@@ -1,0 +1,30 @@
+!!!
+html
+  head
+    title= title
+    link(type="image/x-icon", rel="icon",href="/favicon.ico")
+    link(type="image/png", rel="icon",href="/favicon.png")
+    link(rel='stylesheet', href='/css/style.css')
+    // TODO: remove this when we get a separate layout for our maps page
+    - if ("undefined" !== typeof cssIncludes)
+      - each file in cssIncludes
+        link(rel="stylesheet", href=file)
+    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js")
+    - if ("undefined" !== typeof jsIncludes)
+      - each file in jsIncludes
+        script(type="text/javascript", src=file)
+    - if ("production" == environment()) 
+      script(type="text/javascript")
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-27420261-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+           var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+  // TODO: remove once we get a separate layout for our maps page...
+  body
+    #maincontentWrapper
+      #maincontent
+        #contentBody.container!= body

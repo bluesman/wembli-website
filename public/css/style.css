@@ -1,0 +1,203 @@
+@font-face {
+    font-family: 'BradleyHandITCRegular';
+    src: url('/font/bradhitc-webfont.eot');
+    src: url('/font/bradhitc-webfont.eot?#iefix') format('embedded-opentype'), url('/font/bradhitc-webfont.woff') format('woff'), url('/font/bradhitc-webfont.ttf') format('truetype'), url('/font/bradhitc-webfont.svg#BradleyHandITCRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'JosefinSansStdLight';
+    src: url('JosefinSansStd-Light-webfont.eot');
+    src: url('JosefinSansStd-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSansStd-Light-webfont.woff') format('woff'),
+         url('JosefinSansStd-Light-webfont.ttf') format('truetype'),
+         url('JosefinSansStd-Light-webfont.svg#JosefinSansStdLight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
+
+@font-face {
+    font-family: 'JosefinSlabThin';
+    src: url('JosefinSlab-Thin-webfont.eot');
+    src: url('JosefinSlab-Thin-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-Thin-webfont.woff') format('woff'),
+         url('JosefinSlab-Thin-webfont.ttf') format('truetype'),
+         url('JosefinSlab-Thin-webfont.svg#JosefinSlabThin') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabThinItalic';
+    src: url('JosefinSlab-ThinItalic-webfont.eot');
+    src: url('JosefinSlab-ThinItalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-ThinItalic-webfont.woff') format('woff'),
+         url('JosefinSlab-ThinItalic-webfont.ttf') format('truetype'),
+         url('JosefinSlab-ThinItalic-webfont.svg#JosefinSlabThinItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabLight';
+    src: url('JosefinSlab-Light-webfont.eot');
+    src: url('JosefinSlab-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-Light-webfont.woff') format('woff'),
+         url('JosefinSlab-Light-webfont.ttf') format('truetype'),
+         url('JosefinSlab-Light-webfont.svg#JosefinSlabLight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabLightItalic';
+    src: url('JosefinSlab-LightItalic-webfont.eot');
+    src: url('JosefinSlab-LightItalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-LightItalic-webfont.woff') format('woff'),
+         url('JosefinSlab-LightItalic-webfont.ttf') format('truetype'),
+         url('JosefinSlab-LightItalic-webfont.svg#JosefinSlabLightItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabRegular';
+    src: url('JosefinSlab-Regular-webfont.eot');
+    src: url('JosefinSlab-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-Regular-webfont.woff') format('woff'),
+         url('JosefinSlab-Regular-webfont.ttf') format('truetype'),
+         url('JosefinSlab-Regular-webfont.svg#JosefinSlabRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabItalic';
+    src: url('JosefinSlab-Italic-webfont.eot');
+    src: url('JosefinSlab-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-Italic-webfont.woff') format('woff'),
+         url('JosefinSlab-Italic-webfont.ttf') format('truetype'),
+         url('JosefinSlab-Italic-webfont.svg#JosefinSlabItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabSemiBold';
+    src: url('JosefinSlab-SemiBold-webfont.eot');
+    src: url('JosefinSlab-SemiBold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-SemiBold-webfont.woff') format('woff'),
+         url('JosefinSlab-SemiBold-webfont.ttf') format('truetype'),
+         url('JosefinSlab-SemiBold-webfont.svg#JosefinSlabSemiBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabSemiBoldItalic';
+    src: url('JosefinSlab-SemiBoldItalic-webfont.eot');
+    src: url('JosefinSlab-SemiBoldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-SemiBoldItalic-webfont.woff') format('woff'),
+         url('JosefinSlab-SemiBoldItalic-webfont.ttf') format('truetype'),
+         url('JosefinSlab-SemiBoldItalic-webfont.svg#JosefinSlabSemiBoldItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabBold';
+    src: url('JosefinSlab-Bold-webfont.eot');
+    src: url('JosefinSlab-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-Bold-webfont.woff') format('woff'),
+         url('JosefinSlab-Bold-webfont.ttf') format('truetype'),
+         url('JosefinSlab-Bold-webfont.svg#JosefinSlabBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'JosefinSlabBoldItalic';
+    src: url('JosefinSlab-BoldItalic-webfont.eot');
+    src: url('JosefinSlab-BoldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('JosefinSlab-BoldItalic-webfont.woff') format('woff'),
+         url('JosefinSlab-BoldItalic-webfont.ttf') format('truetype'),
+         url('JosefinSlab-BoldItalic-webfont.svg#JosefinSlabBoldItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+body {
+  /* background-color:#B3D33D; */
+   background-color:#000;
+   font-family: "Trebuchet MS", "Helvetica Nueue", Arial, sans-serif;
+   color:#FFF;
+   text-align:center;
+}
+
+.bradley {font-family:"BradleyHandITCRegular";}
+.satellite {font-family:"Satellite";}
+
+h1, h2, h3, h4, h5, p, ul, ol {margin:0;}
+
+a {outline:none; text-decoration:none;}
+
+a img {border:0;}
+a:link {color:#33ccff;}
+a:visited {color:#524F45;}
+a:hover {color:#FF6700;}
+
+fieldset {border:none;}
+
+.hidden {display:none;}
+.white {color:#FFF !important}
+.black {color:#000;}
+.red {color:#F72400;}
+.bold {font-weight:bold}
+
+.normalSize {font-size:.5em}
+
+#content {
+
+}
+
+/* generic layout stuff */
+.leftBlock  {float:left;}
+.rightBlock {float:right;}
+.wrapper  {width:750px;margin:auto;}
+.container { background-color:#000000; width:960px; margin:0 auto;}
+.clearfix:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.finePrint {font-size:.7em;}
+
+/* forms and stuff */
+.generalError {}
+.error {font-size:11pt;text-align:left;}
+fieldset {text-align:left;margin:0;padding:10px 0;}
+fieldset label,fieldset input {display:block;}
+
+/* error page */
+#notFound {padding:20px 0;}
+
+#logo {margin:40px auto;width:400px; height:165px;background: url("/images/wembli_logo_signup.png") no-repeat scroll transparent;}
+#tagLine {font-size:1.6em;line-height:40px;vertical-align:middle;text-align:center;height:41px;width:889px;margin:0 auto 40px;background: url("/images/tag-line-bg.png") no-repeat scroll transparent;}
+#headers {width:600px;margin:0 auto 40px;}
+#headers #comingSoon {text-align:center;font-size:1.5em;}
+#description {font-size:1.1em;text-align:center;width:600px;margin:0 auto 40px;}
+#follow {margin:0 auto 40px;width:345px;}
+#follow a span {font-size:1.8em;line-height:30px;vertical-align:middle;}
+#follow a img {height:30px;width:161px;float:right;}
