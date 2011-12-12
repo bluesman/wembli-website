@@ -35,18 +35,17 @@ app.set('controllers', __dirname + '/controllers');
 app.set('view engine', 'jade');
 
 app.configure('production',function() {
-    app.use(connect.logger());
-    app.use(connect.static(__dirname + '/public'),{maxAge:31557600000});
-    app.use(connect.errorHandler()); 
+    app.use(express.logger());
+    app.use(express.static(__dirname + '/public'),{maxAge:31557600000});
+    app.use(express.errorHandler()); 
 
 });
 
 app.configure('development',function() {
-    app.use(connect.logger());
-    app.use(connect.static(__dirname + '/public'));
-    app.use(connect.errorHandler({ dumpExceptions: true, showStack: true })); 
+    app.use(express.logger());
+    app.use(express.static(__dirname + '/public'));
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
-
 
 app.configure(function(){
     app.use(express.bodyParser());
@@ -56,6 +55,7 @@ app.configure(function(){
     app.use(app.router);
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
+
 
 app.helpers({
     environment: function() {
