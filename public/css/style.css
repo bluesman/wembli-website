@@ -188,7 +188,7 @@ fieldset label,fieldset input {display:block;}
 /* error page */
 #notFound {padding:20px 0;}
 
-#logo {margin:40px auto;width:400px; height:165px;background: url("/images/wembli_logo_signup.png") no-repeat scroll transparent;}
+#logo {margin: 40px 0 40px 315px;width:400px; height:165px;background: url("/images/wembli_logo_signup.png") no-repeat scroll transparent;}
 #tagLine {font-size:1.6em;line-height:40px;vertical-align:middle;text-align:center;height:41px;width:889px;margin:0 auto 40px;background: url("/images/tag-line-bg.png") no-repeat scroll transparent;}
 #headers {width:600px;margin:0 auto 40px;}
 #headers #comingSoon {text-align:center;font-size:1.5em;}
