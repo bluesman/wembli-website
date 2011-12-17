@@ -1,5 +1,3 @@
-require.paths.unshift('/home/phatseat/node/lib/node_modules');
-
 require('./public/js/lib/date.format');
 
 //globals
@@ -22,37 +20,34 @@ req.session.customer == phatseat's customer data (not a customer model!!)
 */
 
 
-var sys = require('sys'),
-fs      = require('fs'),
-express = require('express'),
-connect = require('connect');
+var express = require('express'),
+redis = require('connect-redis')(express);
 
 console.log('started in '+process.env.NODE_ENV+' mode...');
 
 var app = module.exports = express.createServer();
-app.set('views', __dirname + '/views');
-app.set('controllers', __dirname + '/controllers');
-app.set('view engine', 'jade');
+
+app.configure(function(){
+    app.set('views', __dirname + '/views');
+    app.set('controllers', __dirname + '/controllers');
+    app.set('view engine', 'jade');
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    app.use(express.cookieParser());
+    app.use(express.session({ secret: '@$!#SCDFdsa',store: new redis }));
+    app.use(app.router);
+    app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
+    app.use(express.static(__dirname + '/public'));
+});
+
 
 app.configure('production',function() {
     app.use(express.logger());
-    app.use(express.static(__dirname + '/public'),{maxAge:31557600000});
     app.use(express.errorHandler()); 
 
 });
 
 app.configure('development',function() {
-    app.use(express.logger());
-    app.use(express.static(__dirname + '/public'));
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
-});
-
-app.configure(function(){
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(express.cookieParser());
-    app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
-    app.use(app.router);
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
@@ -65,6 +60,7 @@ app.helpers({
 
 // Controllers
 require('./controllers/index')(app);
+require('./controllers/test')(app);
 require('./controllers/error')(app);
 
 var port = 80;
