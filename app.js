@@ -1,5 +1,3 @@
-require.paths.unshift('/home/phatseat/node/lib/node_modules');
-
 require('./public/js/lib/date.format');
 
 //globals
@@ -22,10 +20,8 @@ req.session.customer == phatseat's customer data (not a customer model!!)
 */
 
 
-var sys = require('sys'),
-fs      = require('fs'),
-express = require('express'),
-connect = require('connect');
+var express  = require('express'),
+    redis    = require('connect-redis')(express);
 
 console.log('started in '+process.env.NODE_ENV+' mode...');
 
@@ -34,13 +30,14 @@ app.set('views', __dirname + '/views');
 app.set('controllers', __dirname + '/controllers');
 app.set('view engine', 'jade');
 
-app.configure('production',function() {
+var production = function() {
     app.use(express.logger());
     app.use(express.static(__dirname + '/public'),{maxAge:31557600000});
     app.use(express.errorHandler()); 
+};
 
-});
-
+app.configure('production1',production);
+app.configure('production2',production);
 app.configure('development',function() {
     app.use(express.logger());
     app.use(express.static(__dirname + '/public'));
@@ -51,25 +48,30 @@ app.configure(function(){
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser());
-    app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
+    app.use(express.session({ secret: '@$!#SCDFdsa',store: new redis }));
     app.use(app.router);
+    app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
 
 app.helpers({
     environment: function() {
-        return process.env.NODE_ENV;
+        return ((process.env.NODE_ENV == 'production1') || (process.env.NODE_ENV == 'production2')) ? 'production' : 'development';
     }
 });
 
 // Controllers
 require('./controllers/index')(app);
+require('./controllers/beta-signup')(app);
 require('./controllers/error')(app);
 
-var port = 80;
+var port = 8001;
 if (process.env.NODE_ENV == 'development') {
     port = 8000;
+}
+if (process.env.NODE_ENV == 'production2') {
+    port = 8002;
 }
 console.log('listening on port: '+port);
 if (!module.parent) app.listen(port);
