@@ -16,7 +16,6 @@ html
     | <![endif]-->
     | 
  
-    // TODO: remove this when we get a separate layout for our maps page
     - if ("undefined" !== typeof cssIncludes)
       - each file in cssIncludes
         link(rel="stylesheet", href=file)
@@ -44,22 +43,6 @@ html
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
   body
-    .topbar
-      .fill
-        .container
-          a.brand(href="#") Wembli
-          ul.nav
-            li.active
-              a(href="#") Home
-            li
-              a(href="#about") About    
-            li
-              a(href="#contact") Contact
-          form.pull-right(action="")
-            input.input-small(type="text",placeholder="Username")
-            input.input-small(type="text",placeholder="Password")
-            button.btn(type="submit") Submit
-    .container
-      .content!= body
-      footer
-        p &copy; Wembli 2011
+    #maincontentWrapper
+      #maincontent
+        #contentBody.container!= body

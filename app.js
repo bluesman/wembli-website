@@ -35,6 +35,8 @@ app.configure(function(){
     app.use(express.methodOverride());
     app.use(express.cookieParser());
     app.use(express.session({ secret: '@$!#SCDFdsa',store: new redis }));
+    app.use(require('wembli/auth'));
+    app.use(require('wembli/ipinfodb'));
     app.use(app.router);
     app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
     app.use(express.static(__dirname + '/public'));
@@ -79,7 +81,7 @@ require('./controllers/error')(app);
 
 var port = 8001;
 if (process.env.NODE_ENV == 'development') {
-    port = 8000;
+    port = 8001;
 }
 if (process.env.NODE_ENV == 'production2') {
     port = 8002;

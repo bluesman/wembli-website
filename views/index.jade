@@ -1,13 +1,19 @@
 #logo
 #tagLine.bradley.black It's a new day for event-goers everywhere.
 - if ((typeof session.signedUp != "undefined") && session.signedUp) 
-  #thankyou Thanks for signing up for our interest list! We'll contact you as soon as we begin beta testing.
+  - if (session.customer.confirmed == true)
+    #thankyou.red Your email address has been confirmed! We'll contact you as soon as we begin beta testing.
+  - else
+    #thankyou.red Thanks for signing up for our interest list! <br/>You will receive a confirmation email shortly (Don't worry, we will not spam you!)<br/>We will contact you as soon as we begin beta testing.
 - else
-  form#signupForm.stdForm(method="post",action="/beta-signup",enctype="application/x-www-form-urlencoded")
-    fieldset
-      label(for="signupEmail") Sign up for our beta:
-      input#signupEmail(type="text",value=(session.remember ? params.email : null),name="email")
-      button#signupEmailButton Submit
+  .grid-system
+    .row.show-grid
+      .span11.offset3
+        form#signupForm(method="post",action="/beta-signup",enctype="application/x-www-form-urlencoded")
+          fieldset
+            label.red(for="signupEmail") Sign up for our beta:
+            input#signupEmail.xlarge(type="text",value=(session.remember ? params.email : null),name="email")
+            button#signupEmailButton.btn.primary Sign up
 #description.josefinsans Wembli is your one-stop-shop for planning the perfect outing.  In minutes you can find your event, pick the best seats (with our expert help of course), lock in your parking, get amazing deals on restaurants then invite your friends.  On the day of your event grab your phone and our mobile app will take you straight to your parking spot and then your seat, let you order concessions so you never miss the fun, then take you back to your parked car and restaurant.  You become the event master with Wembli as your personal concierge.
 #follow 
   a(href="http://www.twitter.com/GoWembli")
