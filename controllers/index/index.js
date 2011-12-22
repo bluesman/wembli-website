@@ -5,10 +5,12 @@ module.exports = function(app) {
 	    delete req.session.signedUp;
 	}
 	res.render('index.jade', {
-	            session: req.session,
+	        session: req.session,
 		    cssIncludes: [],
 		    jsIncludes: [],
-		    title: 'wembli.com - coming soon.'
+		    title: 'wembli.com - home stuff.',
+		    page:'index',
+		    globals:globalViewVars
 	});
     });
 };

@@ -73,18 +73,25 @@ app.helpers({
     }
 });
 
+// Helpers
+globalViewVars = require('./controllers/helpers/global-view-vars');
+
 // Controllers
 require('./controllers/index')(app);
+require('./controllers/research')(app);
+require('./controllers/tickets')(app);
+require('./controllers/hotels')(app);
+require('./controllers/parking')(app);
+require('./controllers/restaurants')(app);
 require('./controllers/test')(app);
 require('./controllers/beta-signup')(app);
-require('./controllers/error')(app);
 
 var port = 8001;
 if (process.env.NODE_ENV == 'development') {
     port = 8000;
 }
 if (process.env.NODE_ENV == 'rob') {
-    port = 8005;
+    port = 8888;
 }
 if (process.env.NODE_ENV == 'production2') {
     port = 8002;

@@ -19,7 +19,7 @@ html
     - if ("undefined" !== typeof cssIncludes)
       - each file in cssIncludes
         link(rel="stylesheet", href=file)
-    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js")
+    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js")
     - if ("undefined" !== typeof jsIncludes)
       - each file in jsIncludes
         script(type="text/javascript", src=file)
@@ -42,7 +42,8 @@ html
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
-  body
-    #maincontentWrapper
-      #maincontent
-        #contentBody.container!= body
+  body(id="#{page}")
+    div#maincontentWrapper.container
+      include includes/header
+      section#content!= body
+      include includes/footer

@@ -1,0 +1,16 @@
+footer.clearfix
+	- each group in globals.footerGroups
+		dl
+			dt.myriad.orange #{group.title}
+			- each link in group.links
+				dd 
+					- url = link.toLowerCase(link.replace(' ', '-'));
+					a(href="#{url}") #{link}
+	
+	dl.connect
+		dt.myriad.orange Follow Us
+		dd.twitter 
+			a(href="http://www.twitter.com/GoWembli", target="_blank") Twitter
+		dd.facebook 
+			a(href="#", target="_blank") Facebook
+				

@@ -1,18 +1,9 @@
 @import "/public/css/fonts.less";
 
-body {
-  /* background-color:#B3D33D; */
-   background-color:#000;
-   font-family: "Trebuchet MS", "Helvetica Nueue", Arial, sans-serif;
-   color:#FFF;
-   text-align:center;
-   font-size:18px;
-}
+body {background-color:#FFF; font-family: "Trebuchet MS", "Helvetica Nueue", Arial, sans-serif; color:#000; text-align:center; font-size:12px; line-height:1;}
+header, footer, nav, section, article {display:block;}
 
-.bradley {font-family:"BradleyHandITCRegular";}
-.josefinsans {font-family:"JosefinSansStdLight";}
-
-h1, h2, h3, h4, h5, p, ul, ol, label {margin:0;font-family:"JosefinSansStdLight";font-weight:normal;}
+h1, h2, h3, h4, h5, p, ul, ol, label {margin:0; font-family:"JosefinSansStdLight"; font-weight:normal;}
 
 a img {border:0;}
 a:link {color:#33ccff;}
@@ -21,6 +12,14 @@ a:hover {color:#FF6700;text-decoration:none;}
 
 fieldset {border:none;}
 
+/* generic layout stuff */
+.leftBlock  {float:left;}
+.rightBlock {float:right;}
+.wrapper  {width:750px;margin:auto;}
+.container { background-color:#000000; width:960px; margin:0 auto;}
+.clearfix:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.finePrint, .small {font-size:.7em;}
+.normalSize {font-size:.5em}
 .hidden {display:none;}
 .white {color:#FFF !important}
 .black {color:#000;}
@@ -28,39 +27,19 @@ fieldset {border:none;}
 .orange {color:#FF6700;}
 .bold {font-weight:bold}
 
-.normalSize {font-size:.5em}
-
-#content {
-
-}
-
-/* generic layout stuff */
-.leftBlock  {float:left;}
-.rightBlock {float:right;}
-.wrapper  {width:750px;margin:auto;}
-.container { background-color:#000000; width:960px; margin:0 auto;}
-.clearfix:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
-.finePrint {font-size:.7em;}
-
 /* forms and stuff */
 .generalError {}
-.error {font-size:11pt;text-align:left;}
+.error {font-size:11pt; text-align:left;}
 fieldset {text-align:left;margin:0;padding:10px 0;}
 fieldset label,fieldset input {display:block;}
 
 /* error page */
 #notFound {padding:20px 0;}
 
-#logo {margin: 40px 0 40px 315px;width:400px; height:165px;background: url("/images/wembli_logo_signup.png") no-repeat scroll transparent;}
-#tagLine {font-size:1.6em;line-height:40px;vertical-align:middle;text-align:center;height:41px;width:889px;margin:0 auto 40px;background: url("/images/tag-line-bg.png") no-repeat scroll transparent;}
-#headers {width:600px;margin:0 auto 40px;}
-#headers #comingSoon {text-align:center;font-size:1.5em;}
-#description {font-size:1.1em;text-align:center;width:600px;margin:0 auto 40px;}
-#follow {margin:0 auto 40px;width:340px;}
-#follow a span {font-weight:bold;font-size:1.6em;line-height:38px;vertical-align:bottom;}
-#follow a img {height:30px;width:161px;float:right;}
+/* Layout */
+#maincontentWrapper {width:960px; margin:10px auto;}
 
-#signupForm fieldset label, #signupForm fieldset input, #signupForm fieldset button {float:left;margin:5px;}
-#signupForm fieldset label {width:232px;font-size:1.5em}
+/* Header */
+header {height:100px;}
+#logo {display:block; height:100px; width:300px; background:url('/images/wembli_logo_300x100_tx.png') 0 0 no-repeat; float:left;}	
 
-#thankyou {line-height:24px;margin: 0 auto 40px;}

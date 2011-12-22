@@ -1,0 +1,16 @@
+header
+	a#logo.seo(href="/") 
+		h1 Wembli
+	ul#utility.myriad
+		li 
+			a(href="#") Login
+		li.last
+			a(href="#") Sign Up
+	nav
+		ul
+			- each tab in globals.tabs
+				li
+					- if (tab.name == page)
+						a.active(href="#{tab.url}") #{tab.label}
+					- else
+						a(href="#{tab.url}") #{tab.label}
