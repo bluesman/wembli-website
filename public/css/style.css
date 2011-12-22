@@ -83,6 +83,7 @@
   font-style: normal;
 }
 
+* {outline:none;}
 body {background-color:#FFF; font-family: "Trebuchet MS", "Helvetica Nueue", Arial, sans-serif; color:#000; font-size:13px; line-height:1;}
 header, footer, nav, section, article {display:block;}
 
