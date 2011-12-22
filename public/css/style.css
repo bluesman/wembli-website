@@ -132,17 +132,15 @@ fieldset label,fieldset input {display:block;}
 #maincontentWrapper {margin-top:10px; overflow:hidden;}
 
 /* Header */
-header {height:90px; position:relative; margin-bottom:4px;}
-
+header {height:90px; position:relative; margin-bottom:3px;}
 header #logo {display:block; height:100px; width:300px; background:url('/images/layout/wembli-logo.png') 0 0 no-repeat; float:left;}	
-
 header #utility {float:right; margin-top:30px;}	
 header #utility li {display:inline-block; text-align:right; margin-right:6px; padding-right:6px; border-right:1px solid #6DA1B7;}
 header #utility li.last {border:0;}
 header #utility li a {color:#6DA1B7;}
 
 /* Nav */
-header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:19px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 4px 4px 2px #666;}
+header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:19px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;}
 header nav ul li {display:inline-block; margin-right:30px;}
 header nav ul li a:link, header nav ul li a:visited {color:#bf4d00;}
 header nav ul li a:hover {color:#f7fefe;}
