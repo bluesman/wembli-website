@@ -1,1 +1,6 @@
 div tickets page
+- if (typeof events != "undefined")
+  - each event in events
+    - if (typeof event == "undefined")
+      - continue
+    .eventDetails!= partial('includes/event-list',{locals: {'event':event}})

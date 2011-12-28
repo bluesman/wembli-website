@@ -34,12 +34,12 @@ app.configure(function(){
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser());
+    app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
+    app.use(express.static(__dirname + '/public'));
     app.use(express.session({ secret: '@$!#SCDFdsa',store: new redis }));
     app.use(require('wembli/auth'));
     app.use(require('wembli/ipinfodb'));
     app.use(app.router);
-    app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
-    app.use(express.static(__dirname + '/public'));
 });
 
 
@@ -75,6 +75,25 @@ app.helpers({
 
 // Helpers
 globalViewVars = require('./controllers/helpers/global-view-vars');
+
+app.helpers({
+    ticketSessionId: function() {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var sid_length = 5;
+        var sid = '';
+        for (var i=0; i<sid_length; i++) {
+            var rnum = Math.floor(Math.random() * chars.length);
+            sid += chars.substring(rnum,rnum+1);
+        }
+        return sid;
+    },
+
+    environment: function() {
+        return process.env.NODE_ENV;
+    }
+});
+
+
 
 // Controllers
 require('./controllers/index')(app);
