@@ -34,7 +34,6 @@ app.configure(function(){
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser());
-    app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
     app.use(express.static(__dirname + '/public'));
     app.use(express.session({ secret: '@$!#SCDFdsa',store: new redis }));
     app.use(require('wembli/auth'));

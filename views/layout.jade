@@ -19,10 +19,6 @@ html
     - if ("undefined" !== typeof cssIncludes)
       - each file in cssIncludes
         link(rel="stylesheet", href=file)
-    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js")
-    - if ("undefined" !== typeof jsIncludes)
-      - each file in jsIncludes
-        script(type="text/javascript", src=file)
     - if ("production" == environment())
       script(type="text/javascript")
         var _kmq = _kmq || [];
@@ -47,3 +43,9 @@ html
       include includes/header
       section#content!= body
       include includes/footer
+  script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
+  script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js")
+  script(type="text/javascript", src="/js/wembli.js")
+  - if ("undefined" !== typeof jsIncludes)
+    - each file in jsIncludes
+      script(type="text/javascript", src=file)

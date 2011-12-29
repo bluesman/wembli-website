@@ -2,7 +2,7 @@ module.exports = {
 	// Navigation Tabs
 	tabs:[
 	      {name:'index', label:'Home', url:'/'},
-	      {name:'research', label:'Research', url:'/research'},
+	      // {name:'research', label:'Research', url:'/research'},
 	      {name:'tickets', label:'Tickets', url:'/tickets'},
 	      {name:'hotels', label:'Hotels', url:'/hotels'},
 	      {name:'parking', label:'Parking', url:'/parking'},

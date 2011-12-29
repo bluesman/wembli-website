@@ -1,9 +1,10 @@
 @import "/public/css/fonts.less";
 
-body {background-color:#FFF; font-family: "Trebuchet MS", "Helvetica Nueue", Arial, sans-serif; color:#000; text-align:center; font-size:12px; line-height:1;}
+* {outline:none;}
+body {background-color:#FFF; font-family: "Trebuchet MS", "Helvetica Nueue", Arial, sans-serif; color:#000; font-size:13px; line-height:1;}
 header, footer, nav, section, article {display:block;}
 
-h1, h2, h3, h4, h5, p, ul, ol, label {margin:0; font-family:"JosefinSansStdLight"; font-weight:normal;}
+h1, h2, h3, h4, h5, p, ul, ol, label {margin:0; font-weight:normal;}
 
 a img {border:0;}
 a:link {color:#33ccff;}
@@ -11,12 +12,15 @@ a:visited {color:#524F45;}
 a:hover {color:#FF6700;text-decoration:none;}
 
 fieldset {border:none;}
+ul {list-style-type:none; padding:0; margin:0;}
+dl {margin-bottom:0;}
+dd {margin-left:0;}
 
 /* generic layout stuff */
 .leftBlock  {float:left;}
 .rightBlock {float:right;}
 .wrapper  {width:750px;margin:auto;}
-.container { background-color:#000000; width:960px; margin:0 auto;}
+.container {width:960px; margin:0 auto;}
 .clearfix:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
 .finePrint, .small {font-size:.7em;}
 .normalSize {font-size:.5em}
@@ -26,6 +30,7 @@ fieldset {border:none;}
 .red {color:#F72400;}
 .orange {color:#FF6700;}
 .bold {font-weight:bold}
+.seo {text-indent:-9999px; overflow:hidden;}
 
 /* forms and stuff */
 .generalError {}
@@ -33,13 +38,69 @@ fieldset {border:none;}
 fieldset {text-align:left;margin:0;padding:10px 0;}
 fieldset label,fieldset input {display:block;}
 
+.myriad {font-family: Myriad Pro, Arial, Helvetica, Tahoma, sans-serif;}
+.bradley {font-family: "BradleyHandITCRegular";}
+.josefinsans {font-family: "JosefinSansStdLight";}
+
 /* error page */
 #notFound {padding:20px 0;}
 
 /* Layout */
-#maincontentWrapper {width:960px; margin:10px auto;}
+#maincontentWrapper {margin-top:10px; overflow:hidden;}
 
 /* Header */
-header {height:100px;}
-#logo {display:block; height:100px; width:300px; background:url('/images/wembli_logo_300x100_tx.png') 0 0 no-repeat; float:left;}	
+header {height:90px; position:relative; margin-bottom:3px;}
+header #logo {display:block; height:100px; width:300px; background:url('/images/layout/wembli-logo.png') 0 0 no-repeat; float:left;}	
+header #utility {float:right; margin-top:30px;}	
+header #utility li {display:inline-block; text-align:right; margin-right:6px; padding-right:6px; border-right:1px solid #6DA1B7;}
+header #utility li.last {border:0;}
+header #utility li a {color:#6DA1B7;}
 
+/* Nav */
+header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:19px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;}
+header nav ul li {display:inline-block; margin-right:30px;}
+header nav ul li a:link, header nav ul li a:visited {color:#bf4d00;}
+header nav ul li a:hover {color:#f7fefe;}
+header nav ul li a.active:link, header nav ul li a.active:hover, header nav ul li a.active:visited {color:#fff;}
+
+/* Footer */
+footer {padding:40px 280px 40px 40px; min-height:100px; background:#000 url('/images/layout/wembli-logo.png') 720px center no-repeat;}
+footer dl {float:left; width:25%;}
+footer dt {text-transform:uppercase; font-size:12px; font-weight:normal;}
+footer dl dd {margin:0 0 3px; margin-left:0;}
+footer dl dd a {font-size:11px;}
+footer dl dd a:link {color:#f7fefe;}
+footer dl dd a:visited {color:#eee;}
+footer dl dd a:hover {text-decoration:underline;}
+
+footer .connect dd a {padding:1px 0 2px 25px; display:block; background-image:url('/images/layout/sm-icons-sprite-small.png'); background-repeat:no-repeat;}
+footer .connect dd.twitter a {background-position:0 1px;}
+footer .connect dd.facebook a {background-position:0 -24px;}
+
+/* Widgets */
+#searchWidget {color:#f7fefe; width:300px;}
+#searchWidget ul.widget-tabs {height:30px;}
+#searchWidget ul.widget-tabs li {font-size:14px; font-weight:bold; float:left; color:#f7fefe; text-transform:uppercase; cursor:pointer; padding:3px 10px 2px; width:115px; margin-top:7px; text-align:center; background-color:black; border-radius:10px 10px 0 0;}
+#searchWidget ul.widget-tabs li:hover {color:#6ea1b7;}
+#searchWidget ul.widget-tabs li.active {color:#6ea1b7; font-size:17px; padding-top:6px; padding-bottom:6px; margin-top:0;}
+#searchWidget #searchContainer {background:black url('/images/layout/widget-active.png') 1px -12px no-repeat; box-shadow:2px 5px 16px #565656; border-radius:0 20px 20px 20px; padding:40px 20px 20px;}
+#searchWidget #searchContainer form {display:none;}
+#searchWidget #searchContainer form.active {display:block;}
+#searchWidget #searchContainer form ul li {border-bottom:2px solid #292929; padding-bottom:3px; margin-bottom:5px;}
+#searchWidget #searchContainer form ul li.last {border:0; padding-bottom:0; margin-bottom:0;}
+#searchWidget #searchContainer form ul li label {color:#f7fefe; display:block; width:100%; text-align:left; font-weight:bold; float:none; margin-bottom:2px; text-transform:uppercase; font-size:12px; font-family: Myriad Pro, Arial, Helvetica, Tahoma, sans-serif;}
+#searchWidget #searchContainer form ul li input[type="text"], #searchWidget #searchContainer form ul li select {color:#f7fefe; background-color:#292929; font-size:12px; border:0; display:block;}
+#searchWidget #searchContainer form ul li input[type="text"] {width:242px; border-radius:5px; padding:8px;}
+#searchWidget #searchContainer form ul li input[type="text"]:focus {box-shadow:inset 2px 2px 5px #999;}
+#searchWidget #searchContainer form ul li input.date {padding-right:24px; width:92px; float:right;}
+#searchWidget #searchContainer form ul li input.first, #searchWidget #searchContainer form ul li select.first {float:left;}
+#searchWidget #searchContainer form ul li input.btn {text-align:center; font-weight:bold; text-transform:uppercase; margin-top:10px; color:red; width:229px;}
+#searchWidget #searchContainer form ul li select {width:124px; float:right; padding-top:8px; height:32px; padding-bottom:8px;}
+
+/* Home Page */
+#index #content {min-height:730px; padding:70px 30px 0; background:url('/images/pages/index/petco-park.png') 0 0 no-repeat;}
+
+#homeContent article {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
+#homeContent article h1 {color:#f7fefe; font-size:36px; margin-bottom:3px;}
+
+ 
