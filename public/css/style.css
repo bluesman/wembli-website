@@ -117,6 +117,18 @@ dd {margin-left:0;}
 .bold {font-weight:bold}
 .seo {text-indent:-9999px; overflow:hidden;}
 
+/* Gradients */
+.grayFade {
+  background: #cedce7; /* Old browsers */
+  background: -moz-linear-gradient(top, #cedce7 0%, #596a72 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cedce7), color-stop(100%,#596a72)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #cedce7 0%,#596a72 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #cedce7 0%,#596a72 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #cedce7 0%,#596a72 100%); /* IE10+ */
+  background: linear-gradient(top, #cedce7 0%,#596a72 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', endColorstr='#596a72',GradientType=0 ); /* IE6-9 */
+}
+
 /* forms and stuff */
 .generalError {}
 .error {font-size:11pt; text-align:left;}
@@ -158,11 +170,12 @@ footer dl dd a:link {color:#f7fefe;}
 footer dl dd a:visited {color:#eee;}
 footer dl dd a:hover {text-decoration:underline;}
 
-footer .connect dd a {padding:1px 0 2px 25px; display:block; background-image:url('/images/layout/sm-icons-sprite-small.png'); background-repeat:no-repeat;}
+footer .connect dd a {padding:1px 0 2px 25px; display:block; background-image:url('/images/icons/sm-icons-sprite-small.png'); background-repeat:no-repeat;}
 footer .connect dd.twitter a {background-position:0 1px;}
 footer .connect dd.facebook a {background-position:0 -24px;}
 
 /* Widgets */
+/* Search */
 #searchWidget {color:#f7fefe; width:300px;}
 #searchWidget ul.widget-tabs {height:30px;}
 #searchWidget ul.widget-tabs li {font-size:13px; font-weight:bold; float:left; color:#f7fefe; text-transform:uppercase; cursor:pointer; padding:3px 10px 2px; width:115px; margin-top:7px; text-align:center; background-color:black; border-radius:10px 10px 0 0;}
@@ -184,8 +197,48 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 #searchWidget #searchContainer form ul li select option {border:0; border-bottom:1px dotted #666; padding:2px 10px;}
 #searchWidget #searchContainer form ul li select option.last {border-bottom:0; padding-bottom:0;}
 
+/* Info Blocks */
+#infoBlocks {margin-top:51px; box-shadow:2px 5px 9px #565656; height:149px; width:573px; border:1px solid #f7fefe; background:url('/images/widgets/info-blocks-bg.jpg') 0 0 no-repeat;}
+#infoBlocks li {float:left; position:relative; padding-top:119px; cursor:pointer; width:143px;}
+#infoBlocks li:hover {background-color:rgba(247, 254, 254, 0.3);}
+#infoBlocks li.second {width:142px;}
+#infoBlocks li.third {width:146px;}
+#infoBlocks li.last {width:142px;}
+#infoBlocks li span.toggler {display:block; border-right:1px solid #aca8a5; height:16px; font-size:16px; padding:6px 0 8px; text-align:center; color:#f7fefe; text-transform:uppercase;}
+#infoBlocks li.last span.toggler {border-right:0;} 
+#infoBlocks li:hover span.toggler {color:#666;}
+#infoBlocks li span.bubble {display:none;}
+
+/* Mobile Ad */
+.mobileAd {display:block; width:134px; padding-top:220px; background:url('/images/widgets/mobile.png') center top no-repeat; text-align:center;}
+
+/* Results Teaser */
+.teaserResults {background-color:#f2f2f2; padding:10px; width:400px;}
+.teaserResults h2 {font-weight:bold; text-transform:uppercase; text-shadow:1px 1px #b4b4b4; margin-bottom:25px;}
+.teaserResults ul {margin-left:15px;}
+.teaserResults ul li {margin-left:80px; font-size:11px; height:50px; padding:0 10px 25px 0; border-bottom:1px solid #a4a4a4; margin-bottom:15px; position:relative;}
+.teaserResults ul li span.when {background-color:#d8d6d7; text-transform:uppercase; text-align:center; display:block; height:57px; width:53px; position:absolute; top:0; left:-80px; border-radius:10px; color:#767676; padding:5px;}
+.teaserResults ul li span.when span {display:block;}
+.teaserResults ul li span.when span.event-date {font-size:16px; line-height:14px; margin-bottom:2px; text-transform:capitalize;}
+.teaserResults ul li p {font-size:11px;}
+.teaserResults ul li p.info {float:left; margin-right:10px; line-height:15px;padding-top:5px;}
+.teaserResults ul li p.info a, .teaserResults ul li p.info span {display:block;}
+.teaserResults ul li p.info a, .teaserResults ul li p.info a:link {color:#6ea1b7;}
+.teaserResults ul li p.info a:hover {text-decoration:underline;}
+.teaserResults ul li p.info span.rating em {position:relative; top:-2px;}
+.teaserResults ul li p.info span.stars {display:inline-block; margin-top:-1px; margin-left:5px; height:14px; width:80px; overflow:hidden; text-indent:-9999px;}
+.teaserResults ul li p.info span.stars span {display:block; margin-top:1px; float:left; background-image:url('/images/icons/star-icons-sprite.png'); height:13px; width:13px;}
+.teaserResults ul li p.info span.stars span.whole-star {background-position:0 0;}
+.teaserResults ul li p.info span.stars span.half-star {background-position:-14px 0;}
+.teaserResults ul li p.info span.stars span.empty-star {background-position:-27px 0;}
+.teaserResults ul li p.cta {width:120px; float:right; text-align:right;}
+.teaserResults ul li p.cta em {display:block; margin-top:5px;}
+
 /* Home Page */
 #index #content {min-height:730px; padding:70px 30px 0; background:url('/images/pages/index/petco-park.png') 0 0 no-repeat;}
 
 #homeContent article {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
 #homeContent article h1 {color:#f7fefe; font-size:36px; margin-bottom:3px;}
+#homeContent #searchWidget {float:left;}
+#homeContent #infoBlocks {float:right; position:relative; z-index:9;}
+#homeContent #belowFold {width:575px; margin-top:10px; float:right;}

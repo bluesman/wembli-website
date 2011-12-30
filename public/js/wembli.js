@@ -22,14 +22,55 @@ $w = {
 			}
 		}); 
 	},
+	initStarRatings:function(){
+		// get and parse the rating
+		var rating;
+		var nums;
+		var whole;
+		var frac;
+		
+		// I'll need this
+		var span;
+		var halfUsed;
+		var me;	
+			
+		$('.stars').each(function(){
+			// get and parse the rating
+			rating 	= $(this).html();
+			nums 	= rating.split('.');
+			whole	= parseInt(nums[0]);
+			frac	= parseInt(nums[1]);
+			
+			// save these now
+			halfUsed = false;
+			me = this;
+			
+			//this.html('');
+			// build the stars
+			for(var i = 1; i < 6; i++){
+				span = doc.createElement('span');
+				
+				if(i <= whole){
+					span.className = 'whole-star';
+				} else if(frac > 2 && !halfUsed){
+					span.className = 'half-star';
+					halfUsed = true;
+				} else {
+					span.className = 'empty-star';
+				}
+				
+				$(span).appendTo(me);
+			}
+		});
+	},
 	loadScripts:function(){
 		$.getScript('/js/plugins/jquery.background-position.js');
 	},
 	init:function(){
-		$('.date').datepicker({minDate:0});
+		$('input.date').datepicker({minDate:0});
 		
 		$w.initDefaultText();
-		
+		$w.initStarRatings();
 		$w.loadScripts();
 	}
 }
