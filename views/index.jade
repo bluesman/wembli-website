@@ -8,7 +8,7 @@
 				li.active Find Tickets
 				li I Have Tickets
 			div#searchContainer
-				form.active(method="get", name="find-tickets", method="/tickets/search")
+				form#findTickets.active(method="get", name="find-tickets", method="/tickets/search")
 					ul
 						li 
 							label(for="term") Search Events and Find Tickets
@@ -21,64 +21,51 @@
 							label(for="adults") For this many people
 							select.half.first(name="adults", id="adults")
 								option(value="") Adults
-								-for(var i = 1; i < 9; i++)
+								-for(var i = 0; i <= 9; i++)
 									option(value="#{i}") #{i}
 								option.last(value="10plus") 10 +
 							select.half(name="children", id="children")
 								option(value="") Children
-								-for(var i = 1; i < 9; i++)
+								-for(var i = 0; i <= 9; i++)
 									option(value="#{i}") #{i}
 								option.last(value="10plus") 10 +								
 						li.last 
 							input.btn.primary(value="Search For Tickets")
-				form(method="get", name="find-tickets", method="/tickets/search")
+							span.small Wembli searches all the tickets on the web to bring you the best deals.  We also provide a knowledgebase with expert reviews, ratings, photos and comments from fans like you.  You'll never have a bad seat again.
+				form#haveTickets(method="get", name="have-tickets", method="/tickets/search")
 					I have tickets form is here
 		include widgets/info-blocks
 		div#belowFold.clearfix
-			section.teaserResults.leftBlock
-				h2.myriad Upcoming Events in San Diego
-				ul
-					li.clearfix
-						p.info 
-							a(href="") Event 1 title
-							span.location This is, The Local
-							span.rating
-								em Expert Rating:
-								span.stars 5
-						p.cta
-							a.btn.danger See Tickets
-							em 300 tickets from $27
-						span.when
-							span.day Sat
-							span.event-date Apr 07
-							span.time 7:05 pm
-					li.clearfix
-						p.info 
-							a(href="") Event 1 title
-							span.location This is, The Local
-							span.rating
-								em Expert Rating:
-								span.stars 4.5
-						p.cta
-							a.btn.danger See Tickets
-							em 300 tickets from $27
-						span.when
-							span.day Sat
-							span.event-date Apr 07
-							span.time 7:05 pm
-					li.clearfix
-						p.info 
-							a(href="") Event 1 title
-							span.location This is, The Local
-							span.rating
-								em Expert Rating:
-								span.stars 3.1
-						p.cta
-							a.btn.danger See Tickets
-							em 300 tickets from $27
-						span.when
-							span.day Sat
-							span.event-date Apr 07
-							span.time 7:05 pm														
+			section.teaserContainer.leftBlock
+				.teaserResults.leftBlock
+					h2.myriad Upcoming Events in 
+						span!= session.ipinfo.cityName
+					ul
+						- var cnt = 0;
+						- each event in events
+							- cnt++;
+							- if (cnt > 5) 
+								- break;
+							- var date = new Date(Date.parse(event.Date));
+							li.clearfix
+								p.info 
+									a(href="/tickets/event/"+event.ID+"/"+event.Name)!= event.Name
+									span.venue!= event.Venue
+									span.location!= event.City+', '+event.StateProvince
+									span.rating
+										em Expert Rating:
+										span.stars!= (event.Rating ? event.Rating : 0)
+								p.cta
+									a.btn.danger(href="/tickets/event/"+event.ID+"/"+event.Name) See Tickets
+									- // don't have this info right now: em 300 tickets from $27
+								span.when
+									span.day!=        date.format("ddd")
+									span.event-date!= date.format("mmm d")
+									span.time!=       date.format("h:MM TT") 
+
+				.seeMore.leftBlock
+					a(href="/tickets/search/"+session.ipinfo.cityName+"/"+Date.today().format("mm-dd-yy"))
+						span see more events in 
+						span.lowercase!= session.ipinfo.cityName
 			a.rightBlock.mobileAd(href="#")
 				span.btn.primary Get Mobile

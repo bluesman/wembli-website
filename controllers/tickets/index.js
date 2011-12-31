@@ -21,7 +21,15 @@ module.exports = function(app) {
 	//everything after search should go in order: /query/from/to/adults/children;
 	splitSearchUri(req);
 	
-        ticketNetwork.SearchEvents({searchTerms:req.param.q},function(err,results) {
+	var whereClause = '';
+	if (req.param.from) {
+	    whereClause = 'Date > DateTime("'+req.param.from+'")';
+	}
+
+	if (req.param.to) {
+	    whereClause += ' AND Date < DateTime("'+req.param.to+'")';
+	}
+        ticketNetwork.SearchEvents({searchTerms:req.param.q,whereClause:whereClause,orderByClause:'Date'},function(err,results) {
             res.render('tickets',{
 		session: req.session,
 		cssIncludes: [],
@@ -46,7 +54,7 @@ module.exports = function(app) {
 		page:'tickets',
 		globals:globalViewVars,
 		cssIncludes: [],
-                jsIncludes: []
+                jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js']
             });
         });
     });
@@ -87,11 +95,11 @@ function splitSearchUri(req) {
 	req.param.to   = d.addWeeks(1).format("shortDate");
     }
 
-    //if there is a from and no to then use from + 1 wk for to
+    //if there is a from and no to then use from + 6 wk for to
     if (!req.param.to) {
-	console.log('adding 1 wk to: '+req.param.from);
-	var d = Date(req.param.from);
-	req.param.to   = d.addWeeks(1).format("shortDate");
+	console.log('adding 6 wk to: '+req.param.from);
+	var d = new Date(req.param.from);
+	req.param.to   = d.addWeeks(18).format("shortDate");
     }
 
     //if no adults, use 1
