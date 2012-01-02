@@ -38,6 +38,7 @@ app.configure(function(){
     app.use(express.session({ secret: '@$!#SCDFdsa',store: new redis }));
     app.use(require('wembli/auth'));
     app.use(require('wembli/ipinfodb'));
+    app.use(require('wembli/top-performers'));
     app.use(app.router);
 });
 
@@ -103,6 +104,7 @@ require('./controllers/parking')(app);
 require('./controllers/restaurants')(app);
 require('./controllers/test')(app);
 require('./controllers/beta-signup')(app);
+require('./controllers/fanvenues')(app);
 
 var port = 8001;
 if (process.env.NODE_ENV == 'development') {
@@ -114,5 +116,11 @@ if (process.env.NODE_ENV == 'rob') {
 if (process.env.NODE_ENV == 'production2') {
     port = 8002;
 }
+if (process.env.NODE_ENV == 'secure') {
+    port = 8010;
+}
+
+
+
 console.log('listening on port: '+port);
 if (!module.parent) app.listen(port);

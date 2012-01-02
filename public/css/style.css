@@ -92,7 +92,7 @@ header, footer, nav, section, article {display:block;}
 h1, h2, h3, h4, h5, p, ul, ol, label {margin:0; font-weight:normal;}
 
 a img {border:0;}
-a:link {color:#33ccff;}
+a:link {color:#6EA1B7;}
 a:visited {color:#524F45;}
 a:hover {color:#FF6700;text-decoration:none;}
 
@@ -116,7 +116,7 @@ dd {margin-left:0;}
 .orange {color:#FF6700;}
 .bold {font-weight:bold}
 .seo {text-indent:-9999px; overflow:hidden;}
-
+.lowercase {text-transform:lowercase;}
 /* Gradients */
 .grayFade {
   background: #cedce7; /* Old browsers */
@@ -143,7 +143,7 @@ fieldset label,fieldset input {display:block;}
 #notFound {padding:20px 0;}
 
 /* Layout */
-#maincontentWrapper {margin-top:10px; overflow:hidden;}
+#maincontentWrapper {margin-top:10px; overflow:visible;}
 
 /* Header */
 header {height:90px; position:relative; margin-bottom:3px;}
@@ -154,7 +154,7 @@ header #utility li.last {border:0;}
 header #utility li a {color:#6DA1B7;}
 
 /* Nav */
-header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:19px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;}
+header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:19px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;top:60px;}
 header nav ul li {display:inline-block; margin-right:30px;}
 header nav ul li a:link, header nav ul li a:visited {color:#bf4d00;}
 header nav ul li a:hover {color:#f7fefe;}
@@ -181,12 +181,14 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 #searchWidget ul.widget-tabs li {font-size:13px; font-weight:bold; float:left; color:#f7fefe; text-transform:uppercase; cursor:pointer; padding:3px 10px 2px; width:115px; margin-top:7px; text-align:center; background-color:black; border-radius:10px 10px 0 0;}
 #searchWidget ul.widget-tabs li:hover {color:#6ea1b7;}
 #searchWidget ul.widget-tabs li.active {color:#6ea1b7; font-size:15px; padding-top:6px; padding-bottom:6px; margin-top:0;}
+
 #searchWidget #searchContainer {background-color:black; min-height:270px; position:relative; box-shadow:2px 5px 16px #565656; border-radius:0 20px 20px 20px; padding:40px 20px 20px;}
 #searchWidget #searchContainer span.marker {display:block; width:137px; height:58px; z-index:10; position:absolute; top:-13px; left:0; background:url('/images/layout/widget-active.png') 0 0 no-repeat;}
 #searchWidget #searchContainer form {display:none; position:absolute; top:40px; left:20px;}
 #searchWidget #searchContainer form.active {display:block;}
 #searchWidget #searchContainer form ul li {border-bottom:2px solid #292929; padding-bottom:3px; margin-bottom:5px;}
 #searchWidget #searchContainer form ul li.last {border:0; padding-bottom:0; margin-bottom:0;}
+#searchWidget #searchContainer form ul li.last span {display:block; width:259px;line-height:10px;margin-top:4px;text-align:center;}
 #searchWidget #searchContainer form ul li label {color:#f7fefe; display:block; width:100%; text-align:left; font-weight:bold; float:none; margin-bottom:2px; text-transform:uppercase; font-size:12px; font-family: Myriad Pro, Arial, Helvetica, Tahoma, sans-serif;}
 #searchWidget #searchContainer form ul li input[type="text"], #searchWidget #searchContainer form ul li select {color:#f7fefe; background-color:#292929; font-size:12px; border:0; display:block;}
 #searchWidget #searchContainer form ul li input[type="text"] {width:242px; border-radius:5px; padding:8px;}
@@ -214,15 +216,16 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 .mobileAd {display:block; width:134px; padding-top:220px; background:url('/images/widgets/mobile.png') center top no-repeat; text-align:center;}
 
 /* Results Teaser */
-.teaserResults {background-color:#f2f2f2; padding:10px; width:400px;}
+.teaserContainer {width:400px;}
+.teaserResults {background-color:#f2f2f2; padding:10px; width:400px;border-bottom:1px solid #CCC;}
 .teaserResults h2 {font-weight:bold; text-transform:uppercase; text-shadow:1px 1px #b4b4b4; margin-bottom:25px;}
 .teaserResults ul {margin-left:15px;}
-.teaserResults ul li {margin-left:80px; font-size:11px; height:50px; padding:0 10px 25px 0; border-bottom:1px solid #a4a4a4; margin-bottom:15px; position:relative;}
+.teaserResults ul li {margin-left:80px; font-size:11px; padding:0 10px 25px 0; border-bottom:1px solid #a4a4a4; margin-bottom:15px; position:relative;}
 .teaserResults ul li span.when {background-color:#d8d6d7; text-transform:uppercase; text-align:center; display:block; height:57px; width:53px; position:absolute; top:0; left:-80px; border-radius:10px; color:#767676; padding:5px;}
 .teaserResults ul li span.when span {display:block;}
 .teaserResults ul li span.when span.event-date {font-size:16px; line-height:14px; margin-bottom:2px; text-transform:capitalize;}
 .teaserResults ul li p {font-size:11px;}
-.teaserResults ul li p.info {float:left; margin-right:10px; line-height:15px;padding-top:5px;}
+.teaserResults ul li p.info {float:left; margin-right:10px; line-height:15px;padding-top:5px;width:185px;}
 .teaserResults ul li p.info a, .teaserResults ul li p.info span {display:block;}
 .teaserResults ul li p.info a, .teaserResults ul li p.info a:link {color:#6ea1b7;}
 .teaserResults ul li p.info a:hover {text-decoration:underline;}
@@ -232,7 +235,7 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 .teaserResults ul li p.info span.stars span.whole-star {background-position:0 0;}
 .teaserResults ul li p.info span.stars span.half-star {background-position:-14px 0;}
 .teaserResults ul li p.info span.stars span.empty-star {background-position:-27px 0;}
-.teaserResults ul li p.cta {width:120px; float:right; text-align:right;}
+.teaserResults ul li p.cta {width:100px; float:right; text-align:right;}
 .teaserResults ul li p.cta em {display:block; margin-top:5px;}
 
 /* Content */
@@ -241,6 +244,9 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 /* Background images */
 #index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat;}
 #parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;}
+
+.seeMore {text-align:center;background-color:#ECECEC; padding:10px; width:400px; border-top:1px solid #FFF}
+.seeMore a {display:block;}
 
 /* Home Page */
 #homeContent article.letterbox {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
