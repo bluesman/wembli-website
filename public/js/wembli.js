@@ -64,14 +64,13 @@ $w = {
 		});
 	},
 	loadScripts:function(){
-		$.getScript('/js/plugins/jquery.background-position.js');
 	},
 	init:function(){
 		$('input.date').datepicker({minDate:0});
 		
 		$w.initDefaultText();
 		$w.initStarRatings();
-		$w.loadScripts();
+		//$w.loadScripts();
 	}
 }
 
@@ -94,7 +93,7 @@ $w.searchWidget = function(){
 		
 		var index	= $(tabs).find('li').index(toggler);
 		var target	= $(search).find('form:eq(' + index + ')');
-		var pos		= index > 0 ? '137px -12px' : '1px -12px';
+		var pos		= index > 0 ? '137px' : '1px';
 		
 		// update the blue highlight
 		$(search).animate({backgroundPosition: pos});
@@ -106,6 +105,7 @@ $w.searchWidget = function(){
 		// update which form is showing
 		$('form.active', search).fadeOut('slow').removeClass('active');
 		$(target).fadeIn('slow').addClass('active');
+		$('.marker', search).animate({left: pos});
 		
 	}
 	 

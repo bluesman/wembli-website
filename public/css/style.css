@@ -177,11 +177,12 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 /* Widgets */
 /* Search */
 #searchWidget {color:#f7fefe; width:300px;}
-#searchWidget ul.widget-tabs {height:30px;}
+#searchWidget ul.widget-tabs {height:30px; position:relative; z-index:9;}
 #searchWidget ul.widget-tabs li {font-size:13px; font-weight:bold; float:left; color:#f7fefe; text-transform:uppercase; cursor:pointer; padding:3px 10px 2px; width:115px; margin-top:7px; text-align:center; background-color:black; border-radius:10px 10px 0 0;}
 #searchWidget ul.widget-tabs li:hover {color:#6ea1b7;}
 #searchWidget ul.widget-tabs li.active {color:#6ea1b7; font-size:15px; padding-top:6px; padding-bottom:6px; margin-top:0;}
-#searchWidget #searchContainer {background:black url('/images/layout/widget-active.png') 1px -12px no-repeat; min-height:270px; position:relative; box-shadow:2px 5px 16px #565656; border-radius:0 20px 20px 20px; padding:40px 20px 20px;}
+#searchWidget #searchContainer {background-color:black; min-height:270px; position:relative; box-shadow:2px 5px 16px #565656; border-radius:0 20px 20px 20px; padding:40px 20px 20px;}
+#searchWidget #searchContainer span.marker {display:block; width:137px; height:58px; z-index:10; position:absolute; top:-13px; left:0; background:url('/images/layout/widget-active.png') 0 0 no-repeat;}
 #searchWidget #searchContainer form {display:none; position:absolute; top:40px; left:20px;}
 #searchWidget #searchContainer form.active {display:block;}
 #searchWidget #searchContainer form ul li {border-bottom:2px solid #292929; padding-bottom:3px; margin-bottom:5px;}
@@ -234,11 +235,16 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 .teaserResults ul li p.cta {width:120px; float:right; text-align:right;}
 .teaserResults ul li p.cta em {display:block; margin-top:5px;}
 
-/* Home Page */
-#index #content {min-height:730px; padding:70px 30px 0; background:url('/images/pages/index/petco-park.png') 0 0 no-repeat;}
+/* Content */
+#content {min-height:730px; padding:70px 30px 0; }
 
-#homeContent article {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
-#homeContent article h1 {color:#f7fefe; font-size:36px; margin-bottom:3px;}
+/* Background images */
+#index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat;}
+#parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;}
+
+/* Home Page */
+#homeContent article.letterbox {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
+#homeContent h1 {color:#f7fefe; font-size:36px; margin-bottom:3px;}
 #homeContent #searchWidget {float:left;}
 #homeContent #infoBlocks {float:right; position:relative; z-index:9;}
 #homeContent #belowFold {width:575px; margin-top:10px; float:right;}
