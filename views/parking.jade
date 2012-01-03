@@ -1,32 +1,56 @@
 #parkingContent
-	article.letterbox
+	div.letterbox
 		h1.myriad It's a new day for event-goers
 	section.clearfix 
 		div#searchWidget
 			ul.widget-tabs
-				li.active Find Tickets
+				li.active Find Parking
 			div#searchContainer
 				span.marker
 				form.active(method="get", name="find-tickets", method="/tickets/search")
 					ul
 						li 
-							label(for="term") Search Events and Find Tickets
-							input.default.example(name="term", id="term", type="text", value="Event Name, venue, team, performer or city")
+							label(for="term") Find parking near
+							input.default.example(name="term", id="term", type="text", value="City, hotel or attraction")
 						li.clearfix 
 							label(form="date1") Between these dates
 							input.default.example.date.first(name="date1", id="date1", type="text", value="Start Date")
 							input.default.example.date(name="date2", id="date2", type="text", value="End Date")
 						li.clearfix
-							label(for="adults") For this many people
-							select.half.first(name="adults", id="adults")
-								option(value="") Adults
-								-for(var i = 1; i < 9; i++)
-									option(value="#{i}") #{i}
-								option.last(value="10plus") 10 +
-							select.half(name="children", id="children")
-								option(value="") Children
-								-for(var i = 1; i < 9; i++)
-									option(value="#{i}") #{i}
-								option.last(value="10plus") 10 +								
+							label(for="time1") For this amount of time
+							input.default.example.time.first(name="time1", id="time1", type="text", value="Time In")
+							input.default.example.time(name="time2", id="time2", type="text", value="Time Out")							
 						li.last 
-							input.btn.primary(value="Search For Tickets")
+							input.btn.primary(value="Search For Parking")
+		div#parkingResults.searchResults
+			h2 Never drive in circles looking for parking again
+			ul.sort.clearfix
+				li.label Sort by:
+				li
+					a.active(href="#") Rate + Distance
+				li
+					a(href="#") Distance
+			div.filters
+				span.filter	 Filters <strong>+</strong>
+				ul.filtered
+			ul.results
+				li
+					a.title(href="#") Result 1 Name
+					span.rating
+						span.stars 3.5
+						span &nbsp;(25 reviews)
+					p Distance: .6m/.8km
+					p 1-619-555-1234
+					a.btn.danger(href="") Reserve			
+				li
+					a.title(href="#") Result 1 Name
+					span.rating
+						span.stars 3.5
+						span &nbsp;(25 reviews)
+					p Distance: .6m/.8km
+					p 1-619-555-1234
+					a.btn.danger(href="") Reserve		
+		article#signupCta.clearfix
+			h3 Sign Up and Get a Discount
+			p Sign up for Wembli today and we'll send you a discount code for parking.  Even if you already bought your tickets from another site !  Make Wembli your one-stop shop for concert and sports outings.  We do the legwork so you can focus on making great memories
+			a(href="#") Sign In							

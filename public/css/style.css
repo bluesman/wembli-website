@@ -90,11 +90,12 @@ body {background-color:#FFF; font-family: "Trebuchet MS", "Helvetica Nueue", Ari
 header, footer, nav, section, article {display:block;}
 
 h1, h2, h3, h4, h5, p, ul, ol, label {margin:0; font-weight:normal;}
+h2, h3 {text-transform:uppercase;}
 
 a img {border:0;}
-a:link {color:#6EA1B7;}
+a{color:#6ea1b7;}
 a:visited {color:#524F45;}
-a:hover {color:#FF6700;text-decoration:none;}
+a:hover {color:#1a4c65; text-decoration:none;}
 
 fieldset {border:none;}
 ul {list-style-type:none; padding:0; margin:0;}
@@ -102,6 +103,7 @@ dl {margin-bottom:0;}
 dd {margin-left:0;}
 
 /* generic layout stuff */
+.block {display:block;}
 .leftBlock  {float:left;}
 .rightBlock {float:right;}
 .wrapper  {width:750px;margin:auto;}
@@ -117,6 +119,7 @@ dd {margin-left:0;}
 .bold {font-weight:bold}
 .seo {text-indent:-9999px; overflow:hidden;}
 .lowercase {text-transform:lowercase;}
+
 /* Gradients */
 .grayFade {
   background: #cedce7; /* Old browsers */
@@ -151,7 +154,6 @@ header #logo {display:block; height:100px; width:300px; background:url('/images/
 header #utility {float:right; margin-top:30px;}	
 header #utility li {display:inline-block; text-align:right; margin-right:6px; padding-right:6px; border-right:1px solid #6DA1B7;}
 header #utility li.last {border:0;}
-header #utility li a {color:#6DA1B7;}
 
 /* Nav */
 header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:19px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;top:60px;}
@@ -176,13 +178,13 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 
 /* Widgets */
 /* Search */
-#searchWidget {color:#f7fefe; width:300px;}
+#searchWidget {color:#f7fefe; width:300px; float:left;}
 #searchWidget ul.widget-tabs {height:30px; position:relative; z-index:9;}
 #searchWidget ul.widget-tabs li {font-size:13px; font-weight:bold; float:left; color:#f7fefe; text-transform:uppercase; cursor:pointer; padding:3px 10px 2px; width:115px; margin-top:7px; text-align:center; background-color:black; border-radius:10px 10px 0 0;}
 #searchWidget ul.widget-tabs li:hover {color:#6ea1b7;}
 #searchWidget ul.widget-tabs li.active {color:#6ea1b7; font-size:15px; padding-top:6px; padding-bottom:6px; margin-top:0;}
 
-#searchWidget #searchContainer {background-color:black; min-height:270px; position:relative; box-shadow:2px 5px 16px #565656; border-radius:0 20px 20px 20px; padding:40px 20px 20px;}
+#searchWidget #searchContainer {background-color:black; min-height:290px; position:relative; box-shadow:2px 5px 16px #565656; border-radius:0 20px 20px 20px; padding:40px 20px 20px;}
 #searchWidget #searchContainer span.marker {display:block; width:137px; height:58px; z-index:10; position:absolute; top:-13px; left:0; background:url('/images/layout/widget-active.png') 0 0 no-repeat;}
 #searchWidget #searchContainer form {display:none; position:absolute; top:40px; left:20px;}
 #searchWidget #searchContainer form.active {display:block;}
@@ -193,7 +195,8 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 #searchWidget #searchContainer form ul li input[type="text"], #searchWidget #searchContainer form ul li select {color:#f7fefe; background-color:#292929; font-size:12px; border:0; display:block;}
 #searchWidget #searchContainer form ul li input[type="text"] {width:242px; border-radius:5px; padding:8px;}
 #searchWidget #searchContainer form ul li input[type="text"]:focus {box-shadow:inset 2px 2px 5px #999;}
-#searchWidget #searchContainer form ul li input.date {padding-right:24px; width:92px; float:right; background:#292929 url('/images/icons/calendar.png') 102px center no-repeat;}
+#searchWidget #searchContainer form ul li input.date, #searchWidget #searchContainer form ul li input.time {padding-right:24px; width:92px; float:right;}
+#searchWidget #searchContainer form ul li input.date {background:#292929 url('/images/icons/calendar.png') 102px center no-repeat;}
 #searchWidget #searchContainer form ul li input.first, #searchWidget #searchContainer form ul li select.first {float:left;}
 #searchWidget #searchContainer form ul li input.btn {text-align:center; font-weight:bold; text-transform:uppercase; margin-top:10px; width:229px;}
 #searchWidget #searchContainer form ul li select {width:124px; float:right; padding-top:8px; height:32px; padding-bottom:8px;}
@@ -217,8 +220,8 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 
 /* Results Teaser */
 .teaserContainer {width:400px;}
-.teaserResults {background-color:#f2f2f2; padding:10px; width:400px;border-bottom:1px solid #CCC;}
-.teaserResults h2 {font-weight:bold; text-transform:uppercase; text-shadow:1px 1px #b4b4b4; margin-bottom:25px;}
+.teaserResults {background-color:#f2f2f2; padding:10px; width:400px; border-bottom:1px solid #CCC;}
+.teaserResults h2 {font-weight:bold; text-shadow:1px 1px #b4b4b4; margin-bottom:25px;}
 .teaserResults ul {margin-left:15px;}
 .teaserResults ul li {margin-left:80px; font-size:11px; padding:0 10px 25px 0; border-bottom:1px solid #a4a4a4; margin-bottom:15px; position:relative;}
 .teaserResults ul li span.when {background-color:#d8d6d7; text-transform:uppercase; text-align:center; display:block; height:57px; width:53px; position:absolute; top:0; left:-80px; border-radius:10px; color:#767676; padding:5px;}
@@ -226,31 +229,61 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 .teaserResults ul li span.when span.event-date {font-size:16px; line-height:14px; margin-bottom:2px; text-transform:capitalize;}
 .teaserResults ul li p {font-size:11px;}
 .teaserResults ul li p.info {float:left; margin-right:10px; line-height:15px;padding-top:5px;width:185px;}
-.teaserResults ul li p.info a, .teaserResults ul li p.info span {display:block;}
-.teaserResults ul li p.info a, .teaserResults ul li p.info a:link {color:#6ea1b7;}
-.teaserResults ul li p.info a:hover {text-decoration:underline;}
+.teaserResults ul li p.info a {display:block;}
 .teaserResults ul li p.info span.rating em {position:relative; top:-2px;}
-.teaserResults ul li p.info span.stars {display:inline-block; margin-top:-1px; margin-left:5px; height:14px; width:80px; overflow:hidden; text-indent:-9999px;}
-.teaserResults ul li p.info span.stars span {display:block; margin-top:1px; float:left; background-image:url('/images/icons/star-icons-sprite.png'); height:13px; width:13px;}
-.teaserResults ul li p.info span.stars span.whole-star {background-position:0 0;}
-.teaserResults ul li p.info span.stars span.half-star {background-position:-14px 0;}
-.teaserResults ul li p.info span.stars span.empty-star {background-position:-27px 0;}
 .teaserResults ul li p.cta {width:100px; float:right; text-align:right;}
 .teaserResults ul li p.cta em {display:block; margin-top:5px;}
 
+.seeMore {text-align:center; background-color:#ECECEC; padding:10px; width:400px; border-top:1px solid #FFF}
+.seeMore a {display:block;}
+
+/* Search Results */
+.searchResults {background-color:#f2f2f2; width:615px; box-shadow:2px 5px 9px #565656; float:right;}
+.searchResults h2 {padding:10px 20px; font-family: Myriad Pro, Arial, Helvetica, Tahoma, sans-serif; color:#524f45; line-height:20px; font-size:20px;}
+.searchResults ul.sort {background-color:#999; padding:3px 20px; margin-right:20px; margin-bottom:10px;}
+.searchResults ul.sort li {float:left; width:110px; margin-right:20px; font-size:11px;}
+.searchResults ul.sort li.label {background-color:inherit; color:#000; width:80px; text-transform:uppercase; font-size:12px;}
+.searchResults ul.sort li a {color:black;}
+.searchResults ul.sort li a:hover {text-decoration:underline;}
+.searchResults ul.sort li a.active, .searchResults ul.sort li a.active:hover {text-decoration:none; color:#f7fefe; cursor:default;}
+
+.searchResults .filters {width:105px; padding:0 0 0 20px; float:left; clear:left;}
+.searchResults .filters span.filter { font-weight:bold; display:block; padding-bottom:1px; margin-bottom:10px; cursor:pointer; color:#444; border-bottom:1px solid #a5a5a5;}
+.searchResults .filters span.filter:hover {color:#666;}
+.searchResults .filters ul.filtered {margin-right:5px;}
+
+.searchResults ul.results {margin-left:125px; border-left:1px solid #a5a5a5; padding-left:15px; font-size:11px;}
+.searchResults ul.results li {position:relative; padding:0 100px 20px 0; margin:0 35px 20px 0; border-bottom:1px solid #a5a5a5;}
+.searchResults ul.results li a.title, .searchResults ul.results li a.title:link {font-size:12px;}
+.searchResults ul.results li p {margin:0; font-size:11px; line-height:15px;}
+.searchResults ul.results li a.btn {display:block; width:90px; position:absolute; top:0; right:0; text-align:center;}
+
+/* Stars */
+.stars {display:inline-block; margin-top:-1px; margin-left:5px; height:14px; width:66px; overflow:hidden; text-indent:-9999px;}
+.stars span {display:block; margin-top:1px; float:left; background-image:url('/images/icons/star-icons-sprite.png'); height:13px; width:13px;}
+.stars span.whole-star {background-position:0 0;}
+.stars span.half-star {background-position:-14px 0;}
+.stars span.empty-star {background-position:-27px 0;}
+
+/* Sign Up Pitch */
+article#signupCta {width:300px; float:left; clear:left; margin:40px 0; padding:0 20px;}
+article#signupCta h3 {color:#6da1b7; margin-bottom:10px;}
+article#signupCta p {color:#524f45; font-size:14px;}
+article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; float:right; background:url('/images/icons/down-icon.png') right center no-repeat;}
+
 /* Content */
-#content {min-height:730px; padding:70px 30px 0; }
+#content {min-height:730px; padding:70px 15px 0; }
+#content .letterbox {margin:75px 0;}
+#content .letterbox h1 {color:#f7fefe; font-size:36px; margin-left:70px;}
+#content #searchWidget {margin-top:55px;}
 
 /* Background images */
-#index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat;}
+#index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat; padding-left:30px; padding-right:30px;}
 #parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;}
-
-.seeMore {text-align:center;background-color:#ECECEC; padding:10px; width:400px; border-top:1px solid #FFF}
-.seeMore a {display:block;}
 
 /* Home Page */
 #homeContent article.letterbox {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
-#homeContent h1 {color:#f7fefe; font-size:36px; margin-bottom:3px;}
-#homeContent #searchWidget {float:left;}
+#homeContent article.letterbox h1 {margin-bottom:3px; margin-left:0;}
+#homeContent #searchWidget {margin-top:0;}
 #homeContent #infoBlocks {float:right; position:relative; z-index:9;}
 #homeContent #belowFold {width:575px; margin-top:10px; float:right;}

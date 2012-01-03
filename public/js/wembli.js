@@ -67,7 +67,7 @@ $w = {
 	},
 	init:function(){
 		$('input.date').datepicker({minDate:0});
-		
+		$('input.time').timepicker({ampm:true, stepHour:1, stepMinute:5});
 		$w.initDefaultText();
 		$w.initStarRatings();
 		//$w.loadScripts();

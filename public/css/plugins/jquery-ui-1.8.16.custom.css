@@ -384,3 +384,14 @@
     width: 200px; /*must have*/
     height: 200px; /*must have*/
 }
+
+.ui-timepicker-div {padding:10px;}
+.ui-timepicker-div .ui-widget-header {display:none;}
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 0 10px 65px;}
+.ui-timepicker-div dl dd div {height:18px; position:relative;}
+.ui-timepicker-div dl dd div a.ui-slider-handle {height:18px; width:6px; border-radius:5px; display:block; position:absolute; top:-1px; left:0;}
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
