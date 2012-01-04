@@ -1,0 +1,32 @@
+div#searchWidget
+	ul.widget-tabs
+		li.active Find Tickets
+		li I Have Tickets
+	div#searchContainer
+		span.marker
+		form#findTickets.active(method="get", name="find-tickets", method="/tickets/search")
+			ul
+				li 
+					label(for="term") Search Events and Find Tickets
+					input.default.example(name="term", id="term", type="text", value="Event Name, venue, team, performer or city")
+				li.clearfix 
+					label(form="date1") Between these dates
+					input.default.example.date.first(name="date1", id="date1", type="text", value="Start Date")
+					input.default.example.date(name="date2", id="date2", type="text", value="End Date")
+				li.clearfix
+					label(for="adults") For this many people
+					select.half.first(name="adults", id="adults")
+						option(value="") Adults
+						-for(var i = 0; i <= 9; i++)
+							option(value="#{i}") #{i}
+						option.last(value="10plus") 10 +
+					select.half(name="children", id="children")
+						option(value="") Children
+						-for(var i = 0; i <= 9; i++)
+							option(value="#{i}") #{i}
+						option.last(value="10plus") 10 +								
+				li.last 
+					input.btn.primary(value="Search For Tickets")
+					span.small Wembli searches all the tickets on the web to bring you the best deals.  We also provide a knowledgebase with expert reviews, ratings, photos and comments from fans like you.  You'll never have a bad seat again.
+		form#haveTickets(method="get", name="have-tickets", method="/tickets/search")
+			I have tickets form is here

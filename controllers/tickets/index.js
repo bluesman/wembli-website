@@ -32,6 +32,7 @@ module.exports = function(app) {
         ticketNetwork.SearchEvents({searchTerms:req.param.q,whereClause:whereClause,orderByClause:'Date'},function(err,results) {
             res.render('tickets',{
 		session: req.session,
+		param: req.param,
 		cssIncludes: [],
 		jsIncludes: [],
 		title: 'wembli.com - tickets.',
@@ -89,10 +90,9 @@ function splitSearchUri(req) {
 
     //if no from use today
     if (!req.param.from) {
-	console.log('no from date use today to next week');
+	console.log('no from date use today');
 	var d = Date.today();
 	req.param.from = d.format("shortDate");
-	req.param.to   = d.addWeeks(1).format("shortDate");
     }
 
     //if there is a from and no to then use from + 6 wk for to

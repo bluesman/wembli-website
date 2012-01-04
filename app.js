@@ -67,15 +67,10 @@ app.configure(function(){
 });
 
 
-app.helpers({
-    environment: function() {
-        return ((process.env.NODE_ENV == 'production1') || (process.env.NODE_ENV == 'production2')) ? 'production' : 'development';
-    }
-});
-
 // Helpers
 globalViewVars = require('./controllers/helpers/global-view-vars');
 
+//static helper functions
 app.helpers({
     ticketSessionId: function() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';

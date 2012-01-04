@@ -258,6 +258,11 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 .searchResults ul.results li p {margin:0; font-size:11px; line-height:15px;}
 .searchResults ul.results li a.btn {display:block; width:90px; position:absolute; top:0; right:0; text-align:center;}
 
+.searchResults ul.results li span.when {background-color:#d8d6d7; text-transform:uppercase; text-align:center; display:block; height:57px; width:53px; position:absolute; top:0; left:-100px; border-radius:10px; color:#767676; padding:5px;}
+.searchResults ul.results li span.when span {display:block;}
+.searchResults ul.results li span.when span.event-date {font-size:16px; line-height:14px; margin-bottom:2px; text-transform:capitalize;}
+
+
 /* Stars */
 .stars {display:inline-block; margin-top:-1px; margin-left:5px; height:14px; width:66px; overflow:hidden; text-indent:-9999px;}
 .stars span {display:block; margin-top:1px; float:left; background-image:url('/images/icons/star-icons-sprite.png'); height:13px; width:13px;}
@@ -266,7 +271,7 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 .stars span.empty-star {background-position:-27px 0;}
 
 /* Sign Up Pitch */
-article#signupCta {width:300px; float:left; clear:left; margin:40px 0; padding:0 20px;}
+article#signupCta {width:275px; float:left; clear:left; margin:40px 0; padding:0 20px;}
 article#signupCta h3 {color:#6da1b7; margin-bottom:10px;}
 article#signupCta p {color:#524f45; font-size:14px;}
 article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; float:right; background:url('/images/icons/down-icon.png') right center no-repeat;}
@@ -280,6 +285,7 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 /* Background images */
 #index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat; padding-left:30px; padding-right:30px;}
 #parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;}
+#tickets #content {background:url('/images/pages/tickets/tickets-bg.jpg') 0 0 no-repeat;}
 
 /* Home Page */
 #homeContent article.letterbox {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
@@ -287,3 +293,9 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 #homeContent #searchWidget {margin-top:0;}
 #homeContent #infoBlocks {float:right; position:relative; z-index:9;}
 #homeContent #belowFold {width:575px; margin-top:10px; float:right;}
+
+/* Tickets PAge */
+
+/* no border on event results */
+#eventResults ul.results {border: none;}
+#eventResults .seeMore {width:auto;}
