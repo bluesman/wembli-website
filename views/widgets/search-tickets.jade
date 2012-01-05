@@ -4,7 +4,7 @@ div#searchWidget
 		li I Have Tickets
 	div#searchContainer
 		span.marker
-		form#findTickets.active(method="get", name="find-tickets", method="/tickets/search")
+		form#findTickets.active(method="get", name="find-tickets", method="/events/search")
 			ul
 				li 
 					label(for="term") Search Events and Find Tickets
@@ -28,5 +28,5 @@ div#searchWidget
 				li.last 
 					input.btn.primary(value="Search For Tickets")
 					span.small Wembli searches all the tickets on the web to bring you the best deals.  We also provide a knowledgebase with expert reviews, ratings, photos and comments from fans like you.  You'll never have a bad seat again.
-		form#haveTickets(method="get", name="have-tickets", method="/tickets/search")
+		form#haveTickets(method="get", name="have-tickets", method="/events/search")
 			I have tickets form is here

@@ -1,8 +1,0 @@
-div event list
-#fvmap
-#thumbnail
-
-#ticketsContainer
-  - if (typeof tickets != "undefined")
-    - each ticket in tickets
-      .ticketDetails!= partial('includes/ticket-list',{ticket: ticket})

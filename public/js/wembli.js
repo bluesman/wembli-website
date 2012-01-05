@@ -159,7 +159,7 @@ $w.searchWidget = function(){
 
 		
 		// get the form elements and build a get url 
-		var url = '/tickets/search';
+		var url = '/events/search';
 
 		$.each(['#term','#date1','#date2','#adults option:selected','#children option:selected'],function(idx,el) {
 		    url += '/'+$(el).val();

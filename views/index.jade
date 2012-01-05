@@ -19,14 +19,14 @@
 							- var date = new Date(Date.parse(event.Date));
 							li.clearfix
 								p.info 
-									a(href="/tickets/event/"+event.ID+"/"+event.Name)!= event.Name
+									a(href="/tickets/"+event.ID+"/"+event.Name)!= event.Name
 									span.venue.block!= event.Venue
 									span.location.block!= event.City+', '+event.StateProvince
 									span.rating.block
 										em Expert Rating:
 										span.stars!= (event.Rating ? event.Rating : 0)
 								p.cta
-									a.btn.danger(href="/tickets/event/"+event.ID+"/"+event.Name) See Tickets
+									a.btn.danger(href="/tickets/"+event.ID+"/"+event.Name) See Tickets
 									- // don't have this info right now: em 300 tickets from $27
 								span.when
 									span.day!=        date.format("ddd")
@@ -34,7 +34,7 @@
 									span.time!=       date.format("h:MM TT") 
 
 				.seeMore.leftBlock
-					a(href="/tickets/search/"+session.ipinfo.cityName+"/"+Date.today().format("mm-dd-yy"))
+					a(href="/events/search/"+session.ipinfo.cityName+"/"+Date.today().format("mm-dd-yy"))
 						span see more events in 
 						span.lowercase!= session.ipinfo.cityName
 			a.rightBlock.mobileAd(href="#")

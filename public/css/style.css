@@ -113,7 +113,7 @@ dd {margin-left:0;}
 .normalSize {font-size:.5em}
 .hidden {display:none;}
 .white {color:#FFF !important}
-.black {color:#000;}
+.black {color:#000 !important;}
 .red {color:#F72400;}
 .orange {color:#FF6700;}
 .bold {font-weight:bold}
@@ -294,7 +294,39 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 #homeContent #infoBlocks {float:right; position:relative; z-index:9;}
 #homeContent #belowFold {width:575px; margin-top:10px; float:right;}
 
-/* Tickets PAge */
+/* Tickets Page */
+#ticketsContent section #ticketsContainer {width:400px;}
+#ticketsContent #thumbnail {position:absolute;top:360px;left:794px;}
+/* map styling */
+#fvmap { width:560px; }
+
+/* section styling */
+#fvmap .section.focus { display: none; color: #cc3300; opacity:0.5; filter:alpha(opacity=50);/* opacity for IE */ }
+#fvmap .section.available { display:none; color: #ff9900; opacity:0.25; filter:alpha(opacity=25);/* opacity for IE */ }
+#fvmap .section.selected { display:none; color: #006699; opacity:0.50; filter:alpha(opacity=50);/* opacity for IE */ }
+
+/* map buttons styling */
+#fvmap .zoomList { padding:10px; }
+#fvmap .actionList { padding:10px; }
+#fvmap .zoomList li { list-style:none; padding:3px; margin-bottom:2px; font-size:10px; font-family:Arial,sans-serif; text-align:center;}
+#fvmap .actionList li { list-style:none; padding:3px; margin-bottom:2px; font-size:10px; font-family:Arial,sans-serif; text-align:center;}
+#fvmap .zoomList li:hover { cursor:pointer; cursor:hand; }
+#fvmap .actionList li:hover { cursor:pointer; cursor:hand; }
+
+/* map price slider styling */
+#fvmap .priceFilter { padding-bottom:10px; padding-left:25px; width:180px; height:10px; }
+#fvmap .priceFilter p { font-family:Arial,sans-serif; font-size:10px; padding:0; margin:0; }
+#fvmap .priceSlider{ width:150px; height:5px; }
+#fvmap .priceSliderAmount { font-size:10px; width:80px; border:0; color:#f6931f; font-weight:bold; }
+
+/* ticket list styling (DIV-based ticket list)*/
+#tixlist div.active { color:#ffffff; background-color: #d5896a; }
+#tixlist div.active:hover { cursor:pointer; cursor:hand; }
+
+/* ticket list styling (TABLE-based ticket list)*/
+#ticket-list tr td.active { background-color: #D6896C; }
+#ticket-list tr td.selected { background-color: #D6896C; }
+
 
 /* no border on event results */
 #eventResults ul.results {border: none;}

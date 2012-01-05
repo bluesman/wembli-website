@@ -93,6 +93,7 @@ app.helpers({
 // Controllers
 require('./controllers/index')(app);
 require('./controllers/research')(app);
+require('./controllers/events')(app);
 require('./controllers/tickets')(app);
 require('./controllers/hotels')(app);
 require('./controllers/parking')(app);

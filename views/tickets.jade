@@ -1,33 +1,34 @@
+
+//event data looks like this right now:
+//   { ChildCategoryID: '63',
+//     City: 'San Diego',
+//     Clicks: '0',
+//     Date: '2012-04-03T19:05:00',
+//     DisplayDate: '04/03/2012 7:05PM',
+//     GrandchildCategoryID: '16',
+//     ID: '1788398',
+//     IsWomensEvent: 'false',
+//     MapURL: 'http://seatics.tickettransaction.com/PetcoPark_SanDiegoPadres_2011-12-06_2011-12-06_1000_tn.gif',
+//     Name: 'MLB Exhibition: San Diego Padres vs. Kansas City Royals',
+//     ParentCategoryID: '1',
+//     StateProvince: 'CA',
+//     StateProvinceID: '5',
+//     Venue: 'Petco Park',
+//     VenueConfigurationID: '2947',
+//     VenueID: '1295',
+//     CountryID: '217' }
+
 #ticketsContent
 	div.letterbox
-		h1.myriad  &nbsp;
+		h1.myriad.black!= event.Name;
 	section.clearfix
-		include widgets/search-tickets
-		div#eventResults.searchResults
-			h2!= 'EVENT LIST FOR '+param.q
-			ul.results.clearfix
-				- var cnt = 0;
-				- each event in events
-					- cnt++;
-					- if (cnt > 50) 
-						- break;
-					- var date = new Date(Date.parse(event.Date));
-					li
-						p.info 
-							a(href="/tickets/event/"+event.ID+"/"+event.Name)!= event.Name
-							span.venue.block!= event.Venue
-							span.location.block!= event.City+', '+event.StateProvince
-							span.rating.block
-								em Expert Rating:
-								span.stars!= (event.Rating ? event.Rating : 0)
-						p.cta
-							a.btn.danger(href="/tickets/event/"+event.ID+"/"+event.Name) See Tickets
-							- // don't have this info right now: em 300 tickets from $27
-						span.when
-							span.day!=        date.format("ddd")
-							span.event-date!= date.format("mmm d")
-							span.time!=       date.format("h:MM TT") 
-		article#signupCta.clearfix
-			h3 Sign Up and Get a Discount
-			p Sign up for Wembli today and we'll send you a discount code for parking.  Even if you already bought your tickets from another site !  Make Wembli your one-stop shop for concert and sports outings.  We do the legwork so you can focus on making great memories
-			a(href="#") Sign In							
+		input#venueId(type="hidden",value=event.VenueID)
+		input#eventName(type="hidden",value=event.Name)
+		#ticketsContainer.leftBlock
+			- if (typeof tickets != "undefined")
+				- each ticket in tickets
+					.ticketDetails!= partial('includes/ticket-list',{ticket: ticket})
+			- else
+				#noTickets No tickets available for this event.
+		#fvmap
+		#thumbnail

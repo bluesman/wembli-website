@@ -1,27 +1,18 @@
 $(document).ready(function() {
+    var mapId = $('#venueId').val()+','+$('#eventName').val();
     $('#fvmap').fanvenues({
-	mapSet:'fv',
-	mapId:'6630',	// new meadowlands stadium - football
+	mapSet:'tn1',
+	mapId:mapId,
+	defaultZoom: 1,
+	fullscreenMapButton: false,
 	interactWithTicketList: false,
-	priceFilter: true,
+	priceFilter: false,
+	resetMapButton: false,
+	printMapButton: false,
+	ssize: '340x183',
 	ticketList:{
 	    'items':[
-		{id:'1231',section:'201',row:'10',price:'110.00',notes:'n/a'},
-		{id:'1232',section:'201',row:'12',price:'24.00',notes:'n/a'},
-		{id:'1232',section:'201',row:'11',price:'12.00',notes:'n/a'},
-		{id:'1233',section:'202',row:'4',price:'150.00',notes:'n/a'},
-		{id:'1234',section:'117',row:'4',price:'210.00',notes:'n/a'},
-		{id:'1235',section:'223',row:'4',price:'110.00',notes:'n/a'},
-		{id:'1236',section:'316',row:'4',price:'115.00',notes:'n/a'},
-		{id:'1237',section:'107',row:'4',price:'300.00',notes:'n/a'},
-		{id:'1238',section:'101',row:'4',price:'320.00',notes:'n/a'},
-		{id:'1239',section:'213',row:'4',price:'80.00',notes:'n/a'},
-		{id:'1240',section:'307',row:'4',price:'100.00',notes:'n/a'},
-		{id:'1241',section:'318',row:'4',price:'130.00',notes:'n/a'},
-		{id:'1242',section:'112',row:'4',price:'510.00',notes:'n/a'},
-		{id:'1243',section:'203',row:'4',price:'110.00',notes:'n/a'},
-		{id:'1244',section:'9',row:'4',price:'31.00',notes:'n/a'},
-		{id:'1245',section:'09',row:'4',price:'31.00',notes:'n/a'}
+		{id:'1231',section:'201',row:'10',price:'110.00',notes:'n/a'}
 	    ]
 	}
     })
@@ -35,6 +26,7 @@ $(document).ready(function() {
 	    // implement large image viewing
 	})
 	.bind('fvmapSectionFocus', function(obj, smallImageUrl, section) {
+	    console.log('smallimage:'+smallImageUrl);
 	    $('#thumbnail').html('<img src="'+smallImageUrl+'" />');
 	})
 	.bind('fvmapSectionBlur', function(obj, smallImageUrl, section) {
