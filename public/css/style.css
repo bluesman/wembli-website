@@ -285,6 +285,7 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 /* Background images */
 #index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat; padding-left:30px; padding-right:30px;}
 #parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;}
+#restaurants #content {background:url('/images/pages/restaurants/restaurants-bg.jpg') 0 0 no-repeat;}
 #tickets #content {background:url('/images/pages/tickets/tickets-bg.jpg') 0 0 no-repeat;}
 
 /* Home Page */
