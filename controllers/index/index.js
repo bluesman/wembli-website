@@ -13,11 +13,16 @@ module.exports = function(app) {
 	console.log(req.session.ipinfo);
 
 	//get nearby events:
-        ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.cityName,orderByClause:'Date'},
+        //ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.cityName,orderByClause:'Date'},
+	ticketNetwork.SearchEvents({searchTerms:'Petco Park',orderByClause:'Date'},
 				function(err,results) {
+				   var events = results.Event;
+				   if (!events) {
+				       events = [];
+				   }
 				    res.render('index.jade', {
 					session: req.session,
-					events:results.Event,
+					events:events,
 					cssIncludes: [],
 					jsIncludes: [],
 					title: 'wembli.com - home stuff.',

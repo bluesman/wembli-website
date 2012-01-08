@@ -18,17 +18,42 @@
 //     VenueID: '1295',
 //     CountryID: '217' }
 
-#ticketsContent
-	div.letterbox
-		h1.myriad.black!= event.Name;
-	section.clearfix
-		input#venueId(type="hidden",value=event.VenueID)
-		input#eventName(type="hidden",value=event.Name)
-		#ticketsContainer.leftBlock
+script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
+section#ticketsContent
+	#eventInfo
+		- var date = new Date(Date.parse(event.Date));
+		h2!= event.Name
+	.clearfix
+		#ticketResults.leftBlock
+			h3!= date.format("dddd mmmm dS, yyyy h:MMTT")
 			- if (typeof tickets != "undefined")
-				- each ticket in tickets
-					.ticketDetails!= partial('includes/ticket-list',{ticket: ticket})
+				ul#tixList.results.clearfix
+					- var brokerId = '5006'
+					- var siteNumber = '0'
+					- var cnt = 0;
+					- each ticket in tickets
+						- cnt++;
+						- if (cnt > 50) 
+							- break;
+						- var ticketLink = 'https://tickettransaction2.com/Checkout.aspx?brokerid='+brokerId+'&sitenumber='+siteNumber+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.TicketQuantity+'&SessionId='+ticketSessionId()
+						- var qtyStr = " (" + ticket.TicketQuantity
+						- qtyStr += (ticket.TicketQuantity > 1) ? " tickets) " : " ticket) "
+						li.tixlistRow.clearfix
+							p.info 
+								span.sectionName.hidden!= ticket.Section
+								a(href=ticketLink)= "Section: "+ticket.Section + " - Row: " + ticket.Row + qtyStr
+								span.seats.block!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+								span.rating.block
+									em Venue Navigator Rating:
+									span.stars!= (ticket.Rating ? ticket.Rating : 0)
+									br
+									em.ratingDescription!= ticket.RatingDescription
+							p.cta
+								a.btn.danger(href=ticketLink) Buy
+								em!= '$'+ticket.ActualPrice
 			- else
 				#noTickets No tickets available for this event.
 		#fvmap
-		#thumbnail
+		- // #thumbnail
+		input#venueId(type="hidden",value=event.VenueID)
+		input#eventName(type="hidden",value=event.Name)

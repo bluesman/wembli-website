@@ -5,16 +5,14 @@ $(document).ready(function() {
 	mapId:mapId,
 	defaultZoom: 1,
 	fullscreenMapButton: false,
-	interactWithTicketList: false,
+	interactWithTicketList: true,
+	rowSelector: '#tixList li.tixListRow',
+	sectionSelector: '#tixList li p.info span.sectionName',
 	priceFilter: false,
 	resetMapButton: false,
 	printMapButton: false,
 	ssize: '340x183',
-	ticketList:{
-	    'items':[
-		{id:'1231',section:'201',row:'10',price:'110.00',notes:'n/a'}
-	    ]
-	}
+	ticketList:{'items':ticketList}
     })
 	.bind('fvmapReady', function() {
 	    // fvmap is now loaded and ready to use

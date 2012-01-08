@@ -85,7 +85,24 @@ app.helpers({
 
     environment: function() {
         return process.env.NODE_ENV;
+    },
+
+    //turn a regular list of tickets into the fanvenues list for the map
+    fanvenuesTicketList: function(tickets) {
+	var ticketsList = [];
+	for (var i = 0; i < tickets.length; i++) {
+	    var ticket = tickets[i];
+	    var fvTicket = {id:ticket.ID,
+			    section:ticket.Section,
+			    row:ticket.Row,
+			    price:'$'+ticket.ActualPrice,
+			    notes:(ticket.Notes ? ticket.Notes : 'n/a'),
+			   };
+	    ticketsList.push(fvTicket);
+	}
+	return JSON.stringify(ticketsList);
     }
+
 });
 
 

@@ -277,16 +277,16 @@ article#signupCta p {color:#524f45; font-size:14px;}
 article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; float:right; background:url('/images/icons/down-icon.png') right center no-repeat;}
 
 /* Content */
-#content {min-height:730px; padding:70px 15px 0; }
+#content {min-height:730px; padding:15px 15px 0; }
 #content .letterbox {margin:75px 0;}
 #content .letterbox h1 {color:#f7fefe; font-size:36px; margin-left:70px;}
 #content #searchWidget {margin-top:55px;}
 
 /* Background images */
-#index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat; padding-left:30px; padding-right:30px;}
-#parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;}
-#restaurants #content {background:url('/images/pages/restaurants/restaurants-bg.jpg') 0 0 no-repeat;}
-#tickets #content {background:url('/images/pages/tickets/tickets-bg.jpg') 0 0 no-repeat;}
+#index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat; padding-left:30px; padding-right:30px;padding-top:75px;}
+#parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;padding-top:75px;}
+#restaurants #content {background:url('/images/pages/restaurants/restaurants-bg.jpg') 0 0 no-repeat;padding-top:75px;}
+#tickets #content {background:url('/images/pages/tickets/tickets-bg.jpg') 0 0 no-repeat;padding-top:75px;}
 
 /* Home Page */
 #homeContent article.letterbox {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
@@ -296,8 +296,20 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 #homeContent #belowFold {width:575px; margin-top:10px; float:right;}
 
 /* Tickets Page */
-#ticketsContent section #ticketsContainer {width:400px;}
 #ticketsContent #thumbnail {position:absolute;top:360px;left:794px;}
+#ticketsContent h2, #ticketsContent h3 {font-weight:bold; text-shadow:1px 1px #b4b4b4; margin-bottom:25px;}
+#ticketResults {width:360px; background-color:#f2f2f2; padding:10px; border-bottom:1px solid #CCC;}
+#ticketResults ul {margin-left:15px;}
+#ticketResults ul li {font-size:11px; padding:0 10px 25px 0; border-bottom:1px solid #a4a4a4; margin-bottom:15px; position:relative;}
+#ticketResults ul li p {font-size:11px;}
+#ticketResults ul li p.info {float:left; margin-right:10px; line-height:15px;padding-top:5px;width:275px;}
+#ticketResults ul li p.info a {display:block;font-size:12px;}
+#ticketResults ul li p.info span.rating em {position:relative; top:-2px;}
+#ticketResults ul li p.cta {width:50px; float:right; text-align:right;}
+#ticketResults ul li p.cta em {display:block; margin-top:5px;margin-right:20px;}
+
+
+
 /* map styling */
 #fvmap { width:560px; }
 
@@ -321,13 +333,8 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 #fvmap .priceSliderAmount { font-size:10px; width:80px; border:0; color:#f6931f; font-weight:bold; }
 
 /* ticket list styling (DIV-based ticket list)*/
-#tixlist div.active { color:#ffffff; background-color: #d5896a; }
-#tixlist div.active:hover { cursor:pointer; cursor:hand; }
-
-/* ticket list styling (TABLE-based ticket list)*/
-#ticket-list tr td.active { background-color: #D6896C; }
-#ticket-list tr td.selected { background-color: #D6896C; }
-
+#tixlist li.tixListRow.active { color:#ffffff; background-color: #d5896a; }
+#tixlist li.tixListRow.active:hover { cursor:pointer; cursor:hand; }
 
 /* no border on event results */
 #eventResults ul.results {border: none;}

@@ -2,7 +2,6 @@ var ticketNetwork = require('wembli/ticketnetwork');
 
 require('date-utils');
 
-
 module.exports = function(app) {
     console.log('events loaded...');
     app.get('/events', function(req, res){
