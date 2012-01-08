@@ -139,6 +139,7 @@ fieldset {text-align:left;margin:0;padding:10px 0;}
 fieldset label,fieldset input {display:block;}
 
 .myriad {font-family: Myriad Pro, Arial, Helvetica, Tahoma, sans-serif;}
+.arialBlack {font-family:Arial Black, Arial, Helvetica, Tahoma, sans-serif;}
 .bradley {font-family: "BradleyHandITCRegular";}
 .josefinsans {font-family: "JosefinSansStdLight";}
 
@@ -279,7 +280,7 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 /* Content */
 #content {min-height:730px; padding:15px 15px 0; }
 #content .letterbox {margin:75px 0;}
-#content .letterbox h1 {color:#f7fefe; font-size:36px; margin-left:70px;}
+#content .letterbox h1 {color:#f7fefe; font-size:30px; margin-left:70px;}
 #content #searchWidget {margin-top:55px;}
 
 /* Background images */
