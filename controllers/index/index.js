@@ -25,7 +25,7 @@ module.exports = function(app) {
 					events:events,
 					cssIncludes: [],
 					jsIncludes: [],
-					title: 'wembli.com - home stuff.',
+					title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 					page:'index',
 					globals:globalViewVars
 				    });

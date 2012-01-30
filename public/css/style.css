@@ -1,88 +1,38 @@
 @import url('./plugins/jquery-ui-1.8.16.custom.css');
 
 @font-face {
-  font-family: 'BradleyHandITCRegular';
-  src: url('/font/bradhitc-webfont.eot');
-  src: url('/font/bradhitc-webfont.eot?#iefix') format('embedded-opentype'), url('/font/bradhitc-webfont.woff') format('woff'), url('/font/bradhitc-webfont.ttf') format('truetype'), url('/font/bradhitc-webfont.svg#BradleyHandITCRegular') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
+  font-family: 'SegoeScriptRegular';
+  src: url('/font/segoesc-webfont.eot');  
+  src: url('/font/segoesc-webfont.eot?#iefix') format('embedded-opentype'),  
+    url('/font/segoesc-webfont.woff') format('woff'),  
+      url('/font/segoesc-webfont.ttf') format('truetype'),  
+	url('/font/segoesc-webfont.svg#SegoeScriptRegular') format('svg'); 
+  font-weight: normal; 
+  font-style: normal;  
+  
+} 
+
 @font-face {
-  font-family: 'JosefinSansStdLight';
-  src: url('/font/JosefinSansStd-Light-webfont.eot');
-  src: url('/font/JosefinSansStd-Light-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSansStd-Light-webfont.woff') format('woff'), url('/font/JosefinSansStd-Light-webfont.ttf') format('truetype'), url('/font/JosefinSansStd-Light-webfont.svg#JosefinSansStdLight') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
+  font-family: 'TungaRegular';  
+  src: url('/font/tunga-webfont.eot');
+  src: url('/font/tunga-webfont.eot?#iefix') format('embedded-opentype'), 
+    url('/font/tunga-webfont.woff') format('woff'),
+      url('/font/tunga-webfont.ttf') format('truetype'), 
+	url('/font/tunga-webfont.svg#TungaRegular') format('svg');  
+  font-weight: normal; 
+  font-style: normal;  
+  
+} 
+  
 @font-face {
-  font-family: 'JosefinSlabThin';
-  src: url('/font/JosefinSlab-Thin-webfont.eot');
-  src: url('/font/JosefinSlab-Thin-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-Thin-webfont.woff') format('woff'), url('/font/JosefinSlab-Thin-webfont.ttf') format('truetype'), url('/font/JosefinSlab-Thin-webfont.svg#JosefinSlabThin') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabThinItalic';
-  src: url('/font/JosefinSlab-ThinItalic-webfont.eot');
-  src: url('/font/JosefinSlab-ThinItalic-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-ThinItalic-webfont.woff') format('woff'), url('/font/JosefinSlab-ThinItalic-webfont.ttf') format('truetype'), url('/font/JosefinSlab-ThinItalic-webfont.svg#JosefinSlabThinItalic') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabLight';
-  src: url('/font/JosefinSlab-Light-webfont.eot');
-  src: url('/font/JosefinSlab-Light-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-Light-webfont.woff') format('woff'), url('/font/JosefinSlab-Light-webfont.ttf') format('truetype'), url('/font/JosefinSlab-Light-webfont.svg#JosefinSlabLight') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabLightItalic';
-  src: url('/font/JosefinSlab-LightItalic-webfont.eot');
-  src: url('/font/JosefinSlab-LightItalic-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-LightItalic-webfont.woff') format('woff'), url('/font/JosefinSlab-LightItalic-webfont.ttf') format('truetype'), url('/font/JosefinSlab-LightItalic-webfont.svg#JosefinSlabLightItalic') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabRegular';
-  src: url('/font/JosefinSlab-Regular-webfont.eot');
-  src: url('/font/JosefinSlab-Regular-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-Regular-webfont.woff') format('woff'), url('/font/JosefinSlab-Regular-webfont.ttf') format('truetype'), url('/font/JosefinSlab-Regular-webfont.svg#JosefinSlabRegular') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabItalic';
-  src: url('/font/JosefinSlab-Italic-webfont.eot');
-  src: url('/font/JosefinSlab-Italic-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-Italic-webfont.woff') format('woff'), url('/font/JosefinSlab-Italic-webfont.ttf') format('truetype'), url('/font/JosefinSlab-Italic-webfont.svg#JosefinSlabItalic') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabSemiBold';
-  src: url('/font/JosefinSlab-SemiBold-webfont.eot');
-  src: url('/font/JosefinSlab-SemiBold-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-SemiBold-webfont.woff') format('woff'), url('/font/JosefinSlab-SemiBold-webfont.ttf') format('truetype'), url('/font/JosefinSlab-SemiBold-webfont.svg#JosefinSlabSemiBold') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabSemiBoldItalic';
-  src: url('/font/JosefinSlab-SemiBoldItalic-webfont.eot');
-  src: url('/font/JosefinSlab-SemiBoldItalic-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-SemiBoldItalic-webfont.woff') format('woff'), url('/font/JosefinSlab-SemiBoldItalic-webfont.ttf') format('truetype'), url('/font/JosefinSlab-SemiBoldItalic-webfont.svg#JosefinSlabSemiBoldItalic') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabBold';
-  src: url('/font/JosefinSlab-Bold-webfont.eot');
-  src: url('/font/JosefinSlab-Bold-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-Bold-webfont.woff') format('woff'), url('/font/JosefinSlab-Bold-webfont.ttf') format('truetype'), url('/font/JosefinSlab-Bold-webfont.svg#JosefinSlabBold') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'JosefinSlabBoldItalic';
-  src: url('/font/JosefinSlab-BoldItalic-webfont.eot');
-  src: url('/font/JosefinSlab-BoldItalic-webfont.eot?#iefix') format('embedded-opentype'), url('/font/JosefinSlab-BoldItalic-webfont.woff') format('woff'), url('/font/JosefinSlab-BoldItalic-webfont.ttf') format('truetype'), url('/font/JosefinSlab-BoldItalic-webfont.svg#JosefinSlabBoldItalic') format('svg');
-  font-weight: normal;
-  font-style: normal;
+  font-family: 'SegoeScriptBold';
+  src: url('/font/segoescb-webfont.eot'); 
+  src: url('/font/segoescb-webfont.eot?#iefix') format('embedded-opentype'), 
+    url('/font/segoescb-webfont.woff') format('woff'), 
+      url('/font/segoescb-webfont.ttf') format('truetype'), 
+	url('/font/segoescb-webfont.svg#SegoeScriptBold') format('svg');
+  font-weight: normal; 
+  font-style: normal;  
 }
 
 * {outline:none !important;}
@@ -140,8 +90,9 @@ fieldset label,fieldset input {display:block;}
 
 .myriad {font-family: Myriad Pro, Arial, Helvetica, Tahoma, sans-serif;}
 .arialBlack {font-family:Arial Black, Arial, Helvetica, Tahoma, sans-serif;}
-.bradley {font-family: "BradleyHandITCRegular";}
-.josefinsans {font-family: "JosefinSansStdLight";}
+.segoe {font-family: "SegoeScriptRegular";}
+.segoeBold {font-family: "SegoeScriptBold";}
+.tunga {font-family: "TungaRegular";}
 
 /* error page */
 #notFound {padding:20px 0;}
@@ -153,11 +104,14 @@ fieldset label,fieldset input {display:block;}
 header {height:90px; position:relative; margin-bottom:3px;}
 header #logo {display:block; height:100px; width:300px; background:url('/images/layout/wembli-logo.png') 0 0 no-repeat; float:left;}	
 header #utility {float:right; margin-top:30px;}	
-header #utility li {display:inline-block; text-align:right; margin-right:6px; padding-right:6px; border-right:1px solid #6DA1B7;}
-header #utility li.last {border:0;}
+header #utility li {display:inline-block; text-align:right; margin-right:6px; padding-right:6px;}
+header #utility li #fbIcon {display:block;height:27px;width:26px;background-image:url('/images/icons/social-icons.png');background-repeat:no-repeat;background-position:-6px -6px;}
+header #utility li #twitterIcon {display:block;height:27px;width:30px;background-image:url('/images/icons/social-icons.png');background-repeat:no-repeat;background-position:-41px -6px;}
+header #utility li#followUs {color:#2A2651;font-size:20px;display:block;margin-top:4px;float:left;}
+
 
 /* Nav */
-header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:19px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;top:60px;}
+header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:17px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;top:60px;}
 header nav ul li {display:inline-block; margin-right:30px;}
 header nav ul li a:link, header nav ul li a:visited {color:#bf4d00;}
 header nav ul li a:hover {color:#f7fefe;}
@@ -216,11 +170,20 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 #infoBlocks li:hover span.toggler {color:#666;}
 #infoBlocks li span.bubble {display:none;}
 
+
+/* SearchBox */
+#searchBoxContainer #searchFrame {position:relative;z-index:10;margin:20px auto 0;border:4px solid #FFF;background-color:#524F45;height:80px;box-shadow:2px 5px 9px #565656;}
+#searchBoxContainer #searchFrame div {margin:12px 0 0 45px;float:left;box-shadow:2px 5px 9px #222222;}
+#searchBoxContainer #searchForm input#q {height:45px;border-radius:15px;font-size:24px;color:#948F8F;padding-left:10px;}
+#searchBoxContainer #searchForm a#go {background:url('/images/go-circle.png') 0 0 no-repeat;height:60px;width:60px;display:block;margin:10px 45px 0 0;float:right;color:#FFF;font-size:26px;text-align:center;vertical-align:middle;line-height:60px;}
+#searchBoxContainer #searchForm a#go:hover {color:#FF6700;}
+
+
 /* Mobile Ad */
-.mobileAd {display:block; width:134px; padding-top:220px; background:url('/images/widgets/mobile.png') center top no-repeat; text-align:center;}
+.mobileAd {display:block; width:134px; padding-top:258px; background:url('/images/widgets/mobile.png') center top no-repeat; text-align:center;margin-top:38px;}
 
 /* Results Teaser */
-.teaserContainer {width:400px;}
+.teaserContainer {width:450px;}
 .teaserResults {background-color:#f2f2f2; padding:10px; width:400px; border-bottom:1px solid #CCC;}
 .teaserResults h2 {font-weight:bold; text-shadow:1px 1px #b4b4b4; margin-bottom:25px;}
 .teaserResults ul {margin-left:15px;}
@@ -284,17 +247,40 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 #content #searchWidget {margin-top:55px;}
 
 /* Background images */
-#index #content {background:url('/images/pages/index/petco-park.png') 0 0 no-repeat; padding-left:30px; padding-right:30px;padding-top:75px;}
+#index #content {background:url('/images/pages/index/home-bg.jpg') 0 0 no-repeat; padding-left:30px; padding-right:30px;padding-top:50px;}
 #parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;padding-top:75px;}
 #restaurants #content {background:url('/images/pages/restaurants/restaurants-bg.jpg') 0 0 no-repeat;padding-top:75px;}
 #tickets #content {background:url('/images/pages/tickets/tickets-bg.jpg') 0 0 no-repeat;padding-top:75px;}
 
 /* Home Page */
-#homeContent article.letterbox {color:#f7fefe; width:498px; margin:0 0 115px 35px; font-size:14px;}
-#homeContent article.letterbox h1 {margin-bottom:3px; margin-left:0;}
+#homeContent section {}
 #homeContent #searchWidget {margin-top:0;}
 #homeContent #infoBlocks {float:right; position:relative; z-index:9;}
-#homeContent #belowFold {width:575px; margin-top:10px; float:right;}
+#homeContent #belowFold {width:690px; margin:auto;}
+#homeContent #circles {position:relative;}
+#homeContent #circles .homeCircle {position:absolute;top:15px;background:url('/images/pages/index/home-circle.png') 0 0 no-repeat;height:234px;width:236px;background-position:0px -266px;}
+#homeContent #circles .homeCircle .stepIcon {position:absolute;top:15px;background:url('/images/pages/index/step-icons.png') 0 0 no-repeat;}
+#homeContent #circles #step1Circle {left:-30px;}
+#homeContent #circles #step1Icon {left:75px;top:82px;background-position:0px 0px;height:51px;width:73px;}
+#homeContent #circles #step2Circle {left:212px;}
+#homeContent #circles #step2Icon {left:76px;top:82px;background-position:-78px 0px;height:51px;width:73px;}
+#homeContent #circles #step3Circle {left:445px;}
+#homeContent #circles #step3Icon {left:82px;top:73px;background-position:-97px -82px;height:66px;width:73px;}
+#homeContent #circles #step4Circle {left:680px;}
+#homeContent #circles #step4Icon {left:91px;top:73px;background-position:-5px -78px;height:88px;width:47px;}
+#homeContent #steps {margin-top:180px;color:#FFF;font-size:1.2em;}
+#homeContent #steps article {width:225px;height:100px;float:left;}
+#homeContent #steps article h3 {font-family:"SegoeScriptBold";color:#FF6600;font-size:14px;text-shadow:3px 3px 4px #000;}
+#homeContent article h1 {text-align:center;color:#F7FEFE;font-size:28px;text-shadow:4px 7px 7px #000;}
+#homeContent #steps article#step1 h3 {margin-left:30px;}
+#homeContent #steps article#step1 #step1Info {width:200px;margin-left:0px;}
+#homeContent #steps article#step2 h3 {margin-left:24px;}
+#homeContent #steps article#step2 #step2Info {width:200px;margin-left:10px;}
+#homeContent #steps article#step3 h3 {margin-left:20px;}
+#homeContent #steps article#step3 #step3Info {width:200px;margin-left:16px;}
+#homeContent #steps article#step4 h3 {margin-left:18px;}
+#homeContent #steps article#step4 #step4Info {width:200px;margin-left:20px;}
+
 
 /* Tickets Page */
 #ticketsContent #thumbnail {position:absolute;top:360px;left:794px;}
@@ -308,7 +294,6 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 #ticketResults ul li p.info span.rating em {position:relative; top:-2px;}
 #ticketResults ul li p.cta {width:50px; float:right; text-align:right;}
 #ticketResults ul li p.cta em {display:block; margin-top:5px;margin-right:20px;}
-
 
 
 /* map styling */

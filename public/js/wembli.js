@@ -176,10 +176,68 @@ $w.searchWidget = function(){
 		init();
 	}
 	
+
 }();
 
 //Kick it on load
 $(document).ready(function(){
 	$w.searchWidget();
+});
+
+$w.stepInfo = function(){
+
+    function init() {
+	//show the info boxen on their respective mouseover
+	$('#step1Circle').hover(
+	    function(e) {
+		$('#step1Circle').css('background-position','0px 0px');
+		$('#step1Info').show();
+	    },
+	    function(e) {
+		$('#step1Circle').css('background-position','0px -266px');
+		$('#step1Info').hide();
+	    }
+	);
+	$('#step2Circle').hover(
+	    function(e) {
+		$('#step2Circle').css('background-position','0px 0px');
+		$('#step2Info').show();
+	    },
+	    function(e) {
+		$('#step2Circle').css('background-position','0px -266px');
+		$('#step2Info').hide();
+	    }
+	);
+	$('#step3Circle').hover(
+	    function(e) {
+		$('#step3Circle').css('background-position','0px 0px');
+		$('#step3Info').show();
+	    },
+	    function(e) {
+		$('#step3Circle').css('background-position','0px -266px');
+		$('#step3Info').hide();
+	    }
+	);
+	$('#step4Circle').hover(
+	    function(e) {
+		$('#step4Circle').css('background-position','0px 0px');
+		$('#step4Info').show();
+	    },
+	    function(e) {
+		$('#step4Circle').css('background-position','0px -266px');
+		$('#step4Info').hide();
+	    }
+	);
+    }
+
+    return function() {
+	init();
+    }
+
+}();
+
+//Kick it on load
+$(document).ready(function(){
+	$w.stepInfo();
 });
 

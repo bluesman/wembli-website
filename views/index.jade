@@ -1,14 +1,39 @@
 #homeContent
-	article.letterbox
-		h1.arialBlack It's a new day for event-goers
-		p Wembli is your one-stop-shop for planning the perfect outing. We scour the internet for the best tickets, prices and deals on concerts and sporting events so you don't have to.  No more bouncing from site to site trying to put all the pieces together with Wembli as your event concierge. 
+	article
+		h1 You're only 4 steps away from planning your perfect outing!
+	#circles.clearfix
+		#step1Circle.homeCircle
+			#step1Icon.stepIcon
+		#step2Circle.homeCircle
+			#step2Icon.stepIcon
+		#step3Circle.homeCircle
+			#step3Icon.stepIcon
+		#step4Circle.homeCircle
+			#step4Icon.stepIcon
+	#steps.clearfix
+		article#step1
+			h3 Buy Tickets
+			#step1Info.tunga.hidden We don't compete with the big guys, we aggregate them all like Kayak so you can get the best bang for your buck.
+		article#step2
+			h3 Reserve Parking
+			#step2Info.tunga.hidden You can reserve a parking spot right here so you never have to deal with the dreaded parking search again.
+		article#step3
+			h3 Book A Restaurant
+			#step3Info.tunga.hidden Go ahead and book your reservations with us - we'll even hook you up with great deals to top off the outing!
+		article#step4
+			h3 Coordinate W Friends
+			#step4Info.tunga.hidden Let's face it - entertainment is a social sport so we make it easy for you to coordinate with your friends!
 	section.clearfix
-		include widgets/search-tickets
-		include widgets/info-blocks
+		#searchBoxContainer
+			#searchFrame.span14
+				form#searchForm.clearfix
+					div
+						input(id="q",name="q",value="Enter an event, team, performer, city, venue").span11
+					a#go(href="#").segoeBold Go!
 		div#belowFold.clearfix
 			section.teaserContainer.leftBlock
 				.teaserResults.leftBlock
-					h2.myriad Upcoming Events in 
+					h2.tunga Upcoming Events in 
 						span!= session.ipinfo.cityName
 					ul
 						- var cnt = 0;
