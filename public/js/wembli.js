@@ -76,112 +76,7 @@ $w = {
 
 // Kick it on load
 $(document).ready(function(){
-	$w.init();
-});
-
-$w.searchWidget = function(){
-	
-	/* Varaibles */
-	var container = doc.getElementById('searchWidget');
-	var search = doc.getElementById('searchContainer');
-	var tabs = $('.widget-tabs', container)[0];
-	
-	/* Methods */
-	// Switch which form is displayed
-	function switchForms(toggler){
-		if($(toggler).hasClass('active')) return;
-		
-		var index	= $(tabs).find('li').index(toggler);
-		var target	= $(search).find('form:eq(' + index + ')');
-		var pos		= index > 0 ? '137px' : '1px';
-		
-		// update the blue highlight
-		$(search).animate({backgroundPosition: pos});
-		
-		// update the active tab
-		$('li.active', tabs).removeClass('active');
-		$(toggler).addClass('active');
-		
-		// update which form is showing
-		$('form.active', search).fadeOut('slow').removeClass('active');
-		$(target).fadeIn('slow').addClass('active');
-		$('.marker', search).animate({left: pos});
-		
-	}
-	 
-	// init
-	function init(){
-		$('.widget-tabs li', container).on('click', function(){
-			switchForms(this);
-		});
-
-	    // make all the datepickers use dash insteal of slash
-	    $('#date1').datepicker('option','dateFormat','mm-dd-yy');
-	    $('#date1').val('Start Date');
-	    $('#date2').datepicker('option','dateFormat','mm-dd-yy');
-	    $('#date2').val('End Date');
-
-	    $('#findTickets input.btn.primary').click(function(e) {
-		e.preventDefault();
-
-		// if the term, dates, adults or children have the default text, change it to legit defaults
-		if ($('#term').val() == 'Event Name, venue, team, performer or city') {
-		    $('#term').val('');
-		}
-		
-		var today = new Date();
-		if ($('#date1').val() == 'Start Date') {
-		    $('#date1').datepicker('setDate',today);
-		}
-		if ($('#date2').val() == 'End Date') {
-		    $('#date2').val('');
-
-		    /* 
-		    // add 1 week
-		    var todayTime = today.getTime();
-		    //add the number of milliseconds in 1 week
-		    var nextWeekTime = todayTime + 604800000;
-		    var nextWeek = new Date(nextWeekTime);
-		    $('#date2').datepicker('setDate',nextWeek);
-                    */
-
-		}
-
-		//if no adults, set it to 1
-		if ($('#adults').val() == '') {
-		    $('#adults').val(1);
-		}
-
-		//if no children, set it to 0
-		if ($('#children').val() == '') {
-		    $('#children').val(0);
-		}
-
-		
-		// get the form elements and build a get url 
-		var url = '/events/search';
-
-		$.each(['#term','#date1','#date2','#adults option:selected','#children option:selected'],function(idx,el) {
-		    url += '/'+$(el).val();
-		});
-
-		// load the url
-		window.location.href = url;
-	    });
-	    
-	}
-	
-	/* Return */
-	return function(){
-		init();
-	}
-	
-
-}();
-
-//Kick it on load
-$(document).ready(function(){
-	$w.searchWidget();
+    $w.init();
 });
 
 $w.stepInfo = function(){
@@ -236,8 +131,42 @@ $w.stepInfo = function(){
 
 }();
 
-//Kick it on load
 $(document).ready(function(){
 	$w.stepInfo();
+});
+
+$w.searchBox = function(){
+
+    function init() {
+	$('#q').click(function(e) {
+	    if ($('#q').val() == "Enter an event, team, performer, city, venue") {
+		$('#q').val('');
+	    }
+	});
+
+	$('#go').click(function(e) {
+	    e.preventDefault();
+	    $('#searchForm').submit();
+	});
+
+	$('#searchForm').submit(function(e) {
+	    //append the query to the url and submit
+	    var q = $('#q').val();
+	    var action = $('#searchForm').attr('action');
+	    $('#searchForm').attr('action',action+q);
+	});
+
+	
+
+    }
+
+    return function() {
+	init();
+    }
+
+}();
+
+$(document).ready(function(){
+	$w.searchBox();
 });
 

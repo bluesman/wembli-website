@@ -40,6 +40,50 @@ module.exports = function(app) {
                 events:results.Event
 	    });
         });
+
+
+
+	/*
+	  eventGroups if I need it
+	  
+        ticketNetwork.GetEvents(args,function(err,results) {
+            console.log(results.Event);
+            //var events = psUtils.sort(results.Event,'Date','asc');
+            var events = (typeof results.Event == "undefined") ? [] : results.Event;
+            var eventGroups = [];
+            var normalizeEvents = function(item,callback) {
+                if (typeof eventGroups[item.Name] == "undefined") {
+                    //if there isn't one yet, initialize it with a min date
+                    eventGroups[item.Name] = psUtils.deepCopy(item);
+                    eventGroups[item.Name].beginDate = item.Date;
+                    delete eventGroups[item.Name].DisplayDate;
+                    delete eventGroups[item.Name].ID;
+                    delete eventGroups[item.Name].Clicks;
+                    eventGroups[item.Name].events = [];
+                    eventGroups[item.Name].events.push(item);
+                } else {
+                    //just set the max date and push the item into the events array
+                    eventGroups[item.Name].events.push(item);
+                    eventGroups[item.Name].endDate = item.Date;
+                }
+                callback(null,item);
+	    };
+            async.forEachSeries(events,normalizeEvents,function(err,results) {
+                req.session.eventGroups = psUtils.deepCopy(eventGroups);
+                //console.log(req.session.eventGroups);
+                render(null,{req:req,
+                             res:res,
+                             path:baseUrl,
+                             eventGroups:eventGroups});
+            });
+        });    
+
+	*/
+
+
+
+
+
     });
 };
 

@@ -4,6 +4,7 @@ module.exports = {
 	      {name:'index', label:'Home', url:'/'},
 	      {name:'signup', label:'Sign Up', url:'/signup'},
 	      {name:'login', label:'Log In To Your Dashboard', url:'/login'},
+	      {name:'login', label:'Get Mobile', url:'/get-mobile'},
 	],
 	
 	// Footer

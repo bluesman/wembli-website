@@ -24,12 +24,7 @@
 			h3 Coordinate W Friends
 			#step4Info.tunga.hidden Let's face it - entertainment is a social sport so we make it easy for you to coordinate with your friends!
 	section.clearfix
-		#searchBoxContainer
-			#searchFrame.span14
-				form#searchForm.clearfix
-					div
-						input(id="q",name="q",value="Enter an event, team, performer, city, venue").span11
-					a#go(href="#").segoeBold Go!
+		include widgets/search-box
 		div#belowFold.clearfix
 			section.teaserContainer.leftBlock
 				.teaserResults.leftBlock
@@ -51,7 +46,7 @@
 										em Expert Rating:
 										span.stars!= (event.Rating ? event.Rating : 0)
 								p.cta
-									a.btn.danger(href="/tickets/"+event.ID+"/"+event.Name) See Tickets
+									a.btn.primary(href="/tickets/"+event.ID+"/"+event.Name) See Tickets
 									- // don't have this info right now: em 300 tickets from $27
 								span.when
 									span.day!=        date.format("ddd")

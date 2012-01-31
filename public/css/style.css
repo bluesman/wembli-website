@@ -111,11 +111,11 @@ header #utility li#followUs {color:#2A2651;font-size:20px;display:block;margin-t
 
 
 /* Nav */
-header nav {height:18px; z-index:9; font-weight:bolder; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:17px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;top:60px;}
+header nav {height:18px; z-index:9; font-weight:normal; text-transform:uppercase; text-shadow: 0 1px #ff8533, 0 -1px #803400; font-size:17px; padding:7px 40px; background-color:#FF6700; width:650px; position:absolute; bottom:0; right:0; box-shadow:-1px 3px 4px 2px #666666;top:60px;}
 header nav ul li {display:inline-block; margin-right:30px;}
-header nav ul li a:link, header nav ul li a:visited {color:#bf4d00;}
-header nav ul li a:hover {color:#f7fefe;}
-header nav ul li a.active:link, header nav ul li a.active:hover, header nav ul li a.active:visited {color:#fff;}
+header nav ul li a:link, header nav ul li a:visited {color:#666;font-size:15px;}
+header nav ul li a:hover {color:#FFF;}
+header nav ul li a.active:link, header nav ul li a.active:hover, header nav ul li a.active:visited {color:#FFF;}
 
 /* Footer */
 footer {padding:40px 280px 40px 40px; min-height:100px; background:#000 url('/images/layout/wembli-logo.png') 720px center no-repeat;}
@@ -132,50 +132,12 @@ footer .connect dd.twitter a {background-position:0 1px;}
 footer .connect dd.facebook a {background-position:0 -24px;}
 
 /* Widgets */
-/* Search */
-#searchWidget {color:#f7fefe; width:300px; float:left;}
-#searchWidget ul.widget-tabs {height:30px; position:relative; z-index:9;}
-#searchWidget ul.widget-tabs li {font-size:13px; font-weight:bold; float:left; color:#f7fefe; text-transform:uppercase; cursor:pointer; padding:3px 10px 2px; width:115px; margin-top:7px; text-align:center; background-color:black; border-radius:10px 10px 0 0;}
-#searchWidget ul.widget-tabs li:hover {color:#6ea1b7;}
-#searchWidget ul.widget-tabs li.active {color:#6ea1b7; font-size:15px; padding-top:6px; padding-bottom:6px; margin-top:0;}
-
-#searchWidget #searchContainer {background-color:black; min-height:290px; position:relative; box-shadow:2px 5px 16px #565656; border-radius:0 20px 20px 20px; padding:40px 20px 20px;}
-#searchWidget #searchContainer span.marker {display:block; width:137px; height:58px; z-index:10; position:absolute; top:-13px; left:0; background:url('/images/layout/widget-active.png') 0 0 no-repeat;}
-#searchWidget #searchContainer form {display:none; position:absolute; top:40px; left:20px;}
-#searchWidget #searchContainer form.active {display:block;}
-#searchWidget #searchContainer form ul li {border-bottom:2px solid #292929; padding-bottom:3px; margin-bottom:5px;}
-#searchWidget #searchContainer form ul li.last {border:0; padding-bottom:0; margin-bottom:0;}
-#searchWidget #searchContainer form ul li.last span {display:block; width:259px;line-height:10px;margin-top:4px;text-align:center;}
-#searchWidget #searchContainer form ul li label {color:#f7fefe; display:block; width:100%; text-align:left; font-weight:bold; float:none; margin-bottom:2px; text-transform:uppercase; font-size:12px; font-family: Myriad Pro, Arial, Helvetica, Tahoma, sans-serif;}
-#searchWidget #searchContainer form ul li input[type="text"], #searchWidget #searchContainer form ul li select {color:#f7fefe; background-color:#292929; font-size:12px; border:0; display:block;}
-#searchWidget #searchContainer form ul li input[type="text"] {width:242px; border-radius:5px; padding:8px;}
-#searchWidget #searchContainer form ul li input[type="text"]:focus {box-shadow:inset 2px 2px 5px #999;}
-#searchWidget #searchContainer form ul li input.date, #searchWidget #searchContainer form ul li input.time {padding-right:24px; width:92px; float:right;}
-#searchWidget #searchContainer form ul li input.date {background:#292929 url('/images/icons/calendar.png') 102px center no-repeat;}
-#searchWidget #searchContainer form ul li input.first, #searchWidget #searchContainer form ul li select.first {float:left;}
-#searchWidget #searchContainer form ul li input.btn {text-align:center; font-weight:bold; text-transform:uppercase; margin-top:10px; width:229px;}
-#searchWidget #searchContainer form ul li select {width:124px; float:right; padding-top:8px; height:32px; padding-bottom:8px;}
-#searchWidget #searchContainer form ul li select option {border:0; border-bottom:1px dotted #666; padding:2px 10px;}
-#searchWidget #searchContainer form ul li select option.last {border-bottom:0; padding-bottom:0;}
-
-/* Info Blocks */
-#infoBlocks {margin-top:51px; box-shadow:2px 5px 9px #565656; height:149px; width:573px; border:1px solid #f7fefe; background:url('/images/widgets/info-blocks-bg.jpg') 0 0 no-repeat;}
-#infoBlocks li {float:left; position:relative; padding-top:119px; cursor:pointer; width:143px;}
-#infoBlocks li:hover {background-color:rgba(247, 254, 254, 0.3);}
-#infoBlocks li.second {width:142px;}
-#infoBlocks li.third {width:146px;}
-#infoBlocks li.last {width:142px;}
-#infoBlocks li span.toggler {display:block; border-right:1px solid #aca8a5; height:16px; font-size:16px; padding:6px 0 8px; text-align:center; color:#f7fefe; text-transform:uppercase;}
-#infoBlocks li.last span.toggler {border-right:0;} 
-#infoBlocks li:hover span.toggler {color:#666;}
-#infoBlocks li span.bubble {display:none;}
-
 
 /* SearchBox */
 #searchBoxContainer #searchFrame {position:relative;z-index:10;margin:20px auto 0;border:4px solid #FFF;background-color:#524F45;height:80px;box-shadow:2px 5px 9px #565656;}
 #searchBoxContainer #searchFrame div {margin:12px 0 0 45px;float:left;box-shadow:2px 5px 9px #222222;}
 #searchBoxContainer #searchForm input#q {height:45px;border-radius:15px;font-size:24px;color:#948F8F;padding-left:10px;}
-#searchBoxContainer #searchForm a#go {background:url('/images/go-circle.png') 0 0 no-repeat;height:60px;width:60px;display:block;margin:10px 45px 0 0;float:right;color:#FFF;font-size:26px;text-align:center;vertical-align:middle;line-height:60px;}
+#searchBoxContainer #searchForm a#go {background:url('/images/widgets/go-circle.png') 0 0 no-repeat;height:60px;width:60px;display:block;margin:10px 45px 0 0;float:right;color:#FFF;font-size:26px;text-align:center;vertical-align:middle;line-height:60px;}
 #searchBoxContainer #searchForm a#go:hover {color:#FF6700;}
 
 
@@ -200,6 +162,16 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 
 .seeMore {text-align:center; background-color:#ECECEC; padding:10px; width:400px; border-top:1px solid #FFF}
 .seeMore a {display:block;}
+
+
+/* Event Results */
+#eventResults h2 {text-shadow: 1px 1px #B4B4B4;font-weight:bold;}
+#eventsContent section #searchBoxContainer {float:left;width:275px;}
+#eventsContent section #searchBoxContainer #searchFrame {position:relative;z-index:10;margin:20px auto 0;border:4px solid #FFF;background-color:#524F45;height:50px;box-shadow:2px 5px 9px #565656;}
+#eventsContent section #searchBoxContainer #searchFrame div {margin:10px 0 0 10px;float:left;box-shadow:2px 5px 9px #222222;}
+#eventsContent section #searchBoxContainer #searchForm input#q {height:20px;border-radius:5px;font-size:12px;color:#948F8F;padding-left:10px;}
+#eventsContent section #searchBoxContainer #searchForm a#go {background:url('/images/widgets/go-circle-small.png') 0 0 no-repeat;height:25px;width:25px;display:block;margin:12px 10px 0 0;float:right;color:#FFF;font-size:12px;text-align:center;vertical-align:middle;line-height:25px;}
+#eventsContent section #searchBoxContainer #searchForm a#go:hover {color:#FF6700;}
 
 /* Search Results */
 .searchResults {background-color:#f2f2f2; width:615px; box-shadow:2px 5px 9px #565656; float:right;}
@@ -237,7 +209,7 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 /* Sign Up Pitch */
 article#signupCta {width:275px; float:left; clear:left; margin:40px 0; padding:0 20px;}
 article#signupCta h3 {color:#6da1b7; margin-bottom:10px;}
-article#signupCta p {color:#524f45; font-size:14px;}
+article#signupCta p {padding:10px 0 0 0;color:#524f45; font-size:14px;}
 article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; float:right; background:url('/images/icons/down-icon.png') right center no-repeat;}
 
 /* Content */
@@ -248,9 +220,7 @@ article#signupCta a {display:block; margin:10px 20px 0 0; padding-right:20px; fl
 
 /* Background images */
 #index #content {background:url('/images/pages/index/home-bg.jpg') 0 0 no-repeat; padding-left:30px; padding-right:30px;padding-top:50px;}
-#parking #content {background:url('/images/pages/parking/parking-bg.jpg') 0 0 no-repeat;padding-top:75px;}
-#restaurants #content {background:url('/images/pages/restaurants/restaurants-bg.jpg') 0 0 no-repeat;padding-top:75px;}
-#tickets #content {background:url('/images/pages/tickets/tickets-bg.jpg') 0 0 no-repeat;padding-top:75px;}
+
 
 /* Home Page */
 #homeContent section {}

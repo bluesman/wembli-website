@@ -1,10 +1,8 @@
+- var search_box_small = {q:param.q};
 #eventsContent
-	div.letterbox
-		h1.myriad  &nbsp;
 	section.clearfix
-		include widgets/search-tickets
 		div#eventResults.searchResults
-			h2!= 'EVENT LIST FOR '+param.q
+			h2.tunga!= 'EVENT LIST FOR "'+param.q+'"'
 			ul.results.clearfix
 				- var cnt = 0;
 				- each event in events
@@ -21,13 +19,15 @@
 								em Expert Rating:
 								span.stars!= (event.Rating ? event.Rating : 0)
 						p.cta
-							a.btn.danger(href="/tickets/"+event.ID+"/"+event.Name) See Tickets
+							a.btn.primary(href="/tickets/"+event.ID+"/"+event.Name) See Tickets
 							- // don't have this info right now: em 300 tickets from $27
 						span.when
 							span.day!=        date.format("ddd")
 							span.event-date!= date.format("mmm d")
 							span.time!=       date.format("h:MM TT") 
+		include widgets/search_box_small
 		article#signupCta.clearfix
 			h3 Sign Up and Get a Discount
-			p Sign up for Wembli today and we'll send you a discount code for parking.  Even if you already bought your tickets from another site !  Make Wembli your one-stop shop for concert and sports outings.  We do the legwork so you can focus on making great memories
+			p Sign up for Wembli today and we'll send you a discount code for parking.  Even if you already bought your tickets from another site!
+			p Make Wembli your one-stop shop for concert and sports outings.  We do the legwork so you can focus on making great memories
 			a(href="#") Sign In							
