@@ -193,6 +193,7 @@ footer .connect dd.facebook a {background-position:0 -24px;}
 .searchResults ul.results li a.title, .searchResults ul.results li a.title:link {font-size:12px;}
 .searchResults ul.results li p {margin:0; font-size:11px; line-height:15px;}
 .searchResults ul.results li a.btn {display:block; width:90px; position:absolute; top:0; right:0; text-align:center;}
+.searchResults ul.results li a.haveTickets {display:block; width:120px; position:absolute; top:60; right:0; text-align:center;}
 
 .searchResults ul.results li span.when {background-color:#d8d6d7; text-transform:uppercase; text-align:center; display:block; height:57px; width:53px; position:absolute; top:0; left:-100px; border-radius:10px; color:#767676; padding:5px;}
 .searchResults ul.results li span.when span {display:block;}
