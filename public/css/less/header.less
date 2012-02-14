@@ -1,0 +1,50 @@
+header {
+       .clearfix();
+}
+
+header .stripeShadow {
+       float:left;
+       height: @stripeHeight;
+       margin-top:@backgroundTopMargin;
+       width:3px;
+}
+
+header #stripeShadowLeft {
+  @shadow: inset -1px 0 0 rgba(0,0,0,.25);
+  .box-shadow(@shadow);
+
+}
+
+header #stripeShadowRight {
+  @shadow: inset 1px 0 0 rgba(0,0,0,.25);
+  .box-shadow(@shadow);
+
+}
+
+header #logo {
+       float:left;
+       display:block; 
+       height:95px;
+       width:230px; 
+       background: url('/images/layout/wembli-logo.png') @white center center no-repeat;
+}
+
+header #utility {float:right; margin-top:30px;}
+header #utility li {display:inline-block; text-align:right; margin-right:6px; padding-right:6px;}
+header #utility li #fbIcon {display:block;height:27px;width:26px;background-image:url('/images/icons/social-icons.png');background-repeat:no-repeat;background-position:-6px -6px;}
+header #utility li #twitterIcon {display:block;height:27px;width:30px;background-image:url('/images/icons/social-icons.png');background-repeat:no-repeat;background-position:-41px -6px;}
+header #utility li#followUs {color:#2A2651;font-size:20px;display:block;margin-top:4px;float:left;}
+
+
+
+header .navbar-inner .container nav ul.nav {
+  margin-top:70px;
+  text-transform:uppercase;
+  text-shadow: 0 1px #ff8533, 0 -1px #803400; 
+  font-size:17px;
+}
+
+header #nav ul li a {font-size:15px;padding:0 10px 0;}
+header #nav ul li a:link, header nav ul li a:visited {color:@grayDark;}
+header #nav ul li a:hover {color:@white;}
+header #nav ul li a.active:link, header nav ul li a.active:hover, header nav ul li a.active:visited {color:@white;}

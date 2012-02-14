@@ -16,10 +16,10 @@ module.exports = function(app) {
         //ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.cityName,orderByClause:'Date'},
 	ticketNetwork.SearchEvents({searchTerms:'Petco Park',orderByClause:'Date'},
 				function(err,results) {
-				   var events = results.Event;
-				   if (!events) {
-				       events = [];
-				   }
+				    var events = results.Event.slice(0,5);
+				    if (!events) {
+					events = [];
+				    }
 				    res.render('index.jade', {
 					session: req.session,
 					events:events,

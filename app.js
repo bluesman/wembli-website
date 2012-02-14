@@ -108,6 +108,7 @@ app.helpers({
 
 
 // Controllers
+require('./controllers/style-guide')(app);
 require('./controllers/index')(app);
 require('./controllers/research')(app);
 require('./controllers/events')(app);

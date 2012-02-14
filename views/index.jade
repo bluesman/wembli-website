@@ -1,7 +1,6 @@
 #homeContent
-	article
-		h1 You're only 4 steps away from planning your perfect outing!
-	#circles.clearfix
+	h1 You're only 4 steps away from planning your perfect outing!
+	#circles
 		#step1Circle.homeCircle
 			#step1Icon.stepIcon
 		#step2Circle.homeCircle
@@ -10,52 +9,24 @@
 			#step3Icon.stepIcon
 		#step4Circle.homeCircle
 			#step4Icon.stepIcon
-	#steps.clearfix
-		article#step1
+	#steps
+		section#step1
 			h3 Buy Tickets
 			#step1Info.tunga.hidden We don't compete with the big guys, we aggregate them all like Kayak so you can get the best bang for your buck.
-		article#step2
+		section#step2
 			h3 Reserve Parking
 			#step2Info.tunga.hidden You can reserve a parking spot right here so you never have to deal with the dreaded parking search again.
-		article#step3
+		section#step3
 			h3 Book A Restaurant
 			#step3Info.tunga.hidden Go ahead and book your reservations with us - we'll even hook you up with great deals to top off the outing!
-		article#step4
+		section#step4
 			h3 Coordinate W Friends
 			#step4Info.tunga.hidden Let's face it - entertainment is a social sport so we make it easy for you to coordinate with your friends!
-	section.clearfix
-		include widgets/search-box
-		div#belowFold.clearfix
-			section.teaserContainer.leftBlock
-				.teaserResults.leftBlock
-					h2.tunga Upcoming Events in 
-						span!= session.ipinfo.cityName
-					ul
-						- var cnt = 0;
-						- each event in events
-							- cnt++;
-							- if (cnt > 5) 
-								- break;
-							- var date = new Date(Date.parse(event.Date));
-							li.clearfix
-								p.info 
-									a(href="/tickets/"+event.ID+"/"+event.Name)!= event.Name
-									span.venue.block!= event.Venue
-									span.location.block!= event.City+', '+event.StateProvince
-									span.rating.block
-										em Expert Rating:
-										span.stars!= (event.Rating ? event.Rating : 0)
-								p.cta
-									a.btn.primary(href="/tickets/"+event.ID+"/"+event.Name) See Tickets
-									- // don't have this info right now: em 300 tickets from $27
-								span.when
-									span.day!=        date.format("ddd")
-									span.event-date!= date.format("mmm d")
-									span.time!=       date.format("h:MM TT") 
-
-				.seeMore.leftBlock
-					a(href="/events/search/"+session.ipinfo.cityName+"/"+Date.today().format("mm-dd-yy"))
-						span see more events in 
-						span.lowercase!= session.ipinfo.cityName
-			a.rightBlock.mobileAd(href="#")
-				span.btn.primary Get Mobile
+	include widgets/search-box
+	#belowFold
+		.event-list.span6.offset1!= partial("widgets/event-list",{heading: 'Upcoming Events in '+session.ipinfo.cityName,events:events});
+			a#seeMore(href="/events/search/"+session.ipinfo.cityName+"/"+Date.today().format("mm-dd-yy"))
+				span see more events in 
+				span.lowercase!= session.ipinfo.cityName
+		a.mobileAd.offset8(href="#")
+			span.btn.btn-primary Get Mobile

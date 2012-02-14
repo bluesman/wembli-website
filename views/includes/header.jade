@@ -1,17 +1,20 @@
-header
-	a#logo.seo(href="/") 
-		h1 Wembli
-	ul#utility
-		li#followUs.tunga Follow Us
-		li 
-			a#fbIcon(href="http://www.facebook.com/pages/Wembli/283576331690548", target="_blank")
-		li.last
-			a#twitterIcon(href="http://www.twitter.com/wembli", target="_blank")
-	nav
-		ul
-			- each tab in globals.tabs
-				li
-					- if (tab.name == page)
-						a.active(href="#{tab.url}") #{tab.label}
-					- else
-						a(href="#{tab.url}") #{tab.label}
+header.navbar
+	.navbar-inner
+		.container
+			#stripeShadowLeft.stripeShadow
+			a#logo.seo(href="/")
+			#stripeShadowRight.stripeShadow
+			ul#utility
+				li#followUs.tunga Follow Us
+				li 
+					a#fbIcon(href="http://www.facebook.com/pages/Wembli/283576331690548", target="_blank")
+				li.last
+					a#twitterIcon(href="http://www.twitter.com/wembli", target="_blank")
+			nav#nav
+				ul.nav
+					- each tab in globals.tabs
+						li
+							- if (tab.name == page)
+								a.active(href="#{tab.url}") #{tab.label}
+							- else
+								a(href="#{tab.url}") #{tab.label}			

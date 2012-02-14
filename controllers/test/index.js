@@ -3,9 +3,12 @@ module.exports = function(app) {
     app.get('/test', function(req, res){
 	console.log('here');
 	res.render('test', {
-		    cssIncludes: [],
-		    jsIncludes: [],
-		    title: 'wembli.com - coming soon.'
+	    cssIncludes: [],
+	    jsIncludes: [],
+	    title: 'wembli.com - coming soon.',
+	    page: 'index',
+	    globals:globalViewVars
+
 	});
     });
 };

@@ -1,6 +1,4 @@
-#searchBoxContainer
-	#searchFrame.span14
-		form#searchForm.clearfix(method="GET", action="/events/search/")
-			div
-				input(id="q",value="Enter an event, team, performer, city, venue").span11
-			a#go(href="#").segoeBold Go!
+#searchBox
+	form#searchForm.form-search(method="GET", action="/events/search/")
+		input.search-query.span10(id="q",value="Enter an event, team, performer, city, venue")
+		a#go(href="#").segoeBold Go!

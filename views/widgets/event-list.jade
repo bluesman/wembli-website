@@ -1,0 +1,20 @@
+h3!= heading
+ul
+	- each event in events
+		- var date = new Date(Date.parse(event.Date));
+		li
+			p.info 
+				a.block(href="/tickets/"+event.ID+"/"+event.Name)!= event.Name
+				span.venue.block!= event.Venue
+				span.location.block!= event.City+', '+event.StateProvince
+				span.rating.block
+					em Expert Rating:
+					span.stars!= (event.Rating ? event.Rating : 0)
+			p.cta
+				a.btn.btn-primary(href="/tickets/"+event.ID+"/"+event.Name) See Tickets
+				- // don't have this info right now: em 300 tickets from $27
+			span.event-date-box
+				span.day!=        date.format("ddd")
+				span.event-date!= date.format("mmm d")
+				span.time!=       date.format("h:MM TT") 
+			

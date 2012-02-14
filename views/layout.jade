@@ -39,6 +39,7 @@ html
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
   body(id="#{page}")
+    include includes/backgrounds
     div#maincontentWrapper.container
       include includes/header
       section#content!= body

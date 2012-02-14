@@ -37,7 +37,7 @@ module.exports = function(app) {
 		title: 'wembli.com - events.',
 		page:'tickets',
 		globals:globalViewVars,
-                events:results.Event
+                events: results.Event
 	    });
         });
 
