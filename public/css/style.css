@@ -109,6 +109,7 @@ section#content {
 }
 #backgrounds #stripe {
   position: relative;
+  margin-left: 24%;
   margin-top: 65px;
   height: 30px;
   background-color: #ff6700;
