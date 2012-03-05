@@ -1,0 +1,20 @@
+- var date = new Date(Date.parse(event.Date));
+	p.info 
+		- if (typeof link != "undefined" && link === false)
+			span.name.block!= event.Name
+		- else
+			a.name.block(href="/tickets/"+event.ID+"/"+event.Name+"#eventBuilder")!= event.Name
+		span.venue.block!= event.Venue
+		span.location.block!= event.City+', '+event.StateProvince
+		- if (typeof rating == "undefined" || rating !== false)
+			span.rating.block
+				em Expert Rating:
+				span.stars!= (event.Rating ? event.Rating : 0)
+	- if (typeof cta == "undefined" || cta !== false)
+		p.cta
+			a.btn.btn-primary(href="/tickets/"+event.ID+"/"+event.Name+"#eventBuilder") See Tickets
+			- // don't have this info right now: em 300 tickets from $27
+	span.event-date-box
+		span.day!=        date.format("ddd")
+		span.event-date!= date.format("mmm d")
+		span.time!=       date.format("h:MM TT") 

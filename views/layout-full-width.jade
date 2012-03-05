@@ -9,6 +9,11 @@ html
     link(type="image/png", rel="icon",href="/favicon.png")
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/style.css')
+    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
+    script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js")
+    script(type="text/javascript", src="/js/plugins/jquery-ui-timepicker.js")
+    script(type="text/javascript", src="/js/jquery.cookie.js")
+    script(type="text/javascript", src="/js/jquery.wembli.js")
 
     | 
     | <!--[if lt IE 9]>
@@ -41,14 +46,10 @@ html
   body(id="#{page}")
     input(type="hidden",id="eventplanGuid",name="eventplanGuid",value=session.eventplanGuid)
     include includes/backgrounds
-    div#maincontentWrapper.container
+    #maincontentWrapper
       include includes/header
       section#content!= body
       include includes/footer
-  script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
-  script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js")
-  script(type="text/javascript", src="/js/plugins/jquery-ui-timepicker.js")
-  script(type="text/javascript", src="/js/jquery.wembli.js")
   script(type="text/javascript", src="/js/wembli.js")
   - if ("undefined" !== typeof jsIncludes)
     - each file in jsIncludes

@@ -1,0 +1,65 @@
+a.block(href="#eventBuilder").hide
+#event!= partial("includes/event",{cta:false,rating:false,link:false,event:event});
+#split
+#stepInfo
+	#info
+		h3 1. Choose Ticket Options
+		span.block Select 1 or more ticket options to share with your friends.
+		#summary
+			h5 Itinerary Summary: 
+			span#summaryContent Nothing added yet...
+	#actions
+		a#continue.btn.btn-success.btn-large(href="#") Continue
+		#links
+			a#howDoesItWork(data-toggle="modal",href="#howDoesItWorkModal") How Does It Work
+			span  | 
+			a.saveForLater(data-toggle="modal",href="#saveForLaterModal") Save For Later
+#eventBuilderAlert.alert.hide
+#howDoesItWorkModal.modal.hide.fade
+	.modal-header
+		a.close(data-dismiss="modal") x
+		h3 How It Works
+	.modal-body
+		p this is how it works...
+	.modal-footer
+		a.btn(data-dismiss="modal") Close
+#saveForLaterModal.modal.hide.fade
+	.modal-header
+		a.close(data-dismiss="modal") x
+		h3 Save Your Plan
+	.modal-body
+		p 
+			span A great plan is always a work in progress.
+			br
+			span Enter your name, email and a password and we'll save your event plan.
+		form#signup.well.form-horizontal(method="POST",action="/signup")
+			fieldset
+				.control-group
+					label.control-label(for="firstName") First Name
+					.controls
+						input#firstName
+				.control-group
+					label.control-label(for="lastName") Last Name
+					.controls
+						input#lastName
+				.control-group
+					label.control-label(for="emailAddress") Email Address
+					.controls
+						input#emailAddress
+				.control-group
+					label.control-label(for="password") Password
+					.controls
+						input#password(type="password")
+				.control-group
+					label.control-label(for="lastName") Confirm Password
+					.controls
+						input#password2(type="password")
+				.form-actions
+					a#login(href="/login")
+						span Existing Users:
+						br
+						span Click here to login
+					button.btn.btn-primary.btn-large(type="submit").right Sign Up
+
+	
+

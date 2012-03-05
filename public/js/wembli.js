@@ -170,3 +170,34 @@ $(document).ready(function(){
 	$w.searchBox();
 });
 
+
+/* eventPlan widget utilities */
+$w.eventplan = {
+    guid:"",
+    toggleButton:function(action,el) {
+	if (action == 'add') {
+	    $(el).attr('class','btn btn-primary');
+	    $(el).html('Add To Plan');
+	} 
+
+	if (action == 'remove') {
+	    $(el).attr('class','btn btn-success');
+	    $(el).html('Remove');
+	}
+
+    },
+    alertMsg:function(status,msg) {
+	$('#eventBuilderAlert').html(msg).addClass('alert-'+status).fadeIn(800).delay(1000).fadeOut(600);
+    },
+    updateSummary:function() {
+	//update the eventplan summary
+	if (typeof this.data != "undefined" &&
+	    typeof this.data.tickets != "undefined") {
+
+	    var count = Object.keys(this.data.tickets).length;
+	    var addS = (count == 1) ? '' : 's';
+	    var summaryMsg = count+' ticket option'+addS+' in your plan.';
+	    $('#summaryContent').html(summaryMsg);
+	}
+    }
+};

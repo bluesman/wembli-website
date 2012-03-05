@@ -1,5 +1,14 @@
 @circleTopPosition: -266px;
 /* Home Page */
+#index section#content {padding-top:50px;}
+
+#index #backgrounds #blue {
+  position:relative;
+  height:450px;
+  z-index:-2;
+  #gradient > .horizontal(@blueDark, @blue);
+}
+
 #homeContent {
   .clearfix();
   background:url('/images/pages/index/four-steps-bg.png') 30px 80px no-repeat;

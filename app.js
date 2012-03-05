@@ -20,14 +20,16 @@ req.session.customer == phatseat's customer data (not a customer model!!)
 */
 
 
-var express  = require('express'),
-    redis    = require('connect-redis')(express);
+var express   = require('express'),
+    redis     = require('connect-redis')(express)
+    wemblirpc = require('wembli/jsonrpc');
 
 console.log('started in '+process.env.NODE_ENV+' mode...');
 
 var app = module.exports = express.createServer();
 
 app.configure(function(){
+    app.use(wemblirpc.server(wemblirpc.rpcDispatchHooks));
     app.set('views', __dirname + '/views');
     app.set('controllers', __dirname + '/controllers');
     app.set('view engine', 'jade');
@@ -35,8 +37,8 @@ app.configure(function(){
     app.use(express.methodOverride());
     app.use(express.cookieParser());
     app.use(express.static(__dirname + '/public'));
-    app.use(express.session({ secret: '@$!#SCDFdsa',store: new redis }));
-    app.use(require('wembli/auth'));
+    app.use(express.session({ key: 'wembli.sid',secret: '@$!#SCDFdsa',store: new redis }));
+    app.use(require('./lib/wembli/auth'));
     app.use(require('wembli/ipinfodb'));
     app.use(require('wembli/top-performers'));
     app.use(app.router);
@@ -52,23 +54,19 @@ app.configure('production1',production);
 app.configure('production2',production);
 app.configure('development',function() {
     app.use(express.logger());
-    app.use(express.static(__dirname + '/public'));
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
-});
-
-app.configure(function(){
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(express.cookieParser());
-    app.use(express.session({ secret: '@$!#SCDFdsa',store: new redis }));
-    app.use(app.router);
-    app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
 
 // Helpers
 globalViewVars = require('./controllers/helpers/global-view-vars');
+
+//dynamic helpers
+app.dynamicHelpers({
+    session: function(req, res){
+	return req.session;
+    }
+});
 
 //static helper functions
 app.helpers({

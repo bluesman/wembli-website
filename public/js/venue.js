@@ -3,7 +3,7 @@ $(document).ready(function() {
     $('#fvmap').fanvenues({
 	mapSet:'tn1',
 	mapId:mapId,
-	defaultZoom: 1,
+	defaultZoom: 3,
 	fullscreenMapButton: false,
 	interactWithTicketList: true,
 	rowSelector: '#tixList li.tixListRow',

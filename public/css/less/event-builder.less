@@ -1,0 +1,118 @@
+#backgrounds {
+  @shadow: 0 0 8px 1px rgba(0,0,0,.25);
+  .box-shadow(@shadow);
+}
+
+@eventBuilderHeight: 70px;
+
+a#eventBuilderContainer:link {
+  
+}
+
+#eventBuilderAlert {
+  position:absolute;
+  z-index:3;
+  text-align:center;
+  top:150px;
+  left:40%;
+  #translucent > .background(#DFF0D8,.85);
+}
+
+#eventBuilder {
+  padding:10px;
+  min-height:@eventBuilderHeight;
+  .clearfix();
+  #gradient > .vertical-three-colors(darken(@blue,15%),@blue,25%,darken(@blue,15%));
+  border-bottom:1px solid @black;
+  border-top:1px solid @black;
+}
+
+#eventBuilder #event {
+  .clearfix();
+  font-size:11px;
+  position:relative;
+  width:40%;
+  float:left;
+}
+
+#eventBuilder #event p {font-size:11px;}
+
+#eventBuilder #event p.info {
+  float:left; 
+  margin:2px 2px 0 75px;
+  line-height:16px;
+  vertical-align:middle;
+  min-width:280px;
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
+  color:@black;
+}
+
+#eventBuilder #event p.info .name {
+  font-size:16px;
+  font-weight:bold;
+}
+
+#eventBuilder #event p.info .venue, #eventBuilder #event p.info .location {
+  font-size:14px;
+}
+
+#eventBuilder #split {
+  width:1px;
+  height:@eventBuilderHeight;
+  float:left;
+  border-right:thin solid rgba(255, 255, 255, .25);
+}
+
+#eventBuilder #stepInfo {
+  .clearfix();
+  color:@white;
+  border-left:1px solid rgba(0, 0, 0, .25);
+  margin-left:40%;
+  min-height:@eventBuilderHeight;
+}
+
+#eventBuilder #stepInfo #info {float:left;margin-left:10px;color:@white;}
+
+#eventBuilder #stepInfo #info h3 {font-family:"SegoeScriptBold";color:#FF6600;font-size:18px;text-shadow:1px 1px 1px rgba(0,0,0,0.5);}
+
+#eventBuilder #stepInfo #info #summary {  
+  margin-top:6px;
+}
+
+#eventBuilder #stepInfo #info #summary h5{  
+  text-transform:uppercase; 
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
+  color:@black;
+  font-size:14px;
+  display:inline;
+}
+
+#eventBuilder #stepInfo #info #summary #summaryContent {  
+  
+}
+
+#eventBuilder #stepInfo #actions {
+  float:right;text-align:center;margin:0 20px 0 0;
+}
+
+#eventBuilder #stepInfo #actions #links {
+  margin-top:10px;
+}
+
+#eventBuilder #stepInfo #actions #links a.saveForLater,#eventBuilder #stepInfo #actions #links a#howDoesItWork {
+  color:@white;
+  font-size:10px;
+  padding:4px;
+}
+
+#eventBuilder #stepInfo #actions #links a.saveForLater:hover, #eventBuilder #stepInfo #actions #links a#howDoesItWork:hover {
+  color:@orange;
+}
+
+#saveForLaterModal #login {
+  float:left;
+  margin-right:10px;
+  width:130px;
+  text-align:center;
+  font-size:11px;
+}

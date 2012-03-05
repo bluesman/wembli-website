@@ -89,11 +89,18 @@ dd {
 * {
   outline: none !important;
 }
-section#content {
-  padding-top: 50px;
-}
 .block {
   display: block;
+}
+section#content {
+  *zoom: 1;
+}
+section#content:before, section#content:after {
+  display: table;
+  content: "";
+}
+section#content:after {
+  clear: both;
 }
 #backgrounds {
   position: absolute;
@@ -117,20 +124,6 @@ section#content {
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
   z-index: -1;
-}
-#backgrounds #blue {
-  position: relative;
-  height: 450px;
-  z-index: -2;
-  background-color: #4380b8;
-  background-image: -moz-linear-gradient(left, #2a2651, #4380b8);
-  background-image: -ms-linear-gradient(left, #2a2651, #4380b8);
-  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#2a2651), to(#4380b8));
-  background-image: -webkit-linear-gradient(left, #2a2651, #4380b8);
-  background-image: -o-linear-gradient(left, #2a2651, #4380b8);
-  background-image: linear-gradient(left, #2a2651, #4380b8);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2a2651', endColorstr='#4380b8', GradientType=1);
 }
 header {
   *zoom: 1;
@@ -198,6 +191,9 @@ header #utility li#followUs {
   margin-top: 4px;
   float: left;
 }
+.navbar {
+  margin-bottom: 0px;
+}
 header .navbar-inner .container nav ul.nav {
   margin-top: 70px;
   text-transform: uppercase;
@@ -207,9 +203,10 @@ header .navbar-inner .container nav ul.nav {
 header #nav ul li a {
   font-size: 15px;
   padding: 0 10px 0;
+  color: #f2f2f2;
 }
 header #nav ul li a:link, header nav ul li a:visited {
-  color: #524f45;
+  color: #f2f2f2;
 }
 header #nav ul li a:hover {
   color: #ffffff;
@@ -366,6 +363,7 @@ footer .connect dd.facebook a {
   width: 200px;
   margin: auto;
 }
+/* the event date box */
 .event-date-box {
   background-color: #d8d6d7;
   text-transform: uppercase;
@@ -386,6 +384,109 @@ footer .connect dd.facebook a {
   line-height: 18px;
   margin-bottom: 2px;
   text-transform: capitalize;
+}
+.ticket-list {
+  background-color: #f2f2f2;
+  padding: 15px;
+  border-bottom: 1px solid #CCC;
+}
+.ticket-list h3 {
+  text-shadow: 1px 1px #b4b4b4;
+  margin-bottom: 25px;
+}
+.ticket-list ul li {
+  *zoom: 1;
+  font-size: 11px;
+  padding: 0 0 25px 0;
+  border-bottom: 1px solid #a4a4a4;
+  margin-bottom: 15px;
+  position: relative;
+}
+.ticket-list ul li:before, .ticket-list ul li:after {
+  display: table;
+  content: "";
+}
+.ticket-list ul li:after {
+  clear: both;
+}
+.ticket-list ul li p {
+  font-size: 11px;
+}
+.ticket-list ul li p.info {
+  float: left;
+  margin: 0 10px 0 75px;
+  line-height: 15px;
+}
+.ticket-list ul li p.info a {
+  font-size: 12px;
+}
+.ticket-list.span4 ul li p.info {
+  width: 125px;
+}
+.ticket-list.span5 ul li p.info {
+  width: 190px;
+}
+.ticket-list.span6 ul li p.info {
+  width: 285px;
+}
+.ticket-list.span7 ul li p.info {
+  width: 365px;
+}
+.ticket-list.span8 ul li p.info {
+  width: 445px;
+}
+.ticket-list.span9 ul li p.info {
+  width: 525px;
+}
+.ticket-list.span10 ul li p.info {
+  width: 605px;
+}
+.ticket-list.span11 ul li p.info {
+  width: 685px;
+}
+.ticket-list.span12 ul li p.info {
+  width: 765px;
+}
+.ticket-list ul li p.cta {
+  float: right;
+  text-align: right;
+}
+.ticket-list ul li p.cta a {
+  font-size: 12px;
+}
+.ticket-list ul li p.cta em {
+  display: block;
+  margin-top: 5px;
+}
+.ticket-list #seeMore {
+  display: block;
+  width: 200px;
+  margin: auto;
+}
+/* the ticket price box */
+.ticket-price-box {
+  background-color: #d8d6d7;
+  text-align: center;
+  display: block;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  border-radius: 10px;
+  color: #524f45;
+  padding: 5px;
+}
+.ticket-price-box span {
+  display: block;
+}
+.ticket-price-box .ticket-quantity {
+  font-size: 11px;
+  line-height: 11px;
+  margin-top: 1px;
+}
+.ticket-price-box .ticket-price {
+  font-size: 17px;
+  line-height: 17px;
+  margin-top: 2px;
 }
 #searchBox {
   z-index: 10;
@@ -431,7 +532,157 @@ footer .connect dd.facebook a {
 #searchBox #searchForm a#go:hover {
   color: #ff6700;
 }
+#backgrounds {
+  -webkit-box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.25);
+}
+#eventBuilderAlert {
+  position: absolute;
+  z-index: 3;
+  text-align: center;
+  top: 150px;
+  left: 40%;
+  background-color: rgba(222, 239, 215, 0.85);
+}
+#eventBuilder {
+  padding: 10px;
+  min-height: 70px;
+  *zoom: 1;
+  background-color: #3f78ad;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2f5980), color-stop(25%, #4380b8), to(#2f5980));
+  background-image: -webkit-linear-gradient(#2f5980, #4380b8 25%, #2f5980);
+  background-image: -moz-linear-gradient(top, #2f5980, #4380b8 25%, #2f5980);
+  background-image: -ms-linear-gradient(#2f5980, #4380b8 25%, #2f5980);
+  background-image: -o-linear-gradient(#2f5980, #4380b8 25%, #2f5980);
+  background-image: linear-gradient(#2f5980, #4380b8 25%, #2f5980);
+  background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2f5980', endColorstr='#2f5980', GradientType=0);
+  border-bottom: 1px solid #000000;
+  border-top: 1px solid #000000;
+}
+#eventBuilder:before, #eventBuilder:after {
+  display: table;
+  content: "";
+}
+#eventBuilder:after {
+  clear: both;
+}
+#eventBuilder #event {
+  *zoom: 1;
+  font-size: 11px;
+  position: relative;
+  width: 40%;
+  float: left;
+}
+#eventBuilder #event:before, #eventBuilder #event:after {
+  display: table;
+  content: "";
+}
+#eventBuilder #event:after {
+  clear: both;
+}
+#eventBuilder #event p {
+  font-size: 11px;
+}
+#eventBuilder #event p.info {
+  float: left;
+  margin: 2px 2px 0 75px;
+  line-height: 16px;
+  vertical-align: middle;
+  min-width: 280px;
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
+  color: #000000;
+}
+#eventBuilder #event p.info .name {
+  font-size: 16px;
+  font-weight: bold;
+}
+#eventBuilder #event p.info .venue, #eventBuilder #event p.info .location {
+  font-size: 14px;
+}
+#eventBuilder #split {
+  width: 1px;
+  height: 70px;
+  float: left;
+  border-right: thin solid rgba(255, 255, 255, 0.25);
+}
+#eventBuilder #stepInfo {
+  *zoom: 1;
+  color: #ffffff;
+  border-left: 1px solid rgba(0, 0, 0, 0.25);
+  margin-left: 40%;
+  min-height: 70px;
+}
+#eventBuilder #stepInfo:before, #eventBuilder #stepInfo:after {
+  display: table;
+  content: "";
+}
+#eventBuilder #stepInfo:after {
+  clear: both;
+}
+#eventBuilder #stepInfo #info {
+  float: left;
+  margin-left: 10px;
+  color: #ffffff;
+}
+#eventBuilder #stepInfo #info h3 {
+  font-family: "SegoeScriptBold";
+  color: #FF6600;
+  font-size: 18px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+#eventBuilder #stepInfo #info #summary {
+  margin-top: 6px;
+}
+#eventBuilder #stepInfo #info #summary h5 {
+  text-transform: uppercase;
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
+  color: #000000;
+  font-size: 14px;
+  display: inline;
+}
+#eventBuilder #stepInfo #actions {
+  float: right;
+  text-align: center;
+  margin: 0 20px 0 0;
+}
+#eventBuilder #stepInfo #actions #links {
+  margin-top: 10px;
+}
+#eventBuilder #stepInfo #actions #links a.saveForLater, #eventBuilder #stepInfo #actions #links a#howDoesItWork {
+  color: #ffffff;
+  font-size: 10px;
+  padding: 4px;
+}
+#eventBuilder #stepInfo #actions #links a.saveForLater:hover, #eventBuilder #stepInfo #actions #links a#howDoesItWork:hover {
+  color: #ff6700;
+}
+#saveForLaterModal #login {
+  float: left;
+  margin-right: 10px;
+  width: 130px;
+  text-align: center;
+  font-size: 11px;
+}
 /* Home Page */
+#index section#content {
+  padding-top: 50px;
+}
+#index #backgrounds #blue {
+  position: relative;
+  height: 450px;
+  z-index: -2;
+  background-color: #4380b8;
+  background-image: -moz-linear-gradient(left, #2a2651, #4380b8);
+  background-image: -ms-linear-gradient(left, #2a2651, #4380b8);
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, from(#2a2651), to(#4380b8));
+  background-image: -webkit-linear-gradient(left, #2a2651, #4380b8);
+  background-image: -o-linear-gradient(left, #2a2651, #4380b8);
+  background-image: linear-gradient(left, #2a2651, #4380b8);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2a2651', endColorstr='#4380b8', GradientType=1);
+}
 #homeContent {
   *zoom: 1;
   background: url('/images/pages/index/four-steps-bg.png') 30px 80px no-repeat;
@@ -624,4 +875,49 @@ footer .connect dd.facebook a {
   background: url('/images/widgets/mobile.png') center top no-repeat;
   text-align: center;
   margin-top: 38px;
+}
+#eventsContent {
+  *zoom: 1;
+}
+#eventsContent:before, #eventsContent:after {
+  display: table;
+  content: "";
+}
+#eventsContent:after {
+  clear: both;
+}
+#ticketsContent {
+  *zoom: 1;
+  background-color: #FFF;
+  -webkit-box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+}
+#ticketsContent:before, #ticketsContent:after {
+  display: table;
+  content: "";
+}
+#ticketsContent:after {
+  clear: both;
+}
+.ticket-list {
+  position: absolute;
+  right: 0px;
+  margin: 0;
+  z-index: 2;
+  height: 569px;
+  overflow: scroll;
+}
+#fvmap {
+  margin-right: 420px;
+  height: 600px;
+}
+#thumbnail {
+  background-color: #d8d6d7;
+  -webkit-box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.25);
+  position: absolute;
+  left: 10px;
+  z-index: 2;
 }
