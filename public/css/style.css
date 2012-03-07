@@ -658,7 +658,7 @@ footer .connect dd.facebook a {
 #eventBuilder #stepInfo #actions #links a.saveForLater:hover, #eventBuilder #stepInfo #actions #links a#howDoesItWork:hover {
   color: #ff6700;
 }
-#saveForLaterModal #login {
+#signupModal #login {
   float: left;
   margin-right: 10px;
   width: 130px;

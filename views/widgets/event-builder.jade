@@ -13,7 +13,7 @@ a.block(href="#eventBuilder").hide
 		#links
 			a#howDoesItWork(data-toggle="modal",href="#howDoesItWorkModal") How Does It Work
 			span  | 
-			a.saveForLater(data-toggle="modal",href="#saveForLaterModal") Save For Later
+			a.saveForLater(data-toggle="modal",href="#signupModal") Save For Later
 #eventBuilderAlert.alert.hide
 #howDoesItWorkModal.modal.hide.fade
 	.modal-header
@@ -23,43 +23,4 @@ a.block(href="#eventBuilder").hide
 		p this is how it works...
 	.modal-footer
 		a.btn(data-dismiss="modal") Close
-#saveForLaterModal.modal.hide.fade
-	.modal-header
-		a.close(data-dismiss="modal") x
-		h3 Save Your Plan
-	.modal-body
-		p 
-			span A great plan is always a work in progress.
-			br
-			span Enter your name, email and a password and we'll save your event plan.
-		form#signup.well.form-horizontal(method="POST",action="/signup")
-			fieldset
-				.control-group
-					label.control-label(for="firstName") First Name
-					.controls
-						input#firstName
-				.control-group
-					label.control-label(for="lastName") Last Name
-					.controls
-						input#lastName
-				.control-group
-					label.control-label(for="emailAddress") Email Address
-					.controls
-						input#emailAddress
-				.control-group
-					label.control-label(for="password") Password
-					.controls
-						input#password(type="password")
-				.control-group
-					label.control-label(for="lastName") Confirm Password
-					.controls
-						input#password2(type="password")
-				.form-actions
-					a#login(href="/login")
-						span Existing Users:
-						br
-						span Click here to login
-					button.btn.btn-primary.btn-large(type="submit").right Sign Up
-
-	
-
+include ../includes/modals/signup

@@ -6,6 +6,7 @@ module.exports = function(app) {
     console.log('events loaded...');
     app.get('/events', function(req, res){
 	res.render('events', {
+	    layoutContainer:true,
 	    session: req.session,
 	    cssIncludes: [],
 	    jsIncludes: [],
@@ -30,6 +31,7 @@ module.exports = function(app) {
 	}
         ticketNetwork.SearchEvents({searchTerms:req.param.q,whereClause:whereClause,orderByClause:'Date'},function(err,results) {
             res.render('events',{
+		layoutContainer:true,
 		session: req.session,
 		param: req.param,
 		cssIncludes: [],

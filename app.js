@@ -2,9 +2,6 @@ require('./public/js/lib/date.format');
 
 //globals
 //some configs here - maybe move this out to a config file some day
-fbAppId  = '121644174563555';
-fbSecret = 'afd240a17fd5cf34a5089ebe213db589';
-
 
 /* DOCUMENTATION FOR HOW SESSION IS ORGANIZED: this should go in unfuddled
 
@@ -28,6 +25,11 @@ console.log('started in '+process.env.NODE_ENV+' mode...');
 
 var app = module.exports = express.createServer();
 
+//app globals
+app.set('fbAppId','314732478586428');
+app.set('fbAppSecret','68b80c2adfd5421b6c9df85751264d4e');
+app.set('host','www');
+
 app.configure(function(){
     app.use(wemblirpc.server(wemblirpc.rpcDispatchHooks));
     app.set('views', __dirname + '/views');
@@ -39,8 +41,8 @@ app.configure(function(){
     app.use(express.static(__dirname + '/public'));
     app.use(express.session({ key: 'wembli.sid',secret: '@$!#SCDFdsa',store: new redis }));
     app.use(require('./lib/wembli/auth'));
-    app.use(require('wembli/ipinfodb'));
-    app.use(require('wembli/top-performers'));
+    app.use(require('./lib/wembli/ipinfodb'));
+    app.use(require('./lib/wembli/top-performers'));
     app.use(app.router);
 });
 
@@ -99,7 +101,17 @@ app.helpers({
 	    ticketsList.push(fvTicket);
 	}
 	return JSON.stringify(ticketsList);
+    },
+
+    fbCredentials: function() {
+	var credentials = {};
+	credentials.appId = app.settings.fbAppId;
+	credentials.appSecret = app.settings.fbAppSecret;
+	credentials.host = app.settings.host;
+	console.log(credentials);
+	return credentials;
     }
+    
 
 });
 
@@ -121,6 +133,10 @@ require('./controllers/fanvenues')(app);
 var port = 8001;
 if (process.env.NODE_ENV == 'development') {
     port = 8000;
+    //tom.wembli.com fb app
+    app.set('fbAppId','364157406939543');
+    app.set('fbAppSecret','ce9779873babc764c3e07efb24a34e69');
+    app.set('host','tom');
 }
 if (process.env.NODE_ENV == 'rob') {
     port = 8888;
@@ -131,8 +147,6 @@ if (process.env.NODE_ENV == 'production2') {
 if (process.env.NODE_ENV == 'secure') {
     port = 8010;
 }
-
-
 
 console.log('listening on port: '+port);
 if (!module.parent) app.listen(port);

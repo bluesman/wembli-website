@@ -22,6 +22,7 @@ module.exports = function(app) {
 				    }
 				    res.render('index.jade', {
 					session: req.session,
+					layoutContainer: true,
 					events:events,
 					cssIncludes: [],
 					jsIncludes: [],
@@ -32,4 +33,21 @@ module.exports = function(app) {
 				    
 				});
     });
+
+
+    app.get('/testfb',function(req,res) {
+	res.render('fbtest.jade', {
+	    layout:false,
+	});
+    });
+
+    app.get('/fbchannel', function(req,res) {
+	res.header('Pragma','public');
+	res.header('Cache-Control','max-age='+2592000);
+	res.header('Expires',new Date().getTime().toString());
+	res.render('fbchannel.jade', {
+	    layout:false,
+	});
+    });
+
 };

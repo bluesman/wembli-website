@@ -11,7 +11,6 @@ module.exports = function(app) {
 	    ticketNetwork.GetTickets({eventID: eventId},function(err,tickets) {
 		//console.log(tickets);
 		res.render('tickets', {
-		    layout:'layout-full-width',
                     session:req.session,
                     tickets:tickets.TicketGroup,
 		    event:event.Event,
@@ -19,7 +18,7 @@ module.exports = function(app) {
 		    page:'foo',
 		    globals:globalViewVars,
 		    cssIncludes: [],
-                    jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js','/js/twitter-bootstrap/bootstrap-modal.js','/js/twitter-bootstrap/bootstrap-transition.js','/js/tickets.js']
+                    jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js','/js/tickets.js']
 		});
 	    });
         });
