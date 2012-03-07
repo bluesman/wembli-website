@@ -1,6 +1,5 @@
-//see lib/phatseat-model.js
-var phatseatModel = require('phatseat-model');
-var Customer = phatseatModel.load('customer');
+var wembliModel = require('wembli-model');
+var Customer = wembliModel.load('customer');
 
 exports.customer = {
 

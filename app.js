@@ -120,6 +120,10 @@ app.helpers({
 // Controllers
 require('./controllers/style-guide')(app);
 require('./controllers/index')(app);
+require('./controllers/dashboard')(app);
+require('./controllers/login')(app);
+require('./controllers/signup')(app);
+require('./controllers/logout')(app);
 require('./controllers/research')(app);
 require('./controllers/events')(app);
 require('./controllers/tickets')(app);

@@ -12,9 +12,10 @@ header.navbar
 					a#twitterIcon(href="http://www.twitter.com/wembli", target="_blank")
 			nav#nav
 				ul.nav
+					- var pageId = (typeof page == "undefined") ? 'none' : page;
 					- each tab in globals.tabs
 						li
-							- if (tab.name == page)
+							- if (tab.name == pageId)
 								a.active(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
 							- else
 								a(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
