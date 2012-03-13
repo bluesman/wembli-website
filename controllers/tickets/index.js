@@ -9,10 +9,10 @@ module.exports = function(app) {
 	var eventId = req.params[0];
         ticketNetwork.GetEvents({eventID:eventId},function(err,event) {
 	    ticketNetwork.GetTickets({eventID: eventId},function(err,tickets) {
-
+		console.log(tickets);
 		res.render('tickets', {
                     session:req.session,
-                    tickets:tickets.TicketGroup?tickets.ticketGroup:[],
+                    tickets:tickets.TicketGroup?tickets.TicketGroup:[],
 		    event:event.Event,
 		    title: 'wembli.com - tickets.',
 		    page:'foo',
