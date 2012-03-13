@@ -1,2 +1,5 @@
 #eventsContent
-	.event-list.span8!= partial("widgets/event-list",{heading: 'Upcoming Events in '+session.ipinfo.cityName,events:events});
+	- if (typeof events != "undefined")
+		.event-list.span8!= partial("widgets/event-list",{heading: 'Upcoming Events in '+session.ipinfo.cityName,events:events});
+	- else 
+		#noEvents no events found
