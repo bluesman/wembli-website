@@ -13,10 +13,11 @@ header.navbar
 			nav#nav
 				ul.nav
 					- var pageId = (typeof page == "undefined") ? 'none' : page;
-					- each tab in globals.tabs
+					- each tab in tabs
 						li
 							- if (tab.name == pageId)
 								a.active(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
 							- else
 								a(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
 include modals/signup
+include modals/login

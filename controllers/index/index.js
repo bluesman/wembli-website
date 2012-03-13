@@ -3,8 +3,8 @@ var ticketNetwork = require('wembli/ticketnetwork');
 module.exports = function(app) {
     console.log('index loaded...');
     app.get('/', function(req, res){
-	if (typeof req.session.customer == "undefined" || (req.session.customer.confirmed == false)) {
-	    delete req.session.signedUp;
+	if (req.session.loggedIn) {
+	    return res.redirect( ( req.param('redirectUrl') ? req.param('redirectUrl') : '/dashboard') );		    
 	}
 	
         var d = Date.today();
@@ -13,8 +13,8 @@ module.exports = function(app) {
 	console.log(req.session.ipinfo);
 
 	//get nearby events:
-        //ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.cityName,orderByClause:'Date'},
-	ticketNetwork.SearchEvents({searchTerms:'Petco Park',orderByClause:'Date'},
+        ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.city,orderByClause:'Date'},
+	//ticketNetwork.SearchEvents({searchTerms:'Petco Park',orderByClause:'Date'},
 				function(err,results) {
 				    var events = results.Event.slice(0,5);
 				    if (!events) {

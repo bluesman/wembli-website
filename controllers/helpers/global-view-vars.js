@@ -1,11 +1,4 @@
 module.exports = {
-	// Navigation Tabs
-	tabs:[
-	    {name:'index', label:'Home', url:'/'},
-	    {name:'signup', label:'Sign Up', url:'#signupModal',modal:'modal'},
-	    {name:'login', label:'Log In To Your Dashboard', url:'#loginModal',modal:'modal'},
-	],
-	
 	// Footer
 	footerGroups:[
 	      {

@@ -5,7 +5,7 @@ module.exports = function(app) {
 	    //var fbCookie = 'fbs_'+fbAppId;
 	    //res.clearCookie(fbCookie);
 	    var errors = {};
-	    res.render('login', {
+	    res.render('index', {
 		    globals:globalViewVars,
 		layoutContainer:true,
 		    session: req.session,

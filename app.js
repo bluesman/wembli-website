@@ -41,7 +41,7 @@ app.configure(function(){
     app.use(express.static(__dirname + '/public'));
     app.use(express.session({ key: 'wembli.sid',secret: '@$!#SCDFdsa',store: new redis }));
     app.use(require('./lib/wembli/auth'));
-    app.use(require('./lib/wembli/ipinfodb'));
+    app.use(require('./lib/wembli/geoip'));
     app.use(require('./lib/wembli/top-performers'));
     app.use(app.router);
 });
@@ -67,7 +67,26 @@ globalViewVars = require('./controllers/helpers/global-view-vars');
 app.dynamicHelpers({
     session: function(req, res){
 	return req.session;
+    },
+
+    //navigation
+    tabs: function(req,res) {
+	var tabs = [];
+
+	if (req.session.loggedIn) {
+	    tabs.push({name:'dashboard', label:'Dashboard', url:'/dashboard'});
+	    tabs.push({name:'logout', label:'Log Out', url:'/logout'});
+	} else {
+	    tabs.push({name:'index', label:'Home', url:'/'});
+	    tabs.push({name:'signup', label:'Sign Up', url:'#signupModal',modal:'modal'});
+	    tabs.push({name:'login', label:'Log In To Your Dashboard', url:'#loginModal',modal:'modal'});
+	}
+	return tabs;
+    },
+    params: function(req,res) {
+	return req.params;
     }
+
 });
 
 //static helper functions
@@ -110,7 +129,8 @@ app.helpers({
 	credentials.host = app.settings.host;
 	console.log(credentials);
 	return credentials;
-    }
+    },
+
     
 
 });

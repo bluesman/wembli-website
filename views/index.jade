@@ -24,9 +24,9 @@
 			#step4Info.tunga.hidden Let's face it - entertainment is a social sport so we make it easy for you to coordinate with your friends!
 	include widgets/search-box
 	#belowFold
-		.event-list.span6.offset1!= partial("widgets/event-list",{heading: 'Upcoming Events in '+session.ipinfo.cityName,events:events});
-			a#seeMore(href="/events/search/"+session.ipinfo.cityName+"/"+Date.today().format("mm-dd-yy"))
+		.event-list.span6.offset1!= partial("widgets/event-list",{heading: 'Upcoming Events in '+session.ipinfo.city,events:events});
+			a#seeMore(href="/events/search/"+session.ipinfo.city+"/"+Date.today().format("mm-dd-yy"))
 				span see more events in 
-				span.lowercase!= session.ipinfo.cityName
+				span.lowercase!= session.ipinfo.city
 //		a.mobileAd.offset8(href="#")
 //			span.btn.btn-primary Get Mobile
