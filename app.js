@@ -142,6 +142,7 @@ require('./controllers/style-guide')(app);
 require('./controllers/index')(app);
 require('./controllers/dashboard')(app);
 require('./controllers/login')(app);
+require('./controllers/forgot-password')(app);
 require('./controllers/signup')(app);
 require('./controllers/logout')(app);
 require('./controllers/research')(app);

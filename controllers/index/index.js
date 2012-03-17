@@ -10,8 +10,6 @@ module.exports = function(app) {
         var d = Date.today();
         var beginDate = d.format("shortDate");
 
-	console.log(req.session.ipinfo);
-
 	//get nearby events:
         ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.city,orderByClause:'Date'},
 	//ticketNetwork.SearchEvents({searchTerms:'Petco Park',orderByClause:'Date'},

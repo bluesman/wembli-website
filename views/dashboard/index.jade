@@ -1,3 +1,6 @@
+- if (typeof session.message != "undefined")
+	- if (typeof session.message.status == 'success')
+		.alert.alert-success session.message.message
 .container 
-  .dashboard#dashboard This is the dashboard: 
-    .email!= session.customer.email
+	.dashboard#dashboard This is the dashboard: 
+		.email!= session.customer.email
