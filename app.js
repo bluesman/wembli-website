@@ -83,9 +83,10 @@ app.dynamicHelpers({
 	}
 	return tabs;
     },
+
     params: function(req,res) {
 	return req.params;
-    }
+    },
 
 });
 
@@ -147,7 +148,9 @@ require('./controllers/signup')(app);
 require('./controllers/logout')(app);
 require('./controllers/research')(app);
 require('./controllers/events')(app);
+require('./controllers/event-builder')(app);
 require('./controllers/tickets')(app);
+require('./controllers/friends')(app);
 require('./controllers/hotels')(app);
 require('./controllers/parking')(app);
 require('./controllers/restaurants')(app);

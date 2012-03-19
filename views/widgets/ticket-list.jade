@@ -14,7 +14,8 @@ ul
 		- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
 		li(id='ticket-id-'+ticket.ID)
 			p.info 
-				a(href=ticketLink)= "Section: "+ticket.Section + " - Row: " + ticket.Row
+				- //a(href=ticketLink)= "Section: "+ticket.Section + " - Row: " + ticket.Row
+				span#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
 				span.seats.block!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
 				span.rating.block
 					em Wembli Rating:

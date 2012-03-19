@@ -19,9 +19,9 @@
 //     CountryID: '217' }
 
 script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
-#eventBuilder!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder});
+#eventBuilder!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'tickets'}});
 #ticketsContent
-	#thumbnail.thumbnail
+	#thumbnail.thumbnail.hide
 	- if (typeof tickets != "undefined")
 		.ticket-list.span5!=partial("widgets/ticket-list",{tickets:tickets});
 	- else
@@ -29,3 +29,6 @@ script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
 	#fvmap
 	input#venueId(type="hidden",value=event.VenueID)
 	input#eventName(type="hidden",value=event.Name)
+#staticMapContainer.hide
+	#staticMap
+		img(src="#{event.MapURL}")

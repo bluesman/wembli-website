@@ -18,7 +18,7 @@ $(document).ready(function() {
 	    // fvmap is now loaded and ready to use
 	})
 	.bind('fvmapNotAvailable', function() {
-	    $(this).replaceWith('Sorry! Map could not be found.');
+	    $(this).replaceWith($('#staticMapContainer').html());
 	})
 	.bind('fvmapEnlargeImage', function(obj, largeImageUrl, section) {
 	    // implement large image viewing

@@ -1,5 +1,8 @@
+include ../includes/modals/eventplan-options
 h3!= heading
 ul
-	- each event in events
-		li!= partial("includes/event",{event:event});
-			
+	- if (events.length > 0) 
+		- each event in events
+			li!= partial("includes/event",{event:event});
+	- else
+		li No Events Found.

@@ -2,18 +2,11 @@ a.block(href="#eventBuilder").hide
 #event!= partial("includes/event",{cta:false,rating:false,link:false,event:event});
 #split
 #stepInfo
-	#info
-		h3 1. Choose Ticket Options
-		span.block Select 1 or more ticket options to share with your friends.
+	#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 		#summary
 			h5 Itinerary Summary: 
 			span#summaryContent Nothing added yet...
-	#actions
-		a#continue.btn.btn-success.btn-large(href="#") Continue
-		#links
-			a#howDoesItWork(data-toggle="modal",href="#howDoesItWorkModal") How Does It Work
-			span  | 
-			a.saveForLater(data-toggle="modal",href="#signupModal") Save For Later
+	#actions!= partial("includes/event-builder-actions",{next:next});
 #eventBuilderAlert.alert.hide
 #howDoesItWorkModal.modal.hide.fade
 	.modal-header

@@ -173,6 +173,16 @@ $(document).ready(function(){
 
 /* eventPlan widget utilities */
 $w.eventplan = {
+    init: function() {
+	//every I'm Going button gets caught to display options overlay
+	$('.choose-event').click(function(e) {
+	    e.preventDefault();
+	    //prepare the modal form action
+	    $('form#eventBuilder').attr('action',$(this).attr('href'));
+	    $('#eventplanOptionsModal').modal('show');
+	});
+
+    },
     guid:"",
     toggleButton:function(action,el) {
 	if (action == 'add') {
@@ -201,3 +211,8 @@ $w.eventplan = {
 	}
     }
 };
+
+$(document).ready(function(){
+	$w.eventplan.init();
+});
+

@@ -1,0 +1,18 @@
+- var currentService = 'tickets';
+ul#breadcrumbs
+	- var idx = 0;
+	- each service in globalViewVars.wembliServices
+		- if (session.eventplan.config[service])
+			- idx++;
+			- var active = ((typeof page != "undefined") && (page == service)) ? 'active' : '';
+			- if (active == 'active')
+				- currentService = service;
+			- if (idx > 1)
+				li
+					i.icon-chevron-right.icon-white 
+			li(class="#{active}")
+				a(href="/#{service}#eventBuilder")!= idx+'. '+ service
+	- idx++;
+	li
+		i.icon-chevron-right.icon-white 
+	li!= idx+'. Summary'

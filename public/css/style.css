@@ -215,54 +215,11 @@ header #nav ul li a.active:link, header nav ul li a.active:hover, header nav ul 
   color: #ffffff;
 }
 footer {
-  *zoom: 1;
-  padding: 40px 280px 40px 40px;
-  min-height: 100px;
-  background: #000000 url('/images/layout/wembli-logo.png') 720px center no-repeat;
-}
-footer:before, footer:after {
-  display: table;
-  content: "";
-}
-footer:after {
-  clear: both;
-}
-footer dl {
-  float: left;
-  width: 25%;
-}
-footer dt {
-  text-transform: uppercase;
-  font-size: 12px;
-  font-weight: normal;
-}
-footer dl dd {
-  margin: 0 0 3px;
-  margin-left: 0;
-}
-footer dl dd a {
-  font-size: 11px;
-}
-footer dl dd a:link {
-  color: #f7fefe;
-}
-footer dl dd a:visited {
-  color: #eee;
-}
-footer dl dd a:hover {
-  text-decoration: underline;
-}
-footer .connect dd a {
-  padding: 1px 0 2px 25px;
-  display: block;
-  background-image: url('/images/icons/sm-icons-sprite-small.png');
-  background-repeat: no-repeat;
-}
-footer .connect dd.twitter a {
-  background-position: 0 1px;
-}
-footer .connect dd.facebook a {
-  background-position: 0 -24px;
+  text-align: center;
+  border-top: thin solid #d8d6d7;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 10px;
 }
 /* Stars */
 .stars {
@@ -447,6 +404,12 @@ footer .connect dd.facebook a {
 .ticket-list.span12 ul li p.info {
   width: 765px;
 }
+.ticket-list ul li p.info #ticketSeat {
+  font-size: 12px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
 .ticket-list ul li p.cta {
   float: right;
   text-align: right;
@@ -621,41 +584,53 @@ footer .connect dd.facebook a {
 #eventBuilder #stepInfo:after {
   clear: both;
 }
-#eventBuilder #stepInfo #info {
+#eventBuilder #stepInfo #breadcrumbsContainer {
   float: left;
   margin-left: 10px;
+}
+#eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li {
+  line-height: 20px;
+  vertical-align: middle;
+  font-family: "SegoeScriptBold";
+  text-transform: capitalize;
+  font-size: 20px;
+  display: inline;
+  padding: 4px;
+}
+#eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li a, #eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li a:visited {
   color: #ffffff;
 }
-#eventBuilder #stepInfo #info h3 {
-  font-family: "SegoeScriptBold";
-  color: #FF6600;
-  font-size: 18px;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+#eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li.active, #eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li.active a, #eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li a:hover {
+  color: #ff6700;
 }
-#eventBuilder #stepInfo #info #summary {
-  margin-top: 6px;
+#eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li i {
+  margin-top: 8px;
 }
-#eventBuilder #stepInfo #info #summary h5 {
+#eventBuilder #stepInfo #breadcrumbsContainer #summary {
+  margin-top: 20px;
+}
+#eventBuilder #stepInfo #breadcrumbsContainer #summary h5 {
   text-transform: uppercase;
   text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
   color: #000000;
   font-size: 14px;
   display: inline;
 }
-#eventBuilder #stepInfo #actions {
+#eventBuilder #actions {
+  color: #ffffff;
   float: right;
   text-align: center;
   margin: 0 20px 0 0;
 }
-#eventBuilder #stepInfo #actions #links {
+#eventBuilder #actions #links {
   margin-top: 10px;
 }
-#eventBuilder #stepInfo #actions #links a.saveForLater, #eventBuilder #stepInfo #actions #links a#howDoesItWork {
+#eventBuilder #actions #links a.saveForLater, #eventBuilder #actions #links a#howDoesItWork {
   color: #ffffff;
   font-size: 10px;
   padding: 4px;
 }
-#eventBuilder #stepInfo #actions #links a.saveForLater:hover, #eventBuilder #stepInfo #actions #links a#howDoesItWork:hover {
+#eventBuilder #actions #links a.saveForLater:hover, #eventBuilder #actions #links a#howDoesItWork:hover {
   color: #ff6700;
 }
 #signupModal #login {
@@ -918,12 +893,18 @@ footer .connect dd.facebook a {
   right: 0px;
   margin: 0;
   z-index: 2;
-  height: 569px;
+  height: 570px;
   overflow: scroll;
 }
-#fvmap {
+#fvmap, #staticMap {
   margin-right: 420px;
   height: 600px;
+}
+#staticMap {
+  padding-right: 420px;
+  width: 600px;
+  margin: auto;
+  text-align: center;
 }
 #thumbnail {
   background-color: #d8d6d7;
