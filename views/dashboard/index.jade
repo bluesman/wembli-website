@@ -1,3 +1,25 @@
 .container 
-  .dashboard#dashboard This is the dashboard: 
-    .email!= session.customer.email
+	#dashboard.dashboard.clearfix
+		aside
+			ul
+				li.active
+					a(href="#myEvents") My Events
+				li.last
+					a(href="#newEvents") New Event
+		section
+			#myEvents.content
+				h2 Manage your events
+				table.events
+					thead
+						tr
+							th Where you going
+					tbody
+						tr
+							td My first event
+						tr.shade
+							td Event #2
+						tr
+							td because I'm awesome event 3
+			#newEvents.content.hidden
+				h2 Start a new experience
+			span.email!= session.customer.email
