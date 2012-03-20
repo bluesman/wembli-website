@@ -925,3 +925,63 @@ footer {
   left: 10px;
   z-index: 2;
 }
+.container {
+  position: relative;
+}
+aside {
+  width: 150px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-height: 600px;
+  background-color: #eee;
+}
+aside ul {
+  padding: 10px 0;
+}
+aside ul li a {
+  padding: 5px 10px;
+  display: block;
+  font-weight: bold;
+  font-size: 12px;
+  border-top: 1px solid #cdcdcd;
+}
+aside ul li.last a {
+  border-bottom: 1px solid #cdcdcd;
+}
+aside ul li.active {
+  width: 151px;
+}
+aside ul li.active a {
+  background-color: #fff;
+  color: #666;
+  padding-right: 1px;
+}
+.dashboard section {
+  margin: 15px 0 15px 150px;
+  min-height: 600px;
+  border-left: 1px solid #cdcdcd;
+  padding: 10px;
+}
+.dashboard div.content {
+  padding-left: 50px;
+}
+table.events {
+  border: 1px solid #cdcdcd;
+  margin: 20px 0;
+  color: #999;
+  border-left: 1px solid #cdcdcd;
+  border-radius: 5px;
+  width: 600px;
+}
+table.events th, table.events td {
+  color: #333;
+  padding: 3px 5px;
+}
+table.events th {
+  background-color: #ddd;
+  border-bottom: 1px solid #cdcdcd;
+}
+table.events tr.shade td {
+  background-color: #eee;
+}
