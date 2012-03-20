@@ -1,0 +1,24 @@
+#eventplanOptionsModal.modal.hide.fade
+	.modal-header
+		a.close(data-dismiss="modal") x
+		h3 Choose Wembli Services
+	.modal-body
+		p 
+			span Wembli provides many services to help you plan your event.  Choose which services you would like to use:
+		form#eventBuilder.well.form-horizontal(method="POST",action="#")
+			input(type="hidden",name="setConfig",value="1")
+			fieldset
+				label.control-label.checkbox.tunga(for="friends") Invite Friends
+					input#friends(type="checkbox",name="friends",checked="checked")
+				label.control-label.checkbox.tunga(for="tickets") Find Tickets
+					input#tickets(type="checkbox",name="tickets",checked="checked")
+				label.control-label.checkbox.tunga(for="parking") Reserve Parking (COMING SOON!)
+					input#parking(type="checkbox",name="parking",disabled="disabled",readonly="readonly")
+				label.control-label.checkbox.tunga(for="restaurants") Restaurant Deals and Reservations (COMING SOON!)
+					input#restaurants(type="checkbox",name="restaurants",disabled="disabled",readonly="readonly")
+				label.control-label.checkbox.tunga(for="hotels") Restaurant Deals and Reservations (COMING SOON!)
+					input#hotels(type="checkbox",name="hotels",disabled="disabled",readonly="readonly")
+			.form-actions
+				button.btn.btn-success.btn-large(type="submit").right Continue
+
+	

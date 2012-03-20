@@ -1,9 +1,13 @@
 this.Model = function(mongoose) {
-
     var Schema = mongoose.Schema;
     var ObjectId = Schema.ObjectId;
 
     var Confirmations = new Schema( {
+	timestamp: {type: String},
+	token: {type: String}
+    });
+
+    var ForgotPassword = new Schema( {
 	timestamp: {type: String},
 	token: {type: String}
     });
@@ -18,14 +22,16 @@ this.Model = function(mongoose) {
 	password: {type: String},
 	confirmed: {type: Boolean,default:false},
 	confirmation: [Confirmations],
+	forgot_password: [ForgotPassword],
 	date_created: {type:Date,default:Date.now},
 	last_modified: {type:Date}
     });
 
     Customer.pre('save',function(next) {
-	    this.last_modified = new Date();
-	    next();
-	});
+	console.log('called save');
+	this.last_modified = new Date();
+	next();
+    });
 
     /*
     Customer.full_name = function(){ 

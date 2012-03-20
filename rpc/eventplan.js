@@ -27,6 +27,7 @@ exports.eventplan = {
 	/* the structure of the cache is like this:
 
 	   eventplan:<someguid> = {
+	                           event: eventData,
 	                           tickets: {123456: { ticketnetwork.TicketGroup },
 				             123457: { ... },
 					     123458: { ... }
@@ -81,6 +82,7 @@ exports.eventplan = {
 
 	    };
 
+	    //returns err,cache - cache is key.value = <serialized json>
 	    redisClient.hgetall('eventplan:'+guid,addTix);
 	};
 

@@ -12,23 +12,23 @@
 				.control-group
 					label.control-label(for="firstName") First Name
 					.controls
-						input#firstName
+						input#firstName(name="first_name")
 				.control-group
 					label.control-label(for="lastName") Last Name
 					.controls
-						input#lastName
+						input#lastName(name="last_name")
 				.control-group
-					label.control-label(for="emailAddress") Email Address
+					label.control-label(for="email") Email Address
 					.controls
-						input#emailAddress
+						input#email(name="email")
 				.control-group
 					label.control-label(for="password") Password
 					.controls
-						input#password(type="password")
+						input#password(type="password",name="password")
 				.control-group
-					label.control-label(for="lastName") Confirm Password
+					label.control-label(for="password2") Confirm Password
 					.controls
-						input#password2(type="password")
+						input#password2(type="password",name="password2")
 				.form-actions
 					a#login(href="/login")
 						span Existing Users:

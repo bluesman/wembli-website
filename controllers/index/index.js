@@ -10,15 +10,13 @@ module.exports = function(app) {
         var d = Date.today();
         var beginDate = d.format("shortDate");
 
-	console.log(req.session.ipinfo);
-
 	//get nearby events:
         ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.city,orderByClause:'Date'},
 	//ticketNetwork.SearchEvents({searchTerms:'Petco Park',orderByClause:'Date'},
 				function(err,results) {
-				    var events = results.Event.slice(0,5);
-				    if (!events) {
-					events = [];
+				    var events = [];
+				    if (typeof results.Event != "undefined") {
+					events = results.Event.slice(0,5);
 				    }
 				    res.render('index.jade', {
 					session: req.session,

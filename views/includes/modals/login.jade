@@ -19,10 +19,15 @@
 					.controls
 						input(type="password",value="",name="password")
 				.control-group
-					label.control-label(for="email") Email:
 					.controls
-						input(type="checkbox",name="remember",checked=params.remember)
-						label(for="remember") Remember Me
+						label.control-label(for="remember") Remember Me
+							input(type="checkbox",name="remember",checked=params.remember)
 				.form-actions
-					a(href="/forgot-password") forgot your password?
+					a#forgotPasswordLink(href="#forgotPasswordModal",data-toggle="modal") forgot your password?
 					button#loginSubmitButton.btn.btn-primary.btn-large Login
+script
+	$(document).ready(function() {
+		$('#forgotPasswordLink').click(function(e) {
+			$('#loginModal').modal('hide');
+		});
+	});

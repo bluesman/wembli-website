@@ -8,21 +8,6 @@ var Customer      = wembliModel.load('customer');
 
 module.exports = function(app) {
 
-    app.get(/\/signup\/?/, function(req, res){
-	console.log('signup called');
-	res.render('signup', {
-	    params:req.params,
-	    session:req.session,
-	    cssIncludes: [],
-	    jsIncludes: [],
-	    title: 'wembli.com - signup.',
-	    globals:globalViewVars,
-	    layoutContainer:true
-	    
-	});
-    });
-
-
     app.post(/\/signup\/?/, function(req, res){
 	console.log('submitted');
 
@@ -40,11 +25,17 @@ module.exports = function(app) {
 	    
 	    //if no c make one email param
 	    if (c == null) {
+		//TODO: make sure passwords match
+
 		var newC = {email: req.param('email'),
+			    first_name: req.param('first_name'),
+			    last_name: req.param('last_name'),
 			    password: digest,
 			    confirmed: false
 			   };
 		
+		console.log(newC);
+
 		//if there's ipinfo in the session grab the zip   
 		if (/\d+/.test(req.session.ipinfo.zipCode)) {
 		    newC.zip_code = req.session.ipinfo.zipCode;
