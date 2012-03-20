@@ -156,7 +156,7 @@ var standardLogin = function(req,res) {
 	    cssIncludes: [],
 	    jsIncludes: [],
 	    title: 'wembli.com - login to get the best seats.',
-	    params: {remember:req.session.remember,email:( req.param('email') ? req.param('email') : req.session.customer.email) },
+	    params: {remember:req.session.remember,email:req.param('email') },
 	    errors: {general:true},
 	    globals:globalViewVars,
 	    layoutContainer:true

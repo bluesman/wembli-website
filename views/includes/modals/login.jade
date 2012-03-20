@@ -20,8 +20,8 @@
 						input(type="password",value="",name="password")
 				.control-group
 					.controls
-						label.control-label(for="remember") Remember Me
-							input(type="checkbox",name="remember",checked=params.remember)
+						input#rememberInput(type="checkbox",name="remember",checked=params.remember)
+						label#rememberLabel.control-label(for="remember") Remember Me
 				.form-actions
 					a#forgotPasswordLink(href="#forgotPasswordModal",data-toggle="modal") forgot your password?
 					button#loginSubmitButton.btn.btn-primary.btn-large Login

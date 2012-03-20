@@ -653,6 +653,16 @@ footer {
 #loginWrapper #loginLeft {
   float: left;
 }
+#loginModal #loginForm #rememberInput {
+  float: left;
+}
+#loginModal #loginForm #rememberLabel {
+  padding: 1px;
+  margin-left: 20px;
+}
+#loginModal #loginForm #forgotPasswordLink {
+  margin-right: 20px;
+}
 /* Home Page */
 #index section#content {
   padding-top: 50px;
