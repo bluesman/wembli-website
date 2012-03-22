@@ -28,6 +28,7 @@ module.exports = function(app) {
 	    title: 'wembli.com - login to get the best seats.',
 	    params: {remember:req.session.remember,email:((req.session.remember && (typeof req.session.customer != "undefined")) ? req.session.customer.email : null)},
 	    errors: errors,
+	    page:'index',
 	    globals:globalViewVars	    
 	});
     });
@@ -159,8 +160,7 @@ var standardLogin = function(req,res) {
 	    params: {remember:req.session.remember,email:req.param('email') },
 	    errors: {general:true},
 	    globals:globalViewVars,
-	    layoutContainer:true
-	    
+	    layoutContainer:true,
 	});
     },false); 
 };

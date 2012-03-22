@@ -3,13 +3,13 @@ http     = require('http');
 
 module.exports = function(app) {
     app.post(/^\/(getdata-2|getsectionlist-2)/,function(req,res) {
-	console.log('here');
-	console.log(req.body);
+	//console.log('here');
+	//console.log(req.body);
 	var params = querystring.stringify(req.body, sep='&', eq='=');
-	console.log(params);
+	//console.log(params);
 	var base = '/'+req.params[0];
 	var uri = base;
-	console.log(uri);
+	//console.log(uri);
 	
 	var options = {'host':'fanvenues2.appspot.com',
 		       'port':80,
