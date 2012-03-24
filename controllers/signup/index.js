@@ -7,7 +7,19 @@ var wembliModel   = require('wembli-model');
 var Customer      = wembliModel.load('customer');
 
 module.exports = function(app) {
-
+    app.get('/signup', function(req, res) {
+	res.render('signup', {
+	    session: req.session,
+	    layoutContainer: true,
+	    cssIncludes: [],
+	    jsIncludes: [],
+	    title: 'wembli.com - Signup now.',
+	    page:'index',
+	    globals:globalViewVars	    
+	});
+	
+    });
+    
     app.post(/\/signup\/?/, function(req, res){
 	console.log('submitted');
 

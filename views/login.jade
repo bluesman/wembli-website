@@ -1,32 +1,4 @@
-#loginWrapper
-  #loginLeft
-    #loginHeader
-      h1 Login to Wembli:
-    .generalError.error.yellow
-      - if((typeof errors !== 'undefined') && (errors.general) )
-        | Incorrect Email or Password.
-      - if((typeof errors !== 'undefined') && (errors.facebook) )
-        | Unable to login through facebook.
-    #loginBody
-      #stdLogin
-        form#loginForm.form-horizontal.well(method="post",action="/login",enctype="application/x-www-form-urlencoded")
-          input#fbLoginHidden(name="fbLoginHidden",value="0",type="hidden")
-          fieldset
-            label(for="email") Email:
-            input(type="text",value=(session.remember ? params.email : null),name="email")
-          fieldset
-            label(for="password") Password:
-            input(type="password",value="",name="password")
-          fieldset#rememberMe.leftBlock
-            input.leftBlock(type="checkbox",name="remember",checked=params.remember)
-            label(for="remember") Remember Me
-            #forgotPassword
-              a(href="/forgot-password") forgot your password?
-          button#loginSubmitButton.btn.btn-primary.btn-large Login
-    #fbLogin.clearfix
-      a#fbLoginLink(href="#")
-  #loginRight
-    a#signupBox.signUp(href="/signup")
-      h3 No Account?
-      #signupBoxText.signUp click here to sign up now.
-
+script
+	$(document).ready(function() {
+		$('#loginModal').modal("show");
+	});

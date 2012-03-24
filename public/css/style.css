@@ -236,9 +236,12 @@ header #nav ul li a.active:link, header nav ul li a.active:hover, header nav ul 
 footer {
   text-align: center;
   border-top: thin solid #d8d6d7;
-  padding: 10px;
+  padding: 10px 0;
   margin-top: 10px;
   font-size: 10px;
+}
+#index #maincontentWrapper footer {
+  margin-top: 410px;
 }
 /* Stars */
 .stars {
@@ -671,6 +674,16 @@ footer {
 }
 #loginWrapper #loginLeft {
   float: left;
+}
+#loginModal #loginForm #rememberInput {
+  float: left;
+}
+#loginModal #loginForm #rememberLabel {
+  padding: 1px;
+  margin-left: 20px;
+}
+#loginModal #loginForm #forgotPasswordLink {
+  margin-right: 20px;
 }
 /* Home Page */
 #index section#content {

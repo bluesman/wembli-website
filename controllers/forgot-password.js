@@ -206,6 +206,8 @@ module.exports = function(app) {
 			    globals:globalViewVars,
 			    title: 'wembli.com - reset password email sent',
 			    email:req.param('email'),
+			    layoutContainer: true,
+			    page:'index',
 			});
 		    });
 		} else {
