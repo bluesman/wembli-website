@@ -4,25 +4,39 @@
 .container 
 	#dashboard.dashboard.clearfix
 		aside
-			ul
+			ul#sideNav
 				li.active
-					a(href="#myEvents") My Events
+					a#myEventsTab(href="#myEvents") My Events
 				li.last
-					a(href="#newEvents") New Event
+					a#newEventsTab(href="#newEvents") New Event
 		section
 			#myEvents.content
 				h2 Manage your events
-				table.events
-					thead
-						tr
-							th Where you going
-					tbody
-						tr
-							td My first event
-						tr.shade
-							td Event #2
-						tr
-							td because I'm awesome event 3
+				- if(session.eventplan.event)
+					p #{session.eventplan.event.Name}
+					table.events
+						thead
+							tr
+								th Where you going
+						tbody
+							tr
+								td My first event
+							tr.shade
+								td Event #2
+							tr
+								td because I'm awesome event 3
+				- else
+					div.alert.alert-info
+						h3 Hey There!
+						p We noticed you don't any events to manage that. Wembli makes planning the perfect out simple. Just go to your "New Event" tab any time to get started.
+						p.tc
+							a.btn.btn-primary.navTrigger(href="#newEventsTab") Let's do it!
 			#newEvents.content.hidden
 				h2 Start a new experience
-			span.email!= session.customer.email
+				#newEventContainer
+					#newEvent
+					#searchContainer
+						form#search
+						#searchResults
+					#mapContainer
+			// span.email!= session.customer.email

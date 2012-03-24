@@ -97,7 +97,7 @@ module.exports = function(app) {
 	    res.render('dashboard/index', {
 		session:req.session,
 		cssIncludes: [],
-		jsIncludes: [],
+		jsIncludes: ['/js/dashboard.js'],
 		globals:globalViewVars,
 		title: 'wembli.com - login to get the best seats.'
 	    });

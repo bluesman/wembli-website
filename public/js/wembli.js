@@ -216,3 +216,46 @@ $(document).ready(function(){
 	$w.eventplan.init();
 });
 
+
+$w.sideNav = function(){
+	
+	/* Properties */
+	
+	/* Methods */
+	function change(toggler){
+		var current = $($('#sideNav .active a:first').attr('href'));
+		var target 	= $($(toggler).attr('href'));
+		
+		$(current).fadeOut('fast', function(){
+			$(target).fadeIn('fast');
+		});
+		
+		$('#sideNav .active').removeClass('active');
+		$(toggler).parent().addClass('active');
+		
+	}
+	
+	function init(){
+		$('#sideNav a').on('click', function(e){
+			e.preventDefault();
+			
+			if(!$(this).hasClass('active')){
+				change(this);
+			}
+		});
+		
+		$('.navTrigger').live('click', function(e){
+			e.preventDefault();
+			change($($(this).attr('href')));
+		});
+	}
+	/* Return */
+	return {
+		init:init,
+		change:change
+	}
+}();
+
+$(document).ready(function(){
+	$w.sideNav.init();
+});

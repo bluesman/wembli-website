@@ -86,6 +86,18 @@ dd {
 .normalSize {
   font-size: 0.5em;
 }
+.tl {
+  text-align: left;
+}
+.tr {
+  text-align: right;
+}
+.tc {
+  text-align: center;
+}
+.tb {
+  text-align: block;
+}
 * {
   outline: none !important;
 }
@@ -120,13 +132,20 @@ section#content:after {
   margin-top: 65px;
   height: 30px;
   background-color: #ff6700;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
   z-index: -1;
+  -webkit-box-shadow: 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
 }
 header {
   *zoom: 1;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 3;
+  padding-top: 5px;
+  top: -5px;
 }
 header:before, header:after {
   display: table;
@@ -948,17 +967,19 @@ aside ul li.active a {
   padding-right: 1px;
 }
 .dashboard section {
-  margin: 15px 0 15px 150px;
+  margin: 0 0 15px 150px;
   min-height: 600px;
   border-left: 1px solid #cdcdcd;
   padding: 10px;
 }
 .dashboard div.content {
-  padding-left: 50px;
+  padding: 15px 0 0 50px;
+}
+.dashboard div.content h2 {
+  margin-bottom: 20px;
 }
 table.events {
   border: 1px solid #cdcdcd;
-  margin: 20px 0;
   color: #999;
   border-left: 1px solid #cdcdcd;
   border-radius: 5px;
@@ -974,4 +995,11 @@ table.events th {
 }
 table.events tr.shade td {
   background-color: #eee;
+}
+.alert h3 {
+  color: #3A87AD;
+  border-bottom: 1px solid #3A87AD;
+}
+.alert p {
+  margin-top: 15px;
 }
