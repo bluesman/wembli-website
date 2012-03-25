@@ -129,7 +129,7 @@ section#content:after {
 #backgrounds #stripe {
   position: relative;
   margin-left: 24%;
-  margin-top: 65px;
+  margin-top: 70px;
   height: 30px;
   background-color: #ff6700;
   z-index: -1;
@@ -139,13 +139,8 @@ section#content:after {
 }
 header {
   *zoom: 1;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(0, 0, 0, 0.25);
   position: relative;
   z-index: 3;
-  padding-top: 5px;
-  top: -5px;
 }
 header:before, header:after {
   display: table;
@@ -154,10 +149,16 @@ header:before, header:after {
 header:after {
   clear: both;
 }
+header .navbar-inner .container nav ul.nav {
+  margin-top: 75px;
+  text-transform: uppercase;
+  text-shadow: 0 1px #ff8533, 0 -1px #803400;
+  font-size: 17px;
+}
 header .stripeShadow {
   float: left;
   height: 30px;
-  margin-top: 65px;
+  margin-top: 70px;
   width: 3px;
 }
 header #stripeShadowLeft {
@@ -173,7 +174,7 @@ header #stripeShadowRight {
 header #logo {
   float: left;
   display: block;
-  height: 95px;
+  height: 100px;
   width: 230px;
   background: url('/images/layout/wembli-logo.png') #ffffff center center no-repeat;
 }
@@ -210,28 +211,28 @@ header #utility li#followUs {
   margin-top: 4px;
   float: left;
 }
-.navbar {
-  margin-bottom: 0px;
-}
-header .navbar-inner .container nav ul.nav {
-  margin-top: 70px;
-  text-transform: uppercase;
-  text-shadow: 0 1px #ff8533, 0 -1px #803400;
-  font-size: 17px;
-}
 header #nav ul li a {
   font-size: 15px;
   padding: 0 10px 0;
   color: #f2f2f2;
 }
-header #nav ul li a:link, header nav ul li a:visited {
+header #nav ul li a:link, header #nav ul li a:visited {
   color: #f2f2f2;
 }
 header #nav ul li a:hover {
   color: #ffffff;
 }
-header #nav ul li a.active:link, header nav ul li a.active:hover, header nav ul li a.active:visited {
+header #nav ul li a.active:link, header #nav ul li a.active:hover, header #nav ul li a.active:visited {
   color: #ffffff;
+}
+#flashContainer {
+  position: absolute;
+}
+.flash {
+  width: 890px;
+}
+.navbar {
+  margin-bottom: 0px;
 }
 footer {
   text-align: center;
@@ -946,6 +947,55 @@ footer {
   position: absolute;
   left: 10px;
   z-index: 2;
+}
+#friendsContent {
+  margin: auto;
+  width: 100%;
+}
+#manual, #gmail, #facebook {
+  *zoom: 1;
+  width: 30%;
+  padding: 10px;
+  float: left;
+}
+#manual:before,
+#gmail:before,
+#facebook:before,
+#manual:after,
+#gmail:after,
+#facebook:after {
+  display: table;
+  content: "";
+}
+#manual:after, #gmail:after, #facebook:after {
+  clear: both;
+}
+#friendsContent h3 {
+  padding: 4px;
+}
+#manual {
+  *zoom: 1;
+}
+#manual:before, #manual:after {
+  display: table;
+  content: "";
+}
+#manual:after {
+  clear: both;
+}
+#manual #friendStack {
+  margin-left: 20px;
+  margin-top: 380px;
+  width: 340px;
+}
+#manual #friendStack .friend {
+  background-color: #f2f2f2;
+  padding: 15px;
+  border-bottom: 1px solid #CCC;
+}
+#manual #friendStack .friend .data {
+  float: left;
+  width: 240px;
 }
 .container {
   position: relative;

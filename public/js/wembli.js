@@ -197,16 +197,31 @@ $w.eventplan = {
 
     },
     alertMsg:function(status,msg) {
+	//use header flash msg?
 	$('#eventBuilderAlert').html(msg).addClass('alert-'+status).fadeIn(800).delay(1000).fadeOut(600);
     },
     updateSummary:function() {
 	//update the eventplan summary
-	if (typeof this.data != "undefined" &&
-	    typeof this.data.tickets != "undefined") {
+	if (typeof this.data != "undefined") {
+	    var summaryMsg = '';
+	    if (typeof this.data.friends != "undefined") {
+		var count = Object.keys(this.data.friends).length;
+		var addS = (count == 1) ? '' : 's';
+		summaryMsg = count+' friend'+addS;
+	    }
 
-	    var count = Object.keys(this.data.tickets).length;
-	    var addS = (count == 1) ? '' : 's';
-	    var summaryMsg = count+' ticket option'+addS+' in your plan.';
+	    if (typeof this.data.tickets != "undefined") {
+		var count = Object.keys(this.data.tickets).length;
+		var addS = (count == 1) ? '' : 's';
+		if (summaryMsg != '') {
+		    summaryMsg += ', ';
+		}
+		summaryMsg += count+' ticket option'+addS;
+	    }
+	    summaryMsg += ' in your plan.';
+	    if (summaryMsg == ' in your plan.') {
+		summaryMsg = 'Nothing added yet.';
+	    }
 	    $('#summaryContent').html(summaryMsg);
 	}
     }

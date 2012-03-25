@@ -1,10 +1,11 @@
 (function($,window,undefined) {
 
     var init = function() {
+	var guid = $w.eventplan.guid;
+
 	$('#ticketsContent .ticket-list li').each(function(idx,el) { 
 	    var li = el;
 	    var ticketId = li.id.split('-')[2];
-	    var guid = $w.eventplan.guid;
 
 	    //if this ticketgroup is already in the plan, toggle the button
 	    if (typeof $w.eventplan.data != "undefined" &&
