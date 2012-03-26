@@ -23,8 +23,8 @@ this.Model = function(mongoose) {
     var unMapFriends = function(f) {
 	console.log('unmapping friends');
 	var friends = [];
-	for (email in this.friends) {
-	    friends.push(this.friends[email]);
+	for (email in f) {
+	    friends.push(f[email]);
 	}
 	return friends;
     };
