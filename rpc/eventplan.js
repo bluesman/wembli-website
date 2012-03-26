@@ -3,21 +3,87 @@ var redis = require("redis"),
 
 var ticketNetwork = require('../lib/wembli/ticketnetwork');
 
+//return result back to client after updating the cache
+var _respond = function(error,data,me) {
+    if (error) {
+	console.log(error);
+	me(error,{success:0});
+    } else {
+	me(null,{success:1,
+		 eventplan:data});
+    }
+};
+
+
 exports.eventplan = {
     getEventPlan: function(guid) {
 	var me = this;
 	var error = null;
 	redisClient.hgetall('eventplan:'+guid,function(err,cache) {
-	    if (err) {
-		me(err);
-	    } else {
-		var eventplan = {};
-		eventplan[guid] = cache;
-		me(null,{success:1,
-			 eventplan:eventplan});
-	    }
+	    var eventplan = {};
+	    eventplan[guid] = cache;
+	    _respond(err,eventplan,me);
 	});
 	
+    },
+    removeFriend: function(guid,args) {
+	var me = this;
+	var error = null;
+
+	//remove the tickets from the event plan and update the cache and respond to client
+	var removeFriendFromEvent = function(err,eventplan) {
+	    var friends = (typeof eventplan.friends !== "undefined") ? JSON.parse(eventplan.friends) : {};
+	    delete friends[args.friendId];
+
+	    //store the updated tix list
+	    eventplan.friends = JSON.stringify(friends);
+
+	    //set the updated data
+	    redisClient.hmset('eventplan:'+guid,eventplan,function(hmsetErr,hmsetResponse) {
+		//TODO:  error checking
+		var responseData = {}
+		responseData[guid] = eventplan;
+		_respond(error,responseData,me);
+	    });
+
+	};
+
+	redisClient.hgetall('eventplan:'+guid,removeFriendFromEvent);
+    },
+
+
+    addFriends: function(guid, args) {
+	var me = this;
+	var error = null;
+
+	if (typeof args.friends == "undefined") {
+	    return _respond('no friends provided',null,me);
+	}
+
+	var addFriendsToEvent = function(err,eventplan) {
+
+
+	    var friends = (typeof eventplan.friends !== "undefined") ? JSON.parse(eventplan.friends) : {};
+	    //friends is a hash keyed by email address
+	    for (email in args.friends) {
+		friends[email] = args.friends[email];
+	    }
+
+	    //store the updated tix list
+	    eventplan.friends = JSON.stringify(friends);
+
+	    //set the updated data
+	    redisClient.hmset('eventplan:'+guid,eventplan,function(hmsetErr,hmsetResponse) {
+		//TODO:  error checking
+		var responseData = {}
+		responseData[guid] = eventplan;
+		_respond(error,responseData,me);
+	    });
+
+
+	};
+	
+	redisClient.hgetall('eventplan:'+guid,addFriendsToEvent);
     },
 
     addTicketGroup: function(guid,args) {
@@ -38,16 +104,6 @@ exports.eventplan = {
 
 	 */
 
-
-	//return result back to client after updating the cache
-	var respond = function(error,data) {
-	    if (error) {
-		me(error);
-	    } else {
-		me(null,{success:1,
-		     eventplan:data});
-	    }
-	};
 
 	//get the tix data matching the passed in id
 	var mapTixData = function(err,ticketData) {
@@ -77,7 +133,7 @@ exports.eventplan = {
 		    //TODO:  error checking
 		    var responseData = {}
 		    responseData[guid] = cache;
-		    respond(error,responseData);
+		    _respond(error,responseData,me);
 		});
 
 	    };
@@ -96,16 +152,6 @@ exports.eventplan = {
 	var me = this;
 	var error = null;
 
-	//return result back to client after updating the cache
-	var respond = function(error,data) {
-	    if (error) {
-		me(error);
-	    } else {
-		me(null,{success:1,
-		     eventplan:data});
-	    }
-	};
-
 	//remove the tickets from the event plan and update the cache and respond to client
 	var removeTix = function(err,cache) {
 	    var tickets = (typeof cache.tickets !== "undefined") ? JSON.parse(cache.tickets) : {};
@@ -119,7 +165,7 @@ exports.eventplan = {
 		//TODO:  error checking
 		var responseData = {}
 		responseData[guid] = cache;
-		respond(error,responseData);
+		_respond(error,responseData,me);
 	    });
 
 	};

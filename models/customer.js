@@ -12,6 +12,32 @@ this.Model = function(mongoose) {
 	token: {type: String}
     });
 
+    var mapFriends = function(f) {
+	var friends = {};
+	for (friend in f) {
+	    friends[friend.email] = friend;
+	}
+	return friends;
+    };
+
+    var unMapFriends = function(f) {
+	console.log('unmapping friends');
+	var friends = [];
+	for (email in f) {
+	    friends.push(f[email]);
+	}
+	return friends;
+    };
+
+    var EventPlan = new Schema( {
+	date_created: {type:Date,default:Date.now},
+	tickets: {type:{}},
+	event: {type:{}},
+	friends: {type:{},get:mapFriends,set:unMapFriends},
+	completed: {type:{}},
+	config: {type:{}}
+    });
+
     var Customer = new Schema( {
 	first_name: {type: String},
 	last_name: {type: String},
@@ -23,6 +49,7 @@ this.Model = function(mongoose) {
 	confirmed: {type: Boolean,default:false},
 	confirmation: [Confirmations],
 	forgot_password: [ForgotPassword],
+	eventplan: [EventPlan],
 	date_created: {type:Date,default:Date.now},
 	last_modified: {type:Date}
     });

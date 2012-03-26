@@ -1,13 +1,11 @@
 #signupModal.modal.hide.fade
 	.modal-header
 		a.close(data-dismiss="modal") x
-		h3 Sign In To Wembli
+		h3 Sign Up For Wembli
 	.modal-body
-		p 
-			span A great plan is always a work in progress.
-			br
-			span Enter your name, email and a password and we'll save your event plan.
+		#message.alert.alert-info.hide
 		form#signup.well.form-horizontal(method="POST",action="/signup")
+			input.redirect-url(type="hidden",name="redirectUrl",value="")
 			fieldset
 				.control-group
 					label.control-label(for="firstName") First Name

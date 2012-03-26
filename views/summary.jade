@@ -1,0 +1,11 @@
+- if (!session.loggedIn)
+	script(type="text/javascript")
+		$(document).ready(function() {
+			$('.redirect-url').each(function(idx,el) {
+				$(el).val('/event/summary');
+			});
+			$('#signupModal #message').html('You have done a lot of work.  Sign up for Wembli so we can associate this plan with your account.').show();
+			$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
+		});
+- console.log(session.eventplan)
+.event!= partial('includes/event',{event:session.eventplan.event,cta:false});

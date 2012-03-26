@@ -178,8 +178,22 @@ $w.eventplan = {
 	$('.choose-event').click(function(e) {
 	    e.preventDefault();
 	    //prepare the modal form action
-	    $('form#eventBuilder').attr('action',$(this).attr('href'));
+	    $('form#wembliOptions').attr('action',$(this).attr('href'));
 	    $('#eventplanOptionsModal').modal('show');
+	});
+
+	$('button.more-info').click(function(e) {
+	    e.preventDefault();
+	    window.location.href= '/more-info';
+	});
+
+	//set signup/login redirect url when they click save for later
+	$('.saveForLater').each(function(idx,el) {
+	    $(el).click(function(e) {
+		$('.redirect-url').each(function(idx,el) {
+		    $(el).val(location.pathname);
+		});
+	    });
 	});
 
     },
@@ -197,16 +211,31 @@ $w.eventplan = {
 
     },
     alertMsg:function(status,msg) {
+	//use header flash msg?
 	$('#eventBuilderAlert').html(msg).addClass('alert-'+status).fadeIn(800).delay(1000).fadeOut(600);
     },
     updateSummary:function() {
 	//update the eventplan summary
-	if (typeof this.data != "undefined" &&
-	    typeof this.data.tickets != "undefined") {
+	if (typeof this.data != "undefined") {
+	    var summaryMsg = '';
+	    if (typeof this.data.friends != "undefined") {
+		var count = Object.keys(this.data.friends).length;
+		var addS = (count == 1) ? '' : 's';
+		summaryMsg = count+' friend'+addS;
+	    }
 
-	    var count = Object.keys(this.data.tickets).length;
-	    var addS = (count == 1) ? '' : 's';
-	    var summaryMsg = count+' ticket option'+addS+' in your plan.';
+	    if (typeof this.data.tickets != "undefined") {
+		var count = Object.keys(this.data.tickets).length;
+		var addS = (count == 1) ? '' : 's';
+		if (summaryMsg != '') {
+		    summaryMsg += ', ';
+		}
+		summaryMsg += count+' ticket option'+addS;
+	    }
+	    summaryMsg += ' in your plan.';
+	    if (summaryMsg == ' in your plan.') {
+		summaryMsg = 'Nothing added yet.';
+	    }
 	    $('#summaryContent').html(summaryMsg);
 	}
     }

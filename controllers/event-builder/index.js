@@ -24,6 +24,7 @@ module.exports = function(app) {
 		var service = wembliServices[idx];
 		req.session.eventplan.config[service] = (typeof req.body[service] == "undefined") ? false : true;
 	    }
+	    req.session.eventplan.config['payment'] = (typeof req.body['payment'] == "undefined") ? 'group' : req.body['payment'];
 	}
 
 	console.log('called event builder for eventId: '+eventId);
@@ -75,5 +76,24 @@ module.exports = function(app) {
 	} else {
 	    dispatch(null,{eventplan:req.session.eventplan});
 	}
+    });
+
+    app.all('/event/summary',function(req,res) {
+	var guid           = req.session.eventplanGuid;
+	var wembliServices = globalViewVars.wembliServices;
+	if (typeof req.session.eventplan.event =="undefined") {
+	    //they tried to load summary without an event
+	    req.flash('error','Your session has expired. If you sign up for Wembli, your work can be automatically saved.');
+	    return res.redirect('/');
+	}
+	res.render('summary', {
+	    event:req.session.eventplan.event,
+	    title: 'wembli.com - Plan Summary.',
+	    page:'summary',
+	    cssIncludes: [],
+            jsIncludes: ['/js/summary.js']
+	});
+	
+	
     });
 }

@@ -3,7 +3,7 @@
 		- if (typeof link != "undefined" && link === false)
 			span.name.block!= event.Name
 		- else
-			a.name.block(href="/tickets/"+event.ID+"/"+event.Name+"#eventBuilder")!= event.Name
+			a.choose-event.name.block(href="/event/"+event.ID+"/"+event.Name+"#eventBuilder")!= event.Name
 		span.venue.block!= event.Venue
 		span.location.block!= event.City+', '+event.StateProvince
 		- if (typeof rating == "undefined" || rating !== false)

@@ -90,7 +90,51 @@
 		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
 		}
 	    });
-	}
+	},
+
+	addFriends: function(args, callback) {
+	    var me = this;
+	    $.ajax({
+		url: "/",
+		dataType:"json",
+		global: false,
+		type: "POST",
+		contentType: "application/json",
+		data: JSON.stringify({
+		    "jsonrpc":"2.0",
+		    "method":"eventplan.addFriends",
+		    "params":args,
+		    "id":1
+		}),
+		success: function(data) {
+		    console.log(data.result.eventplan);
+		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
+		}
+	    });
+	},
+
+	removeFriend: function(args,callback) {
+	    var me = this;
+	    $.ajax({
+		url: "/",
+		dataType:"json",
+		global: false,
+		type: "POST",
+		contentType: "application/json",
+		data: JSON.stringify({
+		    "jsonrpc":"2.0",
+		    "method":"eventplan.removeFriend",
+		    "params":args,
+		    "id":1
+		}),
+		success: function(data) {
+		    console.log(data.result.eventplan);
+		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
+		}
+	    });
+	},
+
+
     };
 
 
