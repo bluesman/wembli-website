@@ -9,6 +9,7 @@
 			- if((typeof errors !== 'undefined') && (errors.facebook) )
 				| Unable to login through facebook.
 		form#loginForm.form-horizontal.well(method="post",action="/login",enctype="application/x-www-form-urlencoded")
+			input.redirect-url(type="hidden",name="redirectUrl",value="")
 			fieldset
 				.control-group
 					label.control-label(for="email") Email:

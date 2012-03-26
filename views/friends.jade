@@ -1,9 +1,20 @@
 #eventBuilder!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'friends'}});
 #friendsContent.row
+	#gmail
+		form#gmailForm().form-horizontal.well.span4
+			fieldset
+				legend 	Invite Friends Using Gmail
+			a.btn.btn-primary.btn-large.span3 Connect to Gmail
+	#facebook
+		form#facebookForm().form-horizontal.well.span4
+			fieldset
+				legend Invite Friends Using Facebook
+			a.btn.btn-primary.btn-large.span3.disable Connect to Facebook
 	#manual
-		form#manualForm().form-horizontal.well.span4
+		form#manualForm(method="POST",action="#").form-horizontal.well.span4
 			fieldset
 				legend 	Invite Friends Manually
+				#error.alert.alert-error.hide
 				.control-group
 					input#firstName.span4(name="firstName",placeholder="First Name",type="text")
 				.control-group
@@ -13,14 +24,4 @@
 			.form-actions
 				button.btn.btn-primary(type="submit") Add To Plan
 		#friendStack
-	#gmail
-		form#manualForm().form-horizontal.well.span4
-			fieldset
-				legend 	Invite Friends Using Gmail
-			a.btn.btn-primary.btn-large.span3 Connect to Gmail
-	#facebook
-		form#manualForm().form-horizontal.well.span4
-			fieldset
-				legend Invite Friends Using Facebook
-			a.btn.btn-primary.btn-large.span3.disable Connect to Facebook
 

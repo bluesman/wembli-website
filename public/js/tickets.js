@@ -80,6 +80,7 @@
 	wembli.eventPlan.get({guid:guid},function(error,eventplan) {
 	    $w.eventplan.guid = guid;
 	    $w.eventplan.data = eventplan[guid]; //store the event plan in the $w wembli global for use by other stuff
+	    $w.eventplan.updateSummary();
 	    init();
 	});
 

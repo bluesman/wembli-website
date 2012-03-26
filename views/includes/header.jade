@@ -1,6 +1,21 @@
 header.navbar
 	.navbar-inner
 		.container
+			#flashContainer
+				- var errors = req.flash('error');
+				- for error in errors
+					-	console.log(error);
+					#flash-error.flash.alert
+						a.close(data-dismiss="alert") x
+						strong Warning! 
+						span!= error
+				- var infos = req.flash('info');
+				- for info in infos
+					-	console.log(info);
+					#flash-info.flash.alert.alert-success
+						a.close(data-dismiss="alert") x
+						strong Info: 
+						span!= info
 			#stripeShadowLeft.stripeShadow.hidden
 			a#logo.seo(href="/")
 			#stripeShadowRight.stripeShadow
@@ -19,21 +34,6 @@ header.navbar
 								a.active(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
 							- else
 								a(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
-#flashContainer
-	- var errors = req.flash('error');
-	- for error in errors
-		-	console.log(error);
-		#flash-error.flash.alert
-			a.close(data-dismiss="alert") x
-			strong Warning! 
-			span!= error
-	- var infos = req.flash('info');
-	- for info in infos
-		-	console.log(info);
-		#flash-info.flash.alert.alert-success
-			a.close(data-dismiss="alert") x
-			strong Info: 
-			span!= info
 include modals/signup
 include modals/login
 include modals/forgot-password

@@ -107,6 +107,7 @@
 		    "id":1
 		}),
 		success: function(data) {
+		    console.log(data.result.eventplan);
 		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
 		}
 	    });
@@ -127,6 +128,7 @@
 		    "id":1
 		}),
 		success: function(data) {
+		    console.log(data.result.eventplan);
 		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
 		}
 	    });

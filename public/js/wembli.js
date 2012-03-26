@@ -178,8 +178,22 @@ $w.eventplan = {
 	$('.choose-event').click(function(e) {
 	    e.preventDefault();
 	    //prepare the modal form action
-	    $('form#eventBuilder').attr('action',$(this).attr('href'));
+	    $('form#wembliOptions').attr('action',$(this).attr('href'));
 	    $('#eventplanOptionsModal').modal('show');
+	});
+
+	$('button.more-info').click(function(e) {
+	    e.preventDefault();
+	    window.location.href= '/more-info';
+	});
+
+	//set signup/login redirect url when they click save for later
+	$('.saveForLater').each(function(idx,el) {
+	    $(el).click(function(e) {
+		$('.redirect-url').each(function(idx,el) {
+		    $(el).val(location.pathname);
+		});
+	    });
 	});
 
     },

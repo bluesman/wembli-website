@@ -40,28 +40,72 @@
     var init = function() {
 	var guid = $w.eventplan.guid;
 	//manual
+	//preload the friendStack with existing friends and update the summary
+	if (typeof $w.eventplan.data.friends != "undefined") {
+	    for (email in $w.eventplan.data.friends) {
+		friendStack.add($w.eventplan.data.friends[email]);
+	    }
+	}
+
+
 	//intercept the form submit and add friend via rpc
 	$('#manualForm').submit(function(e) {
 	    e.preventDefault();
 	    var email = $('#manualForm #email').val();
+	    $('#manualForm .control-group').removeClass('error');
+	    $('#manualForm #error').hide();
+
+	    console.log('email: '+email);
+	    if (!$('#manualForm #firstName').val() || !$('#manualForm #lastName').val()) {
+
+		if (!$('#manualForm #firstName').val()) {
+		    $('#manualForm #firstName').parent().addClass('error');
+		}
+		if (!$('#manualForm #lastName').val()) {
+		    $('#manualForm #lastName').parent().addClass('error');
+		}
+		$('#manualForm #error').show().html('Please provide a first and last name.');
+		return;		
+	    }		
+
+	    if ((typeof email == "undefined") || !email) {
+		//already in plan display an error
+		$('#manualForm #email').parent().addClass('error');
+		$('#manualForm #error').show().html('Please provide an email address.');
+		return;		
+	    }
+
+	    //check if this email is in the event plan already
+	    if ((typeof $w.eventplan.data.friends != "undefined") && (typeof $w.eventplan.data.friends[email] != "undefined")) {
+		//already in plan display an error
+		$('#manualForm #email').parent().addClass('error');
+		$('#manualForm #error').show().html(email+' is already in the plan.');
+		return;
+	    }
+
 	    var friend = {
 		firstName: $('#manualForm #firstName').val(),
 		lastName:  $('#manualForm #lastName').val(),
 		email:     $('#manualForm #email').val()
 	    };
 	    
+	    
+
 	    var args = {friends:{}};
 	    args.friends[email] = friend;
 	    //make wembli rpc call to add friends
 	    wembli.eventPlan.addFriends({guid:guid,args:args},function(error,eventplan) {
 		if (eventplan) {
 		    //show the friend on top of the stack of friends
-		    console.log('adding friend to friendstack');
 		    friendStack.add(friend);
 
 		    //make it global
 		    $w.eventplan.data = eventplan[guid];
 		    $w.eventplan.updateSummary();
+		    $('#manualForm #firstName').val(''),
+		    $('#manualForm #lastName').val(''),
+		    $('#manualForm #email').val('')
+
 		    $w.eventplan.alertMsg('success','Successfully added '+email+' to your plan.');
 		} else {
 		    $w.eventplan.alertMsg('error','Error: Unable to add'+email+' at this time. Try logging in.');
@@ -90,6 +134,7 @@
 	wembli.eventPlan.get({guid:guid},function(error,eventplan) {
 	    $w.eventplan.guid = guid;
 	    $w.eventplan.data = eventplan[guid]; //store the event plan in the $w wembli global for use by other stuff
+	    $w.eventplan.updateSummary();
 	    init();
 	});
 

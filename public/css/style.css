@@ -114,6 +114,9 @@ section#content:before, section#content:after {
 section#content:after {
   clear: both;
 }
+.modal {
+  max-height: 600px;
+}
 #backgrounds {
   position: absolute;
   width: 100%;
@@ -148,6 +151,13 @@ header:before, header:after {
 }
 header:after {
   clear: both;
+}
+header #flashContainer {
+  position: absolute;
+  top: 100px;
+}
+header .flash {
+  width: 890px;
 }
 header .navbar-inner .container nav ul.nav {
   margin-top: 75px;
@@ -224,12 +234,6 @@ header #nav ul li a:hover {
 }
 header #nav ul li a.active:link, header #nav ul li a.active:hover, header #nav ul li a.active:visited {
   color: #ffffff;
-}
-#flashContainer {
-  position: absolute;
-}
-.flash {
-  width: 890px;
 }
 .navbar {
   margin-bottom: 0px;
@@ -655,6 +659,9 @@ footer {
 }
 #eventBuilder #actions #links a.saveForLater:hover, #eventBuilder #actions #links a#howDoesItWork:hover {
   color: #ff6700;
+}
+#eventplanOptionsModal .form-actions button.btn {
+  margin-right: 10px;
 }
 #signupModal #login {
   float: left;
