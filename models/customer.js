@@ -38,15 +38,6 @@ this.Model = function(mongoose) {
 	config: {type:{}}
     });
 
-    EventPlan.pre('save',function(next) {
-	console.log('saving event plan');
-	if (typeof this.friends != "undefined") {
-	    this.friends = unMapFriends(this.friends);
-	    console.log(this.friends);
-	}
-	next();
-    });
-
     var Customer = new Schema( {
 	first_name: {type: String},
 	last_name: {type: String},
