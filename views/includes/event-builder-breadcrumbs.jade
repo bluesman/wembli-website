@@ -1,18 +1,23 @@
 - var currentService = 'tickets';
-ul#breadcrumbs
-	- var idx = 0;
-	- each service in globalViewVars.wembliServices
-		- if (session.eventplan.config[service])
-			- idx++;
-			- var active = ((typeof page != "undefined") && (page == service)) ? 'active' : '';
-			- if (active == 'active')
-				- currentService = service;
-			- if (idx > 1)
-				li
-					i.icon-chevron-right.icon-white 
-			li(class="#{active}")
-				a(href="/#{service}#eventBuilder")!= idx+'. '+ service
-	- idx++;
+- //filter out the services in this plan
+- var services = [];
+- each service in globalViewVars.wembliServices
+	- if (session.eventplan.config[service])
+		- services.push(service);
+- var cnt = services.length + 1;
+- var w = 100 * cnt * 2;
+- var m = ((900 - (100 * cnt))/2)/cnt;
+ul#breadcrumbs(style="width:900px")
+	- each service in services
+		- var active = ((typeof page != "undefined") && (page == service)) ? 'active' : '';
+		- if (active == 'active')
+			- currentService = service;
+		li(class="#{active}")
+			.circle(style="margin:0 #{m}px")
+				a(href="/#{service}#eventBuilder")
+				p.segoe!= service
 	li
-		i.icon-chevron-right.icon-white 
-	li!= idx+'. Summary'
+		.circle(style="margin:0 #{m}px;")
+			a(href="/event/summary#eventBuilder")
+			p.segoe Summary
+.line(style="width:#{w}px")

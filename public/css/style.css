@@ -535,7 +535,7 @@ footer {
   left: 40%;
   background-color: rgba(222, 239, 215, 0.85);
 }
-#eventBuilder {
+#eventBuilderContainer {
   padding: 10px;
   min-height: 70px;
   *zoom: 1;
@@ -551,31 +551,43 @@ footer {
   border-bottom: 1px solid #000000;
   border-top: 1px solid #000000;
 }
-#eventBuilder:before, #eventBuilder:after {
+#eventBuilderContainer:before, #eventBuilderContainer:after {
   display: table;
   content: "";
 }
-#eventBuilder:after {
+#eventBuilderContainer:after {
   clear: both;
 }
-#eventBuilder #event {
+#eventBuilderContainer #eventBuilder {
+  *zoom: 1;
+  margin: auto;
+  max-width: 1200px;
+}
+#eventBuilderContainer #eventBuilder:before, #eventBuilderContainer #eventBuilder:after {
+  display: table;
+  content: "";
+}
+#eventBuilderContainer #eventBuilder:after {
+  clear: both;
+}
+#eventBuilderContainer #eventBuilder #event {
   *zoom: 1;
   font-size: 11px;
   position: relative;
-  width: 40%;
+  width: 50%;
   float: left;
 }
-#eventBuilder #event:before, #eventBuilder #event:after {
+#eventBuilderContainer #eventBuilder #event:before, #eventBuilderContainer #eventBuilder #event:after {
   display: table;
   content: "";
 }
-#eventBuilder #event:after {
+#eventBuilderContainer #eventBuilder #event:after {
   clear: both;
 }
-#eventBuilder #event p {
+#eventBuilderContainer #eventBuilder #event p {
   font-size: 11px;
 }
-#eventBuilder #event p.info {
+#eventBuilderContainer #eventBuilder #event p.info {
   float: left;
   margin: 2px 2px 0 75px;
   line-height: 16px;
@@ -584,80 +596,124 @@ footer {
   text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
   color: #000000;
 }
-#eventBuilder #event p.info .name {
+#eventBuilderContainer #eventBuilder #event p.info .name {
   font-size: 16px;
   font-weight: bold;
 }
-#eventBuilder #event p.info .venue, #eventBuilder #event p.info .location {
+#eventBuilderContainer #eventBuilder #event p.info .venue, #eventBuilderContainer #eventBuilder #event p.info .location {
   font-size: 14px;
 }
-#eventBuilder #split {
+#eventBuilderContainer #eventBuilder #split {
   width: 1px;
   height: 70px;
   float: left;
   border-right: thin solid rgba(255, 255, 255, 0.25);
 }
-#eventBuilder #stepInfo {
+#eventBuilderContainer #eventBuilder #stepInfo {
   *zoom: 1;
   color: #ffffff;
   border-left: 1px solid rgba(0, 0, 0, 0.25);
-  margin-left: 40%;
+  margin-left: 50%;
   min-height: 70px;
 }
-#eventBuilder #stepInfo:before, #eventBuilder #stepInfo:after {
+#eventBuilderContainer #eventBuilder #stepInfo:before, #eventBuilderContainer #eventBuilder #stepInfo:after {
   display: table;
   content: "";
 }
-#eventBuilder #stepInfo:after {
+#eventBuilderContainer #eventBuilder #stepInfo:after {
   clear: both;
 }
-#eventBuilder #stepInfo #breadcrumbsContainer {
-  float: left;
+#eventBuilderContainer #eventBuilder #stepInfo #summary {
   margin-left: 10px;
+  float: left;
 }
-#eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li {
-  line-height: 20px;
-  vertical-align: middle;
-  font-family: "SegoeScriptBold";
-  text-transform: capitalize;
-  font-size: 20px;
-  display: inline;
-  padding: 4px;
-}
-#eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li a, #eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li a:visited {
-  color: #ffffff;
-}
-#eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li.active, #eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li.active a, #eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li a:hover {
-  color: #ff6700;
-}
-#eventBuilder #stepInfo #breadcrumbsContainer ul#breadcrumbs li i {
-  margin-top: 8px;
-}
-#eventBuilder #stepInfo #breadcrumbsContainer #summary {
-  margin-top: 20px;
-}
-#eventBuilder #stepInfo #breadcrumbsContainer #summary h5 {
+#eventBuilderContainer #eventBuilder #stepInfo #summary h5 {
   text-transform: uppercase;
   text-shadow: 1px 1px rgba(255, 255, 255, 0.25);
   color: #000000;
   font-size: 14px;
   display: inline;
 }
-#eventBuilder #actions {
+#eventBuilderContainer #eventBuilder #stepInfo #actions {
   color: #ffffff;
   float: right;
   text-align: center;
   margin: 0 20px 0 0;
 }
-#eventBuilder #actions #links {
+#eventBuilderContainer #eventBuilder #stepInfo #actions #links {
   margin-top: 10px;
 }
-#eventBuilder #actions #links a.saveForLater, #eventBuilder #actions #links a#howDoesItWork {
+#eventBuilderContainer #eventBuilder #stepInfo #actions #links a.saveForLater, #eventBuilderContainer #eventBuilder #stepInfo #actions #links a#howDoesItWork {
   color: #ffffff;
   font-size: 10px;
   padding: 4px;
 }
-#eventBuilder #actions #links a.saveForLater:hover, #eventBuilder #actions #links a#howDoesItWork:hover {
+#eventBuilderContainer #eventBuilder #stepInfo #actions #links a.saveForLater:hover, #eventBuilderContainer #eventBuilder #stepInfo #actions #links a#howDoesItWork:hover {
+  color: #ff6700;
+}
+#eventBuilderContainer #breadcrumbsContainer .line {
+  position: relative;
+  background-color: #ffffff;
+  height: 8px;
+  margin: 8px auto;
+  top: -51px;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs {
+  *zoom: 1;
+  max-width: 1200px;
+  margin: 10px auto ;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs:before, #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs:after {
+  display: table;
+  content: "";
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs:after {
+  clear: both;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li {
+  float: left;
+  line-height: 20px;
+  vertical-align: middle;
+  font-family: "SegoeScriptBold";
+  text-transform: capitalize;
+  font-size: 20px;
+  display: inline;
+  padding: 4px 0;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li .circle {
+  width: 100px;
+  text-align: center;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li .circle a {
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  background-color: #ffffff;
+  display: block;
+  color: #ff6700;
+  margin: auto;
+  position: relative;
+  z-index: 1;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li .circle a:hover {
+  background-color: #ff6700;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li .circle p {
+  color: #ffffff;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li a, #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li a:visited {
+  color: #ffffff;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li.active {
+  color: #ff6700;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li.active .circle a {
+  color: #ff6700;
+  background-color: #ff6700;
+}
+#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li.active .circle p, #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li.active .circle a:hover {
   color: #ff6700;
 }
 #eventplanOptionsModal .form-actions button.btn {

@@ -19,7 +19,7 @@
 //     CountryID: '217' }
 
 script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
-#eventBuilder!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'tickets'}});
+#eventBuilderContainer!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'tickets'}});
 #ticketsContent
 	#thumbnail.thumbnail.hide
 	- if (typeof tickets != "undefined")

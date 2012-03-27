@@ -1,13 +1,13 @@
-a.block(href="#eventBuilder").hide
-#event!= partial("includes/event",{cta:false,rating:false,link:false,event:event});
-#split
-#stepInfo
-	#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
+#eventBuilder.block(href="#eventBuilder")
+	#event!= partial("includes/event",{cta:false,rating:false,link:false,event:event});
+	#split &nbsp;
+	#stepInfo
 		#summary
 			h5 Itinerary Summary: 
-			span#summaryContent Nothing added yet...
-	#actions!= partial("includes/event-builder-actions");
-#eventBuilderAlert.alert.hide
+			#summaryContent Nothing added yet...
+		#actions!= partial("includes/event-builder-actions");
+	#eventBuilderAlert.alert.hide
+	#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #howDoesItWorkModal.modal.hide.fade
 	.modal-header
 		a.close(data-dismiss="modal") x
