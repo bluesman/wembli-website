@@ -658,17 +658,27 @@ footer {
 #eventBuilderContainer #eventBuilder #stepInfo #actions #links a.saveForLater:hover, #eventBuilderContainer #eventBuilder #stepInfo #actions #links a#howDoesItWork:hover {
   color: #ff6700;
 }
+#eventBuilderContainer #breadcrumbsContainer {
+  *zoom: 1;
+}
+#eventBuilderContainer #breadcrumbsContainer:before, #eventBuilderContainer #breadcrumbsContainer:after {
+  display: table;
+  content: "";
+}
+#eventBuilderContainer #breadcrumbsContainer:after {
+  clear: both;
+}
 #eventBuilderContainer #breadcrumbsContainer .line {
   position: relative;
   background-color: #ffffff;
   height: 8px;
   margin: 8px auto;
-  top: -51px;
+  top: 32px;
 }
 #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs {
   *zoom: 1;
   max-width: 1200px;
-  margin: 10px auto ;
+  margin: auto ;
 }
 #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs:before, #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs:after {
   display: table;

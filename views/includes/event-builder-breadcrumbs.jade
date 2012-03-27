@@ -5,8 +5,9 @@
 	- if (session.eventplan.config[service])
 		- services.push(service);
 - var cnt = services.length + 1;
-- var w = 100 * cnt * 2;
 - var m = ((900 - (100 * cnt))/2)/cnt;
+- var w = (100 + (m * 2)) * (cnt - 1);
+.line(style="width:#{w}px")
 ul#breadcrumbs(style="width:900px")
 	- each service in services
 		- var active = ((typeof page != "undefined") && (page == service)) ? 'active' : '';
@@ -20,4 +21,3 @@ ul#breadcrumbs(style="width:900px")
 		.circle(style="margin:0 #{m}px;")
 			a(href="/event/summary#eventBuilder")
 			p.segoe Summary
-.line(style="width:#{w}px")
