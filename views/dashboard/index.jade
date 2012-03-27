@@ -33,10 +33,37 @@
 							a.btn.btn-primary.navTrigger(href="#newEventsTab") Let's do it!
 			#newEvents.content.hidden
 				h2 Start a new experience
-				#newEventContainer
-					#newEvent
+				#newEventContainer.clearfix
+					ul#newEvent.clearfix
+						li#event.opt.empty You Event
+						li#park.opt.empty Park
+						li#eat.opt.empty Eat
 					#searchContainer
-						form#search
-						#searchResults
+						form#search.clearfix
+							input.example.default(type="text", name="query", id="query", value="Start planning")
+							input.btn.blue(type="submit", value="Go!")
+						h4 You Results:
+						ul#searchResults
+							li 
+								span Result one is right here
+							li 
+								span Result one is right here			
+							li 
+								span Result one is right here
+							li 
+								span Result one is right here								
+							li 
+								span Result one is right here
+							li 
+								span Result one is right here								
+							li 
+								span Result one is right here
+							li 
+								span Result one is right here								
+							li 
+								span Result one is right here
+							li 
+								span Result one is right here								
 					#mapContainer
+						#map map goes here
 			// span.email!= session.customer.email

@@ -1,14 +1,16 @@
-.container {position:relative;}
+footer {margin-top:0;}
 
-aside {width:150px; position:absolute; top:0; left:0; min-height:600px; background-color:#eee;}
+#dashboard {position:relative; background:url('/images/pages/dashboard/dash-bg.jpg') 0 0 repeat-y; margin-top:-4px;}
+
+aside {width:168px; position:absolute; top:0; left:0; min-height:600px;}
 aside ul {padding:10px 0;}
-aside ul li a {padding:5px 10px; display:block; font-weight:bold; font-size:12px; border-top:1px solid #cdcdcd;}
+aside ul li a {padding:5px 0 5px 10px; width:154px; display:block; font-weight:bold; font-size:12px; border-top:1px solid #cdcdcd;}
 aside ul li.last a {border-bottom:1px solid #cdcdcd;}
-aside ul li.active {width:151px;}
-aside ul li.active a {background-color:#fff; color:#666; padding-right:1px;}
+aside ul li.active {width:169px; background-color:#fff;}
+aside ul li.active a {color:#666; padding-right:4px;}
 
-.dashboard section {margin:0 0 15px 150px; min-height:600px; border-left:1px solid #cdcdcd; padding:10px;}
-.dashboard div.content {padding:15px 0 0 50px;}
+.dashboard section {margin:0 0 15px 168px; min-height:600px; padding:10px;}
+.dashboard div.content {padding:15px 0 0 43px;}
 .dashboard div.content h2 {margin-bottom:20px;}
 
 table.events {border:1px solid #cdcdcd; color:#999; border-left:1px solid #cdcdcd; border-radius:5px; width:600px;}
@@ -18,3 +20,20 @@ table.events tr.shade td {background-color:#eee;}
 
 .alert h3 {color:#3A87AD; border-bottom:1px solid #3A87AD;}
 .alert p {margin-top:15px;}
+
+#newEvent {border-radius:20px; margin-bottom:20px; background-color:#eee; border:1px solid #cdcdcd; padding:20px; box-shadow:0 0 14px #CDCDCD inset}
+#newEvent .opt {padding:10px; cursor:pointer; float:left; font-size:11px; width:184px; border-radius:10px; border:1px solid #a9a9a9; color:#666; text-align:center;}
+#newEvent .opt:hover {box-shadow: 0 0 5px green inset}
+#newEvent .opt.empty {color:#999; border-style:dashed;}
+#newEvent .opt.empty:hover {box-shadow: 0 0 5px blue inset}
+#newEvent #park {margin:0 20px;}
+
+#searchContainer {width:390px; float:left;}
+#searchContainer h4 {font-weight:bold; color:#999; border-bottom:1px solid #999; font-size:12px; margin-bottom:10px;}
+#searchContainer #query {width:328px; margin-right:10px;}
+ul#searchResults li {border-bottom:1px dotted #cdcdcd; font-size:11px;}
+ul#searchResults li span {border-radius:10px; display:block; cursor:pointer; padding:3px; }
+ul#searchResults li span:hover {box-shadow: 0 0 5px blue inset;}
+
+#mapContainer {width:300px; float:right;}
+#mapContainer #map {border:1px solid #cdcdcd; background-color:#eee; height:150px;}
