@@ -12,7 +12,7 @@
 				span.stars!= (event.Rating ? event.Rating : 0)
 	- if (typeof cta == "undefined" || cta !== false)
 		p.cta
-			a.choose-event.btn.btn-primary(href="/event/"+event.ID+"/"+event.Name+"#eventBuilder") I'm Going!
+			a.choose-event.btn.btn-primary(href="/event/"+event.ID+"/"+event.Name+"#eventBuilder") Plan It!
 			- // don't have this info right now: em 300 tickets from $27
 	span.event-date-box
 		span.day!=        date.format("ddd")

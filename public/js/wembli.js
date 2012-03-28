@@ -191,6 +191,7 @@ $w.eventplan = {
 	$('.saveForLater').each(function(idx,el) {
 	    $(el).click(function(e) {
 		$('.redirect-url').each(function(idx,el) {
+		    console.log(location.pathname);
 		    $(el).val(location.pathname);
 		});
 	    });

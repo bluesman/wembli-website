@@ -4,20 +4,23 @@
 - each service in globalViewVars.wembliServices
 	- if (session.eventplan.config[service])
 		- services.push(service);
+- var maxWidth = 900;
 - var cnt = services.length + 1;
-- var m = ((900 - (100 * cnt))/2)/cnt;
+- var m = ((maxWidth - (100 * cnt))/2)/cnt;
 - var w = (100 + (m * 2)) * (cnt - 1);
 .line(style="width:#{w}px")
-ul#breadcrumbs(style="width:900px")
+ul#breadcrumbs(style="width:#{maxWidth}px")
+	- var idx = 0;
 	- each service in services
+		- idx++;
 		- var active = ((typeof page != "undefined") && (page == service)) ? 'active' : '';
 		- if (active == 'active')
 			- currentService = service;
 		li(class="#{active}")
 			.circle(style="margin:0 #{m}px")
 				a(href="/#{service}#eventBuilder")
-				p.segoe!= service
+				p.segoe!= idx+'. '+service
 	li
 		.circle(style="margin:0 #{m}px;")
 			a(href="/event/summary#eventBuilder")
-			p.segoe Summary
+			p.segoe!= cnt+'. Summary'

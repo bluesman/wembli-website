@@ -28,10 +28,15 @@
 					.controls
 						input#password2(type="password",name="password2")
 				.form-actions
-					a#login(href="/login")
+					a#login(data-toggle="modal",href="#loginModal")
 						span Existing Users:
 						br
 						span Click here to login
 					button.btn.btn-primary.btn-large(type="submit").right Sign Up
-
+script(type="text/javascript")
+	$(document).ready(function() {
+		$('#signup #login').click(function(e) {
+			$('#signupModal').modal("hide");
+		});
+	});
 	
