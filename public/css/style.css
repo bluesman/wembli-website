@@ -658,36 +658,37 @@ footer {
 #eventBuilderContainer #eventBuilder #stepInfo #actions #links a.saveForLater:hover, #eventBuilderContainer #eventBuilder #stepInfo #actions #links a#howDoesItWork:hover {
   color: #ff6700;
 }
-#eventBuilderContainer #breadcrumbsContainer {
+#breadcrumbsContainer {
   *zoom: 1;
+  margin: 10px 0;
 }
-#eventBuilderContainer #breadcrumbsContainer:before, #eventBuilderContainer #breadcrumbsContainer:after {
+#breadcrumbsContainer:before, #breadcrumbsContainer:after {
   display: table;
   content: "";
 }
-#eventBuilderContainer #breadcrumbsContainer:after {
+#breadcrumbsContainer:after {
   clear: both;
 }
-#eventBuilderContainer #breadcrumbsContainer .line {
+#breadcrumbsContainer .line {
   position: relative;
-  background-color: #ffffff;
+  background-color: #d8d6d7;
   height: 8px;
-  margin: 8px auto;
-  top: 32px;
+  margin: 0 auto;
+  top: -41px;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs {
+#breadcrumbsContainer ul#breadcrumbs {
   *zoom: 1;
   max-width: 1200px;
   margin: auto ;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs:before, #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs:after {
+#breadcrumbsContainer ul#breadcrumbs:before, #breadcrumbsContainer ul#breadcrumbs:after {
   display: table;
   content: "";
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs:after {
+#breadcrumbsContainer ul#breadcrumbs:after {
   clear: both;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li {
+#breadcrumbsContainer ul#breadcrumbs li {
   float: left;
   line-height: 20px;
   vertical-align: middle;
@@ -697,40 +698,40 @@ footer {
   display: inline;
   padding: 4px 0;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li .circle {
+#breadcrumbsContainer ul#breadcrumbs li .circle {
   width: 100px;
   text-align: center;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li .circle a {
+#breadcrumbsContainer ul#breadcrumbs li .circle a {
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
   width: 30px;
   height: 30px;
-  background-color: #ffffff;
+  background-color: #d8d6d7;
   display: block;
   color: #ff6700;
   margin: auto;
   position: relative;
   z-index: 1;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li .circle a:hover {
+#breadcrumbsContainer ul#breadcrumbs li .circle a:hover {
   background-color: #ff6700;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li .circle p {
-  color: #ffffff;
+#breadcrumbsContainer ul#breadcrumbs li .circle p {
+  color: #d8d6d7;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li a, #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li a:visited {
-  color: #ffffff;
+#breadcrumbsContainer ul#breadcrumbs li a, #breadcrumbsContainer ul#breadcrumbs li a:visited {
+  color: #d8d6d7;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li.active {
+#breadcrumbsContainer ul#breadcrumbs li.active {
   color: #ff6700;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li.active .circle a {
+#breadcrumbsContainer ul#breadcrumbs li.active .circle a {
   color: #ff6700;
   background-color: #ff6700;
 }
-#eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li.active .circle p, #eventBuilderContainer #breadcrumbsContainer ul#breadcrumbs li.active .circle a:hover {
+#breadcrumbsContainer ul#breadcrumbs li.active .circle p, #breadcrumbsContainer ul#breadcrumbs li.active .circle a:hover {
   color: #ff6700;
 }
 #eventplanOptionsModal .form-actions button.btn {

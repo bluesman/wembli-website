@@ -20,6 +20,7 @@
 
 script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
 #eventBuilderContainer!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'tickets'}});
+#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #ticketsContent
 	#thumbnail.thumbnail.hide
 	- if (typeof tickets != "undefined")

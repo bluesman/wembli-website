@@ -114,77 +114,78 @@ a#eventBuilderContainer:link {
       }
     }
   }
-  
-  #breadcrumbsContainer {
+}
+
+#breadcrumbsContainer {
+  .clearfix();
+  margin:10px 0;
+
+  .line {
+    position:relative;
+    background-color:@grayLight;
+    height:8px;
+    margin:0 auto;
+    top:-41px;
+  }
+
+  ul#breadcrumbs {
+    
     .clearfix();
+    max-width:1200px;
+    margin: auto ;
 
-
-    .line {
-      position:relative;
-      background-color:@white;
-      height:8px;
-      margin:8px auto;
-      top:32px;
-    }
-
-    ul#breadcrumbs {
+    li {
+      float:left;
+      line-height:20px;
+      vertical-align:middle;
+      font-family:"SegoeScriptBold";
+      text-transform:capitalize;
+      font-size:20px;
+      display:inline;
+      padding:4px 0;
       
-      .clearfix();
-      max-width:1200px;
-      margin: auto ;
+      .circle {
+	width:100px;
+	text-align:center;
 
-      li {
-	float:left;
-	line-height:20px;
-	vertical-align:middle;
-	font-family:"SegoeScriptBold";
-	text-transform:capitalize;
-	font-size:20px;
-	display:inline;
-	padding:4px 0;
-	
-	.circle {
-	  width:100px;
-	  text-align:center;
-	  
-	  a {
-	    .border-radius(15px);
-	    width:30px;
-	    height:30px;
-	    background-color:@white;
-	    display:block;
-	    color:@orange;
-	    margin:auto;
-	    position:relative;
-	    z-index:1;
-	  }
-	  
-	  a:hover {
-	    background-color:@orange;
-	  }
-	  
-	  
-	  p {
-	    color:@white;
-	  }
+	a {
+	  .border-radius(15px);
+	  width:30px;
+	  height:30px;
+	  background-color:@grayLight;
+	  display:block;
+	  color:@orange;
+	  margin:auto;
+	  position:relative;
+	  z-index:1;
 	}
 	
-	a, a:visited {
-	  color:@white;
+	a:hover {
+	  background-color:@orange;
+	}
+	
+	
+	p {
+	  color:@grayLight;
 	}
       }
       
-      li.active {
-	color:@orange;
+      a, a:visited {
+	color:@grayLight;
+      }
+    }
+    
+    li.active {
+      color:@orange;
 
-	.circle {
-	  a { color:@orange; background-color:@orange;}
-	  p,a:hover { color:@orange; }
-	}
+      .circle {
+	a { color:@orange; background-color:@orange;}
+	p,a:hover { color:@orange; }
       }
     }
   }
 }
+
 
 #eventplanOptionsModal {
   .form-actions {

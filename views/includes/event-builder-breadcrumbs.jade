@@ -8,7 +8,6 @@
 - var cnt = services.length + 1;
 - var m = ((maxWidth - (100 * cnt))/2)/cnt;
 - var w = (100 + (m * 2)) * (cnt - 1);
-.line(style="width:#{w}px")
 ul#breadcrumbs(style="width:#{maxWidth}px")
 	- var idx = 0;
 	- each service in services
@@ -24,3 +23,4 @@ ul#breadcrumbs(style="width:#{maxWidth}px")
 		.circle(style="margin:0 #{m}px;")
 			a(href="/event/summary#eventBuilder")
 			p.segoe!= cnt+'. Summary'
+.line(style="width:#{w}px")
