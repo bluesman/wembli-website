@@ -66,3 +66,19 @@ html
   - if ("undefined" !== typeof jsIncludes)
     - each file in jsIncludes
       script(type="text/javascript", src=file)
+  script(src="http://www.jotform.com/min/?g=feedback2", type="text/javascript")
+  script(type="text/javascript")
+    new JotformFeedback({
+        formId      : "20908727421150",
+        buttonText  : "Feedback",
+        windowTitle : "Mark up the screenshot to describe a problem or suggestion",
+        base        : "http://jotform.us/",
+        background  : "#FF7700",
+        fontColor   : "#FFFFFF",
+        buttonSide  : "left",
+        buttonAlign : "center",
+        type        : false,
+        width       : 280,
+        height      : 420,
+        instant     : true
+    });
