@@ -68,15 +68,31 @@ html
       script(type="text/javascript", src=file)
   script(src="http://www.jotform.com/min/?g=feedback2", type="text/javascript")
   script(type="text/javascript")
+    /*
     new JotformFeedback({
         formId      : "20908727421150",
         buttonText  : "Feedback",
         windowTitle : "Mark up the screenshot to describe a problem or suggestion",
         base        : "http://jotform.us/",
-        background  : "#FF7700",
+        background  : "#FF6700",
         fontColor   : "#FFFFFF",
         buttonSide  : "left",
         buttonAlign : "center",
+        type        : false,
+        width       : 280,
+        height      : 420,
+        instant     : true
+    });
+    */
+    new JotformFeedback({
+        formId      : "20908662122146",
+        buttonText  : "Send Feedback",
+        windowTitle : "Mark up the screenshot to describe a problem or suggestion",
+        base        : "http://jotform.us/",
+        background  : "#4380b8",
+        fontColor   : "#FFFFFF",
+        buttonSide  : "right",
+        buttonAlign : "top",
         type        : false,
         width       : 280,
         height      : 420,
