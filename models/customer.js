@@ -30,6 +30,7 @@ this.Model = function(mongoose) {
     };
 
     var EventPlan = new Schema( {
+	guid:{type: String},
 	date_created: {type:Date,default:Date.now},
 	tickets: {type:{}},
 	event: {type:{}},
