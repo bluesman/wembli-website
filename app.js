@@ -68,6 +68,7 @@ app.dynamicHelpers(require('./controllers/helpers/dynamic-view-helpers'));
 
 //static helper functions
 app.helpers({
+    getAppSettings: function() { return app.settings; },
     ticketSessionId: function() {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
         var sid_length = 5;

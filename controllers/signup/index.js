@@ -73,12 +73,9 @@ module.exports = function(app) {
 		    console.log(confirmLinkEncoded);
 		   
 		    //send the email asynchronously
-		    res.render('email-templates/signup-email', {
+		    res.render('email-templates/signup', {
 			confirmLink:confirmLinkEncoded,
 			layout:false,
-			token:confirmationToken,
-			logoCid: logoCid,
-			session: req.session
 		    },function(err,htmlStr) {
 			var mail = new mailer.EmailMessage({
 			    sender: '"Wembli Support" <help@wembli.com>',
@@ -89,9 +86,11 @@ module.exports = function(app) {
 			//templatize this 
 			mail.body = 'Click here to confirm your email address: http://'+app.settings.host+'.wembli.com/confirm/'+encodeURIComponent(req.session.customer.email)+'/'+encodeURIComponent(confirmationToken);
 			mail.html = htmlStr;
+			/*
 			mail.attachments = [{filename:'wembli_logo_300x100_tx.png',
 					     contents:new Buffer(fs.readFileSync('/wembli/website/public/images/wembli_logo_300x100_tx.png')),
 					     cid:logoCid}];
+					     */
 			console.log('sending');		    
 			mail.send(function(error, success){
 			    console.log("Message "+(success?"sent":"failed:"+error));

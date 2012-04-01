@@ -4,6 +4,20 @@ require('date-utils');
 
 module.exports = function(app) {
     app.get("/tickets",function(req,res) {
+	if (typeof req.session.eventplan.event == "undefined") {
+	    //redirect to the home page and flash a message
+	    req.flash('error','Your session has expired. If you sign up for Wembli, your work can be automatically saved.');
+	    return res.redirect('/');
+	}
+
+	//if they are logged in save the plan
+	if (req.session.loggedIn) {
+	    req.session.customer.eventplan = [req.session.eventplan];
+	    req.session.customer.save(function(err) {
+		console.log('saved customer');
+	    });
+	}
+
 	console.log(req.session.eventplan);
 	var event = req.session.eventplan.event;
 	console.log(event);

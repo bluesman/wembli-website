@@ -1,21 +1,27 @@
 header.navbar
 	.navbar-inner
 		.container
-			#flashContainer
-				- var errors = req.flash('error');
-				- for error in errors
-					-	console.log(error);
-					#flash-error.flash.alert
-						a.close(data-dismiss="alert") x
-						strong Warning! 
-						span!= error
-				- var infos = req.flash('info');
-				- for info in infos
-					-	console.log(info);
-					#flash-info.flash.alert.alert-success
-						a.close(data-dismiss="alert") x
-						strong Info: 
-						span!= info
+			- var errors = req.flash('error');
+			- var infos  = req.flash('info');
+			- console.log(infos.length);
+			- if (errors.length > 0 || infos.length > 0) 
+				#flashContainer
+					- for error in errors
+						-	console.log(error);
+						.flash-error.flash.alert
+							a.close(data-dismiss="alert") x
+							strong Warning! 
+							span!= error
+					- for info in infos
+						-	console.log(info);
+						.flash-info.flash.alert.alert-success
+							a.close(data-dismiss="alert") x
+							strong Info: 
+							span!= info
+			- else
+				#flashContainer
+					.flash-error.flash.alert.alert-success.hide
+					.flash-info.flash.alert.hide
 			#stripeShadowLeft.stripeShadow.hidden
 			a#logo.seo(href="/")
 			#stripeShadowRight.stripeShadow

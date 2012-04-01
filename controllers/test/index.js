@@ -2,13 +2,10 @@ module.exports = function(app) {
     console.log('test loaded...');
     app.get('/test', function(req, res){
 	console.log('here');
-	res.render('test', {
-	    cssIncludes: [],
-	    jsIncludes: [],
-	    title: 'wembli.com - coming soon.',
-	    page: 'index',
-	    globals:globalViewVars
-
+	res.render('email-templates/signup', {
+	    layout:'email-templates/layout',
+	    confirmLink:'',
+	    resendLink:''
 	});
     });
 };

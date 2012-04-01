@@ -213,7 +213,13 @@ $w.eventplan = {
     },
     alertMsg:function(status,msg) {
 	//use header flash msg?
-	$('#eventBuilderAlert').html(msg).addClass('alert-'+status).fadeIn(800).delay(1000).fadeOut(600);
+	$('.flash-info').each(function(idx,el) {
+	    console.log(idx);
+	    if (idx > 1) {
+		return;
+	    }
+	    $(el).html(msg).addClass('alert-'+status).fadeIn(800).delay(1000).fadeOut(600);
+	});
     },
     updateSummary:function() {
 	//update the eventplan summary

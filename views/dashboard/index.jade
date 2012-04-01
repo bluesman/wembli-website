@@ -12,19 +12,25 @@
 		section
 			#myEvents.content
 				h2 Manage your events
-				- if(session.eventplan.event)
-					p #{session.eventplan.event.Name}
-					table.events
+				- if((typeof session.customer.eventplan != "undefined") && (session.customer.eventplan.length > 0))
+					table.events.table-striped.table-bordered
 						thead
 							tr
-								th Where you going
+								th Date
+								th Event
 						tbody
-							tr
-								td My first event
-							tr.shade
-								td Event #2
-							tr
-								td because I'm awesome event 3
+							- each plan in session.customer.eventplan
+								tr
+									- var date = new Date(Date.parse(plan.event.Date));
+									td.date!= date.format('fullDate')
+									td
+										- var nextStep = 'tickets';
+										- each service in globalViewVars.wembliServices
+											- //first step in wembliServices where config is true
+											- if ((typeof plan.config[service] != "undefined") && plan.config[service])
+												- nextStep = service;
+												- break;
+										a(href="/#{nextStep}/#{plan.config.guid}")!= plan.event.Name
 				- else
 					div.alert.alert-info
 						h3 Hey There!

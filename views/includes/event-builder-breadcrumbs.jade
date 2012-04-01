@@ -19,7 +19,8 @@ ul#breadcrumbs(style="width:#{maxWidth}px")
 			.circle(style="margin:0 #{m}px")
 				a(href="/#{service}#eventBuilder")
 				p.segoe!= idx+'. '+service
-	li
+	- var active = ((typeof page != "undefined") && (page == 'summary')) ? 'active' : '';
+	li(class="#{active}")
 		.circle(style="margin:0 #{m}px;")
 			a(href="/event/summary#eventBuilder")
 			p.segoe!= cnt+'. Summary'
