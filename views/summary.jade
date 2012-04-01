@@ -1,3 +1,4 @@
+include includes/modals/vote-by
 - if (!session.loggedIn)
 	script(type="text/javascript")
 		$(document).ready(function() {
@@ -7,7 +8,7 @@
 			$('#signupModal #message').html('You have done a lot of work.  Sign up for Wembli so we can associate this plan with your account.').show();
 			$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
 		});
-#eventBuilderContainer!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'summary'}});
+#eventBuilderContainer!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'summary',buttonText:'Invite Friends'}});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #summaryContainer
 

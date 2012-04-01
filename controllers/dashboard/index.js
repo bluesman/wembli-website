@@ -278,7 +278,7 @@ module.exports = function(app) {
 	    
 	    res.render('email-templates/signup', {
 		confirmLink:confirmLinkEncoded,
-		layout:false,
+		layout:'email-templates/layout',
 		token: req.session.customer.confirmation[0].token,
 	    },function(err,htmlStr) {
 		console.log(htmlStr);

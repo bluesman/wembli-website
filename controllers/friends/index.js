@@ -1,4 +1,49 @@
+var mailer = require("wembli/sendgrid");
+
 module.exports = function(app) {
+    app.all("/friends/invite",function(req,res) {
+	if (!req.session.loggedIn) {	
+	    return res.redirect('/login?redirectUrl='+req.url);
+	}
+	var voteByDate = req.param('voteBy');
+
+	//send vote emails to friends
+	if (typeof req.session.eventplan == "undefined") {
+	    req.flash('error','Unable to retrieve event. Please start a new plan.');
+	    return res.redirect('/dashboard');
+	}
+
+	for (email in req.session.eventplan.friends) {
+	    console.log(email);
+	    
+	    res.render('email-templates/collect-votes', {
+		layout:'email-templates/layout',
+		voteLink: '',
+		noLink: '',
+	    },function(err,htmlStr) {
+		var mail = new mailer.EmailMessage({
+		    sender: '"Wembli Support" <help@wembli.com>',
+		    to:email
+		});
+	    
+		mail.subject = req.session.customer.first_name+' '+req.session.customer.last_name+' has invited you to go to '+req.session.eventplan.event.Name;
+
+		//templatize this 
+		mail.body = '';
+		mail.html = htmlStr;
+		console.log('sending to '+email);
+		mail.send(function(error, success){
+		    console.log("Message "+(success?"sent":"failed:"+error));
+		});
+	    
+	    });
+	}
+
+	//redirect to organizer view with flash message
+	req.flash('info','Successfully sent email to invited friends.');
+	res.redirect('/plan/view/organizer');
+    });
+
     app.get("/friends/:eventGuid",function(req,res) {
 	if (!req.session.loggedIn) {	
 	    return res.redirect('/login?redirectUrl='+req.url);
@@ -6,6 +51,8 @@ module.exports = function(app) {
 	//get the event for this guid
 	for (idx in req.session.customer.eventplan) {
 	    var plan = req.session.customer.eventplan[idx];
+	    console.log('plan: ');
+	    console.log(plan);
 	    if (plan.config.guid == req.param('eventGuid')) {
 		req.session.eventplan = plan;
 		break;

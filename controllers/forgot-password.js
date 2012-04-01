@@ -182,7 +182,7 @@ module.exports = function(app) {
 		if (!err) {
 		    res.render('email-templates/forgot-password-email', {
 			resetLink:resetLinkEncoded,
-			layout:false,
+			layout:'email-templates/layout',
 			token:tokenHash,
 			c: c
 		    },function(err,htmlStr) {

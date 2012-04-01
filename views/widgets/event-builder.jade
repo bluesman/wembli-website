@@ -5,8 +5,7 @@
 		#summary
 			h5 Itinerary Summary: 
 			#summaryContent Nothing added yet...
-		#actions!= partial("includes/event-builder-actions");
-	#eventBuilderAlert.alert.hide
+		#actions!= partial("includes/event-builder-actions",actionArgs);
 #howDoesItWorkModal.modal.hide.fade
 	.modal-header
 		a.close(data-dismiss="modal") x

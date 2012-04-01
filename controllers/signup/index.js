@@ -75,7 +75,7 @@ module.exports = function(app) {
 		    //send the email asynchronously
 		    res.render('email-templates/signup', {
 			confirmLink:confirmLinkEncoded,
-			layout:false,
+			layout:'email-templates/layout',
 		    },function(err,htmlStr) {
 			var mail = new mailer.EmailMessage({
 			    sender: '"Wembli Support" <help@wembli.com>',

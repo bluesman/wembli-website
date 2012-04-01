@@ -1,0 +1,13 @@
+#voteByModal.modal.hide.fade
+	.modal-header
+		a.close(data-dismiss="modal") x
+		h3 Choose a cutoff date for voting:
+	.modal-body
+		form#voteByForm.form-horizontal.well(method="post",action="/friends/invite",enctype="application/x-www-form-urlencoded")
+			fieldset
+				.control-group
+					label.control-label(for="voteBy") Respond By:
+					.controls
+						input#voteBy(name="voteBy",type="text",placeholder="Choose Date")
+				.form-actions
+					button#loginSubmitButton.btn.btn-primary.btn-large Send Invite

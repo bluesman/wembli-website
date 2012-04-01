@@ -74,6 +74,28 @@ module.exports = function(app) {
 	});
     });
 
+    app.all('/plan/view/organizer',function(req,res) {
+	res.render('organizer-view', {
+	    event:req.session.eventplan.event,
+	    title: 'wembli.com - View Event Plan.',
+	    page:'organizer',
+	    cssIncludes: [],
+            jsIncludes: []
+	});
+
+    });
+
+    app.all('/plan/view/friend',function(req,res) {
+	res.render('friend-view', {
+	    event:req.session.eventplan.event,
+	    title: 'wembli.com - View Event Plan.',
+	    page:'friends',
+	    cssIncludes: [],
+            jsIncludes: []
+	});
+
+    });
+
     app.all('/event/summary',function(req,res) {
 	var guid           = req.session.eventplanGuid;
 	var wembliServices = globalViewVars.wembliServices;

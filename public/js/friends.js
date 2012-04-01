@@ -5,7 +5,7 @@
 	    
 	    //make html from the data passed in
 	    var removeId = friend.email.replace(/\W+/g,'-');
-	    console.log(removeId);
+	    console.log('remove id: '+removeId);
 	    var key = 'container-'+removeId;
 	    var removeBtn = $('<a id="'+removeId+'" class="btn btn-success" href="#">Remove</a>');
 	    removeBtn.click(function(e) {

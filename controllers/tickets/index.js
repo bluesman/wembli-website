@@ -5,6 +5,7 @@ require('date-utils');
 module.exports = function(app) {
     app.get("/tickets",function(req,res) {
 	if (typeof req.session.eventplan.event == "undefined") {
+	    
 	    //redirect to the home page and flash a message
 	    req.flash('error','Your session has expired. If you sign up for Wembli, your work can be automatically saved.');
 	    return res.redirect('/');
