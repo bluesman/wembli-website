@@ -65,7 +65,6 @@ module.exports = function(app) {
 		    req.session.customer = customer;
 		
 		    //send a confirmation email   
-		    var logoCid = new Date().getTime().toString() + 'wembli_logo_300x100_tx.png';
 		    var confirmLink = "http://"+app.settings.host+".wembli.com/confirm";
 		    var emailEsc = encodeURIComponent(req.session.customer.email);
 		    var tokenEsc = encodeURIComponent(req.session.customer.confirmation[0].token);
@@ -86,12 +85,6 @@ module.exports = function(app) {
 			//templatize this 
 			mail.text = 'Click here to confirm your email address: http://'+app.settings.host+'.wembli.com/confirm/'+encodeURIComponent(req.session.customer.email)+'/'+encodeURIComponent(confirmationToken);
 			mail.html = htmlStr;
-			/*
-			mail.attachments = [{filename:'wembli_logo_300x100_tx.png',
-					     contents:new Buffer(fs.readFileSync('/wembli/website/public/images/wembli_logo_300x100_tx.png')),
-					     cid:logoCid}];
-					     */
-			console.log('sending');		    
 			mailer.sendMail(mail,function(error, success){
 			    console.log("Message "+(success?"sent":"failed:"+error));
 			});

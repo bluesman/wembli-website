@@ -37,7 +37,8 @@ module.exports = function(app) {
 			'X-SMTPAPI': {
 			    category : "collect-vote",
 			    unique_args:{
-				guid:req.session.eventplan.config.guid
+				guid:req.session.eventplan.config.guid,
+				organizer:req.session.customer.email
 			    }
 			}
 		    },
