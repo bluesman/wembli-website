@@ -13,13 +13,10 @@ this.Model = function(mongoose) {
     });
 
     var mapFriends = function(f) {
-	console.log(f);
 	var friends = {};
 	for (idx in f) {
-	    console.log(f[idx]);
 	    friends[f[idx].email] = f[idx];
 	}
-	console.log(f[idx]);
 	return friends;
     };
 

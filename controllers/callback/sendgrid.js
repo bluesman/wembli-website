@@ -16,11 +16,11 @@ module.exports = function(app) {
 		    console.log('found matching event: '+req.body.guid);
 		    //update the friend for this event
 		    console.log(c.eventplan[i].friends);
-		    for (var j=0;j<=c.eventplan[i].friends.length;j++) {
-			console.log(c.eventplan[i].friends);
-			if (c.eventplan[i].friends[j].email == req.body.email) {
+		    for (email in c.eventplan[i].friends) {
+			console.log(c.eventplan[i].friends[email]);
+			if (email == req.body.email) {
 			    console.log('found matching friend: '+req.body.email);
-			    c.eventplan[i].friends[j][req.body.category][req.body.event]++;
+			    c.eventplan[i].friends[email][req.body.category][req.body.event]++;
 			    c.save();
 			    break;
 			}
