@@ -7,7 +7,10 @@
 			fieldset
 				.control-group
 					label.control-label(for="voteBy") Respond By:
+						br
+						span#respondByDate
 					.controls
-						input#voteBy(name="voteBy",type="text",placeholder="Choose Date")
+						input#voteBy(name="voteBy",type="hidden")
+						#datepicker
 				.form-actions
 					button#loginSubmitButton.btn.btn-primary.btn-large Send Invite

@@ -6,7 +6,7 @@ module.exports = function(app) {
 	    return res.redirect('/login?redirectUrl='+req.url);
 	}
 	var voteByDate = req.param('voteBy');
-
+	console.log(voteByDate);
 	//send vote emails to friends
 	if (typeof req.session.eventplan == "undefined") {
 	    req.flash('error','Unable to retrieve event. Please start a new plan.');
@@ -15,24 +15,44 @@ module.exports = function(app) {
 
 	for (email in req.session.eventplan.friends) {
 	    console.log(email);
+	    var name = 'A friend';
+	    if ((typeof req.session.customer.first_name != "undefined") && (typeof req.session.customer.last_name != "undefined")) {
+		name = req.session.customer.first_name+' '+req.session.customer.last_name;
+	    }
+
+	    var subj = name+' has invited you to go to '+req.session.eventplan.event.Name;
 	    
 	    res.render('email-templates/collect-votes', {
 		layout:'email-templates/layout',
 		voteLink: '',
 		noLink: '',
+		voteByDate:voteByDate,
+		subject: subj,
 	    },function(err,htmlStr) {
-		var mail = new mailer.EmailMessage({
-		    sender: '"Wembli Support" <help@wembli.com>',
-		    to:email
-		});
-	    
-		mail.subject = req.session.customer.first_name+' '+req.session.customer.last_name+' has invited you to go to '+req.session.eventplan.event.Name;
+		console.log(err);
+		var mail = {
+		    from: '"Wembli Support" <help@wembli.com>',
+		    to:email,
+		    headers: {
+			'X-SMTPAPI': {
+			    category : "collect-vote",
+			    unique_args:{
+				guid:req.session.eventplan.config.guid
+			    }
+			}
+		    },
+		};
+	   
+		mail.subject = subj;
 
 		//templatize this 
-		mail.body = '';
+		mail.text = '';
 		mail.html = htmlStr;
 		console.log('sending to '+email);
-		mail.send(function(error, success){
+		mailer.sendMail(mail,function(error, success){
+		    console.log('sent mail response:');
+		    console.log(error);
+		    console.log(success);
 		    console.log("Message "+(success?"sent":"failed:"+error));
 		});
 	    

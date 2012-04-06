@@ -4,6 +4,11 @@
 	$('#continue').click(function(e) {
 	    e.preventDefault();
 	    //pop a modal to collect respond by date
+	    $('#datepicker').datepicker({altField:'#voteBy',
+					 onSelect: function(d,i) {
+					     $('#respondByDate').html(d);
+					 }
+					 });
 	    $('#voteByModal').modal('show');
 	});
 

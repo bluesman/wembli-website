@@ -1,6 +1,6 @@
 var querystring = require('querystring');
 var fs = require('fs');
-var mailer = require("wembli/sendgrid");
+var mailer = require("../../lib/wembli/sendgrid");
 var crypto = require('crypto');
 var wembliUtils   = require('wembli/utils');
 var wembliModel   = require('wembli-model');
@@ -77,14 +77,14 @@ module.exports = function(app) {
 			confirmLink:confirmLinkEncoded,
 			layout:'email-templates/layout',
 		    },function(err,htmlStr) {
-			var mail = new mailer.EmailMessage({
-			    sender: '"Wembli Support" <help@wembli.com>',
+			var mail = {
+			    from: '"Wembli Support" <help@wembli.com>',
 			    to:req.session.customer.email
-			});
+			};
 			
 			mail.subject = "Welcome to Wembli.com";
 			//templatize this 
-			mail.body = 'Click here to confirm your email address: http://'+app.settings.host+'.wembli.com/confirm/'+encodeURIComponent(req.session.customer.email)+'/'+encodeURIComponent(confirmationToken);
+			mail.text = 'Click here to confirm your email address: http://'+app.settings.host+'.wembli.com/confirm/'+encodeURIComponent(req.session.customer.email)+'/'+encodeURIComponent(confirmationToken);
 			mail.html = htmlStr;
 			/*
 			mail.attachments = [{filename:'wembli_logo_300x100_tx.png',
@@ -92,7 +92,7 @@ module.exports = function(app) {
 					     cid:logoCid}];
 					     */
 			console.log('sending');		    
-			mail.send(function(error, success){
+			mailer.sendMail(mail,function(error, success){
 			    console.log("Message "+(success?"sent":"failed:"+error));
 			});
 		    

@@ -10,5 +10,10 @@ include includes/modals/vote-by
 		});
 #eventBuilderContainer!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'summary',buttonText:'Invite Friends'}});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
-#summaryContainer
+#summaryContainer.row
+	#friends.well
+		- each friend in session.eventplan.friends
+			.friend!= friend.email
+	#tickets.well!= partial("widgets/ticket-list",{tickets:session.eventplan.tickets})
+	#cost.well
 
