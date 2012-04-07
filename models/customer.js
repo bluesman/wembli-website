@@ -30,6 +30,7 @@ this.Model = function(mongoose) {
     };
 
     var EventPlan = new Schema( {
+	event_id: ObjectId,
 	date_created: {type:Date,default:Date.now},
 	tickets: {type:{}},
 	event: {type:{}},
@@ -39,6 +40,7 @@ this.Model = function(mongoose) {
     });
 
     var Customer = new Schema( {
+	customer_id: ObjectId,
 	first_name: {type: String},
 	last_name: {type: String},
 	birthday: {type: String},
