@@ -85,7 +85,6 @@ module.exports = function(app) {
 	    if (req.session.customer.confirmed == false) {
 		//need email confirmation
 		return res.render('dashboard/confirm', {
-		    session:req.session,
 		    cssIncludes: [],
 		    jsIncludes: [],
 		    globals:globalViewVars,
@@ -95,7 +94,6 @@ module.exports = function(app) {
 
 
 	    res.render('dashboard/index', {
-		session:req.session,
 		cssIncludes: [],
 		jsIncludes: ['/js/dashboard.js'],
 		globals:globalViewVars,

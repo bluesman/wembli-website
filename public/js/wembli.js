@@ -198,7 +198,6 @@ $w.eventplan = {
 	});
 
     },
-    guid:"",
     toggleButton:function(action,el) {
 	if (action == 'add') {
 	    $(el).attr('class','btn btn-primary');

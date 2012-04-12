@@ -1,19 +1,21 @@
 var redis = require("redis"),
     redisClient = redis.createClient();
+var uuid = require('node-uuid'); //this is for making a guid
 
 var ticketNetwork = require('../../lib/wembli/ticketnetwork');
 
 module.exports = function(app) {
+    //set up the event plan for the first time
     app.all('/event/:eventId/:eventName',function(req,res) {
 	console.log('called event builder');
 	var eventId     = req.param('eventId');
 	var eventName   = req.param('eventName');
-	var guid        = req.session.eventplanGuid;
+
 	var wembliServices = globalViewVars.wembliServices;
 
 	//for now, everytime they load this page, reset the req.session.eventplan
 	req.session.eventplan = {};
-	req.session.eventplan.completed = {};
+	req.session.eventplan.completed = {init:true};
 	req.session.eventplan.config = {};
 	for (idx in wembliServices) {
 	    var service = wembliServices[idx];
@@ -27,8 +29,9 @@ module.exports = function(app) {
 		req.session.eventplan[service] = {};
 	    }
 	}
+	req.session.eventplan.config['summary'] = true; //every plan has a summary
 	req.session.eventplan.config['payment'] = (typeof req.body['payment'] == "undefined") ? 'group' : req.body['payment'];
-	req.session.eventplan.config['guid'] = guid;
+	req.session.eventplan.config['guid']    = uuid.v1();
 
 	//this function determines which step to go to and goes there
 	var dispatch = function(err,args) {
@@ -59,28 +62,62 @@ module.exports = function(app) {
 	    //add event to the event plan
 	    req.session.eventplan.event = event.Event;
 	    
-	    var saveEventplan = {};
-	    for (key in req.session.eventplan) {
-		saveEventplan[key] = JSON.stringify(req.session.eventplan[key]);
-	    }
-
-	    //serialize and store in redis
-	    redisClient.hmset('eventplan:'+guid,saveEventplan,
-			      function(hmsetErr,hmsetResponse) {
-				  console.log('set eventplan in redis');
-				  //now continue to the right page
-				  dispatch(null,{eventplan:req.session.eventplan});
-			      });
+	    //now continue to the right page
+	    dispatch(null,{eventplan:req.session.eventplan});
 	});
     });
 
     app.all('/plan/view/organizer',function(req,res) {
+	if (!req.session.loggedIn) {	
+	    return res.redirect('/login?redirectUrl='+req.url);
+	}
+
+	//refetch here from the db cause the session could be out of date (due to sendgrid callback)
+	for (idx in req.session.customer.eventplan) {
+	    var plan = req.session.customer.eventplan[idx];
+	    if (plan.config.guid == req.session.eventplan.config.guid) {
+		//hack for now - fix this
+		req.session.eventplan = plan;
+		break;
+	    }
+	}
+
 	res.render('organizer-view', {
-	    event:req.session.eventplan.event,
 	    title: 'wembli.com - View Event Plan.',
+	    layoutContainer: true,
 	    page:'organizer',
 	    cssIncludes: [],
-            jsIncludes: []
+            jsIncludes: ['/js/organizer-view.js']
+	});
+
+    });
+
+    app.all('/plan/view/organizer/:guid',function(req,res) {
+	if (!req.session.loggedIn) {	
+	    return res.redirect('/login?redirectUrl='+req.url);
+	}
+
+	//get the event for this guid
+	for (idx in req.session.customer.eventplan) {
+	    var plan = req.session.customer.eventplan[idx];
+	    if (plan.config.guid == req.param('guid')) {
+		//hack for now - fix this
+		req.session.eventplan = plan;
+		break;
+	    }
+	}
+
+	if (typeof req.session.eventplan == "undefined") {
+	    req.flash('error','Unable to retrieve event. Please start a new plan.');
+	    return res.redirect('/dashboard');
+	}
+
+	res.render('organizer-view', {
+	    title: 'wembli.com - View Event Plan.',
+	    layoutContainer: true,
+	    page:'organizer',
+	    cssIncludes: [],
+            jsIncludes: ['/js/organizer-view.js']
 	});
 
     });
@@ -96,8 +133,7 @@ module.exports = function(app) {
 
     });
 
-    app.all('/event/summary',function(req,res) {
-	var guid           = req.session.eventplanGuid;
+    app.all('/summary',function(req,res) {
 	var wembliServices = globalViewVars.wembliServices;
 	if (typeof req.session.eventplan.event =="undefined") {
 	    //they tried to load summary without an event
@@ -105,12 +141,59 @@ module.exports = function(app) {
 	    return res.redirect('/');
 	}
 
+	if (req.param("completed")) {
+	    console.log(req.param("completed"));
+	    req.session.eventplan.completed[req.param("completed")] = true;
+	}
+
+	//if they are logged in save the plan
+	if (req.session.loggedIn) {
+	    req.session.customer.eventplan = [req.session.eventplan];
+	    req.session.customer.markModified('eventplan');
+	    req.session.customer.save(function(err) {
+		console.log('saved customer');
+	    });
+	}
+
+
 	res.render('summary', {
 	    event:req.session.eventplan.event,
 	    title: 'wembli.com - Plan Summary.',
 	    page:'summary',
 	    cssIncludes: [],
-            jsIncludes: ['/js/summary.js']
+            jsIncludes: ['','/js/summary.js']
+	});
+	
+	
+    });
+
+    app.all('/summary/:guid',function(req,res) {
+	if (!req.session.loggedIn) {	
+	    return res.redirect('/login?redirectUrl='+req.url);
+	}
+
+	//get the event for this guid
+	for (idx in req.session.customer.eventplan) {
+	    var plan = req.session.customer.eventplan[idx];
+	    if (plan.config.guid == req.param('guid')) {
+		//hack for now - fix this
+		req.session.eventplan = plan;
+		break;
+	    }
+	}
+
+	if (typeof req.session.eventplan == "undefined") {
+	    req.flash('error','Unable to retrieve event. Please start a new plan.');
+	    return res.redirect('/dashboard');
+	}
+
+
+	res.render('summary', {
+	    event:req.session.eventplan.event,
+	    title: 'wembli.com - Plan Summary.',
+	    page:'summary',
+	    cssIncludes: [],
+            jsIncludes: ['','/js/summary.js']
 	});
 	
 	
@@ -119,6 +202,7 @@ module.exports = function(app) {
     app.all('/event/save',function(req,res) {
 	//saving plan
 	req.session.customer.eventplan = [req.session.eventplan];
+	req.session.customer.markModified('eventplan');
 	req.session.customer.save(function(err) {
 	    console.log('saved customer');
 	    var redirectUrl = '/dashboard';

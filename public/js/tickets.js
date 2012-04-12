@@ -1,7 +1,6 @@
 (function($,window,undefined) {
 
     var init = function() {
-	var guid = $w.eventplan.guid;
 
 	$('#ticketsContent .ticket-list li').each(function(idx,el) { 
 	    var li = el;
@@ -33,10 +32,10 @@
 		if ($(me).attr('class') == 'btn btn-primary') {
 		    
 		    //add tix to the eventplan and change class and text on success
-		    wembli.eventPlan.addTicketGroup({guid:guid,args:args},function(error,eventplan) {
+		    wembli.eventPlan.addTicketGroup(args,function(error,eventplan) {
 			if (eventplan) {
 			    //make it global
-			    $w.eventplan.data = eventplan[guid];
+			    $w.eventplan.data = eventplan;
 			    $w.eventplan.updateSummary();
 			    //toggle the button
 			    $w.eventplan.toggleButton('remove',me);
@@ -50,9 +49,9 @@
 		//if they clicked on a btn-success it means they are removing
 		if ($(me).attr('class') == 'btn btn-success') {
 		    //remove the tix from eventplan and change class and text on success
-		    wembli.eventPlan.removeTicketGroup({guid:guid,args:args},function(error,eventplan) {
+		    wembli.eventPlan.removeTicketGroup(args,function(error,eventplan) {
 			if (eventplan) {
-			    $w.eventplan.data = eventplan[guid];
+			    $w.eventplan.data = eventplan;
 			    //update the eventplan summary
 			    $w.eventplan.updateSummary();
 			    //toggle the button
@@ -68,18 +67,15 @@
     };
 
     $(window.document).ready(function($) {
-	var guid = $('#eventplanGuid').val();
-
 	//find the $w global defined in wembli.js
 	//wembli.js also contains some utilities for the event builder (aka eventplan)
 	//utilities like: updating the summary, toggling a button and probably more
 
 	//find the wembli object in jquery.wembli.js - this is the wembli jsonrpc api
 
-	//get the eventplan from the server for this guid - then init the buttons and stuff
-	wembli.eventPlan.get({guid:guid},function(error,eventplan) {
-	    $w.eventplan.guid = guid;
-	    $w.eventplan.data = eventplan[guid]; //store the event plan in the $w wembli global for use by other stuff
+	//get the eventplan from the server for this session - then init the buttons and stuff
+	wembli.eventPlan.get({},function(error,eventplan) {
+	    $w.eventplan.data = eventplan; //store the event plan in the $w wembli global for use by other stuff
 	    $w.eventplan.updateSummary();
 	    init();
 	});

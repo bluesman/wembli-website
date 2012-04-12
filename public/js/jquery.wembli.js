@@ -22,17 +22,6 @@
 
     /* event builder methods */
     Wembli.prototype.eventPlan = {
-	_parseEventPlan: function(guid,raw,callback) {
-	    //the eventplan rpc calls return the event plan data
-	    //each of the values for the keys are serialized so we have to parse them here
-	    var items = {};
-	    for (key in raw[guid]) {
-		items[key] = JSON.parse(raw[guid][key]);
-	    }
-	    var eventplan = {};
-	    eventplan[guid] = items;
-	    callback(null,eventplan);
-	},
 	get: function(args,callback) {
 	    var me = this;
 	    $.ajax({
@@ -48,7 +37,7 @@
 		    "id":1
 		}),
 		success: function(data) {
-		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
+		    callback(null,data.result.eventplan);
 		}
 	    });
 	},
@@ -67,7 +56,7 @@
 		    "id":1
 		}),
 		success: function(data) {
-		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
+		    callback(null,data.result.eventplan);
 		}
 	    });
 	},
@@ -87,7 +76,7 @@
 		    "id":1
 		}),
 		success: function(data) {
-		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
+		    callback(null,data.result.eventplan);
 		}
 	    });
 	},
@@ -107,8 +96,7 @@
 		    "id":1
 		}),
 		success: function(data) {
-		    console.log(data.result.eventplan);
-		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
+		    callback(null,data.result.eventplan);
 		}
 	    });
 	},
@@ -128,8 +116,7 @@
 		    "id":1
 		}),
 		success: function(data) {
-		    console.log(data.result.eventplan);
-		    me._parseEventPlan(args.guid,data.result.eventplan,callback);
+		    callback(null,data.result.eventplan);
 		}
 	    });
 	},

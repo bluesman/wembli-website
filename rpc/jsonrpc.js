@@ -76,7 +76,6 @@ errorMessages[INTERNAL_ERROR] = 'Internal Error.';
  */
 
 function jsonrpc(rpcDispatchHooks) {
-
     /**
      * Handle JSON-RPC request.
      *
@@ -153,6 +152,9 @@ function jsonrpc(rpcDispatchHooks) {
                 } catch (err) {
                     return respond(normalize(rpc, { error: { code: PARSE_ERROR }}));
                 }
+
+		rpc.params.req = req;
+		rpc.params.res = res;
 
                 /**
                  * Normalize response object.

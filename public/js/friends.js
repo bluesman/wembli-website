@@ -1,8 +1,6 @@
 (function($,window,undefined) {
     var friendStack = {
 	add: function(friend) {
-	    var guid = $w.eventplan.guid;
-	    
 	    //make html from the data passed in
 	    var removeId = friend.email.replace(/\W+/g,'-');
 	    console.log('remove id: '+removeId);
@@ -13,7 +11,7 @@
 		var removeKey = '#container-'+removeId;
 		console.log('removing: '+removeKey);
 		var args = {friendId:friend.email};
-		wembli.eventPlan.removeFriend({guid:guid,args:args},function(error,eventplan) {
+		wembli.eventPlan.removeFriend(args,function(error,eventplan) {
 		    if (eventplan) {
 			//show the friend on top of the stack of friends
 			console.log('removed friend: '+removeKey+' from friendstack');
@@ -21,7 +19,7 @@
 			$(removeKey).slideUp(500,function() {$(this).remove()});
 			
 			//make it global
-			$w.eventplan.data = eventplan[guid];
+			$w.eventplan.data = eventplan;
 			$w.eventplan.updateSummary();
 			$w.eventplan.alertMsg('success','Successfully removed '+friend.email+' from your plan.');
 		    } else {
@@ -38,7 +36,6 @@
     }
 
     var init = function() {
-	var guid = $w.eventplan.guid;
 	//manual
 	//preload the friendStack with existing friends and update the summary
 	if (typeof $w.eventplan.data.friends != "undefined") {
@@ -96,13 +93,13 @@
 	    var args = {friends:{}};
 	    args.friends[email] = friend;
 	    //make wembli rpc call to add friends
-	    wembli.eventPlan.addFriends({guid:guid,args:args},function(error,eventplan) {
+	    wembli.eventPlan.addFriends(args,function(error,eventplan) {
 		if (eventplan) {
 		    //show the friend on top of the stack of friends
 		    friendStack.add(friend);
 
 		    //make it global
-		    $w.eventplan.data = eventplan[guid];
+		    $w.eventplan.data = eventplan;
 		    $w.eventplan.updateSummary();
 		    $('#manualForm #firstName').val(''),
 		    $('#manualForm #lastName').val(''),
@@ -124,18 +121,15 @@
 
 
     $(window.document).ready(function($) {
-	var guid = $('#eventplanGuid').val();
-
 	//find the $w global defined in wembli.js
 	//wembli.js also contains some utilities for the event builder (aka eventplan)
 	//utilities like: updating the summary, toggling a button and probably more
 
 	//find the wembli object in jquery.wembli.js - this is the wembli jsonrpc api
 
-	//get the eventplan from the server for this guid - then init the buttons and stuff
-	wembli.eventPlan.get({guid:guid},function(error,eventplan) {
-	    $w.eventplan.guid = guid;
-	    $w.eventplan.data = eventplan[guid]; //store the event plan in the $w wembli global for use by other stuff
+	//get the eventplan from the server for this session - then init the buttons and stuff
+	wembli.eventPlan.get({},function(error,eventplan) {
+	    $w.eventplan.data = eventplan; //store the event plan in the $w wembli global for use by other stuff
 	    $w.eventplan.updateSummary();
 	    init();
 	});

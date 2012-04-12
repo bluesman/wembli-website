@@ -3,7 +3,7 @@ include includes/modals/vote-by
 	script(type="text/javascript")
 		$(document).ready(function() {
 			$('.redirect-url').each(function(idx,el) {
-				$(el).val('/event/summary');
+				$(el).val('/summary');
 			});
 			$('#signupModal #message').html('You have done a lot of work.  Sign up for Wembli so we can associate this plan with your account.').show();
 			$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});

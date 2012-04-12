@@ -5,7 +5,7 @@
 	- if (session.eventplan.config[service])
 		- services.push(service);
 - var maxWidth = 900;
-- var cnt = services.length + 1;
+- var cnt = services.length;
 - var m = ((maxWidth - (100 * cnt))/2)/cnt;
 - var w = (100 + (m * 2)) * (cnt - 1);
 ul#breadcrumbs(style="width:#{maxWidth}px")
@@ -19,9 +19,4 @@ ul#breadcrumbs(style="width:#{maxWidth}px")
 			.circle(style="margin:0 #{m}px")
 				a(href="/#{service}#eventBuilder")
 				p.segoe!= idx+'. '+service
-	- var active = ((typeof page != "undefined") && (page == 'summary')) ? 'active' : '';
-	li(class="#{active}")
-		.circle(style="margin:0 #{m}px;")
-			a(href="/event/summary#eventBuilder")
-			p.segoe!= cnt+'. Summary'
 .line(style="width:#{w}px")

@@ -51,7 +51,6 @@ html
   - var pageId = (typeof page == "undefined") ? 'none' : page;
   body(id="#{pageId}")
     include includes/facebook-sdk
-    input(type="hidden",id="eventplanGuid",name="eventplanGuid",value=session.eventplanGuid)
     include includes/backgrounds
     - if (typeof layoutContainer != "undefined")
       #maincontentWrapper.container
@@ -65,7 +64,7 @@ html
         include includes/footer
   - if ("undefined" !== typeof jsIncludes)
     - each file in jsIncludes
-      script(type="text/javascript", src=file)
+      script(type="text/javascript", src="#{file}")
   script(src="http://www.jotform.com/min/?g=feedback2", type="text/javascript")
   script(type="text/javascript")
     /*

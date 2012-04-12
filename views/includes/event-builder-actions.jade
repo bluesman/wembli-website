@@ -1,15 +1,15 @@
 - var stop = false;
-- var next = 'event/summary';
+- var next = 'summary';
 - var idx = 0;
 - each service in globalViewVars.wembliServices
 	- idx++;
 	- if (session.eventplan.config[service])
 		- if (stop)
-			- next = service+'#eventBuilder'
-			- break
+			- next = service;
+			- break;
 		- if (typeof page != "undefined" && (service == page))
 			- stop = true;
-a#continue.btn.btn-success.btn-large(href="/#{next}")!= (typeof buttonText != "undefined") ? buttonText : 'Continue';
+a#continue.btn.btn-success.btn-large(href="/#{next}?completed=#{page}")!= (typeof buttonText != "undefined") ? buttonText : 'Continue';
 #links
 	a#howDoesItWork(data-toggle="modal",href="#howDoesItWorkModal") How Does It Work
 	span  | 

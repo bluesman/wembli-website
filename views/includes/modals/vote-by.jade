@@ -4,6 +4,7 @@
 		h3 Choose a cutoff date for voting:
 	.modal-body
 		form#voteByForm.form-horizontal.well(method="post",action="/friends/invite",enctype="application/x-www-form-urlencoded")
+			input#friendEmailId(type="hidden",name="friendEmailId",value="")
 			fieldset
 				.control-group
 					label.control-label(for="voteBy") Respond By:

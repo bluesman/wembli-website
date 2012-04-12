@@ -9,171 +9,128 @@ var _respond = function(error,data,me) {
 	console.log(error);
 	me(error,{success:0});
     } else {
+	//TODO: save data for customer if logged in
+
 	me(null,{success:1,
 		 eventplan:data});
     }
 };
 
+var _initEventplan = function(req) {
 
+    //make sure we have an event plan
+    if (typeof req.session.eventplan == "undefined") {
+	return _respond('no eventplan available');
+    }
+    return req.session.eventplan;
+};
+
+/* req and res can always be the last 2 args */
 exports.eventplan = {
-    getEventPlan: function(guid) {
+    getEventPlan: function(req,res) {
 	var me = this;
-	var error = null;
-	redisClient.hgetall('eventplan:'+guid,function(err,cache) {
-	    var eventplan = {};
-	    eventplan[guid] = cache;
-	    _respond(err,eventplan,me);
-	});
-	
+
+	var e = (typeof req.session.eventplan != "undefined") ? req.session.eventplan : {};
+
+	_respond(null,e,me);
     },
-    removeFriend: function(guid,args) {
+
+    removeFriend: function(friendId,req,res) {
 	var me = this;
 	var error = null;
 
-	//remove the tickets from the event plan and update the cache and respond to client
-	var removeFriendFromEvent = function(err,eventplan) {
-	    var friends = (typeof eventplan.friends !== "undefined") ? JSON.parse(eventplan.friends) : {};
-	    delete friends[args.friendId];
+	var e = _initEventplan(req);
 
-	    //store the updated tix list
-	    eventplan.friends = JSON.stringify(friends);
+	//deserialize?
+	if (typeof e.friends !== "undefined") {
+	    delete e.friends[friendId];
+	}
+	//TODO: save customer if logged in
 
-	    //set the updated data
-	    redisClient.hmset('eventplan:'+guid,eventplan,function(hmsetErr,hmsetResponse) {
-		//TODO:  error checking
-		var responseData = {}
-		responseData[guid] = eventplan;
-		_respond(error,responseData,me);
-	    });
-
-	};
-
-	redisClient.hgetall('eventplan:'+guid,removeFriendFromEvent);
+	_respond(error,e,me);
     },
 
 
-    addFriends: function(guid, args) {
+    addFriends: function(friends,req,res) {
 	var me = this;
 	var error = null;
 
-	if (typeof args.friends == "undefined") {
+	var e = _initEventplan(req);
+
+	if (typeof friends == "undefined") {
 	    return _respond('no friends provided',null,me);
 	}
 
-	var addFriendsToEvent = function(err,eventplan) {
+	if (typeof e.friends == "undefined") {
+	    e.friends = {};
+	}
 
+	//friends is a hash keyed by email address
+	for (email in friends) {
+	    e.friends[email] = friends[email];
+	}
 
-	    var friends = (typeof eventplan.friends !== "undefined") ? JSON.parse(eventplan.friends) : {};
-	    //friends is a hash keyed by email address
-	    for (email in args.friends) {
-		friends[email] = args.friends[email];
-	    }
-
-	    //store the updated tix list
-	    eventplan.friends = JSON.stringify(friends);
-
-	    //set the updated data
-	    redisClient.hmset('eventplan:'+guid,eventplan,function(hmsetErr,hmsetResponse) {
-		//TODO:  error checking
-		var responseData = {}
-		responseData[guid] = eventplan;
-		_respond(error,responseData,me);
-	    });
-
-
-	};
-	
-	redisClient.hgetall('eventplan:'+guid,addFriendsToEvent);
+	_respond(error,e,me);
     },
 
-    addTicketGroup: function(guid,args) {
+
+
+    addTicketGroup: function(ticketId,req,res) {
 	var me = this;
 	var error = null;
+	var e = _initEventplan(req);
 
-	/* the structure of the cache is like this:
+	if (typeof ticketId == "undefined") {
+	    return _respond('no ticketId provided',null,me);
+	}
 
-	   eventplan:<someguid> = {
-	                           event: eventData,
-	                           tickets: {123456: { ticketnetwork.TicketGroup },
-				             123457: { ... },
-					     123458: { ... }
-					     },
-				   friends: { ... },
-				   parking: { ... },
-				   };
-
-	 */
-
+	if (typeof e.tickets == "undefined") {
+	    e.tickets = {};
+	}
 
 	//get the tix data matching the passed in id
 	var mapTixData = function(err,ticketData) {
 	    //var ticketGroup = JSON.stringify(ticketData.TicketGroup);
 	    var ticketGroup = ticketData.TicketGroup;
-	    //add the tickets to the event plan and update the cache and respond to client
-	    var addTix = function(err,cache) {
-		var tickets = (typeof cache.tickets !== "undefined") ? JSON.parse(cache.tickets) : {};
-		//make sure this ticket group is not already in the cache, if it is - wack the old and replace with the new
-		var replaced = false;
-		for (var cachedTixId in tickets) {
-		    if (cachedTixId == args.ticketId) {
-			tickets[cachedTixId] = ticketGroup;
-			replaced = true;
-		    }
+	    //add the tickets to the event plan and respond to client
+	    //make sure this ticket group is not already in the cache, if it is - wack the old and replace with the new
+	    var replaced = false;
+	    for (var existingTixId in e.tickets) {
+		if (existingTixId == ticketId) {
+		    e.tickets[existingTixId] = ticketGroup;
+		    replaced = true;
+		    break;
 		}
-		//if i didn't replace an existing then i just have to push this group in
-		if (!replaced) {
-		    tickets[args.ticketId] = ticketGroup;
-		}
-		//stored the updated tix list
-		cache.tickets = JSON.stringify(tickets);
-
-		//fail if no guid
-
-		redisClient.hmset('eventplan:'+guid,cache,function(hmsetErr,hmsetResponse) {
-		    //TODO:  error checking
-		    var responseData = {}
-		    responseData[guid] = cache;
-		    _respond(error,responseData,me);
-		});
-
-	    };
-
-	    //returns err,cache - cache is key.value = <serialized json>
-	    redisClient.hgetall('eventplan:'+guid,addTix);
+	    }
+	    //if i didn't replace an existing then i just have to push this group in
+	    if (!replaced) {
+		e.tickets[ticketId] = ticketGroup;
+	    }
+	
+	    _respond(error,e,me);
 	};
-
 
 	//get ticketnetwork data for this ticket
-	ticketNetwork.GetTickets({ticketGroupID: args.ticketId},mapTixData);
-
+	ticketNetwork.GetTickets({ticketGroupID: ticketId},mapTixData);
     },
 
-    removeTicketGroup: function(guid,args) {
+    removeTicketGroup: function(ticketId,req,res) {
 	var me = this;
 	var error = null;
+	var e = _initEventplan(req);
 
-	//remove the tickets from the event plan and update the cache and respond to client
-	var removeTix = function(err,cache) {
-	    var tickets = (typeof cache.tickets !== "undefined") ? JSON.parse(cache.tickets) : {};
-	    delete tickets[args.ticketId];
+	if (typeof ticketId == "undefined") {
+	    return _respond('no ticketId provided',null,me);
+	}
 
-	    //store the updated tix list
-	    cache.tickets = JSON.stringify(tickets);
+	if (typeof e.tickets == "undefined") {
+	    e.tickets = {};
+	}
 
-	    //set the updated data
-	    redisClient.hmset('eventplan:'+guid,cache,function(hmsetErr,hmsetResponse) {
-		//TODO:  error checking
-		var responseData = {}
-		responseData[guid] = cache;
-		_respond(error,responseData,me);
-	    });
-
-	};
-
-	redisClient.hgetall('eventplan:'+guid,removeTix);
-
-
+	//remove the tickets from the eventplan and respond to client
+	if (typeof e.tickets[ticketId] != "undefined") {
+	    delete e.tickets[ticketId];
+	}
+	_respond(error,e,me);
     }
-
-
 }

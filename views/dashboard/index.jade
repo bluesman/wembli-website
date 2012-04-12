@@ -24,12 +24,16 @@
 									- var date = new Date(Date.parse(plan.event.Date));
 									td.date!= date.format('fullDate')
 									td
-										- var nextStep = 'tickets';
-										- each service in globalViewVars.wembliServices
-											- //first step in wembliServices where config is true
-											- if ((typeof plan.config[service] != "undefined") && plan.config[service])
+										- var nextStep = 'plan/view/organizer';
+										- var services = [];
+										- services.push(globalViewVars.wembliServices);
+										- services.push('summary');
+										- each service in services
+											- //first step in wembliServices where config is true and completed is false
+											- if ((typeof plan.config[service] != "undefined") && plan.config[service] && (typeof plan.completed[service] == "undefined"))
 												- nextStep = service;
 												- break;
+										- console.log(globalViewVars.wembliServices)
 										a(href="/#{nextStep}/#{plan.config.guid}")!= plan.event.Name
 				- else
 					div.alert.alert-info

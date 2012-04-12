@@ -1,1 +1,123 @@
-#planContainer This is the plan
+include includes/modals/vote-by
+#planContainer.row
+	#sidebar.span2.well
+		#profileImage
+		#sidebarNav
+			ul.nav.nav-list
+				li.nav-header Planning Tools
+				li
+					a(href="#")
+						i.icon-book
+						span New Event
+				li
+					a(href="#")
+						i.icon-calendar
+						span Add to Calendar
+				li
+					a(href="#")
+						i.icon-map-marker
+						span Show Map
+				li
+					a(href="#")
+						i.icon-star
+						span PayPal
+				li
+					a(href="#")
+						i.icon-envelope
+						span Email My Itinerary
+	#center.span5
+		.alert.alert-success Your Invitations to the events have been sent. 
+		form#votingContainer.well()
+			h3 Voting
+				a#cotingIcon(href="#")
+					i.icon-info-sign.pull-right.icon-white				
+			fieldset#tickets
+				- var idx = 0
+				- for (ticketId in session.eventplan.tickets)
+					- idx++;
+					- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
+					- var ticket = session.eventplan.tickets[ticketId]
+					.control-group
+					label.control-label Ticket Options:
+						.controls
+							label.radio
+								input(type="radio",checked="",value="",name="")
+								span#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
+								span.seats.block!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+			.form-actions
+				a#collectMoney.btn.btn-success.btn-large(href="#") COLLECT MONEY
+				a#buy(href="#").btn.disabled.btn-large BUY
+		#wallContainer
+	#right.span4
+		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.eventplan.event});
+		#friendStack.well
+			h3 Invitees
+				a#inviteesIcon(href="#")
+					i.icon-info-sign.pull-right.icon-white
+			.body
+				- var idx = 0;
+				- for (email in session.eventplan.friends)
+					- idx++;
+					- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
+					- var friend = session.eventplan.friends[email]; 
+					- labelType = 'label-warning';
+					- labelCaption = 'undecided';
+					- labelIcon = 'icon-question-sign';
+					- var emailAsId = friend.email.replace(/\W+/g,'-');
+					- if ((typeof friend.decision != "undefined") && (friend.decision == true))
+						- labelType = 'label-success';
+						- labelCaption = 'attending';
+						- labelIcon = 'icon-ok-sign';
+					- if ((typeof friend.decision != "undefined") && (friend.decision == false))
+						- labelType = 'label-important';
+						- labelCaption = 'declined';
+						- labelIcon = 'icon-remove-sign';
+					.friend.clearfix(class="#{rowClass}")
+						.info.clearfix
+							.status.pull-left
+								span(class="label #{labelType}")
+									i(class="icon-white #{labelIcon}")
+									span!= ' '+labelCaption
+							.name.pull-left!= ' ' + friend.firstName + ' ' + friend.lastName 
+						- if (typeof friend.collectVote != "undefined")
+							.invitationEmailStatus.clearfix
+								.emailType.pull-left
+									i.icon-envelope 
+									span &nbsp;Invitation Email: 
+								.emailLabel.pull-left
+									- if (typeof friend.collectVote.delivered != "undefined")
+										span.label.label-info sent
+										span &nbsp;
+											- if (typeof friend.collectVote.open != "undefined")
+												span.label.label-info opened
+											- else
+												span.label unopened
+									- else
+										span.label not sent
+								a.emailAction.pull-right(id="invitation-#{emailAsId}",href="#")
+									i.icon-repeat
+									span &nbsp;Resend
+						- if (typeof friend.collectPayment != "undefined")
+							.paymentEmailStatus.clearfix
+								.emailType.pull-left
+									i.icon-envelope 
+									span &nbsp;Collect Payment Email: 
+								.emailLabel.pull-right
+									- if (typeof friend.collectPayment.delivered != "undefined")
+										span.label.label-info sent
+										span &nbsp;
+											- if (typeof friend.collectPayment.open != "undefined")
+												span.label.label-info opened
+											- else
+												span.label unopened
+									- else
+										span.label not sent
+								a.emailAction.pull-right(id="payment-#{emailAsId}",href="#")
+									i.icon-repeat
+									span &nbsp;Resend
+						- if ((typeof friend.collectPayment == "undefined") && (typeof friend.collectVote == "undefined"))
+							a.emailAction.pull-right(id="invitation-#{emailAsId}",href="#")
+								i.icon-repeat
+								span &nbsp;Send Invite
+			#inviteMoreContainer
+				a#inviteMoreFriends.btn.btn-success(href="/friends") Add More Friends

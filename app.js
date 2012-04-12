@@ -31,15 +31,15 @@ app.set('fbAppSecret','68b80c2adfd5421b6c9df85751264d4e');
 app.set('host','www');
 
 app.configure(function(){
+    app.use(express.cookieParser());
+    app.use(express.static(__dirname + '/public'));
+    app.use(express.session({ key: 'wembli.sid',secret: '@$!#SCDFdsa',store: new redis }));
     app.use(wemblirpc.server(wemblirpc.rpcDispatchHooks));
     app.set('views', __dirname + '/views');
     app.set('controllers', __dirname + '/controllers');
     app.set('view engine', 'jade');
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(express.cookieParser());
-    app.use(express.static(__dirname + '/public'));
-    app.use(express.session({ key: 'wembli.sid',secret: '@$!#SCDFdsa',store: new redis }));
     app.use(require('./lib/wembli/auth'));
     app.use(require('./lib/wembli/geoip'));
     app.use(require('./lib/wembli/top-performers'));
@@ -105,7 +105,7 @@ app.helpers({
 	credentials.appId = app.settings.fbAppId;
 	credentials.appSecret = app.settings.fbAppSecret;
 	credentials.host = app.settings.host;
-	console.log(credentials);
+	//console.log(credentials);
 	return credentials;
     },
 

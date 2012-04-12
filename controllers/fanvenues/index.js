@@ -30,7 +30,7 @@ module.exports = function(app) {
 	    });
 	    
 	    res2.on('end', function() {
-		console.log(str);
+		//console.log(str);
 		res.json(str);
 	    });
 	});
