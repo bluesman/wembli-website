@@ -4,6 +4,7 @@
 - each service in globalViewVars.wembliServices
 	- if (session.eventplan.config[service])
 		- services.push(service);
+- services.push('summary');
 - var maxWidth = 900;
 - var cnt = services.length;
 - var m = ((maxWidth - (100 * cnt))/2)/cnt;
