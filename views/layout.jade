@@ -28,7 +28,7 @@ html
     - if ("undefined" !== typeof cssIncludes)
       - each file in cssIncludes
         link(rel="stylesheet", href=file)
-    - if ("production" == environment())
+    - if ("development" != environment())
       script(type="text/javascript")
         var _kmq = _kmq || [];
         function _kms(u){
