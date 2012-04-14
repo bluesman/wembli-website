@@ -29,15 +29,15 @@ html
       - each file in cssIncludes
         link(rel="stylesheet", href=file)
     - if ("development" != environment())
-//      script(type="text/javascript")
-//        var _kmq = _kmq || [];
-//        function _kms(u){
-//          setTimeout(function(){
-//            var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true;
-//            s.src = u; f.parentNode.insertBefore(s, f);
-//          }, 1);
-//        }
-//        _kms('//i.kissmetrics.com/i.js');_kms('//doug1izaerwt3.cloudfront.net/93a0d344c13e76907f623cee3af3723ce56f020b.1.js');
+      script(type="text/javascript")
+        var _kmq = _kmq || [];
+        function _kms(u){
+          setTimeout(function(){
+            var s = document.createElement('script'); var f = document.getElementsByTagName('script')[0]; s.type = 'text/javascript'; s.async = true;
+            s.src = u; f.parentNode.insertBefore(s, f);
+          }, 1);
+        }
+        _kms('//i.kissmetrics.com/i.js');_kms('//doug1izaerwt3.cloudfront.net/93a0d344c13e76907f623cee3af3723ce56f020b.1.js');
       script(type="text/javascript")
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-27420261-1']);
@@ -47,14 +47,14 @@ html
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
-//      script(type="text/javascript")
-//        var _sgq = _sgq || [];
-//        _sgq.push(['setSgAccount', 'yjqkdzlt']);
-//        setTimeout(function() {
-//          var sg = document.createElement('script'); sg.type = 'text/javascript'; sg.async = true;
-//          sg.src = ("https:" == document.location.protocol ? "https://dc" : "http://cdn0") + ".skyglue.com/sgtracker.js";
-//          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sg, s);
-//        }, 1);
+      script(type="text/javascript")
+       var _sgq = _sgq || [];
+        _sgq.push(['setSgAccount', 'yjqkdzlt']);
+        setTimeout(function() {
+          var sg = document.createElement('script'); sg.type = 'text/javascript'; sg.async = true;
+          sg.src = ("https:" == document.location.protocol ? "https://dc" : "http://cdn0") + ".skyglue.com/sgtracker.js";
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sg, s);
+        }, 1);
   - var pageId = (typeof page == "undefined") ? 'none' : page;
   body(id="#{pageId}")
     include includes/facebook-sdk
