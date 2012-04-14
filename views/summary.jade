@@ -8,12 +8,14 @@ include includes/modals/vote-by
 			$('#signupModal #message').html('You have done a lot of work.  Sign up for Wembli so we can associate this plan with your account.').show();
 			$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
 		});
-#eventBuilderContainer!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'summary',buttonText:'Invite Friends'}});
+#eventBuilderContainer!= partial("widgets/event-builder",{actionArgs:{step:'summary',buttonText:'Invite Friends'}});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #summaryContainer.row
-	#friends.well
-		- each friend in session.eventplan.friends
-			.friend!= friend.email
-	#tickets.well!= partial("widgets/ticket-list",{tickets:session.eventplan.tickets})
+	- if (typeof session.eventplan.friends != "undefined")
+		#friends.well
+			- each friend in session.eventplan.friends
+				.friend!= friend.email
+	- if (typeof session.eventplan.tickets != "undefined")
+		#tickets.well!= partial("widgets/ticket-list",{tickets:session.eventplan.tickets})
 	#cost.well
 

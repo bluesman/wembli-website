@@ -744,7 +744,7 @@ footer {
   padding: 0px;
   min-height: 20px;
   margin-bottom: 20px;
-  background-color: #f2f2f2;
+  background-color: #ffffff;
   border: 1px solid #d8d6d7;
   border: 1px solid rgba(0, 0, 0, 0.05);
   -webkit-border-radius: 4px;
@@ -769,6 +769,9 @@ footer {
 #planContainer #center .well h3 i, #planContainer #right .well h3 i {
   margin-top: 7px;
 }
+#planContainer #center .well .oddRow, #planContainer #right .well .oddRow {
+  background-color: #FCFCFC;
+}
 #planContainer #sidebar {
   background-color: #d7e4f0;
   border: 2px solid #4380b8;
@@ -785,11 +788,72 @@ footer {
   width: 130px;
   border: 3px dashed #524f45;
 }
-#planContainer #center #votingContainer #tickets .control-label {
-  width: 60px;
+#planContainer #center #votingContainer .votingMsg {
+  margin-bottom: 1px;
 }
-#planContainer #center #votingContainer #tickets .controls {
-  margin-left: 70px;
+#planContainer #center #votingContainer #ticketsContainer .header {
+  *zoom: 1;
+  padding: 5px;
+}
+#planContainer #center #votingContainer #ticketsContainer .header:before, #planContainer #center #votingContainer #ticketsContainer .header:after {
+  display: table;
+  content: "";
+}
+#planContainer #center #votingContainer #ticketsContainer .header:after {
+  clear: both;
+}
+#planContainer #center #votingContainer #ticketsContainer .header h4 {
+  font-weight: bold;
+  width: 200px;
+}
+#planContainer #center #votingContainer #ticketsContainer .header .ticketActions {
+  *zoom: 1;
+  font-size: 11px;
+}
+#planContainer #center #votingContainer #ticketsContainer .header .ticketActions:before, #planContainer #center #votingContainer #ticketsContainer .header .ticketActions:after {
+  display: table;
+  content: "";
+}
+#planContainer #center #votingContainer #ticketsContainer .header .ticketActions:after {
+  clear: both;
+}
+#planContainer #center #votingContainer #ticketsContainer .ticketOption:hover {
+  background-color: #ffdd73;
+}
+#planContainer #center #votingContainer #ticketsContainer .ticketOption {
+  *zoom: 1;
+  position: relative;
+  padding: 10px 0;
+  height: 70px;
+  display: block;
+}
+#planContainer #center #votingContainer #ticketsContainer .ticketOption:before, #planContainer #center #votingContainer #ticketsContainer .ticketOption:after {
+  display: table;
+  content: "";
+}
+#planContainer #center #votingContainer #ticketsContainer .ticketOption:after {
+  clear: both;
+}
+#planContainer #center #votingContainer #ticketsContainer .ticketOption input {
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+#planContainer #center #votingContainer #ticketsContainer .ticketOption .info {
+  margin-left: 90px;
+  float: left;
+  width: 160px;
+}
+#planContainer #center #votingContainer #ticketsContainer .ticketOption .progress {
+  margin-bottom: 1px;
+}
+#planContainer #center #votingContainer #ticketsContainer .ticketOption .ticket-price-box {
+  left: 50px;
+  margin: 0px;
+}
+#planContainer #center #votingContainer .form-footer {
+  text-align: center;
+  padding: 19px;
 }
 #planContainer #right #eventDetails {
   *zoom: 1;
@@ -810,9 +874,6 @@ footer {
 #planContainer #right #eventDetails .info .name {
   font-weight: bold;
   font-size: 14px;
-}
-#planContainer #right #friendStack .oddRow {
-  background-color: #FCFCFC;
 }
 #planContainer #right #friendStack .friend {
   padding: 10px;

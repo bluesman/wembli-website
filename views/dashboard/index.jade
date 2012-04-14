@@ -25,8 +25,7 @@
 									td.date!= date.format('fullDate')
 									td
 										- var nextStep = 'plan/view/organizer';
-										- var services = [];
-										- services.push(globalViewVars.wembliServices);
+										- var services = globalViewVars.wembliServices;
 										- services.push('summary');
 										- each service in services
 											- //first step in wembliServices where config is true and completed is false

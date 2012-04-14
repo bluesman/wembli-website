@@ -70,26 +70,9 @@ module.exports = function(app) {
     app.all('/plan/view/organizer',function(req,res) {
 	if (!req.session.loggedIn) {	
 	    return res.redirect('/login?redirectUrl='+req.url);
+	} else {
+	    return res.redirect('/plan/view/organizer/'+req.session.eventplan.config.guid);
 	}
-
-	//refetch here from the db cause the session could be out of date (due to sendgrid callback)
-	for (idx in req.session.customer.eventplan) {
-	    var plan = req.session.customer.eventplan[idx];
-	    if (plan.config.guid == req.session.eventplan.config.guid) {
-		//hack for now - fix this
-		req.session.eventplan = plan;
-		break;
-	    }
-	}
-
-	res.render('organizer-view', {
-	    title: 'wembli.com - View Event Plan.',
-	    layoutContainer: true,
-	    page:'organizer',
-	    cssIncludes: [],
-            jsIncludes: ['/js/organizer-view.js']
-	});
-
     });
 
     app.all('/plan/view/organizer/:guid',function(req,res) {

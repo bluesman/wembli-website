@@ -8,14 +8,12 @@ module.exports = function(app) {
 	    return res.redirect('/login?redirectUrl='+req.url);
 	}
 
-	var voteByDate = req.param('voteBy');
-	console.log(voteByDate);
-
 	//send vote emails to friends
 	if (typeof req.session.eventplan == "undefined") {
-	    req.flash('error','Unable to retrieve event. Please start a new plan.');
+	    req.flash('plan-msg','Unable to retrieve event. Please start a new plan.');
 	    return res.redirect('/dashboard');
 	}
+
 
 	console.log('friends: ');
 	console.log(req.session.eventplan.friends);
@@ -41,7 +39,7 @@ module.exports = function(app) {
 		layout:'email-templates/layout',
 		voteLink: '',
 		noLink: '',
-		voteByDate:voteByDate,
+		voteByDate:req.param('voteBy'),
 		subject: subj,
 	    },function(err,htmlStr) {
 		var mail = {
@@ -74,6 +72,7 @@ module.exports = function(app) {
 	    });
 	}
 
+	req.session.eventplan.config.voteBy = req.param('voteBy');
 	req.session.eventplan.completed.summary = true;
 	req.session.customer.eventplan = [req.session.eventplan];
 	req.session.customer.markModified('eventplan');
@@ -82,7 +81,7 @@ module.exports = function(app) {
 	});
 
 	//redirect to organizer view with flash message
-	req.flash('info','Successfully sent email to invited friends.');
+	req.flash('plan-msg','Successfully sent email to invited friends.');
 	res.redirect('/plan/view/organizer');
     });
 

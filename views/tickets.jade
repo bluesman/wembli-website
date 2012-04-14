@@ -18,7 +18,7 @@
 //     VenueID: '1295',
 //     CountryID: '217' }
 script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
-#eventBuilderContainer!= partial("widgets/event-builder",{eventBuilder:session.eventBuilder,actionArgs:{step:'tickets'}});
+#eventBuilderContainer!= partial("widgets/event-builder",{actionArgs:{step:'tickets'}});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #ticketsContent
 	#thumbnail.thumbnail.hide

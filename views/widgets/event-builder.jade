@@ -1,5 +1,5 @@
 #eventBuilder.block(href="#eventBuilder")
-	#event!= partial("includes/event",{cta:false,rating:false,link:false,event:event});
+	#event!= partial("includes/event",{cta:false,rating:false,link:false,event:session.eventplan.event});
 	#split &nbsp;
 	#stepInfo
 		#summary

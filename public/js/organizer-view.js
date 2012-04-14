@@ -1,6 +1,12 @@
 (function($,window,undefined) {
 
     var init = function() {    
+	$('.ticketOption').each(function(idx,el) {
+	    $(el).click(function(e) {
+		e.preventDefault();
+		$(this).children('input').attr('checked',true);
+	    });
+	});
 	//email resend button clicks
 	$('.emailAction').each(function(idx,el) {
 	    $(el).click(function(e) {

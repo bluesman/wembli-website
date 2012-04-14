@@ -201,7 +201,7 @@ a#eventBuilderContainer:link {
     padding:0px;
     min-height: 20px;
     margin-bottom: 20px;
-    background-color: @grayLighter;
+    background-color: @white;
     border: 1px solid @grayLight;
     border: 1px solid rgba(0,0,0,.05);              
 
@@ -224,6 +224,9 @@ a#eventBuilderContainer:link {
       }
     } 
     
+    .oddRow {
+      background-color:#FCFCFC;
+    }
 
     .body {
 
@@ -250,14 +253,62 @@ a#eventBuilderContainer:link {
 
   #center {
     #votingContainer {
-      #tickets {
-	.control-label {
-	  width:60px;
+      .votingMsg {
+	margin-bottom:1px;
+      }
+
+      #ticketsContainer {
+	.header {
+	  .clearfix();
+	  padding:5px;
+
+	  h4 {
+	    font-weight:bold;
+	    width:200px;
+	  }
+	  .ticketActions {
+	    .clearfix();
+	    font-size:11px;
+	  }
 	}
-	
-	.controls {
-	  margin-left:70px;
+
+	.ticketOption:hover {
+	  background-color:lighten(@yellow,20%);
 	}
+
+	.ticketOption {
+	  .clearfix();
+	  position:relative;
+	  padding:10px 0;
+	  height:70px;
+	  display:block;
+
+	  input {
+	    float:left;
+	    margin-left:20px;
+	    margin-top:20px;
+	  }
+	  
+	  .info {
+	    margin-left:90px;
+	    float:left;
+	    width:160px;
+	  }
+
+	  .progress {
+	    margin-bottom:1px;
+	  }
+
+	  .ticket-price-box {
+	    left:50px;
+	    margin:0px;
+	  }
+	}
+      }
+
+      .form-footer {
+      	text-align:center;
+	padding:19px;
       }
     }
   }
@@ -276,9 +327,6 @@ a#eventBuilderContainer:link {
       }
     }
     #friendStack {
-      .oddRow {
-	background-color:#FCFCFC;
-      }
       .friend {
 	padding:10px;
 	.info {
