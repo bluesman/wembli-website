@@ -47,14 +47,15 @@ html
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
-      script(type="text/javascript")
-       var _sgq = _sgq || [];
-        _sgq.push(['setSgAccount', 'yjqkdzlt']);
-        setTimeout(function() {
-          var sg = document.createElement('script'); sg.type = 'text/javascript'; sg.async = true;
-          sg.src = ("https:" == document.location.protocol ? "https://dc" : "http://cdn0") + ".skyglue.com/sgtracker.js";
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sg, s);
-        }, 1);
+      - if (0)
+	      script(type="text/javascript")
+	       var _sgq = _sgq || [];
+	        _sgq.push(['setSgAccount', 'yjqkdzlt']);
+	        setTimeout(function() {
+	          var sg = document.createElement('script'); sg.type = 'text/javascript'; sg.async = true;
+	          sg.src = ("https:" == document.location.protocol ? "https://dc" : "http://cdn0") + ".skyglue.com/sgtracker.js";
+	          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sg, s);
+	        }, 1);
   - var pageId = (typeof page == "undefined") ? 'none' : page;
   body(id="#{pageId}")
     include includes/facebook-sdk
