@@ -1,3 +1,4 @@
+var crypto = require('crypto');
 var mailer = require("wembli/sendgrid");
 var redis = require("redis"),
     redisClient = redis.createClient();
@@ -28,6 +29,18 @@ module.exports = function(app) {
 	    }
 	    console.log('sending email to: ');
 	    console.log(email);
+	    
+	    //generate a token to identify this friend when they RSVP
+	    var friendToken = "";
+	    if (typeof req.session.eventplan.friends[email].token == "undefined") {
+		hash = crypto.createHash('md5');
+		var friendTimestamp = new Date().getTime().toString();
+		hash.update(req.param('email')+friendTimestamp);
+		friendToken = hash.digest(encoding='base64');
+		req.session.eventplan.friends[email].token = {timestamp: friendTimestamp,token: friendToken};
+	    } else {
+		friendToken = req.session.eventplan.friends[email].token.token;
+	    }
 
 	    var name = 'A friend';
 	    if ((typeof req.session.customer.first_name != "undefined") && (typeof req.session.customer.last_name != "undefined")) {
@@ -35,12 +48,12 @@ module.exports = function(app) {
 	    }
 	    var subj = name+' has invited you to go to '+req.session.eventplan.event.Name;
 	    
+	    var rsvpLink = "http://"+app.settings.host+".wembli.com/plan/view/friend/collectVote/"+encodeURIComponent(req.session.eventplan.config.guid)+"/"+encodeURIComponent(friendToken);
 	    res.render('email-templates/collect-votes', {
 		layout:'email-templates/layout',
-		voteLink: '',
-		noLink: '',
 		voteByDate:req.param('voteBy'),
-		subject: subj,
+		rsvpLink:rsvpLink,
+		friendToken:friendToken
 	    },function(err,htmlStr) {
 		var mail = {
 		    from: '"Wembli Support" <help@wembli.com>',
@@ -69,9 +82,13 @@ module.exports = function(app) {
 		    console.log("Message "+(success?"sent":"failed:"+error));
 		});
 	    
+		//flag the eventplan so we know we attempted to send the email
+		req.session.eventplan.friends[email].collectVote = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
+
 	    });
 	}
-
+	console.log('eventplan friends after sendgrid: ');
+	console.log(req.session.eventplan.friends);
 	req.session.eventplan.config.voteBy = req.param('voteBy');
 	req.session.eventplan.completed.summary = true;
 	req.session.customer.eventplan = [req.session.eventplan];

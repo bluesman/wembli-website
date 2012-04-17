@@ -78,7 +78,13 @@ module.exports = function(app) {
 		    },function(err,htmlStr) {
 			var mail = {
 			    from: '"Wembli Support" <help@wembli.com>',
-			    to:req.session.customer.email
+			    to:req.session.customer.email,
+			    headers: {
+				'X-SMTPAPI': {
+				    category : "signup",
+				}
+			    },
+
 			};
 			
 			mail.subject = "Welcome to Wembli.com";

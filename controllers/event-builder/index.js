@@ -1,3 +1,5 @@
+var wembliModel = require('wembli-model');
+var Customer = wembliModel.load('customer');
 var redis = require("redis"),
     redisClient = redis.createClient();
 var uuid = require('node-uuid'); //this is for making a guid
@@ -62,9 +64,22 @@ module.exports = function(app) {
 	    //add event to the event plan
 	    req.session.eventplan.event = event.Event;
 	    
-	    //now continue to the right page
-	    dispatch(null,{eventplan:req.session.eventplan});
+	    //get the venue
+	    ticketNetwork.GetVenue({VenueID:event.Event.VenueID},function(err,venue) {
+		console.log(venue);
+		req.session.eventplan.event.Venue = venue.Venue;
+		//now continue to the right page
+		dispatch(null,{eventplan:req.session.eventplan});
+	    });
 	});
+    });
+
+    app.all('/plan/view', function(req,res) {
+	if (req.session.loggedIn) {	
+	    return res.redirect('/plan/view/organizer/'+req.session.eventplan.config.guid);
+	} else {
+	    return res.redirect('/plan/view/public/'+req.session.eventplan.config.guid);
+	}
     });
 
     app.all('/plan/view/organizer',function(req,res) {
@@ -79,7 +94,6 @@ module.exports = function(app) {
 	if (!req.session.loggedIn) {	
 	    return res.redirect('/login?redirectUrl='+req.url);
 	}
-
 	//get the event for this guid
 	for (idx in req.session.customer.eventplan) {
 	    var plan = req.session.customer.eventplan[idx];
@@ -105,14 +119,85 @@ module.exports = function(app) {
 
     });
 
-    app.all('/plan/view/friend',function(req,res) {
-	res.render('friend-view', {
+    app.all('/plan/view/public/:guid',function(req,res) {
+	res.render('public-view', {
 	    event:req.session.eventplan.event,
 	    title: 'wembli.com - View Event Plan.',
 	    page:'friends',
 	    cssIncludes: [],
             jsIncludes: []
 	});
+    });
+
+    app.all('/plan/view/friend/:action/:guid/:token',function(req,res) {
+	//TODO: validate the action
+	
+
+	//get the customer/plan matching this guid
+	var query = Customer.findOne({});
+	query.where('eventplan').elemMatch(function (elem) {
+	    elem.where('config.guid', req.param('guid'))
+	});
+	query.exec(function(err,organizer) {
+	    console.log('found organizer for plan: '+req.param('guid'));
+	    if (err) {
+		console.log('error finding plan for: '+req.param('guid'));
+		req.flash('error','We could not find the plan you were looking for.')
+		return res.redirect("/");
+	    }
+	    //confirm that token is a valid token of a friend in this plan
+	    var tokenMatch = false;
+	    for (idx in organizer.eventplan) {
+		var plan = organizer.eventplan[idx];
+		console.log('checking plan: ');
+		if (plan.config.guid == req.param('guid')) {
+		    for (email in plan.friends) {
+			console.log('checking frined: '+email+ ' looking for token match');
+			if ((typeof plan.friends[email].token != "undefined") && (plan.friends[email].token.token == req.param('token'))) {
+			    console.log('found a token match');
+			    plan.friends[email][req.param('action')].view = (typeof plan.friends[email][req.param('action')].view == "undefined") ? 1 : plan.friends[email][req.param('action')].view + 1;
+			    plan.friends[email][req.param('action')].viewLastDate = new Date().format("m/d/yy h:MM TT Z");
+			    req.session.friend = {};
+			    req.session.friend.email = email;
+			    req.session.friend.last_name = plan.friends[email].lastName;
+			    req.session.friend.first_name = plan.friends[email].firstName;
+			    req.session.friend.token = plan.friends[email].token;
+			    break;
+			}
+		    }
+		    if (typeof req.session.friend != "undefined") {
+			req.session.organizer = organizer;
+		    }
+		    break;
+		}
+	    }
+
+	    if (typeof req.session.friend != "undefined") {
+		req.session.friend.eventplan = req.session.organizer.eventplan[0];
+		console.log('tokens match, sending to friend view');
+		console.log(req.session.friend);
+		//save that they viewed for this action
+		req.session.organizer.markModified('eventplan');
+		req.session.organizer.save(function(err) {
+		    console.log('saved organizer');
+		    console.log('err: '+err);
+		    res.render('friend-view', {
+			layoutContainer:true,
+			action:req.param('action'),
+			event:req.session.friend.eventplan.event,
+			title: 'wembli.com - View Event Plan.',
+			page:'friends',
+			cssIncludes: [],
+			jsIncludes: ['/js/friend-view.js']
+		    });
+		});
+
+	    } else {
+		console.log('tokens do not match, sending to public view');
+		return res.redirect("/plan/view/public/"+req.param('guid'));
+	    }
+	});
+
 
     });
 

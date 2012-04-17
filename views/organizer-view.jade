@@ -27,120 +27,176 @@ include includes/modals/vote-by
 					a(href="#")
 						i.icon-envelope
 						span Email My Itinerary
-	#center.span5
+	#mainContainer
 		- var msg = req.flash('plan-msg')[0];
 		- if (typeof msg != "undefined")
 			.alert.alert-success!= msg;
 				a.close(data-dismiss="alert") x
-		form#votingContainer.well()
-			h3 Voting
-				a#votingIcon(href="#")
-					i.icon-info-sign.pull-right.icon-white				
-			- if (typeof voteMsg != "undefined")
-				.votingMsg.alert.alert-info!= voteMsg
-			.body
-				#ticketsContainer
-					.header.clearfix
-						h4.pull-left Ticket Options:
-						.ticketActions.pull-right
-							a(href="/tickets") View Tickets On Map
-					- var idx = 0
-					- for (ticketId in session.eventplan.tickets)
+		#center.span5
+			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.eventplan.event});
+			form#votingContainer.well()
+				h3 Voting
+					a#votingIcon(href="#")
+						i.icon-info-sign.pull-right.icon-white				
+				- if (typeof voteMsg != "undefined")
+					.votingMsg.alert.alert-info!= voteMsg
+				.body
+					#ticketsContainer
+						.header.clearfix
+							h4.pull-left Ticket Options:
+							.ticketActions.pull-right
+								a(href="/tickets") View Tickets On Map
+						- var idx = 0
+						- for (ticketId in session.eventplan.tickets)
+							- idx++;
+							- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
+							- var ticket = session.eventplan.tickets[ticketId]
+							- var qtyStr = ticket.TicketQuantity
+							- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
+							- var votePct = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
+							- var voteCnt = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
+							- var voteCntStr = voteCnt + ' Vote'
+							- voteCntStr += (ticket.voteCnt == 1) ? '' : 's';
+							- var friendCnt = 1
+							- if (typeof session.eventplan.friends != "undefined")
+								- for friend in session.eventplan.friends
+									- console.log(friend);
+									- console.log('foooo');
+									- if (typeof friend.decision != "undefined" && !friend.decision)
+										- continue;
+									- else
+										- friendCnt++;
+							- var shipping = 15/friendCnt;
+							a.ticketOption(class="#{rowClass}",href="#")
+								- if (parseInt(ticket.TicketQuantity) < friendCnt)
+									.alert 
+										strong Warning: 
+										span There are more invitees than tickets in this ticket group.
+								- if (parseInt(ticket.TicketQuantity) > friendCnt)
+									- var err = true;
+									- if ((typeof ticket.ValidSplits != "undefined") && (typeof ticket.ValidSplits.int != "undefined"))
+										- for (var i in ticket.ValidSplits.int)
+											- if (parseInt(ticket.ValidSplits.int[i]) == friendCnt)
+												- var err = false;
+												- break;
+									- if (err)
+										.alert 
+											strong Warning: 
+											span This ticket group cannot be split to accomodate your group size.
+								input(type="radio",checked="",value="#{ticket.ID}",name="ticketChoice")
+								.info
+									#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
+									.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+									.progress
+										.bar(style="width:#{votePct}%")
+									em!= voteCntStr
+								.ticket-price-box
+									span.ticket-quantity!= qtyStr
+									span.ticket-price!= '$'+ticket.ActualPrice
+									span (each)
+								.costBreakdown.hide
+									table.table(style="font-size:11px;")
+										thead
+											tr
+												th(colspan="2")
+													strong Note: 
+													span These tickets are NOT on hold for you.
+										tbody
+											tr
+												td Ticket Price:
+												td(style="text-align:right")!= '$'+parseFloat(ticket.ActualPrice).toFixed(2)
+											tr
+												td Est. Ticket Network Service Charge:
+												td(style="text-align:right")!= '$'+parseFloat((ticket.ActualPrice * .15)).toFixed(2)
+											tr
+												td Est. Standard Delivery:
+												td(style="text-align:right")!= '$'+parseFloat(shipping).toFixed(2)
+											tr
+												td Credit Card Transaction Fee:
+												td(style="text-align:right")!= '$' + parseFloat((ticket.ActualPrice * 0.029)).toFixed(2)
+											tr
+												td(style="text-align:right;font-weight:bold;") Estimated Total Per Person:
+												- var total = parseFloat(ticket.ActualPrice) + parseFloat((ticket.ActualPrice * .15)) + parseFloat(shipping) + parseFloat((ticket.ActualPrice * 0.029));
+												td(style="text-align:right")!= '$'+total.toFixed(2)
+						.footer 
+					.form-footer
+						a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & COLLECT PAYMENT
+			#wallContainer
+		#right.span4
+			#friendStack.well
+				h3 Invitees
+					a#inviteesIcon(href="#")
+						i.icon-info-sign.pull-right.icon-white
+				.body
+					- var idx = 0;
+					- for (email in session.eventplan.friends)
 						- idx++;
 						- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-						- var ticket = session.eventplan.tickets[ticketId]
-						- var qtyStr = ticket.TicketQuantity
-						- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
-						- var votePct = (typeof ticket.votePct != "undefined") ? ticket.votePct : 3
-						- var voteCnt = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
-						- var voteCntStr = voteCnt + ' Vote'
-						- voteCntStr += (ticket.voteCnt == 1) ? '' : 's';
-						a.ticketOption(class="#{rowClass}",href="#")
-							input(type="radio",checked="",value="#{ticket.ID}",name="ticketChoice")
-							.info
-								#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
-								.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
-								.progress
-									.bar(style="width:#{votePct}%")
-								em!= voteCntStr
-							.ticket-price-box
-								span.ticket-quantity!= qtyStr
-								span.ticket-price!= '$'+ticket.ActualPrice
-								span (each)
-					.footer 
-				.form-footer
-					a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & COLLECT PAYMENT
-		#wallContainer
-	#right.span4
-		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.eventplan.event});
-		#friendStack.well
-			h3 Invitees
-				a#inviteesIcon(href="#")
-					i.icon-info-sign.pull-right.icon-white
-			.body
-				- var idx = 0;
-				- for (email in session.eventplan.friends)
-					- idx++;
-					- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-					- var friend = session.eventplan.friends[email]; 
-					- labelType = 'label-warning';
-					- labelCaption = 'undecided';
-					- labelIcon = 'icon-question-sign';
-					- var emailAsId = friend.email.replace(/\W+/g,'-');
-					- if ((typeof friend.decision != "undefined") && (friend.decision == true))
-						- labelType = 'label-success';
-						- labelCaption = 'attending';
-						- labelIcon = 'icon-ok-sign';
-					- if ((typeof friend.decision != "undefined") && (friend.decision == false))
-						- labelType = 'label-important';
-						- labelCaption = 'declined';
-						- labelIcon = 'icon-remove-sign';
-					.friend.clearfix(class="#{rowClass}")
-						.info.clearfix
-							.status.pull-left
-								span(class="label #{labelType}")
-									i(class="icon-white #{labelIcon}")
-									span!= ' '+labelCaption
-							.name.pull-left!= ' ' + friend.firstName + ' ' + friend.lastName 
-						- if (typeof friend.collectVote != "undefined")
-							.invitationEmailStatus.clearfix
-								.emailType.pull-left
-									i.icon-envelope 
-									span &nbsp;Invitation Email: 
-								.emailLabel.pull-left
-									- if (typeof friend.collectVote.delivered != "undefined")
-										span.label.label-info sent
-										span &nbsp;
-											- if (typeof friend.collectVote.open != "undefined")
-												span.label.label-info opened
-											- else
-												span.label unopened
-									- else
-										span.label not sent
+						- var friend = session.eventplan.friends[email]; 
+						- labelType = 'label-warning';
+						- labelCaption = 'undecided';
+						- labelIcon = 'icon-question-sign';
+						- var emailAsId = friend.email.replace(/\W+/g,'-');
+						- if ((typeof friend.decision != "undefined") && (friend.decision == true))
+							- labelType = 'label-success';
+							- labelCaption = 'attending';
+							- labelIcon = 'icon-ok-sign';
+						- if ((typeof friend.decision != "undefined") && (friend.decision == false))
+							- labelType = 'label-important';
+							- labelCaption = 'declined';
+							- labelIcon = 'icon-remove-sign';
+						.friend.clearfix(class="#{rowClass}")
+							.info.clearfix
+								.status.pull-left
+									span(class="label #{labelType}")
+										i(class="icon-white #{labelIcon}")
+										span!= ' '+labelCaption
+								.name.pull-left!= ' ' + friend.firstName + ' ' + friend.lastName 
+							- if (typeof friend.collectVote != "undefined")
+								.invitationEmailStatus.clearfix
+									.emailType.pull-left
+										i.icon-envelope 
+										span &nbsp;Invitation Email: 
+									.emailLabel.pull-left
+										- if (typeof friend.collectVote.delivered != "undefined")
+											span.label.label-info sent
+											span &nbsp;
+												- if (typeof friend.collectVote.open != "undefined")
+													span.label.label-info opened
+												- else
+													span.label unopened
+										- else
+											span.label en route
+									a.emailAction.pull-right(id="invitation-#{emailAsId}",href="#")
+										i.icon-repeat
+										span &nbsp;Resend
+							- if (typeof friend.collectPayment != "undefined")
+								.paymentEmailStatus.clearfix
+									.emailType.pull-left
+										i.icon-envelope 
+										span &nbsp;Collect Payment Email: 
+									.emailLabel.pull-right
+										- if (typeof friend.collectPayment.delivered != "undefined")
+											span.label.label-info sent
+											span &nbsp;
+												- if (typeof friend.collectPayment.open != "undefined")
+													span.label.label-info opened
+												- else
+													span.label unopened
+										- else
+											span.label not sent
+									a.emailAction.pull-right(id="payment-#{emailAsId}",href="#")
+										i.icon-repeat
+										span &nbsp;Resend
+							- if ((typeof friend.collectPayment == "undefined") && (typeof friend.collectVote == "undefined"))
+								.invitationEmailStatus.clearfix
+									.emailType.pull-left
+										i.icon-envelope 
+										span &nbsp;Invitation Email: 
+									.emailLabel.pull-left
+											span.label not sent
 								a.emailAction.pull-right(id="invitation-#{emailAsId}",href="#")
 									i.icon-repeat
-									span &nbsp;Resend
-						- if (typeof friend.collectPayment != "undefined")
-							.paymentEmailStatus.clearfix
-								.emailType.pull-left
-									i.icon-envelope 
-									span &nbsp;Collect Payment Email: 
-								.emailLabel.pull-right
-									- if (typeof friend.collectPayment.delivered != "undefined")
-										span.label.label-info sent
-										span &nbsp;
-											- if (typeof friend.collectPayment.open != "undefined")
-												span.label.label-info opened
-											- else
-												span.label unopened
-									- else
-										span.label not sent
-								a.emailAction.pull-right(id="payment-#{emailAsId}",href="#")
-									i.icon-repeat
-									span &nbsp;Resend
-						- if ((typeof friend.collectPayment == "undefined") && (typeof friend.collectVote == "undefined"))
-							a.emailAction.pull-right(id="invitation-#{emailAsId}",href="#")
-								i.icon-repeat
-								span &nbsp;Send Invite
-			#inviteMoreContainer
-				a#inviteMoreFriends.btn.btn-success(href="/friends") Add More Friends
+									span &nbsp;Send Invite
+				#inviteMoreContainer
+					a#inviteMoreFriends.btn.btn-success(href="/friends") Add More Friends

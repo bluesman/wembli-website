@@ -1,10 +1,12 @@
 - var stop = false;
-- var next = 'summary';
+- var next = 'plan/view';
 - var idx = 0;
-- each service in globalViewVars.wembliServices
+- var tmp = globalViewVars.wembliServices
+- var services = tmp.concat('summary');
+- each service in services
 	- idx++;
 	- if (session.eventplan.config[service])
-		- if (stop)
+		- if (stop && (typeof session.eventplan.completed[service] == "undefined"))
 			- next = service;
 			- break;
 		- if (typeof page != "undefined" && (service == page))

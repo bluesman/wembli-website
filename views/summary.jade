@@ -13,9 +13,13 @@ include includes/modals/vote-by
 #summaryContainer.row
 	- if (typeof session.eventplan.friends != "undefined")
 		#friends.well
-			- each friend in session.eventplan.friends
-				.friend!= friend.email
+			h3 Invitees:
+			.body
+				- each friend in session.eventplan.friends
+					.friend!= friend.email
 	- if (typeof session.eventplan.tickets != "undefined")
-		#tickets.well!= partial("widgets/ticket-list",{tickets:session.eventplan.tickets})
+		#tickets.center.well
+			h3 Ticket Options:
+			.body!= partial("widgets/ticket-list",{tickets:session.eventplan.tickets})
 	#cost.well
-
+		h3 Cost Breakdown:

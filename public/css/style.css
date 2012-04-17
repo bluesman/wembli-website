@@ -371,7 +371,7 @@ footer {
   display: block;
 }
 .event-date-box span.event-date {
-  font-size: 17px;
+  font-size: 16px;
   line-height: 18px;
   margin-bottom: 2px;
   text-transform: capitalize;
@@ -788,111 +788,137 @@ footer {
   width: 130px;
   border: 3px dashed #524f45;
 }
-#planContainer #center #votingContainer .votingMsg {
-  margin-bottom: 1px;
-}
-#planContainer #center #votingContainer #ticketsContainer .header {
+#planContainer #mainContainer {
   *zoom: 1;
-  padding: 5px;
+  margin-left: 200px;
 }
-#planContainer #center #votingContainer #ticketsContainer .header:before, #planContainer #center #votingContainer #ticketsContainer .header:after {
+#planContainer #mainContainer:before, #planContainer #mainContainer:after {
   display: table;
   content: "";
 }
-#planContainer #center #votingContainer #ticketsContainer .header:after {
+#planContainer #mainContainer:after {
   clear: both;
 }
-#planContainer #center #votingContainer #ticketsContainer .header h4 {
-  font-weight: bold;
-  width: 200px;
+#planContainer #mainContainer .alert {
+  margin: 10px 20px;
 }
-#planContainer #center #votingContainer #ticketsContainer .header .ticketActions {
+#planContainer #mainContainer #center #eventDetails {
   *zoom: 1;
-  font-size: 11px;
-}
-#planContainer #center #votingContainer #ticketsContainer .header .ticketActions:before, #planContainer #center #votingContainer #ticketsContainer .header .ticketActions:after {
-  display: table;
-  content: "";
-}
-#planContainer #center #votingContainer #ticketsContainer .header .ticketActions:after {
-  clear: both;
-}
-#planContainer #center #votingContainer #ticketsContainer .ticketOption:hover {
-  background-color: #ffdd73;
-}
-#planContainer #center #votingContainer #ticketsContainer .ticketOption {
-  *zoom: 1;
-  position: relative;
-  padding: 10px 0;
   height: 70px;
-  display: block;
-}
-#planContainer #center #votingContainer #ticketsContainer .ticketOption:before, #planContainer #center #votingContainer #ticketsContainer .ticketOption:after {
-  display: table;
-  content: "";
-}
-#planContainer #center #votingContainer #ticketsContainer .ticketOption:after {
-  clear: both;
-}
-#planContainer #center #votingContainer #ticketsContainer .ticketOption input {
-  float: left;
-  margin-left: 20px;
-  margin-top: 20px;
-}
-#planContainer #center #votingContainer #ticketsContainer .ticketOption .info {
-  margin-left: 90px;
-  float: left;
-  width: 160px;
-}
-#planContainer #center #votingContainer #ticketsContainer .ticketOption .progress {
-  margin-bottom: 1px;
-}
-#planContainer #center #votingContainer #ticketsContainer .ticketOption .ticket-price-box {
-  left: 50px;
-  margin: 0px;
-}
-#planContainer #center #votingContainer .form-footer {
-  text-align: center;
-  padding: 19px;
-}
-#planContainer #right #eventDetails {
-  *zoom: 1;
   margin: 0 0 10px 0;
 }
-#planContainer #right #eventDetails:before, #planContainer #right #eventDetails:after {
+#planContainer #mainContainer #center #eventDetails:before, #planContainer #mainContainer #center #eventDetails:after {
   display: table;
   content: "";
 }
-#planContainer #right #eventDetails:after {
+#planContainer #mainContainer #center #eventDetails:after {
   clear: both;
 }
-#planContainer #right #eventDetails .info {
+#planContainer #mainContainer #center #eventDetails .info {
   font-size: 11px;
   margin-left: 75px;
   float: left;
 }
-#planContainer #right #eventDetails .info .name {
+#planContainer #mainContainer #center #eventDetails .info .name {
   font-weight: bold;
   font-size: 14px;
 }
-#planContainer #right #friendStack .friend {
+#planContainer #mainContainer #center #votingContainer .votingMsg {
+  margin-bottom: 1px;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .header {
+  *zoom: 1;
+  padding: 5px;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .header:before, #planContainer #mainContainer #center #votingContainer #ticketsContainer .header:after {
+  display: table;
+  content: "";
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .header:after {
+  clear: both;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .header h4 {
+  font-weight: bold;
+  width: 200px;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .header .ticketActions {
+  *zoom: 1;
+  font-size: 11px;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .header .ticketActions:before, #planContainer #mainContainer #center #votingContainer #ticketsContainer .header .ticketActions:after {
+  display: table;
+  content: "";
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .header .ticketActions:after {
+  clear: both;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption:hover {
+  background-color: #ffdd73;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption {
+  *zoom: 1;
+  position: relative;
+  padding: 10px 0;
+  min-height: 70px;
+  display: block;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption:before, #planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption:after {
+  display: table;
+  content: "";
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption:after {
+  clear: both;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td {
+  font-size: 10px;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td.amt {
+  text-align: right;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td.total {
+  font-weight: bold;
+  text-align: right;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption input {
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .info {
+  margin-left: 90px;
+  float: left;
+  width: 200px;
+  min-height: 60px;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .progress {
+  margin-bottom: 1px;
+}
+#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .ticket-price-box {
+  left: 50px;
+  margin: 0px;
+}
+#planContainer #mainContainer #center #votingContainer .form-footer {
+  text-align: center;
+  padding: 19px;
+}
+#planContainer #mainContainer #right #friendStack .friend {
   padding: 10px;
 }
-#planContainer #right #friendStack .friend .info .name {
+#planContainer #mainContainer #right #friendStack .friend .info .name {
   margin-left: 4px;
   font-weight: bold;
   font-size: 14px;
 }
-#planContainer #right #friendStack .friend .invitationEmailStatus {
+#planContainer #mainContainer #right #friendStack .friend .invitationEmailStatus {
   font-size: 12px;
 }
-#planContainer #right #friendStack .friend .invitationEmailStatus .emailType {
+#planContainer #mainContainer #right #friendStack .friend .invitationEmailStatus .emailType {
   margin-right: 4px;
 }
-#planContainer #right #friendStack .friend .invitationEmailStatus .emailAction {
+#planContainer #mainContainer #right #friendStack .friend .invitationEmailStatus .emailAction {
   font-size: 12px;
 }
-#planContainer #right #friendStack #inviteMoreContainer {
+#planContainer #mainContainer #right #friendStack #inviteMoreContainer {
   text-align: center;
   padding: 19px;
 }
@@ -1237,6 +1263,30 @@ footer {
 #manual #friendStack .friend .data {
   float: left;
   width: 240px;
+}
+#summaryContainer {
+  margin: auto;
+  width: 100%;
+  max-width: 1200px;
+}
+#summaryContainer h3 {
+  padding: 4px;
+}
+#summaryContainer .well {
+  *zoom: 1;
+  width: 350px;
+  padding: 10px;
+  float: left;
+}
+#summaryContainer .well:before, #summaryContainer .well:after {
+  display: table;
+  content: "";
+}
+#summaryContainer .well:after {
+  clear: both;
+}
+#summaryContainer .center {
+  margin: 0 40px;
 }
 footer {
   margin-top: 0;

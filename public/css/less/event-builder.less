@@ -251,104 +251,125 @@ a#eventBuilderContainer:link {
     }
   }
 
-  #center {
-    #votingContainer {
-      .votingMsg {
-	margin-bottom:1px;
-      }
-
-      #ticketsContainer {
-	.header {
-	  .clearfix();
-	  padding:5px;
-
-	  h4 {
-	    font-weight:bold;
-	    width:200px;
-	  }
-	  .ticketActions {
-	    .clearfix();
-	    font-size:11px;
-	  }
-	}
-
-	.ticketOption:hover {
-	  background-color:lighten(@yellow,20%);
-	}
-
-	.ticketOption {
-	  .clearfix();
-	  position:relative;
-	  padding:10px 0;
-	  height:70px;
-	  display:block;
-
-	  input {
-	    float:left;
-	    margin-left:20px;
-	    margin-top:20px;
-	  }
-	  
-	  .info {
-	    margin-left:90px;
-	    float:left;
-	    width:160px;
-	  }
-
-	  .progress {
-	    margin-bottom:1px;
-	  }
-
-	  .ticket-price-box {
-	    left:50px;
-	    margin:0px;
-	  }
-	}
-      }
-
-      .form-footer {
-      	text-align:center;
-	padding:19px;
-      }
+  #mainContainer {
+    .clearfix();
+    margin-left: 200px;
+    .alert {
+      margin:10px 20px;
     }
-  }
-
-  #right {
-    #eventDetails {
-      .clearfix();
-      margin:0 0 10px 0;
-      .info {
-	font-size:11px;
-	margin-left:75px;float:left;
-	.name {
-	  font-weight:bold;
-	  font-size:14px;
-	}
-      }
-    }
-    #friendStack {
-      .friend {
-	padding:10px;
+    #center {
+      #eventDetails {
+	.clearfix();
+	height:70px;
+	margin:0 0 10px 0;
 	.info {
+	  font-size:11px;
+	  margin-left:75px;float:left;
 	  .name {
-	    margin-left:4px;
 	    font-weight:bold;
 	    font-size:14px;
 	  }
 	}
-
-	.invitationEmailStatus {
-	  font-size:12px;
-	  .emailType { margin-right:4px; }
-	  .emailAction {font-size:12px;}
+      }
+      #votingContainer {
+	.votingMsg {
+	  margin-bottom:1px;
 	}
 	
+	#ticketsContainer {
+	  .header {
+	    .clearfix();
+	    padding:5px;
+	    
+	    h4 {
+	      font-weight:bold;
+	      width:200px;
+	    }
+	    .ticketActions {
+	      .clearfix();
+	      font-size:11px;
+	    }
+	  }
+	  
+	  .ticketOption:hover {
+	    background-color:lighten(@yellow,20%);
+	  }
+	  
+	  .ticketOption {
+	    .clearfix();
+	    position:relative;
+	    padding:10px 0;
+	    min-height:70px;
+	    display:block;
+	    
+	    .costBreakdown {
+	      table tr td {
+		font-size:10px;
+	      }
+	      table tr td.amt {
+		text-align:right;
+	      }
+	      table tr td.total {
+		font-weight:bold;
+		text-align:right;
+	      }
+	    }
+	    
+	    input {
+	      float:left;
+	      margin-left:20px;
+	      margin-top:20px;
+	    }
+	    
+	    .info {
+	      margin-left:90px;
+	      float:left;
+	      width:200px;
+	      min-height:60px;
+	    }
+	    
+	    .progress {
+	      margin-bottom:1px;
+	    }
+	    
+	    .ticket-price-box {
+	      left:50px;
+	      margin:0px;
+	    }
+	  }
+	}
+	
+	.form-footer {
+      	  text-align:center;
+	  padding:19px;
+	}
       }
-      #inviteMoreContainer {
-	text-align:center;
-	padding:19px;
+    }
+    
+    #right {
+      #friendStack {
+	.friend {
+	  padding:10px;
+	  .info {
+	    .name {
+	      margin-left:4px;
+	      font-weight:bold;
+	      font-size:14px;
+	    }
+	  }
+	  
+	  .invitationEmailStatus {
+	    font-size:12px;
+	    .emailType { margin-right:4px; }
+	    .emailAction {font-size:12px;}
+	  }
+	  
+	}
+	#inviteMoreContainer {
+	  text-align:center;
+	  padding:19px;
+	}
       }
     }
   }
-
 }
