@@ -1218,65 +1218,136 @@ footer {
   margin: auto;
   width: 100%;
   max-width: 1200px;
+  padding-bottom: 20px;
 }
-#manual, #gmail, #facebook {
+#friendsContent .well {
   *zoom: 1;
-  width: 30%;
-  padding: 10px;
   float: left;
+  width: 350px;
+  padding: 0px;
+  min-height: 20px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px solid #d8d6d7;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
 }
-#manual:before,
-#gmail:before,
-#facebook:before,
-#manual:after,
-#gmail:after,
-#facebook:after {
+#friendsContent .well:before, #friendsContent .well:after {
   display: table;
   content: "";
 }
-#manual:after, #gmail:after, #facebook:after {
+#friendsContent .well:after {
   clear: both;
 }
-#friendsContent h3 {
-  padding: 4px;
+#friendsContent .well blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, 0.15);
 }
-#manual {
+#friendsContent .well h3 {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+  background-color: #8cb2d5;
+  padding: 0px 19px;
+  border-bottom: thin solid #d8d6d7;
+}
+#friendsContent .well h3 i {
+  margin-top: 7px;
+}
+#friendsContent .well .oddRow {
+  background-color: #FCFCFC;
+}
+#friendsContent .well .body {
+  padding: 20px;
+}
+#friendsContent .center {
+  margin: 0 40px;
+}
+#friendsContent .footer {
   *zoom: 1;
+  text-align: center;
+  padding: 0 20px 20px 20px;
 }
-#manual:before, #manual:after {
+#friendsContent .footer:before, #friendsContent .footer:after {
   display: table;
   content: "";
 }
-#manual:after {
+#friendsContent .footer:after {
   clear: both;
 }
-#manual #friendStack {
-  margin-left: 20px;
-  margin-top: 380px;
-  width: 340px;
+#friendsContent .footer a.btn {
+  margin: auto;
 }
-#manual #friendStack .friend {
-  background-color: #f2f2f2;
-  padding: 15px;
-  border-bottom: 1px solid #CCC;
+#friendsContent #manual .body {
+  padding: 0;
 }
-#manual #friendStack .friend .data {
+#friendsContent #manual .body #manualForm {
+  *zoom: 1;
+  padding: 20px;
+  margin: 0;
+}
+#friendsContent #manual .body #manualForm:before, #friendsContent #manual .body #manualForm:after {
+  display: table;
+  content: "";
+}
+#friendsContent #manual .body #manualForm:after {
+  clear: both;
+}
+#friendsContent #manual .body #manualForm input {
   float: left;
-  width: 240px;
+}
+#friendsContent #manual .body #manualForm #manualName #firstName {
+  width: 120px;
+  margin-right: 10px;
+}
+#friendsContent #manual .body #manualForm #manualName #lastName {
+  width: 160px;
+}
+#friendsContent #manual .body #manualForm #manualEmail #email {
+  margin-right: 10px;
+  width: 198px;
+}
+#friendsContent #manual #friendStack .friend {
+  *zoom: 1;
+  padding: 10px 20px;
+}
+#friendsContent #manual #friendStack .friend:before, #friendsContent #manual #friendStack .friend:after {
+  display: table;
+  content: "";
+}
+#friendsContent #manual #friendStack .friend:after {
+  clear: both;
+}
+#friendsContent #manual #friendStack .friend .data {
+  float: left;
 }
 #summaryContainer {
   margin: auto;
+  padding-bottom: 20px;
   width: 100%;
   max-width: 1200px;
 }
-#summaryContainer h3 {
-  padding: 4px;
-}
 #summaryContainer .well {
   *zoom: 1;
-  width: 350px;
-  padding: 10px;
   float: left;
+  width: 350px;
+  padding: 0px;
+  min-height: 20px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px solid #d8d6d7;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
 }
 #summaryContainer .well:before, #summaryContainer .well:after {
   display: table;
@@ -1285,8 +1356,89 @@ footer {
 #summaryContainer .well:after {
   clear: both;
 }
+#summaryContainer .well blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+#summaryContainer .well h3 {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+  background-color: #8cb2d5;
+  padding: 0px 19px;
+  border-bottom: thin solid #d8d6d7;
+}
+#summaryContainer .well h3 i {
+  margin-top: 7px;
+}
+#summaryContainer .well .oddRow {
+  background-color: #FCFCFC;
+}
 #summaryContainer .center {
   margin: 0 40px;
+}
+#summaryContainer .footer {
+  text-align: center;
+  padding: 19px;
+}
+#summaryContainer #friends .body .friend {
+  padding: 10px 20px;
+}
+#summaryContainer #tickets .body .ticketOption:hover {
+  background-color: #ffdd73;
+}
+#summaryContainer #tickets .body .ticketOption {
+  *zoom: 1;
+  position: relative;
+  padding: 10px 0;
+  min-height: 70px;
+  display: block;
+}
+#summaryContainer #tickets .body .ticketOption:before, #summaryContainer #tickets .body .ticketOption:after {
+  display: table;
+  content: "";
+}
+#summaryContainer #tickets .body .ticketOption:after {
+  clear: both;
+}
+#summaryContainer #tickets .body .ticketOption .costBreakdown table tr td {
+  font-size: 10px;
+}
+#summaryContainer #tickets .body .ticketOption .costBreakdown table tr td.amt {
+  text-align: right;
+}
+#summaryContainer #tickets .body .ticketOption .costBreakdown table tr td.total {
+  font-weight: bold;
+  text-align: right;
+}
+#summaryContainer #tickets .body .ticketOption input {
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+#summaryContainer #tickets .body .ticketOption .info {
+  margin-left: 90px;
+  float: left;
+  width: 200px;
+  min-height: 60px;
+}
+#summaryContainer #tickets .body .ticketOption .progress {
+  margin-bottom: 1px;
+}
+#summaryContainer #tickets .body .ticketOption .ticket-price-box {
+  left: 20px;
+  margin: 0px;
+}
+#summaryContainer #whatNext {
+  font-size: 16px;
+}
+#summaryContainer #whatNext ul {
+  list-style-type: disc;
+  list-style-position: inside;
+}
+#summaryContainer #whatNext ul li {
+  margin: 0 20px 0 40px;
+  padding: 10px 0;
 }
 footer {
   margin-top: 0;

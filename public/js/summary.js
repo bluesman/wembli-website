@@ -1,6 +1,19 @@
 (function($,window,undefined) {
 
     var init = function() {
+	$('.ticketOption').each(function(idx,el) {
+	    $(this).popover({animation:true,
+			     title:'Price Per Person:',
+			     content: $(this).children('.costBreakdown').html(),
+			     delay:{show:300,hide:100}
+			    });
+
+	    $(el).click(function(e) {
+		e.preventDefault();
+		$(this).children('input').attr('checked',true);
+	    });
+	});
+
 	$('#continue').click(function(e) {
 	    e.preventDefault();
 	    //pop a modal to collect respond by date

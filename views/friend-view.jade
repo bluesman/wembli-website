@@ -1,10 +1,11 @@
 #planContainer
-- if (action == 'collectVote')
-	#collectVoteContainer
-		h3!= 'Will you attend '+session.friend.eventplan.event.Name+'?'
-		p!= 'Welcome to Wembli '+session.friend.first_name+'! '
-		p!= session.organizer.first_name+' '+session.organizer.last_name+' is planning an outing and wants you to come along.'
-		input#guid(type="hidden",name="guid",value="#{session.friend.eventplan.config.guid}")
-		input#token(type="hidden",name="token",value="#{session.friend.token.token}")
-		a#rsvpYes(href="#").btn.btn-primary.btn-large Yes
-		a#rsvpNo(href="#").btn.btn-danger.btn-large No
+	- if (action == 'collectVote')
+		#collectVoteContainer.alert.alert-success.alert-block
+			h3!= 'Will you attend '+session.friend.eventplan.event.Name+'?'
+			p!= 'Welcome to Wembli '+session.friend.first_name+'! '
+			p!= session.organizer.first_name+' '+session.organizer.last_name+' is planning an outing and wants you to come along.'
+			input#guid(type="hidden",name="guid",value="#{session.friend.eventplan.config.guid}")
+			input#token(type="hidden",name="token",value="#{session.friend.token.token}")
+			a#rsvpYes(href="#").btn.btn-primary.btn-large Yes
+			a#rsvpNo(href="#").btn.btn-danger.btn-large No
+	#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.eventplan.event});	

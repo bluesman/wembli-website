@@ -5,7 +5,7 @@
 	    var removeId = friend.email.replace(/\W+/g,'-');
 	    console.log('remove id: '+removeId);
 	    var key = 'container-'+removeId;
-	    var removeBtn = $('<a id="'+removeId+'" class="btn btn-success" href="#">Remove</a>');
+	    var removeBtn = $('<a id="'+removeId+'" class="btn btn-warning pull-right" href="#">Remove</a>');
 	    removeBtn.click(function(e) {
 		e.preventDefault();
 		var removeKey = '#container-'+removeId;
@@ -27,9 +27,9 @@
 		    }
 		});
 	    });
-	    var friendData = $('<div class="data"><div class="name">'+friend.firstName+' '+friend.lastName+'</div><div class="email">'+friend.email+'</div></div>');
-	    var friendEl = $('<div id="'+key+'" class="hide friend"></div>');
-	    $('#friendStack').prepend(friendEl);
+	    var friendData = $('<div class="data"><strong>'+friend.firstName+' '+friend.lastName+'</strong><div class="email">'+friend.email+'</div></div>');
+	    var friendEl = $('<div id="'+key+'" class="hide friend "></div>');
+	    $('#friendStack').append(friendEl);
 	    friendEl.append(friendData,removeBtn).slideDown();
 	}
 

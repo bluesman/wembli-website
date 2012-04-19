@@ -13,6 +13,7 @@
 		$(this).children('input').attr('checked',true);
 	    });
 	});
+
 	//email resend button clicks
 	$('.emailAction').each(function(idx,el) {
 	    $(el).click(function(e) {

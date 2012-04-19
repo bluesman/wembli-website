@@ -1,28 +1,33 @@
 #eventBuilderContainer!= partial("widgets/event-builder",{actionArgs:{step:'friends'}});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #friendsContent.row
-	#gmail
-		form#gmailForm().form-horizontal.well.span4
-			fieldset
-				legend 	Add Friends Using Gmail
-			a.btn.btn-primary.btn-large.span3 Connect to Gmail
-	#facebook
-		form#facebookForm().form-horizontal.well.span4
-			fieldset
-				legend Add Friends Using Facebook
-			a.btn.btn-primary.btn-large.span3.disable Connect to Facebook
-	#manual
-		form#manualForm(method="POST",action="#").form-horizontal.well.span4
-			fieldset
-				legend 	Add Friends Manually
+	#gmail.well
+		h3 Add Friends Using Gmail
+		.body
+			span Find friend contact info quickly using your Gmail contact list. 
+			strong This feature is not available for beta.
+			hr
+		.footer
+			a.btn.btn-success.btn-large.disable Connect to Gmail
+	#facebook.well.center
+		h3 Add Friends Using Facebook
+		.body
+			span Click below to easily add friends from Facebook to your plan. 
+			strong This feature is not available for beta.
+			hr
+		.footer
+			a.btn.btn-success.btn-large.disable Connect to Facebook
+	#manual.well
+		h3 Add Friends Manually
+		.body
+			form#manualForm(method="POST",action="#")
 				#error.alert.alert-error.hide
-				.control-group
-					input#firstName.span4(name="firstName",placeholder="First Name",type="text")
-				.control-group
-					input#lastName.span4(name="lastName",placeholder="Last Name",type="text")
-				.control-group
-					input#email.span4(name="email",placeholder="Email Address",type="text")
-			.form-actions
-				button.btn.btn-primary(type="submit") Add To Plan
-		#friendStack
+				#manualName
+					input#firstName(name="firstName",placeholder="First Name",type="text")
+					input#lastName(name="lastName",placeholder="Last Name",type="text")
+				#manualEmail
+					input#email(name="email",placeholder="Email Address",type="text")
+					button#addToPlan.btn.btn-success(type="submit") Add To Plan
+				hr
+			#friendStack
 
