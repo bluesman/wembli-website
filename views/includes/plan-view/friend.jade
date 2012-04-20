@@ -1,0 +1,7 @@
+.friend.clearfix(class="#{rowClass}",id="#{id}")
+	.info.clearfix
+		.status.pull-left
+			span(class="label #{labelType}")
+				i(class="icon-white #{labelIcon}")
+				span!= ' '+labelCaption
+		.name.pull-left!= ' ' + firstName + ' ' + lastName 

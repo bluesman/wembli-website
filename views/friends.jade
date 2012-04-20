@@ -1,7 +1,7 @@
 #eventBuilderContainer!= partial("widgets/event-builder",{actionArgs:{step:'friends'}});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #friendsContent.row
-	#gmail.well
+	#gmail.module
 		h3 Add Friends Using Gmail
 		.body
 			span Find friend contact info quickly using your Gmail contact list. 
@@ -9,7 +9,7 @@
 			hr
 		.footer
 			a.btn.btn-success.btn-large.disable Connect to Gmail
-	#facebook.well.center
+	#facebook.module.center
 		h3 Add Friends Using Facebook
 		.body
 			span Click below to easily add friends from Facebook to your plan. 
@@ -17,7 +17,7 @@
 			hr
 		.footer
 			a.btn.btn-success.btn-large.disable Connect to Facebook
-	#manual.well
+	#manual.module
 		h3 Add Friends Manually
 		.body
 			form#manualForm(method="POST",action="#")

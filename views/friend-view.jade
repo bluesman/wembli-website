@@ -1,11 +1,117 @@
-#planContainer
+- if (typeof session.friend.eventplan.config.voteBy != "undefined")
+	- var voteMsg = session.organizer.first_name+" asks to please vote by: "+session.friend.eventplan.config.voteBy;
+#planViewFriendContainer.planViewContainer
 	- if (action == 'collectVote')
-		#collectVoteContainer.alert.alert-success.alert-block
-			h3!= 'Will you attend '+session.friend.eventplan.event.Name+'?'
-			p!= 'Welcome to Wembli '+session.friend.first_name+'! '
-			p!= session.organizer.first_name+' '+session.organizer.last_name+' is planning an outing and wants you to come along.'
+		#rsvpContainer.alert.alert-success.alert-block
 			input#guid(type="hidden",name="guid",value="#{session.friend.eventplan.config.guid}")
 			input#token(type="hidden",name="token",value="#{session.friend.token.token}")
-			a#rsvpYes(href="#").btn.btn-primary.btn-large Yes
-			a#rsvpNo(href="#").btn.btn-danger.btn-large No
-	#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.eventplan.event});	
+			input#friendEmail(type="hidden",name="friendEmail",value="#{session.friend.email}")
+			.message.pull-left!= 'Hey '+session.friend.first_name+', <br/>'+session.organizer.first_name+' '+session.organizer.last_name+' is planning an outing and you\'re invited! Will you attend?'
+			.buttons.pull-right
+				a#rsvpYes(href="#").btn.btn-success.btn-large Yes
+				a#rsvpNo(href="#").btn.btn-warning.btn-large No
+	#mainContainer.row
+		#left.span8
+			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.friend.eventplan.event});
+			#votingContainer.module
+				h3 Voting
+					a#votingIcon(href="#")
+						i.icon-info-sign.pull-right.icon-white
+				- if (typeof voteMsg != "undefined")
+					.votingMsg.alert.alert-info!= voteMsg
+				.body
+					#ticketsContainer
+						.header.clearfix
+							h4.pull-left Ticket Options:
+							.ticketActions.pull-right
+								a(href="/tickets") View Tickets On Venue Map
+						- var idx = 0
+						- for (ticketId in session.friend.eventplan.tickets)
+							- idx++;
+							- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
+							- var ticket = session.friend.eventplan.tickets[ticketId]
+							- var qtyStr = ticket.TicketQuantity
+							- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
+							- var votePct = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
+							- var voteCnt = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
+							- var voteCntStr = voteCnt + ' Vote'
+							- voteCntStr += (ticket.voteCnt == 1) ? '' : 's';
+							- var friendCnt = 1
+							- if (typeof session.friend.eventplan.friends != "undefined")
+								- for friend in session.friend.eventplan.friends
+									- if (typeof friend.decision != "undefined" && !friend.decision)
+										- continue;
+									- else
+										- friendCnt++;
+							- var shipping = 15/friendCnt;
+							- var serviceCharge = (ticket.ActualPrice * .15)/friendCnt;
+							a.ticketOption(class="#{rowClass}",href="#")
+								.info
+									#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
+									.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+									span.rating.block
+										em Wembli Rating:
+										span.stars!= (ticket.Rating ? ticket.Rating : 0)
+										br
+										em.ratingDescription!= ticket.RatingDescription
+								.votingProgress
+									.progress
+										.bar(style="width:#{votePct}%")
+									.voteCnt
+										em!= voteCntStr
+									.cta
+										button.btn.btn-success(id="#{ticket.ID}") Vote For This Option
+								.ticket-price-box
+									span.ticket-quantity!= qtyStr
+									span.ticket-price!= '$'+ticket.ActualPrice
+									span (each)
+								.costBreakdown.hide
+									table.table(style="font-size:11px;")
+										thead
+											tr
+												th(colspan="2")
+													strong Note: 
+													span These tickets are NOT on hold for you.
+										tbody
+											tr
+												td Ticket Price:
+												td(style="text-align:right")!= '$'+parseFloat(ticket.ActualPrice).toFixed(2)
+											tr
+												td Est. Ticket Network Service Charge:
+												td(style="text-align:right")!= '$'+parseFloat(serviceCharge).toFixed(2)
+											tr
+												td Est. Standard Delivery:
+												td(style="text-align:right")!= '$'+parseFloat(shipping).toFixed(2)
+											tr
+												td Credit Card Transaction Fee:
+												td(style="text-align:right")!= '$' + parseFloat((ticket.ActualPrice * 0.029)).toFixed(2)
+											tr
+												td(style="text-align:right;font-weight:bold;") Estimated Total Per Person:
+												- var total = parseFloat(ticket.ActualPrice) + parseFloat(serviceCharge) + parseFloat(shipping) + parseFloat((ticket.ActualPrice * 0.029));
+												td(style="text-align:right")!= '$'+total.toFixed(2)
+						.footer 
+		#right.span4
+			#friendStack.module
+				h3 Invitees
+					a#inviteesIcon(href="#")
+						i.icon-info-sign.pull-right.icon-white
+				.body
+					.friendContainer!= partial('includes/plan-view/friend',{'id':'organizer','rowClass':'evenRow','labelType':'label-success','labelIcon':'icon-ok-sign','labelCaption':'attending','firstName':session.organizer.first_name,'lastName':session.organizer.last_name})
+					- var idx = 0;
+					- for (email in session.friend.eventplan.friends)
+						- idx++;
+						- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
+						- var friend = session.friend.eventplan.friends[email]; 
+						- labelType = 'label-warning';
+						- labelCaption = 'undecided';
+						- labelIcon = 'icon-question-sign';
+						- var emailAsId = friend.email.replace(/\W+/g,'-');
+						- if ((typeof friend.decision != "undefined") && (friend.decision == true))
+							- labelType = 'label-success';
+							- labelCaption = 'attending';
+							- labelIcon = 'icon-ok-sign';
+						- if ((typeof friend.decision != "undefined") && (friend.decision == false))
+							- labelType = 'label-important';
+							- labelCaption = 'declined';
+							- labelIcon = 'icon-remove-sign';
+						.friendContainer!= partial('includes/plan-view/friend',{'id':emailAsId,'rowClass':rowClass,'labelType':labelType,'labelIcon':labelIcon,'labelCaption':labelCaption,'firstName':friend.firstName,'lastName':friend.lastName})

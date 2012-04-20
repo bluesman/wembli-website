@@ -1,4 +1,49 @@
 @import url('/css/plugins/jquery-ui-1.8.16.custom.css');
+.module {
+  *zoom: 1;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  padding: 0px;
+  min-height: 20px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px solid #d8d6d7;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.module:before, .module:after {
+  display: table;
+  content: "";
+}
+.module:after {
+  clear: both;
+}
+.module blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+.module .alert {
+  -webkit-border-radius: 0 0 0 0;
+  -moz-border-radius: 0 0 0 0;
+  border-radius: 0 0 0 0;
+}
+.module h3 {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+  background-color: #8cb2d5;
+  padding: 0px 19px;
+  border-bottom: thin solid #d8d6d7;
+}
+.module h3 i {
+  margin-top: 7px;
+}
+.module .oddRow {
+  background-color: #FCFCFC;
+}
 @font-face {
   font-family: 'SegoeScriptRegular';
   src: url('/font/segoesc-webfont.eot');
@@ -737,191 +782,6 @@ footer {
 #eventplanOptionsModal .form-actions button.btn {
   margin-right: 10px;
 }
-#planContainer {
-  margin: 10px 0;
-}
-#planContainer #center .well, #planContainer #right .well {
-  padding: 0px;
-  min-height: 20px;
-  margin-bottom: 20px;
-  background-color: #ffffff;
-  border: 1px solid #d8d6d7;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-}
-#planContainer #center .well blockquote, #planContainer #right .well blockquote {
-  border-color: #ddd;
-  border-color: rgba(0, 0, 0, 0.15);
-}
-#planContainer #center .well h3, #planContainer #right .well h3 {
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
-  background-color: #8cb2d5;
-  padding: 0px 19px;
-  border-bottom: thin solid #d8d6d7;
-}
-#planContainer #center .well h3 i, #planContainer #right .well h3 i {
-  margin-top: 7px;
-}
-#planContainer #center .well .oddRow, #planContainer #right .well .oddRow {
-  background-color: #FCFCFC;
-}
-#planContainer #sidebar {
-  background-color: #d7e4f0;
-  border: 2px solid #4380b8;
-}
-#planContainer #sidebar #sidebarNav {
-  margin-top: 20px;
-  font-size: .9em;
-}
-#planContainer #sidebar #sidebarNav i {
-  padding: 2px;
-}
-#planContainer #sidebar #profileImage {
-  height: 100px;
-  width: 130px;
-  border: 3px dashed #524f45;
-}
-#planContainer #mainContainer {
-  *zoom: 1;
-  margin-left: 200px;
-}
-#planContainer #mainContainer:before, #planContainer #mainContainer:after {
-  display: table;
-  content: "";
-}
-#planContainer #mainContainer:after {
-  clear: both;
-}
-#planContainer #mainContainer .alert {
-  margin: 10px 20px;
-}
-#planContainer #mainContainer #center #eventDetails {
-  *zoom: 1;
-  height: 70px;
-  margin: 0 0 10px 0;
-}
-#planContainer #mainContainer #center #eventDetails:before, #planContainer #mainContainer #center #eventDetails:after {
-  display: table;
-  content: "";
-}
-#planContainer #mainContainer #center #eventDetails:after {
-  clear: both;
-}
-#planContainer #mainContainer #center #eventDetails .info {
-  font-size: 11px;
-  margin-left: 75px;
-  float: left;
-}
-#planContainer #mainContainer #center #eventDetails .info .name {
-  font-weight: bold;
-  font-size: 14px;
-}
-#planContainer #mainContainer #center #votingContainer .votingMsg {
-  margin-bottom: 1px;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .header {
-  *zoom: 1;
-  padding: 5px;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .header:before, #planContainer #mainContainer #center #votingContainer #ticketsContainer .header:after {
-  display: table;
-  content: "";
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .header:after {
-  clear: both;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .header h4 {
-  font-weight: bold;
-  width: 200px;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .header .ticketActions {
-  *zoom: 1;
-  font-size: 11px;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .header .ticketActions:before, #planContainer #mainContainer #center #votingContainer #ticketsContainer .header .ticketActions:after {
-  display: table;
-  content: "";
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .header .ticketActions:after {
-  clear: both;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption:hover {
-  background-color: #ffdd73;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption {
-  *zoom: 1;
-  position: relative;
-  padding: 10px 0;
-  min-height: 70px;
-  display: block;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption:before, #planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption:after {
-  display: table;
-  content: "";
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption:after {
-  clear: both;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td {
-  font-size: 10px;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td.amt {
-  text-align: right;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td.total {
-  font-weight: bold;
-  text-align: right;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption input {
-  float: left;
-  margin-left: 20px;
-  margin-top: 20px;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .info {
-  margin-left: 90px;
-  float: left;
-  width: 200px;
-  min-height: 60px;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .progress {
-  margin-bottom: 1px;
-}
-#planContainer #mainContainer #center #votingContainer #ticketsContainer .ticketOption .ticket-price-box {
-  left: 50px;
-  margin: 0px;
-}
-#planContainer #mainContainer #center #votingContainer .form-footer {
-  text-align: center;
-  padding: 19px;
-}
-#planContainer #mainContainer #right #friendStack .friend {
-  padding: 10px;
-}
-#planContainer #mainContainer #right #friendStack .friend .info .name {
-  margin-left: 4px;
-  font-weight: bold;
-  font-size: 14px;
-}
-#planContainer #mainContainer #right #friendStack .friend .invitationEmailStatus {
-  font-size: 12px;
-}
-#planContainer #mainContainer #right #friendStack .friend .invitationEmailStatus .emailType {
-  margin-right: 4px;
-}
-#planContainer #mainContainer #right #friendStack .friend .invitationEmailStatus .emailAction {
-  font-size: 12px;
-}
-#planContainer #mainContainer #right #friendStack #inviteMoreContainer {
-  text-align: center;
-  padding: 19px;
-}
 #signupModal #login {
   float: left;
   margin-right: 10px;
@@ -951,6 +811,215 @@ footer {
 }
 #loginModal #loginForm #forgotPasswordLink {
   margin-right: 20px;
+}
+.planViewContainer {
+  margin: 10px 0;
+}
+.planViewContainer #eventDetails {
+  *zoom: 1;
+  height: 70px;
+  margin: 0 0 10px 0;
+}
+.planViewContainer #eventDetails:before, .planViewContainer #eventDetails:after {
+  display: table;
+  content: "";
+}
+.planViewContainer #eventDetails:after {
+  clear: both;
+}
+.planViewContainer #eventDetails .info {
+  font-size: 11px;
+  margin-left: 75px;
+  float: left;
+}
+.planViewContainer #eventDetails .info .name {
+  font-weight: bold;
+  font-size: 14px;
+}
+.planViewContainer #votingContainer .votingMsg {
+  margin-bottom: 1px;
+}
+.planViewContainer #votingContainer #ticketsContainer .header {
+  *zoom: 1;
+  padding: 5px;
+}
+.planViewContainer #votingContainer #ticketsContainer .header:before, .planViewContainer #votingContainer #ticketsContainer .header:after {
+  display: table;
+  content: "";
+}
+.planViewContainer #votingContainer #ticketsContainer .header:after {
+  clear: both;
+}
+.planViewContainer #votingContainer #ticketsContainer .header h4 {
+  font-weight: bold;
+  width: 200px;
+}
+.planViewContainer #votingContainer #ticketsContainer .header .ticketActions {
+  *zoom: 1;
+  font-size: 11px;
+}
+.planViewContainer #votingContainer #ticketsContainer .header .ticketActions:before, .planViewContainer #votingContainer #ticketsContainer .header .ticketActions:after {
+  display: table;
+  content: "";
+}
+.planViewContainer #votingContainer #ticketsContainer .header .ticketActions:after {
+  clear: both;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption:hover {
+  background-color: #ffdd73;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption {
+  *zoom: 1;
+  position: relative;
+  padding: 10px 0;
+  min-height: 70px;
+  display: block;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption:before, .planViewContainer #votingContainer #ticketsContainer .ticketOption:after {
+  display: table;
+  content: "";
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption:after {
+  clear: both;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td {
+  font-size: 10px;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td.amt {
+  text-align: right;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td.total {
+  font-weight: bold;
+  text-align: right;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption input {
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption .info {
+  margin-left: 90px;
+  float: left;
+  width: 200px;
+  min-height: 60px;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption .progress {
+  margin-bottom: 1px;
+}
+.planViewContainer #votingContainer #ticketsContainer .ticketOption .ticket-price-box {
+  left: 50px;
+  margin: 0px;
+}
+.planViewContainer #votingContainer .form-footer {
+  text-align: center;
+  padding: 19px;
+}
+.planViewContainer .friendContainer .friend {
+  padding: 10px;
+}
+.planViewContainer .friendContainer .friend .info .name {
+  margin-left: 4px;
+  font-weight: bold;
+  font-size: 14px;
+}
+#planViewOrganizerContainer #organizerSidebar {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  padding: 19px;
+  background-color: #d7e4f0;
+  border: 2px solid #4380b8;
+}
+#planViewOrganizerContainer #organizerSidebar #sidebarNav {
+  margin-top: 20px;
+  font-size: .9em;
+}
+#planViewOrganizerContainer #organizerSidebar #sidebarNav i {
+  padding: 2px;
+}
+#planViewOrganizerContainer #organizerSidebar #profileImage {
+  height: 100px;
+  width: 130px;
+  border: 3px dashed #524f45;
+}
+#planViewOrganizerContainer #mainContainer {
+  *zoom: 1;
+  margin-left: 200px;
+}
+#planViewOrganizerContainer #mainContainer:before, #planViewOrganizerContainer #mainContainer:after {
+  display: table;
+  content: "";
+}
+#planViewOrganizerContainer #mainContainer:after {
+  clear: both;
+}
+#planViewOrganizerContainer #mainContainer #mainAlert {
+  margin: 10px 20px;
+}
+#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus {
+  font-size: 12px;
+}
+#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus .emailType {
+  margin-right: 4px;
+}
+#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus .emailAction {
+  font-size: 12px;
+}
+#planViewOrganizerContainer #mainContainer #right #friendStack #inviteMoreContainer {
+  text-align: center;
+  padding: 19px;
+}
+#planViewFriendContainer #rsvpContainer {
+  *zoom: 1;
+}
+#planViewFriendContainer #rsvpContainer:before, #planViewFriendContainer #rsvpContainer:after {
+  display: table;
+  content: "";
+}
+#planViewFriendContainer #rsvpContainer:after {
+  clear: both;
+}
+#planViewFriendContainer #rsvpContainer .message {
+  width: 755px;
+  margin-right: 20px;
+  font-size: 16px;
+}
+#planViewFriendContainer #rsvpContainer .buttons {
+  width: 114px;
+}
+#planViewFriendContainer #rsvpContainer .buttons #rsvpYes {
+  margin-right: 10px;
+}
+#planViewFriendContainer #left #ticketsContainer .ticketOption {
+  *zoom: 1;
+}
+#planViewFriendContainer #left #ticketsContainer .ticketOption:before, #planViewFriendContainer #left #ticketsContainer .ticketOption:after {
+  display: table;
+  content: "";
+}
+#planViewFriendContainer #left #ticketsContainer .ticketOption:after {
+  clear: both;
+}
+#planViewFriendContainer #left #ticketsContainer .ticketOption .info {
+  float: left;
+}
+#planViewFriendContainer #left #ticketsContainer .ticketOption .votingProgress {
+  float: right;
+  margin-right: 20px;
+  min-width: 200px;
+}
+#planViewFriendContainer #left #ticketsContainer .ticketOption .votingProgress .cta {
+  width: 200px;
+  text-align: center;
+}
+#planViewFriendContainer #left #ticketsContainer .ticketOption .votingProgress .cta button {
+  margin-top: 10px;
+}
+#planViewFriendContainer #left #ticketsContainer .ticketOption .ticket-price-box {
+  left: 20px;
 }
 /* Home Page */
 #index section#content {
@@ -1220,49 +1289,11 @@ footer {
   max-width: 1200px;
   padding-bottom: 20px;
 }
-#friendsContent .well {
-  *zoom: 1;
+#friendsContent .module {
   float: left;
   width: 350px;
-  padding: 0px;
-  min-height: 20px;
-  margin-bottom: 20px;
-  background-color: #ffffff;
-  border: 1px solid #d8d6d7;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
 }
-#friendsContent .well:before, #friendsContent .well:after {
-  display: table;
-  content: "";
-}
-#friendsContent .well:after {
-  clear: both;
-}
-#friendsContent .well blockquote {
-  border-color: #ddd;
-  border-color: rgba(0, 0, 0, 0.15);
-}
-#friendsContent .well h3 {
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
-  background-color: #8cb2d5;
-  padding: 0px 19px;
-  border-bottom: thin solid #d8d6d7;
-}
-#friendsContent .well h3 i {
-  margin-top: 7px;
-}
-#friendsContent .well .oddRow {
-  background-color: #FCFCFC;
-}
-#friendsContent .well .body {
+#friendsContent .module .body {
   padding: 20px;
 }
 #friendsContent .center {
@@ -1332,47 +1363,9 @@ footer {
   width: 100%;
   max-width: 1200px;
 }
-#summaryContainer .well {
-  *zoom: 1;
+#summaryContainer .module {
   float: left;
   width: 350px;
-  padding: 0px;
-  min-height: 20px;
-  margin-bottom: 20px;
-  background-color: #ffffff;
-  border: 1px solid #d8d6d7;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-}
-#summaryContainer .well:before, #summaryContainer .well:after {
-  display: table;
-  content: "";
-}
-#summaryContainer .well:after {
-  clear: both;
-}
-#summaryContainer .well blockquote {
-  border-color: #ddd;
-  border-color: rgba(0, 0, 0, 0.15);
-}
-#summaryContainer .well h3 {
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
-  background-color: #8cb2d5;
-  padding: 0px 19px;
-  border-bottom: thin solid #d8d6d7;
-}
-#summaryContainer .well h3 i {
-  margin-top: 7px;
-}
-#summaryContainer .well .oddRow {
-  background-color: #FCFCFC;
 }
 #summaryContainer .center {
   margin: 0 40px;

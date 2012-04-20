@@ -1,40 +1,16 @@
 - if (typeof session.eventplan.config.voteBy != "undefined")
 	- var voteMsg = "Voting ends "+session.eventplan.config.voteBy;
 include includes/modals/vote-by
-#planContainer.row
-	#sidebar.span2.well
-		#profileImage
-		#sidebarNav
-			ul.nav.nav-list
-				li.nav-header Planning Tools
-				li
-					a(href="#")
-						i.icon-book
-						span New Event
-				li
-					a(href="#")
-						i.icon-calendar
-						span Add to Calendar
-				li
-					a(href="#")
-						i.icon-map-marker
-						span Show Map
-				li
-					a(href="#")
-						i.icon-star
-						span PayPal
-				li
-					a(href="#")
-						i.icon-envelope
-						span Email My Itinerary
+#planViewOrganizerContainer.planViewContainer.row
+	include widgets/organizer-sidebar
 	#mainContainer
 		- var msg = req.flash('plan-msg')[0];
 		- if (typeof msg != "undefined")
-			.alert.alert-success!= msg;
+			#mainAlert.alert.alert-success!= msg;
 				a.close(data-dismiss="alert") x
 		#center.span5
 			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.eventplan.event});
-			form#votingContainer.well()
+			form#votingContainer.module()
 				h3 Voting
 					a#votingIcon(href="#")
 						i.icon-info-sign.pull-right.icon-white				
@@ -122,11 +98,12 @@ include includes/modals/vote-by
 						a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & REQUEST PAYMENT
 			#wallContainer
 		#right.span4
-			#friendStack.well
+			#friendStack.module
 				h3 Invitees
 					a#inviteesIcon(href="#")
 						i.icon-info-sign.pull-right.icon-white
 				.body
+					.friendContainer!= partial('includes/plan-view/friend',{id:'organizer','rowClass':'evenRow','labelType':'label-success','labelIcon':'icon-ok-sign','labelCaption':'attending','firstName':session.customer.first_name,'lastName':session.customer.last_name})
 					- var idx = 0;
 					- for (email in session.eventplan.friends)
 						- idx++;
@@ -144,58 +121,59 @@ include includes/modals/vote-by
 							- labelType = 'label-important';
 							- labelCaption = 'declined';
 							- labelIcon = 'icon-remove-sign';
-						.friend.clearfix(class="#{rowClass}")
-							.info.clearfix
-								.status.pull-left
-									span(class="label #{labelType}")
-										i(class="icon-white #{labelIcon}")
-										span!= ' '+labelCaption
-								.name.pull-left!= ' ' + friend.firstName + ' ' + friend.lastName 
-							- if (typeof friend.collectVote != "undefined")
-								.invitationEmailStatus.clearfix
-									.emailType.pull-left
-										i.icon-envelope 
-										span &nbsp;Invitation Email: 
-									.emailLabel.pull-left
-										- if (typeof friend.collectVote.delivered != "undefined")
-											span.label.label-info sent
-											span &nbsp;
-												- if (typeof friend.collectVote.open != "undefined")
-													span.label.label-info opened
-												- else
-													span.label unopened
-										- else
-											span.label en route
+						.friendContainer
+							.friend.clearfix(class="#{rowClass}",id="#{emailAsId}")
+								.info.clearfix
+									.status.pull-left
+										span(class="label #{labelType}")
+											i(class="icon-white #{labelIcon}")
+											span!= ' '+labelCaption
+									.name.pull-left!= ' ' + friend.firstName + ' ' + friend.lastName 
+								- if (typeof friend.collectVote != "undefined")
+									.invitationEmailStatus.clearfix
+										.emailType.pull-left
+											i.icon-envelope 
+											span &nbsp;Invitation Email: 
+										.emailLabel.pull-left
+											- if (typeof friend.collectVote.delivered != "undefined")
+												span.label.label-info sent
+												span &nbsp;
+													- if (typeof friend.collectVote.open != "undefined")
+														span.label.label-info opened
+													- else
+														span.label unopened
+											- else
+												span.label en route
+										a.emailAction.pull-right(id="invitation-#{emailAsId}",href="#")
+											i.icon-repeat
+											span &nbsp;Resend
+								- if (typeof friend.collectPayment != "undefined")
+									.paymentEmailStatus.clearfix
+										.emailType.pull-left
+											i.icon-envelope 
+											span &nbsp;Collect Payment Email: 
+										.emailLabel.pull-right
+											- if (typeof friend.collectPayment.delivered != "undefined")
+												span.label.label-info sent
+												span &nbsp;
+													- if (typeof friend.collectPayment.open != "undefined")
+														span.label.label-info opened
+													- else
+														span.label unopened
+											- else
+												span.label not sent
+										a.emailAction.pull-right(id="payment-#{emailAsId}",href="#")
+											i.icon-repeat
+											span &nbsp;Resend
+								- if ((typeof friend.collectPayment == "undefined") && (typeof friend.collectVote == "undefined"))
+									.invitationEmailStatus.clearfix
+										.emailType.pull-left
+											i.icon-envelope 
+											span &nbsp;Invitation Email: 
+										.emailLabel.pull-left
+												span.label not sent
 									a.emailAction.pull-right(id="invitation-#{emailAsId}",href="#")
 										i.icon-repeat
-										span &nbsp;Resend
-							- if (typeof friend.collectPayment != "undefined")
-								.paymentEmailStatus.clearfix
-									.emailType.pull-left
-										i.icon-envelope 
-										span &nbsp;Collect Payment Email: 
-									.emailLabel.pull-right
-										- if (typeof friend.collectPayment.delivered != "undefined")
-											span.label.label-info sent
-											span &nbsp;
-												- if (typeof friend.collectPayment.open != "undefined")
-													span.label.label-info opened
-												- else
-													span.label unopened
-										- else
-											span.label not sent
-									a.emailAction.pull-right(id="payment-#{emailAsId}",href="#")
-										i.icon-repeat
-										span &nbsp;Resend
-							- if ((typeof friend.collectPayment == "undefined") && (typeof friend.collectVote == "undefined"))
-								.invitationEmailStatus.clearfix
-									.emailType.pull-left
-										i.icon-envelope 
-										span &nbsp;Invitation Email: 
-									.emailLabel.pull-left
-											span.label not sent
-								a.emailAction.pull-right(id="invitation-#{emailAsId}",href="#")
-									i.icon-repeat
-									span &nbsp;Send Invite
+										span &nbsp;Send Invite
 				#inviteMoreContainer
 					a#inviteMoreFriends.btn.btn-success(href="/friends") Add More Friends
