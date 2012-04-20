@@ -28,7 +28,7 @@ var app = module.exports = express.createServer();
 //app globals
 app.set('fbAppId','314732478586428');
 app.set('fbAppSecret','68b80c2adfd5421b6c9df85751264d4e');
-app.set('host','www');
+app.set('host','beta');
 
 app.configure(function(){
     app.use(express.cookieParser());
