@@ -198,17 +198,10 @@ $w.eventplan = {
 	});
 
     },
-    toggleButton:function(action,el) {
-	if (action == 'add') {
-	    $(el).attr('class','btn btn-primary');
-	    $(el).html('Add To Plan');
-	} 
-
-	if (action == 'remove') {
-	    $(el).attr('class','btn btn-success');
-	    $(el).html('Remove');
-	}
-
+    toggleButton:function(args,el) {
+	var c = 'btn btn-'+args.action;
+	$(el).attr('class',c);
+	$(el).html(args.text);
     },
     alertMsg:function(status,msg) {
 	//use header flash msg?

@@ -189,20 +189,99 @@ exports.eventplan = {
 		    organizer.eventplan[idx].friends[email].decision = (rsvp == "YES") ? true : false;
 		    req.session.currentPlan = organizer.eventplan[idx];
 		    req.session.organizer = organizer;
-		    break;
+		    req.session.organizer.saveCurrentPlan(req.session.currentPlan);
+		    return _respond(err,req.session.currentPlan,req,me);
 		}
 	    }
-	    organizer.markModified('eventplan');
-	    organizer.save(function(err) {
-		return _respond(err,organizer,req,me);
-	    });
-
 	};
 
 	//fetch the updated event
-	console.log('currentplan: ');
-	console.log(req.session.currentPlan);
+	Customer.findPlanByGuid(req.session.currentPlan.config.guid,handleOrganizer);
+
+    },
+    vote: function(voteType,voteId,req,res) {
+	var me = this;
+
+	//must have a req.session.friend
+	if (typeof req.session.friend == "undefined") {
+	    return _respond('Authentication error');
+	}
+
+	//increment voteCnt for this ticket id
+
+	var handleOrganizer = function(err,organizer) {
+	    var email = req.session.friend.email;
+	    //get the plan that matches and save it
+	    for (var idx in organizer.eventplan) {
+		if (organizer.eventplan[idx].config.guid == req.session.currentPlan.config.guid) {
+		    if (typeof organizer.eventplan[idx].friends[email].votes == "undefined") {
+			organizer.eventplan[idx].friends[email].votes = {};
+		    }
+		    //save the vote in the friend
+		    organizer.eventplan[idx].friends[email].votes[voteType] = voteId;
+		    //recalculate voteCnt and votePct
+
+		    var tally = {};
+		    for (var e in  organizer.eventplan[idx].friends) {
+			for(var k in organizer.eventplan[idx].friends[e].votes) {
+			    if (typeof tally[k] == "undefined") {
+				tally[k] = {};
+			    }
+			    if (typeof tally[k][organizer.eventplan[idx].friends[e].votes[k]] == "undefined") {
+				tally[k][organizer.eventplan[idx].friends[e].votes[k]] = 1;
+			    } else {
+				tally[k][organizer.eventplan[idx].friends[e].votes[k]]++;
+			    }
+
+			    if (typeof tally[k]['total'] == "undefined") {
+				tally[k]['total'] = 1;
+			    } else {
+				tally[k]['total']++;				
+			    }
+			}
+		    }
+
+		    console.log(tally);
+
+		    //clear out any existing votes for things we can vote on
+		    for (serviceIdx in globalViewVars.wembliServices) {
+			var service = globalViewVars.wembliServices[serviceIdx];
+			if (typeof organizer.eventplan[idx][service] != "undefined") {
+			    for (serviceKey in organizer.eventplan[idx][service]) {
+				if (typeof organizer.eventplan[idx][service][serviceKey].voteCnt != "undefined") {
+				    organizer.eventplan[idx][service][serviceKey].voteCnt = 0;
+				}
+				if (typeof organizer.eventplan[idx][service][serviceKey].votePct != "undefined") {
+				    organizer.eventplan[idx][service][serviceKey].votePct = 0;
+				}
+			    }
+			}
+		    }
+
+		    //set voteCnt and votePct using the tally
+		    for (var vt in tally) {
+
+			for (var id in tally[vt]) {
+			    if (id == 'total') {
+				continue;
+			    }
+			    organizer.eventplan[idx][vt][id].voteCnt = tally[vt][id];
+			    //vote percentage is the votes for this id divided by total votes cast
+			    var votePct = parseInt((tally[vt][id]/tally[vt]['total']) * 100);
+			    organizer.eventplan[idx][vt][id].votePct = votePct;
+			}
+		    }
+		    req.session.currentPlan = organizer.eventplan[idx];
+		    req.session.organizer = organizer;
+		    req.session.organizer.saveCurrentPlan(req.session.currentPlan);
+		    return _respond(err,req.session.currentPlan,req,me);
+		}
+	    }
+	};
+
+	//fetch the updated event
 	Customer.findPlanByGuid(req.session.currentPlan.config.guid,handleOrganizer);
 
     }
+
 }

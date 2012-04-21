@@ -36,6 +36,7 @@
 							- var voteCnt = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
 							- var voteCntStr = voteCnt + ' Vote'
 							- voteCntStr += (ticket.voteCnt == 1) ? '' : 's';
+							- voteCntStr += ' ('+votePct+'%)';
 							- var friendCnt = 1
 							- if (typeof session.currentPlan.friends != "undefined")
 								- for friend in session.currentPlan.friends
@@ -45,7 +46,7 @@
 										- friendCnt++;
 							- var shipping = 15/friendCnt;
 							- var serviceCharge = (ticket.ActualPrice * .15)/friendCnt;
-							a.ticketOption(class="#{rowClass}",href="#")
+							a.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
 								.info
 									#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
 									.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
@@ -60,7 +61,7 @@
 									.voteCnt
 										em!= voteCntStr
 									.cta
-										button.btn.btn-success(id="#{ticket.ID}") Vote For This Option
+										button.btn.btn-info Vote For This Option
 								.ticket-price-box
 									span.ticket-quantity!= qtyStr
 									span.ticket-price!= '$'+ticket.ActualPrice

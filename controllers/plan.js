@@ -214,6 +214,12 @@ module.exports = function(app) {
 		return res.redirect('/');
 	}
 
+	//if there is a guid but they are not logged in and there is no token - gtfo
+	if (req.param('guid') && !req.session.loggedIn && !req.param('token')) {
+		req.flash('error','The plan you\'re trying to view is by invitation only.');
+		return res.redirect('/');
+	}	    
+
 	var callback = function() {
 	    //they must have a currentPlan to view to
 	    if (typeof req.session.currentPlan == "undefined") {

@@ -38,7 +38,7 @@
 			    $w.eventplan.data = eventplan;
 			    $w.eventplan.updateSummary();
 			    //toggle the button
-			    $w.eventplan.toggleButton('remove',me);
+			    $w.eventplan.toggleButton({action:'success',text:'Remove'},me);
 			    $w.eventplan.alertMsg('success','Successfully added tickets to your plan.');
 			} else {
 			    $w.eventplan.alertMsg('error','Error: Unable to remove tickets at this time. Try logging in.');
@@ -55,7 +55,7 @@
 			    //update the eventplan summary
 			    $w.eventplan.updateSummary();
 			    //toggle the button
-			    $w.eventplan.toggleButton('add',me);
+			    $w.eventplan.toggleButton({action:'primary',text:'Add To Plan'},me);
 			    $w.eventplan.alertMsg('success','Successfully removed tickets from your plan.');
 			} else {
 			    $w.eventplan.alertMsg('Error: Unable to remove tickets at this time. Try logging in.');

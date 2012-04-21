@@ -33,6 +33,7 @@ include includes/modals/vote-by
 							- var voteCnt = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
 							- var voteCntStr = voteCnt + ' Vote'
 							- voteCntStr += (ticket.voteCnt == 1) ? '' : 's';
+							- voteCntStr += ' ('+votePct+'%)';
 							- var friendCnt = 1
 							- if (typeof session.currentPlan.friends != "undefined")
 								- for friend in session.currentPlan.friends
