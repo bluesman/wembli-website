@@ -26,7 +26,7 @@
 									- var date = new Date(Date.parse(plan.event.Date));
 									td.date!= date.format('fullDate')
 									td
-										- var nextStep = 'plan/view/organizer';
+										- var nextStep = 'view';
 										- var tmp = globalViewVars.wembliServices;
 										- var services = tmp.concat(['summary']);
 										- each service in services
@@ -34,7 +34,7 @@
 											- if ((typeof plan.config[service] != "undefined") && plan.config[service] && (typeof plan.completed[service] == "undefined"))
 												- nextStep = service;
 												- break;
-										a(href="/#{nextStep}/#{plan.config.guid}")!= plan.event.Name
+										a(href="/plan/#{nextStep}/#{plan.config.guid}")!= plan.event.Name
 				- else
 					div.alert.alert-info
 						h3 Hey There!

@@ -9,12 +9,10 @@ module.exports = function(app) {
 	    return res.send(200);
 	}
 
-
-	console.log('here');
 	Customer.findOne({email:req.body.organizer},function(err,c) {	
 
 	    //get the event
-	    for (var i=0; i<=c.eventplan.length;i++) {
+	    for (var i in c.eventplan) {
 		if (typeof c.eventplan[i] == "undefined") {
 		    continue;
 		}
@@ -39,6 +37,7 @@ module.exports = function(app) {
 			    }
 			    var eventDate = req.body.event+'LastDate';
 			    c.eventplan[i].friends[email][req.body.category][eventDate] = new Date(req.body.timestamp * 1000).format("m/d/yy h:MM TT Z");
+			    console.log(c.eventplan[i].friends[email]);
 			    c.markModified('eventplan');
 			    c.save();
 			    break;

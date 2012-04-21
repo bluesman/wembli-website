@@ -8,18 +8,18 @@ include includes/modals/vote-by
 			$('#signupModal #message').html('You have done a lot of work.  Sign up for Wembli so we can associate this plan with your account.').show();
 			$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
 		});
-#eventBuilderContainer!= partial("widgets/event-builder",{actionArgs:{step:'summary',buttonText:'Invite Friends'}});
+#eventBuilderContainer!= partial("widgets/event-builder",{buttonText:'Invite Friends'});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #summaryContainer.row
-	- if (typeof session.eventplan.friends != "undefined")
+	- if (typeof session.currentPlan.friends != "undefined")
 		#friends.module
 			h3 Invitees:
 			.body
 				- var idx = 0;
-				- for (email in session.eventplan.friends)
+				- for (email in session.currentPlan.friends)
 					- idx++;
 					- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-					- var friend = session.eventplan.friends[email]; 
+					- var friend = session.currentPlan.friends[email]; 
 					- var emailAsId = friend.email.replace(/\W+/g,'-');
 					.friend.clearfix(class="#{rowClass}")
 						.name
@@ -27,21 +27,21 @@ include includes/modals/vote-by
 							strong!= friend.firstName + ' ' + friend.lastName
 						.email!=	friend.email
 			.footer
-				a#inviteMoreFriends.btn.btn-success.btn-large(href="/friends") Manage Invitees
-	- if (typeof session.eventplan.tickets != "undefined")
+				a#inviteMoreFriends.btn.btn-success.btn-large(href="/plan/friends") Manage Invitees
+	- if (typeof session.currentPlan.tickets != "undefined")
 		#tickets.center.module
 			h3 Ticket Options:
 			.body
 				- var idx = 0
-				- for (ticketId in session.eventplan.tickets)
+				- for (ticketId in session.currentPlan.tickets)
 					- idx++;
 					- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-					- var ticket = session.eventplan.tickets[ticketId]
+					- var ticket = session.currentPlan.tickets[ticketId]
 					- var qtyStr = ticket.TicketQuantity
 					- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
 					- var friendCnt = 1
-					- if (typeof session.eventplan.friends != "undefined")
-						- for friend in session.eventplan.friends
+					- if (typeof session.currentPlan.friends != "undefined")
+						- for friend in session.currentPlan.friends
 							- if (typeof friend.decision != "undefined" && !friend.decision)
 								- continue;
 							- else
@@ -101,9 +101,9 @@ include includes/modals/vote-by
 										- var total = parseFloat(ticket.ActualPrice) + parseFloat(serviceCharge) + parseFloat(shipping) + parseFloat((ticket.ActualPrice * 0.029));
 										td(style="text-align:right")!= '$'+total.toFixed(2)
 			.footer
-				a#ticketButton.btn.btn-success.btn-large(href="/tickets") CHANGE TICKET OPTIONS
+				a#ticketButton.btn.btn-success.btn-large(href="/plan/tickets") CHANGE TICKET OPTIONS
 
-	#whatNext
+	#whatNext.span5
 		h3 What Happens Next?
 		hr
 		.body

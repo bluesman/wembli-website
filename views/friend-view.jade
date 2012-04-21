@@ -1,9 +1,9 @@
-- if (typeof session.friend.eventplan.config.voteBy != "undefined")
-	- var voteMsg = session.organizer.first_name+" asks to please vote by: "+session.friend.eventplan.config.voteBy;
+- if (typeof session.currentPlan.config.voteBy != "undefined")
+	- var voteMsg = session.organizer.first_name+" asks to please vote by: "+session.currentPlan.config.voteBy;
 #planViewFriendContainer.planViewContainer
 	- if (action == 'collectVote')
 		#rsvpContainer.alert.alert-success.alert-block
-			input#guid(type="hidden",name="guid",value="#{session.friend.eventplan.config.guid}")
+			input#guid(type="hidden",name="guid",value="#{session.currentPlan.config.guid}")
 			input#token(type="hidden",name="token",value="#{session.friend.token.token}")
 			input#friendEmail(type="hidden",name="friendEmail",value="#{session.friend.email}")
 			.message.pull-left!= 'Hey '+session.friend.first_name+', <br/>'+session.organizer.first_name+' '+session.organizer.last_name+' is planning an outing and you\'re invited! Will you attend?'
@@ -12,7 +12,7 @@
 				a#rsvpNo(href="#").btn.btn-warning.btn-large No
 	#mainContainer.row
 		#left.span8
-			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.friend.eventplan.event});
+			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 			#votingContainer.module
 				h3 Voting
 					a#votingIcon(href="#")
@@ -24,12 +24,12 @@
 						.header.clearfix
 							h4.pull-left Ticket Options:
 							.ticketActions.pull-right
-								a(href="/tickets") View Tickets On Venue Map
+								a(href="/plan/tickets/#{session.currentPlan.config.guid}") View Tickets On Venue Map
 						- var idx = 0
-						- for (ticketId in session.friend.eventplan.tickets)
+						- for (ticketId in session.currentPlan.tickets)
 							- idx++;
 							- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-							- var ticket = session.friend.eventplan.tickets[ticketId]
+							- var ticket = session.currentPlan.tickets[ticketId]
 							- var qtyStr = ticket.TicketQuantity
 							- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
 							- var votePct = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
@@ -37,8 +37,8 @@
 							- var voteCntStr = voteCnt + ' Vote'
 							- voteCntStr += (ticket.voteCnt == 1) ? '' : 's';
 							- var friendCnt = 1
-							- if (typeof session.friend.eventplan.friends != "undefined")
-								- for friend in session.friend.eventplan.friends
+							- if (typeof session.currentPlan.friends != "undefined")
+								- for friend in session.currentPlan.friends
 									- if (typeof friend.decision != "undefined" && !friend.decision)
 										- continue;
 									- else
@@ -98,10 +98,10 @@
 				.body
 					.friendContainer!= partial('includes/plan-view/friend',{'id':'organizer','rowClass':'evenRow','labelType':'label-success','labelIcon':'icon-ok-sign','labelCaption':'attending','firstName':session.organizer.first_name,'lastName':session.organizer.last_name})
 					- var idx = 0;
-					- for (email in session.friend.eventplan.friends)
+					- for (email in session.currentPlan.friends)
 						- idx++;
 						- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-						- var friend = session.friend.eventplan.friends[email]; 
+						- var friend = session.currentPlan.friends[email]; 
 						- labelType = 'label-warning';
 						- labelCaption = 'undecided';
 						- labelIcon = 'icon-question-sign';

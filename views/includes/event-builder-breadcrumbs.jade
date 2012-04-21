@@ -2,8 +2,7 @@
 - //filter out the services in this plan
 - var services = [];
 - each service in globalViewVars.wembliServices
-	- console.log(service);
-	- if (session.eventplan.config[service])
+	- if (session.currentPlan.config[service])
 		- services.push(service);
 - services.push('summary');
 - var maxWidth = 900;
@@ -19,6 +18,6 @@ ul#breadcrumbs(style="width:#{maxWidth}px")
 			- currentService = service;
 		li(class="#{active}")
 			.circle(style="margin:0 #{m}px")
-				a(href="/#{service}#eventBuilder")
+				a(href="/plan/#{service}#eventBuilder")
 				p.segoe!= idx+'. '+service
 .line(style="width:#{w}px")

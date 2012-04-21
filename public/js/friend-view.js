@@ -44,7 +44,7 @@
     };
 
     $(window.document).ready(function($) {
-	wembli.eventPlan.getFriendPlan({},function(error,eventplan) {
+	wembli.eventPlan.get({},function(error,eventplan) {
 	    $w.eventplan.data = eventplan; //store the event plan in the $w wembli global for use by other stuff
 	    init();
 	});

@@ -22,8 +22,9 @@ ul
 					span.stars!= (ticket.Rating ? ticket.Rating : 0)
 					br
 					em.ratingDescription!= ticket.RatingDescription
-			p.cta
-				a.btn.btn-primary(href=ticketLink) Add to Plan
+			- if (session.currentPlan.config.isOrganizer)
+				p.cta
+					a.btn.btn-primary(href=ticketLink) Add to Plan
 			span.ticket-price-box
 				span.ticket-quantity!= qtyStr
 				span.ticket-price!= '$'+ticket.ActualPrice

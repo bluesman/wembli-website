@@ -1,4 +1,4 @@
-var ticketNetwork = require('wembli/ticketnetwork');
+var ticketNetwork = require('../../lib/wembli/ticketnetwork');
 
 module.exports = function(app) {
     console.log('index loaded...');

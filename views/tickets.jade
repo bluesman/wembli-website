@@ -1,25 +1,7 @@
-
-//event data looks like this right now:
-//   { ChildCategoryID: '63',
-//     City: 'San Diego',
-//     Clicks: '0',
-//     Date: '2012-04-03T19:05:00',
-//     DisplayDate: '04/03/2012 7:05PM',
-//     GrandchildCategoryID: '16',
-//     ID: '1788398',
-//     IsWomensEvent: 'false',
-//     MapURL: 'http://seatics.tickettransaction.com/PetcoPark_SanDiegoPadres_2011-12-06_2011-12-06_1000_tn.gif',
-//     Name: 'MLB Exhibition: San Diego Padres vs. Kansas City Royals',
-//     ParentCategoryID: '1',
-//     StateProvince: 'CA',
-//     StateProvinceID: '5',
-//     Venue: 'Petco Park',
-//     VenueConfigurationID: '2947',
-//     VenueID: '1295',
-//     CountryID: '217' }
 script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
-#eventBuilderContainer!= partial("widgets/event-builder",{actionArgs:{step:'tickets'}});
-#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
+#eventBuilderContainer!= partial("widgets/event-builder",{});
+- if (session.currentPlan.isOrganizer)
+	#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #ticketsContent
 	#thumbnail.thumbnail.hide
 	- if ((typeof tickets != "undefined") && (tickets.length > 0))
@@ -28,8 +10,8 @@ script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
 		.ticket-list.span5
 			#noTickets No tickets available for this event.
 	#fvmap
-	input#venueId(type="hidden",value=event.VenueID)
-	input#eventName(type="hidden",value=event.Name)
+	input#venueId(type="hidden",value=session.currentPlan.event.VenueID)
+	input#eventName(type="hidden",value=session.currentPlan.event.Name)
 #staticMapContainer.hide
 	#staticMap
-		img(src="#{event.MapURL}")
+		img(src="#{session.currentPlan.event.MapURL}")

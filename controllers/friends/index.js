@@ -10,15 +10,12 @@ module.exports = function(app) {
 	}
 
 	//send vote emails to friends
-	if (typeof req.session.eventplan == "undefined") {
+	if (typeof req.session.currentPlan == "undefined") {
 	    req.flash('plan-msg','Unable to retrieve event. Please start a new plan.');
 	    return res.redirect('/dashboard');
 	}
 
-
-	console.log('friends: ');
-	console.log(req.session.eventplan.friends);
-	for (email in req.session.eventplan.friends) {
+	for (email in req.session.currentPlan.friends) {
 	    //only send	1 email if friendEmailId param
 	    //TODO: prevent spammers? only send 3 emails per friend
 	    if (req.param('friendEmailId')) {
@@ -32,23 +29,23 @@ module.exports = function(app) {
 	    
 	    //generate a token to identify this friend when they RSVP
 	    var friendToken = "";
-	    if (typeof req.session.eventplan.friends[email].token == "undefined") {
+	    if (typeof req.session.currentPlan.friends[email].token == "undefined") {
 		hash = crypto.createHash('md5');
 		var friendTimestamp = new Date().getTime().toString();
 		hash.update(req.param('email')+friendTimestamp);
 		friendToken = hash.digest(encoding='base64');
-		req.session.eventplan.friends[email].token = {timestamp: friendTimestamp,token: friendToken};
+		req.session.currentPlan.friends[email].token = {timestamp: friendTimestamp,token: friendToken};
 	    } else {
-		friendToken = req.session.eventplan.friends[email].token.token;
+		friendToken = req.session.currentPlan.friends[email].token.token;
 	    }
 
 	    var name = 'A friend';
 	    if ((typeof req.session.customer.first_name != "undefined") && (typeof req.session.customer.last_name != "undefined")) {
 		name = req.session.customer.first_name+' '+req.session.customer.last_name;
 	    }
-	    var subj = name+' has invited you to go to '+req.session.eventplan.event.Name;
+	    var subj = name+' has invited you to go to '+req.session.currentPlan.event.Name;
 	    
-	    var rsvpLink = "http://"+app.settings.host+".wembli.com/plan/view/friend/collectVote/"+encodeURIComponent(req.session.eventplan.config.guid)+"/"+encodeURIComponent(friendToken);
+	    var rsvpLink = "http://"+app.settings.host+".wembli.com/plan/view/"+encodeURIComponent(req.session.currentPlan.config.guid)+"/"+encodeURIComponent(friendToken)+"/collectVote";
 	    res.render('email-templates/collect-votes', {
 		layout:'email-templates/layout',
 		voteByDate:req.param('voteBy'),
@@ -62,7 +59,7 @@ module.exports = function(app) {
 			'X-SMTPAPI': {
 			    category : "collectVote",
 			    unique_args:{
-				guid:req.session.eventplan.config.guid,
+				guid:req.session.currentPlan.config.guid,
 				organizer:req.session.customer.email
 			    }
 			}
@@ -83,83 +80,17 @@ module.exports = function(app) {
 		});
 	    
 		//flag the eventplan so we know we attempted to send the email
-		req.session.eventplan.friends[email].collectVote = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
+		req.session.currentPlan.friends[email].collectVote = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
 
 	    });
 	}
-	console.log('eventplan friends after sendgrid: ');
-	console.log(req.session.eventplan.friends);
-	req.session.eventplan.config.voteBy = req.param('voteBy');
-	req.session.eventplan.completed.summary = true;
-	req.session.customer.eventplan = [req.session.eventplan];
-	req.session.customer.markModified('eventplan');
-	req.session.customer.save(function(err) {
-	    console.log('saved customer');
-	});
+	req.session.currentPlan.config.voteBy = req.param('voteBy');
+	req.session.currentPlan.completed.summary = true;
+	req.session.customer.saveCurrentPlan(req.session.currentPlan);
 
 	//redirect to organizer view with flash message
 	req.flash('plan-msg','Successfully sent email to invited friends.');
-	res.redirect('/plan/view/organizer');
+	res.redirect('/plan/view');
     });
 
-    app.get("/friends/:guid",function(req,res) {
-	if (!req.session.loggedIn) {	
-	    return res.redirect('/login?redirectUrl='+req.url);
-	}
-
-	//get the event for this guid
-	for (idx in req.session.customer.eventplan) {
-	    var plan = req.session.customer.eventplan[idx];
-	    if (plan.config.guid == req.param('guid')) {
-		//hack for now - fix this
-		req.session.eventplan = plan;
-		break;
-	    }
-	}
-
-	if (typeof req.session.eventplan == "undefined") {
-	    req.flash('error','Unable to retrieve event. Please start a new plan.');
-	    return res.redirect('/dashboard');
-	}
-
-	res.render('friends', {
-	    title: 'wembli.com - friends.',
-	    page:'friends',
-	    globals:globalViewVars,
-	    cssIncludes: [],
-	    jsIncludes: ['/js/friends.js']
-	});
-    });
-
-    app.get("/friends",function(req,res) {
-	if (typeof req.session.eventplan.event == "undefined") {
-	    //redirect to the home page and flash a message
-	    req.flash('error','Your session has expired. If you sign up for Wembli, your work can be automatically saved.');
-	    return res.redirect('/');
-	}
-
-	if (req.param("completed")) {
-	    console.log(req.param("completed"));
-	    req.session.eventplan.completed[req.param("completed")] = true;
-	}
-
-	//if they are logged in save the plan
-	if (req.session.loggedIn) {
-	    req.session.customer.eventplan = [req.session.eventplan];
-	    req.session.customer.markModified('eventplan');
-	    req.session.customer.save(function(err) {
-		console.log('saved customer');
-	    });
-	}
-
-	res.render('friends', {
-	    event:req.session.eventplan.event,
-	    title: 'wembli.com - friends.',
-	    page:'friends',
-	    globals:globalViewVars,
-	    cssIncludes: [],
-	    jsIncludes: ['/js/friends.js']
-	});
-
-    });
 }

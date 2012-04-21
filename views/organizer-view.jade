@@ -1,5 +1,5 @@
-- if (typeof session.eventplan.config.voteBy != "undefined")
-	- var voteMsg = "Voting ends "+session.eventplan.config.voteBy;
+- if (typeof session.currentPlan.config.voteBy != "undefined")
+	- var voteMsg = "Voting ends "+session.currentPlan.config.voteBy;
 include includes/modals/vote-by
 #planViewOrganizerContainer.planViewContainer.row
 	include widgets/organizer-sidebar
@@ -9,7 +9,7 @@ include includes/modals/vote-by
 			#mainAlert.alert.alert-success!= msg;
 				a.close(data-dismiss="alert") x
 		#center.span5
-			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.eventplan.event});
+			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 			form#votingContainer.module()
 				h3 Voting
 					a#votingIcon(href="#")
@@ -21,12 +21,12 @@ include includes/modals/vote-by
 						.header.clearfix
 							h4.pull-left Ticket Options:
 							.ticketActions.pull-right
-								a(href="/tickets") Modify Ticket Options
+								a(href="/plan/tickets") Modify Ticket Options
 						- var idx = 0
-						- for (ticketId in session.eventplan.tickets)
+						- for (ticketId in session.currentPlan.tickets)
 							- idx++;
 							- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-							- var ticket = session.eventplan.tickets[ticketId]
+							- var ticket = session.currentPlan.tickets[ticketId]
 							- var qtyStr = ticket.TicketQuantity
 							- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
 							- var votePct = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
@@ -34,8 +34,8 @@ include includes/modals/vote-by
 							- var voteCntStr = voteCnt + ' Vote'
 							- voteCntStr += (ticket.voteCnt == 1) ? '' : 's';
 							- var friendCnt = 1
-							- if (typeof session.eventplan.friends != "undefined")
-								- for friend in session.eventplan.friends
+							- if (typeof session.currentPlan.friends != "undefined")
+								- for friend in session.currentPlan.friends
 									- if (typeof friend.decision != "undefined" && !friend.decision)
 										- continue;
 									- else
@@ -105,10 +105,10 @@ include includes/modals/vote-by
 				.body
 					.friendContainer!= partial('includes/plan-view/friend',{id:'organizer','rowClass':'evenRow','labelType':'label-success','labelIcon':'icon-ok-sign','labelCaption':'attending','firstName':session.customer.first_name,'lastName':session.customer.last_name})
 					- var idx = 0;
-					- for (email in session.eventplan.friends)
+					- for (email in session.currentPlan.friends)
 						- idx++;
 						- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-						- var friend = session.eventplan.friends[email]; 
+						- var friend = session.currentPlan.friends[email]; 
 						- labelType = 'label-warning';
 						- labelCaption = 'undecided';
 						- labelIcon = 'icon-question-sign';
@@ -176,4 +176,4 @@ include includes/modals/vote-by
 										i.icon-repeat
 										span &nbsp;Send Invite
 				#inviteMoreContainer
-					a#inviteMoreFriends.btn.btn-success(href="/friends") Add More Friends
+					a#inviteMoreFriends.btn.btn-success(href="/plan/friends") Add More Friends

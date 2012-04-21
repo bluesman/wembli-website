@@ -15,25 +15,26 @@ module.exports = function(app) {
 
 	var wembliServices = globalViewVars.wembliServices;
 
-	//for now, everytime they load this page, reset the req.session.eventplan
-	req.session.eventplan = {};
-	req.session.eventplan.completed = {init:true};
-	req.session.eventplan.config = {};
+	//for now, everytime they load this page, reset the req.session.currentPlan
+	req.session.currentPlan = {};
+	req.session.currentPlan.completed = {init:true};
+	req.session.currentPlan.config = {};
 	for (idx in wembliServices) {
 	    var service = wembliServices[idx];
 	    if (typeof req.body[service] == "undefined") {
-		req.session.eventplan.config[service] = false;
-		if (typeof req.session.eventplan[service] != "undefined") {
-		    delete req.session.eventplan[service];
+		req.session.currentPlan.config[service] = false;
+		if (typeof req.session.currentPlan[service] != "undefined") {
+		    delete req.session.currentPlan[service];
 		}
 	    } else {
-		req.session.eventplan.config[service] = true;
-		req.session.eventplan[service] = {};
+		req.session.currentPlan.config[service] = true;
+		req.session.currentPlan[service] = {};
 	    }
 	}
-	req.session.eventplan.config['summary'] = true; //every plan has a summary
-	req.session.eventplan.config['payment'] = (typeof req.body['payment'] == "undefined") ? 'group' : req.body['payment'];
-	req.session.eventplan.config['guid']    = uuid.v1();
+	req.session.currentPlan.config['summary'] = true; //every plan has a summary
+	req.session.currentPlan.config['payment'] = (typeof req.body['payment'] == "undefined") ? 'group' : req.body['payment'];
+	req.session.currentPlan.config['guid']    = uuid.v1();
+	req.session.currentPlan.config['isOrganizer'] = true;
 
 	//this function determines which step to go to and goes there
 	var dispatch = function(err,args) {
@@ -50,7 +51,7 @@ module.exports = function(app) {
 		}
 	    }
 	    console.log('redirecting to: '+goto);
-	    res.redirect('/'+goto);
+	    res.redirect('/plan/'+goto);
 	};
 
 	//get the event for this eventId
@@ -62,23 +63,28 @@ module.exports = function(app) {
 	    }
 
 	    //add event to the event plan
-	    req.session.eventplan.event = event.Event;
+	    req.session.currentPlan.event = event.Event;
 	    
 	    //get the venue
 	    ticketNetwork.GetVenue({VenueID:event.Event.VenueID},function(err,venue) {
 		console.log(venue);
-		req.session.eventplan.event.Venue = venue.Venue;
+		req.session.currentPlan.event.Venue = venue.Venue;
 		//now continue to the right page
-		dispatch(null,{eventplan:req.session.eventplan});
+		dispatch(null,{eventplan:req.session.currentPlan});
 	    });
 	});
     });
 
+
+
+
+
+/*
     app.all('/plan/view', function(req,res) {
 	if (req.session.loggedIn) {	
-	    return res.redirect('/plan/view/organizer/'+req.session.eventplan.config.guid);
+	    return res.redirect('/plan/view/organizer/'+req.session.currentPlan.config.guid);
 	} else {
-	    return res.redirect('/plan/view/public/'+req.session.eventplan.config.guid);
+	    return res.redirect('/plan/view/public/'+req.session.currentPlan.config.guid);
 	}
     });
 
@@ -86,7 +92,7 @@ module.exports = function(app) {
 	if (!req.session.loggedIn) {	
 	    return res.redirect('/login?redirectUrl='+req.url);
 	} else {
-	    return res.redirect('/plan/view/organizer/'+req.session.eventplan.config.guid);
+	    return res.redirect('/plan/view/organizer/'+req.session.currentPlan.config.guid);
 	}
     });
 
@@ -99,12 +105,12 @@ module.exports = function(app) {
 	    var plan = req.session.customer.eventplan[idx];
 	    if (plan.config.guid == req.param('guid')) {
 		//hack for now - fix this
-		req.session.eventplan = plan;
+		req.session.currentPlan = plan;
 		break;
 	    }
 	}
 
-	if (typeof req.session.eventplan == "undefined") {
+	if (typeof req.session.currentPlan == "undefined") {
 	    req.flash('error','Unable to retrieve event. Please start a new plan.');
 	    return res.redirect('/dashboard');
 	}
@@ -121,14 +127,14 @@ module.exports = function(app) {
 
     app.all('/plan/view/public/:guid',function(req,res) {
 	res.render('public-view', {
-	    event:req.session.eventplan.event,
+	    event:req.session.currentPlan.event,
 	    title: 'wembli.com - View Event Plan.',
 	    page:'friends',
 	    cssIncludes: [],
             jsIncludes: []
 	});
     });
-
+*/
     app.all('/plan/view/friend/:action/:guid/:token',function(req,res) {
 	//TODO: validate the action
 	
@@ -202,8 +208,8 @@ module.exports = function(app) {
     });
 
     app.all('/summary',function(req,res) {
-	var wembliServices = globalViewVars.wembliServices;
-	if (typeof req.session.eventplan.event =="undefined") {
+
+	if (typeof req.session.currentPlan.event =="undefined") {
 	    //they tried to load summary without an event
 	    req.flash('error','Your session has expired. If you sign up for Wembli, your work can be automatically saved.');
 	    return res.redirect('/');
@@ -211,12 +217,12 @@ module.exports = function(app) {
 
 	if (req.param("completed")) {
 	    console.log(req.param("completed"));
-	    req.session.eventplan.completed[req.param("completed")] = true;
+	    req.session.currentPlan.completed[req.param("completed")] = true;
 	}
 
 	//if they are logged in save the plan
 	if (req.session.loggedIn) {
-	    req.session.customer.eventplan = [req.session.eventplan];
+	    req.session.customer.eventplan = [req.session.currentPlan];
 	    req.session.customer.markModified('eventplan');
 	    req.session.customer.save(function(err) {
 		console.log('saved customer');
@@ -225,7 +231,7 @@ module.exports = function(app) {
 
 
 	res.render('summary', {
-	    event:req.session.eventplan.event,
+	    event:req.session.currentPlan.event,
 	    title: 'wembli.com - Plan Summary.',
 	    page:'summary',
 	    cssIncludes: [],
@@ -245,19 +251,19 @@ module.exports = function(app) {
 	    var plan = req.session.customer.eventplan[idx];
 	    if (plan.config.guid == req.param('guid')) {
 		//hack for now - fix this
-		req.session.eventplan = plan;
+		req.session.currentPlan = plan;
 		break;
 	    }
 	}
 
-	if (typeof req.session.eventplan == "undefined") {
+	if (typeof req.session.currentPlan == "undefined") {
 	    req.flash('error','Unable to retrieve event. Please start a new plan.');
 	    return res.redirect('/dashboard');
 	}
 
 
 	res.render('summary', {
-	    event:req.session.eventplan.event,
+	    event:req.session.currentPlan.event,
 	    title: 'wembli.com - Plan Summary.',
 	    page:'summary',
 	    cssIncludes: [],
@@ -269,9 +275,7 @@ module.exports = function(app) {
 
     app.all('/event/save',function(req,res) {
 	//saving plan
-	req.session.customer.eventplan = [req.session.eventplan];
-	req.session.customer.markModified('eventplan');
-	req.session.customer.save(function(err) {
+	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
 	    console.log('saved customer');
 	    var redirectUrl = '/dashboard';
 	    if (typeof req.param('redirectUrl') != "undefined") {

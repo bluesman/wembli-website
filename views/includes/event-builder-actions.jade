@@ -5,9 +5,9 @@
 - var services = tmp.concat('summary');
 - each service in services
 	- idx++;
-	- if (session.eventplan.config[service])
-		- if (stop && (typeof session.eventplan.completed[service] == "undefined"))
-			- next = service;
+	- if (session.currentPlan.config[service])
+		- if (stop && (typeof session.currentPlan.completed[service] == "undefined"))
+			- next = 'plan/'+service;
 			- break;
 		- if (typeof page != "undefined" && (service == page))
 			- stop = true;

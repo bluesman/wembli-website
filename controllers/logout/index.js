@@ -2,6 +2,8 @@ module.exports = function(app) {
     app.all('/logout/?', function(req, res) {
 	req.session.loggedIn = false;
 	req.session.fbAuth   = false;
+	delete req.session.currentPlan;
+	delete req.session.customer;
 	//var fbCookie = 'fbs_'+fbAppId;
 	//res.clearCookie(fbCookie);
 	var errors = {};

@@ -17,14 +17,9 @@ var _respond = function(error,data,req,me) {
 	me(error,{success:0});
     } else {
 	//TODO: save data for customer if logged in
-	if (req.session.loggedIn) {
-	    req.session.customer.eventplan = [data];
-	    req.session.customer.markModified('eventplan');
-	    req.session.customer.save(function(err) {
-
-	    });
+	if (req.session.loggedIn && req.session.currentPlan.isOrganizer) {
+	    req.session.customer.saveCurrentPlan(data);
 	}
-
 
 	me(null,{success:1,
 		 eventplan:data});
@@ -42,38 +37,30 @@ var _initEventplan = function(req,callback) {
 		//console.log('error finding customer for session!: '+err);
 		delete req.session.customer;
 		req.session.loggedIn = false;
-		return callback('Authentication error');		
+		return callback('Authentication error');
 	    }
+
 	    req.session.customer = customer;
 	    //make sure we have an event plan
-	    if (typeof req.session.eventplan == "undefined") {
+	    if (typeof req.session.currentPlan == "undefined") {
 		return callback('no eventplan available');
 	    }
-	    var e = (typeof req.session.eventplan != "undefined") ? req.session.eventplan : {};
+	    var e = (typeof req.session.currentPlan != "undefined") ? req.session.currentPlan : {};
 	    return callback(null,e);
 	});
     } else {
 	//make sure we have an event plan
-	if (typeof req.session.eventplan == "undefined") {
+	if (typeof req.session.currentPlan == "undefined") {
 	    return callback('no eventplan available');
 	}
-	var e = (typeof req.session.eventplan != "undefined") ? req.session.eventplan : {};
+	var e = (typeof req.session.currentPlan != "undefined") ? req.session.currentPlan : {};
 	return callback(null,e);
     }
 };
 
 /* req and res can always be the last 2 args */
 exports.eventplan = {
-    getFriendEventPlan: function(req,res) {
-	var me = this;
-	if ((typeof req.session.friend == "undefined") || (typeof req.session.friend.eventplan == "undefined")) {
-	    return _response('no eventplan available');
-	}
-	
-	return _respond(null,req.session.friend.eventplan,req,me);
-    },
-
-    getEventPlan: function(req,res) {
+    getCurrentPlan: function(req,res) {
 	var me = this;
 	_initEventplan(req,function(err,e) {
 	    if (err) { return _respond(err,null,null,me); }
@@ -194,20 +181,28 @@ exports.eventplan = {
 	}
 
 	//signify that this person will be attending by setting decision in the eventplan
-	var email = req.session.friend.email;
-	//fetch the updated event
-	var query = Customer.findOne({});
-	query.where('eventplan').elemMatch(function (elem) {
-	    elem.where('config.guid', req.session.friend.eventplan.config.guid)
-	});
-	query.exec(function(err,organizer) {
-	    organizer.eventplan[0].friends[email].decision = (rsvp == "YES") ? true : false;
+	var handleOrganizer = function(err,organizer) {
+	    var email = req.session.friend.email;
+	    //get the plan that matches and save it
+	    for (var idx in organizer.eventplan) {
+		if (organizer.eventplan[idx].config.guid == req.session.currentPlan.config.guid) {
+		    organizer.eventplan[idx].friends[email].decision = (rsvp == "YES") ? true : false;
+		    req.session.currentPlan = organizer.eventplan[idx];
+		    req.session.organizer = organizer;
+		    break;
+		}
+	    }
 	    organizer.markModified('eventplan');
 	    organizer.save(function(err) {
-		req.session.friend.eventplan = organizer.eventplan[0];
-		req.session.organizer = organizer;
 		return _respond(err,organizer,req,me);
 	    });
-	});
+
+	};
+
+	//fetch the updated event
+	console.log('currentplan: ');
+	console.log(req.session.currentPlan);
+	Customer.findPlanByGuid(req.session.currentPlan.config.guid,handleOrganizer);
+
     }
 }
