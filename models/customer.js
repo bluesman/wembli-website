@@ -61,7 +61,46 @@ this.Model = function(mongoose) {
 	next();
     });
 
-    /*
+    Customer.methods.saveCurrentPlan = function(plan,callback) {
+	var plans = [];
+	for (var idx in this.eventplan) {
+	    //housekeeping
+	    if ((typeof this.eventplan[idx].config == "undefined") || (typeof this.eventplan[idx].config.guid == "undefined")) {
+		continue;
+	    }
+
+	    if (this.eventplan[idx].config.guid == plan.config.guid) {
+		plans.push(plan);
+	    } else {
+		plans.push(this.eventplan);
+	    }
+	}
+
+	//no plans, put this one in
+	if (typeof plans[0] == "undefined") {
+	    plans.push(plan);
+	}
+
+	this.eventplan = plans;
+	this.markModified('eventplan');
+	this.save(function(err) {
+	    console.log('saved customer eventplan');
+	    if (typeof callback != "undefined") {
+		callback(err);
+	    }
+	});
+    };
+
+    Customer.statics.findPlanByGuid = function(guid,callback) {
+	//get plan by guid and set it in the session
+	var query = this.findOne({});
+	query.where('eventplan').elemMatch(function (elem) {
+	    elem.where('config.guid', guid)
+	});
+	query.exec(callback);
+    };
+
+
     Customer.full_name = function(){ 
 	return this.first_name + ' ' + this.last_name 
     };
@@ -71,7 +110,6 @@ this.Model = function(mongoose) {
     };
 
 
-    */
     //not sure if mongoose does connection pooling - i hope so :)
     //var db = mongoose.connect(mongoose.dbSetting);
     mongoose.model('customer',Customer);
