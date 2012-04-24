@@ -8,8 +8,8 @@ include includes/modals/vote-by
 		- if (typeof msg != "undefined")
 			#mainAlert.alert.alert-success!= msg;
 				a.close(data-dismiss="alert") x
+		#eventDetails.span5!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 		#center.span5
-			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 			form#votingContainer.module()
 				h3 Voting
 					a#votingIcon(href="#")

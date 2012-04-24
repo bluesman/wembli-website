@@ -28,7 +28,11 @@
 		- if (typeof session.ipinfo.city != "undefined")
 			- heading += ' in '+session.ipinfo.city;
 		.event-list.span6.offset1!= partial("widgets/event-list",{heading: heading,events:events});
-			a#seeMore(href="/events/search/"+session.ipinfo.city+"/"+Date.today().format("mm-dd-yy"))
+			a#moreEvents(href="/events/search/"+session.ipinfo.city+"/"+Date.today().format("mm-dd-yy"))
+				input(type="hidden",id="moreEventsZipCode",value="#{session.ipinfo.postal_code}")
+				- var d = new Date(Date.parse(events[events.length-1].Date))
+				- var lastDate = d.format("mm-dd-yy")
+				input(type="hidden",id="moreEventsBeginDate",value="#{lastDate}")
 				span see more events in 
 				span.lowercase!= session.ipinfo.city
 //		a.mobileAd.offset8(href="#")

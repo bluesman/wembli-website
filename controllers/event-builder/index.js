@@ -12,6 +12,7 @@ module.exports = function(app) {
 	console.log('called event builder');
 	var eventId     = req.param('eventId');
 	var eventName   = req.param('eventName');
+	var services = {'friends':true,'tickets':true};
 
 	var wembliServices = globalViewVars.wembliServices;
 
@@ -21,7 +22,7 @@ module.exports = function(app) {
 	req.session.currentPlan.config = {};
 	for (idx in wembliServices) {
 	    var service = wembliServices[idx];
-	    if (typeof req.body[service] == "undefined") {
+	    if (typeof services[service] == "undefined") {
 		req.session.currentPlan.config[service] = false;
 		if (typeof req.session.currentPlan[service] != "undefined") {
 		    delete req.session.currentPlan[service];

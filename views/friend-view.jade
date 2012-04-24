@@ -11,8 +11,8 @@
 				a#rsvpYes(href="#").btn.btn-success.btn-large Yes
 				a#rsvpNo(href="#").btn.btn-warning.btn-large No
 	#mainContainer.row
+		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 		#left.span8
-			#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 			#votingContainer.module
 				h3 Voting
 					a#votingIcon(href="#")

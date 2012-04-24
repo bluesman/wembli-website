@@ -19,14 +19,12 @@ module.exports = function(app) {
 					events = results.Event.slice(0,5);
 				    }
 				    res.render('index.jade', {
-					session: req.session,
 					layoutContainer: true,
 					events:events,
 					cssIncludes: [],
 					jsIncludes: [],
 					title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 					page:'index',
-					globals:globalViewVars
 				    });
 				    
 				});

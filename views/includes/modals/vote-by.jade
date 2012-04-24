@@ -1,7 +1,7 @@
 #voteByModal.modal.hide.fade
 	.modal-header
 		a.close(data-dismiss="modal") x
-		h3 Choose a cutoff date for voting:
+		h3 Ask Your Friends To Respond By Date:
 	.modal-body
 		form#voteByForm.form-horizontal.well(method="post",action="/friends/invite",enctype="application/x-www-form-urlencoded")
 			input#friendEmailId(type="hidden",name="friendEmailId",value="")

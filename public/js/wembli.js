@@ -2,76 +2,85 @@ doc = document;
 
 // Global Wembli Object
 $w = {
-	// Properties
-	defaultText:{},
-	// Methods
-	initDefaultText:function(){
-		$('.default').each(function(){
-			$w.defaultText[this.name] = this.value;
-		});
+    // Properties
+    defaultText:{},
+    // Methods
+    initDefaultText:function(){
+	$('.default').each(function(){
+	    $w.defaultText[this.name] = this.value;
+	});
+	
+	$('.example').on('focus', function(){
+	    if($(this).hasClass('default')){
+		$(this).removeClass('default').val('');
+	    }
+	});
+	
+	$('.example').on('focusout', function(){
+	    if(this.value == ''){
+		$(this).addClass('default').val($w.defaultText[this.name]);
+	    }
+	}); 
+    },
+    initStarRatings:function(){
+	// get and parse the rating
+	var rating;
+	var nums;
+	var whole;
+	var frac;
+	
+	// I'll need this
+	var span;
+	var halfUsed;
+	var me;	
+	
+	$('.stars').each(function(){
+	    // get and parse the rating
+	    rating 	= $(this).html();
+	    nums 	= rating.split('.');
+	    whole	= parseInt(nums[0]);
+	    frac	= parseInt(nums[1]);
+	    
+	    // save these now
+	    halfUsed = false;
+	    me = this;
+	    
+	    //this.html('');
+	    // build the stars
+	    for(var i = 1; i < 6; i++){
+		span = doc.createElement('span');
 		
-		$('.example').on('focus', function(){
-			if($(this).hasClass('default')){
-				$(this).removeClass('default').val('');
-			}
-		});
+		if(i <= whole){
+		    span.className = 'whole-star';
+		} else if(frac > 2 && !halfUsed){
+		    span.className = 'half-star';
+		    halfUsed = true;
+		} else {
+		    span.className = 'empty-star';
+		}
 		
-		$('.example').on('focusout', function(){
-			if(this.value == ''){
-				$(this).addClass('default').val($w.defaultText[this.name]);
-			}
-		}); 
-	},
-	initStarRatings:function(){
-		// get and parse the rating
-		var rating;
-		var nums;
-		var whole;
-		var frac;
-		
-		// I'll need this
-		var span;
-		var halfUsed;
-		var me;	
-			
-		$('.stars').each(function(){
-			// get and parse the rating
-			rating 	= $(this).html();
-			nums 	= rating.split('.');
-			whole	= parseInt(nums[0]);
-			frac	= parseInt(nums[1]);
-			
-			// save these now
-			halfUsed = false;
-			me = this;
-			
-			//this.html('');
-			// build the stars
-			for(var i = 1; i < 6; i++){
-				span = doc.createElement('span');
-				
-				if(i <= whole){
-					span.className = 'whole-star';
-				} else if(frac > 2 && !halfUsed){
-					span.className = 'half-star';
-					halfUsed = true;
-				} else {
-					span.className = 'empty-star';
-				}
-				
-				$(span).appendTo(me);
-			}
-		});
-	},
-	loadScripts:function(){
-	},
-	init:function(){
-		$('input.date').datepicker({minDate:0});
-		$('input.time').timepicker({ampm:true, stepHour:1, stepMinute:5});
-		$w.initDefaultText();
-		$w.initStarRatings();
-		//$w.loadScripts();
-	}
+		$(span).appendTo(me);
+	    }
+	});
+    },
+    loadScripts:function(){
+    },
+    loadPlanOptions:function() {
+	$('#wembliOptions .planOption').each(function(idx,el) {
+	    $(el).click(function(e) {
+		e.preventDefault();
+		$(this).children('input').attr('checked',true);		
+	    });
+	});
+    },
+    init:function(){
+	$('input.date').datepicker({minDate:0});
+	$('input.time').timepicker({ampm:true, stepHour:1, stepMinute:5});
+	$w.initDefaultText();
+	$w.initStarRatings();
+	$w.loadPlanOptions();
+	//$w.loadScripts();
+    }
 }
 
 // Kick it on load
@@ -138,11 +147,6 @@ $(document).ready(function(){
 $w.searchBox = function(){
 
     function init() {
-	$('#q').click(function(e) {
-	    if ($('#q').val() == "Enter an event, team, performer, city, venue") {
-		$('#q').val('');
-	    }
-	});
 
 	$('#go').click(function(e) {
 	    e.preventDefault();
@@ -168,6 +172,59 @@ $w.searchBox = function(){
 
 $(document).ready(function(){
 	$w.searchBox();
+});
+
+
+$w.moreEvents = function(){
+
+    function init() {
+
+	$('#moreEvents').click(function(e) {
+	    e.preventDefault();
+	    var zip = $('#moreEventsZipCode').val();
+	    var beginDate = $('#moreEventsBeginDate').val();
+	    console.log('begin: '+beginDate);
+	    wembli.event.get({beginDate:beginDate,nearZip:zip},function(error,events) {
+		if (events.length > 0) {
+		    for (var idx in events) {
+			var template = $('#belowFold ul li:first').clone(true,true);
+			var event = events[idx];
+			console.log(event);
+			var href = '/event/'+event.ID+'/'+event.Name+'#eventBuilder';
+			console.log(href);
+			template.find('.info .choose-event').attr('href',href);
+			template.find('.info .choose-event').html(event.Name);
+			template.find('.info .venue').html(event.Venue);
+			var location = event.City+', '+event.State;
+			template.find('.info .location').html(location);
+			template.find('.cta .choose-event').attr('href',href);
+			var date = new Date(Date.parse(event.Date));
+			var day  = date.format("ddd");
+			var eventDate = date.format("mmm d");
+			var time = date.format("h:MM TT");
+			template.find('.event-date-box .day').html(day);
+			template.find('.event-date-box .event-date').html(eventDate);
+			template.find('.event-date-box .time').html(time);
+			$('#belowFold ul').append(template);
+		    }
+		}
+		
+
+
+	    });
+	});
+	
+
+    }
+
+    return function() {
+	init();
+    }
+
+}();
+
+$(document).ready(function(){
+	$w.moreEvents();
 });
 
 

@@ -172,6 +172,31 @@
 	//search
     };
 
+    Wembli.prototype.event = {
+
+	get: function(args,callback) {
+	    console.log(args);
+	    var me = this;
+	    $.ajax({
+		url: "/",
+		dataType:"json",
+		global: false,
+		type: "POST",
+		contentType: "application/json",
+		data: JSON.stringify({
+		    "jsonrpc":"2.0",
+		    "method":"event.get",
+		    "params":{args:args},
+		    "id":1
+		}),
+		success: function(data) {
+		    callback(null,data.result.event);
+		}
+	    });
+	},
+
+    };
+
     Wembli.prototype.category = {
 	getAll: function(args,callback) {
 

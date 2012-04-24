@@ -421,6 +421,28 @@ footer {
   margin-bottom: 2px;
   text-transform: capitalize;
 }
+#wembliOptions hr {
+  margin: 0;
+}
+#wembliOptions a.planOption {
+  display: block;
+  padding: 20px 0;
+  min-height: 20px;
+  font-size: 14px;
+}
+#wembliOptions a.planOption input {
+  float: left;
+  margin-left: 20px;
+}
+#wembliOptions a.planOption .info {
+  margin-left: 40px;
+}
+#wembliOptions .comingSoon {
+  padding: 20px 0;
+}
+a.planOption:hover {
+  background-color: #ffdd73;
+}
 .ticket-list {
   background-color: #f2f2f2;
   padding: 15px;
@@ -818,7 +840,7 @@ footer {
 .planViewContainer #eventDetails {
   *zoom: 1;
   height: 70px;
-  margin: 0 0 10px 0;
+  margin: 10px 20px;
 }
 .planViewContainer #eventDetails:before, .planViewContainer #eventDetails:after {
   display: table;

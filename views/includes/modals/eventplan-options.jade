@@ -1,36 +1,24 @@
 #eventplanOptionsModal.modal.hide.fade
 	.modal-header
 		a.close(data-dismiss="modal") x
-		h3 Choose Wembli Services
+		h3 Start Planning!
 	.modal-body
-		.alert.alert-info Wembli provides many services to help you plan your event.  Choose which services you would like to use:
+		.alert.alert-info Wembli makes it easy to plan the perfect outing.
 		form#wembliOptions.well.form-horizontal(method="POST",action="#")
 			input(type="hidden",name="setConfig",value="1")
-			fieldset
-				.control-group
-					label.control-label(for="optionsCheckboxList") Wembli Services:
-					.controls
-						label.control-label.checkbox(for="friends") Invite Friends
-							input#friends(type="checkbox",name="friends",checked="checked")
-						label.control-label.checkbox(for="tickets") Find Tickets
-							input#tickets(type="checkbox",name="tickets",checked="checked")
-						label.control-label.checkbox(for="parking") Reserve Parking (COMING SOON!)
-							input#parking(type="checkbox",name="parking",disabled="disabled",readonly="readonly")
-						label.control-label.checkbox(for="restaurants") Restaurant Deals and Reservations (COMING SOON!)
-							input#restaurants(type="checkbox",name="restaurants",disabled="disabled",readonly="readonly")
-						label.control-label.checkbox(for="hotels") Book a Hotel (COMING SOON!)
-							input#hotels(type="checkbox",name="hotels",disabled="disabled",readonly="readonly")
-				.control-group
-					label.control-label Payment Options:
-					.controls
-						label.radio
-							input#split(type="radio",name="payment",value="group",checked="checked")
-							span Split With Friends (you must have a paypal account)
-						label.radio
-							input#split(type="radio",name="payment",value="self")
-							span I'm Paying For It
+			a.planOption
+				input(type="radio",value="group",name="payment",checked="checked")
+				.info I'm coordinating this outing with friends and we're splitting the bill.
+			hr
+			a.planOption
+				input(type="radio",checked="",value="self",name="payment")
+				.info I'm planning this outing and footing the bill.
+			hr
+			.comingSoon
+				strong COMING SOON:
+				br
+				span Online Parking and Hotel Reservations, Restaurant Deals, and More...	
 			.form-actions
 				button.btn.btn-success.btn-large(type="submit") Continue
 				button.more-info.btn.btn-info.btn-large(href="/more-info") More Info
 
-	
