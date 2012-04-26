@@ -42,7 +42,7 @@
   margin-top: 7px;
 }
 .module .oddRow {
-  background-color: #FCFCFC;
+  background-color: #f2f2f2;
 }
 @font-face {
   font-family: 'SegoeScriptRegular';
@@ -834,6 +834,41 @@ a.planOption:hover {
 #loginModal #loginForm #forgotPasswordLink {
   margin-right: 20px;
 }
+#collectPaymentModal #finalTicketOption {
+  *zoom: 1;
+  position: relative;
+  padding: 10px 0;
+  min-height: 70px;
+}
+#collectPaymentModal #finalTicketOption:before, #collectPaymentModal #finalTicketOption:after {
+  display: table;
+  content: "";
+}
+#collectPaymentModal #finalTicketOption:after {
+  clear: both;
+}
+#collectPaymentModal #finalTicketOption .info {
+  font-size: 12px;
+  margin-left: 90px;
+  float: left;
+  width: 200px;
+  min-height: 60px;
+}
+#collectPaymentModal #finalTicketOption .progress {
+  margin-bottom: 1px;
+}
+#collectPaymentModal #finalTicketOption .ticket-price-box {
+  left: 20px;
+  margin: 0px;
+}
+#collectPaymentModal #collectPaymentActions {
+  width: 475px;
+  margin: auto;
+  text-align: center;
+}
+#collectPaymentModal #collectPaymentActions button {
+  margin: 10px;
+}
 .planViewContainer {
   margin: 10px 0;
 }
@@ -920,6 +955,7 @@ a.planOption:hover {
   margin-top: 20px;
 }
 .planViewContainer #votingContainer #ticketsContainer .ticketOption .info {
+  font-size: 12px;
   margin-left: 90px;
   float: left;
   width: 200px;
@@ -1285,6 +1321,11 @@ a.planOption:hover {
   z-index: 2;
   height: 570px;
   overflow: scroll;
+}
+.ticket-list .qty select {
+  font-size: 11px;
+  height: 25px;
+  width: 45px;
 }
 #fvmap, #staticMap {
   margin-right: 420px;

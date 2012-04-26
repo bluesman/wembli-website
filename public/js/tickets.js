@@ -10,8 +10,7 @@
 	    if (typeof $w.eventplan.data != "undefined" &&
 		typeof $w.eventplan.data.tickets != "undefined" &&
 		typeof $w.eventplan.data.tickets[ticketId] != "undefined") {
-
-		$w.eventplan.toggleButton('remove','#'+li.id+' .cta > a');
+		$w.eventplan.toggleButton({action:'success',text:'Remove'},$('#'+li.id+' .cta > a'));
 		//update the summary
 		$w.eventplan.updateSummary();
 	    }

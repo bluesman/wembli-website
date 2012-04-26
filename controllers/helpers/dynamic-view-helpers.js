@@ -22,4 +22,11 @@ module.exports = {
 	return req.params;
     },
 
+    friendsCount: function(req,res) {
+	if (typeof req.session.currentPlan.config != "undefined") {
+	    return Object.keys(req.session.currentPlan.friends).length + 1;
+	}
+	return 0;
+    }
+
 };

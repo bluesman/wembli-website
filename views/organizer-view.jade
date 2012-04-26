@@ -1,6 +1,7 @@
 - if (typeof session.currentPlan.config.voteBy != "undefined")
 	- var voteMsg = "Voting ends "+session.currentPlan.config.voteBy;
 include includes/modals/vote-by
+include includes/modals/collect-payment
 #planViewOrganizerContainer.planViewContainer.row
 	include widgets/organizer-sidebar
 	#mainContainer
@@ -10,7 +11,7 @@ include includes/modals/vote-by
 				a.close(data-dismiss="alert") x
 		#eventDetails.span5!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 		#center.span5
-			form#votingContainer.module()
+			#votingContainer.module()
 				h3 Voting
 					a#votingIcon(href="#")
 						i.icon-info-sign.pull-right.icon-white				
@@ -27,8 +28,6 @@ include includes/modals/vote-by
 							- idx++;
 							- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
 							- var ticket = session.currentPlan.tickets[ticketId]
-							- var qtyStr = ticket.TicketQuantity
-							- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
 							- var votePct = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
 							- var voteCnt = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
 							- var voteCntStr = voteCnt + ' Vote'
@@ -59,6 +58,10 @@ include includes/modals/vote-by
 										.alert 
 											strong Warning: 
 											span This ticket group cannot be split to accomodate your group size.
+									- else
+										.alert.alert-info
+											strong Info: 
+											span The tickets in this ticket group will be split to accomodate your group size.
 								input(type="radio",checked="",value="#{ticket.ID}",name="ticketChoice")
 								.info
 									#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
@@ -66,10 +69,7 @@ include includes/modals/vote-by
 									.progress
 										.bar(style="width:#{votePct}%")
 									em!= voteCntStr
-								.ticket-price-box
-									span.ticket-quantity!= qtyStr
-									span.ticket-price!= '$'+ticket.ActualPrice
-									span (each)
+								.ticket-price-box!= partial('widgets/ticket-price-box',ticket);
 								.costBreakdown.hide
 									table.table(style="font-size:11px;")
 										thead

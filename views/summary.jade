@@ -72,10 +72,7 @@ include includes/modals/vote-by
 								span.stars!= (ticket.Rating ? ticket.Rating : 0)
 								br
 								em.ratingDescription!= ticket.RatingDescription
-						.ticket-price-box
-							span.ticket-quantity!= qtyStr
-							span.ticket-price!= '$'+ticket.ActualPrice
-							span (each)
+						.ticket-price-box!= partial('widgets/ticket-price-box',ticket);
 						.costBreakdown.hide
 							table.table(style="font-size:11px;")
 								thead

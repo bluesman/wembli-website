@@ -1,0 +1,13 @@
+#collectPaymentModal.modal.hide.fade
+	.modal-header
+		a.close(data-dismiss="modal") x
+		h3 End Voting and Continue With These Options?
+	.modal-body
+		form#collectPaymentForm.form-horizontal.well(method="post",action="/plan/collect-payment",enctype="application/x-www-form-urlencoded")
+			.finalOptions
+				.header.clearfix
+					h4.pull-left Final Ticket Group Choice:
+				#finalTicketOption
+			#collectPaymentActions.row
+				button#yesButton.btn.btn-primary.btn-large Yes, This is correct
+				button#noButton.btn.btn-large No, I want to change them

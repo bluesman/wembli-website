@@ -1,6 +1,25 @@
 (function($,window,undefined) {
 
     var init = function() {    
+	$('#collectMoney').click(function(e) {
+	    e.preventDefault();
+	    //get the ticket option that is selected and put it in the modal
+	    var selectedOption = $('.ticketOption input[name=ticketChoice]:radio:checked').parent()[0];
+	    var alert = $($(selectedOption).find('.alert')[0]).clone();
+	    var info = $($(selectedOption).find('.info')[0]).clone();
+	    var ticketPriceBox = $($(selectedOption).find('.ticket-price-box')[0]).clone();
+	    $('#finalTicketOption').html('');	    
+	    $('#finalTicketOption').append(alert);
+	    $('#finalTicketOption').append(info);
+	    $('#finalTicketOption').append(ticketPriceBox);
+	    $('#collectPaymentModal').modal('show');	    
+	});
+
+	$('#noButton').click(function(e) {
+	    e.preventDefault();
+	    $('#collectPaymentModal').modal('hide');  
+	});
+
 	$('.ticketOption').each(function(idx,el) {
 	    $(this).popover({animation:true,
 			     title:'Price Per Person:',

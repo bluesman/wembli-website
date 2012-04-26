@@ -12,7 +12,7 @@ module.exports = function(app) {
 	//this is the meat of the friends function
 	var callback = function() {
 	    //they must have a currentPlan to add friends to
-	    if (typeof req.session.currentPlan == "undefined") {
+	    if (typeof req.session.currentPlan.config == "undefined") {
 		req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	    }
@@ -64,7 +64,7 @@ module.exports = function(app) {
 	var callback = function() {
 
 	    //they must have a currentPlan to add tix to
-	    if (typeof req.session.currentPlan == "undefined") {
+	    if (typeof req.session.currentPlan.config == "undefined") {
 		req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	    }
@@ -81,7 +81,9 @@ module.exports = function(app) {
 	    if (req.session.loggedIn && !req.param('guid')) {
 		console.log('saving current plan to this customer');
 		//this is async but we don't need to wait (i don't think)
-		req.session.customer.saveCurrentPlan(req.session.currentPlan);
+		req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
+		    console.log('save error: '+err);
+		});
 	    }
 
 	    //set friend in the session
@@ -140,11 +142,12 @@ module.exports = function(app) {
 	};
 
 	if(req.param('guid')) {
-	    console.log('setting current plan');
+	    console.log('setting current plan: '+req.param('guid'));
 	    _setCurrentPlan({req:  req,
 			     res:  res,
 			     guid: req.param('guid')},callback);
 	} else {
+	    console.log('no plan to set: '+req.param('guid'));
 	    callback();
 	}
 
@@ -156,7 +159,7 @@ module.exports = function(app) {
 
 	var callback = function() {
 	    //they must have a currentPlan to add friends to
-	    if (typeof req.session.currentPlan == "undefined") {
+	    if (typeof req.session.currentPlan.config == "undefined") {
 		req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	    }
@@ -209,7 +212,7 @@ module.exports = function(app) {
     //organizer or friend view of the currentPlan
     app.all('/plan/view/:guid?/:token?/:action?',function(req,res) {
 	//if they don't have a guid they have to have a current plan
-	if (!req.param('guid') && (typeof req.session.currentPlan == "undefined")) {
+	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
 		req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	}
@@ -222,7 +225,7 @@ module.exports = function(app) {
 
 	var callback = function() {
 	    //they must have a currentPlan to view to
-	    if (typeof req.session.currentPlan == "undefined") {
+	    if (typeof req.session.currentPlan.config == "undefined") {
 		req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	    }
@@ -281,6 +284,7 @@ module.exports = function(app) {
 	};
 
 	var guid = req.param('guid') ? req.param('guid') : req.session.currentPlan.config.guid;
+
 	//fetch the plan for this guid from the db and set it in the session
 	_setCurrentPlan({req:  req,
 			 res:  res,
@@ -336,14 +340,16 @@ module.exports = function(app) {
 	    
 	    //get the plan
 	    for (var idx in organizer.eventplan) {
+		console.log('checking for matching guid: '+organizer.eventplan[idx].config.guid);
 		if (organizer.eventplan[idx].config.guid == args.guid) {
 		    //set the current plan in the session
+		    console.log('setting currentplan');
 		    args.req.session.currentPlan = organizer.eventplan[idx];
 		    break;
 		}
 	    }
 	    //if there's no currentPlan we have a major problem
-	    if (typeof args.req.session.currentPlan == "undefined") {
+	    if (typeof args.req.session.currentPlan.config == "undefined") {
 		args.req.flash('error','The plan you tried to view does not exist.');
 		return args.res.redirect('/');
 	    }

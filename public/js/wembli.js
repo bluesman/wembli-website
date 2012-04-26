@@ -69,9 +69,17 @@ $w = {
 	$('#wembliOptions .planOption').each(function(idx,el) {
 	    $(el).click(function(e) {
 		e.preventDefault();
+		$('#wembliOptions .planOption').children('input').attr('checked',false);
 		$(this).children('input').attr('checked',true);		
 	    });
 	});
+
+	$('#wembliOptions .planOption').children('input').click(function(e) {
+	    e.preventDefault();
+	    $('#wembliOptions .planOption').children('input').attr('checked',false);
+	    $(this).attr('checked',true);		
+	});
+
     },
     init:function(){
 	$('input.date').datepicker({minDate:0});
@@ -256,6 +264,7 @@ $w.eventplan = {
 
     },
     toggleButton:function(args,el) {
+	console.log(args);
 	var c = 'btn btn-'+args.action;
 	$(el).attr('class',c);
 	$(el).html(args.text);

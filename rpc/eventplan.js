@@ -17,7 +17,9 @@ var _respond = function(error,data,req,me) {
 	me(error,{success:0});
     } else {
 	//TODO: save data for customer if logged in
-	if (req.session.loggedIn && req.session.currentPlan.isOrganizer) {
+	console.log('do i save?');
+	if (req.session.loggedIn && req.session.currentPlan.config.isOrganizer) {
+	    console.log('yes!');	    
 	    req.session.customer.saveCurrentPlan(data);
 	}
 
@@ -111,7 +113,6 @@ exports.eventplan = {
 
     addTicketGroup: function(ticketId,req,res) {
 	var me = this;
-
 	_initEventplan(req,function(err,e) {
 	    if (err) { return _respond(err,null,null,me); }
 

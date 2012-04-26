@@ -24,8 +24,19 @@ ul
 					em.ratingDescription!= ticket.RatingDescription
 			- if (session.currentPlan.config.isOrganizer)
 				p.cta
+					span.qty
+						strong Qty: 
+						- if ((typeof ticket.ValidSplits != "undefined") && (typeof ticket.ValidSplits.int != "undefined"))
+							- var friendCnt = Object.keys(session.currentPlan.friends).length;
+							- console.log(friendCnt);
+							select(name="qty")
+								- each split in ticket.ValidSplits.int
+									var selected = '';
+									- if ((friendCnt > 0) && (friendCnt == parseInt(split)))
+										selected = "selected";
+									option(value="#{split}",selected="#{selected}")!= split
+						- else
+							span!= split
+					br
 					a.btn.btn-primary(href=ticketLink) Add to Plan
-			span.ticket-price-box
-				span.ticket-quantity!= qtyStr
-				span.ticket-price!= '$'+ticket.ActualPrice
-				span (each)
+			span.ticket-price-box!= partial('ticket-price-box',ticket);

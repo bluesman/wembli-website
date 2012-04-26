@@ -1,0 +1,5 @@
+- var qtyStr = TicketQuantity
+- qtyStr += (TicketQuantity > 1) ? " tickets " : " ticket "
+span.ticket-quantity!= qtyStr
+span.ticket-price!= '$'+ActualPrice
+span (each)
