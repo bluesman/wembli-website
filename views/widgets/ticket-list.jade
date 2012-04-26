@@ -39,4 +39,4 @@ ul
 							span!= split
 					br
 					a.btn.btn-primary(href=ticketLink) Add to Plan
-			span.ticket-price-box!= partial('ticket-price-box',ticket);
+			span.ticket-price-box!= partial('ticket-price-box',{ticket:ticket});

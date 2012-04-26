@@ -23,10 +23,10 @@ module.exports = {
     },
 
     friendsCount: function(req,res) {
-	if (typeof req.session.currentPlan.config != "undefined") {
+	if ((typeof req.session.currentPlan.friends != "undefined") && (typeof req.session.currentPlan.config != "undefined")) {
 	    return Object.keys(req.session.currentPlan.friends).length + 1;
 	}
-	return 0;
+	return 1;
     }
 
 };

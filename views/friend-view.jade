@@ -62,7 +62,7 @@
 										em!= voteCntStr
 									.cta
 										button.btn.btn-info Vote For This Option
-								.ticket-price-box!= partial('widgets/ticket-price-box',ticket);
+								.ticket-price-box!= partial('widgets/ticket-price-box',{ticket:ticket});
 								.costBreakdown.hide
 									table.table(style="font-size:11px;")
 										thead

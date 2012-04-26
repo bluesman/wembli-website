@@ -69,7 +69,7 @@ include includes/modals/collect-payment
 									.progress
 										.bar(style="width:#{votePct}%")
 									em!= voteCntStr
-								.ticket-price-box!= partial('widgets/ticket-price-box',ticket);
+								.ticket-price-box!= partial('widgets/ticket-price-box',{ticket:ticket});
 								.costBreakdown.hide
 									table.table(style="font-size:11px;")
 										thead

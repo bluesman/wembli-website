@@ -81,9 +81,7 @@ module.exports = function(app) {
 	    if (req.session.loggedIn && !req.param('guid')) {
 		console.log('saving current plan to this customer');
 		//this is async but we don't need to wait (i don't think)
-		req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
-		    console.log('save error: '+err);
-		});
+		req.session.customer.saveCurrentPlan(req.session.currentPlan);
 	    }
 
 	    //set friend in the session
@@ -147,7 +145,6 @@ module.exports = function(app) {
 			     res:  res,
 			     guid: req.param('guid')},callback);
 	} else {
-	    console.log('no plan to set: '+req.param('guid'));
 	    callback();
 	}
 
@@ -224,12 +221,16 @@ module.exports = function(app) {
 	}	    
 
 	var callback = function() {
+	    console.log('foo in callback: ');
+	    console.log(req.session.foo);
 	    //they must have a currentPlan to view to
 	    if (typeof req.session.currentPlan.config == "undefined") {
 		req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	    }
 
+	    console.log('session after: ');
+	    console.log(req.session);
 	    //if there is a guid but they are not the organizer of this guid then they can't edit
 	    if (req.param('guid') && (req.param('guid') != req.session.currentPlan.config.guid)) {
 		return res.render('friend-view', {
@@ -281,10 +282,11 @@ module.exports = function(app) {
 		});
 	    }
 
+	    
+
 	};
 
 	var guid = req.param('guid') ? req.param('guid') : req.session.currentPlan.config.guid;
-
 	//fetch the plan for this guid from the db and set it in the session
 	_setCurrentPlan({req:  req,
 			 res:  res,
@@ -340,11 +342,30 @@ module.exports = function(app) {
 	    
 	    //get the plan
 	    for (var idx in organizer.eventplan) {
-		console.log('checking for matching guid: '+organizer.eventplan[idx].config.guid);
 		if (organizer.eventplan[idx].config.guid == args.guid) {
 		    //set the current plan in the session
-		    console.log('setting currentplan');
+		    var poop = JSON.stringify(organizer.eventplan[idx]);
+		    console.log(poop);
+		    var pooper = JSON.parse(poop);
+		    for (key in pooper) {
+			console.log(key);
+		    }
+		    //if (typeof args.req.session.foo != "undefined") {
+		    //console.log('foo: ');
+		    //console.log(args.req.session.foo);
+		//}
+		    //args.req.session.currentPlan = pooper;
+		    //args.req.session.foo = {foo:'bar8'};
+		    //console.log('new foo: ');
+		    //console.log(args.req.session.foo);
 		    args.req.session.currentPlan = organizer.eventplan[idx];
+
+		    //console.log(poop.toJSON());
+		    //args.req.session.currentPlan = {"config":{"voteBy":"04/26/2012","isOrganizer":true,"guid":"e2663ec0-8dc9-11e1-ad46-13358f0c036d","payment":"group","summary":true,"hotels":false,"restaurants":false,"parking":false,"tickets":true,"friends":true},"tickets":{"123":{"ActualPrice":"8","TicketQuantity":"7"}},"event":{"CountryID":"217","VenueID":"1295","VenueConfigurationID":"2947","Venue":{"ZipCode":"92111","Street1":"100 Park Blvd.","StateProvince":"California","NumberOfConfigurations":"4","Name":"Petco Park","ID":"1295","Country":"United States of America","City":"San Diego","Capacity":"42445"},"StateProvinceID":"5","StateProvince":"CA","ParentCategoryID":"1","Name":"San Diego Padres vs. Washington Nationals","MapURL":"http://seatics.tickettransaction.com/PetcoPark_SanDiegoPadres_2011-12-06_2011-12-06_1000_tn.gif","IsWomensEvent":"false","ID":"1734131","GrandchildCategoryID":"16","DisplayDate":"04/26/2012 7:05PM","Date":"2012-04-26T19:05:00","Clicks":"1","City":"San Diego","ChildCategoryID":"63"},"_id":"4f9632e9bfea02891a000030","date_created":"2012-04-24T04:58:17.649Z"};
+
+		    //args.req.session.currentPlan = {"config":{"guid":"fa4b87d0-8f5d-11e1-8b6d-a7107e9183cf","isOrganizer":true},"event":{"CountryID":"217","VenueID":"954","VenueConfigurationID":"8983","Venue":{"ZipCode":"92101","Street1":"3rd Ave And B Street","StateProvince":"California","NumberOfConfigurations":"3","Name":"San Diego Civic Theatre","ID":"954","Country":"United States of America","City":"San Diego","Capacity":"3000"},"StateProvinceID":"5","StateProvince":"CA","ParentCategoryID":"3","Name":"Barber Of Seville","MapURL":"http://seatics.tickettransaction.com/SanDiegoCivicTheatre_YoGabbaGabba-Zone-ZP_2011-11-20_2011-10-29_1028_tn.gif","IsWomensEvent":"false","ID":"1633301","GrandchildCategoryID":"25","DisplayDate":"04/27/2012 8:00PM","Date":"2012-04-27T20:00:00","Clicks":"0","City":"San Diego","ChildCategoryID":"75"},"_id":"4f98ea6c8590bf030c00002f","date_created":"2012-04-26T06:25:48.680Z"};
+
+		    console.log('guid for new currentplan is: '+args.guid);
 		    break;
 		}
 	    }
