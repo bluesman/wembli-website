@@ -1,0 +1,17 @@
+.info
+	#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
+	.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+	span.rating.block
+		em Wembli Rating:
+		span.stars!= (ticket.Rating ? ticket.Rating : 0)
+		br
+		em.ratingDescription!= ticket.RatingDescription
+.votingProgress
+	.progress
+		.bar(style="width:#{votePct}%")
+	.voteCnt
+		em!= voteCntStr
+	.cta
+		button.btn.btn-info Vote For This Option
+.ticket-price-box!= partial('../../ticket-price-box',{ticket:ticket});
+.costBreakdown.hide!= partial('cost-breakdown',{actualPrice:ticket.ActualPrice,serviceCharge:serviceCharge,shipping:shipping});

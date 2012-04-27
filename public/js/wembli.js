@@ -279,14 +279,28 @@ $w.eventplan = {
 	    $(el).html(msg).addClass('alert-'+status).fadeIn(800).delay(1000).fadeOut(600);
 	});
     },
+    friendsNotDeclined: function() {
+	var friendCnt = 1;
+	if (typeof this.data != "undefined") {
+	    for (email in this.data.friends) {
+		var friend = this.data.friends[email];
+		if (typeof friend.decision != "undefined" && !friend.decision) {
+		    continue;
+		} else {
+		    friendCnt++;
+		}
+	    }
+	} 
+	return friendCnt;
+    },
     updateSummary:function() {
+	
 	//update the eventplan summary
 	if (typeof this.data != "undefined") {
 	    var summaryMsg = '';
 	    if (typeof this.data.friends != "undefined") {
-		var count = Object.keys(this.data.friends).length;
-		var addS = (count == 1) ? '' : 's';
-		summaryMsg = count+' friend'+addS;
+		var count = this.friendsNotDeclined();
+		summaryMsg = count+' people going';
 	    }
 
 	    if (typeof this.data.tickets != "undefined") {

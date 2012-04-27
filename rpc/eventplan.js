@@ -111,11 +111,15 @@ exports.eventplan = {
 
 
 
-    addTicketGroup: function(ticketId,req,res) {
+    addTicketGroup: function(ticketId,qty,req,res) {
 	var me = this;
 	_initEventplan(req,function(err,e) {
 	    if (err) { return _respond(err,null,null,me); }
 
+	    if ((typeof qty == "undefined") || (parseInt(qty) < 1)) {
+		return _respond('no qty provided',null,me);
+	    }
+	    
 	    if (typeof ticketId == "undefined") {
 		return _respond('no ticketId provided',null,me);
 	    }
@@ -128,6 +132,7 @@ exports.eventplan = {
 	    var mapTixData = function(err,ticketData) {
 		//var ticketGroup = JSON.stringify(ticketData.TicketGroup);
 		var ticketGroup = ticketData.TicketGroup;
+		ticketGroup.selectedQty = qty;
 		//add the tickets to the event plan and respond to client
 		//make sure this ticket group is not already in the cache, if it is - wack the old and replace with the new
 		var replaced = false;

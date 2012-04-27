@@ -834,11 +834,31 @@ a.planOption:hover {
 #loginModal #loginForm #forgotPasswordLink {
   margin-right: 20px;
 }
+p.note {
+  padding: 5px;
+}
+#voteByModal .sendEmailCheckBoxContainer {
+  padding: 10px;
+}
+#voteByModal .sendEmailCheckBoxContainer input {
+  margin-left: 23px;
+  margin-right: 10px;
+}
+#voteByModal #voteByAction {
+  width: 475px;
+  margin: auto;
+  text-align: center;
+}
+#voteByModal #voteByAction button {
+  margin: 10px;
+}
 #collectPaymentModal #finalTicketOption {
   *zoom: 1;
   position: relative;
   padding: 10px 0;
   min-height: 70px;
+  background-color: #ffffff;
+  margin-top: 10px;
 }
 #collectPaymentModal #finalTicketOption:before, #collectPaymentModal #finalTicketOption:after {
   display: table;
@@ -860,6 +880,13 @@ a.planOption:hover {
 #collectPaymentModal #finalTicketOption .ticket-price-box {
   left: 20px;
   margin: 0px;
+}
+#collectPaymentModal .sendEmailCheckBoxContainer {
+  padding: 10px;
+}
+#collectPaymentModal .sendEmailCheckBoxContainer input {
+  margin-left: 23px;
+  margin-right: 10px;
 }
 #collectPaymentModal #collectPaymentActions {
   width: 475px;
@@ -1017,13 +1044,13 @@ a.planOption:hover {
 #planViewOrganizerContainer #mainContainer #mainAlert {
   margin: 10px 20px;
 }
-#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus {
+#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .paymentEmailStatus, #planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus {
   font-size: 12px;
 }
-#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus .emailType {
+#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .paymentEmailStatus .emailType, #planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus .emailType {
   margin-right: 4px;
 }
-#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus .emailAction {
+#planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .paymentEmailStatus .emailAction, #planViewOrganizerContainer #mainContainer #right #friendStack .friendContainer .friend .invitationEmailStatus .emailAction {
   font-size: 12px;
 }
 #planViewOrganizerContainer #mainContainer #right #friendStack #inviteMoreContainer {

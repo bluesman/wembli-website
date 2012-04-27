@@ -35,7 +35,7 @@ module.exports = function(app) {
 	req.session.currentPlan.config['summary'] = true; //every plan has a summary
 	req.session.currentPlan.config['payment'] = (typeof req.body['payment'] == "undefined") ? 'group' : req.body['payment'];
 	req.session.currentPlan.config['guid']    = uuid.v1();
-	req.session.currentPlan.config['isOrganizer'] = true;
+	req.session.isOrganizer = true;
 
 	//this function determines which step to go to and goes there
 	var dispatch = function(err,args) {

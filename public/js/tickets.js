@@ -25,7 +25,9 @@
 		//else remove the tickets
 		
 		//hold the ticket info
-		var args = {ticketId: ticketId};
+		var qty = $(li).find('select option:selected').val()
+		var args = {ticketId: ticketId,
+			    qty: qty};
 		
 		//if they clicked on a btn-primary, it means they are adding
 		if ($(me).attr('class') == 'btn btn-primary') {

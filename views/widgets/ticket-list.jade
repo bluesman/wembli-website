@@ -3,40 +3,43 @@
 - var siteNumber = '0'
 - var tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid='+brokerId+'&sitenumber='+siteNumber;
 // ----
-- var cnt = 0;
-ul
-	- each ticket in tickets
-		- cnt++;
-		- if (cnt > 100) 
-			- break;
-		- var ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.TicketQuantity+'&SessionId='+ticketSessionId()
-		- var qtyStr = ticket.TicketQuantity
-		- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
-		li(id='ticket-id-'+ticket.ID)
-			p.info 
-				- //a(href=ticketLink)= "Section: "+ticket.Section + " - Row: " + ticket.Row
-				span#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
-				span.seats.block!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
-				span.rating.block
-					em Wembli Rating:
-					span.stars!= (ticket.Rating ? ticket.Rating : 0)
-					br
-					em.ratingDescription!= ticket.RatingDescription
-			- if (session.currentPlan.config.isOrganizer)
-				p.cta
-					span.qty
-						strong Qty: 
-						- if ((typeof ticket.ValidSplits != "undefined") && (typeof ticket.ValidSplits.int != "undefined"))
-							- var friendCnt = Object.keys(session.currentPlan.friends).length;
-							- console.log(friendCnt);
-							select(name="qty")
-								- each split in ticket.ValidSplits.int
-									var selected = '';
-									- if ((friendCnt > 0) && (friendCnt == parseInt(split)))
-										selected = "selected";
-									option(value="#{split}",selected="#{selected}")!= split
-						- else
-							span!= split
-					br
-					a.btn.btn-primary(href=ticketLink) Add to Plan
-			span.ticket-price-box!= partial('ticket-price-box',{ticket:ticket});
+form
+	ul
+		- each ticket in tickets
+			- var selectQty = 0;
+			- //if any of ticket.ValidSplits.int == friendsCount, use that, else skip this ticket group
+			- each split in ticket.ValidSplits.int
+				- if (parseInt(split) == friendsCount)
+					- selectQty = parseInt(split)
+			- if ((typeof session.currentPlan.tickets[ticket.ID] == "undefined") && selectQty == 0)
+				- continue
+			- var ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.TicketQuantity+'&SessionId='+ticketSessionId()
+			- var qtyStr = ticket.TicketQuantity
+			- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
+			li(id='ticket-id-'+ticket.ID)
+				p.info 
+					- //a(href=ticketLink)= "Section: "+ticket.Section + " - Row: " + ticket.Row
+					span#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
+					span.seats.block!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+					span.rating.block
+						em Wembli Rating:
+						span.stars!= (ticket.Rating ? ticket.Rating : 0)
+						br
+						em.ratingDescription!= ticket.RatingDescription
+				- if (session.isOrganizer)
+					p.cta
+						span.qty
+							strong Qty: 
+							- if ((typeof ticket.ValidSplits != "undefined") && (typeof ticket.ValidSplits.int != "undefined"))
+								select(name="qty-#{ticket.ID}")
+									- each split in ticket.ValidSplits.int
+										- if (selectQty == parseInt(split)) 
+											option(value="#{split}",selected="selected")!= split
+										- else
+											option(value="#{split}")!= split
+							- else
+								span!= split
+						br
+						a.btn.btn-primary(href=ticketLink) Add to Plan
+				span.ticket-price-box!= partial('includes/ticket-price-box',{ticket:ticket});
+	

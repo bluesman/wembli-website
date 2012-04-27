@@ -1,7 +1,7 @@
 #voteByModal.modal.hide.fade
 	.modal-header
 		a.close(data-dismiss="modal") x
-		h3 Ask Your Friends To Respond By Date:
+		h3 Ask Your Friends To RSVP:
 	.modal-body
 		form#voteByForm.form-horizontal.well(method="post",action="/friends/invite",enctype="application/x-www-form-urlencoded")
 			input#friendEmailId(type="hidden",name="friendEmailId",value="")
@@ -13,5 +13,12 @@
 					.controls
 						input#voteBy(name="voteBy",type="hidden")
 						#datepicker
-				.form-actions
-					button#loginSubmitButton.btn.btn-primary.btn-large Send Invite
+				hr
+				p.note When you click the Send Invite button, we'll send an email asking all of your invited friends to please RSVP by the date you have selected.
+				p.note If you would rather send the invite emails yourself, that's fine too - just uncheck the box below.
+				.sendEmailCheckBoxContainer
+					label.checkbox
+						input(name="sendEmail",type="checkbox",checked="checked")
+						span Send an RSVP email to my invitees.
+				#voteByAction
+					button#sendInviteButton.btn.btn-primary.btn-large Send Invite

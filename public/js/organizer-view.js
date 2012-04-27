@@ -55,12 +55,8 @@
 		    },
 		    'payment': function() {
 			//pop a modal to collect respond by date
-			$('#datepicker').datepicker({altField:'#collectBy',
-						     onSelect: function(d,i) {
-							 $('#respondByDate').html(d);
-						     }
-						    });
-			$('#collectByModal').modal('show');
+
+			$('#collectPaymentModal').modal('show');
 		    }
 		};
 		$('#friendEmailId').val(ary[1]);

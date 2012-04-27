@@ -1,6 +1,6 @@
 script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
 #eventBuilderContainer!= partial("widgets/event-builder",{});
-- if (session.currentPlan.isOrganizer)
+- if (session.isOrganizer)
 	#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #ticketsContent
 	#thumbnail.thumbnail.hide
