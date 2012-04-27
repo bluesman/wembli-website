@@ -29,7 +29,7 @@ module.exports = function(app) {
 		req.session.currentPlan.completed[req.param("completed")] = true;
 	    }
 
-	    var needToSavePlan = false;
+	    var needToSave = false;
 
 	    //if they are logged in and did not supply a guid, save the plan
 	    //(if they did supply a guid, don't save it cause we just fetched it)
