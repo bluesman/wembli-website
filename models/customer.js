@@ -21,7 +21,6 @@ this.Model = function(mongoose) {
     };
 
     var unMapFriends = function(f) {
-	console.log('unmapping friends');
 	var friends = [];
 	for (email in f) {
 	    friends.push(f[email]);
@@ -56,35 +55,40 @@ this.Model = function(mongoose) {
     });
 
     Customer.pre('save',function(next) {
-	console.log('called save');
 	this.last_modified = new Date();
 	next();
     });
 
     Customer.methods.saveCurrentPlan = function(plan,callback) {
 	var plans = [];
+	var saved = false;
 	for (var idx in this.eventplan) {
 	    //housekeeping
 	    if ((typeof this.eventplan[idx].config == "undefined") || (typeof this.eventplan[idx].config.guid == "undefined")) {
 		continue;
 	    }
 
+	    //add this plan if its one of the plans
 	    if (this.eventplan[idx].config.guid == plan.config.guid) {
 		plans.push(plan);
+		saved = true;
 	    } else {
-		plans.push(this.eventplan);
+		plans.push(this.eventplan[idx]);
 	    }
 	}
 
 	//no plans, put this one in
-	if (typeof plans[0] == "undefined") {
+	if (!saved) {
 	    plans.push(plan);
 	}
 
 	this.eventplan = plans;
 	this.markModified('eventplan');
 	this.save(function(err) {
-	    console.log('saved customer eventplan');
+	    if (err) {
+		console.log('error saving customer: '+err);
+	    }
+
 	    if (typeof callback != "undefined") {
 		callback(err);
 	    }
@@ -101,12 +105,12 @@ this.Model = function(mongoose) {
     };
 
 
-    Customer.full_name = function(){ 
+    Customer.methods.full_name = function(){ 
 	return this.first_name + ' ' + this.last_name 
     };
 
-    Customer.findByEmail = function(email){
-	return this.find({email: email});
+    Customer.statics.findByEmail = function(email,callback){
+	return this.find({email: email},callback);
     };
 
 
