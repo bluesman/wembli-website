@@ -1,27 +1,37 @@
-- var plan = session.currentPlan;
+- var plan                    = session.currentPlan;
+- var friendView              = session.isOrganizer ? 'includes/plan-view/friend/organizer' : 'includes/plan-view/friend/friend';
+- var friendViewArgs          = {};
+- friendViewArgs.id           = 'organizer';
+- friendViewArgs.friend       = {firstName:session.organizer.first_name,lastName:session.organizer.last_name};
+- friendViewArgs.rowClass     = 'evenRow';
+- friendViewArgs.labelType    = 'label-success';
+- friendViewArgs.labelIcon    = 'icon-ok-sign';
+- friendViewArgs.labelCaption = 'attending';
+- console.log(friendViewArgs);
 h3 Invitees
 	a#inviteesIcon(href="#")
 		i.icon-info-sign.pull-right.icon-white
 .body
-	.friendContainer!= partial('includes/plan-view/friend',{'id':'organizer','rowClass':'evenRow','labelType':'label-success','labelIcon':'icon-ok-sign','labelCaption':'attending','firstName':session.organizer.first_name,'lastName':session.organizer.last_name})
+	.friendContainer!= partial('includes/plan-view/friend/friend',friendViewArgs)
 	- var idx = 0;
 	- for (email in session.currentPlan.friends)
 		- idx++;
-		- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-		- var friend = session.currentPlan.friends[email]; 
-		- labelType = 'label-warning';
-		- labelCaption = 'undecided';
-		- labelIcon = 'icon-question-sign';
-		- var emailAsId = friend.email.replace(/\W+/g,'-');
+		- var friend                  = session.currentPlan.friends[email]; 
+		- friendViewArgs.id           = friend.email.replace(/\W+/g,'-');
+		- friendViewArgs.rowClass     = (idx % 2) ? 'oddRow' : 'evenRow';
+		- friendViewArgs.friend       = friend;
+		- friendViewArgs.labelType    = 'label-warning';
+		- friendViewArgs.labelCaption = 'undecided';
+		- friendViewArgs.labelIcon    = 'icon-question-sign';
 		- if ((typeof friend.decision != "undefined") && (friend.decision == true))
-			- labelType = 'label-success';
-			- labelCaption = 'attending';
-			- labelIcon = 'icon-ok-sign';
+			- friendViewArgs.labelType    = 'label-success';
+			- friendViewArgs.labelCaption = 'attending';
+			- friendViewArgs.labelIcon    = 'icon-ok-sign';
 		- if ((typeof friend.decision != "undefined") && (friend.decision == false))
-			- labelType = 'label-important';
-			- labelCaption = 'declined';
-			- labelIcon = 'icon-remove-sign';
-		.friendContainer!= partial('includes/plan-view/friend',{'id':emailAsId,'rowClass':rowClass,'labelType':labelType,'labelIcon':labelIcon,'labelCaption':labelCaption,'firstName':friend.firstName,'lastName':friend.lastName,friend:friend})
+			- friendViewArgs.labelType    = 'label-important';
+			- friendViewArgs.labelCaption = 'declined';
+			- friendViewArgs.labelIcon    = 'icon-remove-sign';
+		.friendContainer!= partial(friendView,friendViewArgs)
 - if (session.isOrganizer)
 	#inviteMoreContainer
 		a#inviteMoreFriends.btn.btn-success(href="/plan/friends") Add More Friends
