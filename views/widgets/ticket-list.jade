@@ -2,6 +2,8 @@
 - var brokerId = '5006'
 - var siteNumber = '0'
 - var tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid='+brokerId+'&sitenumber='+siteNumber;
+- var skippedCnt = 0;
+- var validCnt = 0;
 // ----
 form
 	ul
@@ -12,7 +14,9 @@ form
 				- if (parseInt(split) == friendsCount)
 					- selectQty = parseInt(split)
 			- if ((typeof session.currentPlan.tickets[ticket.ID] == "undefined") && selectQty == 0)
+				- skippedCnt++;
 				- continue
+			- validCnt++;
 			- var ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.TicketQuantity+'&SessionId='+ticketSessionId()
 			- var qtyStr = ticket.TicketQuantity
 			- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
@@ -42,4 +46,14 @@ form
 						br
 						a.btn.btn-primary(href=ticketLink) Add to Plan
 				span.ticket-price-box!= partial('includes/ticket-price-box',{ticket:ticket});
-	
+	- if (validCnt == 0)
+		h4 Oh Noes!
+		div
+			p.note There are no ticket groups that will accomodate the size of your group.
+			- if (skippedCnt > 0)
+				p.note!= "There are however, "+skippedCnt+" ticket groups available for this event."
+				hr
+				div
+					a.btn.btn-primary.btn-large(href="/plan/tickets/all") Show Me
+				div
+					a(href="/") No thanks, I'll find a new event to go to
