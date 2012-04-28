@@ -8,7 +8,7 @@ include includes/modals/vote-by
 			$('#signupModal #message').html('You have done a lot of work.  Sign up for Wembli so we can associate this plan with your account.').show();
 			$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
 		});
-#eventBuilderContainer!= partial("widgets/event-builder",{buttonText:'Invite Friends'});
+#eventBuilderContainer!= partial("widgets/event-builder",{buttonText:'Send RSVP'});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #summaryContainer.row
 	- if (typeof session.currentPlan.friends != "undefined")
@@ -105,7 +105,7 @@ include includes/modals/vote-by
 		hr
 		.body
 			ul
-				li Clicking Invite Friends will send an email invitation to your friends.
+				li Clicking Send RSVP will send an email invitation to your friends.
 				li Friends will be able to vote on these ticket options.
 				li Votes help you decide which tickets work best.
 				li Each friend pays their portion into your PayPal account.

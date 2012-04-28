@@ -300,7 +300,8 @@ $w.eventplan = {
 	    var summaryMsg = '';
 	    if (typeof this.data.friends != "undefined") {
 		var count = this.friendsNotDeclined();
-		summaryMsg = count+' people going';
+		var peopleStr = (count > 1) ? ' people' : ' person';
+		summaryMsg = count+peopleStr+' going';
 	    }
 
 	    if (typeof this.data.tickets != "undefined") {
