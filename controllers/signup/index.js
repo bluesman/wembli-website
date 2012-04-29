@@ -99,7 +99,7 @@ module.exports = function(app) {
 
 		    //if there is a redirectUrl, show a flash message indicating successful signup
 		    var redirectUrl = '/dashboard';
-		    if (typeof req.param('redirectUrl') != "undefined") {
+		    if (req.param('redirectUrl')) {
 			req.flash('info','Signup was successful and your work was saved.');
 			redirectUrl = req.param('redirectUrl');
 		    }

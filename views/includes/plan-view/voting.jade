@@ -1,36 +1,35 @@
-- var plan = session.currentPlan;
 - if (typeof plan.config.voteBy != "undefined")
-	- var voteMsg    = session.isOrganizer ? "Voting ends "+plan.config.voteBy : session.organizer.first_name+" asks to please vote by: "+session.currentPlan.config.voteBy;
+	voteMsg    = session.isOrganizer ? "Voting ends "+plan.config.voteBy : session.organizer.first_name+" asks to please vote by: "+session.currentPlan.config.voteBy;
 - var venueMapUrl  = session.isOrganizer ? '/plan/tickets' : '/plan/tickets/'+plan.config.guid;
 - var venueMapText = session.isOrganizer ? 'Modify Ticket Options' : 'View Tickets On Venue Map';
-- var ticketWidget = session.isOrganizer ? 'ticket/organizer' : 'ticket/friend';
-
-h3 Voting
-	a#votingIcon(href="#")
-		i.icon-info-sign.pull-right.icon-white				
-- if (typeof voteMsg != "undefined")
-	.votingMsg.alert.alert-info!= voteMsg
-form.body
-	#ticketsContainer
-		.header.clearfix
-			h4.pull-left Ticket Options:
-			.ticketActions.pull-right
-				a(href="#{venueMapUrl}")!= venueMapText
-		- var idx = 0
-		- for (ticketId in plan.tickets)
-			- idx++;
-			- var ticket     = plan.tickets[ticketId]
-			- var rowClass   = (idx % 2) ? 'oddRow' : 'evenRow';
-			- var votePct    = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
-			- var voteCnt    = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
-			- var voteCntStr = voteCnt + ' Vote'
-			- voteCntStr    += (ticket.voteCnt == 1) ? '' : 's';
-			- voteCntStr    += ' ('+votePct+'%)';
-			- var shipping = 15/friendsCount;
-			- var serviceCharge = (ticket.ActualPrice * .15)/friendsCount;
-			- var args = {ticket:ticket,votePct:votePct,voteCnt:voteCnt,voteCntStr:voteCntStr,shipping:shipping,serviceCharge:serviceCharge}
-			a.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")!= partial(ticketWidget,args)
-		.footer 
-	- if (session.isOrganizer)
-		.form-footer
-			a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & REQUEST PAYMENT
+#votingContainer.planOptions.module
+	h3 Voting
+		a#votingIcon(href="#")
+			i.icon-info-sign.pull-right.icon-white				
+	- if (typeof voteMsg != "undefined")
+		.votingMsg.alert.alert-info #{voteMsg}
+	form.body
+		#ticketsContainer
+			.header.clearfix
+				h4.pull-left Tickets:
+				.ticketActions.pull-right
+					a(href="#{venueMapUrl}")!= venueMapText
+			idx = 0
+			- for (ticketId in plan.tickets)
+				- idx++;
+				ticket     = plan.tickets[ticketId]
+				rowClass   = (idx % 2) ? 'oddRow' : 'evenRow';
+				votePct    = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
+				voteCnt    = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
+				voteCntStr = voteCnt + ' Vote'
+				- voteCntStr    += (ticket.voteCnt == 1) ? '' : 's';
+				- voteCntStr    += ' ('+votePct+'%)';
+				a.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
+					- if (session.isOrganizer)
+						include ticket/organizer-voting
+					- else
+						include ticket/friend-voting
+		- if (session.isOrganizer)
+			.form-footer
+				a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & REQUEST PAYMENT
+	

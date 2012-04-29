@@ -1,0 +1,25 @@
+.paymentEmailStatus.clearfix
+	.emailType.pull-left
+		i.icon-envelope 
+		span &nbsp;Payment Email: 
+	- if (typeof friend.collectPayment == "undefined")
+		.emailLabel.pull-left
+				span.label not sent
+		a.emailAction.pull-right(id="payment-#{id}",href="#")
+			i.icon-repeat
+			span &nbsp;Send
+	- else
+		.emailLabel.pull-left
+			- if (typeof friend.collectPayment.delivered != "undefined")
+				span.label.label-info sent
+				span &nbsp;
+					- if (typeof friend.collectPayment.open != "undefined")
+						span.label.label-info opened
+					- else
+						span.label unopened
+			- else
+				span.label not sent
+		a.emailAction.pull-right(id="payment-#{id}",href="#")
+			i.icon-repeat
+			span &nbsp;Resend
+		

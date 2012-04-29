@@ -4,90 +4,93 @@
   width:100%;
   max-width:1200px;
 
-  .module {
-    float:left;
-    width:350px;
+  #summaryModules {
+    margin:auto;
 
-  }
-  .center {
-    margin:0 40px;
-  }
+    .module {
+      float:left;
+      width:350px;
 
-  .footer{
-    text-align:center;
-    padding:19px;
-  }
+    }
+    .center {
+      margin:0 40px;
+    }
 
-  #friends {
-    .body {
-      .friend {
-	padding:10px 20px;
+    .footer{
+      text-align:center;
+      padding:19px;
+    }
+    
+    #friends {
+      .body {
+	.friend {
+	  padding:10px 20px;
+	}
       }
     }
-  }
-
-  #tickets {
-    .body {
-      .ticketOption:hover {
-	background-color:lighten(@yellow,20%);
+    
+    #tickets {
+      .body {
+	.ticketOption:hover {
+	  background-color:lighten(@yellow,20%);
+	}
+	
+	.ticketOption {
+	  .clearfix();
+	  position:relative;
+	  padding:10px 0;
+	  min-height:70px;
+	  display:block;
+	  
+	  .costBreakdown {
+	    table tr td {
+	      font-size:10px;
+	    }
+	    table tr td.amt {
+	      text-align:right;
+	    }
+	    table tr td.total {
+	      font-weight:bold;
+	      text-align:right;
+	    }
+	  }
+	  
+	  input {
+	    float:left;
+	    margin-left:20px;
+	    margin-top:20px;
+	  }
+	  
+	  .info {
+	    margin-left:90px;
+	    float:left;
+	    width:200px;
+	    min-height:60px;
+	  }
+	  
+	  .progress {
+	    margin-bottom:1px;
+	  }
+	  
+	  .ticket-price-box {
+	    left:20px;
+	    margin:0px;
+	  }
+	}
       }
+    }
+    
+    #whatNext {
+      font-size:16px;
       
-      .ticketOption {
-	.clearfix();
-	position:relative;
-	padding:10px 0;
-	min-height:70px;
-	display:block;
-	
-	.costBreakdown {
-	  table tr td {
-	    font-size:10px;
-	  }
-	  table tr td.amt {
-	    text-align:right;
-	  }
-	  table tr td.total {
-	    font-weight:bold;
-	    text-align:right;
-	  }
-	}
-	
-	input {
-	  float:left;
-	  margin-left:20px;
-	  margin-top:20px;
-	}
-	
-	.info {
-	  margin-left:90px;
-	  float:left;
-	  width:200px;
-	  min-height:60px;
-	}
-	
-	.progress {
-	  margin-bottom:1px;
-	}
-	
-	.ticket-price-box {
-	  left:20px;
-	  margin:0px;
+      ul {
+	list-style-type: disc;
+	list-style-position: inside;
+	li {
+	  margin:0 20px 0 40px;
+	  padding:10px 0;
 	}
       }
     }
   }
-
-  #whatNext {
-    font-size:16px;
-
-    ul {
-      list-style-type: disc;
-      list-style-position: inside;
-      li {
-	margin:0 20px 0 40px;
-	padding:10px 0;
-      }
-    }
-  }
-
 }

@@ -53,9 +53,11 @@ module.exports = function(app) {
 		var subj = name+' has invited you to go to '+req.session.currentPlan.event.Name;
 		
 		var rsvpLink = "http://"+app.settings.host+".wembli.com/plan/view/"+encodeURIComponent(req.session.currentPlan.config.guid)+"/"+encodeURIComponent(friendToken)+"/collectVote";
+		var voteBy = req.param('respondByCheckbox') ? req.param('voteBy') : null;
+
 		res.render('email-templates/collect-votes', {
 		    layout:'email-templates/layout',
-		    voteByDate:req.param('voteBy'),
+		    voteByDate:voteBy,
 		    rsvpLink:rsvpLink,
 		    friendToken:friendToken
 		},function(err,htmlStr) {

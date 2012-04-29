@@ -1,0 +1,32 @@
+- var brokerId = '5006'
+- var siteNumber = '0'
+- var tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid='+brokerId+'&sitenumber='+siteNumber;
+- var skippedCnt = 0;
+- var validCnt = 0;
+#checkoutContainer.planOptions.module
+	h3 Finalized Plan
+		a#checkoutIcon(href="#")
+			i.icon-shopping-cart.pull-right.icon-white				
+	- if (typeof checkoutMsg != "undefined")
+		.checkoutMsg.alert.alert-info #{checkoutMsg}
+	form.body
+		#ticketsContainer
+			.header.clearfix
+				h4.pull-left Tickets:
+				.ticketActions.pull-right
+					a(href="/plan/tickets") View Tickets On Venue Map
+			idx = 0
+			- for (ticketId in plan.tickets)
+				- idx++;
+				ticket     = plan.tickets[ticketId]
+				rowClass   = (idx % 2) ? 'oddRow' : 'evenRow';
+				a.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
+					- if (session.isOrganizer)
+						include ticket/organizer-checkout
+					- else
+						include ticket/friend-checkout
+				ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.selectedQty+'&SessionId='+ticketSessionId()
+		- if (session.isOrganizer)
+			.form-footer
+				a#checkout.btn.btn-success.btn-large(href="#{ticketLink}",target="_blank") CHECKOUT
+	

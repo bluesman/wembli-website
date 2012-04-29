@@ -1,4 +1,3 @@
-- console.log(friendsCount);
 - if ((typeof ticket.selectedQty != "undefined") && (parseInt(ticket.selectedQty) < friendsCount))
 	.alert 
 		strong Warning: 
@@ -21,5 +20,7 @@ input(type="radio",checked="",value="#{ticket.ID}",name="ticketChoice")
 	.progress
 		.bar(style="width:#{votePct}%")
 	em!= voteCntStr
-.ticket-price-box!= partial('includes/ticket-price-box',{ticket:ticket});
-.costBreakdown.hide!= partial('cost-breakdown',{actualPrice:ticket.ActualPrice,serviceCharge:serviceCharge,shipping:shipping});
+.ticket-price-box
+	include ../../ticket-price-box
+include cost-breakdown
+

@@ -2,26 +2,16 @@ doc = document;
 
 // Global Wembli Object
 $w = {
-    // Properties
-    defaultText:{},
-    // Methods
-    initDefaultText:function(){
-	$('.default').each(function(){
-	    $w.defaultText[this.name] = this.value;
-	});
-	
-	$('.example').on('focus', function(){
-	    if($(this).hasClass('default')){
-		$(this).removeClass('default').val('');
-	    }
-	});
-	
-	$('.example').on('focusout', function(){
-	    if(this.value == ''){
-		$(this).addClass('default').val($w.defaultText[this.name]);
-	    }
-	}); 
+    initEventPlanOptionsModal:function() {
+	$('.planOption').each(function(idx,el) {
+		$(el).click(function(e) {
+		    $(el).find('input').each(function(idx,i) {
+			$(i).attr('checked',true);
+		    });
+		});
+	    });
     },
+
     initStarRatings:function(){
 	// get and parse the rating
 	var rating;
@@ -63,38 +53,15 @@ $w = {
 	    }
 	});
     },
-    loadScripts:function(){
-    },
-    loadPlanOptions:function() {
-	$('#wembliOptions .planOption').each(function(idx,el) {
-	    $(el).click(function(e) {
-		e.preventDefault();
-		$('#wembliOptions .planOption').children('input').attr('checked',false);
-		$(this).children('input').attr('checked',true);		
-	    });
-	});
-
-	$('#wembliOptions .planOption').children('input').click(function(e) {
-	    e.preventDefault();
-	    $('#wembliOptions .planOption').children('input').attr('checked',false);
-	    $(this).attr('checked',true);		
-	});
-
-    },
     init:function(){
 	$('input.date').datepicker({minDate:0});
 	$('input.time').timepicker({ampm:true, stepHour:1, stepMinute:5});
-//	$w.initDefaultText();
+	if ($('#eventplanOptionsModal').length > 0) {
+	    $w.initEventPlanOptionsModal();
+	}
 	$w.initStarRatings();
-//	$w.loadPlanOptions();
-	//$w.loadScripts();
     }
 }
-
-// Kick it on load
-$(document).ready(function(){
-    $w.init();
-});
 
 $w.stepInfo = function(){
 
@@ -148,10 +115,6 @@ $w.stepInfo = function(){
 
 }();
 
-$(document).ready(function(){
-	$w.stepInfo();
-});
-
 $w.searchBox = function(){
 
     function init() {
@@ -177,11 +140,6 @@ $w.searchBox = function(){
     }
 
 }();
-
-$(document).ready(function(){
-	$w.searchBox();
-});
-
 
 $w.moreEvents = function(){
 
@@ -231,14 +189,12 @@ $w.moreEvents = function(){
 
 }();
 
-$(document).ready(function(){
-	$w.moreEvents();
-});
-
 
 /* eventPlan widget utilities */
 $w.eventplan = {
     init: function() {
+	
+
 	//every I'm Going button gets caught to display options overlay
 	$('.choose-event').click(function(e) {
 	    e.preventDefault();
@@ -318,13 +274,8 @@ $w.eventplan = {
 	    }
 	    $('#summaryContent').html(summaryMsg);
 	}
-    }
+    },
 };
-
-$(document).ready(function(){
-	$w.eventplan.init();
-});
-
 
 $w.sideNav = function(){
 	
@@ -366,5 +317,24 @@ $w.sideNav = function(){
 }();
 
 $(document).ready(function(){
+    $w.init();
+    $w.eventplan.init();
+
+    if ($('#searchBox').length > 0) {
+	$w.searchBox();
+    }
+    
+    if ($('#moreEvents').length > 0) {
+	$w.moreEvents();
+    }
+
+    if ($('#organizerSidebar').length > 0) {
 	$w.sideNav.init();
+    }
+
+    if ($('#homeContent').length > 0) {
+	$w.stepInfo();
+    }
+
+
 });

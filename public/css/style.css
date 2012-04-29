@@ -837,10 +837,16 @@ a.planOption:hover {
 p.note {
   padding: 5px;
 }
-#voteByModal .sendEmailCheckBoxContainer {
+#voteByModal #respondBy {
+  margin: auto;
+}
+#voteByModal #respondBy, #voteByModal .sendEmailCheckBoxContainer {
   padding: 10px;
 }
-#voteByModal .sendEmailCheckBoxContainer input {
+#voteByModal #respondBy .controls, #voteByModal .sendEmailCheckBoxContainer .controls {
+  margin: 20px 0 0 100px;
+}
+#voteByModal #respondBy input, #voteByModal .sendEmailCheckBoxContainer input {
   margin-left: 23px;
   margin-right: 10px;
 }
@@ -920,82 +926,85 @@ p.note {
   font-weight: bold;
   font-size: 14px;
 }
-.planViewContainer #votingContainer .votingMsg {
+.planViewContainer #checkoutContainer #ticketsContainer .ticket-price-box {
+  left: 20px;
+}
+.planViewContainer .planOptions .checkoutMsg, .planViewContainer .planOptions .paymentMsg, .planViewContainer .planOptions .votingMsg {
   margin-bottom: 1px;
 }
-.planViewContainer #votingContainer #ticketsContainer .header {
+.planViewContainer .planOptions #ticketsContainer .header {
   *zoom: 1;
   padding: 5px;
 }
-.planViewContainer #votingContainer #ticketsContainer .header:before, .planViewContainer #votingContainer #ticketsContainer .header:after {
+.planViewContainer .planOptions #ticketsContainer .header:before, .planViewContainer .planOptions #ticketsContainer .header:after {
   display: table;
   content: "";
 }
-.planViewContainer #votingContainer #ticketsContainer .header:after {
+.planViewContainer .planOptions #ticketsContainer .header:after {
   clear: both;
 }
-.planViewContainer #votingContainer #ticketsContainer .header h4 {
+.planViewContainer .planOptions #ticketsContainer .header h4 {
   font-weight: bold;
   width: 200px;
 }
-.planViewContainer #votingContainer #ticketsContainer .header .ticketActions {
+.planViewContainer .planOptions #ticketsContainer .header .ticketActions {
   *zoom: 1;
   font-size: 11px;
 }
-.planViewContainer #votingContainer #ticketsContainer .header .ticketActions:before, .planViewContainer #votingContainer #ticketsContainer .header .ticketActions:after {
+.planViewContainer .planOptions #ticketsContainer .header .ticketActions:before, .planViewContainer .planOptions #ticketsContainer .header .ticketActions:after {
   display: table;
   content: "";
 }
-.planViewContainer #votingContainer #ticketsContainer .header .ticketActions:after {
+.planViewContainer .planOptions #ticketsContainer .header .ticketActions:after {
   clear: both;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption:hover {
+.planViewContainer .planOptions #ticketsContainer .ticketOption:hover {
   background-color: #ffdd73;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption {
+.planViewContainer .planOptions #ticketsContainer .ticketOption {
   *zoom: 1;
   position: relative;
   padding: 10px 0;
   min-height: 70px;
   display: block;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption:before, .planViewContainer #votingContainer #ticketsContainer .ticketOption:after {
+.planViewContainer .planOptions #ticketsContainer .ticketOption:before, .planViewContainer .planOptions #ticketsContainer .ticketOption:after {
   display: table;
   content: "";
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption:after {
+.planViewContainer .planOptions #ticketsContainer .ticketOption:after {
   clear: both;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td {
+.planViewContainer .planOptions #ticketsContainer .ticketOption .costBreakdown table tr td {
   font-size: 10px;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td.amt {
+.planViewContainer .planOptions #ticketsContainer .ticketOption .costBreakdown table tr td.amt {
   text-align: right;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption .costBreakdown table tr td.total {
+.planViewContainer .planOptions #ticketsContainer .ticketOption .costBreakdown table tr td.total {
   font-weight: bold;
   text-align: right;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption input {
+.planViewContainer .planOptions #ticketsContainer .ticketOption input {
   float: left;
   margin-left: 20px;
   margin-top: 20px;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption .info {
+.planViewContainer .planOptions #ticketsContainer .ticketOption .info {
   font-size: 12px;
   margin-left: 90px;
   float: left;
   width: 200px;
   min-height: 60px;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption .progress {
+.planViewContainer .planOptions #ticketsContainer .ticketOption .progress {
   margin-bottom: 1px;
 }
-.planViewContainer #votingContainer #ticketsContainer .ticketOption .ticket-price-box {
+.planViewContainer .planOptions #ticketsContainer .ticketOption .ticket-price-box {
   left: 50px;
   margin: 0px;
 }
-.planViewContainer #votingContainer .form-footer {
+.planViewContainer .planOptions .form-footer {
   text-align: center;
   padding: 19px;
 }
@@ -1453,73 +1462,76 @@ p.note {
   width: 100%;
   max-width: 1200px;
 }
-#summaryContainer .module {
+#summaryContainer #summaryModules {
+  margin: auto;
+}
+#summaryContainer #summaryModules .module {
   float: left;
   width: 350px;
 }
-#summaryContainer .center {
+#summaryContainer #summaryModules .center {
   margin: 0 40px;
 }
-#summaryContainer .footer {
+#summaryContainer #summaryModules .footer {
   text-align: center;
   padding: 19px;
 }
-#summaryContainer #friends .body .friend {
+#summaryContainer #summaryModules #friends .body .friend {
   padding: 10px 20px;
 }
-#summaryContainer #tickets .body .ticketOption:hover {
+#summaryContainer #summaryModules #tickets .body .ticketOption:hover {
   background-color: #ffdd73;
 }
-#summaryContainer #tickets .body .ticketOption {
+#summaryContainer #summaryModules #tickets .body .ticketOption {
   *zoom: 1;
   position: relative;
   padding: 10px 0;
   min-height: 70px;
   display: block;
 }
-#summaryContainer #tickets .body .ticketOption:before, #summaryContainer #tickets .body .ticketOption:after {
+#summaryContainer #summaryModules #tickets .body .ticketOption:before, #summaryContainer #summaryModules #tickets .body .ticketOption:after {
   display: table;
   content: "";
 }
-#summaryContainer #tickets .body .ticketOption:after {
+#summaryContainer #summaryModules #tickets .body .ticketOption:after {
   clear: both;
 }
-#summaryContainer #tickets .body .ticketOption .costBreakdown table tr td {
+#summaryContainer #summaryModules #tickets .body .ticketOption .costBreakdown table tr td {
   font-size: 10px;
 }
-#summaryContainer #tickets .body .ticketOption .costBreakdown table tr td.amt {
+#summaryContainer #summaryModules #tickets .body .ticketOption .costBreakdown table tr td.amt {
   text-align: right;
 }
-#summaryContainer #tickets .body .ticketOption .costBreakdown table tr td.total {
+#summaryContainer #summaryModules #tickets .body .ticketOption .costBreakdown table tr td.total {
   font-weight: bold;
   text-align: right;
 }
-#summaryContainer #tickets .body .ticketOption input {
+#summaryContainer #summaryModules #tickets .body .ticketOption input {
   float: left;
   margin-left: 20px;
   margin-top: 20px;
 }
-#summaryContainer #tickets .body .ticketOption .info {
+#summaryContainer #summaryModules #tickets .body .ticketOption .info {
   margin-left: 90px;
   float: left;
   width: 200px;
   min-height: 60px;
 }
-#summaryContainer #tickets .body .ticketOption .progress {
+#summaryContainer #summaryModules #tickets .body .ticketOption .progress {
   margin-bottom: 1px;
 }
-#summaryContainer #tickets .body .ticketOption .ticket-price-box {
+#summaryContainer #summaryModules #tickets .body .ticketOption .ticket-price-box {
   left: 20px;
   margin: 0px;
 }
-#summaryContainer #whatNext {
+#summaryContainer #summaryModules #whatNext {
   font-size: 16px;
 }
-#summaryContainer #whatNext ul {
+#summaryContainer #summaryModules #whatNext ul {
   list-style-type: disc;
   list-style-position: inside;
 }
-#summaryContainer #whatNext ul li {
+#summaryContainer #summaryModules #whatNext ul li {
   margin: 0 20px 0 40px;
   padding: 10px 0;
 }

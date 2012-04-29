@@ -1,10 +1,11 @@
-- var plan = session.currentPlan;
-h3 Payment Status
-	a#paymentIcon(href="#")
-		i.icon-star.pull-right.icon-white				
-- if (typeof paymentMsg != "undefined")
-	.votingMsg.alert.alert-info!= paymentMsg
-form.body
-	- if (session.isOrganizer)
-		.form-footer
-			a#purchase.btn.btn-success.btn-large(href="#") Finalize and Purchase
+#paymentContainer.module
+	h3 Payment Status
+		a#paymentIcon(href="#")
+			i.icon-star.pull-right.icon-white				
+	- if (typeof paymentMsg != "undefined")
+		.votingMsg.alert.alert-info!= paymentMsg
+	form.body
+		- if (session.isOrganizer)
+			.form-footer
+				a#purchase.btn.btn-success.btn-large(href="#") Finalize and Purchase
+	

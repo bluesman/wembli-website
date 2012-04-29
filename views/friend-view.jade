@@ -4,7 +4,16 @@
 	#mainContainer.row
 		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 		#left.span8
-			#votingContainer.module!= partial("includes/plan-view/voting",{})
+			case plan.config.payment
+				when 'self'
+					include includes/plan-view/checkout
+				when 'group'
+					- if ((typeof plan.completed.voting == "undefined") || (!plan.completed.voting))
+						include includes/plan-view/voting
+					- else if ((typeof plan.completed.payment == "undefined") || (!plan.completed.payment))
+						include includes/plan-view/payment
+					- else
+						include includes/plan-view/checkout
 		#right.span4
 			#friendStack.module!= partial("includes/plan-view/friend-stack",{})
 

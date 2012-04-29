@@ -1,0 +1,23 @@
+friendName   = friend.firstName+' '+friend.lastName;
+id           = friend.email.replace(/\W+/g,'-');
+rowClass     = (idx % 2) ? 'oddRow' : 'evenRow';
+labelType    = 'label-warning';
+labelCaption = 'undecided';
+labelIcon    = 'icon-question-sign';
+- if ((typeof friend.decision != "undefined") && (friend.decision == true))
+	labelType    = 'label-success';
+	labelCaption = 'attending';
+	labelIcon    = 'icon-ok-sign';
+- if ((typeof friend.decision != "undefined") && (friend.decision == false))
+	labelType    = 'label-important';
+	labelCaption = 'declined';
+	labelIcon    = 'icon-remove-sign';
+.friendContainer
+	.friend.clearfix(class="#{rowClass}",id="#{id}")
+		include friend/friend-info
+		- if (session.isOrganizer)
+			include friend/invitation-email-status
+			- if (session.currentPlan.config.payment != 'self')
+				include friend/payment-email-status
+	//- include friend/popover
+	

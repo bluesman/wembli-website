@@ -20,7 +20,6 @@
 	    $('#'+li.id+' .cta > a').click(function(e) {
 		var me = this;
 		e.preventDefault();
-		
 		//if class is btn btn-primary then add the tickets 
 		//else remove the tickets
 		
@@ -28,10 +27,8 @@
 		var qty = $(li).find('select option:selected').val()
 		var args = {ticketId: ticketId,
 			    qty: qty};
-		
-		//if they clicked on a btn-primary, it means they are adding
-		if ($(me).attr('class') == 'btn btn-primary') {
-		    
+
+		var addTicketGroup = function() {
 		    //add tix to the eventplan and change class and text on success
 		    wembli.eventPlan.addTicketGroup(args,function(error,eventplan) {
 			if (eventplan) {
@@ -45,6 +42,57 @@
 			    $w.eventplan.alertMsg('error','Error: Unable to remove tickets at this time. Try logging in.');
 			}
 		    });
+
+		};
+		
+		//if they clicked on a btn-primary, it means they are adding
+		if ($(me).attr('class') == 'btn btn-primary') {
+
+		    if ($w.eventplan.data.config.payment == 'self') {
+			//if they are paying for it - they can only choose 1 ticket group
+			//so, anthing that is currently in the plan needs to come out
+			//remove the tix from eventplan and change class and text on success
+
+
+			//check to see if we have any tix to remove
+			var totalToRemove = $('#ticketsContent .ticket-list li').find('.btn-success').length;
+			console.log('total tixgroups to remove: '+totalToRemove);
+			if (totalToRemove > 0) {
+			    console.log('we have tix to remove');
+			    $('#ticketsContent .ticket-list li').find('.btn-success').each(function(idx2,el2) {
+				//get the parent li.id from this el2
+				var idStr = $(el2).closest('li').attr('id');
+				console.log('closest li id str: '+idStr);
+				var removeId = idStr.split('-')[2];
+				wembli.eventPlan.removeTicketGroup({ticketId:removeId},function(error,eventplan) {
+				    if (eventplan) {
+					$w.eventplan.data = eventplan;
+					//update the eventplan summary
+					$w.eventplan.updateSummary();
+					//toggle the button
+					$w.eventplan.toggleButton({action:'primary',text:'Add To Plan'},el2);
+					
+					//now its ok to add the new ticket group
+					console.log('finished removing group: '+idx2);
+					if (idx2 == totalToRemove-1) {
+					    console.log('finished last one - add the new group');
+					    addTicketGroup();
+					}
+					
+				    } else {
+					$w.eventplan.alertMsg('Error: Unable to remove tickets at this time. Try logging in.');
+				    }
+				});
+			    });
+			} else {
+			    console.log('no tix to remove');
+			    addTicketGroup();
+			}
+		    } else {
+			console.log('adding ticket group');
+			addTicketGroup();
+		    }
+		
 		}
 		
 		//if they clicked on a btn-success it means they are removing

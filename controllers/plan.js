@@ -224,6 +224,8 @@ module.exports = function(app) {
 	    }
 
 	    //if there is a guid but they are not the organizer of this guid then they can't edit
+	    //i don't think this can ever happen because if there is a guid - this plan will be the currentPlan
+	    /*
 	    if (req.param('guid') && (req.param('guid') != req.session.currentPlan.config.guid)) {
 		return res.render('friend-view', {
 		    layoutContainer:true,
@@ -234,6 +236,7 @@ module.exports = function(app) {
 		    jsIncludes: ['/js/friend-view.js']
 		});
 	    }
+	    */
 
 	    //set friend in the session
 	    if (req.param('guid') && req.param('token') && req.param('action')) {
@@ -391,6 +394,8 @@ module.exports = function(app) {
      */
     function _setFriend(args) {
 	var plan = args.req.session.currentPlan;
+	//they can't be the organizer if they are the friend
+	args.req.session.isOrganizer = false;
 	//a friend is viewing the page - find the friend in the currentPlan that has a matching token
 	//and store that as session.friend
 	for (email in plan.friends) {

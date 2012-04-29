@@ -22,6 +22,10 @@ module.exports = {
 	return req.params;
     },
 
+    plan: function(req,res) {
+	return req.session.currentPlan;
+    },
+
     friendsCount: function(req,res) {
 	var friendCnt  = 1
 	if ((typeof req.session.currentPlan.friends != "undefined") && (typeof req.session.currentPlan.config != "undefined")) {

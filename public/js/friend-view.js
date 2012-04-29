@@ -2,8 +2,9 @@
 
     var init = function() {    
 	$('.ticketOption').each(function(idx,el) {
+	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';	    
 	    $(this).popover({animation:true,
-			     title:'Price Per Person:',
+			     title:title,
 			     content: $(this).children('.costBreakdown').html(),
 			     delay:{show:300,hide:100}
 			    });

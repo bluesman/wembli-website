@@ -1,18 +1,24 @@
 include includes/modals/vote-by
 include includes/modals/collect-payment
 #planViewOrganizerContainer.planViewContainer.row
-	include widgets/organizer-sidebar
+	include includes/plan-view/organizer-sidebar
 	#mainContainer
-		- var msg = req.flash('plan-msg')[0];
+		msg = req.flash('plan-msg')[0];
 		- if (typeof msg != "undefined")
 			#mainAlert.alert.alert-success!= msg;
 				a.close(data-dismiss="alert") x
 		#eventDetails.span5!= partial("includes/event",{cta:false,rating:false,link:false});
 		#center.span5
-			- if ((typeof session.currentPlan.completed.voting == "undefined") || (!session.currentPlan.completed.voting))
-				#votingContainer.module()!= partial("includes/plan-view/voting",{})
-			- else if ((typeof session.currentPlan.completed.payment == "undefined") || (session.currentPlan.completed.payment))
-				#paymentContainer.module()!= partial("includes/plan-view/payment",{})
+			case plan.config.payment
+				when 'self'
+					include includes/plan-view/checkout
+				when 'group'
+					- if ((typeof plan.completed.voting == "undefined") || (!plan.completed.voting))
+						include includes/plan-view/voting
+					- else if ((typeof plan.completed.payment == "undefined") || (!plan.completed.payment))
+						include includes/plan-view/payment
+					- else
+						include includes/plan-view/checkout
 			#wallContainer
 		#right.span4
 			#friendStack.module!= partial("includes/plan-view/friend-stack",{})

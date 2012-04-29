@@ -21,8 +21,9 @@
 	});
 
 	$('.ticketOption').each(function(idx,el) {
+	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';	    
 	    $(this).popover({animation:true,
-			     title:'Price Per Person:',
+			     title:title,
 			     content: $(this).children('.costBreakdown').html(),
 			     delay:{show:300,hide:100}
 			    });
@@ -31,6 +32,17 @@
 		e.preventDefault();
 		$(this).children('input').attr('checked',true);
 	    });
+	});
+
+	$('.friendContainer').each(function(idx,el) {
+	    /*
+	    $(this).popover({animation:true,
+			     placement:'left',
+			     title:'Friend Details:',
+			     content: $(this).children('.friendPopover').html(),
+			     delay:{show:300,hide:100}
+			    });
+	    */
 	});
 
 	//email resend button clicks
@@ -67,7 +79,10 @@
     };
 
     $(window.document).ready(function($) {
-	init();
+	wembli.eventPlan.get({},function(error,eventplan) {
+	    $w.eventplan.data = eventplan; //store the event plan in the $w wembli global for use by other stuff
+	    init();
+	});
     });
 
 })(jQuery,window);

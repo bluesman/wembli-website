@@ -1,9 +1,30 @@
 (function($,window,undefined) {
 
     var init = function() {
+	$('#sendRSVP').attr('checked',true);
+	$('#respondByCheckbox').attr('checked',true);
+
+	$('#respondByCheckbox').click(function(e) {
+	    if ($(this).is(':checked')) {	    
+		$('#respondBy').find('.controls').slideDown();
+	    } else {
+		$('#respondBy').find('.controls').slideUp();
+	    }
+	});
+
+	$('#sendRSVP').click(function(e) {
+	    //e.preventDefault();
+	    if ($(this).is(':checked')) {
+		$('#respondBy').slideDown();
+	    } else {
+		$('#respondBy').slideUp();		
+	    }
+	});
+	
 	$('.ticketOption').each(function(idx,el) {
+	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';
 	    $(this).popover({animation:true,
-			     title:'Price Per Person:',
+			     title:title,
 			     content: $(this).children('.costBreakdown').html(),
 			     delay:{show:300,hide:100}
 			    });

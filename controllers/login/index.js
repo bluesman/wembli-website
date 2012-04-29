@@ -148,7 +148,6 @@ var standardLogin = function(req,res) {
 		//req.session.customer = {email: c.email};
 		req.session.customer = c;
 		if (req.param('redirectUrl')) {
-		    console.log('set flash oin login');
 		    req.flash('info','Login was successful and your work was saved.');
 		}
 		return res.redirect( ( req.param('redirectUrl') ? req.param('redirectUrl') : '/dashboard') );
