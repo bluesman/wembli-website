@@ -29,6 +29,7 @@
 			    qty: qty};
 
 		var addTicketGroup = function() {
+		    console.log(args);
 		    //add tix to the eventplan and change class and text on success
 		    wembli.eventPlan.addTicketGroup(args,function(error,eventplan) {
 			if (eventplan) {

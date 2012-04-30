@@ -1,11 +1,13 @@
+- var title = (session.isOrganizer) ? 'Payment Status' : 'Make Payment';
 #paymentContainer.module
-	h3 Payment Status
+	h3 #{title}
 		a#paymentIcon(href="#")
 			i.icon-star.pull-right.icon-white				
 	- if (typeof paymentMsg != "undefined")
 		.votingMsg.alert.alert-info!= paymentMsg
-	form.body
-		- if (session.isOrganizer)
-			.form-footer
-				a#purchase.btn.btn-success.btn-large(href="#") Finalize and Purchase
+	- if (session.isOrganizer)
+		include payment-status
+	- else
+		include make-payment
+
 	

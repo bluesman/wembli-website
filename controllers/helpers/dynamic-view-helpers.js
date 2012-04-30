@@ -26,6 +26,18 @@ module.exports = {
 	return req.session.currentPlan;
     },
 
+    finalTicketChoice: function(req,res) {
+	if ((typeof req.session.currentPlan.tickets != "undefined") && (typeof req.session.currentPlan.config != "undefined")) {	
+	    //loop through tix and see if one has the finalChoice param
+	    for (tixId in req.session.currentPlan.tickets) {
+		var ticket = req.session.currentPlan.tickets[tixId];
+		if (typeof ticket.finalChoice != "undefined" && ticket.finalChoice) {
+		    return ticket;
+		}
+	    }
+	}
+	return null;
+    },
     friendsCount: function(req,res) {
 	var friendCnt  = 1
 	if ((typeof req.session.currentPlan.friends != "undefined") && (typeof req.session.currentPlan.config != "undefined")) {

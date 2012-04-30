@@ -29,8 +29,8 @@
 			    });
 
 	    $(el).click(function(e) {
-		e.preventDefault();
 		$(this).children('input').attr('checked',true);
+		e.preventDefault();
 	    });
 	});
 

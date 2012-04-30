@@ -7,8 +7,8 @@ include includes/modals/collect-payment
 		- if (typeof msg != "undefined")
 			#mainAlert.alert.alert-success!= msg;
 				a.close(data-dismiss="alert") x
-		#eventDetails.span5!= partial("includes/event",{cta:false,rating:false,link:false});
-		#center.span5
+		#eventDetails.span6!= partial("includes/event",{cta:false,rating:false,link:false});
+		#center.span6
 			case plan.config.payment
 				when 'self'
 					include includes/plan-view/checkout
@@ -20,7 +20,7 @@ include includes/modals/collect-payment
 					- else
 						include includes/plan-view/checkout
 			#wallContainer
-				div(class="fb-comments",data-href="http://wembli.com",data-num-posts="6",data-width="380")
+				div(class="fb-comments",data-href="http://#{getAppSettings().host}.wembli.com/plan/view/#{plan.config.guid}",data-num-posts="6",data-width="460")
 		#right.span4
 			#friendStack.module!= partial("includes/plan-view/friend-stack",{})
 

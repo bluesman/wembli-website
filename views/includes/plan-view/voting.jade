@@ -7,7 +7,9 @@
 		a#votingIcon(href="#")
 			i.icon-info-sign.pull-right.icon-white				
 	- if (typeof voteMsg != "undefined")
-		.votingMsg.alert.alert-info #{voteMsg}
+		.votingMsg.alert.alert-info
+			i.icon-calendar
+			span &nbsp;#{voteMsg}
 	form.body
 		#ticketsContainer
 			.header.clearfix

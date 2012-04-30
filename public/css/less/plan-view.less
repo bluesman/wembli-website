@@ -198,7 +198,9 @@ p.note {
     padding:19px;  
     background-color:lighten(@blue,40%);
     border:2px solid @blue;
-    
+    width:140px;
+    float:left;    
+
     #sidebarNav {
       margin-top:20px;
       font-size: .9em;
@@ -214,7 +216,7 @@ p.note {
 
   #mainContainer {
     .clearfix();
-    margin-left: 200px;
+    margin-left: 180px;
     
     #mainAlert {
       margin:10px 20px;
@@ -262,6 +264,75 @@ p.note {
   }
 
   #left {
+    #paymentContainer {
+      #makePayment {
+	#content {
+	  .clearfix();
+
+	  #costBreakdown {
+	    width:259px;
+	    padding:10px;
+	  }
+
+	  #paymentOptionsContainer {
+	    padding:10px;
+
+	    .form-footer {
+	      float:left;
+	      width:329px;
+	      text-align:center;
+	      #contributionText {
+		.clearfix();
+		font-size:16px;
+		text-align:right;
+		margin-bottom:10px;
+
+	      }
+	      #contributionText > div {
+		margin:10px;
+	      }
+
+	    }
+
+	    #paymentOptions {
+	      width:289px;
+	      margin:10px 0;
+	      .paymentOption {
+		.clearfix();
+
+		label {
+		  .clearfix();
+		  
+		}
+		
+		label > div {
+		  height:30px;
+		  line-height:26px;
+		  vertical-align:middle;
+		  font-size:16px;
+		  margin:0 10px;
+		}
+		
+		input[name=amount] {
+		  margin:7px 0;
+		  
+		}
+		
+		input#arbitraryAmount {
+		  width:100px;
+		}
+		
+		select#amountQty {
+		  font-size:12px;
+		  width:40px;
+		}
+	      }
+	    }
+	  }
+	}
+      }
+    }
+
     #ticketsContainer {
       .ticketOption {
 	.clearfix();

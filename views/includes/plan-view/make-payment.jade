@@ -1,0 +1,37 @@
+- var noHideCostBreakdown = true;
+- var ticket = finalTicketChoice;
+form#makePayment.body(method="POST",action="/plan/make-payment/#{plan.config.guid}/#{token}")
+	#content
+		#costBreakdown.pull-left
+			h4 Cost Breakdown:
+			- var costBreakdownNote = 'Tickets are not guaranteed until the organizer buys them.'
+			include ticket/cost-breakdown
+		#paymentOptionsContainer
+			h4 Payment Options:
+			#paymentOptions.well.pull-left
+				.paymentOption(href="#")
+					label(for="amount")
+						input#byPerson.pull-left(name="amount",type="radio",value="byPerson",checked)
+						div.pull-left I want to pay for:
+						select#amountQty.pull-left(name="amountQty")
+							- for (var opt = 1; opt <= friendsCount; opt++)
+								- if (opt == 1)
+									option(value="#{opt}",checked) #{opt}
+								- else
+									option(value="#{opt}") #{opt}
+						div.pull-left Tickets.
+				hr
+				a.paymentOption(href="#")
+					label(for="amount")
+						input#arbitrary.pull-left(name="amount",type="radio",value="arbitrary")
+						div.pull-left I want to pay:
+						div.input-prepend
+							span.add-on $
+							input#arbitraryAmount.pull-left(size="5",name="arbitraryAmount",placeholder="Enter Amount")
+			.form-footer
+				input#contribution(type="hidden",name="contribution",value="#{total.toFixed(2)}");
+				#contributionText 
+					div.pull-left: strong Your Contribution: 
+					div.pullright: span#contributionValue= '$'+total.toFixed(2)
+				button#makePaymentButton.btn.btn-success.btn-large(type="submit") Make Payment
+	

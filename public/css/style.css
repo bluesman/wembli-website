@@ -1,4 +1,7 @@
 @import url('/css/plugins/jquery-ui-1.8.16.custom.css');
+.container {
+  width: 1000px;
+}
 .module {
   *zoom: 1;
   -webkit-border-radius: 4px;
@@ -1026,6 +1029,8 @@ p.note {
   padding: 19px;
   background-color: #d7e4f0;
   border: 2px solid #4380b8;
+  width: 140px;
+  float: left;
 }
 #planViewOrganizerContainer #organizerSidebar #sidebarNav {
   margin-top: 20px;
@@ -1041,7 +1046,7 @@ p.note {
 }
 #planViewOrganizerContainer #mainContainer {
   *zoom: 1;
-  margin-left: 200px;
+  margin-left: 180px;
 }
 #planViewOrganizerContainer #mainContainer:before, #planViewOrganizerContainer #mainContainer:after {
   display: table;
@@ -1086,6 +1091,85 @@ p.note {
 }
 #planViewFriendContainer #rsvpContainer .buttons #rsvpYes {
   margin-right: 10px;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content {
+  *zoom: 1;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content:before, #planViewFriendContainer #left #paymentContainer #makePayment #content:after {
+  display: table;
+  content: "";
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content:after {
+  clear: both;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #costBreakdown {
+  width: 259px;
+  padding: 10px;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer {
+  padding: 10px;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer .form-footer {
+  float: left;
+  width: 329px;
+  text-align: center;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer .form-footer #contributionText {
+  *zoom: 1;
+  font-size: 16px;
+  text-align: right;
+  margin-bottom: 10px;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer .form-footer #contributionText:before, #planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer .form-footer #contributionText:after {
+  display: table;
+  content: "";
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer .form-footer #contributionText:after {
+  clear: both;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer .form-footer #contributionText > div {
+  margin: 10px;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions {
+  width: 289px;
+  margin: 10px 0;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption {
+  *zoom: 1;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption:before, #planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption:after {
+  display: table;
+  content: "";
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption:after {
+  clear: both;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption label {
+  *zoom: 1;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption label:before, #planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption label:after {
+  display: table;
+  content: "";
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption label:after {
+  clear: both;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption label > div {
+  height: 30px;
+  line-height: 26px;
+  vertical-align: middle;
+  font-size: 16px;
+  margin: 0 10px;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption input[name=amount] {
+  margin: 7px 0;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption input#arbitraryAmount {
+  width: 100px;
+}
+#planViewFriendContainer #left #paymentContainer #makePayment #content #paymentOptionsContainer #paymentOptions .paymentOption select#amountQty {
+  font-size: 12px;
+  width: 40px;
 }
 #planViewFriendContainer #left #ticketsContainer .ticketOption {
   *zoom: 1;
@@ -1136,6 +1220,8 @@ p.note {
 #homeContent {
   *zoom: 1;
   background: url('/images/pages/index/four-steps-bg.png') 30px 80px no-repeat;
+  margin: auto;
+  width: 940px;
 }
 #homeContent:before, #homeContent:after {
   display: table;

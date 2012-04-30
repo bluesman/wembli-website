@@ -1,6 +1,72 @@
 (function($,window,undefined) {
 
     var init = function() {    
+	if ($('#amountQty').length > 0) {
+	    $("#amountQty")[0].selectedIndex = 0;
+	    $('#byPerson').attr('checked',true);
+	    $('#arbitraryAmount').val(null);
+	    $('#arbitraryAmount').keyup(function(e) {
+		var str = '$'+$(this).val();
+		$('#contribution').val(parseFloat($(this).val()).toFixed(2));
+		$('#contributionValue').html('$'+parseFloat($(this).val()).toFixed(2));
+	    });
+
+	    $('#arbitraryAmount').focus(function(e) {
+		console.log('clicked');
+		$('#arbitrary').attr('checked',true);		
+		var val = 0;
+		if ($(this).val()) {
+		    val = $(this).val(0);
+		}
+
+		var str = '$'+val;
+		$('#contribution').val(parseFloat(val).toFixed(2));
+		$('#contributionValue').html('$'+parseFloat(val).toFixed(2));
+	    });
+
+
+	    $('#amountQty').click(function(e) {
+		$('#byPerson').attr('checked',true);
+	    });
+
+	    $('#amountQty').change(function(e) {
+		var qty = $(this).val();
+		//recalc the totals
+		//get the cound of friends going
+		var friendCnt = 1;
+		for (email in $w.eventplan.data.friends) {
+		    var friend = $w.eventplan.data.friends[email];
+		    if (typeof friend.decision != "undefined" && !friend.decision) {
+			continue;
+		    } else {
+			friendCnt++;
+		    }
+		}
+		
+		//get the final ticket
+		for (var tixId in $w.eventplan.data.tickets) {
+		    if ((typeof $w.eventplan.data.tickets[tixId].finalChoice != "undefined") && ($w.eventplan.data.tickets[tixId].finalChoice)) {
+			var ticket = $w.eventplan.data.tickets[tixId];
+			break;
+		    }
+		}
+		//this should be an api call
+		var shipping      = (15/friendCnt) * qty;
+		var serviceCharge = ((ticket.ActualPrice * .15)/friendCnt) * qty;
+		var actualPrice   = (ticket.ActualPrice) * qty;
+		var total = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping) + parseFloat((actualPrice * 0.029));
+		
+		$('#ticketPrice').html('$'+parseFloat(actualPrice).toFixed(2));
+		$('#serviceCharge').html('$'+parseFloat(serviceCharge).toFixed(2));
+		$('#delivery').html('$'+parseFloat(shipping).toFixed(2));
+		$('#transactionFee').html('$' + parseFloat((actualPrice * 0.029)).toFixed(2));
+		$('#estimatedTotal').html('$'+total.toFixed(2));
+		$('#contributionValue').html('$'+total.toFixed(2));
+		$('#contribution').val(total.toFixed(2));
+
+	    });
+	}
+
 	$('.ticketOption').each(function(idx,el) {
 	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';	    
 	    $(this).popover({animation:true,

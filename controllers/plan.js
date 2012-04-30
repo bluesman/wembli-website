@@ -3,6 +3,7 @@ var wembliModel   = require('wembli-model'),
     crypto        = require('crypto'),
     mailer        = require("wembli/sendgrid"),
     uuid          = require('node-uuid'),
+    payPal        = require('../lib/wembli/paypal'),
     ticketNetwork = require('../lib/wembli/ticketnetwork');
 
 module.exports = function(app) {
@@ -212,7 +213,7 @@ module.exports = function(app) {
 
 	//if there is a guid but they are not logged in and there is no token - gtfo
 	if (req.param('guid') && !req.session.loggedIn && !req.param('token')) {
-		req.flash('error','The plan you\'re trying to view is by invitation only.');
+		req.flash('error','The plan you\'re trying to view is by invitation only. Please login to confirm you are invited.');
 		return res.redirect('/');
 	}	    
 
@@ -251,6 +252,7 @@ module.exports = function(app) {
 		    action:req.param('action'),
 		    title: 'wembli.com - View Event Plan.',
 		    page:'friends',
+		    token:req.param('token'),
 		    cssIncludes: [],
 		    jsIncludes: ['/js/friend-view.js']
 		});
@@ -272,6 +274,7 @@ module.exports = function(app) {
 		    action:req.param('action'),
 		    title: 'wembli.com - View Event Plan.',
 		    page:'friends',
+		    token:req.param('token'),
 		    cssIncludes: [],
 		    jsIncludes: ['/js/friend-view.js']
 		});
@@ -288,19 +291,31 @@ module.exports = function(app) {
 
 
     app.all('/plan/collect-payment',function(req,res) {
-	//if they don't have a guid they have to have a current plan
-	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
-		req.flash('error','An error occurred. Please start a new plan.');
-		return res.redirect('/');
+	if (!req.param('ticketChoice')) {
+	    req.flash('plan-msg','An error occurred. No ticket choice provided.');
+	    return res.redirect('/plan/view');
 	}
 
+	//if they don't have a guid they have to have a current plan
+	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
+	    req.flash('error','An error occurred. Please start a new plan.');
+	    return res.redirect('/');
+	}
+	
 	//if there is a guid but they are not logged in and there is no token - gtfo
 	if (req.param('guid') && !req.session.loggedIn && !req.param('token')) {
-		req.flash('error','The plan you\'re trying to view is by invitation only.');
-		return res.redirect('/');
+	    req.flash('error','The plan you\'re trying to view is by invitation only. Please login to confirm you are invited.');
+	    return res.redirect('/');
 	}	    
 
-
+	//set the appropriate ticket group to have finalChoice = true
+	if (typeof req.session.currentPlan.tickets[req.param('ticketChoice')] == "undefined") {
+	    req.flash('plan-msg','An error occurred. No ticket choice provided.');
+	    return res.redirect('/plan/view');
+	} else {	    
+	    req.session.currentPlan.tickets[req.param('ticketChoice')].finalChoice = true;
+	}
+	
 	for (email in req.session.currentPlan.friends) {
 	    var friend = req.session.currentPlan.friends[email];
 	    //don't send email to friends that have declined
@@ -385,6 +400,76 @@ module.exports = function(app) {
 	req.flash('plan-msg','Successfully sent email to invited friends.');
 	res.redirect('/plan/view');
 
+    });
+
+    app.all('/plan/make-payment/:guid?/:token?',function(req,res) {
+	var amountMethod = req.param('amount'); //did they pay for tickets? or an arbitrary amount?
+	var amountQty    = req.param('amountQty'); //only relevant if amountMethod == 'byPerson'
+	var arbitraryAmount = req.param('#arbitraryAmount'); //only relevant if amountMethod == 'arbitrary'
+	var contribution = req.param('contribution'); //the amount the person wants to pay
+	var token = req.param('token'); //token tells us who is making the payment
+	var guid = req.param('guid'); //which plan 
+
+	console.log('contribution: '+contribution);
+
+	if (!req.param('contribution')) {
+	    req.flash('plan-msg','An error occurred. No ticket choice provided.');
+	    return res.redirect('/plan/view/'+guid+'/'+token);
+	}
+
+	//if they don't have a guid they have to have a current plan
+	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
+	    req.flash('error','An error occurred. Please start a new plan.');
+	    return res.redirect('/');
+	}
+	
+	//if there is a guid but they are not logged in and there is no token - gtfo
+	if (req.param('guid') && !req.session.loggedIn && !req.param('token')) {
+	    req.flash('error','The plan you\'re trying to view is by invitation only. Please login to confirm you are invited.');
+	    return res.redirect('/');
+	}	    
+
+	var callback = function() {
+	    if (req.param('guid') && req.param('token')) {
+		if (!_setFriend({req:req})) {
+		    //this guid doesn't have a friend with this token
+		    req.flash('error','Invalid token for this event.');
+		    return res.redirect('/');
+		}
+
+		//send request to create transaction over to paypal
+		//receiver is the organizer
+		var receiverList = {"receiver":[{"amount":contribution,"email":req.session.organizer.email}]};
+		console.log(receiverList);
+		payPal.Pay({receiverList:receiverList},function(err,results) {
+		    if (err) {
+			console.log('ERROR: '+err);
+		    } else {
+			console.log(results);
+			//set the results in the session and mark that this person has paid
+			req.session.currentPlan.friends[req.session.friend.email].payment = results;
+			//redirect to paypal on success
+			req.session.organizer.saveCurrentPlan(req.session.currentPlan,function(err) {
+			    if (err) {
+				req.flash('plan-msg','An error occurred. No ticket choice provided.');
+				return res.redirect('/plan/view/'+guid+'/'+token);
+			    }
+			    var redirectUrl = payPal.redirectUrl(results.payKey);
+			    console.log('redirecting to '+redirectUrl);
+			    return res.redirect(redirectUrl);
+			});
+		    }
+		});
+	    }
+	};
+
+	var guid = req.param('guid') ? req.param('guid') : req.session.currentPlan.config.guid;
+	//fetch the plan for this guid from the db and set it in the session
+	_setCurrentPlan({req:  req,
+			 res:  res,
+			 guid: guid},callback);
+
+	
     });
 
 
