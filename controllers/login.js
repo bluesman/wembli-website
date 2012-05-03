@@ -12,9 +12,11 @@ module.exports = function(app) {
 	if (req.session.loginRedirect) {	    
 	    console.log('redirect after facebook login');
 	    console.log(req.session.redirectUrl);
-	    var r = req.session.redirectUrl;
-	    var rm = req.session.redirectMsg;
-	    req.flash('info',rm);
+	    var r = req.session.redirectUrl ? req.session.redirectUrl : '/dashboard';
+	    var rm = req.session.redirectMsg ? req.session.redirectMsg : '';;
+	    if (rm != '') {
+		req.flash('info',rm);
+	    }
 	    delete req.session.redirectUrl;
 	    delete req.session.redirectMsg;
 	    return res.redirect(r);
