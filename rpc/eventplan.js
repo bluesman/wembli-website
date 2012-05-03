@@ -247,8 +247,6 @@ exports.eventplan = {
 			}
 		    }
 
-		    console.log(tally);
-
 		    //clear out any existing votes for things we can vote on
 		    for (serviceIdx in globalViewVars.wembliServices) {
 			var service = globalViewVars.wembliServices[serviceIdx];

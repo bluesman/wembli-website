@@ -1,5 +1,5 @@
 friendName   = friend.firstName+' '+friend.lastName;
-id           = friend.email.replace(/\W+/g,'-');
+htmlId       = (typeof friend.email != "undefined") ? friend.email.replace(/\W+/g,'-') : friend.id;
 rowClass     = (idx % 2) ? 'oddRow' : 'evenRow';
 labelType    = 'label-warning';
 labelCaption = 'undecided';
@@ -13,10 +13,13 @@ labelIcon    = 'icon-question-sign';
 	labelCaption = 'declined';
 	labelIcon    = 'icon-remove-sign';
 .friendContainer
-	.friend.clearfix(class="#{rowClass}",id="#{id}")
+	.friend.clearfix(class="#{rowClass}",id="#{htmlId}")
 		include friend/friend-info
 		- if (session.isOrganizer)
-			include friend/invitation-email-status
+			- if ((typeof friend.addMethod == "undefined") || (friend.addMethod == 'facebook')) 
+				include friend/invitation-facebook-status
+			- else
+				include friend/invitation-email-status
 			- if (session.currentPlan.config.payment != 'self')
 				include friend/payment-email-status
 	//- include friend/popover

@@ -222,6 +222,9 @@ $w.eventplan = {
     toggleButton:function(args,el) {
 	console.log(args);
 	var c = 'btn btn-'+args.action;
+	if (typeof args.appendClass != "undefined") {
+	    c+= ' '+args.appendClass;
+	}
 	$(el).attr('class',c);
 	$(el).html(args.text);
     },

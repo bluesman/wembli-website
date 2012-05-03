@@ -18,21 +18,23 @@ include includes/modals/vote-by
 	- summaryWidth += 440;
 #summaryContainer
 	#summaryModules.row(style="width:#{summaryWidth}px")
-		- if (typeof session.currentPlan.friends != "undefined")
+		- if (typeof plan.friends != "undefined")
 			#friends.module
 				h3 Who's Going:
 				.body
 					- var idx = 0;
-					- for (email in session.currentPlan.friends)
+					- for (id in plan.friends)
 						- idx++;
 						- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-						- var friend = session.currentPlan.friends[email]; 
-						- var emailAsId = friend.email.replace(/\W+/g,'-');
+						- var friend = session.currentPlan.friends[id]; 
 						.friend.clearfix(class="#{rowClass}")
 							.name
 								span!= idx+'. '
 								strong!= friend.firstName + ' ' + friend.lastName
-							.email!=	friend.email
+							- if (friend.addMethod == 'facebook')
+								.email Invitation will be posted to #{friend.firstName}'s facebook wall
+							- else
+								.email Invitiation will be emailed to #{friend.email}
 					- if (Object.keys(plan.friends).length == 0) 
 	
 				.footer
@@ -89,7 +91,7 @@ include includes/modals/vote-by
 			hr
 			.body
 				ul
-					li Clicking Send RSVP will send an email invitation to your friends.
+					li Clicking Send RSVP will send an invitation to your friends.
 					li Friends will be able to vote on these ticket options.
 					li Votes help you decide which tickets work best.
 					li Each friend pays their portion into your PayPal account.

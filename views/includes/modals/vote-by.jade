@@ -6,11 +6,11 @@
 		form#voteByForm.form-horizontal.well(method="post",action="/friends/invite",enctype="application/x-www-form-urlencoded")
 			input#friendEmailId(type="hidden",name="friendEmailId",value="")
 			fieldset
-				p.note Do you want to send your friends an email invitation?
+				p.note Do you want to send your friends an invitation?
 				.sendEmailCheckBoxContainer
 					label.checkbox
-						input(id="sendRSVP",name="sendEmail",type="checkbox",checked="checked")
-						span Yes, send an RSVP email to the people i've invited.
+						input(id="sendRSVP",name="sendInvite",type="checkbox",checked="checked")
+						span Yes, send an RSVP to the people i've invited.
 				hr
 				#respondBy
 					label.checkbox

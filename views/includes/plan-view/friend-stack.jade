@@ -11,9 +11,9 @@ h3 Invitees
 		labelCaption = 'attending';
 		include friend/friend-info
 	idx = 0;
-	- for (email in plan.friends)
+	- for (id in plan.friends)
 		- idx++;
-		friend   = plan.friends[email]; 
+		friend   = plan.friends[id]; 
 		include friend
 - if (session.isOrganizer)
 	#inviteMoreContainer

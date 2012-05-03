@@ -40,9 +40,14 @@ module.exports = function(app) {
 
 	    
 	    if (needToSave) {
+		console.log(req.session.customer);
 		//this is async but we don't need to wait (i don't think)
-		req.session.customer.saveCurrentPlan(req.session.currentPlan);
+		req.user.saveCurrentPlan(req.session.currentPlan);
 	    }
+
+	    //set the login redirect url
+	    req.session.redirectUrl = req.url;
+	    req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
 	    //render the friends template
 	    return res.render('friends', {
@@ -83,7 +88,7 @@ module.exports = function(app) {
 	    //(if they did supply a guid, don't save it cause we just fetched it)
 	    if (req.session.loggedIn && !req.param('guid')) {
 		//this is async but we don't need to wait (i don't think)
-		req.session.customer.saveCurrentPlan(req.session.currentPlan);
+		req.user.saveCurrentPlan(req.session.currentPlan);
 	    }
 
 	    //set friend in the session
@@ -94,6 +99,10 @@ module.exports = function(app) {
 		    return res.redirect('/');
 		}
 	    }
+
+	    //set the login redirect url
+	    req.session.redirectUrl = req.url;
+	    req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
 	    //if there is a guid but they are not the organizer of this guid then they can't edit
 	    if (req.param('guid') && (req.param('guid') != req.session.currentPlan.config.guid)) {
@@ -178,9 +187,12 @@ module.exports = function(app) {
 	    //(if they did supply a guid, don't save it cause we just fetched it)
 	    if (req.session.loggedIn && !req.param('guid')) {
 		//this is async but we don't need to wait (i don't think)
-		req.session.customer.saveCurrentPlan(req.session.currentPlan);
+		req.user.saveCurrentPlan(req.session.currentPlan);
 	    }
 
+	    //set the login redirect url
+	    req.session.redirectUrl = req.url;
+	    req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
 	    res.render('summary', {
 		event:req.session.currentPlan.event,
@@ -205,6 +217,9 @@ module.exports = function(app) {
 
     //organizer or friend view of the currentPlan
     app.all('/plan/view/:guid?/:token?/:action?',function(req,res) {
+	//check if fb login
+	
+
 	//if they don't have a guid they have to have a current plan
 	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
 		req.flash('error','An error occurred. Please start a new plan.');
@@ -238,6 +253,10 @@ module.exports = function(app) {
 		});
 	    }
 	    */
+
+	    //set the login redirect url
+	    req.session.redirectUrl = req.url;
+	    req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
 	    //set friend in the session
 	    if (req.param('guid') && req.param('token') && req.param('action')) {
@@ -394,7 +413,7 @@ module.exports = function(app) {
 	    }
 	}
 	req.session.currentPlan.completed.voting = true;
-	req.session.customer.saveCurrentPlan(req.session.currentPlan);
+	req.user.saveCurrentPlan(req.session.currentPlan);
 
 	//redirect to organizer view with flash message
 	req.flash('plan-msg','Successfully sent email to invited friends.');

@@ -180,24 +180,30 @@ module.exports = function(app) {
 	    c.forgot_password = {timestamp: tokenTimestamp,token: tokenHash};
 	    c.save(function(err) {
 		if (!err) {
-		    res.render('email-templates/forgot-password-email', {
+		    res.render('email-templates/forgot-password', {
 			resetLink:resetLinkEncoded,
 			layout:'email-templates/layout',
 			token:tokenHash,
 			c: c
 		    },function(err,htmlStr) {
-			var mail = new mailer.EmailMessage({
-			    sender: '"Wembli Support" <help@wembli.com>',
-			    to:c.email
-			});
-			
+			var mail = {
+			    from: '"Wembli Support" <help@wembli.com>',
+			    to:c.email,
+			    headers: {
+				'X-SMTPAPI': {
+				    category : "forgotPassword",
+				}
+			    },
+			    
+			};
+						
 			mail.subject = "Reset Your Password";
-			mail.body = 'Click here to reset your password: '+resetLinkEncoded;
+			mail.text = 'Click here to reset your password: '+resetLinkEncoded;
 			mail.html = htmlStr;
-
-			mail.send(function(error, success){
+			mailer.sendMail(mail,function(error, success){
 			    console.log("Message "+(success?"sent":"failed:"+error));
 			});
+
 
 			//load check your email page
 			return res.render('reset-password-sent', {

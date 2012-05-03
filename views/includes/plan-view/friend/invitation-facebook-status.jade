@@ -1,0 +1,23 @@
+.invitationEmailStatus.clearfix
+	.emailType.pull-left
+		i.icon-envelope 
+		span &nbsp;Facebook Invite: 
+	- if (typeof friend.collectVote == "undefined")
+		.emailLabel.pull-left
+				span.label not sent
+		a.emailAction.pull-right(id="invitation-#{id}",href="#")
+			i.icon-repeat
+			span &nbsp;Post
+	- else
+		.emailLabel.pull-left
+			- if (typeof friend.collectVote.delivered != "undefined")
+				span.label.label-info Posted
+				span &nbsp;
+					- if (typeof friend.collectVote.open != "undefined")
+						span.label.label-info Viewed
+			- else
+				span.label Posted
+		a.emailAction.pull-right(id="invitation-#{id}",href="#")
+			i.icon-repeat
+			span &nbsp;Repost
+	

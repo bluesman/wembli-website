@@ -7,6 +7,10 @@ var wembliModel   = require('wembli-model');
 var Customer      = wembliModel.load('customer');
 
 module.exports = function(app) {
+
+    app.all('/signup/facebook',function(req,res) {
+    });
+
     app.get('/signup', function(req, res) {
 	res.render('signup', {
 	    session: req.session,
@@ -48,6 +52,7 @@ module.exports = function(app) {
 		}
 		var customer = new Customer(newC);
 		console.log(customer);
+
 		//make a confirmation token   
 		hash = crypto.createHash('md5');
 		var confirmationTimestamp = new Date().getTime().toString();

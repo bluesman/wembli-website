@@ -249,7 +249,7 @@ module.exports = function(app) {
 
 	//get the event for this guid
 	for (idx in req.session.customer.eventplan) {
-	    var plan = req.session.customer.eventplan[idx];
+	    var plan = req.user.eventplan[idx];
 	    if (plan.config.guid == req.param('guid')) {
 		//hack for now - fix this
 		req.session.currentPlan = plan;
@@ -276,7 +276,7 @@ module.exports = function(app) {
 
     app.all('/event/save',function(req,res) {
 	//saving plan
-	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
+	req.user.saveCurrentPlan(req.session.currentPlan,function(err) {
 	    console.log('saved customer');
 	    var redirectUrl = '/dashboard';
 	    if (typeof req.param('redirectUrl') != "undefined") {

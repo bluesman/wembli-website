@@ -7,6 +7,23 @@ var Customer      = wembliModel.load('customer');
 
 module.exports = function(app) {
     console.log('login loaded...');
+
+    app.get('/login/facebook',function(req,res,next) {
+	if (req.session.loginRedirect) {	    
+	    console.log('redirect after facebook login');
+	    console.log(req.session.redirectUrl);
+	    var r = req.session.redirectUrl;
+	    var rm = req.session.redirectMsg;
+	    req.flash('info',rm);
+	    delete req.session.redirectUrl;
+	    delete req.session.redirectMsg;
+	    return res.redirect(r);
+	}
+	console.log('here');
+
+	next();
+    });
+
     app.get('/login/?', function(req,res,next) {
 	//if they try to load the login page while alredy logged in
 	if (req.session.loggedIn) {

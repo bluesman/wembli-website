@@ -989,23 +989,25 @@ p.note {
   text-align: right;
 }
 .planViewContainer .planOptions #ticketsContainer .ticketOption input {
-  float: left;
-  margin-left: 20px;
-  margin-top: 20px;
+  float: right;
+  margin-right: 70px;
+  margin-top: 30px;
 }
 .planViewContainer .planOptions #ticketsContainer .ticketOption .info {
   font-size: 12px;
-  margin-left: 90px;
+  margin-left: 100px;
   float: left;
   width: 200px;
   min-height: 60px;
+  margin-top: 4px;
 }
 .planViewContainer .planOptions #ticketsContainer .ticketOption .progress {
   margin-bottom: 1px;
 }
 .planViewContainer .planOptions #ticketsContainer .ticketOption .ticket-price-box {
-  left: 50px;
+  left: 20px;
   margin: 0px;
+  top: 15px;
 }
 .planViewContainer .planOptions .form-footer {
   text-align: center;
@@ -1498,6 +1500,24 @@ p.note {
 }
 #friendsContent .footer a.btn {
   margin: auto;
+}
+#friendsContent #facebook .body #fbFriendList .friend {
+  *zoom: 1;
+  padding: 10px 20px;
+  border-bottom: thin solid #d8d6d7;
+}
+#friendsContent #facebook .body #fbFriendList .friend:before, #friendsContent #facebook .body #fbFriendList .friend:after {
+  display: table;
+  content: "";
+}
+#friendsContent #facebook .body #fbFriendList .friend:after {
+  clear: both;
+}
+#friendsContent #facebook .body #fbFriendList .friend .data {
+  float: left;
+  height: 28px;
+  line-height: 28px;
+  vertical-align: middle;
 }
 #friendsContent #manual .body {
   padding: 0;

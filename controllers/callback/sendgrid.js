@@ -22,22 +22,23 @@ module.exports = function(app) {
 
 		if (c.eventplan[i].config.guid == req.body.guid) {
 		    //update the friend for this event
-		    for (email in c.eventplan[i].friends) {
-			if (email == req.body.email) {
-			    console.log('sendgrid callback for: '+email);
-			    if (typeof c.eventplan[i].friends[email][req.body.category] == "undefined") {
-				c.eventplan[i].friends[email][req.body.category] = {};
-				c.eventplan[i].friends[email][req.body.category][req.body.event] = 1;
+		    for (friendId in c.eventplan[i].friends) {
+			var friend = c.eventplan[i].friends[friendId];
+			if (friend.email == req.body.email) {
+			    console.log('sendgrid callback for: '+friend.email);
+			    if (typeof c.eventplan[i].friends[friendId][req.body.category] == "undefined") {
+				c.eventplan[i].friends[friendId][req.body.category] = {};
+				c.eventplan[i].friends[friendId][req.body.category][req.body.event] = 1;
 			    } else {
-				if (typeof c.eventplan[i].friends[email][req.body.category][req.body.event] == "undefined") {
-				    c.eventplan[i].friends[email][req.body.category][req.body.event] = 1;
+				if (typeof c.eventplan[i].friends[friendId][req.body.category][req.body.event] == "undefined") {
+				    c.eventplan[i].friends[friendId][req.body.category][req.body.event] = 1;
 				} else {
-				    c.eventplan[i].friends[email][req.body.category][req.body.event]++;
+				    c.eventplan[i].friends[friendId][req.body.category][req.body.event]++;
 				}
 			    }
 			    var eventDate = req.body.event+'LastDate';
-			    c.eventplan[i].friends[email][req.body.category][eventDate] = new Date(req.body.timestamp * 1000).format("m/d/yy h:MM TT Z");
-			    console.log(c.eventplan[i].friends[email]);
+			    c.eventplan[i].friends[friendId][req.body.category][eventDate] = new Date(req.body.timestamp * 1000).format("m/d/yy h:MM TT Z");
+			    console.log(c.eventplan[i].friends[friendId]);
 			    c.markModified('eventplan');
 			    c.save();
 			    break;
