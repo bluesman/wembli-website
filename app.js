@@ -80,6 +80,7 @@ require('./controllers/test')(app);
 require('./controllers/beta-signup')(app);
 require('./controllers/fanvenues')(app);
 require('./controllers/callback/sendgrid')(app);
+require('./controllers/callback/paypal')(app);
 
 var port = 8001;
 if (process.env.NODE_ENV == 'development') {

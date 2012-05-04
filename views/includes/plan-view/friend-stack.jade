@@ -2,13 +2,13 @@ h3 Invitees
 	a#inviteesIcon(href="#")
 		i.icon-info-sign.pull-right.icon-white
 .body
+	id           = 'organizer';
+	friendName   = session.organizer.first_name+' '+session.organizer.last_name;
+	rowClass     = 'evenRow';
+	labelType    = 'label-success';
+	labelIcon    = 'icon-ok-sign';
+	labelCaption = 'attending';
 	.friendContainer: div.friend.clearfix(class="#{rowClass}",id="#{id}")
-		id           = 'organizer';
-		friendName   = session.organizer.first_name+' '+session.organizer.last_name;
-		rowClass     = 'evenRow';
-		labelType    = 'label-success';
-		labelIcon    = 'icon-ok-sign';
-		labelCaption = 'attending';
 		include friend/friend-info
 	idx = 0;
 	- for (id in plan.friends)

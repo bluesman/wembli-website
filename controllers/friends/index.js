@@ -98,9 +98,7 @@ module.exports = function(app) {
 			});
 			
 		    });
-
 		    initCollectVote();
-		    
 		} else {
 		    res.render('email-templates/collect-votes', {
 			layout:'email-templates/layout',
@@ -138,6 +136,7 @@ module.exports = function(app) {
 			initCollectVote();
 		    });
 		}
+		req.flash('plan-msg','Successfully sent invitations to invited friends.');
 	    }
 	}
 	req.session.currentPlan.config.voteBy = req.param('voteBy');
@@ -145,7 +144,6 @@ module.exports = function(app) {
 	req.user.saveCurrentPlan(req.session.currentPlan);
 
 	//redirect to organizer view with flash message
-	req.flash('plan-msg','Successfully sent invitations to invited friends.');
 	res.redirect('/plan/view');
     });
 

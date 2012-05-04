@@ -1,6 +1,28 @@
-- var noHideCostBreakdown = true;
-- var ticket = finalTicketChoice;
+brokerId = '5006'
+siteNumber = '0'
+tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid='+brokerId+'&sitenumber='+siteNumber;
+skippedCnt = 0;
+validCnt = 0;
+noHideCostBreakdown = true;
+ticket = finalTicketChoice;
+ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.selectedQty+'&SessionId='+ticketSessionId()
+shipping = 15;
+serviceCharge = (ticket.ActualPrice * .15) * ticket.selectedQty;
+actualPrice = ticket.ActualPrice * ticket.selectedQty;
+totalPrice = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping) + parseFloat((actualPrice * 0.029));
 form.body
 	- if (session.isOrganizer)
-		.form-footer
-			a#purchase.btn.btn-success.btn-large(href="#") Finalize and Purchase
+		table.table(style="font-size:11px;")
+			thead
+				tr
+					th(colspan="2")
+						strong Note: 
+						span Some informative message.
+			tbody
+				tr
+					td Estimated Total Price:
+					td#totalPrice(style="text-align:right")!= '$'+parseFloat(totalPrice).toFixed(2)
+				//- loop through friends and make a row for anyone who has contributed payment
+
+		.form-footer(style="text-align:center")
+			a#checkout.btn.btn-success.btn-large(href="#{ticketLink}",target="_blank") CHECKOUT

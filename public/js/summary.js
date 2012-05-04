@@ -39,6 +39,7 @@
 	    e.preventDefault();
 	    //pop a modal to collect respond by date
 	    $('#datepicker').datepicker({altField:'#voteBy',
+					 maxDate:new Date($w.eventplan.data.event.Date),
 					 onSelect: function(d,i) {
 					     $('#respondByDate').html(d);
 					 }

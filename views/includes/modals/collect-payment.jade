@@ -4,18 +4,20 @@
 		h3 End Voting and Continue With These Options?
 	.modal-body
 		form#collectPaymentForm.form-horizontal.well(method="post",action="/plan/collect-payment",enctype="application/x-www-form-urlencoded")
+			input#ticketChoiceHidden(type="hidden",name="ticketChoice",value="")
 			input#friendEmailId(type="hidden",name="friendEmailId",value="")
 			.finalOptions
 				.header.clearfix
 					h4.pull-left Final Ticket Group Choice:
 				#finalTicketOption
 			hr
-			p.note When you click Yes, we'll automatically send an email to the invitees that have not declined and politely ask them to pay their share.
-			p.note If you do not want to send email at this time, you can do it later - just uncheck the box below.
+			p.note When you click Yes, we'll reach out to your invitees through facebook or email and politely ask them to pay their share.
+			p.note If you do not want to send a message at this time, you can do it later - just uncheck the box below.
 			.sendEmailCheckBoxContainer
 				label.checkbox
-					input(name="sendEmail",type="checkbox",checked)
-					span Send email to my invitees (the ones that have not declined).
+					input(name="sendMessage",type="checkbox",checked)
+					span Send message to my invitees.
+			p.note (invitees that have declined will not receive messages)
 			#collectPaymentActions.row
 				button#yesButton.btn.btn-primary.btn-large Yes, This is correct
 				button#noButton.btn.btn-large No, I want to change options

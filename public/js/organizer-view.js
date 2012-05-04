@@ -3,6 +3,7 @@
     var init = function() {    
 	$('#collectMoney').click(function(e) {
 	    e.preventDefault();
+	    $('#ticketChoiceHidden').val($('.ticketOption input[name=ticketChoice]:radio:checked').val());
 	    //get the ticket option that is selected and put it in the modal
 	    var selectedOption = $('.ticketOption input[name=ticketChoice]:radio:checked').parent()[0];
 	    var alert = $($(selectedOption).find('.alert')[0]).clone();
@@ -59,6 +60,7 @@
 		    'invitation': function() {
 			//pop a modal to collect respond by date
 			$('#datepicker').datepicker({altField:'#voteBy',
+						     maxDate:new Date($w.eventplan.data.event.Date),						     
 						     onSelect: function(d,i) {
 							 $('#respondByDate').html(d);
 						     }
@@ -66,8 +68,32 @@
 			$('#voteByModal').modal('show');
 		    },
 		    'payment': function() {
-			//pop a modal to collect respond by date
+			//get the ticket option id from the event plan - else look for a radio input
+			var selectedOption = false;
+			for (id in $w.eventplan.data.tickets) {
+			    var ticket = $w.eventplan.data.tickets[id];
+			    if ((typeof ticket.finalChoice != "undefined") && (ticket.finalChoice)) {
+				selectedOption = '#'+id;
+				console.log(selectedOption);
+				$('#ticketChoiceHidden').val(id);
+				break;
+			    }
+			}
 
+			if (!selectedOption) {
+			    //pop a modal to collect respond by date
+			    $('#ticketChoiceHidden').val($('.ticketOption input[name=ticketChoice]:radio:checked').val());
+			    //get the ticket option that is selected and put it in the modal
+			    selectedOption = $('.ticketOption input[name=ticketChoice]:radio:checked').parent()[0];
+			}
+			var alert = $($(selectedOption).find('.alert')[0]).clone();
+			var info = $($(selectedOption).find('.info')[0]).clone();
+			var ticketPriceBox = $($(selectedOption).find('.ticket-price-box')[0]).clone();
+			$('#finalTicketOption').html('');	    
+			$('#finalTicketOption').append(alert);
+			$('#finalTicketOption').append(info);
+			$('#finalTicketOption').append(ticketPriceBox);
+			
 			$('#collectPaymentModal').modal('show');
 		    }
 		};

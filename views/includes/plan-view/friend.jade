@@ -21,6 +21,9 @@ labelIcon    = 'icon-question-sign';
 			- else
 				include friend/invitation-email-status
 			- if (session.currentPlan.config.payment != 'self')
-				include friend/payment-email-status
+				- if ((typeof friend.addMethod == "undefined") || (friend.addMethod == 'facebook')) 
+					include friend/payment-facebook-status
+				- else
+					include friend/payment-email-status					
 	//- include friend/popover
 	
