@@ -18,7 +18,7 @@ var _respond = function(error,data,req,me) {
     } else {
 	//TODO: save data for customer if logged in
 	console.log('do i save?');
-	if (req.session.loggedIn && req.session.currentPlan.config.isOrganizer) {
+	if (req.session.loggedIn && req.session.isOrganizer) {
 	    console.log('yes!');	    
 	    req.session.customer.saveCurrentPlan(data);
 	}

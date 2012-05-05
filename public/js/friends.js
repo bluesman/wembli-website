@@ -207,7 +207,7 @@
 	});
 
 	$('#facebook a').click(function(e) {
-
+	    console.log('clicked button');
 	    FB.getLoginStatus(function(response) {
 		console.log('getloginstatus: ');
 		console.log(response);

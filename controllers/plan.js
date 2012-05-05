@@ -45,7 +45,7 @@ module.exports = function(app) {
 	    if (needToSave) {
 		console.log(req.session.customer);
 		//this is async but we don't need to wait (i don't think)
-		req.user.saveCurrentPlan(req.session.currentPlan);
+		req.session.customer.saveCurrentPlan(req.session.currentPlan);
 	    }
 
 	    //set the login redirect url
@@ -91,7 +91,7 @@ module.exports = function(app) {
 	    //(if they did supply a guid, don't save it cause we just fetched it)
 	    if (req.session.loggedIn && !req.param('guid')) {
 		//this is async but we don't need to wait (i don't think)
-		req.user.saveCurrentPlan(req.session.currentPlan);
+		req.session.customer.saveCurrentPlan(req.session.currentPlan);
 	    }
 
 	    //set friend in the session
@@ -190,7 +190,7 @@ module.exports = function(app) {
 	    //(if they did supply a guid, don't save it cause we just fetched it)
 	    if (req.session.loggedIn && !req.param('guid')) {
 		//this is async but we don't need to wait (i don't think)
-		req.user.saveCurrentPlan(req.session.currentPlan);
+		req.session.customer.saveCurrentPlan(req.session.currentPlan);
 	    }
 
 	    //set the login redirect url
@@ -250,14 +250,22 @@ module.exports = function(app) {
     //organizer or friend view of the currentPlan
     app.all('/plan/view/:guid?/:token?/:action?',function(req,res) {
 	//check if fb login
-	
 	var publicViewUrl = '/plan/public/';
-	publicViewUrl += req.param('guid') ? req.param('guid') : req.session.currentPlan.config.guid;
-	if (req.param('token')) {
-	    publicViewUrl += '/'+req.param('token');
+	var hasGuid = false;
+	if (req.param('guid')) {
+	    publicViewUrl += req.param('guid');
+	    hasGuid = true;
+	} else if (typeof req.session.currentPlan.config != "undefined") {
+	    publicViewUrl += req.session.currentPlan.config.guid;
+	    hasGuid = true;
 	}
-	if (req.param('action')) {
-	    publicViewUrl += '/'+req.param('action');
+	if (hasGuid) {
+	    if (req.param('token')) {
+		publicViewUrl += '/'+req.param('token');
+	    }
+	    if (req.param('action')) {
+		publicViewUrl += '/'+req.param('action');
+	    }
 	}
 
 	//if they are not logged in, send them to the public view
@@ -413,8 +421,8 @@ module.exports = function(app) {
 	    console.log('sendMessage is '+req.param('sendMessage'));
 	    if (req.param('sendMessage')) {
 		var name = 'A friend';
-		if ((typeof req.user.first_name != "undefined") && (typeof req.user.last_name != "undefined")) {
-		    name = req.user.first_name+' '+req.user.last_name;
+		if ((typeof req.session.customer.first_name != "undefined") && (typeof req.session.customer.last_name != "undefined")) {
+		    name = req.session.customer.first_name+' '+req.session.customer.last_name;
 		}
 		var subj = name+' has finalized plans for '+req.session.currentPlan.event.Name;
 		
@@ -499,7 +507,7 @@ module.exports = function(app) {
 	}
 	console.log(req.session.currentPlan);
 	req.session.currentPlan.completed.voting = true;
-	req.user.saveCurrentPlan(req.session.currentPlan);
+	req.session.customer.saveCurrentPlan(req.session.currentPlan);
 
 	//redirect to organizer view with flash message
 	req.flash('plan-msg','Successfully sent messages to invited friends.');
@@ -627,6 +635,7 @@ module.exports = function(app) {
     function _setCurrentPlan(args,callback) {
 
 	var handleOrganizer = function(err,organizer) {
+	    console.log(organizer);
 	    if (err) {
 		args.req.flash('error','Something went wrong :) '+err);
 		return args.res.redirect('/');

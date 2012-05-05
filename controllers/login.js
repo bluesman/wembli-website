@@ -158,13 +158,12 @@ var standardLogin = function(req,res) {
     //validate email/password against the db
     Customer.findOne({email:req.param('email')},function(err,c) { 
 	if ((err == null) && (c != null)) {
-	    console.log('dbpass: '+c.password);
-	    console.log('postpass: '+digest);
 	    //set up the session and head to the redirect url
 	    if (typeof c.password != "undefined" && c.password == digest) {
 		console.log('valid credentials..logging in');
 		req.session.loggedIn = true;
 		//req.session.customer = {email: c.email};
+		console.log('setting customer in session');
 		req.session.customer = c;
 		if (req.param('redirectUrl')) {
 		    req.flash('info','Login was successful and your work was saved.');

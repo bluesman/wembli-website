@@ -11,6 +11,8 @@
 			i.icon-calendar
 			span &nbsp;#{voteMsg}
 	form.body
+		- if (!req.session.isOrganizer)
+			input#friendEmail(name="friendEmail",type="hidden",value="#{req.session.friend.email}")
 		#ticketsContainer
 			.header.clearfix
 				h4.pull-left Tickets:

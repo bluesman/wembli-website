@@ -22,6 +22,12 @@
 	});
 
 	$('.ticketOption').each(function(idx,el) {
+	    console.log(el.id);
+	    if (el.id == 'finalChoice') {
+		console.log('skipping final choice');
+		//finalChoice is special and links to the ticket purchase page
+		return;
+	    }
 	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';	    
 	    $(this).popover({animation:true,
 			     title:title,
@@ -60,6 +66,7 @@
 		    'invitation': function() {
 			//pop a modal to collect respond by date
 			$('#datepicker').datepicker({altField:'#voteBy',
+						     minDate: new Date(),
 						     maxDate:new Date($w.eventplan.data.event.Date),						     
 						     onSelect: function(d,i) {
 							 $('#respondByDate').html(d);

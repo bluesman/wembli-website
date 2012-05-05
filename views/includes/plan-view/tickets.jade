@@ -20,7 +20,11 @@ ticket = finalTicketChoice
 						span.stars!= (ticket.Rating ? ticket.Rating : 0)
 						br
 						em.ratingDescription!= ticket.RatingDescription
-				.ticket-price-box!= partial('includes/ticket-price-box',{ticket:ticket});
+				- if (plan.completed.payment)
+					p.cta
+						button#buyTickets.btn.btn-success Buy Tickets
+				.ticket-price-box
+					include ../ticket-price-box
 				.votingProgress.pull-left
 					.progress
 						.bar(style="width:#{votePct}%")

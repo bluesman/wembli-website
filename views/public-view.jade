@@ -2,12 +2,16 @@
 	#mainContainer.row
 		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 		#left.span8
-
+			#upsell.module
+				h3 Welcome
+					a#welcomeIcon(href="#")
+						i.icon-star.pull-right.icon-white
+				.body
+					.welcome.well Welcome to Wembli! Please login to view this plan.
 		#right.span4
-			#friendStack.module!= partial("includes/plan-view/friend-stack",{})
 			#login.module
-				h3 Invitees
-					a#inviteesIcon(href="#")
+				h3 Login
+					a#loginIcon(href="#")
 						i.icon-user.pull-right.icon-white
 				.body
 					.generalError.error.yellow

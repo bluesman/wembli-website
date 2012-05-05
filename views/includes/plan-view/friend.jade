@@ -24,6 +24,8 @@ labelIcon    = 'icon-question-sign';
 				- if ((typeof friend.addMethod == "undefined") || (friend.addMethod == 'facebook')) 
 					include friend/payment-facebook-status
 				- else
-					include friend/payment-email-status					
+					include friend/payment-email-status
+			- if (friend.payment && friend.payment.payment)
+				include friend/payment-amount
 	//- include friend/popover
 	

@@ -76,7 +76,8 @@
 			    });
 
 	    //if this is a ticket you voted for make it say that
-	    if (typeof $w.eventplan.data.friends[$('#friendEmail').val()].votes != "undefined") {
+	    var friendEmail = $('#friendEmail').val();
+	    if (typeoftypeof $w.eventplan.data.friends[friendEmail].votes != "undefined") {
 		if (typeof $w.eventplan.data.friends[$('#friendEmail').val()].votes.tickets != "undefined") {
 		    var tixId = $w.eventplan.data.friends[$('#friendEmail').val()].votes.tickets;
 		    if (tixId == el.id) {

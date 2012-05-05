@@ -5,9 +5,10 @@
 	- if (typeof friend.collectVote == "undefined")
 		.emailLabel.pull-left
 				span.label not sent
-		a.emailAction.pull-right(id="invitation-#{id}",href="#")
-			i.icon-repeat
-			span &nbsp;Post
+		- if (!plan.completed.voting)
+			a.emailAction.pull-right(id="invitation-#{id}",href="#")
+				i.icon-repeat
+				span &nbsp;Post
 	- else
 		.emailLabel.pull-left
 			- if (typeof friend.collectVote.delivered != "undefined")
@@ -17,7 +18,8 @@
 						span.label.label-info viewed
 			- else
 				span.label posted
-		a.emailAction.pull-right(id="invitation-#{id}",href="#")
-			i.icon-repeat
-			span &nbsp;Repost
+		- if (!plan.completed.voting)
+			a.emailAction.pull-right(id="invitation-#{id}",href="#")
+				i.icon-repeat
+				span &nbsp;Repost
 	

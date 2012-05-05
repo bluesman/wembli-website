@@ -3,26 +3,41 @@ siteNumber = '0'
 tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid='+brokerId+'&sitenumber='+siteNumber;
 skippedCnt = 0;
 validCnt = 0;
-noHideCostBreakdown = true;
 ticket = finalTicketChoice;
 ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.selectedQty+'&SessionId='+ticketSessionId()
 shipping = 15;
 serviceCharge = (ticket.ActualPrice * .15) * ticket.selectedQty;
 actualPrice = ticket.ActualPrice * ticket.selectedQty;
 totalPrice = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping) + parseFloat((actualPrice * 0.029));
-form.body
-	- if (session.isOrganizer)
-		table.table(style="font-size:11px;")
-			thead
-				tr
-					th(colspan="2")
-						strong Note: 
-						span Some informative message.
-			tbody
-				tr
-					td Estimated Total Price:
-					td#totalPrice(style="text-align:right")!= '$'+parseFloat(totalPrice).toFixed(2)
-				//- loop through friends and make a row for anyone who has contributed payment
-
-		.form-footer(style="text-align:center")
-			a#checkout.btn.btn-success.btn-large(href="#{ticketLink}",target="_blank") CHECKOUT
+venueMapUrl  = '/plan/tickets/'+plan.config.guid;
+venueMapText = 'View Tickets On Venue Map';
+#planOptionsContainer.planOptions.module
+	h3 Plan
+		a#ticketsIcon(href="#")
+			i.icon-info-sign.pull-right.icon-white				
+	.body
+		#ticketsContainer
+			.header.clearfix
+				h4.pull-left Tickets:
+				.ticketActions.pull-right
+					a(href="#{venueMapUrl}")!= venueMapText
+			#ticketsTotal
+				.totalHeader.pull-left
+					span Estimated Total Price For #{ticket.selectedQty} Tickets:
+				.total.pull-right
+					strong#totalPrice(style="text-align:right")!= '$'+parseFloat(totalPrice).toFixed(2)
+				hr
+			a#finalChoice.ticketOption(target="_blank",href="#{ticketLink}")
+				.info
+					#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
+					.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+					span.rating.block
+						em Wembli Rating:
+						span.stars!= (ticket.Rating ? ticket.Rating : 0)
+						br
+						em.ratingDescription!= ticket.RatingDescription
+				p.cta
+					button#buyTickets.btn.btn-success Buy Tickets
+				.ticket-price-box
+					include ../ticket-price-box
+				include ticket/cost-breakdown

@@ -81,7 +81,7 @@ module.exports = function(app) {
 			    apiCall = "/me/feed";
 			    //post args for fb
 			    var msg = name+' is planning an outing and you\'re invited!';
-			    var desc = req.user.first_name+', '+name+ ' is using Wembli to plan a '+req.session.currentPlan.event.Name+' outing on '+req.session.currentPlan.event.DisplayDate+' and has invited you! Follow the link so you can RSVP.  You can also contribute to the plan by voting for the options that work best for you.';
+			    var desc = req.session.customer.first_name+', '+name+ ' is using Wembli to plan a '+req.session.currentPlan.event.Name+' outing on '+req.session.currentPlan.event.DisplayDate+' and has invited you! Follow the link so you can RSVP.  You can also contribute to the plan by voting for the options that work best for you.';
 			    if (voteBy != null) {
 				desc += 'Oh, and '+name+' is asking if you would please respond no later than: '+voteBy;
 			    }
@@ -141,7 +141,7 @@ module.exports = function(app) {
 	}
 	req.session.currentPlan.config.voteBy = req.param('voteBy');
 	req.session.currentPlan.completed.summary = true;
-	req.user.saveCurrentPlan(req.session.currentPlan);
+	req.session.customer.saveCurrentPlan(req.session.currentPlan);
 
 	//redirect to organizer view with flash message
 	res.redirect('/plan/view');
