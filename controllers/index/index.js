@@ -8,15 +8,24 @@ module.exports = function(app) {
 	}
 	
         var d = Date.today();
-        var beginDate = d.format("shortDate");
+	d2 = new Date ( d );
+	d2.setDate ( d.getDate() + 2 );
+        var beginDate = d2.format("shortDate");
+	var args = {beginDate:beginDate};
+	args.orderByClause = 'Date';
+	console.log(req.session.ipinfo);
+	if (typeof req.session.ipinfo != "undefined") {
+	    args.nearZip = req.session.ipinfo.postal_code;
+	}
 
 	//get nearby events:
-        ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.city,orderByClause:'Date'},
+        //ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.city,orderByClause:'Date'},
 	//ticketNetwork.SearchEvents({searchTerms:'Petco Park',orderByClause:'Date'},
+        ticketNetwork.GetEvents(args,
 				function(err,results) {
 				    var events = [];
-				    if (typeof results.Event != "undefined") {
-					events = results.Event.slice(0,5);
+				    if (!err && typeof results.Event != "undefined") {
+					events = results.Event.slice(0,15);
 				    }
 				    res.render('index.jade', {
 					layoutContainer: true,

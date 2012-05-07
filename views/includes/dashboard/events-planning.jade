@@ -1,0 +1,10 @@
+#eventsPlanningContainer.dashboardEventList.module
+	h3 Events I'm Planning
+	.body
+		ul
+			- if ((typeof events != "undefined") && (events.length > 0)) 
+				- each event in events
+					li!= partial("includes/event",{event:event});
+			- else
+				li Search for an event above to start planning.
+	

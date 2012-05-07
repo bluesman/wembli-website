@@ -446,6 +446,16 @@ footer {
 a.planOption:hover {
   background-color: #ffdd73;
 }
+a#moreEvents {
+  display: block;
+  line-height: 16px;
+  vertical-align: middle;
+  height: 16px;
+  padding: 10px;
+}
+a#moreEvents:hover {
+  background-color: #ffdd73;
+}
 .ticket-list {
   background-color: #f2f2f2;
   padding: 15px;
@@ -1045,6 +1055,9 @@ p.note {
   height: 100px;
   width: 130px;
   border: 3px dashed #524f45;
+}
+#planViewOrganizerContainer #organizerSidebar #profileImage i {
+  margin: 43px 58px;
 }
 #planViewOrganizerContainer #mainContainer {
   *zoom: 1;
@@ -1668,137 +1681,31 @@ p.note {
   margin: 0 20px 0 40px;
   padding: 10px 0;
 }
-footer {
-  margin-top: 0;
-}
-#dashboard {
-  position: relative;
-  background: url('/images/pages/dashboard/dash-bg.jpg') 0 0 repeat-y;
-  margin-top: -4px;
-}
-aside {
-  width: 168px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-height: 600px;
-}
-aside ul {
-  padding: 10px 0;
-}
-aside ul li a {
-  padding: 5px 0 5px 10px;
-  width: 154px;
-  display: block;
-  font-weight: bold;
-  font-size: 12px;
-  border-top: 1px solid #cdcdcd;
-}
-aside ul li.last a {
-  border-bottom: 1px solid #cdcdcd;
-}
-aside ul li.active {
-  width: 169px;
-  background-color: #fff;
-}
-aside ul li.active a {
-  color: #666;
-  padding-right: 4px;
-}
-.dashboard section {
-  margin: 0 0 15px 168px;
-  min-height: 600px;
-  padding: 10px;
-}
-.dashboard div.content {
-  padding: 15px 0 0 43px;
-}
-.dashboard div.content h2 {
-  margin-bottom: 20px;
-}
-table.events {
-  width: 700px;
-}
-table.events th, table.events td {
-  padding: 6px;
-  text-align: left;
-}
-table.events th {
-  background-color: #f2f2f2;
-}
-.alert h3 {
-  color: #3A87AD;
-  border-bottom: 1px solid #3A87AD;
-}
-.alert p {
-  margin-top: 15px;
-}
-#newEvent {
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background-color: #eee;
-  border: 1px solid #cdcdcd;
-  padding: 20px;
-  box-shadow: 0 0 14px #cdcdcd inset;
-}
-#newEvent .opt {
-  padding: 10px;
-  cursor: pointer;
-  float: left;
-  font-size: 11px;
-  width: 184px;
-  border-radius: 10px;
-  border: 1px solid #a9a9a9;
-  color: #666;
-  text-align: center;
-}
-#newEvent .opt:hover {
-  box-shadow: 0 0 5px #008000 inset;
-}
-#newEvent .opt.empty {
-  color: #999;
-  border-style: dashed;
-}
-#newEvent .opt.empty:hover {
-  box-shadow: 0 0 5px #0000ff inset;
-}
-#newEvent #park {
-  margin: 0 20px;
-}
-#searchContainer {
-  width: 390px;
+#dashboardContainer #dashboardSidebar {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  padding: 19px;
+  background-color: #d7e4f0;
+  border: 2px solid #4380b8;
+  width: 140px;
   float: left;
 }
-#searchContainer h4 {
-  font-weight: bold;
-  color: #999;
-  border-bottom: 1px solid #999;
-  font-size: 12px;
-  margin-bottom: 10px;
+#dashboardContainer #dashboardSidebar #sidebarNav {
+  margin-top: 20px;
+  font-size: .9em;
 }
-#searchContainer #query {
-  width: 328px;
-  margin-right: 10px;
+#dashboardContainer #dashboardSidebar #sidebarNav i {
+  padding: 2px;
 }
-ul#searchResults li {
-  border-bottom: 1px dotted #cdcdcd;
-  font-size: 11px;
+#dashboardContainer #dashboardSidebar #profileImage {
+  height: 100px;
+  width: 130px;
+  border: 3px dashed #524f45;
 }
-ul#searchResults li span {
-  border-radius: 10px;
-  display: block;
-  cursor: pointer;
-  padding: 3px;
-}
-ul#searchResults li span:hover {
-  box-shadow: 0 0 5px blue inset;
-}
-#mapContainer {
-  width: 300px;
-  float: right;
-}
-#mapContainer #map {
-  border: 1px solid #cdcdcd;
-  background-color: #eee;
-  height: 150px;
+#dashboardContainer #dashboardSidebar #profileImage i {
+  margin: 43px 58px;
 }

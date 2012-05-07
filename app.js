@@ -47,7 +47,8 @@ everyauth.helpExpress(app);
 
 var production = function() {
     app.use(express.logger());
-    app.use(express.errorHandler()); 
+    //app.use(express.errorHandler()); 
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 };
 
 app.configure('production1',production);

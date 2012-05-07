@@ -97,7 +97,9 @@ module.exports = function(app) {
 		cssIncludes: [],
 		jsIncludes: ['/js/dashboard.js'],
 		globals:globalViewVars,
-		title: 'wembli.com - login to get the best seats.'
+		title: 'wembli.com - login to get the best seats.',
+		layoutContainer:true,
+		page:'dashboard'
 	    });
 	    
 	} else {

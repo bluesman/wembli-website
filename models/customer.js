@@ -59,6 +59,10 @@ this.Model = function(mongoose) {
 	next();
     });
 
+    Customer.methods.test = function() {
+	console.log('test');
+    };
+
     Customer.methods.saveCurrentPlan = function(plan,callback) {
 	var plans = [];
 	var saved = false;

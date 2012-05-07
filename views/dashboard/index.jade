@@ -1,79 +1,13 @@
-- if (typeof session.message != "undefined")
-	- if (typeof session.message.status == 'success')
-		.alert.alert-success session.message.message
-.container 
-	#dashboard.dashboard.clearfix
-		aside
-			ul#sideNav
-				li.active
-					a#myEventsTab(href="#myEvents") My Events
-				li.last
-					a#newEventsTab(href="#newEvents") New Event
-		section
-			#myEvents.content
-				h2 Manage your events
-				- if((typeof session.customer.eventplan != "undefined") && (session.customer.eventplan.length > 0))
-					table.events.table-striped.table-bordered
-						thead
-							tr
-								th Date
-								th Event
-						tbody
-							- each plan in session.customer.eventplan
-								- if (typeof plan.event == "undefined")
-									- continue;
-								tr
-									- var date = new Date(Date.parse(plan.event.Date));
-									td.date!= date.format('fullDate')
-									td
-										- var nextStep = 'view';
-										- var tmp = globalViewVars.wembliServices;
-										- var services = tmp.concat(['summary']);
-										- each service in services
-											- //first step in wembliServices where config is true and completed is false
-											- if ((typeof plan.config[service] != "undefined") && plan.config[service] && (typeof plan.completed[service] == "undefined"))
-												- nextStep = service;
-												- break;
-										a(href="/plan/#{nextStep}/#{plan.config.guid}")!= plan.event.Name
-				- else
-					div.alert.alert-info
-						h3 Hey There!
-						p We noticed you don't any events to manage that. Wembli makes planning the perfect out simple. Just go to your "New Event" tab any time to get started.
-						p.tc
-							a.btn.btn-primary.navTrigger(href="#newEventsTab") Let's do it!
-			#newEvents.content.hidden
-				h2 Start a new experience
-				#newEventContainer.clearfix
-					ul#newEvent.clearfix
-						li#event.opt.empty You Event
-						li#park.opt.empty Park
-						li#eat.opt.empty Eat
-					#searchContainer
-						form#search.clearfix
-							input.example.default(type="text", name="query", id="query", value="Start planning")
-							input.btn.blue(type="submit", value="Go!")
-						h4 You Results:
-						ul#searchResults
-							li 
-								span Result one is right here
-							li 
-								span Result one is right here			
-							li 
-								span Result one is right here
-							li 
-								span Result one is right here								
-							li 
-								span Result one is right here
-							li 
-								span Result one is right here								
-							li 
-								span Result one is right here
-							li 
-								span Result one is right here								
-							li 
-								span Result one is right here
-							li 
-								span Result one is right here								
-					#mapContainer
-						#map map goes here
-			// span.email!= session.customer.email
+#dashboardContainer.row
+	include ../includes/dashboard/sidebar
+	#mainContainer
+		msg = req.flash('dashboard-msg')[0];
+		- if (typeof msg != "undefined")
+			#mainAlert.alert.alert-success!= msg;
+				a.close(data-dismiss="alert") x
+		#center.span6
+			include ../includes/dashboard/events-planning
+			include ../includes/dashboard/events-attending
+		#right.span4
+			#friendStack.module!= partial("../includes/dashboard/friend-stack",{})
+

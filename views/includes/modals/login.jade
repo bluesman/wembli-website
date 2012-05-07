@@ -33,12 +33,12 @@
 					a#forgotPasswordLink(href="#forgotPasswordModal",data-toggle="modal") forgot your password?
 					button#loginSubmitButton.btn.btn-primary.btn-large Login
 		a#signupLink(data-toggle="modal",href="#signupModal") New to Wembli? Click here to Sign Up.
-script
+script(type="text/javascript")
 	$(document).ready(function() {
 		$('#forgotPasswordLink').click(function(e) {
 			$('#loginModal').modal('hide');
 		});
-		$('#loginForm #signupLink').click(function(e) {
+		$('#loginModal #signupLink').click(function(e) {
 			$('#loginModal').modal('hide');
 		});
 	});

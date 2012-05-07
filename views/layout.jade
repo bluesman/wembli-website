@@ -9,6 +9,7 @@ html
     link(type="image/png", rel="icon",href="/favicon.png")
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/style.css')
+    script(type="text/javascript", src="https://apis.google.com/js/client.js?onload=OnLoadCallback")
     script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
     script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js")
     script(type="text/javascript", src="/js/plugins/jquery-ui-timepicker.js")
@@ -109,3 +110,6 @@ html
         height      : 420,
         instant     : true
     });
+//-  script(type="text/javascript")
+//-    gapi.client.load('calendar', 'v3', function() { console.log('loaded google api.'); });
+//-    gapi.client.setApiKey('AIzaSyAmG1hix3hyx7PpEmIFYuSByECVi6M4j_o');

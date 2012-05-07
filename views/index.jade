@@ -26,7 +26,7 @@
 	#belowFold
 		- var heading = 'Upcoming Events';
 		- if (typeof session.ipinfo.city != "undefined")
-			- heading += ' in '+session.ipinfo.city;
+			- heading += ' near '+session.ipinfo.city;
 		.event-list.span6.offset1!= partial("widgets/event-list",{heading: heading,events:events});
 			a#moreEvents(href="/events/search/"+session.ipinfo.city+"/"+Date.today().format("mm-dd-yy"))
 				input(type="hidden",id="moreEventsZipCode",value="#{session.ipinfo.postal_code}")
@@ -34,7 +34,8 @@
 					- var d = new Date(Date.parse(events[events.length-1].Date))
 					- var lastDate = d.format("mm-dd-yy")
 					input(type="hidden",id="moreEventsBeginDate",value="#{lastDate}")
-					span see more events in 
+					span See more events near 
 					span.lowercase!= session.ipinfo.city
+				img.spinner.pull-right.hide(src="/images/ajax-loader-small.gif")
 		a.mobileAd.offset8(href="#")
 //			span.btn.btn-primary Get Mobile

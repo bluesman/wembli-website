@@ -147,10 +147,12 @@ $w.moreEvents = function(){
 
 	$('#moreEvents').click(function(e) {
 	    e.preventDefault();
+	    $('#moreEvents img.spinner').show();
 	    var zip = $('#moreEventsZipCode').val();
 	    var beginDate = $('#moreEventsBeginDate').val();
 	    console.log('begin: '+beginDate);
 	    wembli.event.get({beginDate:beginDate,nearZip:zip},function(error,events) {
+		$('#moreEvents img.spinner').hide();		
 		if (events.length > 0) {
 		    for (var idx in events) {
 			var template = $('#belowFold ul li:first').clone(true,true);
@@ -173,6 +175,11 @@ $w.moreEvents = function(){
 			template.find('.event-date-box .time').html(time);
 			$('#belowFold ul').append(template);
 		    }
+		    //update the last date hidden field
+		    var d = new Date(Date.parse(events[events.length-1].Date))
+		    var lastDate = d.format("mm-dd-yy")
+		    $('#moreEventsBeginDate').val(lastDate);
+
 		}
 		
 
