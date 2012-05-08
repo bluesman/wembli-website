@@ -2,9 +2,9 @@
 	h3 Events I'm Planning
 	.body
 		ul
-			- if ((typeof events != "undefined") && (events.length > 0)) 
-				- each event in events
-					li!= partial("includes/event",{event:event});
+			- if ((typeof session.customer.eventplan != "undefined") && (session.customer.eventplan.length > 0)) 
+				- each plan in session.customer.eventplan
+					li!= partial("includes/event",{event:plan.event});
 			- else
 				li Search for an event above to start planning.
 	
