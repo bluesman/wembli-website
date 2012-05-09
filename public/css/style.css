@@ -294,14 +294,14 @@ header #nav ul li a.active:link, header #nav ul li a.active:hover, header #nav u
   margin-bottom: 0px;
 }
 footer {
-  text-align: center;
-  border-top: thin solid #d8d6d7;
+  text-align: left;
+  border-top: 40px solid #524F45;
   padding: 10px 0;
-  margin-top: 10px;
-  font-size: 10px;
+  font-size: 14px;
+  min-height: 100px;
 }
-#index #maincontentWrapper footer {
-  margin-top: 410px;
+footer .span3 div {
+  height: 26px;
 }
 /* Stars */
 .stars {
@@ -847,6 +847,9 @@ a#moreEvents:hover {
 #loginModal #loginForm #forgotPasswordLink {
   margin-right: 20px;
 }
+#resetWrapper form {
+  margin: 10px 0 0 0;
+}
 p.note {
   padding: 5px;
 }
@@ -1244,6 +1247,7 @@ p.note {
 /* Home Page */
 #index section#content {
   padding-top: 50px;
+  min-height: 400px;
 }
 #index #backgrounds #blue {
   position: relative;
@@ -1275,7 +1279,7 @@ p.note {
 #homeContent h1 {
   text-align: center;
   color: #F7FEFE;
-  font-size: 28px;
+  font-size: 22px;
   text-shadow: 4px 7px 7px #000;
 }
 #homeContent #circles {
@@ -1454,6 +1458,38 @@ p.note {
   text-align: center;
   margin-top: 38px;
 }
+#homeContent .quoteContainer {
+  margin-left: 640px;
+  margin-top: 100px;
+}
+#homeContent .quoteContainer h3 {
+  color: #ff6700;
+  font-size: 14px;
+  font-weight: bold;
+}
+#homeContent .quoteContainer .quote {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #767676;
+}
+#homeContent hr {
+  margin-top: 20px;
+  margin-left: 40px;
+}
+#homeContent .twitterContainer {
+  margin-left: 630px;
+  width: 300px;
+}
+#homeContent .twitterContainer h3 {
+  position: relative;
+  width: 200px;
+  top: 30px;
+  left: 30px;
+  color: #ff6700;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 10;
+}
 #eventsContent {
   *zoom: 1;
 }
@@ -1491,7 +1527,7 @@ p.note {
   height: 25px;
   width: 45px;
 }
-#fvmap, #staticMap {
+#fvmap {
   margin-right: 420px;
   height: 600px;
 }

@@ -57,7 +57,9 @@ module.exports = function(app) {
 		globals:globalViewVars,
                 title: 'wembli.com - reset password',
 		email: c.email,
-		token: c.forgot_password[0].token
+		token: c.forgot_password[0].token,
+		layoutContainer:true,
+		page:'index'
             });
         });
     });
@@ -68,8 +70,9 @@ module.exports = function(app) {
             return res.render('reset-password', {
                 cssIncludes: [],
                 jsIncludes: [],
-		globals:globalViewVars,
                 title: 'wembli.com - reset password',
+		layoutContainer:true,
+		page:'index',
 		email:req.param('email'),
 		token: req.param('token'),
                 errors:{passwordMismatch:true},

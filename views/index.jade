@@ -1,5 +1,5 @@
 #homeContent
-	h1 You're only 4 steps away from planning your perfect outing!
+	h1 The free and easy way for friends to plan, coordinate and split the cost of going to live events.
 	#circles
 		#step1Circle.homeCircle
 			#step1Icon.stepIcon
@@ -21,7 +21,7 @@
 			#step3Info.tunga.hidden Go ahead and book your reservations with us - we'll even hook you up with great deals to top off the outing!
 		section#step4
 			h3 Coordinate W Friends
-			#step4Info.tunga.hidden Let's face it - entertainment is a social sport so we make it easy for you to coordinate with your friends!
+			#step4Info.tunga.hidden Take one friend or make it a group outing! We make it easy for you to plan, coordinate and even split the bill.
 	include widgets/search-box
 	#belowFold
 		- var heading = 'Upcoming Events';
@@ -37,5 +37,39 @@
 					span See more events near 
 					span.lowercase!= session.ipinfo.city
 				img.spinner.pull-right.hide(src="/images/ajax-loader-small.gif")
+		.quoteContainer
+			h3 PEOPLE ARE TALKING...
+			.quote "This is the expedia.com of live events!"
+			.quote "A one-stop-shop for concert and event-goers - It's about time!"
+		hr
+		.twitterContainer
+			h3 TWITTER FEED...
+			script(charset="utf-8",src="http://widgets.twimg.com/j/2/widget.js")
+			script
+				new TWTR.Widget({
+				version: 2,
+				type: 'profile',
+				rpp: 4,
+				interval: 30000,
+				width: 'auto',
+				height: 300,
+				theme: {
+				shell: {
+				background: '#ffffff',
+				color: '#ffffff'
+				},
+				tweets: {
+				background: '#ffffff',
+				color: '#767676',
+				links: '#ff6600'
+				}
+				},
+				features: {
+				scrollbar: false,
+				loop: false,
+				live: false,
+				behavior: 'all'
+				}
+				}).render().setUser('wembli').start();
 		a.mobileAd.offset8(href="#")
-//			span.btn.btn-primary Get Mobile
+			span.btn.btn-primary Coming Soon

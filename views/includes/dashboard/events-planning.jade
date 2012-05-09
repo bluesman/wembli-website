@@ -4,7 +4,10 @@
 		ul
 			- if ((typeof session.customer.eventplan != "undefined") && (session.customer.eventplan.length > 0)) 
 				- each plan in session.customer.eventplan
-					li!= partial("includes/event",{event:plan.event});
+					- if (typeof plan.config != "undefined")
+						li!= partial("includes/event",{event:plan.event});
+					- else
+						li Search for an event above to start planning.
 			- else
 				li Search for an event above to start planning.
 	

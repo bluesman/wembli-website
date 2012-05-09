@@ -3,6 +3,7 @@ var ticketNetwork = require('../../lib/wembli/ticketnetwork');
 module.exports = function(app) {
     console.log('index loaded...');
     app.get('/', function(req, res){
+	
 	if (req.session.loggedIn) {
 	    return res.redirect( ( req.param('redirectUrl') ? req.param('redirectUrl') : '/dashboard') );		    
 	}

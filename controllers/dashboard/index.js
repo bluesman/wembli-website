@@ -35,10 +35,10 @@ module.exports = function(app) {
             if (expired) {        
                 return res.render('dashboard/confirm', {
                     errors:{expiredToken:true},         
-                    session:req.session,                
                     cssIncludes: [],                    
                     jsIncludes: [],
-		    globals:globalViewVars,
+		    layoutContainer:true,
+		    page:'index',
                     title: 'wembli.com - check your email!.'                                                       
                 });               
                                   
@@ -55,10 +55,10 @@ module.exports = function(app) {
                 //some sort of hackery is going down - gtfo                                                          
                 return res.render('dashboard/confirm', {
                     errors:{invalidToken:true},         
-                    session:req.session,                
                     cssIncludes: [],                    
                     jsIncludes: [],
-		    globals:globalViewVars,
+		    layoutContainer:true,
+		    page:'index',
                     title: 'wembli.com - check your email!.'                                                       
                 });               
                                   
@@ -68,10 +68,10 @@ module.exports = function(app) {
             return res.render('dashboard/confirm-need-password', {                                                   
                 email: req.params[0],                   
                 token: req.params[1],                   
-                session:req.session,                    
                 cssIncludes: [],                        
                 jsIncludes: [],
-		globals:globalViewVars,
+		layoutContainer:true,
+		page:'index',
                 title: 'wembli.com - supply your password!.'                                                       
             });                                         
 

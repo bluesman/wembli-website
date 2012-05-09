@@ -166,7 +166,7 @@ var standardLogin = function(req,res) {
 		console.log('setting customer in session');
 		req.session.customer = c;
 		if (req.param('redirectUrl')) {
-		    req.flash('info','Login was successful and your work was saved.');
+		    //req.flash('info','Login was successful and your work was saved.');
 		}
 		return res.redirect( ( req.param('redirectUrl') ? req.param('redirectUrl') : '/dashboard') );
 	    }

@@ -23,6 +23,7 @@ wembliEveryauth.init(everyauth);
 app.set('fbAppId',wembliEveryauth.conf.fb.appId);
 app.set('fbAppSecret',wembliEveryauth.conf.fb.appSecret);
 app.set('host','beta');
+app.set('secure',false);
 
 app.configure(function(){
     app.use(express.cookieParser());
@@ -35,6 +36,7 @@ app.configure(function(){
     app.set('view engine', 'jade');
     app.use(express.bodyParser());
     app.use(express.methodOverride());
+    app.use(require('./lib/wembli/secure'));
     app.use(require('./lib/wembli/eventplan'));
     app.use(require('./lib/wembli/geoip'));
     app.use(require('./lib/wembli/top-performers'));
@@ -46,15 +48,14 @@ everyauth.helpExpress(app);
 
 
 var production = function() {
-    app.use(express.logger());
     //app.use(express.errorHandler()); 
+    app.use(express.logger());
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 };
 
 app.configure('production1',production);
 app.configure('production2',production);
 app.configure('development',function() {
-    app.use(express.logger());
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
@@ -99,6 +100,8 @@ if (process.env.NODE_ENV == 'production2') {
 }
 if (process.env.NODE_ENV == 'secure') {
     port = 8010;
+    app.set('secure',true);
+    
 }
 
 console.log('listening on port: '+port);

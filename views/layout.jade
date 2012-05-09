@@ -9,7 +9,7 @@ html
     link(type="image/png", rel="icon",href="/favicon.png")
     link(rel='stylesheet', href='/css/bootstrap.css')
     link(rel='stylesheet', href='/css/style.css')
-    script(type="text/javascript", src="https://apis.google.com/js/client.js?onload=OnLoadCallback")
+    //- script(type="text/javascript", src="https://apis.google.com/js/client.js?onload=OnLoadCallback")
     script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
     script(type="text/javascript", src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js")
     script(type="text/javascript", src="/js/plugins/jquery-ui-timepicker.js")
@@ -69,12 +69,12 @@ html
       #maincontentWrapper.container
         include includes/header
         section#content!= body
-        include includes/footer
+      include includes/footer
     - else
       #maincontentWrapper
         include includes/header
         section#content!= body
-        include includes/footer
+      include includes/footer
   - if ("undefined" !== typeof jsIncludes)
     - each file in jsIncludes
       script(type="text/javascript", src="#{file}")

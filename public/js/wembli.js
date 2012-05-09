@@ -330,6 +330,12 @@ $(document).ready(function(){
     $w.init();
     $w.eventplan.init();
 
+    if ($('#homeContent .mobileAd').length > 0) {
+	$('#homeContent .mobileAd').click(function(e) {
+	    e.preventDefault();
+	});
+    }
+
     if ($('#searchBox').length > 0) {
 	$w.searchBox();
     }
