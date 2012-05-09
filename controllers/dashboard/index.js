@@ -87,7 +87,8 @@ module.exports = function(app) {
 		return res.render('dashboard/confirm', {
 		    cssIncludes: [],
 		    jsIncludes: [],
-		    globals:globalViewVars,
+		    layoutContainer:true,
+		    page:'index',
 		    title: 'wembli.com - check your email!.'
 		});
 	    }
@@ -132,10 +133,10 @@ module.exports = function(app) {
 			errors:{general:true},
 			email: req.param('email'),
 			token: req.param('token'),
-			session:req.session,
 			cssIncludes: [],
 			jsIncludes: [],
-			globals:globalViewVars,
+			layoutContainer:true,
+			page:'index',
 			title: 'wembli.com - supply your password!.'
 		    });
 	    
@@ -172,10 +173,10 @@ module.exports = function(app) {
 	    if (expired) {
 		return res.render('dashboard/confirm', {
 		    errors:{expiredToken:true},
-		    session:req.session,
 		    cssIncludes: [],
 		    jsIncludes: [],
-		    globals:globalViewVars,
+		    layoutContainer:true,
+		    page:'index',
 		    title: 'wembli.com - check your email!.'
 		});
 		
@@ -192,10 +193,10 @@ module.exports = function(app) {
 		//some sort of hackery is going down - gtfo
 		return res.render('dashboard/confirm', {
 		    errors:{invalidToken:true},
-		    session:req.session,
+		    layoutContainer:true,
+		    page:'index',
 		    cssIncludes: [],
 		    jsIncludes: [],
-		    globals:globalViewVars,
 		    title: 'wembli.com - check your email!.'
 		});
 
@@ -206,10 +207,11 @@ module.exports = function(app) {
 	    return res.render('dashboard/confirm-need-password', {
 		email: req.params[0],
 		token: req.params[1],
-		session:req.session,
 		cssIncludes: [],
 		jsIncludes: [],
-		    globals:globalViewVars,
+		errors:{invalidToken:true},
+		layoutContainer:true,
+		page:'index',
 		title: 'wembli.com - supply your password!.'
 	    });
 	    
@@ -307,7 +309,8 @@ module.exports = function(app) {
 		session:req.session,
 		cssIncludes: [],
 		jsIncludes: [],
-		globals:globalViewVars,
+		layoutContainer:true,
+		page:'index',
 		title: 'wembli.com - check your email!.'
 	    });
 

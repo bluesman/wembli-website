@@ -300,7 +300,21 @@ footer {
   font-size: 14px;
   min-height: 100px;
 }
+footer .body {
+  *zoom: 1;
+  width: 720px;
+  margin: auto;
+}
+footer .body:before, footer .body:after {
+  display: table;
+  content: "";
+}
+footer .body:after {
+  clear: both;
+}
 footer .span3 div {
+  margin: auto;
+  text-align: left;
   height: 26px;
 }
 /* Stars */
@@ -1248,6 +1262,8 @@ p.note {
 #index section#content {
   padding-top: 50px;
   min-height: 400px;
+  position: relative;
+  z-index: 1;
 }
 #index #backgrounds #blue {
   position: relative;
@@ -1536,6 +1552,11 @@ p.note {
   width: 600px;
   margin: auto;
   text-align: center;
+  min-height: 600px;
+}
+#staticMap #mapNotFound {
+  height: 201px;
+  padding: 200px;
 }
 #thumbnail {
   background-color: #d8d6d7;
@@ -1717,6 +1738,12 @@ p.note {
   margin: 0 20px 0 40px;
   padding: 10px 0;
 }
+#dashboardContainer {
+  margin: 10px 0;
+}
+#dashboardContainer #friendStack .friend {
+  padding: 10px;
+}
 #dashboardContainer #dashboardSidebar {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -1744,4 +1771,31 @@ p.note {
 }
 #dashboardContainer #dashboardSidebar #profileImage i {
   margin: 43px 58px;
+}
+#dashboardContainer .dashboardEventList li a.event {
+  *zoom: 1;
+  height: 70px;
+  display: block;
+  padding: 10px;
+}
+#dashboardContainer .dashboardEventList li a.event:before, #dashboardContainer .dashboardEventList li a.event:after {
+  display: table;
+  content: "";
+}
+#dashboardContainer .dashboardEventList li a.event:after {
+  clear: both;
+}
+#dashboardContainer .dashboardEventList li a.event .info {
+  margin-left: 80px;
+  float: left;
+}
+#dashboardContainer .dashboardEventList li a.event:hover {
+  background-color: #ffdd73;
+}
+#dashboardContainer .dashboardEventList li.empty {
+  padding: 10px;
+}
+#dashboardContainer .dashboardEventList li.empty hr {
+  padding: 0 10px;
+  margin: 0;
 }

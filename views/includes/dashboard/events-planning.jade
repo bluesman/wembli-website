@@ -5,9 +5,21 @@
 			- if ((typeof session.customer.eventplan != "undefined") && (session.customer.eventplan.length > 0)) 
 				- each plan in session.customer.eventplan
 					- if (typeof plan.config != "undefined")
-						li!= partial("includes/event",{event:plan.event});
+						- var date = new Date(Date.parse(plan.event.Date));
+						li
+							a.event(href="/plan/view/#{plan.config.guid}")
+								.info
+									.name #{plan.event.Name}
+									.venue!= (typeof plan.event.Venue.Name != "undefined") ? plan.event.Venue.Name : plan.event.Venue
+									.location!= plan.event.City+', '+plan.event.StateProvince
+								.event-date-box
+									span.day!=        date.format("ddd")
+									span.event-date!= date.format("mmm d")
+									span.time!=       date.format("h:MM TT") 
+						li.empty
+							hr
 					- else
-						li Search for an event above to start planning.
+						li.empty Search for an event above to start planning.
 			- else
-				li Search for an event above to start planning.
+				li.empty Search for an event above to start planning.
 	

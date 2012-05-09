@@ -1,10 +1,10 @@
-#eventsPlanningContainer.dashboardEventList.module
-	h3 Events I'm Planning
+#eventsAttendingContainer.dashboardEventList.module
+	h3 Events I'm Attending
 	.body
 		ul
 			- if ((typeof eventsAttending !="undefined") && (eventsAttending.length > 0))
 				- each event in events
 					li!= partial("includes/event",{event:event});
 			- else
-				li Search for an event above to start planning.
+				li.empty You have not been invited to any events yet :(
 	

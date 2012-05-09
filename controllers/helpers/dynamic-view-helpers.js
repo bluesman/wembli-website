@@ -53,5 +53,19 @@ module.exports = {
 	return friendCnt;
     },
 
+    allFriends: function(req,res) {
+	var friends = [];
+	if ((typeof req.session.customer != "undefined") && (typeof req.session.customer.eventplan != "undefined")) {
+	    for (idx in req.session.customer.eventplan) {
+		var plan = req.session.customer.eventplan[idx];
+		if (typeof plan.friends != "undefined") {
+		    for (friendId in plan.friends) {
+			friends.push(plan.friends[friendId]);
+		    }
+		}
+	    }
+	}
+	return friends;
+    }
 };
 

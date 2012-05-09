@@ -105,7 +105,7 @@
 		//make it global
 		$w.eventplan.data = eventplan;
 		$w.eventplan.updateSummary();
-		$w.eventplan.alertMsg('success','Successfully added '+friend.firstName+' to your plan.');
+		//$w.eventplan.alertMsg('success','Successfully added '+friend.firstName+' to your plan.');
 	    } else {
 		$w.eventplan.alertMsg('error','Error: Unable to add'+friend.firstName+' at this time. Try logging in.');
 	    }
@@ -154,7 +154,7 @@
 			//make it global
 			$w.eventplan.data = eventplan;
 			$w.eventplan.updateSummary();
-			$w.eventplan.alertMsg('success','Successfully removed '+friend.firstName+' from your plan.');
+			//$w.eventplan.alertMsg('success','Successfully removed '+friend.firstName+' from your plan.');
 		    } else {
 			$w.eventplan.alertMsg('error','Error: Unable to remove '+friend.firstName+' at this time. Try logging in.');
 		    }
@@ -310,7 +310,7 @@
 		    $('#manualForm #lastName').val(''),
 		    $('#manualForm #email').val('')
 
-		    $w.eventplan.alertMsg('success','Successfully removed '+friend.firstName+' from your plan.');
+		    //$w.eventplan.alertMsg('success','Successfully removed '+friend.firstName+' from your plan.');
 		} else {
 		    $w.eventplan.alertMsg('error','Error: Unable to remove '+friend.firstName+' at this time. Try logging in.');
 		}

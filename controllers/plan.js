@@ -364,7 +364,7 @@ module.exports = function(app) {
 
     app.all('/plan/collect-payment',function(req,res) {
 	if (!req.param('ticketChoice')) {
-	    req.flash('plan-msg','An error occurred. No ticket choice provided.');
+	    //req.flash('plan-msg','An error occurred. No ticket choice provided.');
 	    return res.redirect('/plan/view');
 	}
 
@@ -382,7 +382,7 @@ module.exports = function(app) {
 
 	//set the appropriate ticket group to have finalChoice = true
 	if (typeof req.session.currentPlan.tickets[req.param('ticketChoice')] == "undefined") {
-	    req.flash('plan-msg','An error occurred. No ticket choice provided.');
+	    //req.flash('plan-msg','An error occurred. No ticket choice provided.');
 	    return res.redirect('/plan/view');
 	} else {	    
 	    req.session.currentPlan.tickets[req.param('ticketChoice')].finalChoice = true;
@@ -510,7 +510,7 @@ module.exports = function(app) {
 	req.session.customer.saveCurrentPlan(req.session.currentPlan);
 
 	//redirect to organizer view with flash message
-	req.flash('plan-msg','Successfully sent messages to invited friends.');
+	//	req.flash('plan-msg','Successfully sent messages to invited friends.');
 	res.redirect('/plan/view');
 
     });
@@ -529,7 +529,7 @@ module.exports = function(app) {
 	console.log('contribution: '+contribution);
 
 	if (!req.param('contribution')) {
-	    req.flash('plan-msg','An error occurred. No ticket choice provided.');
+	    //req.flash('plan-msg','An error occurred. No ticket choice provided.');
 	    return res.redirect('/plan/view/'+guid+'/'+token);
 	}
 
@@ -573,7 +573,7 @@ module.exports = function(app) {
 			//redirect to paypal on success
 			req.session.organizer.saveCurrentPlan(req.session.currentPlan,function(err) {
 			    if (err) {
-				req.flash('plan-msg','An error occurred. No ticket choice provided.');
+				//req.flash('plan-msg','An error occurred. No ticket choice provided.');
 				return res.redirect('/plan/view/'+guid+'/'+token);
 			    }
 			    var redirectUrl = payPal.redirectUrl(results.payKey);

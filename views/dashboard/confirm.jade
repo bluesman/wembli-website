@@ -1,10 +1,9 @@
-.container 
-  .dashboard waiting for email confirmation: 
-    .email!= session.customer.email
-    .generalError.error.yellow
-      - if((typeof errors !== 'undefined') && (errors.expiredToken) )
-        | Your confirmation email token has expired, please click below to send a new one.
-      - if((typeof errors !== 'undefined') && (errors.invalidToken) )
-        | Your confirmation email token is invalid, please click below to send a new one.
-    #resendConfirmation
-      a(href="/dashboard/resend-confirmation-email") click here to resend the confirmation email
+#dashboard.hero-unit
+	h3 waiting for email confirmation from #{session.customer.email}
+	.generalError.error.yellow
+	- if((typeof errors !== 'undefined') && (errors.expiredToken) )
+		| Your confirmation email token has expired, please click below to send a new one.
+	- if((typeof errors !== 'undefined') && (errors.invalidToken) )
+		| Your confirmation email token is invalid, please click below to send a new one.
+	#resendConfirmation
+		a.btn.btn-primary(href="/dashboard/resend-confirmation-email") Resend Confirmation Email

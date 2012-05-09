@@ -1,4 +1,11 @@
 #dashboardContainer {
+  margin:10px 0;
+
+  #friendStack {
+    .friend {
+      padding:10px;
+    }
+  }
 
   #dashboardSidebar {
     .border-radius(4px);
@@ -26,5 +33,34 @@
     }
   }
 
+  .dashboardEventList {
+    li {
+      a.event {
+	.clearfix();
+	height:70px;
+	display:block;
+	padding:10px;
+	
+	.info {
+	  margin-left:80px;
+	  float:left;
+	}
+      }
+      
+      a.event:hover {
+	background-color:lighten(@yellow,20%);      
+      }
+    }
+
+    li.empty {
+      padding:10px;
+
+      hr {
+	padding:0 10px;
+	margin:0;
+      }
+    }
+
+  } 
 
 }

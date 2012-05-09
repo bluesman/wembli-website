@@ -136,7 +136,7 @@ module.exports = function(app) {
 			initCollectVote();
 		    });
 		}
-		req.flash('plan-msg','Successfully sent invitations to invited friends.');
+		//req.flash('plan-msg','Successfully sent invitations to invited friends.');
 	    }
 	}
 	req.session.currentPlan.config.voteBy = req.param('voteBy');
