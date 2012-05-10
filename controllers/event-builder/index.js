@@ -212,7 +212,7 @@ module.exports = function(app) {
 
 	if (typeof req.session.currentPlan.event =="undefined") {
 	    //they tried to load summary without an event
-	    req.flash('error','Your session has expired. If you sign up for Wembli, your work can be automatically saved.');
+	    //req.flash('error','Your session has expired. If you sign up for Wembli, your work can be automatically saved.');
 	    return res.redirect('/');
 	}
 

@@ -297,22 +297,29 @@ module.exports = function(app) {
 		mail.html = htmlStr;
 		mailer.sendMail(mail,function(error, success){
 		    console.log("Message "+(success?"sent":"failed:"+error));
+
+		    if (error) {
+			req.flash('confirm-error',"Shoot! We had trouble sending the confirmation email.  If the problem persists contact help@wembli.com");
+		    } else {
+			req.flash('confirm-info','Thanks! We sent you a new confirmation email.');
+		    }
+
+		    //render the dashboard/confirm page	    
+		    return res.render('dashboard/confirm', {
+			session:req.session,
+			cssIncludes: [],
+			jsIncludes: [],
+			layoutContainer:true,
+			page:'index',
+			title: 'wembli.com - check your email!.'
+		    });
+
 		});
 
 
 	    });
 	    
 
-
-	    //render the dashboard/confirm page	    
-	    return res.render('dashboard/confirm', {
-		session:req.session,
-		cssIncludes: [],
-		jsIncludes: [],
-		layoutContainer:true,
-		page:'index',
-		title: 'wembli.com - check your email!.'
-	    });
 
 	} else {
 	    //already confirmed? then send to dashboard

@@ -1,7 +1,7 @@
 - if (typeof plan.config.voteBy != "undefined")
 	voteMsg    = session.isOrganizer ? "Voting ends "+plan.config.voteBy : session.organizer.first_name+" asks to please vote by: "+session.currentPlan.config.voteBy;
 - var venueMapUrl  = session.isOrganizer ? '/plan/tickets' : '/plan/tickets/'+plan.config.guid;
-- var venueMapText = session.isOrganizer ? 'Modify Ticket Options' : 'View Tickets On Venue Map';
+- var venueMapText = session.isOrganizer ? 'Change Ticket Options' : 'View Tickets On Venue Map';
 #votingContainer.planOptions.module
 	h3 Voting
 		a#votingIcon(href="#")
@@ -35,5 +35,5 @@
 						include ticket/friend-voting
 		- if (session.isOrganizer)
 			.form-footer
-				a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & REQUEST PAYMENT
+				a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & ASK FRIENDS TO PONY UP
 	

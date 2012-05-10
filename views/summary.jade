@@ -5,7 +5,7 @@ include includes/modals/vote-by
 			$('.redirect-url').each(function(idx,el) {
 				$(el).val('/summary');
 			});
-			$('#signupModal #message').html('You have done a lot of work.  Sign up for Wembli so we can associate this plan with your account.').show();
+			$('#signupModal #message').html("You've done a lot of work.  Sign up for Wembli now to make sure your plan is saved.").show();
 			$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
 		});
 #eventBuilderContainer!= partial("widgets/event-builder",{});
@@ -95,5 +95,5 @@ include includes/modals/vote-by
 					li Friends will be able to vote on these ticket options.
 					li Votes help you decide which tickets work best.
 					li Each friend pays their portion into your PayPal account.
-					li You buy all each ticket using the funds deposited by your friends.
+					li You buy the tickets using the money deposited by your friends.
 					

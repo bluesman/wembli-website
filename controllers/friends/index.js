@@ -78,7 +78,7 @@ module.exports = function(app) {
 
 			    //make a post for wembli
 			    var apiCall = "/"+friend.id+"/feed";
-			    apiCall = "/me/feed";
+			    //apiCall = "/me/feed";
 			    //post args for fb
 			    var msg = name+' is planning an outing and you\'re invited!';
 			    var desc = req.session.customer.first_name+', '+name+ ' is using Wembli to plan a '+req.session.currentPlan.event.Name+' outing on '+req.session.currentPlan.event.DisplayDate+' and has invited you! Follow the link so you can RSVP.  You can also contribute to the plan by voting for the options that work best for you.';

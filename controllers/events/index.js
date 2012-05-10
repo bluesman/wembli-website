@@ -33,12 +33,12 @@ module.exports = function(app) {
             res.render('events',{
 		layoutContainer:true,
 		session: req.session,
+		q: req.param.q,
 		param: req.param,
 		cssIncludes: [],
 		jsIncludes: [],
 		title: 'wembli.com - events.',
 		page:'tickets',
-		globals:globalViewVars,
                 events: results.Event
 	    });
         });

@@ -6,8 +6,12 @@
 			#mainAlert.alert.alert-success!= msg;
 				a.close(data-dismiss="alert") x
 		#center.span6
+			#search.module
+				h3 Plan a new event
+				.body
+					.input-append
 			include ../includes/dashboard/events-planning
 			include ../includes/dashboard/events-attending
 		#right.span4
-			#friendStack.module!= partial("../includes/dashboard/friend-stack",{})
+			include ../includes/dashboard/activity-feed
 

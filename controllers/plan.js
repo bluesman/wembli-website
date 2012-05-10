@@ -50,7 +50,7 @@ module.exports = function(app) {
 
 	    //set the login redirect url
 	    req.session.redirectUrl = req.url;
-	    req.session.redirectMsg = 'Successfully logged in and saved your work.';
+	    //req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
 	    //render the friends template
 	    return res.render('friends', {
@@ -105,7 +105,7 @@ module.exports = function(app) {
 
 	    //set the login redirect url
 	    req.session.redirectUrl = req.url;
-	    req.session.redirectMsg = 'Successfully logged in and saved your work.';
+	    //req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
 	    //if there is a guid but they are not the organizer of this guid then they can't edit
 	    if (req.param('guid') && (req.param('guid') != req.session.currentPlan.config.guid)) {
@@ -195,7 +195,7 @@ module.exports = function(app) {
 
 	    //set the login redirect url
 	    req.session.redirectUrl = req.url;
-	    req.session.redirectMsg = 'Successfully logged in and saved your work.';
+	    //req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
 	    res.render('summary', {
 		event:req.session.currentPlan.event,
@@ -309,7 +309,7 @@ module.exports = function(app) {
 
 	    //set the login redirect url
 	    req.session.redirectUrl = req.url;
-	    req.session.redirectMsg = 'Successfully logged in and saved your work.';
+	    //req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
 	    //set friend in the session
 	    if (req.param('guid') && req.param('token') && req.param('action')) {
@@ -432,7 +432,6 @@ module.exports = function(app) {
 		if ((typeof friend.addMethod != "undefined") && (friend.addMethod == "facebook")) {
 		    //post to this friend's facebook wall
 		    facebook_client.getSessionByAccessToken(req.session.fbAccessToken)(function(facebook_session) {
-			console.log(facebook_session);
 			if (!facebook_session) {
 			    return res.redirect('/auth/facebook');
 			}
@@ -444,7 +443,8 @@ module.exports = function(app) {
 
 			    //make a post for wembli
 			    var apiCall = "/"+friend.id+"/feed";
-			    apiCall = "/me/feed"; //take this out after testing
+			    console.log('apicall:'+apiCall);
+			    //apiCall = "/me/feed"; //take this out after testing
 			    //post args for fb
 			    var msg = 'Hey '+friend.firstName+' thanks for coming to '+req.session.currentPlan.event.Name+'!';
 			    var desc = 'I\'ve created a plan for our outing - click the link below to view and make a contribution.';

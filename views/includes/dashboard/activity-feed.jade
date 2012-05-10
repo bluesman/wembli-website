@@ -1,0 +1,8 @@
+#feedContainer
+	h3 Activity Feed
+	#feedItems
+		- if (typeof feedItems != "undefined")
+			- each feed in feedItems
+				.feed
+		- else
+			

@@ -39,7 +39,6 @@ app.configure(function(){
     app.use(require('./lib/wembli/secure'));
     app.use(require('./lib/wembli/eventplan'));
     app.use(require('./lib/wembli/geoip'));
-    app.use(require('./lib/wembli/top-performers'));
     app.use(app.router);
 });
 

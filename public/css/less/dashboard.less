@@ -1,18 +1,16 @@
+#dashboard.hero-unit {
+  position:relative;
+  z-index:2;
+}
+
 #dashboardContainer {
   margin:10px 0;
-
-  #friendStack {
-    .friend {
-      padding:10px;
-    }
-  }
 
   #dashboardSidebar {
     .border-radius(4px);
     .box-shadow(inset 0 2px 2px rgba(0,0,0,.05));   
     padding:19px;  
-    background-color:lighten(@blue,40%);
-    border:2px solid @blue;
+    border:2px solid @grayLighter;
     width:140px;
     float:left;    
 
@@ -22,16 +20,24 @@
       
       i {padding:2px;}
     }
+
     #profileImage {
       height:100px;
       width:130px;
-      border:3px dashed @grayDark;
-
-      i {
-	margin: 43px 58px;
-      }
+      border:3px dashed lighten(@blue,20%);
+      background:url(/images/profile_icon_small.png) no-repeat center center;
     }
   }
+  #feedContainer {
+    h3 {
+      color:@orange;
+      font-size:14px;
+      font-weight:bold;
+    }
+
+
+  }
+
 
   .dashboardEventList {
     li {
