@@ -40,6 +40,15 @@ module.exports = function(app) {
 				});
     });
 
+    app.get('/terms-policies',function(req,res) {
+	res.render('terms-policies.jade', {
+	    layoutContainer: true,
+	    cssIncludes: [],
+	    jsIncludes: [],
+	    title: 'wembli.com - Terms & Policies.'
+	});
+
+    });
 
     app.get('/testfb',function(req,res) {
 	res.render('fbtest.jade', {

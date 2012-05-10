@@ -1262,8 +1262,6 @@ p.note {
 #index section#content {
   padding-top: 50px;
   min-height: 400px;
-  position: relative;
-  z-index: 1;
 }
 #index #backgrounds #blue {
   position: relative;
