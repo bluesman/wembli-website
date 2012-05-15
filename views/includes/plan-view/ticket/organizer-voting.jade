@@ -13,14 +13,15 @@
 		.alert 
 			strong Warning: 
 			span This ticket group cannot be split to accomodate your group size.
-.info
-	#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
-	.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
-	.progress
-		.bar(style="width:#{votePct}%")
-	em!= voteCntStr
-input(type="radio",checked="",value="#{ticket.ID}",name="ticketChoice")
-.ticket-price-box
-	include ../../ticket-price-box
-include cost-breakdown
-
+.infoContainer.clearfix
+	.info
+		#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
+		.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+		.progress
+			.bar(style="width:#{votePct}%")
+		em!= voteCntStr
+	input(type="radio",checked="",value="#{ticket.ID}",name="ticketChoice")
+	.ticket-price-box
+		include ../../ticket-price-box
+	include cost-breakdown
+	

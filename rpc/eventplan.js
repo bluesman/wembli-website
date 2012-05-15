@@ -70,6 +70,54 @@ exports.eventplan = {
 	});
     },
 
+    removePlan: function(guid,req,res) {
+	var me = this;
+	//make sure this plan belongs to this customer, if so, mark it as removed in config
+	if (req.session.loggedIn) {
+	    if (typeof req.session.customer == 'string') {
+		req.session.customer = JSON.parse(req.session.customer);
+	    }
+	    //refresh customer from the db
+	    Customer.findOne({email:req.session.customer.email},function(err,customer) {
+		if (err != null || customer == null) {
+		    //console.log('error finding customer for session!: '+err);
+		    delete req.session.customer;
+		    req.session.loggedIn = false;
+		    return callback('Authentication error');
+		}
+
+		req.session.customer = customer;
+
+		for (idx in customer.eventplan) {
+		    if (typeof customer.eventplan[idx].config == "undefined") {
+			continue;
+		    }
+		    console.log('eventplan #'+idx);
+		    console.log('comparing: '+customer.eventplan[idx].config.guid+' to '+guid);
+		    if (customer.eventplan[idx].config.guid == guid) {
+			console.log('match');
+			customer.eventplan[idx].config.deleted = true;
+			customer.markModified('eventplan');
+			customer.save(function(err) {
+			    if (err) { return _respond(err,null,null,me); }
+			    return _respond(null,customer.eventplan[idx],req,me);
+			});
+			
+			last;
+		    }
+		}
+		//if we got here something went wrong, we did not find the plan to delete
+		return _respond('invalid eventplan guid: '+guid,null,null,me);
+	    });
+	} else {
+	    //make sure we have an event plan
+	    if (typeof req.session.currentPlan == "undefined") {
+		return callback('no eventplan available');
+	    }
+	}
+	
+    },
+
     removeFriend: function(friendId,req,res) {
 	var me = this;
 
@@ -102,6 +150,10 @@ exports.eventplan = {
 
 	    //friends is a hash keyed by email address
 	    for (email in friends) {
+		if (typeof e.friendIds == "undefined") {
+		    e.friendIds = [];
+		}
+		e.friendIds.push(email);
 		e.friends[email] = friends[email];
 	    }
 	    

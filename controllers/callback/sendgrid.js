@@ -8,9 +8,12 @@ module.exports = function(app) {
 	if (typeof req.body.organizer == "undefined") {
 	    return res.send(200);
 	}
-
+	
 	Customer.findOne({email:req.body.organizer},function(err,c) {	
-
+	    if (err || !c) {
+		console.log('error handling sendgrid callback: '+err);
+		return res.send(200);
+	    }
 	    //get the event
 	    for (var i in c.eventplan) {
 		if (typeof c.eventplan[i] == "undefined") {
@@ -48,6 +51,6 @@ module.exports = function(app) {
 		}
 	    }
 	});
-	res.send(200);
+	return res.send(200);
     });
 }

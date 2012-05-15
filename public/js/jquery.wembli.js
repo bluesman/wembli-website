@@ -41,6 +41,25 @@
 		}
 	    });
 	},
+	remove: function(args,callback) {
+	    var me = this;
+	    $.ajax({
+		url: "/",
+		dataType:"json",
+		global: false,
+		type: "POST",
+		contentType: "application/json",
+		data: JSON.stringify({
+		    "jsonrpc":"2.0",
+		    "method":"eventplan.removePlan",
+		    "params":args,
+		    "id":1
+		}),
+		success: function(data) {
+		    callback(null,data.result.eventplan);
+		}
+	    });
+	},
 	addTicketGroup: function(args,callback) {
 	    var me = this;
 	    $.ajax({

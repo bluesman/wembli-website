@@ -19,16 +19,31 @@ module.exports = function(app) {
 	    return res.redirect('/dashboard');
 	}
 
+	//you can only resend to a single email
+	//this allows us to handle the case where they are adding more friends to an existing plan
+	//for bulk friend emails, we will send only to those emails that have not had emails sent
+	var resendOk = req.param('friendEmailId') ? true : false;
+
 	for (id in req.session.currentPlan.friends) {
 	    var friend = req.session.currentPlan.friends[id];
 	    //don't send email to friends that have declined
 	    if (typeof friend.decision != "undefined" && !friend.decision) {
+		console.log('no decision');
 		continue;
 	    }
+
+	    //if resendOk is false, make sure this friend has never had a collectVote email sent yet
+	    if (!resendOk) {
+		if ((typeof friend.collectVote != "undefined") && (friend.collectVote.initiated)) {
+		    console.log('skipping this friend because resendok is false and they already got a collectVote email');
+		    continue;
+		}
+	    }
+
 	    //only send	1 email if friendEmailId param
 	    //TODO: prevent spammers? only send 3 emails per friend
 	    if (req.param('friendEmailId')) {
-		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.id : friend.email.replace(/\W+/g,'-');
+		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.id : friend.email;
 		if (req.param('friendEmailId') != friendEmailId) {
 		    continue;  
 		} 

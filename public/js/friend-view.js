@@ -77,7 +77,7 @@
 
 	    //if this is a ticket you voted for make it say that
 	    var friendEmail = $('#friendEmail').val();
-	    if (typeoftypeof $w.eventplan.data.friends[friendEmail].votes != "undefined") {
+	    if (typeof $w.eventplan.data.friends[friendEmail].votes != "undefined") {
 		if (typeof $w.eventplan.data.friends[$('#friendEmail').val()].votes.tickets != "undefined") {
 		    var tixId = $w.eventplan.data.friends[$('#friendEmail').val()].votes.tickets;
 		    if (tixId == el.id) {
@@ -126,6 +126,7 @@
 	    });
 	});
 	$('#rsvpYes').click(function(e) {
+
 	    e.preventDefault();
 	    wembli.eventPlan.rsvp({rsvp:'YES'},function(error,eventplan) {
 		//mark label for this friend to 'attending'
@@ -151,6 +152,7 @@
     };
 
     $(window.document).ready(function($) {
+	console.log('init');	
 	wembli.eventPlan.get({},function(error,eventplan) {
 	    $w.eventplan.data = eventplan; //store the event plan in the $w wembli global for use by other stuff
 	    init();

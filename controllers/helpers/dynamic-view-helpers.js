@@ -66,6 +66,14 @@ module.exports = {
 	    }
 	}
 	return friends;
+    },
+    
+    eventsAttending: function(req,res) {
+	var friends = [];
+	if ((typeof req.session.customer != "undefined") && (typeof req.session.customer.eventplan != "undefined")) {
+	    for (idx in req.session.customer.eventplan) {
+	    }
+	}
     }
 };
 

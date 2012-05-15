@@ -2,92 +2,84 @@
     var fbFriendStack = {
 	init: function(fbFriends) {
 	    //clear out the existing stuff
-	    $('#facebook .footer').slideUp(100);
-	    $('#facebook .footer').promise().done(function() {
-		$('#facebook .body').slideUp(100);
-		$('#facebook .body').promise().done(function() {
+	    $('#facebook img.spinner').hide();
+	    //make a scrolable div
+	    var fbFriendContainer = $('<div id="fbFriendStack"></div>');
+	    //set up the friend search filter
+	    var searchContainer = $('<div class="input-append"><input id="fbFilter" placeholder="Enter friend name to filter" style="width:273px;" type="text" size="16"><span class="add-on"><i class="icon-search" style="margin-top:2px;"></i></span></div>');
+	    fbFriendContainer.append(searchContainer);
+	    var fbFriendList = $('<div id="fbFriendList" class="hide" style="height:300px;overflow:auto;"></div>');
+	    fbFriendContainer.append(fbFriendList);
+	    $(fbFriends.data).each(function(idx) {
+		var friend = this;
+		friend.addMethod = 'facebook';
+		
+		var fbFriendEl = $('<div id="fb-container-'+friend.id+'" class=" friend "></div>');
+		$('<div class="data"><strong>'+friend.name+'</strong></div>').appendTo(fbFriendEl);
+		
+		//if this friend is in the plan already make it a remove button
+		if ((typeof $w.eventplan.data.friends != "undefined") && (typeof $w.eventplan.data.friends[friend.id] != "undefined")) {
+		    var button = $('<a id="fb-'+friend.id+'" class="btn btn-warning pull-right" href="#">Remove</a>');			    
+		} else {
+		    var button = $('<a id="fb-'+friend.id+'" class="btn btn-primary pull-right" href="#">Add To Plan</a>');
+		}
+		//click event for the add to plan button
+		button.click(function(e) {
+		    console.log('clicked add to plan');
+		    e.preventDefault();
+		    //get firstName and lastName from name
+		    var i = friend.name.indexOf(' ');
+		    friend.firstName = friend.name.slice(0,i);
+		    friend.lastName = friend.name.slice(i+1);
+		    fbFriendStack.add(friend);
+		});
+		//append to the fbfriendel
+		fbFriendEl.append(button);
+		fbFriendEl.appendTo(fbFriendList);
+	    });
+	    $('#facebook .body').html(fbFriendContainer).slideDown(200);
+	    $('#facebook .body').promise().done(function() {
+		fbFriendContainer.append(fbFriendList);
+		fbFriendList.slideDown(100);
+	    });
+	    //add the filter function
+	    $('#fbFilter').keyup(function(e) {
+		var val = $(this).val();
+		var r = new RegExp("^"+val,"i");
+		var show = [];
+		var hide = [];
+		$(fbFriends.data).each(function(idx) {
+		    var f = this;
 		    
-		    //make a scrolable div
-		    var fbFriendContainer = $('<div id="fbFriendStack"></div>');
-		    //set up the friend search filter
-		    var searchContainer = $('<div class="input-append"><input id="fbFilter" placeholder="Enter friend name to filter" style="width:273px;" type="text" size="16"><span class="add-on"><i class="icon-search" style="margin-top:2px;"></i></span></div>');
-		    fbFriendContainer.append(searchContainer);
-		    var fbFriendList = $('<div id="fbFriendList" class="hide" style="height:300px;overflow:auto;"></div>');
-		    fbFriendContainer.append(fbFriendList);
-		    $(fbFriends.data).each(function(idx) {
-			var friend = this;
-			friend.addMethod = 'facebook';
-
-			var fbFriendEl = $('<div id="fb-container-'+friend.id+'" class=" friend "></div>');
-			$('<div class="data"><strong>'+friend.name+'</strong></div>').appendTo(fbFriendEl);
-
-			//if this friend is in the plan already make it a remove button
-			if ((typeof $w.eventplan.data.friends != "undefined") && (typeof $w.eventplan.data.friends[friend.id] != "undefined")) {
-			    var button = $('<a id="fb-'+friend.id+'" class="btn btn-warning pull-right" href="#">Remove</a>');			    
-			} else {
-			    var button = $('<a id="fb-'+friend.id+'" class="btn btn-primary pull-right" href="#">Add To Plan</a>');
-			}
-			//click event for the add to plan button
-			button.click(function(e) {
-			    console.log('clicked add to plan');
-			    e.preventDefault();
-			    //get firstName and lastName from name
-			    var i = friend.name.indexOf(' ');
-			    friend.firstName = friend.name.slice(0,i);
-			    friend.lastName = friend.name.slice(i+1);
-			    fbFriendStack.add(friend);
-			});
-			//append to the fbfriendel
-			fbFriendEl.append(button);
-			fbFriendEl.appendTo(fbFriendList);
-		    });
-		    $('#facebook .body').html(fbFriendContainer).slideDown(200);
-		    $('#facebook .body').promise().done(function() {
-			fbFriendContainer.append(fbFriendList);
-			fbFriendList.slideDown(100);
-		    });
-		    //add the filter function
-		    $('#fbFilter').keyup(function(e) {
-			var val = $(this).val();
-			var r = new RegExp("^"+val,"i");
-			var show = [];
-			var hide = [];
-			$(fbFriends.data).each(function(idx) {
-			    var f = this;
-			    
-			    var show = false;
-			    //fullname
-			    if (r.test(f.name)) {
+		    var show = false;
+		    //fullname
+		    if (r.test(f.name)) {
+			show = true;
+		    }
+		    //check name parts
+		    if (!show) {
+			var ary = f.name.split(' ');
+			$(ary).each(function(idx) {
+			    if (r.test(this)) {
 				show = true;
-			    }
-			    //check name parts
-			    if (!show) {
-				var ary = f.name.split(' ');
-				$(ary).each(function(idx) {
-				    if (r.test(this)) {
-					show = true;
-					return false;
-				    }
-				});
-			    }
-			    
-			    var k = '#fb-container-'+this.id;
-			    if (show) {
-				$(k).show();
-			    } else {
-				$(k).hide();
+				return false;
 			    }
 			});
-		    });
+		    }
+		    
+		    var k = '#fb-container-'+this.id;
+		    if (show) {
+			$(k).show();
+		    } else {
+			$(k).hide();
+		    }
 		});
 	    });
-
-
-	    
 	    //fbFriendList.fadeIn();
 	    console.log('here2');
 	}
     };
+
     fbFriendStack.add = function(friend) {
 	console.log(friend);
 	//toggle this button to be a remove button
@@ -123,11 +115,11 @@
 	add: function(friend) {
 	    //make html from the data passed in
 	    var removeId = false;
-	    if (typeof friend.email != "undefined") {
-		removeId = friend.email.replace(/\W+/g,'-');
-	    }
 	    if (typeof friend.id != "undefined") {
 		removeId = friend.id;
+	    }
+	    if (typeof friend.email != "undefined") {
+		removeId = removeId.replace(/\W+/g,'-');
 	    }
 	    if (!removeId) {
 		return false;
@@ -203,6 +195,11 @@
 		var uid = response.authResponse.userID;
 		var accessToken = response.authResponse.accessToken;
 		getFbFriends();
+	    } else {
+		$('#facebook .footer').slideDown(100);
+		$('#facebook .footer').promise().done(function() {
+		    $('#facebook .body').slideDown(100);
+		});
 	    }
 	});
 
@@ -238,6 +235,25 @@
     };
 
     var init = function() {
+
+	//catch the continue button and pop up the send rsvp email if they have added new friends
+	console.log($w.eventplan);
+	if (($w.eventplan.data.completed.tickets != "undefined") && ($w.eventplan.data.completed.tickets)) {
+	    $('#continue').click(function(e) {
+		e.preventDefault();
+		//pop a modal to collect respond by date
+		$('#datepicker').datepicker({altField:'#voteBy',
+					     defaultDate: $w.eventplan.data.config.voteBy,
+					     minDate: new Date(),
+					     maxDate:new Date($w.eventplan.data.event.Date),
+					     onSelect: function(d,i) {
+						 $('#respondByDate').html(d);
+					     }
+					    });
+		$('#voteByModal').modal('show');
+		
+	    });
+	}
 
 	//manual
 	//preload the friendStack with existing friends and update the summary

@@ -8,10 +8,13 @@
 						- var date = new Date(Date.parse(plan.event.Date));
 						li
 							a.event(href="/plan/view/#{plan.config.guid}")
+								input.eventGuid(name="eventGuid",value="#{plan.config.guid}",type="hidden")
 								.info
 									.name #{plan.event.Name}
 									.venue!= (typeof plan.event.Venue.Name != "undefined") ? plan.event.Venue.Name : plan.event.Venue
 									.location!= plan.event.City+', '+plan.event.StateProvince
+								.cta
+									btn#removePlan.btn.btn-warning.pull-right(href="#") Remove
 								.event-date-box
 									span.day!=        date.format("ddd")
 									span.event-date!= date.format("mmm d")

@@ -1026,6 +1026,17 @@ p.note {
   margin-right: 70px;
   margin-top: 30px;
 }
+.planViewContainer .planOptions #ticketsContainer .ticketOption .infoContainer {
+  *zoom: 1;
+  position: relative;
+}
+.planViewContainer .planOptions #ticketsContainer .ticketOption .infoContainer:before, .planViewContainer .planOptions #ticketsContainer .ticketOption .infoContainer:after {
+  display: table;
+  content: "";
+}
+.planViewContainer .planOptions #ticketsContainer .ticketOption .infoContainer:after {
+  clear: both;
+}
 .planViewContainer .planOptions #ticketsContainer .ticketOption .info {
   font-size: 12px;
   margin-left: 100px;
@@ -1040,7 +1051,6 @@ p.note {
 .planViewContainer .planOptions #ticketsContainer .ticketOption .ticket-price-box {
   left: 20px;
   margin: 0px;
-  top: 15px;
 }
 .planViewContainer .planOptions .form-footer {
   text-align: center;
@@ -1567,6 +1577,15 @@ p.note {
 #friendsContent .footer a.btn {
   margin: auto;
 }
+#friendsContent #facebook {
+  text-align: center;
+}
+#friendsContent #facebook img.spinner {
+  margin: 20px auto;
+}
+#friendsContent #facebook .body {
+  text-align: left;
+}
 #friendsContent #facebook .body #fbFriendList .friend {
   *zoom: 1;
   padding: 10px 20px;
@@ -1758,6 +1777,7 @@ p.note {
   clear: both;
 }
 #dashboardContainer .dashboardEventList li a.event .info {
+  width: 200px;
   margin-left: 80px;
   float: left;
 }

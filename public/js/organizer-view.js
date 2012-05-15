@@ -22,12 +22,12 @@
 	});
 
 	$('.ticketOption').each(function(idx,el) {
-	    console.log(el.id);
 	    if (el.id == 'finalChoice') {
 		console.log('skipping final choice');
 		//finalChoice is special and links to the ticket purchase page
 		return;
 	    }
+
 	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';	    
 	    $(this).popover({animation:true,
 			     title:title,

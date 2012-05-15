@@ -270,6 +270,7 @@ module.exports = function(app) {
 
 	//if they are not logged in, send them to the public view
 	if (!req.session.loggedIn) {
+	    req.session.redirectUrl = req.url;
 	    return res.redirect(publicViewUrl);
 	}
 
@@ -398,7 +399,7 @@ module.exports = function(app) {
 	    //only send	1 email if friendEmailId param
 	    //TODO: prevent spammers? only send 3 emails per friend
 	    if (req.param('friendEmailId')) {
-		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.id : friend.email.replace(/\W+/g,'-');
+		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.id : friend.email;
 		if (req.param('friendEmailId') != friendEmailId) {
 		    continue;  
 		} 

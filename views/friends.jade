@@ -1,3 +1,4 @@
+include includes/modals/vote-by
 #eventBuilderContainer!= partial("widgets/event-builder",{});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #friendsContent.row
@@ -11,10 +12,11 @@
 			a.btn.btn-success.btn-large.disable Connect to Gmail
 	#facebook.module.center
 		h3 Add Friends Using Facebook
-		.body
+		img.spinner(src="/images/ajax-loader-small.gif")
+		.body.hide
 			span Click below to easily add friends from Facebook to your plan. 
 			hr
-		.footer
+		.footer.hide
 			a.btn.btn-success.btn-large.disable Connect to Facebook
 	#manual.module
 		h3 Add Friends Manually

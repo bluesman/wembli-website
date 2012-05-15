@@ -168,7 +168,8 @@ var standardLogin = function(req,res) {
 		if (req.param('redirectUrl')) {
 		    //req.flash('info','Login was successful and your work was saved.');
 		}
-		return res.redirect( ( req.param('redirectUrl') ? req.param('redirectUrl') : '/dashboard') );
+		var redirectUrl = req.param('redirectUrl') ? req.param('redirectUrl') : req.session.redirectUrl;
+		return res.redirect( ( redirectUrl ? redirectUrl : '/dashboard') );
 	    }
 	}
 	console.log('error: '+err);
