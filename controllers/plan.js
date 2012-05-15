@@ -197,6 +197,12 @@ module.exports = function(app) {
 	    req.session.redirectUrl = req.url;
 	    //req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
+	    //if they are not logged in but have facebook auth data, log them in using fb auth
+	    if (!req.session.loggedIn) {
+		//return res.redirect('/auth/facebook');
+	    }
+
+
 	    res.render('summary', {
 		event:req.session.currentPlan.event,
 		title: 'wembli.com - Plan Summary.',
@@ -221,13 +227,17 @@ module.exports = function(app) {
     app.all('/plan/public/:guid?/:token?/:action?',function(req,res) {
 	//get the event details for this guid
 	Customer.findPlanByGuid(req.param('guid'),function(err,c) {
+	    if (err || c == null) {
+		return res.redirect('/');
+	    }
+
 	    for (var i in c.eventplan) {
 		if (typeof c.eventplan[i] == "undefined") {
 		    continue;
 		}
 		if (typeof c.eventplan[i].config == "undefined") {
-		    continuel;
-		    ;	}
+		    continue;
+		}
 
 		if (c.eventplan[i].config.guid == req.param('guid')) {
 		    req.session.isOrganizer = false;
@@ -315,6 +325,7 @@ module.exports = function(app) {
 	    //set friend in the session
 	    if (req.param('guid') && req.param('token') && req.param('action')) {
 		if (!_setFriend({req:req,action:req.param('action'),countView:true})) {
+		    
 		    //this guid doesn't have a friend with this token
 		    req.flash('error','Invalid token for this event.');
 		    return res.redirect('/');
@@ -399,13 +410,13 @@ module.exports = function(app) {
 	    //only send	1 email if friendEmailId param
 	    //TODO: prevent spammers? only send 3 emails per friend
 	    if (req.param('friendEmailId')) {
-		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.id : friend.email;
+		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.fbId : friend.email;
 		if (req.param('friendEmailId') != friendEmailId) {
 		    continue;  
 		} 
 	    }
 	    console.log('sending email to: ');
-	    console.log(id);
+	    console.log(friendEmailId);
 	    
 	    //generate a token to identify this friend when they come back to pay
 	    var friendToken = "";
@@ -414,6 +425,7 @@ module.exports = function(app) {
 		var friendTimestamp = new Date().getTime().toString();
 		hash.update(friend.id+friendTimestamp);
 		friendToken = hash.digest(encoding='base64');
+		friendToken = friendToken.replace('/','');	    
 		req.session.currentPlan.friends[id].token = {timestamp: friendTimestamp,token: friendToken};
 	    } else {
 		friendToken = req.session.currentPlan.friends[id].token.token;
@@ -443,7 +455,7 @@ module.exports = function(app) {
 			    }
 
 			    //make a post for wembli
-			    var apiCall = "/"+friend.id+"/feed";
+			    var apiCall = "/"+friend.fbId+"/feed";
 			    console.log('apicall:'+apiCall);
 			    //apiCall = "/me/feed"; //take this out after testing
 			    //post args for fb
@@ -570,7 +582,12 @@ module.exports = function(app) {
 			results.initiated = true;
 			initiatedLastDate = new Date(results.responseEnvelope.timestamp).format("m/d/yy h:MM TT Z");
 			//set the results in the session and mark that this person has paid
-			req.session.currentPlan.friends[req.session.friend.id].payment = results;
+			for (var idx in req.session.currentPlan.friends) {
+			    if (req.session.currentPlan.friends[idx].email == req.session.friend.email) {
+				req.session.currentPlan.friends[idx].payment = results;
+			    }
+			}
+			
 			//redirect to paypal on success
 			req.session.organizer.saveCurrentPlan(req.session.currentPlan,function(err) {
 			    if (err) {
@@ -609,6 +626,12 @@ module.exports = function(app) {
 	for (id in plan.friends) {
 	    //if the friend has a token and it matches the token param
 	    if ((typeof plan.friends[id].token != "undefined") && (plan.friends[id].token.token == args.req.param('token'))) {
+		//this token is a valid token for this guid, now is the person who is logged in the person that owns this token?
+		//only way to tell is to compare email address or facebook id
+		//if they were invited through facebook and login with an email address then we are screwed
+		//use case 1: invited with facebook and logged in with facebook
+
+
 		if (typeof args.countView != "undefined") {
 		    if (typeof plan.friends[id][args.action] == "undefined") {
 			plan.friends[id][args.action] = {};
@@ -621,11 +644,12 @@ module.exports = function(app) {
 		}
 
 		args.req.session.friend            = {};
-		args.req.session.friend.id         = id;
 		args.req.session.friend.email      = plan.friends[id].email;
+		args.req.session.friend.fbId       = plan.friends[id].fbId;
 		args.req.session.friend.last_name  = plan.friends[id].lastName;
 		args.req.session.friend.first_name = plan.friends[id].firstName;
 		args.req.session.friend.token      = plan.friends[id].token;
+		args.req.session.friend.addMethod  = plan.friends[id].addMethod;
 		return true;
 	    }
 	}

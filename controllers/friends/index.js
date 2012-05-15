@@ -43,13 +43,13 @@ module.exports = function(app) {
 	    //only send	1 email if friendEmailId param
 	    //TODO: prevent spammers? only send 3 emails per friend
 	    if (req.param('friendEmailId')) {
-		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.id : friend.email;
+		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.fbId : friend.email;
 		if (req.param('friendEmailId') != friendEmailId) {
 		    continue;  
 		} 
 	    }
 	    console.log('sending invitation to: ');
-	    console.log(friend.id);
+	    console.log(friendEmailId);
 	    
 	    //generate a token to identify this friend when they RSVP
 	    var friendToken = "";
@@ -58,6 +58,8 @@ module.exports = function(app) {
 		var friendTimestamp = new Date().getTime().toString();
 		hash.update(friend.email+friendTimestamp);
 		friendToken = hash.digest(encoding='base64');
+		friendToken = friendToken.replace('/','');	    
+		
 		req.session.currentPlan.friends[id].token = {timestamp: friendTimestamp,token: friendToken};
 	    } else {
 		friendToken = req.session.currentPlan.friends[id].token.token;
@@ -92,7 +94,7 @@ module.exports = function(app) {
 			    }
 
 			    //make a post for wembli
-			    var apiCall = "/"+friend.id+"/feed";
+			    var apiCall = "/"+friend.fbId+"/feed";
 			    //apiCall = "/me/feed";
 			    //post args for fb
 			    var msg = name+' is planning an outing and you\'re invited!';

@@ -5,6 +5,9 @@
 			- if ((typeof session.customer.eventplan != "undefined") && (session.customer.eventplan.length > 0)) 
 				- each plan in session.customer.eventplan
 					- if (typeof plan.config != "undefined")
+						- if ((typeof plan.config.deleted != "undefined") && (plan.config.deleted)) 
+							- continue;
+						- console.log(plan)
 						- var date = new Date(Date.parse(plan.event.Date));
 						li
 							a.event(href="/plan/view/#{plan.config.guid}")
@@ -14,7 +17,7 @@
 									.venue!= (typeof plan.event.Venue.Name != "undefined") ? plan.event.Venue.Name : plan.event.Venue
 									.location!= plan.event.City+', '+plan.event.StateProvince
 								.cta
-									btn#removePlan.btn.btn-warning.pull-right(href="#") Remove
+									button#removePlan.btn.btn-warning.pull-right(href="#") Remove
 								.event-date-box
 									span.day!=        date.format("ddd")
 									span.event-date!= date.format("mmm d")

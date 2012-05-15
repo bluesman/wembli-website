@@ -2,11 +2,21 @@ include includes/modals/vote-by
 - if (!session.loggedIn)
 	script(type="text/javascript")
 		$(document).ready(function() {
-			$('.redirect-url').each(function(idx,el) {
-				$(el).val('/summary');
+			FB.getLoginStatus(function(response) {
+				console.log('getloginstatus: ');
+				console.log(response);
+				if (response.status === 'connected') {
+					var uid = response.authResponse.userID;
+					var accessToken = response.authResponse.accessToken;
+					location.replace('/auth/facebook');
+				} else {
+					$('.redirect-url').each(function(idx,el) {
+						$(el).val('/summary');
+					});
+					$('#signupModal #message').html("You've done a lot of work.  Sign up for Wembli now to make sure your plan is saved.").show();
+					$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
+				}
 			});
-			$('#signupModal #message').html("You've done a lot of work.  Sign up for Wembli now to make sure your plan is saved.").show();
-			$('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
 		});
 #eventBuilderContainer!= partial("widgets/event-builder",{});
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
@@ -22,11 +32,9 @@ include includes/modals/vote-by
 			#friends.module
 				h3 Who's Going:
 				.body
-					- var idx = 0;
-					- for (id in plan.friends)
-						- idx++;
+					- for (var idx in plan.friends)
 						- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-						- var friend = session.currentPlan.friends[id]; 
+						- var friend = session.currentPlan.friends[idx]; 
 						.friend.clearfix(class="#{rowClass}")
 							.name
 								span!= idx+'. '

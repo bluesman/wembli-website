@@ -17,12 +17,24 @@
 		var fbFriendEl = $('<div id="fb-container-'+friend.id+'" class=" friend "></div>');
 		$('<div class="data"><strong>'+friend.name+'</strong></div>').appendTo(fbFriendEl);
 		
+		var alreadyInPlan = false;
 		//if this friend is in the plan already make it a remove button
-		if ((typeof $w.eventplan.data.friends != "undefined") && (typeof $w.eventplan.data.friends[friend.id] != "undefined")) {
+		if (typeof $w.eventplan.data.friends != "undefined") {
+		    
+		    for (var idx in $w.eventplan.data.friends) {
+			if (($w.eventplan.data.friends[idx].fbId != "undefined") && ($w.eventplan.data.friends[idx].fbId == friend.id)) {
+			    alreadyInPlan = true;
+			    break;
+			}
+		    }
+		}
+
+		if (alreadyInPlan) {
 		    var button = $('<a id="fb-'+friend.id+'" class="btn btn-warning pull-right" href="#">Remove</a>');			    
 		} else {
 		    var button = $('<a id="fb-'+friend.id+'" class="btn btn-primary pull-right" href="#">Add To Plan</a>');
 		}
+
 		//click event for the add to plan button
 		button.click(function(e) {
 		    console.log('clicked add to plan');
@@ -84,9 +96,9 @@
 	console.log(friend);
 	//toggle this button to be a remove button
 	var k = '#fb-'+friend.id;
-
-	var args = {friends:{}};
-	args.friends[friend.id] = friend;
+	friend.fbId = friend.id;
+	var args = {friends:[]};
+	args.friends.push(friend);
 	//make wembli rpc call to add friends
 	wembli.eventPlan.addFriends(args,function(error,eventplan) {
 	    if (eventplan) {
@@ -115,14 +127,11 @@
 	add: function(friend) {
 	    //make html from the data passed in
 	    var removeId = false;
-	    if (typeof friend.id != "undefined") {
-		removeId = friend.id;
-	    }
-	    if (typeof friend.email != "undefined") {
+	    if ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')){
+		removeId = friend.fbId;
+	    } else {
+		removeId = friend.email;
 		removeId = removeId.replace(/\W+/g,'-');
-	    }
-	    if (!removeId) {
-		return false;
 	    }
 
 	    console.log('remove id: '+removeId);
@@ -132,7 +141,9 @@
 		e.preventDefault();
 		var removeKey = '#container-'+removeId;
 		console.log('removing: '+removeId);
-		var args = {friendId:friend.id};
+		var friendId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.fbId : friend.email;
+		var args = {friendId:friendId,
+			    addMethod:friend.addMethod};
 		console.log(args);
 		wembli.eventPlan.removeFriend(args,function(error,eventplan) {
 		    if (eventplan) {
@@ -196,6 +207,7 @@
 		var accessToken = response.authResponse.accessToken;
 		getFbFriends();
 	    } else {
+		$('#facebook img.spinner').hide();
 		$('#facebook .footer').slideDown(100);
 		$('#facebook .footer').promise().done(function() {
 		    $('#facebook .body').slideDown(100);
@@ -258,8 +270,8 @@
 	//manual
 	//preload the friendStack with existing friends and update the summary
 	if (typeof $w.eventplan.data.friends != "undefined") {
-	    for (email in $w.eventplan.data.friends) {
-		friendStack.add($w.eventplan.data.friends[email]);
+	    for (var idx in $w.eventplan.data.friends) {
+		friendStack.add($w.eventplan.data.friends[idx]);
 	    }
 	}
 
@@ -294,25 +306,28 @@
 	    }
 
 	    //check if this email is in the event plan already
-	    if ((typeof $w.eventplan.data.friends != "undefined") && (typeof $w.eventplan.data.friends[email] != "undefined")) {
-		//already in plan display an error
-		$('#manualForm #email').parent().addClass('error');
-		$('#manualForm #error').show().html(email+' is already in the plan.');
-		return;
+	    if (typeof $w.eventplan.data.friends != "undefined") {
+		for (var idx in $w.eventplan.data.friends) {
+		    if ((typeof $w.eventplan.data.friends[idx].email != "undefined") && $w.eventplan.data.friends[idx].email == email) {
+			//already in plan display an error
+			$('#manualForm #email').parent().addClass('error');
+			$('#manualForm #error').show().html(email+' is already in the plan.');
+			return;
+		    }
+		}
 	    }
 
 	    var friend = {
 		addMethod: 'manual',
 		firstName: $('#manualForm #firstName').val(),
 		lastName:  $('#manualForm #lastName').val(),
-		email:     $('#manualForm #email').val(),
-		id:        $('#manualForm #email').val(),
+		email:     $('#manualForm #email').val()
 	    };
 	    
 	    
 
-	    var args = {friends:{}};
-	    args.friends[email] = friend;
+	    var args = {friends:[]};
+	    args.friends.push(friend);
 	    //make wembli rpc call to add friends
 	    wembli.eventPlan.addFriends(args,function(error,eventplan) {
 		if (eventplan) {

@@ -43,3 +43,13 @@ header.navbar
 include modals/signup
 include modals/login
 include modals/forgot-password
+script
+	$(window.document).ready(function($) {
+		$("#nav a").each(function(idx,el) {
+			if ($(this).attr('href') == '/logout') {
+				$(this).click(function(e) {
+					FB.logout();
+				});
+			}
+		});
+	});

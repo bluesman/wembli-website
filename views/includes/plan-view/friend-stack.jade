@@ -10,10 +10,8 @@ h3 Invitees
 	labelCaption = 'attending';
 	.friendContainer: div.friend.clearfix(class="#{rowClass}",id="#{id}")
 		include friend/friend-info
-	idx = 0;
-	- for (id in plan.friends)
-		- idx++;
-		friend   = plan.friends[id]; 
+	- for (idx in plan.friends)
+		friend   = plan.friends[idx]; 
 		include friend
 - if (session.isOrganizer)
 	#inviteMoreContainer

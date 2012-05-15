@@ -87,7 +87,7 @@ exports.eventplan = {
 		}
 
 		req.session.customer = customer;
-
+		var good = false;
 		for (idx in customer.eventplan) {
 		    if (typeof customer.eventplan[idx].config == "undefined") {
 			continue;
@@ -95,6 +95,7 @@ exports.eventplan = {
 		    console.log('eventplan #'+idx);
 		    console.log('comparing: '+customer.eventplan[idx].config.guid+' to '+guid);
 		    if (customer.eventplan[idx].config.guid == guid) {
+			good = true;
 			console.log('match');
 			customer.eventplan[idx].config.deleted = true;
 			customer.markModified('eventplan');
@@ -102,12 +103,14 @@ exports.eventplan = {
 			    if (err) { return _respond(err,null,null,me); }
 			    return _respond(null,customer.eventplan[idx],req,me);
 			});
-			
-			last;
 		    }
 		}
-		//if we got here something went wrong, we did not find the plan to delete
-		return _respond('invalid eventplan guid: '+guid,null,null,me);
+
+		if (!good) {
+		    //if we got here something went wrong, we did not find the plan to delete
+		    return _respond('invalid eventplan guid: '+guid,null,null,me);
+		}
+
 	    });
 	} else {
 	    //make sure we have an event plan
@@ -125,9 +128,17 @@ exports.eventplan = {
 	    if (err) { return _respond(err,null,null,me); }
 
 	    //deserialize?
+	    var newFriends = [];
 	    if (typeof e.friends !== "undefined") {
-		delete e.friends[friendId];
+		for (var idx in e.friends) {
+		    var id = ((typeof e.friends[idx].addMethod != "undefined") && (e.friends[idx].addMethod == "facebook")) ? e.friends[idx].fbId : e.friends[idx].email;
+		    console.log('comparing: '+friendId+' to '+id);
+		    if (id != friendId) {
+			newFriends.push(e.friends[idx]);
+		    }
+		}
 	    }
+	    e.friends = newFriends;
 
 	    return _respond(err,e,req,me);
 	});
@@ -145,16 +156,17 @@ exports.eventplan = {
 	    }
 
 	    if (typeof e.friends == "undefined") {
-		e.friends = {};
+		e.friends = [];
 	    }
 
 	    //friends is a hash keyed by email address
-	    for (email in friends) {
+	    for (var idx in friends) {
 		if (typeof e.friendIds == "undefined") {
 		    e.friendIds = [];
 		}
-		e.friendIds.push(email);
-		e.friends[email] = friends[email];
+		var id = ((typeof friends[idx].addMethod != "undefined") && (friends[idx].addMethod == "facebook")) ? friends[idx].fbId : friends[idx].email;
+		e.friendIds.push(id);
+		e.friends.push(friends[idx]);
 	    }
 	    
 	    return _respond(err,e,req,me);
@@ -240,11 +252,16 @@ exports.eventplan = {
 
 	//signify that this person will be attending by setting decision in the eventplan
 	var handleOrganizer = function(err,organizer) {
-	    var email = req.session.friend.email;
+	    var friendId = ((typeof req.session.friend.addMethod != "undefined") && (req.session.friend.addMethod == "facebook")) ? req.session.friend.fbId : req.session.friend.email;
 	    //get the plan that matches and save it
 	    for (var idx in organizer.eventplan) {
 		if (organizer.eventplan[idx].config.guid == req.session.currentPlan.config.guid) {
-		    organizer.eventplan[idx].friends[email].decision = (rsvp == "YES") ? true : false;
+		    for (var idx2 in organizer.eventplan[idx].friends) {
+			var friendId2 = ((typeof organizer.eventplan[idx].friends[idx2].addMethod != "undefined") && (organizer.eventplan[idx].friends[idx2].addMethod == "facebook")) ? organizer.eventplan[idx].friends[idx2].fbId : organizer.eventplan[idx].friends[idx2].email;
+			if (friendId == friendId2) {
+			    organizer.eventplan[idx].friends[idx2].decision = (rsvp == "YES") ? true : false;
+			}
+		    }
 		    req.session.currentPlan = organizer.eventplan[idx];
 		    req.session.organizer = organizer;
 		    req.session.organizer.saveCurrentPlan(req.session.currentPlan);
@@ -268,29 +285,34 @@ exports.eventplan = {
 	//increment voteCnt for this ticket id
 
 	var handleOrganizer = function(err,organizer) {
-	    var email = req.session.friend.email;
+	    var friendId = ((typeof req.session.friend.addMethod != "undefined") && (req.session.friend.addMethod == "facebook")) ? req.session.friend.fbId : req.session.friend.email;
 	    //get the plan that matches and save it
 	    for (var idx in organizer.eventplan) {
 		if (organizer.eventplan[idx].config.guid == req.session.currentPlan.config.guid) {
-		    if (typeof organizer.eventplan[idx].friends[email].votes == "undefined") {
-			organizer.eventplan[idx].friends[email].votes = {};
+		    for (idx2 in organizer.eventplan[idx].friends) {
+			var friendId2 = ((typeof organizer.eventplan[idx].friends[idx2].addMethod != "undefined") && (organizer.eventplan[idx].friends[idx2].addMethod == "facebook")) ? organizer.eventplan[idx].friends[idx2].fbId : organizer.eventplan[idx].friends[idx2].email;
+			if (friendId == friendId2) {
+			    if (typeof organizer.eventplan[idx].friends[idx2].votes == "undefined") {
+				organizer.eventplan[idx].friends[idx2].votes = {};
+			    }
+			    //save the vote in the friend
+			    organizer.eventplan[idx].friends[idx2].votes[voteType] = voteId;
+			    //recalculate voteCnt and votePct
+			}
 		    }
-		    //save the vote in the friend
-		    organizer.eventplan[idx].friends[email].votes[voteType] = voteId;
-		    //recalculate voteCnt and votePct
 
 		    var tally = {};
-		    for (var e in  organizer.eventplan[idx].friends) {
-			for(var k in organizer.eventplan[idx].friends[e].votes) {
+		    for (var idx3 in organizer.eventplan[idx].friends) {
+			for(var k in organizer.eventplan[idx].friends[idx3].votes) {
 			    if (typeof tally[k] == "undefined") {
 				tally[k] = {};
 			    }
-			    if (typeof tally[k][organizer.eventplan[idx].friends[e].votes[k]] == "undefined") {
-				tally[k][organizer.eventplan[idx].friends[e].votes[k]] = 1;
+			    if (typeof tally[k][organizer.eventplan[idx].friends[idx3].votes[k]] == "undefined") {
+				tally[k][organizer.eventplan[idx].friends[idx3].votes[k]] = 1;
 			    } else {
-				tally[k][organizer.eventplan[idx].friends[e].votes[k]]++;
+				tally[k][organizer.eventplan[idx].friends[idx3].votes[k]]++;
 			    }
-
+			    
 			    if (typeof tally[k]['total'] == "undefined") {
 				tally[k]['total'] = 1;
 			    } else {

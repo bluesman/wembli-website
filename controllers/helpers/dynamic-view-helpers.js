@@ -41,8 +41,8 @@ module.exports = {
     friendsCount: function(req,res) {
 	var friendCnt  = 1
 	if ((typeof req.session.currentPlan.friends != "undefined") && (typeof req.session.currentPlan.config != "undefined")) {
-	    for (email in req.session.currentPlan.friends) {
-		var friend = req.session.currentPlan.friends[email];
+	    for (idx in req.session.currentPlan.friends) {
+		var friend = req.session.currentPlan.friends[idx];
 		if (typeof friend.decision != "undefined" && !friend.decision) {
 		    continue;
 		} else {
@@ -55,12 +55,17 @@ module.exports = {
 
     allFriends: function(req,res) {
 	var friends = [];
+	var seen = {}
 	if ((typeof req.session.customer != "undefined") && (typeof req.session.customer.eventplan != "undefined")) {
 	    for (idx in req.session.customer.eventplan) {
 		var plan = req.session.customer.eventplan[idx];
 		if (typeof plan.friends != "undefined") {
-		    for (friendId in plan.friends) {
-			friends.push(plan.friends[friendId]);
+		    for (idx2 in plan.friends) {
+			var id = ((typeof plan.friends[idx2].addMethod != "undefined") && (plan.friends[idx2].addMethod == 'facebook')) ? plan.friends[idx2].fbId : plan.friends[idx2].email;
+			if (typeof seen[id] == "undefined") {
+			    friends.push(plan.friends[idx2]);
+			    seen[id] = true;
+			}			    
 		    }
 		}
 	    }

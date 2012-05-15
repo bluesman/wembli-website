@@ -115,6 +115,7 @@ module.exports = function(app) {
 	var hash = crypto.createHash('sha512');
 	hash.update(req.param('password'));
 	var digest = hash.digest(encoding='base64');
+	digest.replace('/','');
 	//validate email/password against the db
 	Customer.findOne({email:req.param('email')},function(err,c) { 
 	    if ((err == null) && (c != null)) {
@@ -248,6 +249,7 @@ module.exports = function(app) {
 		var tmp = req.session.customer.email+confirmationTimestamp;
 		hash.update(tmp);
 		var confirmationToken = hash.digest(encoding='base64');
+		confirmationToken.replace('/','');
 		console.log(req.session.customer.confirmation);
 
 		//save the token to the customer obj

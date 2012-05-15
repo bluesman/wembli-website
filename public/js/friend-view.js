@@ -34,8 +34,8 @@
 		//recalc the totals
 		//get the cound of friends going
 		var friendCnt = 1;
-		for (email in $w.eventplan.data.friends) {
-		    var friend = $w.eventplan.data.friends[email];
+		for (var idx in $w.eventplan.data.friends) {
+		    var friend = $w.eventplan.data.friends[idx];
 		    if (typeof friend.decision != "undefined" && !friend.decision) {
 			continue;
 		    } else {
@@ -77,16 +77,21 @@
 
 	    //if this is a ticket you voted for make it say that
 	    var friendEmail = $('#friendEmail').val();
-	    if (typeof $w.eventplan.data.friends[friendEmail].votes != "undefined") {
-		if (typeof $w.eventplan.data.friends[$('#friendEmail').val()].votes.tickets != "undefined") {
-		    var tixId = $w.eventplan.data.friends[$('#friendEmail').val()].votes.tickets;
-		    if (tixId == el.id) {
-			$('#'+el.id+' button').attr('class','btn btn-success');
-			$('#'+el.id+' button').html('You Voted For This');
+	    for (var idx in $w.eventplan.data.friends) {
+		var friendId = ((typeof $w.eventplan.data.friends[idx].addMethod != "undefined") && ($w.eventplan.data.friends[idx].addMethod == 'facebook')) ? $w.eventplan.data.friends[idx].fbId : $w.eventplan.data.friends[idx].email;
+		if (typeof $w.eventplan.data.friends[idx].votes != "undefined") {
+		    if (friendEmail == friendId) {
+			if (typeof $w.eventplan.data.friends[idx].votes.tickets != "undefined") {
+			    var tixId = $w.eventplan.data.friends[idx].votes.tickets;
+			    if (tixId == el.id) {
+				$('#'+el.id+' button').attr('class','btn btn-success');
+				$('#'+el.id+' button').html('You Voted For This');
+			    }
+			}
 		    }
 		}
 	    }			    
-
+	    
 	    $(el).click(function(e) {
 		e.preventDefault();
 		/*

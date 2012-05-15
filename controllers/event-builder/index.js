@@ -12,7 +12,7 @@ module.exports = function(app) {
 	console.log('called event builder');
 	var eventId     = req.param('eventId');
 	var eventName   = req.param('eventName');
-	var services = {'friends':true,'tickets':true};
+	var services = {'friends':[],'tickets':{}};
 
 	var wembliServices = globalViewVars.wembliServices;
 
@@ -22,6 +22,8 @@ module.exports = function(app) {
 	req.session.currentPlan.config = {};
 	for (idx in wembliServices) {
 	    var service = wembliServices[idx];
+	    console.log('service for idx: '+idx);
+	    console.log(service);
 	    if (typeof services[service] == "undefined") {
 		req.session.currentPlan.config[service] = false;
 		if (typeof req.session.currentPlan[service] != "undefined") {
@@ -29,7 +31,7 @@ module.exports = function(app) {
 		}
 	    } else {
 		req.session.currentPlan.config[service] = true;
-		req.session.currentPlan[service] = {};
+		req.session.currentPlan[service] = services[service];
 	    }
 	}
 	req.session.currentPlan.config['summary'] = true; //every plan has a summary
@@ -136,6 +138,8 @@ module.exports = function(app) {
 	});
     });
 */
+
+/* i think this is no longer used - tomw 20120514
     app.all('/plan/view/friend/:action/:guid/:token',function(req,res) {
 	//TODO: validate the action
 	
@@ -158,8 +162,8 @@ module.exports = function(app) {
 		var plan = organizer.eventplan[idx];
 		console.log('checking plan: ');
 		if (plan.config.guid == req.param('guid')) {
-		    for (email in plan.friends) {
-			console.log('checking frined: '+email+ ' looking for token match');
+		    for (idx in plan.friends) {
+			console.log('checking frined: '++ ' looking for token match');
 			if ((typeof plan.friends[email].token != "undefined") && (plan.friends[email].token.token == req.param('token'))) {
 			    console.log('found a token match');
 			    plan.friends[email][req.param('action')].view = (typeof plan.friends[email][req.param('action')].view == "undefined") ? 1 : plan.friends[email][req.param('action')].view + 1;
@@ -273,7 +277,7 @@ module.exports = function(app) {
 	
 	
     });
-
+*/
     app.all('/event/save',function(req,res) {
 	//saving plan
 	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {

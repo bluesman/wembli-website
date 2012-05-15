@@ -869,6 +869,7 @@ a#moreEvents:hover {
 }
 #resetWrapper form {
   margin: 10px 0 0 0;
+  z-index: 3;
 }
 p.note {
   padding: 5px;
@@ -1273,6 +1274,20 @@ p.note {
 }
 #planViewFriendContainer #left #ticketsContainer .ticketOption .ticket-price-box {
   left: 20px;
+}
+#planViewPublicContainer #right #publicLoginForm #publicRememberInput {
+  float: left;
+}
+#planViewPublicContainer #right #publicLoginForm #publicRememberLabel {
+  margin-left: 20px;
+}
+#planViewPublicContainer #right #publicLoginForm #publicForgotPasswordLink {
+  margin-right: 19px;
+}
+#planViewPublicContainer #right #publicSignupLink {
+  display: block;
+  text-align: center;
+  margin: 20px;
 }
 /* Home Page */
 #index section#content {
@@ -1777,7 +1792,7 @@ p.note {
   clear: both;
 }
 #dashboardContainer .dashboardEventList li a.event .info {
-  width: 200px;
+  width: 285px;
   margin-left: 80px;
   float: left;
 }
@@ -1790,4 +1805,19 @@ p.note {
 #dashboardContainer .dashboardEventList li.empty hr {
   padding: 0 10px;
   margin: 0;
+}
+#dashboardContainer #mainContainer #center #search .input-append {
+  padding: 20px;
+}
+#dashboardContainer #mainContainer #center #search .input-append #eventSearch {
+  width: 354px;
+  height: 30px;
+  font-size: 18px;
+}
+#dashboardContainer #mainContainer #center #search .input-append .add-on {
+  height: 30px;
+  width: 30px;
+}
+#dashboardContainer #mainContainer #center #search .input-append .add-on i {
+  margin: 8px 0 0 0;
 }

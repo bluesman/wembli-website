@@ -248,8 +248,8 @@ $w.eventplan = {
     friendsNotDeclined: function() {
 	var friendCnt = 1;
 	if (typeof this.data != "undefined") {
-	    for (email in this.data.friends) {
-		var friend = this.data.friends[email];
+	    for (idx in this.data.friends) {
+		var friend = this.data.friends[idx];
 		if (typeof friend.decision != "undefined" && !friend.decision) {
 		    continue;
 		} else {

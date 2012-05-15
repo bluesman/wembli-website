@@ -1,7 +1,12 @@
 (function($,window,undefined) {
 
     var init = function() {    
-	$('#eventsPlanningContainer .event').each(function(idx,el) {
+	$('#searchButton').click(function(e) {
+	    var q = $('#eventSearch').val();
+	    var url = '/event/search/'+q;
+	    window.location = url;
+	});
+	$('#eventsPlanningContainer .event button').each(function(idx,el) {
 	    $(el).click(function(e) {
 		e.preventDefault();
 		var guid = null;
@@ -14,7 +19,7 @@
 			//set an error message
 		    } else {
 			$w.eventplan.data = eventplan;
-			el.slideUp();
+			$(el).slideUp();
 		    }
 		});
 	    });

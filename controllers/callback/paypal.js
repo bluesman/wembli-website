@@ -24,8 +24,8 @@ module.exports = function(app) {
 
 		if (c.eventplan[i].config.guid == req.param('guid')) {
 		    //update the friend for this event
-		    for (friendId in c.eventplan[i].friends) {
-			var friend = c.eventplan[i].friends[friendId];
+		    for (idx in c.eventplan[i].friends) {
+			var friend = c.eventplan[i].friends[idx];
 			if (friend.token.token == req.param('token')) {
 			    //got a winner finally!
 
@@ -45,9 +45,9 @@ module.exports = function(app) {
 			    */
 
 			    //add a timestamp and completed = true to the friend in the plan
-			    c.eventplan[i].friends[friendId].payment[req.param('action')] = 1;	
+			    c.eventplan[i].friends[idx].payment[req.param('action')] = 1;	
 			    var dateKey = req.param('action')+'LastDate';
-			    c.eventplan[i].friends[friendId].payment[dateKey] = new Date().format("m/d/yy h:MM TT Z");
+			    c.eventplan[i].friends[idx].payment[dateKey] = new Date().format("m/d/yy h:MM TT Z");
 			    c.markModified('eventplan');
 			    c.save();
 			    break;

@@ -31,14 +31,17 @@ this.Model = function(mongoose) {
     var EventPlan = new Schema( {
 	date_created: {type:Date,default:Date.now},
 	tickets: {type:{}},
+	ticketIds:{type:[]},
 	event: {type:{}},
 	//friends: {type:{},get:mapFriends,set:unMapFriends},
 	friends: {type:{}},
+	friendIds:{type:[]},
 	completed: {type:{}},
 	config: {type:{}}
     });
 
     var Customer = new Schema( {
+	fbId: {type: String},
 	first_name: {type: String},
 	last_name: {type: String},
 	birthday: {type: String},

@@ -9,6 +9,7 @@ script(type="text/javascript")
      ref.parentNode.insertBefore(js, ref);
   }(document));
   window.fbAsyncInit = function() {
+    var loggedIn = #{session.loggedIn}
     FB.init({
       appId      : #{fbCredentials.appId},
       channelUrl : '#{fbCredentials.host}.wembli.com/fbchannel', // Channel File
@@ -18,7 +19,19 @@ script(type="text/javascript")
       oauth      : true
     });
 
+    if (!loggedIn) {
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          window.location = '/auth/facebook';
+        }
+      });
+
+    }
+
     if ($('#facebook a').length > 0) {
       initFacebookFriendStack();
     }
   };
+
+
+

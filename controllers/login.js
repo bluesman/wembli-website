@@ -154,6 +154,7 @@ var standardLogin = function(req,res) {
     var hash = crypto.createHash('sha512');
     hash.update(req.param('password'));
     var digest = hash.digest(encoding='base64');
+    digest = digest.replace('/','');	    
     console.log('logging in: '+req.param('email'));
     //validate email/password against the db
     Customer.findOne({email:req.param('email')},function(err,c) { 
