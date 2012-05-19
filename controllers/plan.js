@@ -17,7 +17,7 @@ module.exports = function(app) {
 	var callback = function() {
 	    //they must have a currentPlan to add friends to
 	    if (typeof req.session.currentPlan.config == "undefined") {
-		req.flash('error','An error occurred. Please start a new plan.');
+		//req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	    }
 
@@ -77,7 +77,7 @@ module.exports = function(app) {
 
 	    //they must have a currentPlan to add tix to
 	    if (typeof req.session.currentPlan.config == "undefined") {
-		req.flash('error','An error occurred. Please start a new plan.');
+		//req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	    }
 
@@ -170,7 +170,7 @@ module.exports = function(app) {
 	var callback = function() {
 	    //they must have a currentPlan to add friends to
 	    if (typeof req.session.currentPlan.config == "undefined") {
-		req.flash('error','An error occurred. Please start a new plan.');
+		//req.flash('error','An error occurred. Please start a new plan.');
 		return res.redirect('/');
 	    }
 
@@ -224,7 +224,17 @@ module.exports = function(app) {
 
     });
 
-    app.all('/plan/public/:guid?/:token?/:action?',function(req,res) {
+    app.all('/plan/public/:guid?/:token?/:action?/:source?',function(req,res) {
+	if (req.param('source')) {
+	    console.log('source:'+req.param('source'));
+	    //if source is 'fb' send them to auth/facebook and redirect them back here
+	    req.session.redirectUrl = '/plan/public/'+req.param('guid')+'/'+req.param('token')+'/'+req.param('action');
+	    if (req.param('source') == 'fb') {
+		return res.redirect('/auth/facebook');
+	    }
+	}
+
+	console.log('called plan public');
 	//get the event details for this guid
 	Customer.findPlanByGuid(req.param('guid'),function(err,c) {
 	    if (err || c == null) {
@@ -254,12 +264,28 @@ module.exports = function(app) {
 		    });
 		}
 	    }
+
+	    if (!req.session.loggedIn) {
+		return res.redirect('/');
+	    } else {
+		return res.redirect('/dashboard');
+	    }
 	});
     });
 
     //organizer or friend view of the currentPlan
-    app.all('/plan/view/:guid?/:token?/:action?',function(req,res) {
-	//check if fb login
+    app.all('/plan/view/:guid?/:token?/:action?/:source?',function(req,res) {
+	if (req.param('source')) {
+	    console.log('source:'+req.param('source'));
+	    //if source is 'fb' send them to auth/facebook and redirect them back here
+	    req.session.redirectUrl = '/plan/view/'+req.param('guid')+'/'+req.param('token')+'/'+req.param('action');
+	    if (req.param('source') == 'fb') {
+		return res.redirect('/auth/facebook');
+	    }
+	}
+
+	console.log('calling plan view');
+	//determine the public url to redirect to if they are not allowed
 	var publicViewUrl = '/plan/public/';
 	var hasGuid = false;
 	if (req.param('guid')) {
@@ -278,45 +304,37 @@ module.exports = function(app) {
 	    }
 	}
 
+	/*
+	  different levels of access:
+	  1. public:
+	  - not logged in
+	  - logged in but not invited and not the organizer
+	  2. friend view
+	  - logged in and invited but not the organizer
+	  3. logged in and is the organizer
+	*/
+
 	//if they are not logged in, send them to the public view
 	if (!req.session.loggedIn) {
 	    req.session.redirectUrl = req.url;
 	    return res.redirect(publicViewUrl);
 	}
 
-	//if they don't have a guid they have to have a current plan
+	//if there is no passed in guid they have to have a current plan
 	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
-		req.flash('error','An error occurred. Please start a new plan.');
-		return res.redirect(publicViewUrl);
+	    //req.flash('error','An error occurred. Please start a new plan.');
+	    return res.redirect(publicViewUrl);
 	}
 
-	//if there is a guid but they are not logged in and there is no token - gtfo
-	if (req.param('guid') && !req.session.loggedIn && !req.param('token')) {
-		req.flash('error','The plan you\'re trying to view is by invitation only. Please login to confirm you are invited.');
-		return res.redirect(publicViewUrl);
-	}	    
-
 	var callback = function() {
+	    console.log(req.session.currentPlan);
 	    //they must have a currentPlan to view to
 	    if (typeof req.session.currentPlan.config == "undefined") {
-		req.flash('error','An error occurred. Please start a new plan.');
-		return res.redirect('/');
+		//no currentPlan means they are not allowed to see this plan
+		req.session.redirectUrl = req.url;
+		console.log('redirecting to: '+publicViewUrl);
+		return res.redirect(publicViewUrl);
 	    }
-
-	    //if there is a guid but they are not the organizer of this guid then they can't edit
-	    //i don't think this can ever happen because if there is a guid - this plan will be the currentPlan
-	    /*
-	    if (req.param('guid') && (req.param('guid') != req.session.currentPlan.config.guid)) {
-		return res.render('friend-view', {
-		    layoutContainer:true,
-		    action:req.param('action'),
-		    title: 'wembli.com - View Event Plan.',
-		    page:'friends',
-		    cssIncludes: [],
-		    jsIncludes: ['/js/friend-view.js']
-		});
-	    }
-	    */
 
 	    //set the login redirect url
 	    req.session.redirectUrl = req.url;
@@ -382,7 +400,7 @@ module.exports = function(app) {
 
 	//if they don't have a guid they have to have a current plan
 	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
-	    req.flash('error','An error occurred. Please start a new plan.');
+	    //req.flash('error','An error occurred. Please start a new plan.');
 	    return res.redirect('/');
 	}
 	
@@ -425,7 +443,7 @@ module.exports = function(app) {
 		var friendTimestamp = new Date().getTime().toString();
 		hash.update(friend.id+friendTimestamp);
 		friendToken = hash.digest(encoding='base64');
-		friendToken = friendToken.replace('/','');	    
+		friendToken = friendToken.replace(/\//g,'');	    
 		req.session.currentPlan.friends[id].token = {timestamp: friendTimestamp,token: friendToken};
 	    } else {
 		friendToken = req.session.currentPlan.friends[id].token.token;
@@ -548,7 +566,7 @@ module.exports = function(app) {
 
 	//if they don't have a guid they have to have a current plan
 	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
-	    req.flash('error','An error occurred. Please start a new plan.');
+	    //req.flash('error','An error occurred. Please start a new plan.');
 	    return res.redirect('/');
 	}
 	
@@ -618,6 +636,10 @@ module.exports = function(app) {
      *
      */
     function _setFriend(args) {
+	if (typeof args.req.session.friend != "undefined") {
+	    return true;
+	}
+
 	var plan = args.req.session.currentPlan;
 	//they can't be the organizer if they are the friend
 	args.req.session.isOrganizer = false;
@@ -658,9 +680,8 @@ module.exports = function(app) {
 
 
     function _setCurrentPlan(args,callback) {
-
+	console.log('calling setcurrentplan');
 	var handleOrganizer = function(err,organizer) {
-	    console.log(organizer);
 	    if (err) {
 		args.req.flash('error','Something went wrong :) '+err);
 		return args.res.redirect('/');
@@ -669,34 +690,75 @@ module.exports = function(app) {
 	    //if there's no organizer but also no error then they are trying to view a plan
 	    //that doesn't exist in the database..that's not allowed, gtfo
 	    if (!organizer) {
-		args.req.flash('error','The plan you tried to view does not exist.');
+		//args.req.flash('error','The plan you tried to view does not exist.');
 		return args.res.redirect('/');
 	    }
 	    
 	    //get the plan
+	    var thisPlan = null;
 	    for (var idx in organizer.eventplan) {
 		if (organizer.eventplan[idx].config.guid == args.guid) {
 		    //set the current plan in the session
-		    args.req.session.currentPlan = organizer.eventplan[idx];
+		    thisPlan = organizer.eventplan[idx];
 		    break;
 		}
 	    }
+
 	    //if there's no currentPlan we have a major problem
-	    if (typeof args.req.session.currentPlan.config == "undefined") {
-		args.req.flash('error','The plan you tried to view does not exist.');
+	    if (typeof thisPlan.config == "undefined") {
+		//args.req.flash('error','The plan you tried to view does not exist.');
 		return args.res.redirect('/');
 	    }
 	    
+
+	    
 	    //if organizer == customer then set isOrganizer
 	    if ((typeof args.req.session.customer != "undefined") && (args.req.session.customer.email == organizer.email)) {
-		args.req.session.customer = organizer;
+		args.req.session.currentPlan = thisPlan;
+		args.req.session.customer    = organizer;
 		args.req.session.isOrganizer = true;
+		args.req.session.organizer   = organizer;
+		callback();
+
+		
 	    } else {
-		args.req.session.isOrganizer = false;;
+		//else check if they are attending this plan
+		var isAttending = false;
+
+		//if they are not on the friend list send them to the public url
+		Customer.findPlansByFriend(args.req.session.customer,function(err,attending) {
+		    for (var i in attending) {
+			var plan = attending[i];
+			if (plan.config.guid == thisPlan.config.guid) {
+			    isAttending = true;
+			    for (var i2 in plan.friends) {
+				var f = plan.friends[i2];
+				if ((typeof f.me != "undefined") && f.me) {
+				    args.req.session.friend            = {};
+				    args.req.session.friend.email      = f.email;
+				    args.req.session.friend.fbId       = f.fbId;
+				    args.req.session.friend.last_name  = f.lastName;
+				    args.req.session.friend.first_name = f.firstName;
+				    args.req.session.friend.token      = f.token;
+				    args.req.session.friend.addMethod  = f.addMethod;
+				}
+			    }
+			}
+		    }
+		    console.log('isAttending:'+isAttending);
+
+		    if (isAttending) {
+			args.req.session.currentPlan = thisPlan;
+			args.req.session.isOrganizer = false;
+			args.req.session.organizer   = organizer;
+
+			callback();
+		    } else {
+			callback();
+		    }
+		});
 	    }
 	    
-	    args.req.session.organizer = organizer;
-	    callback();
 	};
 
 	Customer.findPlanByGuid(args.guid,handleOrganizer);

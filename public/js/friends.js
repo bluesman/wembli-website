@@ -251,6 +251,27 @@
 	//catch the continue button and pop up the send rsvp email if they have added new friends
 	console.log($w.eventplan);
 	if (($w.eventplan.data.completed.tickets != "undefined") && ($w.eventplan.data.completed.tickets)) {
+
+	    $('#sendRSVP').attr('checked',true);
+	    $('#respondByCheckbox').attr('checked',true);
+	    
+	    $('#respondByCheckbox').click(function(e) {
+		if ($(this).is(':checked')) {	    
+		    $('#respondBy').find('.controls').slideDown();
+		} else {
+		    $('#respondBy').find('.controls').slideUp();
+		}
+	    });
+	    
+	    $('#sendRSVP').click(function(e) {
+		//e.preventDefault();
+		if ($(this).is(':checked')) {
+		    $('#respondBy').slideDown();
+		} else {
+		    $('#respondBy').slideUp();		
+		}
+	    });
+	
 	    $('#continue').click(function(e) {
 		e.preventDefault();
 		//pop a modal to collect respond by date

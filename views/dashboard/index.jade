@@ -10,8 +10,9 @@
 				h3 Plan a new event
 				.body
 					.input-append
-						input#eventSearch(placeholder="Search for an event",type="text")
-						button#searchButton.btn.btn-large.btn-success(type="button") Go!
+						form#eventSearchForm(method="GET",action="/events/search")
+							input#eventSearch(placeholder="Search for an event",type="text")
+							button#searchButton.btn.btn-large.btn-success(type="button") Go!
 			include ../includes/dashboard/events-planning
 			include ../includes/dashboard/events-attending
 		#right.span4

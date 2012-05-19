@@ -19,7 +19,8 @@ var _respond = function(error,data,req,me) {
 	//TODO: save data for customer if logged in
 	console.log('do i save?');
 	if (req.session.loggedIn && req.session.isOrganizer) {
-	    console.log('yes!');	    
+	    console.log('yes!');
+	    console.log(data);
 	    req.session.customer.saveCurrentPlan(data);
 	}
 
@@ -101,6 +102,8 @@ exports.eventplan = {
 			customer.markModified('eventplan');
 			customer.save(function(err) {
 			    if (err) { return _respond(err,null,null,me); }
+			    var plan = customer.eventplan[idx];
+			    console.log(plan);
 			    return _respond(null,customer.eventplan[idx],req,me);
 			});
 		    }

@@ -869,7 +869,6 @@ a#moreEvents:hover {
 }
 #resetWrapper form {
   margin: 10px 0 0 0;
-  z-index: 3;
 }
 p.note {
   padding: 5px;
@@ -1064,6 +1063,31 @@ p.note {
   margin-left: 4px;
   font-weight: bold;
   font-size: 14px;
+}
+#planViewOrganizerContainer #dashboardSidebar {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  padding: 19px;
+  border: 2px solid #f2f2f2;
+  width: 140px;
+  float: left;
+}
+#planViewOrganizerContainer #dashboardSidebar #sidebarNav {
+  margin-top: 20px;
+  font-size: .9em;
+}
+#planViewOrganizerContainer #dashboardSidebar #sidebarNav i {
+  padding: 2px;
+}
+#planViewOrganizerContainer #dashboardSidebar #profileImage {
+  height: 100px;
+  width: 130px;
+  border: 3px dashed #8cb2d5;
+  background: url(/images/profile_icon_small.png) no-repeat center center;
 }
 #planViewOrganizerContainer #organizerSidebar {
   -webkit-border-radius: 4px;
@@ -1795,6 +1819,9 @@ p.note {
   width: 285px;
   margin-left: 80px;
   float: left;
+}
+#dashboardContainer .dashboardEventList li a.event .cta button {
+  margin-bottom: 10px;
 }
 #dashboardContainer .dashboardEventList li a.event:hover {
   background-color: #ffdd73;

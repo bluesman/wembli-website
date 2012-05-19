@@ -34,7 +34,7 @@ module.exports = function(app) {
 	    var hash = crypto.createHash('sha512');
 	    hash.update(req.param('password'));
 	    var digest = hash.digest(encoding='base64');
-	    digest = digest.replace('/','');	    
+	    digest = digest.replace(/\//g,'');	    
 	    
 	    //if no c make one email param
 	    if (c == null) {
@@ -59,7 +59,7 @@ module.exports = function(app) {
 		var confirmationTimestamp = new Date().getTime().toString();
 		hash.update(req.param('email')+confirmationTimestamp);
 		var confirmationToken = hash.digest(encoding='base64');
-		confirmationToken = confirmationToken.replace('/','');	    
+		confirmationToken = confirmationToken.replace(/\//g,'');	    
 		
 		customer.confirmation.push({timestamp: confirmationTimestamp,token: confirmationToken});
 		console.log('here');

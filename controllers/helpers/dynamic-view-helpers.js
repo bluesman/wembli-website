@@ -1,3 +1,6 @@
+var wembliModel   = require('wembli-model'),
+    Customer      = wembliModel.load('customer');
+
 module.exports = {
     req: function(req,res) { return req; },
     res: function(req,res) { return res; },
@@ -73,12 +76,5 @@ module.exports = {
 	return friends;
     },
     
-    eventsAttending: function(req,res) {
-	var friends = [];
-	if ((typeof req.session.customer != "undefined") && (typeof req.session.customer.eventplan != "undefined")) {
-	    for (idx in req.session.customer.eventplan) {
-	    }
-	}
-    }
 };
 

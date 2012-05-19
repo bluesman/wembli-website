@@ -1,6 +1,20 @@
 (function($,window,undefined) {
 
     var init = function() {
+	$('.ticketOption').each(function(idx,el) {
+	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';
+	    $(this).popover({animation:true,
+			     title:title,
+			     content: $(this).children('.costBreakdown').html(),
+			     delay:{show:300,hide:100}
+			    });
+
+	    $(el).click(function(e) {
+		e.preventDefault();
+		$(this).children('input').attr('checked',true);
+	    });
+	});
+
 	$('#sendRSVP').attr('checked',true);
 	$('#respondByCheckbox').attr('checked',true);
 
@@ -21,20 +35,6 @@
 	    }
 	});
 	
-	$('.ticketOption').each(function(idx,el) {
-	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';
-	    $(this).popover({animation:true,
-			     title:title,
-			     content: $(this).children('.costBreakdown').html(),
-			     delay:{show:300,hide:100}
-			    });
-
-	    $(el).click(function(e) {
-		e.preventDefault();
-		$(this).children('input').attr('checked',true);
-	    });
-	});
-
 	$('#continue').click(function(e) {
 	    e.preventDefault();
 	    //pop a modal to collect respond by date
@@ -59,9 +59,13 @@
 	//find the wembli object in jquery.wembli.js - this is the wembli jsonrpc api
 
 	//get the eventplan from the server for this session - then init the buttons and stuff
+	console.log('document ready');
 	wembli.eventPlan.get({},function(error,eventplan) {
+	    console.log('getting eventplan');
 	    $w.eventplan.data = eventplan; //store the event plan in the $w wembli global for use by other stuff
+	    console.log('calling update summary');
 	    $w.eventplan.updateSummary();
+	    console.log('called update summary');
 	    init();
 	});
 

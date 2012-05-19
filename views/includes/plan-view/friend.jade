@@ -1,4 +1,5 @@
 friendName   = friend.firstName+' '+friend.lastName;
+id           = (typeof friend.email != "undefined") ? friend.email : friend.fbId;
 htmlId       = (typeof friend.email != "undefined") ? friend.email.replace(/\W+/g,'-') : friend.fbId;
 rowClass     = (idx % 2) ? 'oddRow' : 'evenRow';
 labelType    = 'label-warning';

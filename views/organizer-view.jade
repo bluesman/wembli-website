@@ -1,7 +1,8 @@
 include includes/modals/vote-by
 include includes/modals/collect-payment
 #planViewOrganizerContainer.planViewContainer.row
-	include includes/plan-view/organizer-sidebar
+	include includes/dashboard/sidebar
+	//- include includes/plan-view/organizer-sidebar
 	#mainContainer
 		msg = req.flash('plan-msg')[0];
 		- if (typeof msg != "undefined")

@@ -1,16 +1,27 @@
 (function($,window,undefined) {
 
     var init = function() {    
-	$('#searchButton').click(function(e) {
+	console.log('init dashboard');
+	$('#eventSearchForm').submit(function(e) {
+	    var action = $(this).attr('action');
 	    var q = $('#eventSearch').val();
-	    var url = '/event/search/'+q;
-	    window.location = url;
+	    var url = action+'/'+q;
+	    $(this).attr('action',url);
 	});
-	$('#eventsPlanningContainer .event button').each(function(idx,el) {
-	    $(el).click(function(e) {
+	$('#searchButton').click(function(e) {
+	    e.preventDefault();
+	    $('#eventSearchForm').submit();
+	});
+	$('#eventsPlanningContainer .event').each(function(idx,el) {
+	    el.click(function(e) {
+		e.preventDefault();
+	    });
+
+	    $(el).find('button').click(function(e) {
 		e.preventDefault();
 		var guid = null;
 		$(el).find('.eventGuid').each(function(idx,guidHidden) {
+		    console.log(guidHidden);
 		    guid = $(guidHidden).val();
 		});
 		console.log('removing: '+guid);

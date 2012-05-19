@@ -5,7 +5,7 @@ var wembliUtils   = require('wembli/utils');
 var wembliModel   = require('wembli-model');
 var Customer      = wembliModel.load('customer');
 var querystring   = require('querystring');
-
+var async         = require('async');
 //var https = require('https');
 
 module.exports = function(app) {
@@ -93,16 +93,18 @@ module.exports = function(app) {
 		});
 	    }
 
-
-	    res.render('dashboard/index', {
-		cssIncludes: [],
-		jsIncludes: ['/js/dashboard.js'],
-		globals:globalViewVars,
-		title: 'wembli.com - login to get the best seats.',
-		layoutContainer:true,
-		page:'dashboard'
+	    Customer.findPlansByFriend(req.session.customer,function(err,attending) {
+		res.render('dashboard/index', {
+		    cssIncludes: [],
+		    jsIncludes: ['/js/dashboard.js'],
+		    globals:globalViewVars,
+		    title: 'wembli.com - login to get the best seats.',
+		    layoutContainer:true,
+		    attending:attending,
+		    page:'dashboard'
+		});
 	    });
-	    
+
 	} else {
 	    console.log('no auth');
 	    res.redirect('/login',302);
@@ -115,7 +117,7 @@ module.exports = function(app) {
 	var hash = crypto.createHash('sha512');
 	hash.update(req.param('password'));
 	var digest = hash.digest(encoding='base64');
-	digest.replace('/','');
+	digest = digest.replace(/\//g,'');
 	//validate email/password against the db
 	Customer.findOne({email:req.param('email')},function(err,c) { 
 	    if ((err == null) && (c != null)) {
@@ -249,7 +251,7 @@ module.exports = function(app) {
 		var tmp = req.session.customer.email+confirmationTimestamp;
 		hash.update(tmp);
 		var confirmationToken = hash.digest(encoding='base64');
-		confirmationToken.replace('/','');
+		confirmationToken = confirmationToken.replace(/\//g,'');
 		console.log(req.session.customer.confirmation);
 
 		//save the token to the customer obj

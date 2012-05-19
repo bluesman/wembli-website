@@ -1,6 +1,7 @@
 input#guid(type="hidden",name="guid",value="#{session.currentPlan.config.guid}")
 input#token(type="hidden",name="token",value="#{session.friend.token.token}")
-input#friendEmail(type="hidden",name="friendEmail",value="#{session.friend.email}")
+- friendId = (typeof session.friend.email != "undefined") ? session.friend.email : session.friend.fbId;
+input#friendEmail(type="hidden",name="friendEmail",value="#{friendId}")
 .message.pull-left!= 'Hey '+session.friend.first_name+', <br/>'+session.organizer.first_name+' '+session.organizer.last_name+' is planning an outing and you\'re invited! Are you in?'
 .buttons.pull-right.row
 	a#rsvpYes(href="#").btn.btn-success.btn-large Yes

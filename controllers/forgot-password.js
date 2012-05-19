@@ -110,7 +110,7 @@ module.exports = function(app) {
 	    var hash = crypto.createHash('sha512');
 	    hash.update(req.param('password'));
 	    var digest = hash.digest(encoding='base64');
-	    digest.replace('/','');	    
+	    digest = digest.replace(/\//g,'');
 	    c.password = digest;
 	    c.forgot_password = [];
 	    c.save(function(err) {
@@ -168,7 +168,7 @@ module.exports = function(app) {
 		tokenTimestamp = new Date().getTime().toString();
 		hash.update(req.param('email')+tokenTimestamp);
 		tokenHash = hash.digest(encoding='base64');
-		tokenHash.replace('/','');	    
+		tokenHash = tokenHash.replace(/\//g,'');	    
 	    } else {
 		//use the existing token
 		tokenHash = c.forgot_password[0].token;

@@ -9,6 +9,7 @@ var facebook_client = new Facebook(app.settings.fbAppId,app.settings.fbAppSecret
 
 module.exports = function(app) {
     app.all("/friends/invite",function(req,res) {
+	console.log('called friend invite');
 	if (!req.session.loggedIn) {	
 	    return res.redirect('/login?redirectUrl='+req.url);
 	}
@@ -23,12 +24,13 @@ module.exports = function(app) {
 	//this allows us to handle the case where they are adding more friends to an existing plan
 	//for bulk friend emails, we will send only to those emails that have not had emails sent
 	var resendOk = req.param('friendEmailId') ? true : false;
-
+	console.log('resendok:'+resendOk);
+	console.log('resendto: '+req.param('friendEmailId'));
 	for (id in req.session.currentPlan.friends) {
 	    var friend = req.session.currentPlan.friends[id];
 	    //don't send email to friends that have declined
 	    if (typeof friend.decision != "undefined" && !friend.decision) {
-		console.log('no decision');
+		console.log('they declined');
 		continue;
 	    }
 
@@ -44,7 +46,9 @@ module.exports = function(app) {
 	    //TODO: prevent spammers? only send 3 emails per friend
 	    if (req.param('friendEmailId')) {
 		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.fbId : friend.email;
+		console.log('friend email id: '+friendEmailId);
 		if (req.param('friendEmailId') != friendEmailId) {
+		    console.log(req.param('friendEmailId')+' != '+friendEmailId);
 		    continue;  
 		} 
 	    }
@@ -58,7 +62,7 @@ module.exports = function(app) {
 		var friendTimestamp = new Date().getTime().toString();
 		hash.update(friend.email+friendTimestamp);
 		friendToken = hash.digest(encoding='base64');
-		friendToken = friendToken.replace('/','');	    
+		friendToken = friendToken.replace(/\//g,'');	    
 		
 		req.session.currentPlan.friends[id].token = {timestamp: friendTimestamp,token: friendToken};
 	    } else {
@@ -71,7 +75,7 @@ module.exports = function(app) {
 		if ((typeof req.session.customer.first_name != "undefined") && (typeof req.session.customer.last_name != "undefined")) {
 		    name = req.session.customer.first_name+' '+req.session.customer.last_name;
 		}
-		var rsvpLink = "http://"+app.settings.host+".wembli.com/plan/view/"+encodeURIComponent(req.session.currentPlan.config.guid)+"/"+encodeURIComponent(friendToken)+"/collectVote";
+		var rsvpLink = "http://"+app.settings.host+".wembli.com/plan/view/"+encodeURIComponent(req.session.currentPlan.config.guid)+"/"+encodeURIComponent(friendToken)+"/collectVote/fb";
 		var voteBy = req.param('respondByCheckbox') ? req.param('voteBy') : null;
 
 		var initCollectVote = function() {
@@ -98,9 +102,9 @@ module.exports = function(app) {
 			    //apiCall = "/me/feed";
 			    //post args for fb
 			    var msg = name+' is planning an outing and you\'re invited!';
-			    var desc = req.session.customer.first_name+', '+name+ ' is using Wembli to plan a '+req.session.currentPlan.event.Name+' outing on '+req.session.currentPlan.event.DisplayDate+' and has invited you! Follow the link so you can RSVP.  You can also contribute to the plan by voting for the options that work best for you.';
+			    var desc = friend.firstName+', '+name+ ' is using Wembli to plan a '+req.session.currentPlan.event.Name+' outing on '+req.session.currentPlan.event.DisplayDate+' and has invited you! Follow the link so you can RSVP.  You can also contribute to the plan by voting for the options that work best for you. ';
 			    if (voteBy != null) {
-				desc += 'Oh, and '+name+' is asking if you would please respond no later than: '+voteBy;
+				desc += 'Oh, and '+req.session.customer.first_name+' is asking if you would please respond no later than: '+voteBy;
 			    }
 			    var params = {
 				message:msg,

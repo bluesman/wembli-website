@@ -22,11 +22,29 @@ script(type="text/javascript")
     if (!loggedIn) {
       FB.getLoginStatus(function(response) {
         if (response.status === 'connected') {
-          window.location = '/auth/facebook';
+          //take this out for now - seems like not a good user experience
+          //window.location = '/auth/facebook';
         }
       });
 
+      if ($('#summaryContainer').length > 0) {
+        FB.getLoginStatus(function(response) {
+          if (response.status === 'connected') {
+            var uid = response.authResponse.userID;
+            var accessToken = response.authResponse.accessToken;
+            location.replace('/auth/facebook');
+          } else {
+            $('.redirect-url').each(function(idx,el) {
+              $(el).val('/plan/summary');
+            });
+            $('#signupModal #message').html("You've done a lot of work.  Sign up for Wembli now to make sure your plan is saved.").show();
+            $('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
+          }
+        });
+      }
+
     }
+
 
     if ($('#facebook a').length > 0) {
       initFacebookFriendStack();

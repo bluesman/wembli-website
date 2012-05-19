@@ -64,6 +64,27 @@
 		console.log(ary);
 		var functions = {
 		    'invitation': function() {
+
+			$('#sendRSVP').attr('checked',true);
+			$('#respondByCheckbox').attr('checked',true);
+			
+			$('#respondByCheckbox').click(function(e) {
+			    if ($(this).is(':checked')) {	    
+				$('#respondBy').find('.controls').slideDown();
+			    } else {
+				$('#respondBy').find('.controls').slideUp();
+			    }
+			});
+			
+			$('#sendRSVP').click(function(e) {
+			    //e.preventDefault();
+			    if ($(this).is(':checked')) {
+				$('#respondBy').slideDown();
+			    } else {
+				$('#respondBy').slideUp();		
+			    }
+			});
+	
 			//pop a modal to collect respond by date
 			$('#datepicker').datepicker({altField:'#voteBy',
 						     minDate: new Date(),
