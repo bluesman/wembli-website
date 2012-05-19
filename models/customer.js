@@ -198,7 +198,8 @@ this.Model = function(mongoose) {
 	//get plan by guid and set it in the session
 	var query = this.findOne({});
 	query.where('eventplan').elemMatch(function (elem) {
-	    elem.where('config.guid', guid)
+	    elem.where('config.guid', guid);
+	    elem.$ne('config.deleted',true);
 	});
 	query.exec(callback);
     };
