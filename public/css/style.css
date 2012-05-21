@@ -922,6 +922,7 @@ p.note {
 #collectPaymentModal #finalTicketOption .ticket-price-box {
   left: 20px;
   margin: 0px;
+  top: 16px;
 }
 #collectPaymentModal .sendEmailCheckBoxContainer {
   padding: 10px;
@@ -964,6 +965,7 @@ p.note {
 }
 .planViewContainer #checkoutContainer #ticketsContainer .ticket-price-box {
   left: 20px;
+  top: 16px;
 }
 .planViewContainer .planOptions .checkoutMsg, .planViewContainer .planOptions .paymentMsg, .planViewContainer .planOptions .votingMsg {
   margin-bottom: 1px;
@@ -1051,6 +1053,7 @@ p.note {
 .planViewContainer .planOptions #ticketsContainer .ticketOption .ticket-price-box {
   left: 20px;
   margin: 0px;
+  top: 16px;
 }
 .planViewContainer .planOptions .form-footer {
   text-align: center;
@@ -1298,6 +1301,7 @@ p.note {
 }
 #planViewFriendContainer #left #ticketsContainer .ticketOption .ticket-price-box {
   left: 20px;
+  top: 16px;
 }
 #planViewPublicContainer #right #publicLoginForm #publicRememberInput {
   float: left;
