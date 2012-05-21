@@ -24,7 +24,6 @@ $(document).ready(function() {
 	    // implement large image viewing
 	})
 	.bind('fvmapSectionFocus', function(obj, smallImageUrl, section) {
-	    console.log('smallimage:'+smallImageUrl);
 	    $('#thumbnail').html('<img src="'+smallImageUrl+'" />');
 	})
 	.bind('fvmapSectionBlur', function(obj, smallImageUrl, section) {
@@ -33,7 +32,6 @@ $(document).ready(function() {
 	.bind('fvmapSectionSelect', function(obj, smallImageUrl, sectionName, sectionId, ticketsInSection) {
 	    // implement section select event
 	    // ticketsInSection is returned only if option 'interactWithTicketList' is true.
-	    console.log('fvmapSectionSelect', sectionName, sectionId);
 	})
 	.bind('fvmapSectionDeselect', function(obj, smallImageUrl, sectionName, sectionId) {
 	    // implement section deselect event

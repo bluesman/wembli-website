@@ -29,7 +29,6 @@
 			    qty: qty};
 
 		var addTicketGroup = function() {
-		    console.log(args);
 		    //add tix to the eventplan and change class and text on success
 		    wembli.eventPlan.addTicketGroup(args,function(error,eventplan) {
 			if (eventplan) {
@@ -57,13 +56,10 @@
 
 			//check to see if we have any tix to remove
 			var totalToRemove = $('#ticketsContent .ticket-list li').find('.btn-success').length;
-			console.log('total tixgroups to remove: '+totalToRemove);
 			if (totalToRemove > 0) {
-			    console.log('we have tix to remove');
 			    $('#ticketsContent .ticket-list li').find('.btn-success').each(function(idx2,el2) {
 				//get the parent li.id from this el2
 				var idStr = $(el2).closest('li').attr('id');
-				console.log('closest li id str: '+idStr);
 				var removeId = idStr.split('-')[2];
 				wembli.eventPlan.removeTicketGroup({ticketId:removeId},function(error,eventplan) {
 				    if (eventplan) {
@@ -74,9 +70,7 @@
 					$w.eventplan.toggleButton({action:'primary',text:'Add To Plan'},el2);
 					
 					//now its ok to add the new ticket group
-					console.log('finished removing group: '+idx2);
 					if (idx2 == totalToRemove-1) {
-					    console.log('finished last one - add the new group');
 					    addTicketGroup();
 					}
 					
@@ -86,11 +80,9 @@
 				});
 			    });
 			} else {
-			    console.log('no tix to remove');
 			    addTicketGroup();
 			}
 		    } else {
-			console.log('adding ticket group');
 			addTicketGroup();
 		    }
 		

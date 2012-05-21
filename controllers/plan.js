@@ -4,6 +4,7 @@ var wembliModel   = require('wembli-model'),
     mailer        = require("wembli/sendgrid"),
     uuid          = require('node-uuid'),
     payPal        = require('../lib/wembli/paypal'),
+    async         = require('async'),
     ticketNetwork = require('../lib/wembli/ticketnetwork');
 
 var Facebook = require('facebook-client').FacebookClient;
@@ -43,7 +44,6 @@ module.exports = function(app) {
 
 	    
 	    if (needToSave) {
-		console.log(req.session.customer);
 		//this is async but we don't need to wait (i don't think)
 		req.session.customer.saveCurrentPlan(req.session.currentPlan);
 	    }
@@ -226,7 +226,6 @@ module.exports = function(app) {
 
     app.all('/plan/public/:guid?/:token?/:action?/:source?',function(req,res) {
 	if (req.param('source')) {
-	    console.log('source:'+req.param('source'));
 	    //if source is 'fb' send them to auth/facebook and redirect them back here
 	    req.session.redirectUrl = '/plan/public/'+req.param('guid')+'/'+req.param('token')+'/'+req.param('action');
 	    if (req.param('source') == 'fb') {
@@ -234,7 +233,6 @@ module.exports = function(app) {
 	    }
 	}
 
-	console.log('called plan public');
 	//get the event details for this guid
 	Customer.findPlanByGuid(req.param('guid'),function(err,c) {
 	    if (err || c == null) {
@@ -276,15 +274,14 @@ module.exports = function(app) {
     //organizer or friend view of the currentPlan
     app.all('/plan/view/:guid?/:token?/:action?/:source?',function(req,res) {
 	if (req.param('source')) {
-	    console.log('source:'+req.param('source'));
 	    //if source is 'fb' send them to auth/facebook and redirect them back here
 	    req.session.redirectUrl = '/plan/view/'+req.param('guid')+'/'+req.param('token')+'/'+req.param('action');
 	    if (req.param('source') == 'fb') {
+		console.log('source is fb - logging in then redirecting to: '+req.session.redirectUrl);
 		return res.redirect('/auth/facebook');
 	    }
 	}
 
-	console.log('calling plan view');
 	//determine the public url to redirect to if they are not allowed
 	var publicViewUrl = '/plan/public/';
 	var hasGuid = false;
@@ -327,12 +324,10 @@ module.exports = function(app) {
 	}
 
 	var callback = function() {
-	    console.log(req.session.currentPlan);
 	    //they must have a currentPlan to view to
 	    if (typeof req.session.currentPlan.config == "undefined") {
 		//no currentPlan means they are not allowed to see this plan
 		req.session.redirectUrl = req.url;
-		console.log('redirecting to: '+publicViewUrl);
 		return res.redirect(publicViewUrl);
 	    }
 
@@ -348,7 +343,8 @@ module.exports = function(app) {
 		    req.flash('error','Invalid token for this event.');
 		    return res.redirect('/');
 		}
-
+		console.log('logged in?'+req.session.loggedIn);
+		console.log('rendering friend view');
 		return res.render('friend-view', {
 		    layoutContainer:true,
 		    action:req.param('action'),
@@ -371,6 +367,7 @@ module.exports = function(app) {
 		    jsIncludes: ['/js/organizer-view.js']
 		});
 	    } else {
+		console.log('not organizer rendering friend view');
 		return res.render('friend-view', {
 		    layoutContainer:true,
 		    action:req.param('action'),
@@ -418,11 +415,11 @@ module.exports = function(app) {
 	    req.session.currentPlan.tickets[req.param('ticketChoice')].finalChoice = true;
 	}
 	
-	for (id in req.session.currentPlan.friends) {
-	    var friend = req.session.currentPlan.friends[id];
+
+	var sendCollectPayment = function(friend,callback) {
 	    //don't send email to friends that have declined
 	    if (typeof friend.decision != "undefined" && !friend.decision) {
-		continue;
+		return callback();
 	    }
 
 	    //only send	1 email if friendEmailId param
@@ -430,26 +427,23 @@ module.exports = function(app) {
 	    if (req.param('friendEmailId')) {
 		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.fbId : friend.email;
 		if (req.param('friendEmailId') != friendEmailId) {
-		    continue;  
+		    return callback();
 		} 
 	    }
-	    console.log('sending email to: ');
-	    console.log(friendEmailId);
 	    
 	    //generate a token to identify this friend when they come back to pay
 	    var friendToken = "";
-	    if (typeof req.session.currentPlan.friends[id].token == "undefined") {
+	    if (typeof friend.token == "undefined") {
 		hash = crypto.createHash('md5');
 		var friendTimestamp = new Date().getTime().toString();
 		hash.update(friend.id+friendTimestamp);
 		friendToken = hash.digest(encoding='base64');
 		friendToken = friendToken.replace(/\//g,'');	    
-		req.session.currentPlan.friends[id].token = {timestamp: friendTimestamp,token: friendToken};
+		friend.token = {timestamp: friendTimestamp,token: friendToken};
 	    } else {
-		friendToken = req.session.currentPlan.friends[id].token.token;
+		friendToken = friend.token.token;
 	    }
-
-	    console.log('sendMessage is '+req.param('sendMessage'));
+	    
 	    if (req.param('sendMessage')) {
 		var name = 'A friend';
 		if ((typeof req.session.customer.first_name != "undefined") && (typeof req.session.customer.last_name != "undefined")) {
@@ -458,8 +452,8 @@ module.exports = function(app) {
 		var subj = name+' has finalized plans for '+req.session.currentPlan.event.Name;
 		
 		var payLink = "http://"+app.settings.host+".wembli.com/plan/view/"+encodeURIComponent(req.session.currentPlan.config.guid)+"/"+encodeURIComponent(friendToken)+"/collectPayment";
-
-
+		
+		
 		if ((typeof friend.addMethod != "undefined") && (friend.addMethod == "facebook")) {
 		    //post to this friend's facebook wall
 		    facebook_client.getSessionByAccessToken(req.session.fbAccessToken)(function(facebook_session) {
@@ -474,27 +468,26 @@ module.exports = function(app) {
 
 			    //make a post for wembli
 			    var apiCall = "/"+friend.fbId+"/feed";
-			    console.log('apicall:'+apiCall);
 			    //apiCall = "/me/feed"; //take this out after testing
 			    //post args for fb
-			    var msg = 'Hey '+friend.firstName+' thanks for coming to '+req.session.currentPlan.event.Name+'!';
-			    var desc = 'I\'ve created a plan for our outing - click the link below to view and make a contribution.';
+			    var msg = 'Hey '+friend.firstName+', glad you\'re coming to '+req.session.currentPlan.event.Name+'!';
+			    var desc = 'Click here to pony up for your part of the bill.';
 			    var params = {
 				message:msg,
-				link:payLink,
+				link:payLink+'/fb',
 				name:'Click To See The Plan',
 				description:desc,
 			    };
 			    
 			    facebook_session.graphCall(apiCall,params,'POST')(function(result) {
+				console.log('facebook result: ');
 				console.log(result);
 			    });
 			});
 			
 		    });
 		    //flag the eventplan so we know we attempted to send the email
-		    console.log('setting collect payment');
-		    req.session.currentPlan.friends[id].collectPayment = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
+		    friend.collectPayment = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
 
 		} else {
 		    res.render('email-templates/collect-payment', {
@@ -504,7 +497,7 @@ module.exports = function(app) {
 		    },function(err,htmlStr) {
 			var mail = {
 			    from: '"Wembli Support" <help@wembli.com>',
-			    to:email,
+			    to:friend.email,
 			    headers: {
 				'X-SMTPAPI': {
 				    category : "collectPayment",
@@ -521,28 +514,32 @@ module.exports = function(app) {
 			//templatize this 
 			mail.text = '';
 			mail.html = htmlStr;
-			console.log('sending to '+email);
 			mailer.sendMail(mail,function(error, success){
-			    console.log('sent mail response:');
-			    console.log(error);
-			    console.log(success);
 			    console.log("Message "+(success?"sent":"failed:"+error));
 			});
 			
 			//flag the eventplan so we know we attempted to send the email
-			req.session.currentPlan.friends[id].collectPayment = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
+			friend.collectPayment = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
 			
 		    });
 		}
 	    }
-	}
-	console.log(req.session.currentPlan);
-	req.session.currentPlan.completed.voting = true;
-	req.session.customer.saveCurrentPlan(req.session.currentPlan);
+	    callback();
+	};
 
-	//redirect to organizer view with flash message
-	//	req.flash('plan-msg','Successfully sent messages to invited friends.');
-	res.redirect('/plan/view');
+	var finished = function(err) {
+	    if (!err) {
+
+		req.session.currentPlan.completed.voting = true;
+		req.session.customer.saveCurrentPlan(req.session.currentPlan);
+
+		//redirect to organizer view with flash message
+		//	req.flash('plan-msg','Successfully sent messages to invited friends.');
+	    }
+	    res.redirect('/plan/view');
+	};
+
+	async.forEach(req.session.currentPlan.friends,sendCollectPayment,finished);
 
     });
 
@@ -556,8 +553,6 @@ module.exports = function(app) {
 	var contribution = req.param('contribution'); //the amount the person wants to pay
 	var token = req.param('token'); //token tells us who is making the payment
 	var guid = req.param('guid'); //which plan 
-
-	console.log('contribution: '+contribution);
 
 	if (!req.param('contribution')) {
 	    //req.flash('plan-msg','An error occurred. No ticket choice provided.');
@@ -587,7 +582,6 @@ module.exports = function(app) {
 		//send request to create transaction over to paypal
 		//receiver is the organizer
 		var receiverList = {"receiver":[{"amount":contribution,"email":req.session.organizer.email}]};
-		console.log(receiverList)
 		var params = {token:req.param('token'),
 			      guid:req.param('guid'),
 			      receiverList:receiverList};
@@ -595,7 +589,6 @@ module.exports = function(app) {
 		    if (err) {
 			console.log('ERROR: '+err);
 		    } else {
-			console.log(results);
 			results.contribution = contribution;
 			results.initiated = true;
 			initiatedLastDate = new Date(results.responseEnvelope.timestamp).format("m/d/yy h:MM TT Z");
@@ -613,7 +606,6 @@ module.exports = function(app) {
 				return res.redirect('/plan/view/'+guid+'/'+token);
 			    }
 			    var redirectUrl = payPal.redirectUrl(results.payKey);
-			    console.log('redirecting to '+redirectUrl);
 			    return res.redirect(redirectUrl);
 			});
 		    }
@@ -680,7 +672,6 @@ module.exports = function(app) {
 
 
     function _setCurrentPlan(args,callback) {
-	console.log('calling setcurrentplan');
 	var handleOrganizer = function(err,organizer) {
 	    if (err) {
 		args.req.flash('error','Something went wrong :) '+err);
@@ -745,7 +736,6 @@ module.exports = function(app) {
 			    }
 			}
 		    }
-		    console.log('isAttending:'+isAttending);
 
 		    if (isAttending) {
 			args.req.session.currentPlan = thisPlan;

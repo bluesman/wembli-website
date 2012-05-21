@@ -12,7 +12,6 @@
 	    });
 
 	    $('#arbitraryAmount').focus(function(e) {
-		console.log('clicked');
 		$('#arbitrary').attr('checked',true);		
 		var val = 0;
 		if ($(this).val()) {
@@ -136,7 +135,6 @@
 	    wembli.eventPlan.rsvp({rsvp:'YES'},function(error,eventplan) {
 		//mark label for this friend to 'attending'
 		var emailAsId = $('#friendEmail').val().replace(/\W+/g,'-');
-		console.log(emailAsId);
 		var key = '#'+emailAsId+' .info .status';
 		var label = '<span class="label label-success"><i class="icon-white icon-ok-sign"/><span>attending</span></span>';
 		$(key).html(label);
@@ -158,7 +156,6 @@
     };
 
     $(window.document).ready(function($) {
-	console.log('init');	
 	wembli.eventPlan.get({},function(error,eventplan) {
 	    $w.eventplan.data = eventplan; //store the event plan in the $w wembli global for use by other stuff
 	    init();

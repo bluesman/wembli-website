@@ -1,5 +1,5 @@
 #planViewFriendContainer.planViewContainer
-	- if (action == 'collectVote')
+	- if (action != 'collectPayment')
 		#rsvpContainer.alert.alert-success.alert-block!= partial("includes/plan-view/rsvp-alert",{})
 	#mainContainer.row
 		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
@@ -16,4 +16,3 @@
 						include includes/plan-view/checkout
 		#right.span4
 			#friendStack.module!= partial("includes/plan-view/friend-stack",{})
-

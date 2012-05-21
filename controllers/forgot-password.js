@@ -28,14 +28,12 @@ module.exports = function(app) {
     app.get(/\/reset-password\/(.*?)\/(.*)\/?/, function(req, res){    
 	Customer.findOne({email:req.params[0]},function(err,c) {	
 	    if (c == null) {
-		console.log('no customer');
 		//TODO: wonky
 		return res.redirect( '/' );
 	    }
 
 	    if (typeof c.forgot_password[0] == "undefined") {
 		//no crystal
-		console.log('no forgot password');
 		return res.redirect( '/' );
 	    }
 
@@ -45,7 +43,6 @@ module.exports = function(app) {
 	    var timePassed = (currentTimestamp - dbTimestamp)/1000;                                                  
 	    //has it been more than 2 days?
 	    if (timePassed > 172800) {     
-		console.log('token is expired');
 		//token is expired - handle this better someday
 		return res.redirect( '/' );
 	    }
@@ -95,14 +92,12 @@ module.exports = function(app) {
 	    var timePassed = (currentTimestamp - dbTimestamp)/1000;                                                  
 	    //has it been more than 2 days?
 	    if (timePassed > 172800) {             
-		console.log('token expired');
 		//token is expired - handle this better someday
 		return res.redirect( '/' );
 	    }
 
 	    //make sure the passed in token matches the db token
 	    if (req.param('token') != c.forgot_password[0].token) {
-		console.log('db token doesnt match');
 		return res.redirect( '/' );
 	    }	
 
@@ -126,13 +121,11 @@ module.exports = function(app) {
 
     app.post('/forgot-password', function(req, res){
 	if (!req.param('email')) {
-	    console.log('no email to reset password for!');
 	    //no crystal - make this better someday
 	    return res.redirect( '/' );
 	}
 
 	if ((typeof req.session.loggedIn != "undefined") && req.session.loggedIn) {
-	    console.log('customer is logged in!');
 	    //retard is already logged in
 	    return res.redirect('/dashboard');
 	}
@@ -141,7 +134,6 @@ module.exports = function(app) {
 	    if (c == null) {
 		//clear out any existing customer (logout doesn't do this by design
 		delete req.session.customer;
-		console.log('no customer for this email to reset password for!');
 		//TODO: fix this - they tried to give us an email for an account that doesn't exist
 		return res.redirect( '/' );
 	    }

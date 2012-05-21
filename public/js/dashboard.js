@@ -17,7 +17,7 @@
 		e.preventDefault();
 	    });
 
-	    $(el).find('button').click(function(e) {
+	    $(el).find('button.removePlan').click(function(e) {
 		e.preventDefault();
 		var guid = null;
 		$(el).find('.eventGuid').each(function(idx,guidHidden) {
@@ -34,7 +34,17 @@
 		    }
 		});
 	    });
-	});
+	    $(el).find('button.viewPlan').click(function(e) {
+		e.preventDefault();
+		var guid = null;
+		$(el).find('.eventGuid').each(function(idx,guidHidden) {
+		    console.log(guidHidden);
+		    guid = $(guidHidden).val();
+		});
+		console.log('viewing: '+guid);
+		location.replace('/plan/view/'+guid);
+	    });
+	});	
     };
 
     $(window.document).ready(function($) {

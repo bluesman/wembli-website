@@ -19,7 +19,7 @@
 						span.label unopened
 			- else
 				span.label not sent
-		- if (!friend.payment.payment)
+		- if ((typeof friend.payment =="undefined") || (!friend.payment.payment))
 			a.emailAction.pull-right(id="payment-#{id}",href="#")
 				i.icon-repeat
 				span &nbsp;Resend

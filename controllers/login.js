@@ -6,12 +6,9 @@ var wembliModel   = require('wembli-model');
 var Customer      = wembliModel.load('customer');
 
 module.exports = function(app) {
-    console.log('login loaded...');
 
     app.get('/login/facebook',function(req,res,next) {
 	if (req.session.loginRedirect) {	    
-	    console.log('redirect after facebook login');
-	    console.log(req.session.redirectUrl);
 	    var r = req.session.redirectUrl ? req.session.redirectUrl : '/dashboard';
 	    var rm = req.session.redirectMsg ? req.session.redirectMsg : '';;
 	    if (rm != '') {
@@ -21,7 +18,6 @@ module.exports = function(app) {
 	    delete req.session.redirectMsg;
 	    return res.redirect(r);
 	}
-	console.log('here');
 
 	next();
     });
@@ -29,11 +25,9 @@ module.exports = function(app) {
     app.get('/login/?', function(req,res,next) {
 	//if they try to load the login page while alredy logged in
 	if (req.session.loggedIn) {
-	    console.log(req.session.customer);
 	    //redirect to the dashboard
 	    return res.redirect( ( req.param('redirectUrl') ? req.param('redirectUrl') : '/dashboard') );
 	}
-	console.log('login');
 	var errors = {};
 	if (req.param('errors') == '200') {
 	    errors.facebook = true;
@@ -54,13 +48,10 @@ module.exports = function(app) {
 
     app.post('/login/?', function(req, res) {
 	req.session.remember = req.param('remember');
-	console.log(req.param('fbLoginHidden'));
 	//if there is no email address, try fb login
 	if (req.param('fbLoginHidden') == 1) {
-	    console.log('fb login');
 	    fbLogin(req, res);
 	} else {
-	    console.log('standard login');
 	    standardLogin(req, res);
 	}
     });
@@ -155,16 +146,13 @@ var standardLogin = function(req,res) {
     hash.update(req.param('password'));
     var digest = hash.digest(encoding='base64');
     digest = digest.replace(/\//g,'');	    
-    console.log('logging in: '+req.param('email'));
     //validate email/password against the db
     Customer.findOne({email:req.param('email')},function(err,c) { 
 	if ((err == null) && (c != null)) {
 	    //set up the session and head to the redirect url
 	    if (typeof c.password != "undefined" && c.password == digest) {
-		console.log('valid credentials..logging in');
 		req.session.loggedIn = true;
 		//req.session.customer = {email: c.email};
-		console.log('setting customer in session');
 		req.session.customer = c;
 		if (req.param('redirectUrl')) {
 		    //req.flash('info','Login was successful and your work was saved.');
@@ -173,7 +161,6 @@ var standardLogin = function(req,res) {
 		return res.redirect( ( redirectUrl ? redirectUrl : '/dashboard') );
 	    }
 	}
-	console.log('error: '+err);
 	//still here? then we failed
 	res.render('login', {
 	    session: req.session,

@@ -194,7 +194,6 @@
     Wembli.prototype.event = {
 
 	get: function(args,callback) {
-	    console.log(args);
 	    var me = this;
 	    $.ajax({
 		url: "/",

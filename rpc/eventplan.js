@@ -17,12 +17,12 @@ var _respond = function(error,data,req,me) {
 	me(error,{success:0});
     } else {
 	//TODO: save data for customer if logged in
-	console.log('do i save?');
-	if (req.session.loggedIn && req.session.isOrganizer && data) {
-	    console.log('yes!');
-	    console.log(data);
+	if (req.session.loggedIn && req.session.isOrganizer && (typeof data.config != "undefined")) {
+	    //console.log(data);
 	    req.session.customer.saveCurrentPlan(data);
 	}
+
+	console.log(data);
 
 	me(null,{success:1,
 		 eventplan:data});
@@ -45,6 +45,8 @@ var _initEventplan = function(req,callback) {
 
 	    req.session.customer = customer;
 	    //make sure we have an event plan
+	    console.log('eventplan from session');
+	    console.log(req.session.currentPlan);
 	    if (typeof req.session.currentPlan == "undefined") {
 		return callback('no eventplan available');
 	    }
@@ -52,6 +54,7 @@ var _initEventplan = function(req,callback) {
 	    return callback(null,e);
 	});
     } else {
+	console.log('not logged in');
 	//make sure we have an event plan
 	if (typeof req.session.currentPlan == "undefined") {
 	    return callback('no eventplan available');
@@ -93,8 +96,6 @@ exports.eventplan = {
 		    if (typeof customer.eventplan[idx].config == "undefined") {
 			continue;
 		    }
-		    console.log('eventplan #'+idx);
-		    console.log('comparing: '+customer.eventplan[idx].config.guid+' to '+guid);
 		    if (customer.eventplan[idx].config.guid == guid) {
 			good = true;
 			console.log('match');
@@ -103,7 +104,6 @@ exports.eventplan = {
 			customer.save(function(err) {
 			    if (err) { return _respond(err,null,null,me); }
 			    var plan = customer.eventplan[idx];
-			    console.log(customer.eventplan[idx]);
 			    return _respond(null,null,req,me);
 			});
 		    }

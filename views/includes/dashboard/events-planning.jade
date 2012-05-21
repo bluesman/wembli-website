@@ -18,8 +18,8 @@
 									.venue!= (typeof plan.event.Venue.Name != "undefined") ? plan.event.Venue.Name : plan.event.Venue
 									.location!= plan.event.City+', '+plan.event.StateProvince
 								.cta
-									button.removePlan.btn.btn-warning.pull-right(href="#") Remove
-									button.viewPlan.btn.btn-success.pull-right(href="/plan/view/#{plan.config.guid}") View
+									button.removePlan.btn.btn-warning.pull-right Remove
+									button.viewPlan.btn.btn-success.pull-right View
 								.event-date-box
 									span.day!=        date.format("ddd")
 									span.event-date!= date.format("mmm d")

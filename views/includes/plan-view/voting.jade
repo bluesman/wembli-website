@@ -28,7 +28,7 @@
 				voteCntStr = voteCnt + ' Vote'
 				- voteCntStr    += (ticket.voteCnt == 1) ? '' : 's';
 				- voteCntStr    += ' ('+votePct+'%)';
-				a.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
+				.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
 					- if (session.isOrganizer)
 						include ticket/organizer-voting
 					- else

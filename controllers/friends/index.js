@@ -1,3 +1,4 @@
+var async = require('async');
 var crypto = require('crypto');
 var mailer = require("wembli/sendgrid");
 var Facebook = require('facebook-client').FacebookClient;
@@ -26,19 +27,19 @@ module.exports = function(app) {
 	var resendOk = req.param('friendEmailId') ? true : false;
 	console.log('resendok:'+resendOk);
 	console.log('resendto: '+req.param('friendEmailId'));
-	for (id in req.session.currentPlan.friends) {
-	    var friend = req.session.currentPlan.friends[id];
+
+	var sendInvite = function(friend,callback) {
 	    //don't send email to friends that have declined
 	    if (typeof friend.decision != "undefined" && !friend.decision) {
 		console.log('they declined');
-		continue;
+		return callback();
 	    }
 
 	    //if resendOk is false, make sure this friend has never had a collectVote email sent yet
 	    if (!resendOk) {
 		if ((typeof friend.collectVote != "undefined") && (friend.collectVote.initiated)) {
 		    console.log('skipping this friend because resendok is false and they already got a collectVote email');
-		    continue;
+		    return callback();
 		}
 	    }
 
@@ -48,8 +49,8 @@ module.exports = function(app) {
 		var friendEmailId = ((typeof friend.addMethod != "undefined") && (friend.addMethod == 'facebook')) ? friend.fbId : friend.email;
 		console.log('friend email id: '+friendEmailId);
 		if (req.param('friendEmailId') != friendEmailId) {
-		    console.log(req.param('friendEmailId')+' != '+friendEmailId);
-		    continue;  
+		    console.log('skipping because: '+req.param('friendEmailId')+' != '+friendEmailId);
+		    return callback();
 		} 
 	    }
 	    console.log('sending invitation to: ');
@@ -57,37 +58,36 @@ module.exports = function(app) {
 	    
 	    //generate a token to identify this friend when they RSVP
 	    var friendToken = "";
-	    if (typeof req.session.currentPlan.friends[id].token == "undefined") {
+	    if (typeof friend.token == "undefined") {
 		hash = crypto.createHash('md5');
 		var friendTimestamp = new Date().getTime().toString();
 		hash.update(friend.email+friendTimestamp);
 		friendToken = hash.digest(encoding='base64');
 		friendToken = friendToken.replace(/\//g,'');	    
 		
-		req.session.currentPlan.friends[id].token = {timestamp: friendTimestamp,token: friendToken};
+		friend.token = {timestamp: friendTimestamp,token: friendToken};
 	    } else {
-		friendToken = req.session.currentPlan.friends[id].token.token;
+		friendToken = friend.token.token;
 	    }
 
 	    console.log('sendInvite is '+req.param('sendInvite'));
-	    if (req.param('sendInvite')) {
+	    if (req.param('sendInvite') == 'on') {
 		var name = 'A friend';
 		if ((typeof req.session.customer.first_name != "undefined") && (typeof req.session.customer.last_name != "undefined")) {
 		    name = req.session.customer.first_name+' '+req.session.customer.last_name;
 		}
-		var rsvpLink = "http://"+app.settings.host+".wembli.com/plan/view/"+encodeURIComponent(req.session.currentPlan.config.guid)+"/"+encodeURIComponent(friendToken)+"/collectVote/fb";
+		var rsvpLink = "http://"+app.settings.host+".wembli.com/plan/view/"+encodeURIComponent(req.session.currentPlan.config.guid)+"/"+encodeURIComponent(friendToken)+"/collectVote";
 		var voteBy = req.param('respondByCheckbox') ? req.param('voteBy') : null;
 
 		var initCollectVote = function() {
 		    //flag the eventplan so we know we attempted to send the email
-		    req.session.currentPlan.friends[id].collectVote = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
+		    friend.collectVote = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
 		};
 		var subj = name+' has invited you to go to '+req.session.currentPlan.event.Name;
 		
 		if ((typeof friend.addMethod != "undefined") && (friend.addMethod == "facebook")) {
 		    //post to this friend's facebook wall
 		    facebook_client.getSessionByAccessToken(req.session.fbAccessToken)(function(facebook_session) {
-			console.log(facebook_session);
 			if (!facebook_session) {
 			    return res.redirect('/auth/facebook');
 			}
@@ -96,7 +96,7 @@ module.exports = function(app) {
 			    if (!is_valid) {
 				return res.redirect('/auth/facebook');
 			    }
-
+			    
 			    //make a post for wembli
 			    var apiCall = "/"+friend.fbId+"/feed";
 			    //apiCall = "/me/feed";
@@ -108,18 +108,20 @@ module.exports = function(app) {
 			    }
 			    var params = {
 				message:msg,
-				link:rsvpLink,
+				link:rsvpLink+'/fb',
 				name:'Click To View Details & RSVP',
 				description:desc,
 			    };
-			    
+			    console.log('calling fb: '+apiCall);
+			    console.log('with params:' );
+			    console.log(params);
 			    facebook_session.graphCall(apiCall,params,'POST')(function(result) {
 				console.log(result);
 			    });
 			});
-			
 		    });
 		    initCollectVote();
+
 		} else {
 		    res.render('email-templates/collect-votes', {
 			layout:'email-templates/layout',
@@ -159,13 +161,23 @@ module.exports = function(app) {
 		}
 		//req.flash('plan-msg','Successfully sent invitations to invited friends.');
 	    }
-	}
-	req.session.currentPlan.config.voteBy = req.param('voteBy');
-	req.session.currentPlan.completed.summary = true;
-	req.session.customer.saveCurrentPlan(req.session.currentPlan);
+	    callback();
+	};
 
-	//redirect to organizer view with flash message
-	res.redirect('/plan/view');
+	var finished = function(err) {
+	    if (!err) {
+		req.session.currentPlan.config.voteBy = req.param('voteBy');
+		req.session.currentPlan.completed.summary = true;
+		req.session.customer.saveCurrentPlan(req.session.currentPlan);
+	    } else {
+		console.log(err);
+	    }
+	    //redirect to organizer view with flash message
+	    res.redirect('/plan/view');
+	}
+
+	async.forEach(req.session.currentPlan.friends,sendInvite,finished);
+
     });
 
 }

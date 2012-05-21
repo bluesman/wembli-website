@@ -23,7 +23,6 @@
 
 	$('.ticketOption').each(function(idx,el) {
 	    if (el.id == 'finalChoice') {
-		console.log('skipping final choice');
 		//finalChoice is special and links to the ticket purchase page
 		return;
 	    }
@@ -31,13 +30,13 @@
 	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';	    
 	    $(this).popover({animation:true,
 			     title:title,
-			     content: $(this).children('.costBreakdown').html(),
+			     content: $(this).find('.costBreakdown').html(),
 			     delay:{show:300,hide:100}
 			    });
 
 	    $(el).click(function(e) {
-		$(this).children('input').attr('checked',true);
-		e.preventDefault();
+		$(this).find('input').attr('checked',true);
+		//e.preventDefault();
 	    });
 	});
 
@@ -46,7 +45,7 @@
 	    $(this).popover({animation:true,
 			     placement:'left',
 			     title:'Friend Details:',
-			     content: $(this).children('.friendPopover').html(),
+			     content: $(this).find('.friendPopover').html(),
 			     delay:{show:300,hide:100}
 			    });
 	    */
@@ -59,9 +58,7 @@
 		var elements = el.id.split('-');
 		var ary = [];
 		ary[0] = elements.shift();
-		console.log(elements);
 		ary[1] = elements.join('-');
-		console.log(ary);
 		var functions = {
 		    'invitation': function() {
 
@@ -102,7 +99,6 @@
 			    var ticket = $w.eventplan.data.tickets[id];
 			    if ((typeof ticket.finalChoice != "undefined") && (ticket.finalChoice)) {
 				selectedOption = '#'+id;
-				console.log(selectedOption);
 				$('#ticketChoiceHidden').val(id);
 				break;
 			    }
