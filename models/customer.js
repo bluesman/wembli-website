@@ -95,6 +95,8 @@ this.Model = function(mongoose) {
 
 	this.eventplan = plans;
 	this.markModified('eventplan');
+	console.log('saving plans: ');
+	console.log(plans);
 	this.save(function(err) {
 	    if (err) {
 		console.log('error saving customer: '+err);
