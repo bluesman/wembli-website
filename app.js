@@ -55,6 +55,7 @@ var production = function() {
 app.configure('production1',production);
 app.configure('production2',production);
 app.configure('development',function() {
+    app.use(express.logger());
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 

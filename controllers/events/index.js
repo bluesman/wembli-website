@@ -3,7 +3,6 @@ var ticketNetwork = require('wembli/ticketnetwork');
 require('date-utils');
 
 module.exports = function(app) {
-    console.log('events loaded...');
     app.get('/events', function(req, res){
 	res.render('events', {
 	    layoutContainer:true,
@@ -49,7 +48,6 @@ module.exports = function(app) {
 	  eventGroups if I need it
 	  
         ticketNetwork.GetEvents(args,function(err,results) {
-            console.log(results.Event);
             //var events = psUtils.sort(results.Event,'Date','asc');
             var events = (typeof results.Event == "undefined") ? [] : results.Event;
             var eventGroups = [];
@@ -105,7 +103,6 @@ function splitSearchUri(req) {
     req.param.adults   = req.params[3];
     req.param.children = req.params[4];
 
-    console.log(req.params.q);
 
     //set some defaults if some params are not supplied
     //if no search query, use zip code
@@ -118,14 +115,12 @@ function splitSearchUri(req) {
 
     //if no from use today
     if (!req.param.from) {
-	console.log('no from date use today');
 	var d = Date.today();
 	req.param.from = d.format("shortDate");
     }
 
     //if there is a from and no to then use from + 6 wk for to
     if (!req.param.to) {
-	console.log('adding 6 wk to: '+req.param.from);
 	var d = new Date(req.param.from);
 	req.param.to   = d.addWeeks(18).format("shortDate");
     }
@@ -141,9 +136,4 @@ function splitSearchUri(req) {
     }
 
     //donzies, log the params for fun
-    console.log(req.param.q);
-    console.log(req.param.from);
-    console.log(req.param.to);
-    console.log(req.param.adults);
-    console.log(req.param.children);
 }

@@ -1,0 +1,57 @@
+#planViewPublicContainer.planViewContainer
+	#mainContainer.row
+		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:event});
+		#left.span8
+			#upsell.module
+				h3 Welcome
+					a#welcomeIcon(href="#")
+						i.icon-star.pull-right.icon-white
+				.body
+					.welcome.well Welcome to Wembli! Please login to view this plan.
+		#right.span4
+			#publicLogin.module
+				h3 Login
+					a#publicLoginIcon(href="#")
+						i.icon-user.pull-right.icon-white
+				.body
+					.generalError.error.yellow
+						- if((typeof errors !== 'undefined') && (errors.general) )
+							| Incorrect Email or Password.
+						- if((typeof errors !== 'undefined') && (errors.facebook) )
+							| Unable to login through facebook.
+					form#publicLoginForm.form-vertical.well(method="post",action="/login",enctype="application/x-www-form-urlencoded")
+						div(style="text-align:center")
+							a#publicFacebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Login With Facebook
+						hr
+						strong Login without Facebook:
+						br
+						br
+						input.redirect-url(type="hidden",name="redirectUrl",value="")
+						fieldset
+							.control-group
+								label.control-label(for="email") Email:
+								.controls
+									input#publicEmail(type="text",value=(session.remember ? params.email : null),name="email")
+							.control-group
+								label.control-label(for="password") Password:
+								.controls
+									input(type="password",value="",name="password")
+							.control-group
+								.controls
+									input#publicRememberInput(type="checkbox",name="remember",checked=params.remember)
+									label#publicRememberLabel.control-label(for="remember") Remember Me
+							.form-actions
+								a#publicForgotPasswordLink(href="#forgotPasswordModal",data-toggle="modal") forgot your password?
+								button#publicLoginSubmitButton.btn.btn-primary.btn-large Login
+					a#publicSignupLink(data-toggle="modal",href="#signupModal") New to Wembli? Click here to Sign Up.
+			script
+				$(document).ready(function() {
+					$('#publicForgotPasswordLink').click(function(e) {
+						$('#publicLoginModal').modal('hide');
+					});
+					$('#publicLoginForm #publicSignupLink').click(function(e) {
+						$('#publicLoginModal').modal('hide');
+					});
+				});
+						
+			

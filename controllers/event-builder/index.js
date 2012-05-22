@@ -7,9 +7,39 @@ var uuid = require('node-uuid'); //this is for making a guid
 var ticketNetwork = require('../../lib/wembli/ticketnetwork');
 
 module.exports = function(app) {
+    app.get('/event/:eventId/:eventName',function(req,res) {
+	var eventId     = req.param('eventId');
+	var eventName   = req.param('eventName');
+
+	ticketNetwork.GetEvents({eventID:eventId},function(err,event) {
+	    if (err) {
+		//send to home page for now
+		//TODO: make an event builder error page
+		return res.redirect('/');
+	    }
+
+	    //add event to the event plan
+	    var e = event.Event;
+	    
+	    //get the venue
+	    ticketNetwork.GetVenue({VenueID:event.Event.VenueID},function(err,venue) {
+		e.Venue = venue.Venue;
+		//now continue to the right page
+		res.render('event-view', {
+		    title: 'wembli.com - View Event Plan.',
+		    layoutContainer: true,
+		    page:'event',
+		    cssIncludes: [],
+		    jsIncludes: [],
+		    event:e
+		});
+	    });
+	});
+	
+    });
     //set up the event plan for the first time
-    app.all('/event/:eventId/:eventName',function(req,res) {
-	console.log('called event builder');
+    app.post('/event/:eventId/:eventName',function(req,res) {
+	console.log('called event builder for url: '+req.url);
 	var eventId     = req.param('eventId');
 	var eventName   = req.param('eventName');
 	var services = {'friends':[],'tickets':{}};
@@ -23,7 +53,6 @@ module.exports = function(app) {
 	for (idx in wembliServices) {
 	    var service = wembliServices[idx];
 	    console.log('service for idx: '+idx);
-	    console.log(service);
 	    if (typeof services[service] == "undefined") {
 		req.session.currentPlan.config[service] = false;
 		if (typeof req.session.currentPlan[service] != "undefined") {
@@ -41,7 +70,6 @@ module.exports = function(app) {
 
 	//this function determines which step to go to and goes there
 	var dispatch = function(err,args) {
-	    console.log(args.eventplan);
 	    //check eventplan to see which step should go next
 	    var goto = 'tickets';
 	    for (idx in wembliServices) {
@@ -70,7 +98,6 @@ module.exports = function(app) {
 	    
 	    //get the venue
 	    ticketNetwork.GetVenue({VenueID:event.Event.VenueID},function(err,venue) {
-		console.log(venue);
 		req.session.currentPlan.event.Venue = venue.Venue;
 		//now continue to the right page
 		dispatch(null,{eventplan:req.session.currentPlan});
@@ -281,7 +308,6 @@ module.exports = function(app) {
     app.all('/event/save',function(req,res) {
 	//saving plan
 	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
-	    console.log('saved customer');
 	    var redirectUrl = '/dashboard';
 	    if (typeof req.param('redirectUrl') != "undefined") {
 		//req.flash('info','Your work was saved.');

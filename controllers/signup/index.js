@@ -26,8 +26,21 @@ module.exports = function(app) {
     
     app.post(/\/signup\/?/, function(req, res){
 	if (!req.param('email')) {
-	    return res.redirect( '/' );
+	    req.flash('signup-error','Please make sure all the form items are filled.');
+	    return res.redirect('/signup');
 	}
+
+	//TODO: make sure passwords match
+	if ( !req.param('password') || !req.param('password2') ) {
+	    req.flash('signup-error','Please make sure all the form items are filled.');
+	    return res.redirect('/signup');
+	}		    
+
+	if ( req.param('password') != req.param('password2') ) {
+	    req.flash('signup-error','The passwords do not match.');
+	    return res.redirect('/signup');
+	}		    
+
 
 	//fetch the customer by email 
 	Customer.findOne({email:req.param('email')},function(err,c) {
@@ -35,10 +48,8 @@ module.exports = function(app) {
 	    hash.update(req.param('password'));
 	    var digest = hash.digest(encoding='base64');
 	    digest = digest.replace(/\//g,'');	    
-	    
 	    //if no c make one email param
 	    if (c == null) {
-		//TODO: make sure passwords match
 
 		var newC = {email: req.param('email'),
 			    first_name: req.param('first_name'),
@@ -115,8 +126,8 @@ module.exports = function(app) {
 		
 	    } else {
 		//they've already signed up
-		req.session.customer = c;
-		return res.redirect( '/dashboard' );
+		req.flash('signup-error','An account with that email exists.');
+		return res.redirect('/signup');
 	    }
 
 	});

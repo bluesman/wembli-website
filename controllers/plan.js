@@ -271,6 +271,119 @@ module.exports = function(app) {
 	});
     });
 
+    app.all('/plan/itinerary/:guid?/:token?/:action?/:source?',function(req,res) {
+
+	if (req.param('source') && !(req.session.loggedIn)) {
+	    //if source is 'fb' send them to auth/facebook and redirect them back here
+	    req.session.redirectUrl = '/plan/view/'+req.param('guid')+'/'+req.param('token')+'/'+req.param('action');
+	    if (req.param('source') == 'fb') {
+		console.log('source is fb - logging in then redirecting to: '+req.session.redirectUrl);
+		return res.redirect('/auth/facebook');
+	    }
+	}
+
+	//determine the public url to redirect to if they are not allowed
+	var publicViewUrl = '/plan/public/';
+	var hasGuid = false;
+	if (req.param('guid')) {
+	    publicViewUrl += req.param('guid');
+	    hasGuid = true;
+	} else if (typeof req.session.currentPlan.config != "undefined") {
+	    publicViewUrl += req.session.currentPlan.config.guid;
+	    hasGuid = true;
+	}
+	if (hasGuid) {
+	    if (req.param('token')) {
+		publicViewUrl += '/'+req.param('token');
+	    }
+	    if (req.param('action')) {
+		publicViewUrl += '/'+req.param('action');
+	    }
+	}
+
+	/*
+	  different levels of access:
+	  1. public:
+	  - not logged in
+	  - logged in but not invited and not the organizer
+	  2. friend view
+	  - logged in and invited but not the organizer
+	  3. logged in and is the organizer
+	*/
+
+	//if they are not logged in, send them to the public view
+	if (!req.session.loggedIn) {
+	    req.session.redirectUrl = req.url;
+	    return res.redirect(publicViewUrl);
+	}
+
+	//if there is no passed in guid they have to have a current plan
+	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
+	    //req.flash('error','An error occurred. Please start a new plan.');
+	    return res.redirect(publicViewUrl);
+	}
+
+	var callback = function() {
+	    //they must have a currentPlan to view to
+	    if (typeof req.session.currentPlan.config == "undefined") {
+		//no currentPlan means they are not allowed to see this plan
+		req.session.redirectUrl = req.url;
+		return res.redirect(publicViewUrl);
+	    }
+
+	    //set friend in the session
+	    if (req.param('guid') && req.param('token') && req.param('action')) {
+		if (!_setFriend({req:req,action:req.param('action'),countView:true})) {
+		    //this guid doesn't have a friend with this token
+		    req.flash('error','Invalid token for this event.');
+		    return res.redirect('/');
+		}
+		console.log('rendering friend itinerary');
+		return res.render('friend-itinerary', {
+		    layoutContainer:true,
+		    action:req.param('action'),
+		    title: 'wembli.com - View Event Plan.',
+		    page:'itinerary',
+		    token:req.param('token'),
+		    cssIncludes: [],
+		    jsIncludes: []
+		});
+
+	    }
+
+	    //render the appropriate view
+	    if (req.session.isOrganizer) {
+		return res.render('organizer-itinerary', {
+		    title: 'wembli.com - View Event Plan.',
+		    layoutContainer: true,
+		    page:'organizer',
+		    cssIncludes: [],
+		    jsIncludes: []
+		});
+	    } else {
+		console.log('not organizer rendering friend view');
+		return res.render('friend-itinerary', {
+		    layoutContainer:true,
+		    action:req.param('action'),
+		    title: 'wembli.com - View Event Plan.',
+		    page:'itinerary',
+		    token:req.param('token'),
+		    cssIncludes: [],
+		    jsIncludes: [],
+		});
+	    }
+	};
+
+	var guid = req.param('guid') ? req.param('guid') : req.session.currentPlan.config.guid;
+	//fetch the plan for this guid from the db and set it in the session
+	_setCurrentPlan({req:  req,
+			 res:  res,
+			 guid: guid},callback);
+
+
+    });
+
+
     //organizer or friend view of the currentPlan
     app.all('/plan/view/:guid?/:token?/:action?/:source?',function(req,res) {
 	if (req.param('source')) {
@@ -368,6 +481,9 @@ module.exports = function(app) {
 		});
 	    } else {
 		console.log('not organizer rendering friend view');
+		if ((typeof req.session.friend.payment != "undefined") && (req.session.friend.payment.payKey)) {
+		    var paymentLink = payPal.redirectUrl(req.session.friend.payment.payKey);
+		}
 		return res.render('friend-view', {
 		    layoutContainer:true,
 		    action:req.param('action'),
@@ -375,7 +491,8 @@ module.exports = function(app) {
 		    page:'friends',
 		    token:req.param('token'),
 		    cssIncludes: [],
-		    jsIncludes: ['/js/friend-view.js']
+		    jsIncludes: ['/js/friend-view.js'],
+		    paymentLink:paymentLink
 		});
 	    }
 	};
@@ -471,17 +588,16 @@ module.exports = function(app) {
 			    //apiCall = "/me/feed"; //take this out after testing
 			    //post args for fb
 			    var msg = 'Hey '+friend.firstName+', glad you\'re coming to '+req.session.currentPlan.event.Name+'!';
-			    var desc = 'Click here to pony up for your part of the bill.';
+			    var name = 'Click here to pony up for your part of the bill.';
 			    var params = {
 				message:msg,
 				link:payLink+'/fb',
-				name:'Click To See The Plan',
-				description:desc,
+				name:name,
+				description:'What happens next: [1] Pay your part of the bill, [2] Once everyone has paid, the Organizer will make the buy [3] Enjoy an awesome outing with friends'
 			    };
 			    
 			    facebook_session.graphCall(apiCall,params,'POST')(function(result) {
-				console.log('facebook result: ');
-				console.log(result);
+				return;
 			    });
 			});
 			
@@ -590,24 +706,40 @@ module.exports = function(app) {
 			console.log('ERROR: '+err);
 		    } else {
 			results.contribution = contribution;
-			results.initiated = true;
-			initiatedLastDate = new Date(results.responseEnvelope.timestamp).format("m/d/yy h:MM TT Z");
+			results.initiated = 1;
+			results.initiatedLastDate = new Date(results.responseEnvelope.timestamp).format("m/d/yy h:MM TT Z");
 			//set the results in the session and mark that this person has paid
-			for (var idx in req.session.currentPlan.friends) {
-			    if (req.session.currentPlan.friends[idx].email == req.session.friend.email) {
-				req.session.currentPlan.friends[idx].payment = results;
+			var storePaymentInfo = function(friend,callback) {
+			    if (friend.addMethod == 'facebook') {
+				if (friend.fbId == req.session.friend.fbId) {
+				    console.log('setting payment for friend');
+				    friend.payment = results;
+				}
+			    } else {
+				if (friend.email == req.session.friend.email) {
+				    friend.payment = results;
+				}				    
 			    }
-			}
-			
-			//redirect to paypal on success
-			req.session.organizer.saveCurrentPlan(req.session.currentPlan,function(err) {
-			    if (err) {
-				//req.flash('plan-msg','An error occurred. No ticket choice provided.');
-				return res.redirect('/plan/view/'+guid+'/'+token);
+			    callback();
+			};
+
+			var finished = function(err) {
+			    if (!err) {
+				//redirect to paypal on success
+				console.log('saving eventplan: ');
+				console.log(req.session.currentPlan);
+				req.session.organizer.saveCurrentPlan(req.session.currentPlan,function(err) {
+				    if (err) {
+					//req.flash('plan-msg','An error occurred. No ticket choice provided.');
+					return res.redirect('/plan/view/'+guid+'/'+token);
+				    }
+				    var redirectUrl = payPal.redirectUrl(results.payKey);
+				    return res.redirect(redirectUrl);
+				});
 			    }
-			    var redirectUrl = payPal.redirectUrl(results.payKey);
-			    return res.redirect(redirectUrl);
-			});
+			};
+
+			async.forEach(req.session.currentPlan.friends,storePaymentInfo,finished);
 		    }
 		});
 	    }
@@ -664,6 +796,8 @@ module.exports = function(app) {
 		args.req.session.friend.first_name = plan.friends[id].firstName;
 		args.req.session.friend.token      = plan.friends[id].token;
 		args.req.session.friend.addMethod  = plan.friends[id].addMethod;
+		args.req.session.friend.payment    = plan.friends[id].payment;
+		args.req.session.friend.decision   = plan.friends[id].decision;
 		return true;
 	    }
 	}
@@ -705,6 +839,7 @@ module.exports = function(app) {
 	    
 	    //if organizer == customer then set isOrganizer
 	    if ((typeof args.req.session.customer != "undefined") && (args.req.session.customer.email == organizer.email)) {
+		console.log('setcurrentplan: session email == organizer email');
 		args.req.session.currentPlan = thisPlan;
 		args.req.session.customer    = organizer;
 		args.req.session.isOrganizer = true;
@@ -713,9 +848,10 @@ module.exports = function(app) {
 
 		
 	    } else {
+		args.req.session.isOrganizer = false;
 		//else check if they are attending this plan
 		var isAttending = false;
-
+		console.log('setcurrentplan: session email != organizer email');
 		//if they are not on the friend list send them to the public url
 		Customer.findPlansByFriend(args.req.session.customer,function(err,attending) {
 		    for (var i in attending) {
@@ -732,6 +868,8 @@ module.exports = function(app) {
 				    args.req.session.friend.first_name = f.firstName;
 				    args.req.session.friend.token      = f.token;
 				    args.req.session.friend.addMethod  = f.addMethod;
+				    args.req.session.friend.payment    = f.payment;
+				    args.req.session.friend.decision   = f.decision;
 				}
 			    }
 			}
@@ -739,7 +877,6 @@ module.exports = function(app) {
 
 		    if (isAttending) {
 			args.req.session.currentPlan = thisPlan;
-			args.req.session.isOrganizer = false;
 			args.req.session.organizer   = organizer;
 
 			callback();

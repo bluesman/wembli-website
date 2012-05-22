@@ -13,11 +13,7 @@
 	    $('#eventSearchForm').submit();
 	});
 	$('#eventsPlanningContainer .event').each(function(idx,el) {
-	    el.click(function(e) {
-		e.preventDefault();
-	    });
-
-	    $(el).find('button.removePlan').click(function(e) {
+	    $(el).find('.removePlan').click(function(e) {
 		e.preventDefault();
 		var guid = null;
 		$(el).find('.eventGuid').each(function(idx,guidHidden) {
@@ -34,8 +30,9 @@
 		    }
 		});
 	    });
-	    $(el).find('button.viewPlan').click(function(e) {
+	    $(el).find('.viewPlan').click(function(e) {
 		e.preventDefault();
+		console.log('clicked view');
 		var guid = null;
 		$(el).find('.eventGuid').each(function(idx,guidHidden) {
 		    console.log(guidHidden);

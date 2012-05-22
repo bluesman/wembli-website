@@ -1,0 +1,9 @@
+.planViewContainer
+	#mainContainer.row
+		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
+		#left.span8
+			#itineraryContainer This is the itinerary.
+			#wallContainer
+				div(class="fb-comments",data-href="http://#{getAppSettings().host}.wembli.com/plan/view/#{plan.config.guid}",data-num-posts="6",data-width="620")
+		#right.span4
+			#friendStack.module!= partial("includes/plan-view/friend-stack",{})

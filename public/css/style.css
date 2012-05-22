@@ -137,6 +137,9 @@ dd {
 .normalSize {
   font-size: 0.5em;
 }
+.error {
+  color: #ff6700;
+}
 .tl {
   text-align: left;
 }
@@ -1053,7 +1056,7 @@ p.note {
 .planViewContainer .planOptions #ticketsContainer .ticketOption .ticket-price-box {
   left: 20px;
   margin: 0px;
-  top: 16px;
+  top: 5px;
 }
 .planViewContainer .planOptions .form-footer {
   text-align: center;
@@ -1191,9 +1194,6 @@ p.note {
 }
 #planViewFriendContainer #rsvpContainer .buttons {
   width: 114px;
-}
-#planViewFriendContainer #rsvpContainer .buttons #rsvpYes {
-  margin-right: 10px;
 }
 #planViewFriendContainer #left #paymentContainer #makePayment #content {
   *zoom: 1;
@@ -1806,28 +1806,28 @@ p.note {
   font-size: 14px;
   font-weight: bold;
 }
-#dashboardContainer .dashboardEventList li a.event {
+#dashboardContainer .dashboardEventList li .event {
   *zoom: 1;
   height: 70px;
   display: block;
   padding: 10px;
 }
-#dashboardContainer .dashboardEventList li a.event:before, #dashboardContainer .dashboardEventList li a.event:after {
+#dashboardContainer .dashboardEventList li .event:before, #dashboardContainer .dashboardEventList li .event:after {
   display: table;
   content: "";
 }
-#dashboardContainer .dashboardEventList li a.event:after {
+#dashboardContainer .dashboardEventList li .event:after {
   clear: both;
 }
-#dashboardContainer .dashboardEventList li a.event .info {
+#dashboardContainer .dashboardEventList li .event .info {
   width: 285px;
   margin-left: 80px;
   float: left;
 }
-#dashboardContainer .dashboardEventList li a.event .cta button {
+#dashboardContainer .dashboardEventList li .event .cta button {
   margin-bottom: 10px;
 }
-#dashboardContainer .dashboardEventList li a.event:hover {
+#dashboardContainer .dashboardEventList li .event:hover {
   background-color: #ffdd73;
 }
 #dashboardContainer .dashboardEventList li.empty {

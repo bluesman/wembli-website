@@ -12,9 +12,6 @@ module.exports = function(app) {
     console.log('dashboard loaded...');
 
     app.get(/\/confirm\/(.*?)\/(.*)\/?/, function(req, res){    
-	console.log(req.params[0]);
-	console.log(req.params[1]);
-
         //validate the token      
         //a) must not be expired (1 week)               
         //b) must be a token that belong to this customer                                                            
@@ -22,11 +19,9 @@ module.exports = function(app) {
                                   
         if (req.session.loggedIn) {                     
             var expired = true;   
-            console.log('logged in, great!');           
             var dbTimestamp = req.session.customer.confirmation[0].timestamp;                                        
             var currentTimestamp = new Date().getTime();
             var timePassed = (currentTimestamp - dbTimestamp)/1000;                                                  
-            console.log(timePassed);                    
                                   
             //has it been more than 1 week?             
             if (timePassed < 604800) {                  
@@ -81,7 +76,6 @@ module.exports = function(app) {
 
     app.get('/dashboard/?', function(req, res){
 	if (req.session.loggedIn) {
-	    console.log(req.session.customer.email);
 	    if (req.session.customer.confirmed == false) {
 		//need email confirmation
 		return res.render('dashboard/confirm', {
@@ -106,7 +100,6 @@ module.exports = function(app) {
 	    });
 
 	} else {
-	    console.log('no auth');
 	    res.redirect('/login',302);
 	}
     });
@@ -154,8 +147,6 @@ module.exports = function(app) {
     });
 
     app.get(/\/confirm\/(.*)\/(.*)\/?/, function(req, res){    
-	console.log(req.params[0]);
-	console.log(req.params[1]);
 	//validate the token
 	//a) must not be expired (1 week)
 	//b) must be a token that belong to this customer
@@ -163,11 +154,9 @@ module.exports = function(app) {
 	
 	if (req.session.loggedIn) {
 	    var expired = true;
-	    console.log('logged in, great!');
 	    var dbTimestamp = req.session.customer.confirmation[0].timestamp;
 	    var currentTimestamp = new Date().getTime();
 	    var timePassed = (currentTimestamp - dbTimestamp)/1000;
-	    console.log(timePassed);
 
 	    //has it been more than 1 week?
 	    if (timePassed < 604800) {
@@ -236,7 +225,6 @@ module.exports = function(app) {
 		//get current timestamp
 		var currentTimestamp = new Date().getTime();
 		var timePassed = (currentTimestamp - existingTimestamp)/1000;
-		console.log(timePassed);
 		if (timePassed < 1800) {
 		    expired = false;
 		}
@@ -244,7 +232,6 @@ module.exports = function(app) {
 
 	    //if the timestamp is > 30 mins, expire it by overwriting the customer confirmation obj with new token data
 	    if (expired) {
-		console.log('token expired making a new one');
 		//make a new token
 		hash = crypto.createHash('md5');
 		var confirmationTimestamp = new Date().getTime().toString();
@@ -252,11 +239,9 @@ module.exports = function(app) {
 		hash.update(tmp);
 		var confirmationToken = hash.digest(encoding='base64');
 		confirmationToken = confirmationToken.replace(/\//g,'');
-		console.log(req.session.customer.confirmation);
 
 		//save the token to the customer obj
 		req.session.customer.confirmation = [{timestamp:confirmationTimestamp,token:confirmationToken}];
-		console.log(req.session.customer.confirmation);
 		req.session.customer.save();
 	    } else {
 		console.log('token was not expired, using existing');
@@ -277,7 +262,6 @@ module.exports = function(app) {
 	    var emailEsc = encodeURIComponent(req.session.customer.email);
 	    var tokenEsc = encodeURIComponent(req.session.customer.confirmation[0].token);
 	    var confirmLinkEncoded = confirmLink + '/' + emailEsc + '/' + tokenEsc;
-	    console.log(confirmLinkEncoded);
 	    
 	    res.render('email-templates/signup', {
 		confirmLink:confirmLinkEncoded,

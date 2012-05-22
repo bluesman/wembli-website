@@ -17,12 +17,12 @@ var _respond = function(error,data,req,me) {
 	me(error,{success:0});
     } else {
 	//TODO: save data for customer if logged in
-	if (req.session.loggedIn && req.session.isOrganizer && (typeof data.config != "undefined")) {
+	if (req.session.loggedIn && req.session.isOrganizer && (typeof data != null) && (typeof data.config != "undefined")) {
+	    console.log('eventplan: saving eventplan: ');
+	    console.log(req.session);
 	    //console.log(data);
 	    req.session.customer.saveCurrentPlan(data);
 	}
-
-	console.log(data);
 
 	me(null,{success:1,
 		 eventplan:data});
@@ -45,8 +45,6 @@ var _initEventplan = function(req,callback) {
 
 	    req.session.customer = customer;
 	    //make sure we have an event plan
-	    console.log('eventplan from session');
-	    console.log(req.session.currentPlan);
 	    if (typeof req.session.currentPlan == "undefined") {
 		return callback('no eventplan available');
 	    }

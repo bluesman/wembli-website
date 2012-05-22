@@ -1,0 +1,21 @@
+#paymentContainer.module
+	h3 Waiting For Payment
+		a#paymentIcon(href="#")
+			i.icon-shopping-cart.pull-right.icon-white				
+	- if (typeof paymentMsg != "undefined")
+		.votingMsg.alert.alert-info!= paymentMsg
+	- var ticket = finalTicketChoice;
+	- var link = (typeof paymentLink != "undefined") ? paymentLink : '';
+	.body
+		div You have initiated a payment for $#{session.friend.payment.contribution}, however, it has not been completed.
+		div If you have already successfully completed the payment process through paypal, It should just be a few moments until paypal notifies us that the transaction has completed.
+		div If you did not complete the payment process and would like to continue, you can 
+			a(href="#{paymentLink}") Click Here
+			span to finish.
+		div If you did not complete the payment process and want to pay a different amount, you can
+			a(href="/plan/reset-payment") Click Here
+			span to pay a different amount.
+	- console.log(ticket)
+	- console.log(total)
+	- console.log(session.friend)
+	

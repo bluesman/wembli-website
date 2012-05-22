@@ -5,7 +5,7 @@
 		- if (typeof link != "undefined" && link === false)
 			span.name.block!= event.Name
 		- else
-			a.choose-event.name.block(href="/event/"+event.ID+"/"+event.Name+"#eventBuilder")!= event.Name
+			a.choose-event.name.block(href="/event/"+event.ID+"/"+encodeURIComponent(event.Name)+"#eventBuilder")!= event.Name
 		span.venue.block!= (typeof event.Venue.Name != "undefined") ? event.Venue.Name : event.Venue
 		span.location.block!= event.City+', '+event.StateProvince
 		- if (typeof rating == "undefined" || rating !== false)

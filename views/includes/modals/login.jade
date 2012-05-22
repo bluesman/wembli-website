@@ -1,18 +1,16 @@
+- var errors = req.flash('login-error');
 #loginModal.modal.hide.fade
 	.modal-header
 		a.close(data-dismiss="modal") x
 		h3 Login to Wembli:
 	.modal-body
-		.generalError.error.yellow
-			- if((typeof errors !== 'undefined') && (errors.general) )
-				| Incorrect Email or Password.
-			- if((typeof errors !== 'undefined') && (errors.facebook) )
-				| Unable to login through facebook.
 		form#loginForm.form-horizontal.well(method="post",action="/login",enctype="application/x-www-form-urlencoded")
 			div(style="text-align:center")
 				a#facebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Login With Facebook
 			hr
-			strong Login without Facebook:
+			strong Login without Facebook: 
+				- if (errors.length > 0)
+					span.error #{errors[0]}
 			br
 			br
 			input.redirect-url(type="hidden",name="redirectUrl",value="")

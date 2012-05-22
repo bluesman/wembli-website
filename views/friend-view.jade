@@ -1,5 +1,5 @@
 #planViewFriendContainer.planViewContainer
-	- if (action != 'collectPayment')
+	- if (!session.friend.decision)
 		#rsvpContainer.alert.alert-success.alert-block!= partial("includes/plan-view/rsvp-alert",{})
 	#mainContainer.row
 		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
@@ -11,8 +11,18 @@
 					- if ((typeof plan.completed.voting == "undefined") || (!plan.completed.voting))
 						include includes/plan-view/voting
 					- else if ((typeof plan.completed.payment == "undefined") || (!plan.completed.payment))
-						include includes/plan-view/payment
+						- if ((typeof session.friend.payment == "undefined") || (!session.friend.payment.initiated))
+							- title = 'It\'s time to pony up!'
+							include includes/plan-view/payment
+						- else if (!session.friend.payment.payment)
+							//- its initiated but not paid
+							include includes/plan-view/waiting-for-payment
+						- else 
+							//- its paid
+							include includes/plan-view/paid
 					- else
 						include includes/plan-view/checkout
+			#wallContainer
+				div(class="fb-comments",data-href="http://#{getAppSettings().host}.wembli.com/plan/view/#{plan.config.guid}",data-num-posts="6",data-width="620")
 		#right.span4
 			#friendStack.module!= partial("includes/plan-view/friend-stack",{})

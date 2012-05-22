@@ -1,0 +1,16 @@
+#paymentContainer.module
+	h3 Payment Complete
+		a#paymentIcon(href="#")
+			i.icon-shopping-cart.pull-right.icon-white				
+	- if (typeof paymentMsg != "undefined")
+		.votingMsg.alert.alert-info!= paymentMsg
+	- var ticket = finalTicketChoice;
+	.body 
+		div Success! You have contributed $#{session.friend.payment.contribution} to #{session.organizer.first_name}. 
+			a(href="/plan/itinerary") Click Here 
+			span to view the itinerary.
+	- console.log(ticket)
+	- console.log(total)
+	- console.log(session.friend)
+
+	

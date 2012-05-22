@@ -1,3 +1,4 @@
+- var errors = req.flash('signup-error');
 #signupModal.modal.hide.fade
 	.modal-header
 		a.close(data-dismiss="modal") x
@@ -6,9 +7,11 @@
 		#message.alert.alert-info.hide
 		form#signup.well.form-horizontal(method="POST",action="/signup")
 			div(style="text-align:center")
-				a#facebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Sign Up With Facebook
+				a#facebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Sign Up With Facebook 
 			hr
-			strong Sign Up without Facebook:
+			strong Sign Up without Facebook: 
+				- if (errors.length > 0)
+					span.error #{errors[0]}
 			br
 			br
 			input.redirect-url(type="hidden",name="redirectUrl",value="")

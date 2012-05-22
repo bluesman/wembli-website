@@ -15,7 +15,11 @@ module.exports = function(app) {
 		req.flash('info',rm);
 	    }
 	    delete req.session.redirectUrl;
+	    delete req.session.loginRedirect;
 	    delete req.session.redirectMsg;
+	    delete req.session.isOrganizer;
+	    delete req.session.currentPlan;
+
 	    return res.redirect(r);
 	}
 
@@ -28,21 +32,14 @@ module.exports = function(app) {
 	    //redirect to the dashboard
 	    return res.redirect( ( req.param('redirectUrl') ? req.param('redirectUrl') : '/dashboard') );
 	}
-	var errors = {};
-	if (req.param('errors') == '200') {
-	    errors.facebook = true;
-	}
 	
 	res.render('login', {
-	    session: req.session,
 	    layoutContainer: true,
 	    cssIncludes: [],
 	    jsIncludes: [],
 	    title: 'wembli.com - login to get the best seats.',
 	    params: {remember:req.session.remember,email:((req.session.remember && (typeof req.session.customer != "undefined")) ? req.session.customer.email : null)},
-	    errors: errors,
 	    page:'index',
-	    globals:globalViewVars	    
 	});
     });
 
@@ -149,6 +146,8 @@ var standardLogin = function(req,res) {
     //validate email/password against the db
     Customer.findOne({email:req.param('email')},function(err,c) { 
 	if ((err == null) && (c != null)) {
+	    console.log('session:');
+	    console.log(req.session);
 	    //set up the session and head to the redirect url
 	    if (typeof c.password != "undefined" && c.password == digest) {
 		req.session.loggedIn = true;
@@ -158,9 +157,12 @@ var standardLogin = function(req,res) {
 		    //req.flash('info','Login was successful and your work was saved.');
 		}
 		var redirectUrl = req.param('redirectUrl') ? req.param('redirectUrl') : req.session.redirectUrl;
+		req.session.redirectUrl = false;
+		req.session.loginRedirect = false;
 		return res.redirect( ( redirectUrl ? redirectUrl : '/dashboard') );
 	    }
 	}
+	req.flash('login-error','Incorrect Login Credentials');
 	//still here? then we failed
 	res.render('login', {
 	    session: req.session,

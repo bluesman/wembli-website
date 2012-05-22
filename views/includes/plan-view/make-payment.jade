@@ -1,6 +1,6 @@
 - var noHideCostBreakdown = true;
 - var ticket = finalTicketChoice;
-form#makePayment.body(method="POST",action="/plan/make-payment/#{plan.config.guid}/#{token}")
+form#makePayment.body(method="POST",action="/plan/make-payment/#{plan.config.guid}/#{token}",target="_blank")
 	#content
 		#costBreakdown.pull-left
 			h4 Cost Breakdown:
