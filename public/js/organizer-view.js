@@ -1,6 +1,11 @@
 (function($,window,undefined) {
 
     var init = function() {    
+	$('#finalChoice').click(function(e) {
+	    console.log('clicked buy tix');
+	    $('#purchasedTicketsModal').modal('show');	    
+	});
+
 	$('#collectMoney').click(function(e) {
 	    e.preventDefault();
 	    $('#ticketChoiceHidden').val($('.ticketOption input[name=ticketChoice]:radio:checked').val());
@@ -22,10 +27,6 @@
 	});
 
 	$('.ticketOption').each(function(idx,el) {
-	    if (el.id == 'finalChoice') {
-		//finalChoice is special and links to the ticket purchase page
-		return;
-	    }
 
 	    var title = ($w.eventplan.data.config.payment) == 'group' ? 'Price Per Person:' : 'Cost Breakdown:';	    
 	    $(this).popover({animation:true,
@@ -33,6 +34,11 @@
 			     content: $(this).find('.costBreakdown').html(),
 			     delay:{show:300,hide:100}
 			    });
+
+	    if (el.id == 'finalChoice') {
+		//finalChoice is special and links to the ticket purchase page
+		return;
+	    }
 
 	    $(el).click(function(e) {
 		$(this).find('input').attr('checked',true);

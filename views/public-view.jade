@@ -20,12 +20,6 @@
 						- if((typeof errors !== 'undefined') && (errors.facebook) )
 							| Unable to login through facebook.
 					form#publicLoginForm.form-vertical.well(method="post",action="/login",enctype="application/x-www-form-urlencoded")
-						div(style="text-align:center")
-							a#publicFacebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Login With Facebook
-						hr
-						strong Login without Facebook:
-						br
-						br
 						input.redirect-url(type="hidden",name="redirectUrl",value="")
 						fieldset
 							.control-group

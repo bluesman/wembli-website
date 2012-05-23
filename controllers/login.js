@@ -8,8 +8,11 @@ var Customer      = wembliModel.load('customer');
 module.exports = function(app) {
 
     app.get('/login/facebook',function(req,res,next) {
+	console.log('login redirect: '+req.session.loginRedirect);
 	if (req.session.loginRedirect) {	    
 	    var r = req.session.redirectUrl ? req.session.redirectUrl : '/dashboard';
+	    console.log('redirecturl: '+req.session.redirectUrl);
+	    
 	    var rm = req.session.redirectMsg ? req.session.redirectMsg : '';;
 	    if (rm != '') {
 		req.flash('info',rm);
@@ -17,9 +20,7 @@ module.exports = function(app) {
 	    delete req.session.redirectUrl;
 	    delete req.session.loginRedirect;
 	    delete req.session.redirectMsg;
-	    delete req.session.isOrganizer;
-	    delete req.session.currentPlan;
-
+	    console.log('redirecting to:'+r);
 	    return res.redirect(r);
 	}
 

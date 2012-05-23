@@ -22,18 +22,24 @@ module.exports = function(app) {
 	    var e = event.Event;
 	    
 	    //get the venue
-	    ticketNetwork.GetVenue({VenueID:event.Event.VenueID},function(err,venue) {
-		e.Venue = venue.Venue;
-		//now continue to the right page
-		res.render('event-view', {
-		    title: 'wembli.com - View Event Plan.',
-		    layoutContainer: true,
-		    page:'event',
-		    cssIncludes: [],
-		    jsIncludes: [],
-		    event:e
+	    console.log('event-builder: event:');
+	    console.log(event);
+	    if ((typeof event.Event != "undefined") && (typeof event.Event.VenueID != "undefined")) {
+		ticketNetwork.GetVenue({VenueID:event.Event.VenueID},function(err,venue) {
+		    e.Venue = venue.Venue;
+		    //now continue to the right page
+		    res.render('event-view', {
+			title: 'wembli.com - View Event Plan.',
+			layoutContainer: true,
+			page:'event',
+			cssIncludes: [],
+			jsIncludes: [],
+			event:e
+		    });
 		});
-	    });
+	    } else {
+		res.redirect('/');
+	    }
 	});
 	
     });

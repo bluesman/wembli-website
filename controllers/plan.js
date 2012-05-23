@@ -386,6 +386,8 @@ module.exports = function(app) {
 
     //organizer or friend view of the currentPlan
     app.all('/plan/view/:guid?/:token?/:action?/:source?',function(req,res) {
+	console.log('plan/view currentPlan is:');
+	console.log(req.session.currentPlan);
 	if (req.param('source')) {
 	    //if source is 'fb' send them to auth/facebook and redirect them back here
 	    req.session.redirectUrl = '/plan/view/'+req.param('guid')+'/'+req.param('token')+'/'+req.param('action');
@@ -441,7 +443,7 @@ module.exports = function(app) {
 	    if (typeof req.session.currentPlan.config == "undefined") {
 		//no currentPlan means they are not allowed to see this plan
 		req.session.redirectUrl = req.url;
-		return res.redirect(publicViewUrl);
+		return res.redirect('/');
 	    }
 
 	    //set the login redirect url
@@ -876,11 +878,15 @@ module.exports = function(app) {
 		    }
 
 		    if (isAttending) {
+			console.log('isattenting: '+isAttending);
 			args.req.session.currentPlan = thisPlan;
 			args.req.session.organizer   = organizer;
-
 			callback();
 		    } else {
+			console.log('isattenting: '+isAttending);
+			args.req.session.currentPlan = {};
+			delete args.req.session.organizer;
+
 			callback();
 		    }
 		});

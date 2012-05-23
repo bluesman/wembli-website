@@ -17,20 +17,24 @@ var _respond = function(error,data,req,me) {
 	me(error,{success:0});
     } else {
 	//TODO: save data for customer if logged in
-	if (req.session.loggedIn && req.session.isOrganizer && (typeof data != null) && (typeof data.config != "undefined")) {
+	if (req.session.loggedIn && req.session.isOrganizer && (data != null) && (typeof data.config != "undefined")) {
 	    console.log('eventplan: saving eventplan: ');
 	    console.log(req.session);
 	    //console.log(data);
-	    req.session.customer.saveCurrentPlan(data);
+	    req.session.customer.saveCurrentPlan(data,function() {
+		me(null,{success:1,
+			 eventplan:data});		
+	    });
+	} else {
+	    me(null,{success:1,
+		     eventplan:data});
 	}
-
-	me(null,{success:1,
-		 eventplan:data});
     }
 };
 
 var _initEventplan = function(req,callback) {
     if (req.session.loggedIn) {
+	console.log('initEventplan - logged in');
 	if (typeof req.session.customer == 'string') {
 	    req.session.customer = JSON.parse(req.session.customer);
 	}
@@ -67,6 +71,8 @@ exports.eventplan = {
     getCurrentPlan: function(req,res) {
 	var me = this;
 	_initEventplan(req,function(err,e) {
+	    console.log('getcurrentplan error:');	    
+	    console.log(err);
 	    if (err) { return _respond(err,null,null,me); }
 	    return _respond(null,e,req,me);
 	});
