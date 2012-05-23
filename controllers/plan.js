@@ -386,8 +386,6 @@ module.exports = function(app) {
 
     //organizer or friend view of the currentPlan
     app.all('/plan/view/:guid?/:token?/:action?/:source?',function(req,res) {
-	console.log('plan/view currentPlan is:');
-	console.log(req.session.currentPlan);
 	if (req.param('source')) {
 	    //if source is 'fb' send them to auth/facebook and redirect them back here
 	    req.session.redirectUrl = '/plan/view/'+req.param('guid')+'/'+req.param('token')+'/'+req.param('action');
@@ -728,8 +726,6 @@ module.exports = function(app) {
 			var finished = function(err) {
 			    if (!err) {
 				//redirect to paypal on success
-				console.log('saving eventplan: ');
-				console.log(req.session.currentPlan);
 				req.session.organizer.saveCurrentPlan(req.session.currentPlan,function(err) {
 				    if (err) {
 					//req.flash('plan-msg','An error occurred. No ticket choice provided.');

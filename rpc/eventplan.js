@@ -18,8 +18,6 @@ var _respond = function(error,data,req,me) {
     } else {
 	//TODO: save data for customer if logged in
 	if (req.session.loggedIn && req.session.isOrganizer && (data != null) && (typeof data.config != "undefined")) {
-	    console.log('eventplan: saving eventplan: ');
-	    console.log(req.session);
 	    //console.log(data);
 	    req.session.customer.saveCurrentPlan(data,function() {
 		me(null,{success:1,
