@@ -1,0 +1,22 @@
+#purchasedTicketsModal.modal.hide.fade
+	.modal-header
+		a.close(data-dismiss="modal") x
+		h3 How'd It Go?
+	.modal-body
+		.alert.alert-info We'd love your feedback so we can make wembli better.
+		form#feedbackOptions.well.form-horizontal(method="POST",action="#")
+			input(type="hidden",name="setConfig",value="1")
+			a.planOption
+				input(type="radio",value="yes-easy",name="purchasedTickets",checked="checked")
+				.info Buying my tickets was smooth and easy.
+			hr
+			a.planOption
+				input(type="radio",value="yes-hassle",name="purchasedTickets")
+				.info Buying my tickets was a hassle.
+			hr
+			a.planOption
+				input(type="radio",value="no",name="purchasedTickets")
+				.info I changed my mind and didn't buy the tickets.
+			hr
+			.form-actions
+				button.btn.btn-success.btn-large(type="submit") Continue
