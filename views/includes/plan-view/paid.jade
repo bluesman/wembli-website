@@ -5,10 +5,12 @@
 	- if (typeof paymentMsg != "undefined")
 		.votingMsg.alert.alert-info!= paymentMsg
 	- var ticket = finalTicketChoice;
-	.body 
-		div Success! You have contributed $#{session.friend.payment.contribution} to #{session.organizer.first_name}. 
-			a(href="/plan/itinerary") Click Here 
-			span to view the itinerary.
+	#paid.body 
+		span.label.label-success
+			strong Success!
+			span &nbsp;You have contributed $#{session.friend.payment.contribution} to #{session.organizer.first_name}. 
+				a(href="/plan/itinerary") Click Here 
+				span to view the itinerary.
 	- console.log(ticket)
 	- console.log(total)
 	- console.log(session.friend)

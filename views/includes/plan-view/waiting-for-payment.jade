@@ -6,15 +6,26 @@
 		.votingMsg.alert.alert-info!= paymentMsg
 	- var ticket = finalTicketChoice;
 	- var link = (typeof paymentLink != "undefined") ? paymentLink : '';
-	.body
-		div You have initiated a payment for $#{session.friend.payment.contribution}, however, it has not been completed.
-		div If you have already successfully completed the payment process through paypal, It should just be a few moments until paypal notifies us that the transaction has completed.
-		div If you did not complete the payment process and would like to continue, you can 
-			a(href="#{paymentLink}") Click Here
-			span to finish.
-		div If you did not complete the payment process and want to pay a different amount, you can
-			a(href="/plan/reset-payment") Click Here
-			span to pay a different amount.
+	#waitingForPayment.body
+		p
+			span.label.label-warning
+				strong Head's Up!
+			span &nbsp;You have initiated a payment for $#{session.friend.payment.contribution}, however, it has not been completed.
+		h4 You have a few options:
+		ul
+			li
+				span.label.label-success Already Paid
+				span &nbsp;No need to do anything, It should just be a few moments until paypal notifies us that the transaction has completed.
+			li
+				span.label.label-info Continue
+				span &nbsp;If you did not complete the payment process and would like to continue, you can&nbsp;
+					a(href="#{paymentLink}") Click Here&nbsp;
+					span to finish.
+			li
+				span.label.label-success Change Amount
+				span &nbsp;If you want to change your payment amount, you can&nbsp;
+					a(href="/plan/reset-payment") Click Here&nbsp; 
+					span to pay a different amount.
 	- console.log(ticket)
 	- console.log(total)
 	- console.log(session.friend)

@@ -665,9 +665,28 @@ module.exports = function(app) {
 
     });
 
+
+    app.all('/plan/reset-payment',function(req,res) {
+	//update payment to 0 for this friend
+	if ((typeof req.session.friend != "undefined") && (typeof req.session.friend.token != "undefined")) {
+	    var plan = req.session.currentPlan;
+	    for (id in plan.friends) {
+		if ((typeof plan.friends[id].token != "undefined") && (plan.friends[id].token.token == req.session.friend.token.token)) {
+		    delete plan.friends[id].payment;
+		    break;
+		}
+	    }
+	    Customer.findOne({email:req.session.organizer.email},function(err,c) {
+		c.saveCurrentPlan(plan);
+		res.redirect('/plan/view');
+	    });
+	} else {
+	    res.redirect('/plan/view');
+	}
+    });    
+
     app.all('/plan/make-payment/:guid?/:token?',function(req,res) {
 	//must be logged in and we need to have their email address
-
 
 	var amountMethod = req.param('amount'); //did they pay for tickets? or an arbitrary amount?
 	var amountQty    = req.param('amountQty'); //only relevant if amountMethod == 'byPerson'
@@ -738,7 +757,11 @@ module.exports = function(app) {
 					return res.redirect('/plan/view/'+guid+'/'+token);
 				    }
 				    var redirectUrl = payPal.redirectUrl(results.payKey);
-				    return res.redirect(redirectUrl);
+				    console.log('R: '+redirectUrl);
+				    return res.render('paypal-redirect', {
+					layout:false,
+					redirectUrl: redirectUrl,
+				    });
 				});
 			    }
 			};

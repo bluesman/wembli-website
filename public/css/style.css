@@ -1195,6 +1195,17 @@ p.note {
 #planViewFriendContainer #rsvpContainer .buttons {
   width: 114px;
 }
+#planViewFriendContainer #left #paymentContainer #paid, #planViewFriendContainer #left #paymentContainer #waitingForPayment {
+  padding: 10px;
+}
+#planViewFriendContainer #left #paymentContainer #paid ul li, #planViewFriendContainer #left #paymentContainer #waitingForPayment ul li {
+  padding: 10px;
+}
+#planViewFriendContainer #left #paymentContainer #paid h4, #planViewFriendContainer #left #paymentContainer #waitingForPayment h4 {
+  font-weight: bold;
+  font-size: 14px;
+  padding: 10px;
+}
 #planViewFriendContainer #left #paymentContainer #makePayment #content {
   *zoom: 1;
 }
