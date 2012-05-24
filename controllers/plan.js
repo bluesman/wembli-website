@@ -458,6 +458,11 @@ module.exports = function(app) {
 		}
 		console.log('logged in?'+req.session.loggedIn);
 		console.log('rendering friend view');
+		console.log('not organizer rendering friend view');
+		if ((typeof req.session.friend.payment != "undefined") && (req.session.friend.payment.payKey)) {
+		    var paymentLink = payPal.redirectUrl(req.session.friend.payment.payKey);
+		}
+
 		return res.render('friend-view', {
 		    layoutContainer:true,
 		    action:req.param('action'),
@@ -465,6 +470,7 @@ module.exports = function(app) {
 		    page:'friends',
 		    token:req.param('token'),
 		    cssIncludes: [],
+		    paymentLink:paymentLink,
 		    jsIncludes: ['/js/friend-view.js']
 		});
 

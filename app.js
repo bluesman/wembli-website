@@ -5,6 +5,9 @@ var express          = require('express'),
     wembliEveryauth  = require('./lib/wembli/everyauth.js'),
     wemblirpc        = require('./lib/wembli/jsonrpc');
 
+var fs = require('fs');
+
+var access_logfile = fs.createWriteStream('./logs/access.log', {flags: 'a'});
 
 console.log('started in '+process.env.NODE_ENV+' mode...');
 
@@ -26,6 +29,7 @@ app.set('host','beta');
 app.set('secure',false);
 
 app.configure(function(){
+    app.use(express.logger({stream:access_logfile}));
     app.use(express.cookieParser());
     app.use(express.static(__dirname + '/public'));
     app.use(express.session({ key: 'wembli.sid',secret: '@$!#SCDFdsa',store: new redis }));
@@ -48,14 +52,12 @@ everyauth.helpExpress(app);
 
 var production = function() {
     //app.use(express.errorHandler()); 
-    app.use(express.logger());
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 };
 
 app.configure('production1',production);
 app.configure('production2',production);
 app.configure('development',function() {
-    app.use(express.logger());
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
 
