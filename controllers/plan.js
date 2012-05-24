@@ -678,10 +678,10 @@ module.exports = function(app) {
 	    }
 	    Customer.findOne({email:req.session.organizer.email},function(err,c) {
 		c.saveCurrentPlan(plan);
-		res.redirect('/plan/view');
+		res.redirect('/plan/view/'+req.session.currentPlan.config.guid+'/'+req.session.friend.token.token+'/collectPaymemt');
 	    });
 	} else {
-	    res.redirect('/plan/view');
+	    res.redirect('/plan/view/'+req.session.currentPlan.config.guid);
 	}
     });    
 
