@@ -1,8 +1,20 @@
+- var d = makeFeedDateString(new Date())
+- console.log(d)
 #feedContainer
 	h3 Activity Feed
-	#feedItems
+	ul
 		- if (typeof feedItems != "undefined")
 			- each feed in feedItems
-				.feed
+				li.feed
+					span
 		- else
+			li.feed
+				strong Tom Walpole
+				span &nbsp;asked Kim to pony up #{d}
+			li.feed
+				span Kim Walpole
+				span &nbsp;voted for tickets.
+			li.feed
+				span T10 Walpole
+				span &nbsp;ponied up $56.12.
 			

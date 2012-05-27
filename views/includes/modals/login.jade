@@ -4,9 +4,9 @@
 		a.close(data-dismiss="modal") x
 		h3 Login to Wembli:
 	.modal-body
-		form#loginForm.form-horizontal.well(method="post",action="https://#{fbCredentials.host}.wembli.com/login",enctype="application/x-www-form-urlencoded")
+		form#loginForm.form-horizontal.well(method="post",action="/login",enctype="application/x-www-form-urlencoded")
 			div(style="text-align:center")
-				a#facebookLogin.btn.btn-primary(href="http://#{fbCredentials.host}.wembli.com/auth/facebook") Click Here To Login With Facebook
+				a#facebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Login With Facebook
 			hr
 			strong Login without Facebook: 
 				- if (errors.length > 0)

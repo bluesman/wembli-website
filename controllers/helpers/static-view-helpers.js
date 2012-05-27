@@ -40,5 +40,39 @@ module.exports = {
 	return credentials;
     },
 
+    makeFeedDateString: function(d) {
+	var now = new Date().getTime();
+	var t = d.getTime();
+	/*
+	  subtract t from now
+	  - if <= 60 : xx seconds ago
+	  - if <= 3600 : xx minutes ago
+	  - if <= 86400 : xx hours ago
+	  - else 12/05/2012
+	*/
+	var s = now - t;
+
+
+	if (s <= 60) {
+	    var sString = (s == 1) ? '' : 's';
+	    return parseInt(s)+' second'+sString+' ago.';
+	}
+
+	if (s <= 3600) {
+	    var m = s/60;
+	    var sString = (m == 1) ? '' : 's';
+	    return parseInt(m)+' minute'+sString+' ago.';
+	}
+
+	if (s <= 86400) {
+	    var dd = s/3600;
+	    var sString = (dd == 1) ? '' : 's';
+	    return parseInt(dd)+' day'+sString+' ago.';
+	}
+
+	return 'on ' + d.format('shortDate')+'.';
+
+    },
+    
 
 };

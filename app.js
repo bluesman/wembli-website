@@ -27,17 +27,43 @@ app.set('fbAppId',wembliEveryauth.conf.fb.appId);
 app.set('fbAppSecret',wembliEveryauth.conf.fb.appSecret);
 app.set('host','beta');
 app.set('secure',false);
+var port = 8001;
+if (process.env.NODE_ENV == 'development') {
+    port = 8000;
+    //tom.wembli.com fb app
+    app.set('fbAppId','364157406939543');
+    app.set('fbAppSecret','ce9779873babc764c3e07efb24a34e69');
+    app.set('host','tom');
+}
+if (process.env.NODE_ENV == 'rob') {
+    port = 8888;
+}
+if (process.env.NODE_ENV == 'production2') {
+    port = 8002;
+}
+if (process.env.NODE_ENV == 'secure') {
+    port = 8010;
+    app.set('secure',true);
+    app.set('host','beta');
+    
+}
 
 app.use(function(req, res, next) {
-    var schema = req.headers["x-forwarded-for"];
-    console.log(schema);
-    // --- Do nothing if schema is already https
-    if (schema === "https")
-        return next();
- 
-    // --- Redirect to https
-    res.redirect("https://" + req.headers.host + req.url);
+
+    if (process.env.NODE_ENV != 'development') {
+	var schema = req.headers["x-forwarded-for"];
+	// --- Do nothing if schema is already https
+	if (schema === "https")
+            return next();
+	
+	// --- Redirect to https
+	res.redirect("https://" + req.headers.host + req.url);
+    } else {
+	next();
+    }
 });
+
+
 
 app.configure(function(){
     app.use(express.logger({stream:access_logfile}));
@@ -96,27 +122,6 @@ require('./controllers/beta-signup')(app);
 require('./controllers/fanvenues')(app);
 require('./controllers/callback/sendgrid')(app);
 require('./controllers/callback/paypal')(app);
-
-var port = 8001;
-if (process.env.NODE_ENV == 'development') {
-    port = 8000;
-    //tom.wembli.com fb app
-    app.set('fbAppId','364157406939543');
-    app.set('fbAppSecret','ce9779873babc764c3e07efb24a34e69');
-    app.set('host','tom');
-}
-if (process.env.NODE_ENV == 'rob') {
-    port = 8888;
-}
-if (process.env.NODE_ENV == 'production2') {
-    port = 8002;
-}
-if (process.env.NODE_ENV == 'secure') {
-    port = 8010;
-    app.set('secure',true);
-    app.set('host','beta');
-    
-}
 
 console.log('listening on port: '+port);
 if (!module.parent) app.listen(port);

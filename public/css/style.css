@@ -247,7 +247,7 @@ header #logo {
   display: block;
   height: 83px;
   width: 203px;
-  background: url('/images/layout/wembli-logo-small.png') #ffffff center center no-repeat;
+  background: url('/images/layout/wembli-orange-beta-small.png') #ffffff center center no-repeat;
 }
 header #utility {
   float: right;
@@ -1421,9 +1421,9 @@ p.note {
   float: left;
 }
 #homeContent #steps h3 {
-  font-family: "SegoeScriptBold";
+  font-family: "TungaRegular";
   color: #FF6600;
-  font-size: 14px;
+  font-size: 20px;
   text-shadow: 3px 3px 4px #000;
 }
 #homeContent #steps #step1 h3 {
@@ -1812,10 +1812,28 @@ p.note {
   border: 3px dashed #8cb2d5;
   background: url(/images/profile_icon_small.png) no-repeat center center;
 }
+#dashboardContainer #feedContainer {
+  background-color: #f2f2f2;
+  padding: 15px;
+  border-bottom: 1px solid #CCC;
+}
 #dashboardContainer #feedContainer h3 {
-  color: #ff6700;
-  font-size: 14px;
-  font-weight: bold;
+  text-shadow: 1px 1px #b4b4b4;
+  margin-bottom: 15px;
+}
+#dashboardContainer #feedContainer ul li {
+  *zoom: 1;
+  font-size: 12px;
+  padding: 10px;
+  border-top: 1px solid #a4a4a4;
+  position: relative;
+}
+#dashboardContainer #feedContainer ul li:before, #dashboardContainer #feedContainer ul li:after {
+  display: table;
+  content: "";
+}
+#dashboardContainer #feedContainer ul li:after {
+  clear: both;
 }
 #dashboardContainer .dashboardEventList li .event {
   *zoom: 1;
