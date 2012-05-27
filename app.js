@@ -28,6 +28,17 @@ app.set('fbAppSecret',wembliEveryauth.conf.fb.appSecret);
 app.set('host','beta');
 app.set('secure',false);
 
+app.use(function(req, res, next) {
+    var schema = req.headers["x-forwarded-for"];
+    console.log(schema);
+    // --- Do nothing if schema is already https
+    if (schema === "https")
+        return next();
+ 
+    // --- Redirect to https
+    res.redirect("https://" + req.headers.host + req.url);
+});
+
 app.configure(function(){
     app.use(express.logger({stream:access_logfile}));
     app.use(express.cookieParser());
@@ -103,6 +114,7 @@ if (process.env.NODE_ENV == 'production2') {
 if (process.env.NODE_ENV == 'secure') {
     port = 8010;
     app.set('secure',true);
+    app.set('host','beta');
     
 }
 
