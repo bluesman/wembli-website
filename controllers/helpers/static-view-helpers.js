@@ -40,9 +40,13 @@ module.exports = {
 	return credentials;
     },
 
-    makeFeedDateString: function(d) {
+    makeFeedString: function(f) {
 	var now = new Date().getTime();
-	var t = d.getTime();
+	now = parseInt(now/1000);
+	var then = new Date(f.date_created);
+	var t = then.getTime();
+	t = parseInt(t/1000);
+	
 	/*
 	  subtract t from now
 	  - if <= 60 : xx seconds ago
@@ -50,27 +54,37 @@ module.exports = {
 	  - if <= 86400 : xx hours ago
 	  - else 12/05/2012
 	*/
-	var s = now - t;
+	var s = parseInt(now - t);
+	console.log(s);
 
+	var dateStr = 'on ' + then.format('shortDate')+'.';
 
-	if (s <= 60) {
-	    var sString = (s == 1) ? '' : 's';
-	    return parseInt(s)+' second'+sString+' ago.';
+	if (s <= 86400) {
+	    var dd = parseInt(s/3600);
+	    var sString = (dd == 1) ? '' : 's';
+	    dateStr = dd+' day'+sString+' ago.';
 	}
 
 	if (s <= 3600) {
-	    var m = s/60;
+	    var m = parseInt(s/60);
 	    var sString = (m == 1) ? '' : 's';
-	    return parseInt(m)+' minute'+sString+' ago.';
+	    dateStr = m+' minute'+sString+' ago.';
 	}
 
-	if (s <= 86400) {
-	    var dd = s/3600;
-	    var sString = (dd == 1) ? '' : 's';
-	    return parseInt(dd)+' day'+sString+' ago.';
+	if (s <= 60) {
+	    var sString = (s == 1) ? '' : 's';
+	    dateStr = parseInt(s)+' second'+sString+' ago.';
 	}
 
-	return 'on ' + d.format('shortDate')+'.';
+	switch (f.action.name) {
+	case 'initPlan':
+	    return 'created a new plan '+dateStr;
+	    break;
+	case 'updatePlan':
+	    return 'updated a plan '+dateStr;
+	    break;
+	}
+	return '';
 
     },
     

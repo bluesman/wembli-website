@@ -4,6 +4,7 @@ var crypto        = require('crypto');
 var wembliUtils   = require('wembli/utils');
 var wembliModel   = require('wembli-model');
 var Customer      = wembliModel.load('customer');
+var Feed          = wembliModel.load('feed');
 var querystring   = require('querystring');
 var async         = require('async');
 //var https = require('https');
@@ -88,14 +89,43 @@ module.exports = function(app) {
 	    }
 
 	    Customer.findPlansByFriend(req.session.customer,function(err,attending) {
-		res.render('dashboard/index', {
-		    cssIncludes: [],
-		    jsIncludes: ['/js/dashboard.js'],
-		    globals:globalViewVars,
-		    title: 'wembli.com - login to get the best seats.',
-		    layoutContainer:true,
-		    attending:attending,
-		    page:'dashboard'
+		//get activity feed
+		var guids = req.session.currentPlan.config.guid ? [req.session.currentPlan.config.guid] : [];
+		for (idx in attending) {
+		    var p = attending[idx];
+		    guids.push(p.config.guid);
+		    console.log('pushed:'+p.config.guid);
+		}
+
+		Feed.find({guid:{$in:guids}},function(err,feeds) {
+		    var feed = [];
+		    for (idx2 in feeds) {
+			wembliUtils.merge(feed,feeds[idx2].activity);
+		    }
+		    //sort by feed el date_created
+		    feed.sort(function(a,b) {
+			var aDate = new Date(a.date_created);
+			var aTime = aDate.getTime();
+			var bDate = new Date(b.date_created);
+			var bTime = bDate.getTime();
+			if (aTime < bTime) {
+			    return 1;
+			}
+			if (aTime > bTime) {
+			    return -1;
+			}
+			return 0;
+		    });
+
+		    res.render('dashboard/index', {
+			cssIncludes: [],
+			jsIncludes: ['/js/dashboard.js'],
+			title: 'wembli.com - login to get the best seats.',
+			layoutContainer:true,
+			attending:attending,
+			feed:feed,
+			page:'dashboard'
+		    });
 		});
 	    });
 

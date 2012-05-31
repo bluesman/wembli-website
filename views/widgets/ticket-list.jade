@@ -13,7 +13,7 @@ form
 			- each split in ticket.ValidSplits.int
 				- if (parseInt(split) == friendsCount)
 					- selectQty = parseInt(split)
-			- if ((typeof session.currentPlan.tickets[ticket.ID] == "undefined") && selectQty == 0)
+			- if ((typeof session.currentPlan.tickets == "undefined") || (typeof session.currentPlan.tickets[ticket.ID] == "undefined") && selectQty == 0)
 				- skippedCnt++;
 				- continue
 			- validCnt++;

@@ -88,22 +88,8 @@ module.exports = function(app) {
 		    break;
 		}
 	    }
-
-	    //log this event
-	    var actor = {name:req.session.customer.first_name+' '+req.session.customer.last_name,
-			 keyName:'organizer',
-			 keyValue:'organizer'};
-	    var action = {name:'initPlan'};
-	    var meta = {};
-	    var activity = {action:action,
-			    actor:actor,
-			    meta:meta};
-	    var f = new Feed({guid:guid1,activity:[activity]});
-	    
-	    f.save(function(err) {
-		console.log('redirecting to: '+goto);
-		res.redirect('/plan/'+goto);
-	    });
+	    console.log('redirecting to: '+goto);
+	    res.redirect('/plan/'+goto);
 	};
 	  
 	//get the event for this eventId
@@ -127,14 +113,50 @@ module.exports = function(app) {
     });
 
     app.all('/event/save',function(req,res) {
+	//log this event
+	var actor = {name:req.session.customer.first_name+' '+req.session.customer.last_name,
+		     keyName:'organizer',
+		     keyValue:'organizer'};
+	var action = {name:'initPlan'};
+	var meta = {};
+	var activity = {action:action,
+			actor:actor,
+			meta:meta};
 
-	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
+
+	var redir = function() {
 	    var redirectUrl = '/dashboard';
 	    if (typeof req.param('redirectUrl') != "undefined") {
 		//req.flash('info','Your work was saved.');
 		redirectUrl = req.param('redirectUrl');
 	    }
 	    return res.redirect( redirectUrl );		    
+	}
+
+	//check if there's an existing feed
+	Feed.findOne({guid:req.session.currentPlan.config.guid},function(err,feed) {
+	    if (err) {
+		console.log(err);
+	    } else {
+		if (feed == null) {
+		    //create a new one
+		    var f = new Feed({guid:req.session.currentPlan.config.guid,activity:[activity]});
+	
+		    f.save(function(err) {
+			redir();
+		    });
+		} else {
+		    feed.activity.push(activity);
+		    feed.markModified('activity');	
+		    feed.save(function(err) {
+			redir();
+		    });
+		}
+	    }
+	});
+	
+	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
+	    redir();
 	});
     });
 
