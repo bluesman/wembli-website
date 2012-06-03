@@ -888,6 +888,7 @@ module.exports = function(app) {
 			    for (var i2 in plan.friends) {
 				var f = plan.friends[i2];
 				if ((typeof f.me != "undefined") && f.me) {
+				    console.log(plan);
 				    args.req.session.friend            = {};
 				    args.req.session.friend.email      = f.email;
 				    args.req.session.friend.fbId       = f.fbId;

@@ -5,6 +5,7 @@ var crypto = require('crypto');
 var wembliUtils   = require('wembli/utils');
 var wembliModel   = require('wembli-model');
 var Customer      = wembliModel.load('customer');
+var Feed          = wembliModel.load('feed');
 
 module.exports = function(app) {
 
@@ -73,7 +74,11 @@ module.exports = function(app) {
 		confirmationToken = confirmationToken.replace(/\//g,'');	    
 		
 		customer.confirmation.push({timestamp: confirmationTimestamp,token: confirmationToken});
-		customer.eventplan.push(req.session.currentPlan);
+		console.log('saving currentplan after signup:');
+		console.log(req.session);
+		if ((req.session.isOrganizer != "undefined") && (req.session.isOrganizer)) {
+		    customer.eventplan.push(req.session.currentPlan);
+		}
 		customer.save(function(err) {
 		    //console.log('customer save err: '+err);
 		    

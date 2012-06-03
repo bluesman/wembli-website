@@ -2,7 +2,7 @@ var wembliModel   = require('wembli-model');
 var Customer      = wembliModel.load('customer');
 
 module.exports = function(app) {
-    app.post("/callback/sendgrid/email",function(req,res) {
+    app.all("/callback/sendgrid/email",function(req,res) {
 	console.log(req.body);
 	//get the event for this organizer
 	if (typeof req.body.organizer == "undefined") {

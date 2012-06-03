@@ -88,14 +88,17 @@ module.exports = function(app) {
 		});
 	    }
 
+
 	    Customer.findPlansByFriend(req.session.customer,function(err,attending) {
 		//get activity feed
-		var guids = req.session.currentPlan.config.guid ? [req.session.currentPlan.config.guid] : [];
+		var guids = ((typeof req.session.currentPlan.config != "undefined") && req.session.currentPlan.config.guid) ? [req.session.currentPlan.config.guid] : [];
 		for (idx in attending) {
 		    var p = attending[idx];
 		    guids.push(p.config.guid);
 		    console.log('pushed:'+p.config.guid);
 		}
+		console.log('attending:');
+		console.log(attending);
 
 		Feed.find({guid:{$in:guids}},function(err,feeds) {
 		    var feed = [];

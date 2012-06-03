@@ -1,5 +1,7 @@
 var wembliUtils   = require('wembli/utils');
 var async         = require('async');
+var wembliModel   = require('../lib/wembli-model');
+var Feed          = wembliModel.load('feed');
 
 this.Model = function(mongoose) {
     var Schema = mongoose.Schema;
@@ -71,6 +73,7 @@ this.Model = function(mongoose) {
     };
 
     Customer.methods.saveCurrentPlan = function(plan,callback) {
+	var c = this;
 	var plans = [];
 	var saved = false;
 	for (var idx in this.eventplan) {
@@ -95,11 +98,13 @@ this.Model = function(mongoose) {
 
 	this.eventplan = plans;
 	this.markModified('eventplan');
+	
 	this.save(function(err) {
+	    
 	    if (err) {
 		console.log('error saving customer: '+err);
 	    }
-
+	    //console.log(c);
 	    if (typeof callback != "undefined") {
 		callback(err);
 	    }
