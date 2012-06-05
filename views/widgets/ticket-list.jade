@@ -1,7 +1,6 @@
 //ticketnetwork settings
 - var brokerId = '5006'
 - var siteNumber = '0'
-- var tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid='+brokerId+'&sitenumber='+siteNumber;
 - var skippedCnt = 0;
 - var validCnt = 0;
 // ----
@@ -17,12 +16,10 @@ form
 				- skippedCnt++;
 				- continue
 			- validCnt++;
-			- var ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.TicketQuantity+'&SessionId='+ticketSessionId()
 			- var qtyStr = ticket.TicketQuantity
 			- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
 			li(id='ticket-id-'+ticket.ID)
 				p.info 
-					- //a(href=ticketLink)= "Section: "+ticket.Section + " - Row: " + ticket.Row
 					span#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
 					span.seats.block!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
 					span.rating.block
@@ -30,7 +27,7 @@ form
 						span.stars!= (ticket.Rating ? ticket.Rating : 0)
 						br
 						em.ratingDescription!= ticket.RatingDescription
-				- if (session.isOrganizer)
+				- if ((session.isOrganizer) && ((typeof ticket.payment == "undefined") || (typeof ticket.payment.payment == "undefined") || (!ticket.payment.payment)))
 					p.cta
 						span.qty
 							strong Qty: 
@@ -44,7 +41,7 @@ form
 							- else
 								span!= split
 						br
-						a.btn.btn-primary(href=ticketLink) Add to Plan
+						a.btn.btn-primary(href="#") Add to Plan
 				span.ticket-price-box!= partial('includes/ticket-price-box',{ticket:ticket});
 	- if (validCnt == 0)
 		h4 Oh Noes!

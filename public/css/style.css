@@ -942,6 +942,31 @@ p.note {
 #collectPaymentModal #collectPaymentActions button {
   margin: 10px;
 }
+#purchasedTicketsModal hr {
+  margin: 0;
+}
+#purchasedTicketsModal a.planOption:hover {
+  background-color: #ffdd73;
+}
+#purchasedTicketsModal a.planOption {
+  position: relative;
+  padding: 20px 5px;
+  display: block;
+  *zoom: 1;
+}
+#purchasedTicketsModal a.planOption:before, #purchasedTicketsModal a.planOption:after {
+  display: table;
+  content: "";
+}
+#purchasedTicketsModal a.planOption:after {
+  clear: both;
+}
+#purchasedTicketsModal a.planOption .info {
+  margin-left: 20px;
+}
+#purchasedTicketsModal a.planOption input {
+  position: relative;
+}
 .planViewContainer {
   margin: 10px 0;
 }

@@ -127,16 +127,32 @@ module.exports = function(app) {
 
 	    //they are the organizer of this plan
 	    if (req.session.isOrganizer) {
-		
-		ticketNetwork.GetTickets({eventID: req.session.currentPlan.event.ID},function(err,tickets) {
+		if ((typeof req.session.currentPlan.completed.purchasedTickets != "undefined") && req.session.currentPlan.completed.purchasedTickets) {
+		    var tix = [];
+		    for (var tixId in req.session.currentPlan.tickets) {
+			if ((typeof req.session.currentPlan.tickets[tixId].finalChoice != "undefined") && req.session.currentPlan.tickets[tixId].finalChoice) {
+			    tix.push(req.session.currentPlan.tickets[tixId]);
+			}
+		    }
 		    res.render('tickets', {
 			title:'wembli.com - tickets.',
 			page:'tickets',
-			tickets:tickets.TicketGroup?tickets.TicketGroup:[],
+			tickets:tix,
 			cssIncludes: [],
 			jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js','/js/tickets.js']
 		    });
-		});
+		} else {
+
+		    ticketNetwork.GetTickets({eventID: req.session.currentPlan.event.ID},function(err,tickets) {
+			res.render('tickets', {
+			    title:'wembli.com - tickets.',
+			    page:'tickets',
+			    tickets:tickets.TicketGroup?tickets.TicketGroup:[],
+			    cssIncludes: [],
+			    jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js','/js/tickets.js']
+			});
+		    });
+		}
 
 	    } else {
 		var tix = [];
@@ -779,6 +795,51 @@ module.exports = function(app) {
 			 guid: guid},callback);
 
 	
+    });
+
+
+    app.all('/plan/payment-feedback',function(req,res) {
+
+	if (!req.param('purchasedTickets')) {
+	    //req.flash('plan-msg','An error occurred. No ticket choice provided.');
+	    return res.redirect('/plan/view');
+	}
+
+	//if they don't have a guid they have to have a current plan
+	if (!req.param('guid') && (typeof req.session.currentPlan.config == "undefined")) {
+	    //req.flash('error','An error occurred. Please start a new plan.');
+	    return res.redirect('/');
+	}
+	
+	//if there is a guid but they are not logged in and there is no token - gtfo
+	if (req.param('guid') && !req.session.loggedIn && !req.param('token')) {
+	    req.flash('error','The plan you\'re trying to view is by invitation only. Please login to confirm you are invited.');
+	    return res.redirect('/');
+	}	    
+
+	/*
+	  find the finalChoice and set payment appropriately:
+	  yes-easy 
+	  yes-hassle 
+	  no 
+	*/
+	for (ticketId in req.session.currentPlan.tickets) {
+	    var tix = req.session.currentPlan.tickets[ticketId];
+	    if ((typeof tix.finalChoice != "undefined") && tix.finalChoice) {
+		if (req.param('purchasedTickets') == 'no') {
+		    delete tix.payment;
+		} else {
+		    req.session.currentPlan.completed.purchasedTickets = true;
+		    tix.payment.payment = 1;
+		    tix.payment.paymentLastDate = new Date().format("m/d/yy h:MM TT Z");
+		    tix.payment.feedback = req.param('purchasedTickets');
+		}
+		req.session.customer.saveCurrentPlan(req.session.currentPlan);
+
+		break;
+	    }
+	}
+	return res.redirect('/plan/view');
     });
 
 

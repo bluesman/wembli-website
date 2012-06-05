@@ -1,9 +1,23 @@
 (function($,window,undefined) {
 
     var init = function() {    
+	if ($('#feedbackOptions').length > 0) {
+	    $('#feedbackOptions .planOption').each(function(idx,el) {
+		$(el).click(function(e) {
+		    e.preventDefault();
+		    $('#feedbackOptions .planOption').each(function(idx,el) {
+			$(this).find('input').attr('checked',false);
+		   });
+		    $(this).find('input').attr('checked',true);
+		});
+	    });
+	}
 	$('#finalChoice').click(function(e) {
-	    console.log('clicked buy tix');
-	    $('#purchasedTicketsModal').modal('show');	    
+	    console.log('clicked buy tix'+$('#finalTicketId').val());
+	    wembli.eventPlan.buyTicketGroup({ticketId:$('#finalTicketId').val()},function(error,eventplan) {
+		$w.eventplan.data = eventplan; //store the event plan in the $w wembli global for use by other stuff
+		$('#purchasedTicketsModal').modal('show');	    
+	    });
 	});
 
 	$('#collectMoney').click(function(e) {
@@ -42,7 +56,6 @@
 
 	    $(el).click(function(e) {
 		$(this).find('input').attr('checked',true);
-		//e.preventDefault();
 	    });
 	});
 

@@ -247,6 +247,38 @@ exports.eventplan = {
 	});
     },
 
+    buyTicketGroup: function(ticketId,req,res) {
+	var me = this;
+	_initEventplan(req,function(err,e) {
+	    if (err) { return _respond(err,null,null,me); }
+
+	    if (typeof ticketId == "undefined") {
+		return _respond('no ticketId provided',null,me);
+	    }
+	    
+	    if (typeof e.tickets == "undefined") {
+		e.tickets = {};
+	    }
+	    
+	    //remove the tickets from the eventplan and respond to client
+	    if (typeof e.tickets[ticketId] != "undefined") {
+		var payment = {};
+		if (typeof e.tickets[ticketId].payment != "undefined") {
+		    console.log('ticketgroup payment: ');
+		    console.log(e.tickets[ticketId].payment);
+		    payment = e.tickets[ticketId].payment;
+		}
+
+		//mark payment.init
+		payment.initiated = 1;
+		payment.initiatedLastDate = new Date().format("m/d/yy h:MM TT Z");
+
+		e.tickets[ticketId].payment = payment;
+	    }
+	    return _respond(err,e,req,me);
+	});
+    },
+    
     rsvp: function(rsvp,req,res) {
 	var me = this;
 

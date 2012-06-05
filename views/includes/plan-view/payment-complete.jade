@@ -27,7 +27,7 @@ venueMapText = 'View Tickets On Venue Map';
 				.total.pull-right
 					strong#totalPrice(style="text-align:right")!= '$'+parseFloat(totalPrice).toFixed(2)
 				hr
-			a#finalChoice.ticketOption(target="_blank",href="#{ticketLink}")
+			a#finalChoice.ticketOption(href="/plan/tickets/#{session.currentPlan.config.guid}")
 				input#finalTicketId(type="hidden",value="#{ticket.ID}")
 				.info
 					#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
@@ -38,7 +38,7 @@ venueMapText = 'View Tickets On Venue Map';
 						br
 						em.ratingDescription!= ticket.RatingDescription
 				p.cta
-					button#buyTickets.btn.btn-success Buy Tickets
+					button#buyTickets.btn.btn-success View On Map
 				.ticket-price-box
 					include ../ticket-price-box
 				include ticket/cost-breakdown

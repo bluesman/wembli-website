@@ -17,8 +17,10 @@ include includes/modals/purchased-tickets
 				when 'group'
 					- if (!plan.completed.voting)
 						include includes/plan-view/voting
-					- else if (!plan.completed.payment)
+					- else if (!plan.completed.purchasedTickets)
 						include includes/plan-view/payment-status
+					- else
+						include includes/plan-view/payment-complete
 			#wallContainer
 				div(class="fb-comments",data-href="http://#{getAppSettings().host}.wembli.com/plan/view/#{plan.config.guid}",data-num-posts="6",data-width="460")
 		#right.span4
