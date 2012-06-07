@@ -619,14 +619,13 @@ module.exports = function(app) {
 			    };
 			    
 			    facebook_session.graphCall(apiCall,params,'POST')(function(result) {
-				return;
+				//flag the eventplan so we know we attempted to send the email
+				friend.collectPayment = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
+				return callback();
 			    });
 			});
 			
 		    });
-		    //flag the eventplan so we know we attempted to send the email
-		    friend.collectPayment = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
-
 		} else {
 		    res.render('email-templates/collect-payment', {
 			layout:'email-templates/layout',
@@ -658,11 +657,12 @@ module.exports = function(app) {
 			
 			//flag the eventplan so we know we attempted to send the email
 			friend.collectPayment = {initiated:1,initiatedLastDate:new Date().format("m/d/yy h:MM TT Z")};
-			
+			callback();
 		    });
 		}
+	    } else {
+		callback();
 	    }
-	    callback();
 	};
 
 	var finished = function(err) {

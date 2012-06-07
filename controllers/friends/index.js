@@ -116,11 +116,11 @@ module.exports = function(app) {
 			    console.log('with params:' );
 			    console.log(params);
 			    facebook_session.graphCall(apiCall,params,'POST')(function(result) {
-				console.log(result);
+				initCollectVote();
+				return callback();
 			    });
 			});
 		    });
-		    initCollectVote();
 
 		} else {
 		    res.render('email-templates/collect-votes', {
@@ -157,11 +157,13 @@ module.exports = function(app) {
 			});
 			
 			initCollectVote();
+			return callback();
 		    });
 		}
 		//req.flash('plan-msg','Successfully sent invitations to invited friends.');
+	    } else {
+		callback();
 	    }
-	    callback();
 	};
 
 	var finished = function(err) {
