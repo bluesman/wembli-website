@@ -4,7 +4,7 @@
 - var skippedCnt = 0;
 - var validCnt = 0;
 // ----
-- if (plan.config.payment == 'group' && !plan.completed.purchasedTickets)
+- if (session.isOrganizer && plan.config.payment == 'group' && !plan.completed.purchasedTickets)
 	.alert.alert-info Choose options for your friends to vote on:
 form
 	ul

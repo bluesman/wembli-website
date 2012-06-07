@@ -15,7 +15,9 @@ a#continue.btn.btn-success.btn-large(href="/#{next}?completed=#{page}")!= (typeo
 #links
 	- //a#howDoesItWork(data-toggle="modal",href="#howDoesItWorkModal") How Does It Work
 	- //span  | 
-	- if(session.loggedIn)
-		a.saveForLater(href="/event/save?redirectUrl=#{req.originalUrl}") Save For Later
-	- else
-		a.saveForLater(data-toggle="modal",href="#signupModal") Save For Later
+	- if (session.isOrganizer)
+		- if(session.loggedIn)
+			a.saveForLater(href="/event/save?redirectUrl=#{req.originalUrl}") Save For Later
+		- else
+			a.saveForLater(data-toggle="modal",href="#signupModal") Save For Later
+	

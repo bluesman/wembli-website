@@ -73,6 +73,7 @@ module.exports = function(app) {
 
     //add tickets to the currentPlan or view the tickets in the plan if not the organizer
     app.all('/plan/tickets/:guid?/:token?',function(req,res) {
+	console.log('tickets loading...');
 	var callback = function() {
 
 	    //they must have a currentPlan to add tix to

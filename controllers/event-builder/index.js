@@ -11,7 +11,7 @@ module.exports = function(app) {
     app.get('/event/:eventId/:eventName',function(req,res) {
 	var eventId     = req.param('eventId');
 	var eventName   = req.param('eventName');
-
+	console.log('hey');
 	ticketNetwork.GetEvents({eventID:eventId},function(err,event) {
 	    if (err) {
 		//send to home page for now
@@ -113,6 +113,7 @@ module.exports = function(app) {
     });
 
     app.all('/event/save',function(req,res) {
+	console.log('calling event save');
 	//log this event
 	var actor = {name:req.session.customer.first_name+' '+req.session.customer.last_name,
 		     keyName:'organizer',
@@ -133,31 +134,33 @@ module.exports = function(app) {
 	    return res.redirect( redirectUrl );		    
 	}
 
-	//check if there's an existing feed
-	Feed.findOne({guid:req.session.currentPlan.config.guid},function(err,feed) {
-	    if (err) {
-		console.log(err);
-	    } else {
-		if (feed == null) {
-		    //create a new one
-		    var f = new Feed({guid:req.session.currentPlan.config.guid,activity:[activity]});
-	
-		    f.save(function(err) {
-			redir();
-		    });
-		} else {
-		    feed.activity.push(activity);
-		    feed.markModified('activity');	
-		    feed.save(function(err) {
-			redir();
-		    });
-		}
-	    }
-	});
-	
 	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
-	    redir();
+	    console.log('saved current plan');
+	    //check if there's an existing feed
+	    Feed.findOne({guid:req.session.currentPlan.config.guid},function(err,feed) {
+		if (err) {
+		    console.log('feed saving err:'+err);
+		    return redir();
+		} else {
+		    if (feed == null) {
+			//create a new one
+			var f = new Feed({guid:req.session.currentPlan.config.guid,activity:[activity]});
+			console.log('saving new feed');
+			f.save(function(err) {
+			    return redir();
+			});
+		    } else {
+			console.log('adding to feed');
+			feed.activity.push(activity);
+			feed.markModified('activity');	
+			feed.save(function(err) {
+			    return redir();
+			});
+		    }
+		}
+	    });
 	});
+	
     });
 
 
