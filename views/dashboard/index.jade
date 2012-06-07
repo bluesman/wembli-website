@@ -13,8 +13,10 @@
 						form#eventSearchForm(method="GET",action="/events/search")
 							input#eventSearch(placeholder="Search for an event",type="text")
 							button#searchButton.btn.btn-large.btn-success(type="button") Go!
-			include ../includes/dashboard/events-planning
-			include ../includes/dashboard/events-attending
+			- if ((typeof planning !="undefined") && (planning.length > 0))
+				include ../includes/dashboard/events-planning
+			- if ((typeof attending !="undefined") && (attending.length > 0))
+				include ../includes/dashboard/events-attending
 		#right.span4
 			include ../includes/dashboard/activity-feed
 

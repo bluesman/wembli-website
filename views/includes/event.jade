@@ -8,6 +8,10 @@
 			a.choose-event.name.block(href="/event/"+event.ID+"/"+encodeURIComponent(event.Name)+"#eventBuilder")!= event.Name
 		span.venue.block!= (typeof event.Venue.Name != "undefined") ? event.Venue.Name : event.Venue
 		span.location.block!= event.City+', '+event.StateProvince
+		- if (typeof event.Venue != "undefined" && typeof event.Venue.Street1 != "undefined" && typeof event.Venue.ZipCode != "undefined")
+			- var mapQuery = event.Venue.Name+', '+event.Venue.Street1+' '+event.Venue.ZipCode;
+			span.mapLink.block
+				a(href="http://maps.google.com/?q=#{mapQuery}",target="_blank") Map Link
 		- if (typeof rating == "undefined" || rating !== false)
 			span.rating.block
 				em Expert Rating:

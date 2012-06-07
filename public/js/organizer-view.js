@@ -4,7 +4,6 @@
 	if ($('#feedbackOptions').length > 0) {
 	    $('#feedbackOptions .planOption').each(function(idx,el) {
 		$(el).click(function(e) {
-		    e.preventDefault();
 		    $('#feedbackOptions .planOption').each(function(idx,el) {
 			$(this).find('input').attr('checked',false);
 		   });
@@ -117,7 +116,8 @@
 			for (id in $w.eventplan.data.tickets) {
 			    var ticket = $w.eventplan.data.tickets[id];
 			    if ((typeof ticket.finalChoice != "undefined") && (ticket.finalChoice)) {
-				selectedOption = '#'+id;
+				console.log('final choice: '+id);
+				selectedOption = '#finalChoice';
 				$('#ticketChoiceHidden').val(id);
 				break;
 			    }

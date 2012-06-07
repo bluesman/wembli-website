@@ -6,15 +6,15 @@
 		.alert.alert-info We'd love your feedback so we can make wembli better.
 		form#feedbackOptions.well.form-horizontal(method="POST",action="/plan/payment-feedback")
 			input(type="hidden",name="setConfig",value="1")
-			a.planOption
+			.planOption
 				input(type="radio",value="yes-easy",name="purchasedTickets",checked="checked").pull-left
 				.info Buying my tickets was smooth and easy.
 			hr
-			a.planOption
+			.planOption
 				input(type="radio",value="yes-hassle",name="purchasedTickets").pull-left
 				.info Buying my tickets was a hassle.
 			hr
-			a.planOption
+			.planOption
 				input(type="radio",value="no",name="purchasedTickets").pull-left
 				.info I changed my mind and didn't buy the tickets.
 			.form-actions

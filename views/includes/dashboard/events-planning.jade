@@ -2,32 +2,30 @@
 	h3 Events I'm Planning
 	.body
 		ul
-			- if ((typeof session.customer.eventplan != "undefined") && (session.customer.eventplan.length > 0)) 
-				- each plan in session.customer.eventplan
-					- if (typeof plan.config != "undefined")
-						- if ((typeof plan.config.deleted != "undefined") && (plan.config.deleted)) 
-							- continue;
-						- if (typeof plan.event == "undefined")
-							- continue;
-						- var date = new Date(Date.parse(plan.event.Date));
-						li
-							.event(href="#")
-								input.eventGuid(name="eventGuid",value="#{plan.config.guid}",type="hidden")
-								.info
-									.name #{plan.event.Name}
-									.venue!= (typeof plan.event.Venue.Name != "undefined") ? plan.event.Venue.Name : plan.event.Venue
-									.location!= plan.event.City+', '+plan.event.StateProvince
-								.cta
-									button.removePlan.btn.btn-warning.pull-right Remove
-									button.viewPlan.btn.btn-success.pull-right View
-								.event-date-box
-									span.day!=        date.format("ddd")
-									span.event-date!= date.format("mmm d")
-									span.time!=       date.format("h:MM TT") 
-						li.empty
-							hr
-					- else
-						li.empty Search for an event above to start planning.
-			- else
-				li.empty Search for an event above to start planning.
+			- each plan in planning
+				- if (typeof plan.config != "undefined")
+					- if ((typeof plan.config.deleted != "undefined") && (plan.config.deleted)) 
+						- continue;
+					- if (typeof plan.event == "undefined")
+						- continue;
+					- var date = new Date(Date.parse(plan.event.Date));
+					li
+						.event(href="#")
+							input.eventGuid(name="eventGuid",value="#{plan.config.guid}",type="hidden")
+							.info
+								.name #{plan.event.Name}
+								.venue!= (typeof plan.event.Venue.Name != "undefined") ? plan.event.Venue.Name : plan.event.Venue
+								.location!= plan.event.City+', '+plan.event.StateProvince
+							.cta
+								button.viewPlan.btn.btn-success.pull-right View
+								a.removePlan.pull-right(href="#")
+									span Remove
+							.event-date-box
+								span.day!=        date.format("ddd")
+								span.event-date!= date.format("mmm d")
+								span.time!=       date.format("h:MM TT") 
+					li.empty
+						hr
+				- else
+					li.empty Search for an event above to start planning.
 	

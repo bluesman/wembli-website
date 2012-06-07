@@ -3,7 +3,7 @@
 - var venueMapUrl  = session.isOrganizer ? '/plan/tickets' : '/plan/tickets/'+plan.config.guid;
 - var venueMapText = session.isOrganizer ? 'Change Ticket Options' : 'View Tickets On Venue Map';
 #votingContainer.planOptions.module
-	h3 Voting
+	h3 Planning
 		a#votingIcon(href="#")
 			i.icon-info-sign.pull-right.icon-white				
 	- if (typeof voteMsg != "undefined")
@@ -13,27 +13,33 @@
 	form.body
 		- if (!req.session.isOrganizer)
 			input#friendEmail(name="friendEmail",type="hidden",value="#{req.session.friend.email}")
-		#ticketsContainer
-			.header.clearfix
-				h4.pull-left Tickets:
-				.ticketActions.pull-right
-					a(href="#{venueMapUrl}")!= venueMapText
-			idx = 0
-			- for (ticketId in plan.tickets)
-				- idx++;
-				ticket     = plan.tickets[ticketId]
-				rowClass   = (idx % 2) ? 'oddRow' : 'evenRow';
-				votePct    = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
-				voteCnt    = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
-				voteCntStr = voteCnt + ' Vote'
-				- voteCntStr    += (ticket.voteCnt == 1) ? '' : 's';
-				- voteCntStr    += ' ('+votePct+'%)';
-				.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
-					- if (session.isOrganizer)
-						include ticket/organizer-voting
-					- else
-						include ticket/friend-voting
-		- if (session.isOrganizer)
+		- if (typeof plan.tickets != "undefined")
+			#ticketsContainer
+				.header.clearfix
+					h4.pull-left Tickets:
+					.ticketActions.pull-right
+						a(href="#{venueMapUrl}")!= venueMapText
+				idx = 0
+				- for (ticketId in plan.tickets)
+					- idx++;
+					ticket     = plan.tickets[ticketId]
+					rowClass   = (idx % 2) ? 'oddRow' : 'evenRow';
+					votePct    = (typeof ticket.votePct != "undefined") ? ticket.votePct : 0
+					voteCnt    = (typeof ticket.voteCnt != "undefined") ? ticket.voteCnt : 0
+					voteCntStr = voteCnt + ' Vote'
+					- voteCntStr    += (ticket.voteCnt == 1) ? '' : 's';
+					- voteCntStr    += ' ('+votePct+'%)';
+					.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
+						- if (session.isOrganizer)
+							include ticket/organizer-voting
+						- else
+							include ticket/friend-voting
+			- if (session.isOrganizer)
+				.form-footer
+					a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & ASK FRIENDS TO PONY UP
+		- else if (session.isOrganizer)
 			.form-footer
-				a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & ASK FRIENDS TO PONY UP
-	
+				a.btn.btn-success.btn-large(href="/plan/tickets") ADD TICKET OPTIONS TO YOUR PLAN
+		- else
+			.form-footer
+				.alert.alert-info There are no tickets in this plan

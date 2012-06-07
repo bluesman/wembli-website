@@ -267,7 +267,7 @@ $w.eventplan = {
 	    if (typeof this.data.friends != "undefined") {
 		var count = this.friendsNotDeclined();
 		var peopleStr = (count > 1) ? ' people' : ' person';
-		summaryMsg = count+peopleStr+' going';
+		summaryMsg = count+peopleStr;
 	    }
 
 	    if (typeof this.data.tickets != "undefined") {

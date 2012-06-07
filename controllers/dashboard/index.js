@@ -95,10 +95,7 @@ module.exports = function(app) {
 		for (idx in attending) {
 		    var p = attending[idx];
 		    guids.push(p.config.guid);
-		    console.log('pushed:'+p.config.guid);
 		}
-		console.log('attending:');
-		console.log(attending);
 
 		Feed.find({guid:{$in:guids}},function(err,feeds) {
 		    var feed = [];
@@ -120,12 +117,22 @@ module.exports = function(app) {
 			return 0;
 		    });
 
+		    //pull out deleted events from the customer eventplan
+		    var planning = [];
+		    for (idx in req.session.customer.eventplan) {
+			var plan = req.session.customer.eventplan[idx];
+			if ((typeof plan.config != "undefined") && (typeof plan.config.deleted == "undefined" || !plan.config.deleted)) {
+			    planning.push(plan);
+			}
+		    }
+		    console.log(planning);
 		    res.render('dashboard/index', {
 			cssIncludes: [],
 			jsIncludes: ['/js/dashboard.js'],
 			title: 'wembli.com - login to get the best seats.',
 			layoutContainer:true,
 			attending:attending,
+			planning:planning,
 			feed:feed,
 			page:'dashboard'
 		    });

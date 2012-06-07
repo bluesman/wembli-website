@@ -2,7 +2,6 @@ var express          = require('express'),
     date             = require('./public/js/lib/date.format'),
     redis            = require('connect-redis')(express),
     everyauth        = require('everyauth'),
-    wembliEveryauth  = require('./lib/wembli/everyauth.js'),
     wemblirpc        = require('./lib/wembli/jsonrpc');
 
 var fs = require('fs');
@@ -19,12 +18,7 @@ app.helpers(require('./controllers/helpers/static-view-helpers'));
 
 globalViewVars   = require('./controllers/helpers/global-view-vars');
 
-//init the openauth thing
-wembliEveryauth.init(everyauth);
-
 //app globals
-app.set('fbAppId',wembliEveryauth.conf.fb.appId);
-app.set('fbAppSecret',wembliEveryauth.conf.fb.appSecret);
 app.set('host','beta');
 app.set('secure',false);
 var port = 8001;
@@ -48,8 +42,15 @@ if (process.env.NODE_ENV == 'secure') {
     
 }
 
-app.use(function(req, res, next) {
+var wembliEveryauth  = require('./lib/wembli/everyauth.js');
+//init the openauth thing
+wembliEveryauth.init(everyauth);
+app.set('fbAppId',wembliEveryauth.conf.fb.appId);
+app.set('fbAppSecret',wembliEveryauth.conf.fb.appSecret);
 
+
+
+app.use(function(req, res, next) {
     if (process.env.NODE_ENV != 'development') {
 	var schema = req.headers["x-forwarded-for"];
 	// --- Do nothing if schema is already https
