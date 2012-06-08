@@ -64,83 +64,108 @@ module.exports = function(app) {
 		    newC.zip_code = req.session.ipinfo.zipCode;
 		}
 		var customer = new Customer(newC);
-		console.log(customer);
+		//console.log(customer);
 
-		//make a confirmation token   
-		hash = crypto.createHash('md5');
-		var confirmationTimestamp = new Date().getTime().toString();
-		hash.update(req.param('email')+confirmationTimestamp);
-		var confirmationToken = hash.digest(encoding='base64');
-		confirmationToken = confirmationToken.replace(/\//g,'');	    
-		
-		customer.confirmation.push({timestamp: confirmationTimestamp,token: confirmationToken});
-		console.log('saving currentplan after signup:');
-		console.log(req.session);
-		if ((req.session.isOrganizer != "undefined") && (req.session.isOrganizer)) {
-		    customer.eventplan.push(req.session.currentPlan);
-		}
-		customer.save(function(err) {
-		    //console.log('customer save err: '+err);
-		    
-		    //log created plan activity feed
-		    var actor = {name:customer.first_name+' '+customer.last_name,
-				 keyName:'organizer',
-				 keyValue:'organizer'};
-		    var action = {name:'initPlan'};
-		    var meta = {};
-		    var activity = {action:action,
-				    actor:actor,
-				    meta:meta};
-		    
-		    var f = new Feed({guid:req.session.currentPlan.config.guid,activity:[activity]});
-		    f.save();
-		    
-		    //iterate through customer.properties 
-		    //for each prop: customer.prop = (c.prop ? c.prop : ((typeof result.prop != 'undefined') ? result.prop : null));  
-		    req.session.loggedIn = true;
-		    req.session.customer = customer;
-		
-		    //send a confirmation email   
-		    var confirmLink = "http://"+app.settings.host+".wembli.com/confirm";
-		    var emailEsc = encodeURIComponent(req.session.customer.email);
-		    var tokenEsc = encodeURIComponent(req.session.customer.confirmation[0].token);
-		    var confirmLinkEncoded = confirmLink + '/' + emailEsc + '/' + tokenEsc;
-		    console.log(confirmLinkEncoded);
-		   
-		    //send the email asynchronously
-		    res.render('email-templates/signup', {
-			confirmLink:confirmLinkEncoded,
-			layout:'email-templates/layout',
-		    },function(err,htmlStr) {
-			var mail = {
-			    from: '"Wembli Support" <help@wembli.com>',
-			    to:req.session.customer.email,
-			    headers: {
-				'X-SMTPAPI': {
-				    category : "signup",
-				}
-			    },
+		var createCustomer = function() {
 
-			};
-			
-			mail.subject = "Welcome to Wembli.com";
-			//templatize this 
-			mail.text = 'Click here to confirm your email address: http://'+app.settings.host+'.wembli.com/confirm/'+encodeURIComponent(req.session.customer.email)+'/'+encodeURIComponent(confirmationToken);
-			mail.html = htmlStr;
-			mailer.sendMail(mail,function(error, success){
-			    console.log("Message "+(success?"sent":"failed:"+error));
-			});
+		    //make a confirmation token   
+		    hash = crypto.createHash('md5');
+		    var confirmationTimestamp = new Date().getTime().toString();
+		    hash.update(req.param('email')+confirmationTimestamp);
+		    var confirmationToken = hash.digest(encoding='base64');
+		    confirmationToken = confirmationToken.replace(/\//g,'');	    
 		    
-		    });
-
-		    //if there is a redirectUrl, show a flash message indicating successful signup
-		    var redirectUrl = '/dashboard';
-		    if (req.param('redirectUrl')) {
-			//req.flash('info','Signup was successful and your work was saved.');
-			redirectUrl = req.param('redirectUrl');
+		    customer.confirmation.push({timestamp: confirmationTimestamp,token: confirmationToken});
+		    
+		    
+		    console.log('saving currentplan after signup:');
+		    console.log(req.session);
+		    if ((req.session.isOrganizer != "undefined") && (req.session.isOrganizer)) {
+			customer.eventplan.push(req.session.currentPlan);
 		    }
-		    return res.redirect( redirectUrl );		    
-		});
+		    customer.save(function(err) {
+			//console.log('customer save err: '+err);
+			
+			//log created plan activity feed
+			var actor = {name:customer.first_name+' '+customer.last_name,
+				     keyName:'organizer',
+				     keyValue:'organizer'};
+			var action = {name:'initPlan'};
+			var meta = {};
+			var activity = {action:action,
+					actor:actor,
+					meta:meta};
+			
+			if (req.session.currentPlan) {
+			    var f = new Feed({guid:req.session.currentPlan.config.guid,activity:[activity]});
+			    f.save();
+			}
+			
+			//iterate through customer.properties 
+			//for each prop: customer.prop = (c.prop ? c.prop : ((typeof result.prop != 'undefined') ? result.prop : null));  
+			req.session.loggedIn = true;
+			req.session.customer = customer;
+			
+			//send a confirmation email   
+			var confirmLink = "http://"+app.settings.host+".wembli.com/confirm";
+			var emailEsc = encodeURIComponent(req.session.customer.email);
+			var tokenEsc = encodeURIComponent(req.session.customer.confirmation[0].token);
+			var confirmLinkEncoded = confirmLink + '/' + emailEsc + '/' + tokenEsc;
+			console.log(confirmLinkEncoded);
+			
+			//send the email asynchronously
+			res.render('email-templates/signup', {
+			    confirmLink:confirmLinkEncoded,
+			    layout:'email-templates/layout',
+			},function(err,htmlStr) {
+			    var mail = {
+				from: '"Wembli Support" <help@wembli.com>',
+				to:req.session.customer.email,
+				headers: {
+				    'X-SMTPAPI': {
+					category : "signup",
+				    }
+				},
+				
+			};
+			    
+			    mail.subject = "Welcome to Wembli.com";
+			    //templatize this 
+			    mail.text = 'Click here to confirm your email address: http://'+app.settings.host+'.wembli.com/confirm/'+encodeURIComponent(req.session.customer.email)+'/'+encodeURIComponent(confirmationToken);
+			    mail.html = htmlStr;
+			    mailer.sendMail(mail,function(error, success){
+				console.log("Message "+(success?"sent":"failed:"+error));
+			    });
+			    
+			});
+			
+			//if there is a redirectUrl, show a flash message indicating successful signup
+			var redirectUrl = '/dashboard';
+			if (req.param('redirectUrl')) {
+			    //req.flash('info','Signup was successful and your work was saved.');
+			    redirectUrl = req.param('redirectUrl');
+			}
+			return res.redirect( redirectUrl );		    
+		    });
+		};
+
+		//if there's a token in the session it means they came from an email invite url
+		//check to make sure there is a friend with this token
+		console.log('token is: '+req.session.token);
+		if (req.session.token) {
+		    console.log('signup with a token:'+req.session.token);
+		    Customer.findFriendEmailByFriendToken(req.session.token,function(err,email) {
+			if (email && (email == req.param('email'))) {
+			    //confirmation should be true
+			    customer.confirmed = true;
+			}
+			createCustomer();
+		    });
+		} else {
+		    console.log('signup with out a token:'+req.session.token);
+
+		    createCustomer();
+		}
 		
 	    } else {
 		//they've already signed up

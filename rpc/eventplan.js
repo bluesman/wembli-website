@@ -19,6 +19,10 @@ var _respond = function(error,data,req,me) {
 	//TODO: save data for customer if logged in
 	if (req.session.loggedIn && req.session.isOrganizer && (data != null) && (typeof data.config != "undefined")) {
 	    //console.log(data);
+	    if (req.session.customer && !data.config.organizer) {
+		console.log('setting organizer for plan to '+req.session.customer.email);
+		data.config.organizer = req.session.customer.email;
+	    }
 	    req.session.customer.saveCurrentPlan(data,function() {
 		me(null,{success:1,
 			 eventplan:data});		
@@ -264,8 +268,6 @@ exports.eventplan = {
 	    if (typeof e.tickets[ticketId] != "undefined") {
 		var payment = {};
 		if (typeof e.tickets[ticketId].payment != "undefined") {
-		    console.log('ticketgroup payment: ');
-		    console.log(e.tickets[ticketId].payment);
 		    payment = e.tickets[ticketId].payment;
 		}
 

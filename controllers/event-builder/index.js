@@ -133,6 +133,10 @@ module.exports = function(app) {
 	    }
 	    return res.redirect( redirectUrl );		    
 	}
+	if (req.session.customer && !req.session.currentPlan.config.organizer) {
+	    console.log('setting organizer for plan to '+req.session.customer.email);
+	    req.session.currentPlan.config.organizer = req.session.customer.email;
+	}
 
 	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
 	    console.log('saved current plan');

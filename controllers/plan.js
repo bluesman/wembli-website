@@ -251,6 +251,14 @@ module.exports = function(app) {
 	    }
 	}
 
+	//if there's a token - put it in the session. if they sign up i'll check the token to make sure the email+token combo they sign up for matches
+	//a plan with a friend+token.  if it doesn't match then the email address should not be automatically confirmed
+	if (req.param('token')) {
+	    console.log('setting token: '+req.param('token'));
+	    req.session.token = req.param('token');
+	}
+	
+
 	//get the event details for this guid
 	Customer.findPlanByGuid(req.param('guid'),function(err,c) {
 	    if (err || c == null) {
@@ -413,6 +421,12 @@ module.exports = function(app) {
 	    }
 	}
 
+	//if there's a token - put it in the session. if they sign up i'll check the token to make sure the email+token combo they sign up for matches
+	//a plan with a friend+token.  if it doesn't match then the email address should not be automatically confirmed
+	if (req.param('token')) {
+	    req.session.token = req.param.token;
+	}
+	
 	//determine the public url to redirect to if they are not allowed
 	var publicViewUrl = '/plan/public/';
 	var hasGuid = false;

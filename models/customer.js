@@ -74,6 +74,27 @@ this.Model = function(mongoose) {
 
     Customer.methods.saveCurrentPlan = function(plan,callback) {
 	var c = this;
+	//plan must have a config.organizer
+	if (typeof plan.config.organizer == "undefined") {
+	    console.log('plan does not have an organizer..not saving it..');
+	    if (typeof callback != "undefined") {
+		return callback('plan must have a config.organizer');
+	    } else {
+		return;
+	    }
+
+	}
+
+	//if the organizer email for plan is not c.email gtfo
+	if (plan.config.organizer != c.email) {
+	    console.log('organizer is not the customer');
+	    if (typeof callback != "undefined") {
+		return callback('the plan does not belong to this customer');
+	    } else {
+		return;
+	    }
+	}
+
 	var plans = [];
 	var saved = false;
 	for (var idx in this.eventplan) {
@@ -107,6 +128,39 @@ this.Model = function(mongoose) {
 	    //console.log(c);
 	    if (typeof callback != "undefined") {
 		callback(err);
+	    }
+	});
+    };
+
+    Customer.statics.findFriendEmailByFriendToken = function(token,callback) {
+	var Customer = this;
+	var friendEmail = null;
+	//if there's a fbId for this customer get all the friends that have this as an id
+	var query = Customer.find();
+	query.where('eventplan.friends').elemMatch(function(elem) {
+		    elem.where('token.token',token);
+		});
+	query.exec(function(err,res) {
+	    if (err) {
+		callback(err);
+	    } else {
+		var plans = [];
+		for (var i in res) {
+		    for (var idx in res[i].eventplan) {
+			var plan = res[i].eventplan[idx];
+			var keep = false;
+			for (var idx2 in plan.friends) {
+			    var f = plan.friends[idx2];
+			    if ((typeof f.token != "undefined") && (f.token.token == token)) {
+				if (f.email) {
+				    return callback(null,f.email);
+				    break;
+				}
+			    }
+			}
+		    }
+		}
+		callback(null,null);
 	    }
 	});
     };
