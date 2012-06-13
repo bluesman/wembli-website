@@ -58,7 +58,8 @@ app.use(function(req, res, next) {
             return next();
 	
 	// --- Redirect to https
-	res.redirect("https://" + req.headers.host + req.url);
+	var host = 'beta.wembli.com'; //use req.headers.host eventually
+	res.redirect("https://" + host + req.url);
     } else {
 	next();
     }

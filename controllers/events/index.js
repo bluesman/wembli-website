@@ -28,21 +28,53 @@ module.exports = function(app) {
 	if (req.param.to) {
 	    whereClause += ' AND Date < DateTime("'+req.param.to+'")';
 	}
-        ticketNetwork.SearchEvents({searchTerms:req.param.q,whereClause:whereClause,orderByClause:'Date'},function(err,results) {
-            res.render('events',{
-		layoutContainer:true,
-		session: req.session,
-		q: req.param.q,
-		param: req.param,
-		cssIncludes: [],
-		jsIncludes: [],
-		title: 'wembli.com - events.',
-		page:'tickets',
-                events: results.Event
-	    });
-        });
 
+	if (req.param('updateEvent')) {
+	    req.session.updateEvent = req.param('updateEvent');
+	}
+	console.log(req.param('save'));
+	if (req.param.q) {
+	    req.session.lastSearch = req.param.q;
+            ticketNetwork.SearchEvents({searchTerms:req.param.q,whereClause:whereClause,orderByClause:'Date'},function(err,results) {
+		res.render('events',{
+		    layoutContainer:true,
+		    session: req.session,
+		    q: req.param.q,
+		    param: req.param,
+		    cssIncludes: [],
+		    jsIncludes: [],
+		    title: 'wembli.com - events.',
+		    page:'tickets',
+                    events: results.Event,
+		});
+            });
+	} else {
+            var d = Date.today();
+	    d2 = new Date ( d );
+	    d2.setDate ( d.getDate() + 2 );
+            var beginDate = d2.format("shortDate");
+	    var args = {beginDate:beginDate};
+	    args.orderByClause = 'Date';
+	    console.log(req.session.ipinfo);
+	    if (typeof req.session.ipinfo != "undefined") {
+		args.nearZip = req.session.ipinfo.postal_code;
+	    }
 
+            ticketNetwork.GetEvents(args,function(err,results) {
+		res.render('events',{
+		    layoutContainer:true,
+		    session: req.session,
+		    q: req.param.q,
+		    param: req.param,
+		    cssIncludes: [],
+		    jsIncludes: [],
+		    title: 'wembli.com - events.',
+		    page:'tickets',
+                    events: results.Event,
+		});
+            });
+
+	}
 
 	/*
 	  eventGroups if I need it

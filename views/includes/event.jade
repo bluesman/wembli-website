@@ -1,26 +1,36 @@
+- var lastSearch = session.lastSearch ? session.lastSearch : '/events/search';
+- lastSearch += '?updateEvent=1';
 - if (typeof event == "undefined")
 	- var event = session.currentPlan.event
 - var date = new Date(Date.parse(event.Date));
-	p.info 
-		- if (typeof link != "undefined" && link === false)
-			span.name.block!= event.Name
-		- else
-			a.choose-event.name.block(href="/event/"+event.ID+"/"+encodeURIComponent(event.Name)+"#eventBuilder")!= event.Name
-		span.venue.block!= (typeof event.Venue.Name != "undefined") ? event.Venue.Name : event.Venue
-		span.location.block!= event.City+', '+event.StateProvince
-		- if (typeof event.Venue != "undefined" && typeof event.Venue.Street1 != "undefined" && typeof event.Venue.ZipCode != "undefined")
-			- var mapQuery = event.Venue.Name+', '+event.Venue.Street1+' '+event.Venue.ZipCode;
-			span.mapLink.block
+p.info 
+	- if (typeof link != "undefined" && link === false)
+		span.name.block!= event.Name
+	- else
+		a.choose-event.name.block(href="/event/"+event.ID+"/"+encodeURIComponent(event.Name)+"#eventBuilder")!= event.Name
+	span.venue.block!= (typeof event.Venue.Name != "undefined") ? event.Venue.Name : event.Venue
+	- if (typeof event.Venue != "undefined" && typeof event.Venue.Street1 != "undefined" && typeof event.Venue.ZipCode != "undefined")
+		- var location = event.Venue.Street1+', '+event.City+', '+event.StateProvince+' '+event.Venue.ZipCode;
+		- var mapQuery = event.Venue.Name+', '+event.Venue.Street1+' '+event.Venue.ZipCode;
+	- else
+		- var location = event.City+', '+event.StateProvince
+	span.location.block!= location 
+		- if (typeof mapQuery != "undefined")
+			span.mapLink &nbsp;(&nbsp;
 				a(href="http://maps.google.com/?q=#{mapQuery}",target="_blank") Map Link
-		- if (typeof rating == "undefined" || rating !== false)
-			span.rating.block
-				em Expert Rating:
-				span.stars!= (event.Rating ? event.Rating : 0)
-	- if (typeof cta == "undefined" || cta !== false)
-		p.cta
-			a.choose-event.btn.btn-primary(href="/event/"+event.ID+"/"+event.Name+"#eventBuilder") Plan It!
-			- // don't have this info right now: em 300 tickets from $27
-	span.event-date-box
-		span.day!=        date.format("ddd")
-		span.event-date!= date.format("mmm d")
-		span.time!=       date.format("h:MM TT") 
+			span &nbsp;)
+	- if (typeof rating == "undefined" || rating !== false)
+		span.rating.block
+			em Expert Rating:
+			span.stars!= (event.Rating ? event.Rating : 0)
+	- if (typeof changeEvent != "undefined" && changeEvent == true)
+		span.changeEvent.block
+			a#changeEvent(href="/events/search/#{lastSearch}") Change Event
+- if (typeof cta == "undefined" || cta !== false)
+	p.cta
+		a.choose-event.btn.btn-primary(id="#{event.ID}",href="/event/"+event.ID+"/"+event.Name+"#eventBuilder") Plan It!
+		- // don't have this info right now: em 300 tickets from $27
+span.event-date-box
+	span.day!=        date.format("ddd")
+	span.event-date!= date.format("mmm d")
+	span.time!=       date.format("h:MM TT") 

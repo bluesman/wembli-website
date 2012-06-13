@@ -121,13 +121,71 @@ this.Model = function(mongoose) {
 	this.markModified('eventplan');
 	
 	this.save(function(err) {
-	    
 	    if (err) {
 		console.log('error saving customer: '+err);
-	    }
-	    //console.log(c);
-	    if (typeof callback != "undefined") {
 		callback(err);
+	    }
+
+	    //check if there any currentPlan.feed elements to save
+	    //there's an existing feed
+	    if ((typeof plan.feed != "undefined") && plan.feed.length > 0) {
+		//look for an existing feed
+		Feed.findOne({guid:plan.config.guid},function(err,feed) {
+		    if (err) {
+			console.log('feed saving err:'+err);
+			if (typeof callback != "undefined") {
+			    callback(err);
+			} 
+		    } else {
+			if (feed == null) {
+			    //create a new one
+			    var newFeed = new Feed({guid:plan.config.guid,activity:[]});
+			    for (var idx in plan.feed) {
+				var f = plan.feed[idx];
+				if (typeof f.actor == "undefined") {
+				    f.actor = {name:c.first_name+' '+c.last_name,
+					       keyName:'organizer',
+					       keyValue:'organizer'};
+
+				}
+				newFeed.activity.push(f);
+			    }
+
+
+			    console.log('saving new feed');
+			    newFeed.save(function(err) {
+				plan.feed = [];
+				if (typeof callback != "undefined") {
+				    callback(err);
+				} 
+			    });
+			} else {
+			    console.log('adding to feed');
+			    for (var idx in plan.feed) {
+				var f = plan.feed[idx];
+				if (typeof f.actor == "undefined") {
+				    f.actor = {name:c.first_name+' '+c.last_name,
+					       keyName:'organizer',
+					       keyValue:'organizer'};
+				    
+				}
+				feed.activity.push(f);
+			    }
+			    feed.markModified('activity');	
+			    feed.save(function(err) {
+				plan.feed = [];
+				if (typeof callback != "undefined") {
+				    callback(err);
+				} 
+			    });
+			}
+		    }
+		});
+	    } else {
+		//console.log(c);
+		if (typeof callback != "undefined") {
+		    callback(err);
+		} 
 	    }
 	});
     };

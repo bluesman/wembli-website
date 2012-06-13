@@ -85,22 +85,7 @@ module.exports = function(app) {
 		    }
 		    customer.save(function(err) {
 			//console.log('customer save err: '+err);
-			
-			//log created plan activity feed
-			var actor = {name:customer.first_name+' '+customer.last_name,
-				     keyName:'organizer',
-				     keyValue:'organizer'};
-			var action = {name:'initPlan'};
-			var meta = {};
-			var activity = {action:action,
-					actor:actor,
-					meta:meta};
-			
-			if (req.session.currentPlan) {
-			    var f = new Feed({guid:req.session.currentPlan.config.guid,activity:[activity]});
-			    f.save();
-			}
-			
+						
 			//iterate through customer.properties 
 			//for each prop: customer.prop = (c.prop ? c.prop : ((typeof result.prop != 'undefined') ? result.prop : null));  
 			req.session.loggedIn = true;

@@ -49,30 +49,50 @@ module.exports = function(app) {
 	console.log('called event builder for url: '+req.url);
 	var eventId     = req.param('eventId');
 	var eventName   = req.param('eventName');
+
 	var services = {'friends':[],'tickets':{}};
 
 	var wembliServices = globalViewVars.wembliServices;
 
-	//for now, everytime they load this page, reset the req.session.currentPlan
-	req.session.currentPlan = {};
-	req.session.currentPlan.completed = {init:true};
-	req.session.currentPlan.config = {};
-	for (idx in wembliServices) {
-	    var service = wembliServices[idx];
-	    console.log('service for idx: '+idx);
-	    if (typeof services[service] == "undefined") {
-		req.session.currentPlan.config[service] = false;
-		if (typeof req.session.currentPlan[service] != "undefined") {
-		    delete req.session.currentPlan[service];
+	if (req.param('updateEvent') && req.session.currentPlan && req.session.currentPlan.config) {
+	    console.log('updating event for current plan')
+	} else {
+
+	    //for now, everytime they load this page, reset the req.session.currentPlan
+	    req.session.currentPlan = {};
+	    req.session.currentPlan.completed = {init:true};
+	    req.session.currentPlan.config = {};
+	    for (idx in wembliServices) {
+		var service = wembliServices[idx];
+		console.log('service for idx: '+idx);
+		if (typeof services[service] == "undefined") {
+		    req.session.currentPlan.config[service] = false;
+		    if (typeof req.session.currentPlan[service] != "undefined") {
+			delete req.session.currentPlan[service];
+		    }
+		} else {
+		    req.session.currentPlan.config[service] = true;
+		    req.session.currentPlan[service] = services[service];
 		}
-	    } else {
-		req.session.currentPlan.config[service] = true;
-		req.session.currentPlan[service] = services[service];
 	    }
+	    req.session.currentPlan.config['summary'] = true; //every plan has a summary
+	    req.session.currentPlan.config['payment'] = (typeof req.body['payment'] == "undefined") ? 'group' : req.body['payment'];
+	    req.session.currentPlan.config['guid']    = uuid.v1();
+
+
+	    //queue up feed activity to be saved when this person saves their work
+	    var action = {name:'initPlan'};
+	    var meta = {};
+	    var activity = {action:action,
+			    meta:meta,
+			    time:Date.now()
+			   };
+	    
+	    console.log('added initPlan feed activity');
+	    req.session.currentPlan.feed = [];
+	    req.session.currentPlan.feed.push(activity);
 	}
-	req.session.currentPlan.config['summary'] = true; //every plan has a summary
-	req.session.currentPlan.config['payment'] = (typeof req.body['payment'] == "undefined") ? 'group' : req.body['payment'];
-	req.session.currentPlan.config['guid']    = uuid.v1();
+
 	req.session.isOrganizer = true;
 
 	//this function determines which step to go to and goes there
@@ -140,29 +160,7 @@ module.exports = function(app) {
 
 	req.session.customer.saveCurrentPlan(req.session.currentPlan,function(err) {
 	    console.log('saved current plan');
-	    //check if there's an existing feed
-	    Feed.findOne({guid:req.session.currentPlan.config.guid},function(err,feed) {
-		if (err) {
-		    console.log('feed saving err:'+err);
-		    return redir();
-		} else {
-		    if (feed == null) {
-			//create a new one
-			var f = new Feed({guid:req.session.currentPlan.config.guid,activity:[activity]});
-			console.log('saving new feed');
-			f.save(function(err) {
-			    return redir();
-			});
-		    } else {
-			console.log('adding to feed');
-			feed.activity.push(activity);
-			feed.markModified('activity');	
-			feed.save(function(err) {
-			    return redir();
-			});
-		    }
-		}
-	    });
+	    return redir();
 	});
 	
     });

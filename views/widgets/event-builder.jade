@@ -2,7 +2,7 @@
 - if (typeof buttonText != "undefined")
 	- actionArgs.buttonText = buttonText;
 #eventBuilder.block(href="#eventBuilder")
-	#event!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
+	#event!= partial("includes/event",{changeEvent:true,cta:false,rating:false,link:false,event:session.currentPlan.event});
 	#split &nbsp;
 	#stepInfo
 		#summary

@@ -23,14 +23,19 @@
 		- if (typeof session.ipinfo.city != "undefined")
 			- heading += ' near '+session.ipinfo.city;
 		.event-list.span6.offset1!= partial("widgets/event-list",{heading: heading,events:events});
-			a#moreEvents(href="/events/search/"+session.ipinfo.city+"/"+Date.today().format("mm-dd-yy"))
+			- var url = "/events/search/"
+			- if (session.ipinfo.city)
+				- url += session.ipinfo.city+"/"
+			- url += Date.today().format("mm-dd-yy")
+			a#moreEvents(href="#{url}")
 				input(type="hidden",id="moreEventsZipCode",value="#{session.ipinfo.postal_code}")
 				- if (events.length > 0)
 					- var d = new Date(Date.parse(events[events.length-1].Date))
 					- var lastDate = d.format("mm-dd-yy")
 					input(type="hidden",id="moreEventsBeginDate",value="#{lastDate}")
-					span See more events near 
-					span.lowercase!= session.ipinfo.city
+					span See more events 
+					- if (session.ipinfo.city)
+						span.lowercase!= 'near '+session.ipinfo.city
 				img.spinner.pull-right.hide(src="/images/ajax-loader-small.gif")
 		.quoteContainer
 			h3 PEOPLE ARE TALKING...

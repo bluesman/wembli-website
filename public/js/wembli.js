@@ -150,7 +150,6 @@ $w.moreEvents = function(){
 	    $('#moreEvents img.spinner').show();
 	    var zip = $('#moreEventsZipCode').val();
 	    var beginDate = $('#moreEventsBeginDate').val();
-	    console.log('begin: '+beginDate);
 	    wembli.event.get({beginDate:beginDate,nearZip:zip},function(error,events) {
 		$('#moreEvents img.spinner').hide();		
 		if (events.length > 0) {
@@ -200,14 +199,30 @@ $w.moreEvents = function(){
 /* eventPlan widget utilities */
 $w.eventplan = {
     init: function() {
-	
+	//init the notickets close button
+	$('#noTicketsModal #notifyMe a').click(function(e) {
+	    e.preventDefault();
+	    $('#noTicketsModal').modal('hide');
+	});
 
 	//every I'm Going button gets caught to display options overlay
 	$('.choose-event').click(function(e) {
 	    e.preventDefault();
-	    //prepare the modal form action
-	    $('form#wembliOptions').attr('action',$(this).attr('href'));
-	    $('#eventplanOptionsModal').modal('show');
+	    var me = this;
+	    //check if there are tickets for this event
+	    var eventId = me.id
+
+	    //get tix for this event
+	    wembli.event.getTickets({eventID:eventId},function(err,results) {
+		console.log(results);
+		if (results.tickets && results.tickets.length > 0) {
+		    //prepare the modal form action
+		    $('form#wembliOptions').attr('action',$(me).attr('href'));
+		    $('#eventplanOptionsModal').modal('show');
+		} else {
+		    $('#noTicketsModal').modal('show');
+		}
+	    });
 	});
 
 	$('button.more-info').click(function(e) {

@@ -18,6 +18,8 @@ module.exports = function(app) {
 	if (typeof req.session.ipinfo != "undefined") {
 	    args.nearZip = req.session.ipinfo.postal_code;
 	}
+	//clear the updateEvent session so searches start over
+	delete req.session.updateEvent;
 
 	//get nearby events:
         //ticketNetwork.SearchEvents({searchTerms:req.session.ipinfo.city,orderByClause:'Date'},

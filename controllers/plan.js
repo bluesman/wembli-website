@@ -85,6 +85,21 @@ module.exports = function(app) {
 	    //if they got to this step after completing a previous step
 	    //then mark that previous step as completed
 	    if (req.param("completed")) {
+		//add feed item saying this thing was completed
+		var feedName = req.param("completed") + 'Completed';
+		var action = {name:feedName};
+		var meta = {};
+		var activity = {action:action,
+				meta:meta,
+				time:Date.now()
+			       };
+		console.log('added feed: ');
+		console.log(activity);
+		if (typeof req.session.currentPlan.feed == "undefined") {
+		    req.session.currentPlan.feed = [activity];
+		} else {
+		    req.session.currentPlan.feed.push(activity);
+		}
 		req.session.currentPlan.completed[req.param("completed")] = true;
 	    }
 
@@ -146,6 +161,8 @@ module.exports = function(app) {
 		} else {
 
 		    ticketNetwork.GetTickets({eventID: req.session.currentPlan.event.ID},function(err,tickets) {
+			console.log('tickets in plan.js');
+			console.log(tickets);
 			res.render('tickets', {
 			    title:'wembli.com - tickets.',
 			    page:'tickets',
@@ -480,6 +497,7 @@ module.exports = function(app) {
 	    req.session.redirectUrl = req.url;
 	    //req.session.redirectMsg = 'Successfully logged in and saved your work.';
 
+
 	    //set friend in the session
 	    if (req.param('guid') && req.param('token') && req.param('action')) {
 		if (!_setFriend({req:req,action:req.param('action'),countView:true})) {
@@ -510,13 +528,34 @@ module.exports = function(app) {
 
 	    //render the appropriate view
 	    if (req.session.isOrganizer) {
-		return res.render('organizer-view', {
-		    title: 'wembli.com - View Event Plan.',
-		    layoutContainer: true,
-		    page:'organizer',
-		    cssIncludes: [],
-		    jsIncludes: ['/js/organizer-view.js']
-		});
+		//if is organizer and voting is not yet completed and there's only 1 ticket option
+		//set voting automatically to completed
+		if (!req.session.currentPlan.completed.voting && (Object.keys(req.session.currentPlan.tickets).length == 1)) {
+		    console.log('theres only 1 ticket');
+		    req.session.currentPlan.completed.voting = true;
+		    //set this ticket option to finalChoice
+		    for (var idx in req.session.currentPlan.tickets) {
+			req.session.currentPlan.tickets[idx].finalChoice = true;
+		    }
+		    req.session.customer.saveCurrentPlan(req.session.currentPlan, function() {
+			return res.render('organizer-view', {
+			    title: 'wembli.com - View Event Plan.',
+			    layoutContainer: true,
+			    page:'organizer',
+			    cssIncludes: [],
+			    jsIncludes: ['/js/organizer-view.js']
+			});
+		    });
+		} else {
+		    return res.render('organizer-view', {
+			title: 'wembli.com - View Event Plan.',
+			layoutContainer: true,
+			page:'organizer',
+			cssIncludes: [],
+			jsIncludes: ['/js/organizer-view.js']
+		    });
+		}
+
 	    } else {
 		console.log('not organizer rendering friend view');
 		if ((typeof req.session.friend.payment != "undefined") && (req.session.friend.payment.payKey)) {

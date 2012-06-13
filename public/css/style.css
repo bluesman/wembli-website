@@ -351,6 +351,7 @@ footer .span3 div {
   background-position: -27px 0;
 }
 .event-list {
+  min-height: 600px;
   background-color: #f2f2f2;
   padding: 15px;
   border-bottom: 1px solid #CCC;
@@ -382,33 +383,6 @@ footer .span3 div {
   margin: 0 10px 0 75px;
   line-height: 15px;
 }
-.event-list.span4 ul li p.info {
-  width: 125px;
-}
-.event-list.span5 ul li p.info {
-  width: 205px;
-}
-.event-list.span6 ul li p.info {
-  width: 285px;
-}
-.event-list.span7 ul li p.info {
-  width: 365px;
-}
-.event-list.span8 ul li p.info {
-  width: 445px;
-}
-.event-list.span9 ul li p.info {
-  width: 525px;
-}
-.event-list.span10 ul li p.info {
-  width: 605px;
-}
-.event-list.span11 ul li p.info {
-  width: 685px;
-}
-.event-list.span12 ul li p.info {
-  width: 765px;
-}
 .event-list ul li p.cta {
   float: right;
   text-align: right;
@@ -416,6 +390,39 @@ footer .span3 div {
 .event-list ul li p.cta em {
   display: block;
   margin-top: 5px;
+}
+.event-list #searchBox {
+  margin: 0 0 20px 0;
+}
+.event-list #searchBox #searchForm input#q {
+  font-size: 22px;
+}
+.event-list .span4 ul li p.info {
+  width: 125px;
+}
+.event-list .span5 ul li p.info {
+  width: 205px;
+}
+.event-list .span6 ul li p.info {
+  width: 285px;
+}
+.event-list .span7 ul li p.info {
+  width: 365px;
+}
+.event-list .span8 ul li p.info {
+  width: 445px;
+}
+.event-list .span9 ul li p.info {
+  width: 525px;
+}
+.event-list .span10 ul li p.info {
+  width: 605px;
+}
+.event-list .span11 ul li p.info {
+  width: 685px;
+}
+.event-list .span12 ul li p.info {
+  width: 765px;
 }
 .event-list #seeMore {
   display: block;
@@ -691,8 +698,15 @@ a#moreEvents:hover {
 #eventBuilderContainer #eventBuilder #event:after {
   clear: both;
 }
+#eventBuilderContainer #eventBuilder #event #changeEvent {
+  margin-right: 10px;
+}
 #eventBuilderContainer #eventBuilder #event a {
   color: #ffffff;
+  text-shadow: none;
+}
+#eventBuilderContainer #eventBuilder #event a:hover {
+  color: #ff6700;
 }
 #eventBuilderContainer #eventBuilder #event p {
   font-size: 11px;
@@ -1573,6 +1587,9 @@ p.note {
 #eventsContent:after {
   clear: both;
 }
+#eventsContent #topPerformers {
+  min-height: 360px;
+}
 #ticketsContent {
   *zoom: 1;
   background-color: #FFF;
@@ -1838,8 +1855,11 @@ p.note {
 }
 #dashboardContainer #feedContainer {
   background-color: #f2f2f2;
-  padding: 15px;
+  padding: 10px 0 0 15px;
   border-bottom: 1px solid #CCC;
+  position: relative;
+  top: -10px;
+  z-index: -1;
 }
 #dashboardContainer #feedContainer h3 {
   text-shadow: 1px 1px #b4b4b4;

@@ -55,14 +55,13 @@ module.exports = {
 	  - else 12/05/2012
 	*/
 	var s = parseInt(now - t);
-	console.log(s);
 
 	var dateStr = 'on ' + then.format('shortDate')+'.';
 
 	if (s <= 86400) {
 	    var dd = parseInt(s/3600);
 	    var sString = (dd == 1) ? '' : 's';
-	    dateStr = dd+' day'+sString+' ago.';
+	    dateStr = dd+' hour'+sString+' ago.';
 	}
 
 	if (s <= 3600) {
@@ -75,13 +74,19 @@ module.exports = {
 	    var sString = (s == 1) ? '' : 's';
 	    dateStr = parseInt(s)+' second'+sString+' ago.';
 	}
-
+	console.log('feed: '+f.action.name);
 	switch (f.action.name) {
 	case 'initPlan':
 	    return 'created a new plan '+dateStr;
 	    break;
 	case 'updatePlan':
 	    return 'updated a plan '+dateStr;
+	    break;
+	case 'removePlan':
+	    return 'removed a plan '+dateStr;
+	    break;
+	case 'friendsCompleted':
+	    return 'changed an invite list '+dateStr;
 	    break;
 	}
 	return '';

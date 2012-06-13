@@ -6,6 +6,8 @@
 		.alert.alert-info Wembli makes it easy to plan the perfect outing.
 		form#wembliOptions.well.form-horizontal(method="POST",action="#")
 			input(type="hidden",name="setConfig",value="1")
+			- if (session.updateEvent) 
+				input(type="hidden",name="updateEvent",value="1")
 			a.planOption
 				input(type="radio",value="group",name="payment",checked="checked")
 				.info I'm coordinating this outing with friends and we're splitting the bill.

@@ -1,5 +1,6 @@
 var wembliModel = require('wembli-model');
 var Customer = wembliModel.load('customer');
+var Feed          = wembliModel.load('feed');
 var redis = require("redis"),
     redisClient = redis.createClient();
 
@@ -103,14 +104,33 @@ exports.eventplan = {
 			continue;
 		    }
 		    if (customer.eventplan[idx].config.guid == guid) {
+			var plan = customer.eventplan[idx];
 			good = true;
 			console.log('match');
 			customer.eventplan[idx].config.deleted = true;
 			customer.markModified('eventplan');
 			customer.save(function(err) {
 			    if (err) { return _respond(err,null,null,me); }
-			    var plan = customer.eventplan[idx];
-			    return _respond(null,null,req,me);
+			    Feed.findOne({guid:plan.config.guid},function(err,feed) {
+				if (!err && feed) {
+				    var action = {name:'removePlan'};
+				    var meta = {};
+				    var actor = {name:customer.first_name+' '+customer.last_name,
+						 keyName:'organizer',
+						 keyValue:'organizer'};
+
+				    var activity = {action:action,
+						    actor:actor,
+						    meta:meta,
+						    time:Date.now()
+						   };
+				    feed.activity.push(activity);
+				    feed.markModified('activity');
+				    feed.save(function(err) {
+					return _respond(null,null,req,me);
+				    });
+				}
+			    });
 			});
 		    }
 		}

@@ -45,8 +45,9 @@ module.exports = function(app) {
             if (dbToken == req.params[1]) {             
                 //set customer to confirmed so they can access the dashboard                                         
                 req.session.customer.confirmed = true;  
-                req.session.customer.save();            
-                return res.redirect( '/dashboard' );    
+                req.session.customer.save(function(err) {
+                    return res.redirect( '/dashboard' );
+		});
             } else {              
                 //some sort of hackery is going down - gtfo                                                          
                 return res.render('dashboard/confirm', {
@@ -88,26 +89,50 @@ module.exports = function(app) {
 		});
 	    }
 
+	    //clear the updateEvent session so searches start over
+	    delete req.session.updateEvent;
 
 	    Customer.findPlansByFriend(req.session.customer,function(err,attending) {
 		//get activity feed
-		var guids = ((typeof req.session.currentPlan.config != "undefined") && req.session.currentPlan.config.guid) ? [req.session.currentPlan.config.guid] : [];
+		var guids = [];
 		for (idx in attending) {
 		    var p = attending[idx];
 		    guids.push(p.config.guid);
 		}
 
+		//pull out deleted events from the customer eventplan
+		var planning = [];
+		for (idx in req.session.customer.eventplan) {
+		    var plan = req.session.customer.eventplan[idx];
+		    if ((typeof plan.config != "undefined") && (typeof plan.config.deleted == "undefined" || !plan.config.deleted)) {
+			planning.push(plan);
+		    }
+		    //use all guids deleted or not for activity feed
+		    if (typeof plan.config != "undefined") {
+			console.log('pushing guid:'+plan.config.guid);
+			guids.push(plan.config.guid);
+		    }
+		}
+		console.log(planning);
+
 		Feed.find({guid:{$in:guids}},function(err,feeds) {
+		    console.log(feeds);
 		    var feed = [];
+		    //merge the activities from all the feeds for guids attending
 		    for (idx2 in feeds) {
 			wembliUtils.merge(feed,feeds[idx2].activity);
 		    }
-		    //sort by feed el date_created
+		    //sort by feed el date_created - might be better to sort this by time
 		    feed.sort(function(a,b) {
+			/* this is to sort by date created (iso date)
 			var aDate = new Date(a.date_created);
 			var aTime = aDate.getTime();
 			var bDate = new Date(b.date_created);
 			var bTime = bDate.getTime();
+			*/
+			//sort by activity.time
+			var aTime = a.time;
+			var bTime = b.time;
 			if (aTime < bTime) {
 			    return 1;
 			}
@@ -117,15 +142,9 @@ module.exports = function(app) {
 			return 0;
 		    });
 
-		    //pull out deleted events from the customer eventplan
-		    var planning = [];
-		    for (idx in req.session.customer.eventplan) {
-			var plan = req.session.customer.eventplan[idx];
-			if ((typeof plan.config != "undefined") && (typeof plan.config.deleted == "undefined" || !plan.config.deleted)) {
-			    planning.push(plan);
-			}
-		    }
-		    console.log(planning);
+		    //only keep the last 10 feed items
+		    feed = feed.slice(0,10);
+
 		    res.render('dashboard/index', {
 			cssIncludes: [],
 			jsIncludes: ['/js/dashboard.js'],
