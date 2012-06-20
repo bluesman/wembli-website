@@ -1108,6 +1108,9 @@ p.note {
   font-weight: bold;
   font-size: 14px;
 }
+.planViewContainer #contribution .body {
+  padding: 10px;
+}
 #planViewOrganizerContainer #dashboardSidebar {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;

@@ -2,7 +2,13 @@
 	#mainContainer.row
 		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 		#left.span8
-			#itineraryContainer This is the itinerary.
+			#contribution.module
+				h3 Contribution
+				.body
+					- if (typeof session.friend != "undefined")
+						- if (typeof session.friend.payment != "undefined" && session.friend.payment.payment)
+							p #{session.friend.first_name}, you've contributed #{session.friend.payment.contribution} towards this plan.
+			include includes/plan-view/tickets
 			#wallContainer
 				div(class="fb-comments",data-href="http://#{getAppSettings().host}.wembli.com/plan/view/#{plan.config.guid}",data-num-posts="6",data-width="620")
 		#right.span4
