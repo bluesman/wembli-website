@@ -273,7 +273,7 @@ this.Model = function(mongoose) {
 		//if there's a fbId for this customer get all the friends that have this as an id
 		var query = Customer.find();
 		query.where('eventplan.friends').elemMatch(function(elem) {
-		    elem.where('email',friend.email);
+		    elem.where('email',/friend.email/i);
 		});
 		query.exec(function(err,res) {
 		    if (err) {

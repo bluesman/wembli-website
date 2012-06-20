@@ -294,6 +294,14 @@ module.exports = function(app) {
 		    req.session.isOrganizer = false;
 		    req.session.currentPlan = c.eventplan[i]
 		    req.session.organizer = c;
+		    //get first name/lastname email for form prefill
+		    var f = {};
+		    for (id in req.session.currentPlan.friends) {
+			//if the friend has a token and it matches the token param
+			if ((typeof req.session.currentPlan.friends[id].token != "undefined") && (req.session.currentPlan.friends[id].token.token == req.param('token'))) {
+			    f = req.session.currentPlan.friends[id];
+			}
+		    }
 		    return res.render('public-view', {
 			layoutContainer:true,
 			action:req.param('action'),
@@ -301,7 +309,8 @@ module.exports = function(app) {
 			page:'public',
 			token:req.param('token'),
 			cssIncludes: [],
-			jsIncludes: ['/js/public-view.js']
+			jsIncludes: ['/js/public-view.js'],
+			friend:f
 		    });
 		}
 	    }
