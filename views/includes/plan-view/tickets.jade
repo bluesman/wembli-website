@@ -1,6 +1,8 @@
 venueMapUrl  = '/plan/tickets/'+plan.config.guid;
 venueMapText = 'View Tickets On Venue Map';
 ticket = finalTicketChoice 
+- if (typeof rowClass == "undefined")
+	- rowClass = '';
 #ticketsContainer.planOptions.module
 	h3 Plan
 		a#ticketsIcon(href="#")
@@ -25,10 +27,11 @@ ticket = finalTicketChoice
 						button#buyTickets.btn.btn-success Buy Tickets
 				.ticket-price-box
 					include ../ticket-price-box
-				.votingProgress.pull-left
-					.progress
-						.bar(style="width:#{votePct}%")
-					.voteCnt
-						em!= voteCntStr
+				if (typeof votePct != "undefined")
+					.votingProgress.pull-left
+						.progress
+							.bar(style="width:#{votePct}%")
+						.voteCnt
+							em!= voteCntStr
 				include ticket/cost-breakdown
 					
