@@ -272,8 +272,9 @@ this.Model = function(mongoose) {
 	    var getByEmail = function(cb2) {
 		//if there's a fbId for this customer get all the friends that have this as an id
 		var query = Customer.find();
+		console.log(',atching for: '+friend.email);
 		query.where('eventplan.friends').elemMatch(function(elem) {
-		    elem.where('email',friend.email);
+		    elem.where('email',new RegExp('^'+friend.email+'$', "i"));
 		});
 		query.exec(function(err,res) {
 		    if (err) {
@@ -287,7 +288,12 @@ this.Model = function(mongoose) {
 				var keep = false;
 				for (var idx2 in plan.friends) {
 				    var f = plan.friends[idx2];
-				    if ((typeof f.email != "undefined") && (f.email == friend.email)) {
+				    if (f.email) {
+					console.log('is f '+friend.email.toUpperCase());
+				    }
+				    if ((typeof f.email != "undefined") && (f.email.toUpperCase() == friend.email.toUpperCase())) {
+					console.log('yes');
+					console.log(f);
 					plan.friends[idx2].me = true;
 					plans.push(plan);
 					break;
