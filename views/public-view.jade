@@ -3,11 +3,44 @@
 		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
 		#left.span8
 			#upsell.module
-				h3 Welcome
+				h3 New To Wembl? Sign Up Here To See Your Invitation
 					a#welcomeIcon(href="#")
 						i.icon-star.pull-right.icon-white
 				.body
-					.welcome.well Welcome to Wembli! Please login to view this plan.
+					#message.alert.alert-info.hide
+					form#signup.well.form-horizontal(method="POST",action="/signup")
+						div(style="text-align:center")
+							a#facebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Connect With Facebook 
+						hr
+						strong Sign Up without Facebook: 
+							- if (typeof errors != "undefined" && errors.length > 0)
+								span.error #{errors[0]}
+						br
+						br
+						input.redirect-url(type="hidden",name="redirectUrl",value="")
+						fieldset
+							.control-group
+								label.control-label(for="firstName") First Name
+								.controls
+									input#firstName(name="first_name",value="#{friend.firstName}")
+							.control-group
+								label.control-label(for="lastName") Last Name
+								.controls
+									input#lastName(name="last_name",value="#{friend.lastName}")
+							.control-group
+								label.control-label(for="email") Email Address
+								.controls
+									input#email(name="email",value="#{friend.email}")
+							.control-group
+								label.control-label(for="password") Password
+								.controls
+									input#password(type="password",name="password")
+							.control-group
+								label.control-label(for="password2") Confirm Password
+								.controls
+									input#password2(type="password",name="password2")
+							.form-actions
+								button.btn.btn-primary.btn-large(type="submit").right Sign Up
 		#right.span4
 			#publicLogin.module
 				h3 Login
@@ -25,7 +58,7 @@
 							.control-group
 								label.control-label(for="email") Email:
 								.controls
-									input#publicEmail(type="text",value=(session.remember ? params.email : null),name="email")
+									input#publicEmail(type="text",value=(session.remember ? params.email : friend.email),name="email")
 							.control-group
 								label.control-label(for="password") Password:
 								.controls
@@ -37,7 +70,6 @@
 							.form-actions
 								a#publicForgotPasswordLink(href="#forgotPasswordModal",data-toggle="modal") forgot your password?
 								button#publicLoginSubmitButton.btn.btn-primary.btn-large Login
-					a#publicSignupLink(data-toggle="modal",href="#signupModal") New to Wembli? Click here to Sign Up.
 			script
 				$(document).ready(function() {
 					$('#publicForgotPasswordLink').click(function(e) {
