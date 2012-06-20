@@ -63,6 +63,12 @@ this.Model = function(mongoose) {
     });
 
     Customer.pre('save',function(next) {
+	console.log('customer email is: '+this.email);
+	//if no email throw an error
+	if (!this.email) {
+	    return next(new Error('error - no email for customer'));
+	}
+
 	this.last_modified = new Date();
 	console.log('pre save');
 	next();
@@ -74,6 +80,8 @@ this.Model = function(mongoose) {
 
     Customer.methods.saveCurrentPlan = function(plan,callback) {
 	var c = this;
+	console.log('customer model');
+	console.log(plan);
 	//plan must have a config.organizer
 	if (typeof plan.config.organizer == "undefined") {
 	    console.log('plan does not have an organizer..not saving it..');
@@ -84,7 +92,6 @@ this.Model = function(mongoose) {
 	    }
 
 	}
-
 	//if the organizer email for plan is not c.email gtfo
 	if (plan.config.organizer != c.email) {
 	    console.log('organizer is not the customer');

@@ -530,7 +530,7 @@ module.exports = function(app) {
 	    if (req.session.isOrganizer) {
 		//if is organizer and voting is not yet completed and there's only 1 ticket option
 		//set voting automatically to completed
-		if (!req.session.currentPlan.completed.voting && (Object.keys(req.session.currentPlan.tickets).length == 1)) {
+		if (!req.session.currentPlan.completed.voting && ((req.session.currentPlan.tickets) && Object.keys(req.session.currentPlan.tickets).length == 1)) {
 		    console.log('theres only 1 ticket');
 		    req.session.currentPlan.completed.voting = true;
 		    //set this ticket option to finalChoice
