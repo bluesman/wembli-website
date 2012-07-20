@@ -78,23 +78,28 @@ html
   - if ("undefined" !== typeof jsIncludes)
     - each file in jsIncludes
       script(type="text/javascript", src="#{file}")
-  script(src="http://www.jotform.com/min/?g=feedback2", type="text/javascript")
+  script(src="https://jotform.us/min/?g=feedback2", type="text/javascript")
   script(type="text/javascript")
-    new JotformFeedback({
-        formId      : "20908727421150",
-        buttonText  : "Feedback",
-        windowTitle : "Mark up the screenshot to describe a problem or suggestion",
-        base        : "http://jotform.us/",
-        background  : "#FF6700",
-        fontColor   : "#FFFFFF",
-        buttonSide  : "left",
-        buttonAlign : "bottom",
-        type        : false,
-        width       : 280,
-        height      : 420,
-        instant     : true
-    });
+    var uvOptions = {};
+    (function() {
+      var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+      uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/knxWmtXUBCcgrlednerg.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+    })();
     /*
+    new JotformFeedback({
+      formId        : "21788451352154",
+      buttonText    : "Feedback",
+      base        : "http://jotform.us/",
+      background    : "#Ff6700",
+      fontColor    : "#FFFFFF",
+      buttonSide    : "left",
+      buttonAlign    : "center",
+      type        : false,
+      width        : 240,
+      height        : 533,
+      instant        : true
+    });
     new JotformFeedback({
         formId      : "20908662122146",
         buttonText  : "Send Feedback",

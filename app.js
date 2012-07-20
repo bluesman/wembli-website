@@ -29,19 +29,17 @@ if (process.env.NODE_ENV == 'development') {
     app.set('fbAppSecret','ce9779873babc764c3e07efb24a34e69');
     app.set('host','tom');
 }
-if (process.env.NODE_ENV == 'rob') {
-    port = 8888;
-}
+
 if (process.env.NODE_ENV == 'production2') {
     port = 8002;
 }
+
 if (process.env.NODE_ENV == 'secure') {
     port = 8010;
     app.set('secure',true);
     app.set('host','beta');
     
 }
-
 var wembliEveryauth  = require('./lib/wembli/everyauth.js');
 //init the openauth thing
 wembliEveryauth.init(everyauth);
