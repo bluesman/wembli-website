@@ -1,4 +1,5 @@
 var ticketNetwork = require('../lib/wembli/ticketnetwork');
+var async = require('async');
 
 exports.event = {
     get: function(args,req,res) {
@@ -14,11 +15,26 @@ exports.event = {
 	    if (err) {
 		return me(err);
 	    }
-	    
-	    console.log(results);
-	    me(null,{success:1,
-		     event:results.Event});
 
+	    var events = results.Event;
+	    var cb = function() {
+		console.log(events);
+		me(null,{success:1,
+			 event:events});
+	    };
+	    
+	    async.forEach(events,function(item,callback) {
+		//get the ticket pricing info for this event
+		ticketNetwork.GetPricingInfo({eventID:item.ID},function(err,results) {
+		    if (err) {
+			callback(err);
+		    } else {
+			console.log(results);
+			item.TicketPricingInfo = results;
+			callback();
+		    }
+		});
+	    },cb);
 	});
     },
     getTickets: function(args,req,res) {

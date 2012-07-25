@@ -1,4 +1,5 @@
-var ticketNetwork = require('wembli/ticketnetwork');
+var ticketNetwork = require('../../lib/wembli/ticketnetwork');
+var async = require('async');
 
 require('date-utils');
 
@@ -36,18 +37,37 @@ module.exports = function(app) {
 	if (req.param.q) {
 	    req.session.lastSearch = req.param.q;
             ticketNetwork.SearchEvents({searchTerms:req.param.q,whereClause:whereClause,orderByClause:'Date'},function(err,results) {
-		res.render('events',{
-		    layoutContainer:true,
-		    session: req.session,
-		    q: req.param.q,
-		    param: req.param,
-		    cssIncludes: [],
-		    jsIncludes: [],
-		    title: 'wembli.com - events.',
-		    page:'tickets',
-                    events: results.Event,
-		});
-            });
+		var events = results.Event;
+
+		var renderCb = function() {
+		    
+		    res.render('events',{
+			layoutContainer:true,
+			session: req.session,
+			q: req.param.q,
+			param: req.param,
+			cssIncludes: [],
+			jsIncludes: [],
+			title: 'wembli.com - events.',
+			page:'tickets',
+			events: events,
+		    });
+		};
+		async.forEach(events,function(item,callback) {
+		    //get the ticket pricing info for this event
+		    ticketNetwork.GetPricingInfo({eventID:item.ID},function(err,results) {
+			if (err) {
+			    callback(err);
+			} else {
+			    console.log(results);
+			    item.TicketPricingInfo = results;
+			    callback();
+			}
+		    });
+		},renderCb);
+				    
+		
+	    });
 	} else {
             var d = Date.today();
 	    d2 = new Date ( d );
@@ -61,17 +81,36 @@ module.exports = function(app) {
 	    }
 
             ticketNetwork.GetEvents(args,function(err,results) {
-		res.render('events',{
-		    layoutContainer:true,
-		    session: req.session,
-		    q: req.param.q,
-		    param: req.param,
-		    cssIncludes: [],
-		    jsIncludes: [],
-		    title: 'wembli.com - events.',
-		    page:'tickets',
-                    events: results.Event,
-		});
+		var events = results.Event;
+
+		var renderCb = function() {
+		    res.render('events',{
+			layoutContainer:true,
+			session: req.session,
+			q: req.param.q,
+			param: req.param,
+			cssIncludes: [],
+			jsIncludes: [],
+			title: 'wembli.com - events.',
+			page:'tickets',
+			events: events
+		    });
+		};
+
+		async.forEach(events,function(item,callback) {
+		    //get the ticket pricing info for this event
+		    ticketNetwork.GetPricingInfo({eventID:item.ID},function(err,results) {
+			if (err) {
+			    callback(err);
+			} else {
+			    console.log(results);
+			    item.TicketPricingInfo = results;
+			    callback();
+			}
+		    });
+		},renderCb);
+		
+
             });
 
 	}

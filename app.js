@@ -79,7 +79,8 @@ app.configure(function(){
     app.use(express.methodOverride());
     app.use(require('./lib/wembli/secure'));
     app.use(require('./lib/wembli/eventplan'));
-    app.use(require('./lib/wembli/geoip'));
+    //app.use(require('./lib/wembli/geoip'));
+    app.use(require('./lib/wembli/ipinfodb'));
     app.use(app.router);
 });
 

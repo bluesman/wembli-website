@@ -27,9 +27,17 @@ p.info
 		span.changeEvent.block
 			a#changeEvent(href="/events/search/#{lastSearch}") Change Event
 - if (typeof cta == "undefined" || cta !== false)
-	p.cta
+	p.cta.center
 		a.choose-event.btn.btn-primary(id="#{event.ID}",href="/event/"+event.ID+"/"+event.Name+"#eventBuilder") Plan It!
-		- // don't have this info right now: em 300 tickets from $27
+		- if (typeof event.TicketPricingInfo != "undefined")
+			- if (event.TicketPricingInfo.ticketsAvailable == '0')
+				em.orange No tix available
+			- else
+				em.ticketsAvailable #{event.TicketPricingInfo.ticketsAvailable} tix
+				- if (event.TicketPricingInfo.lowPrice == event.TicketPricingInfo.highPrice)
+					em.priceRange from $#{parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)}
+				- else
+					em.priceRange ($#{parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)} - $#{parseFloat(event.TicketPricingInfo.highPrice).toFixed(0)})
 span.event-date-box
 	span.day!=        date.format("ddd")
 	span.event-date!= date.format("mmm d")

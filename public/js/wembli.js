@@ -172,6 +172,15 @@ $w.moreEvents = function(){
 			template.find('.event-date-box .day').html(day);
 			template.find('.event-date-box .event-date').html(eventDate);
 			template.find('.event-date-box .time').html(time);
+			var tixAvail = event.TicketPricingInfo.ticketsAvailable + ' tickets';
+			template.find('.cta .ticketsAvailable').html(tixAvail);
+			if (event.TicketPricingInfo.lowPrice == event.TicketPricingInfo.highPrice) {
+			    var priceRange = 'from $'+parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0);
+			} else {
+			    var priceRange = '($'+parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)+' - $'+parseFloat(event.TicketPricingInfo.highPrice).toFixed(0)+')';
+			}
+			template.find('.cta .priceRange').html(priceRange);
+
 			$('#belowFold ul').append(template);
 		    }
 		    //update the last date hidden field

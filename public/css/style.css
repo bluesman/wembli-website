@@ -385,7 +385,7 @@ footer .span3 div {
 }
 .event-list ul li p.cta {
   float: right;
-  text-align: right;
+  text-align: center;
 }
 .event-list ul li p.cta em {
   display: block;
