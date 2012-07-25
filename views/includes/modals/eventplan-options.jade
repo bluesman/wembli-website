@@ -3,7 +3,7 @@
 		a.close(data-dismiss="modal") x
 		h3 Start Planning!
 	.modal-body
-		.alert.alert-info Wembli makes it easy to plan the perfect outing.
+		.alert.alert-info Share the cost with friends or pay for it all yourself?
 		form#wembliOptions.well.form-horizontal(method="POST",action="#")
 			input(type="hidden",name="setConfig",value="1")
 			- if (session.updateEvent) 
@@ -11,10 +11,12 @@
 			a.planOption
 				input(type="radio",value="group",name="payment",checked="checked")
 				.info I'm coordinating this outing with friends and we're splitting the bill.
+				.moreInfo (Friends deposit their share of the cost into your PayPal account)
 			hr
 			a.planOption
 				input(type="radio",value="self",name="payment")
 				.info I'm planning this outing and footing the bill.
+				.moreInfo (You pay up front and get reimbursed later...maybe)
 			hr
 			.comingSoon
 				strong COMING SOON:

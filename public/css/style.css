@@ -467,6 +467,11 @@ footer .span3 div {
 #wembliOptions a.planOption .info {
   margin-left: 40px;
 }
+#wembliOptions a.planOption .moreInfo {
+  margin-left: 40px;
+  font-size: 12px;
+  color: #000000;
+}
 #wembliOptions .comingSoon {
   padding: 20px 0;
 }
