@@ -79,8 +79,7 @@ app.configure(function(){
     app.use(express.methodOverride());
     app.use(require('./lib/wembli/secure'));
     app.use(require('./lib/wembli/eventplan'));
-    //app.use(require('./lib/wembli/geoip'));
-    app.use(require('./lib/wembli/ipinfodb'));
+    app.use(require('./lib/wembli/geoip'));
     app.use(app.router);
 });
 
@@ -103,24 +102,18 @@ app.configure('development',function() {
 
 // Controllers
 require('./controllers/plan')(app);
-require('./controllers/style-guide')(app);
-require('./controllers/more-info')(app);
 require('./controllers/index')(app);
 require('./controllers/dashboard')(app);
 require('./controllers/login')(app);
 require('./controllers/forgot-password')(app);
 require('./controllers/signup')(app);
 require('./controllers/logout')(app);
-require('./controllers/research')(app);
 require('./controllers/events')(app);
 require('./controllers/event-builder')(app);
 require('./controllers/friends')(app);
 require('./controllers/hotels')(app);
 require('./controllers/parking')(app);
 require('./controllers/restaurants')(app);
-require('./controllers/test')(app);
-require('./controllers/beta-signup')(app);
-require('./controllers/fanvenues')(app);
 require('./controllers/callback/sendgrid')(app);
 require('./controllers/callback/paypal')(app);
 
