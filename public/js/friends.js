@@ -57,6 +57,9 @@
 	    //add the filter function
 	    $('#fbFilter').keyup(function(e) {
 		var val = $(this).val();
+		if (val.length <= 2) {
+		    return;
+		}
 		var r = new RegExp("^"+val,"i");
 		var show = [];
 		var hide = [];
