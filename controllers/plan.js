@@ -137,7 +137,7 @@ module.exports = function(app) {
 		    page:'tickets',
 		    tickets:tix,
 		    cssIncludes: [],
-		    //jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js','/js/tickets.js']
+		    //jsIncludes: ['/js/venue.js','/js/tickets.js']
 		    jsIncludes: ['/js/tickets.js']
 		});
 	    }
@@ -156,7 +156,7 @@ module.exports = function(app) {
 			page:'tickets',
 			tickets:tix,
 			cssIncludes: [],
-			jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js','/js/tickets.js']
+			jsIncludes: ['/js/tickets.js']
 		    });
 		} else {
 
@@ -168,7 +168,7 @@ module.exports = function(app) {
 			    page:'tickets',
 			    tickets:tickets.TicketGroup?tickets.TicketGroup:[],
 			    cssIncludes: [],
-			    jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js','/js/tickets.js']
+			    jsIncludes: ['/js/tickets.js']
 			});
 		    });
 		}
@@ -183,7 +183,7 @@ module.exports = function(app) {
 		    page:'tickets',
 		    tickets:tix,
 		    cssIncludes: [],
-		    jsIncludes: ['http://maps.google.com/maps/api/js?v=3.3&sensor=false','/js/jquery.fanvenues.js','/js/venue.js','/js/tickets.js']
+		    jsIncludes: ['/js/venue.js','/js/tickets.js']
 		});
 	    }
 	};
