@@ -1,1 +1,1 @@
-/wembli/jquery-cookie/jquery.cookie.js
+/production/jquery-cookie/jquery.cookie.js
