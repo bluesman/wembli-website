@@ -1,45 +1,21 @@
-header.navbar
-	.navbar-inner
-		.container
-			- var errors = req.flash('error');
-			- var infos  = req.flash('info');
-			- console.log(infos.length);
-			- if (errors.length > 0 || infos.length > 0) 
-				#flashContainer
-					- for error in errors
-						-	console.log(error);
-						.flash-error.flash.alert
-							a.close(data-dismiss="alert") x
-							strong Warning! 
-							span!= error
-					- for info in infos
-						-	console.log(info);
-						.flash-info.flash.alert.alert-success
-							a.close(data-dismiss="alert") x
-							strong Info: 
-							span!= info
-			- else
-				#flashContainer
-					.flash-error.flash.alert.alert-success.hide
-					.flash-info.flash.alert.hide
-			#stripeShadowLeft.stripeShadow.hidden
-			a#logo.seo(href="/")
-			#stripeShadowRight.stripeShadow
-			ul#utility
-				li#followUs.tunga Follow Us
-				li 
-					a#fbIcon(href="http://www.facebook.com/pages/Wembli/283576331690548", target="_blank")
-				li.last
-					a#twitterIcon(href="http://www.twitter.com/wembli", target="_blank")
-			nav#nav
-				ul.nav
-					- var pageId = (typeof page == "undefined") ? 'none' : page;
-					- each tab in tabs
-						li
-							- if (tab.name == pageId)
-								a.active(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
-							- else
-								a(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
+header.container
+	a#logo.seo(href="/")
+	ul#utility
+		li#followUs.tunga Follow Us
+		li
+			a#fbIcon(href="http://www.facebook.com/pages/Wembli/283576331690548", target="_blank")
+		li.last
+			a#twitterIcon(href="http://www.twitter.com/wembli", target="_blank")
+	ul#nav
+		- var pageId = (typeof page == "undefined") ? 'none' : page;
+		- tabs = locals.tabs(req,res)
+		- console.log(tabs)
+		- each tab in	tabs
+			li
+				- if (tab.name == pageId)
+					a.active(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
+				- else
+					a(href="#{tab.url}",data-toggle="#{tab.modal}") #{tab.label}
 include modals/signup
 include modals/login
 include modals/forgot-password

@@ -2,20 +2,20 @@
 	- var errors = req.flash('confirm-error');
 	- var infos  = req.flash('confirm-info');
 	- console.log(infos.length);
-	- if (errors.length > 0 || infos.length > 0) 
+	- if (errors.length > 0 || infos.length > 0)
 		#flashContainer
 			- for error in errors
 				-	console.log(error);
 				.flash-error.flash.alert
 					a.close(data-dismiss="alert") x
-					strong Warning! 
+					strong Warning!
 					span!= error
 			- for info in infos
 				-	console.log(info);
 				.flash-info.flash.alert.alert-success
 					a.close(data-dismiss="alert") x
 					span!= info
-	h3 waiting for email confirmation from #{session.customer.email}
+	h3 waiting for email confirmation from #{req.session.customer.email}
 	.generalError.error.yellow
 	- if((typeof errors !== 'undefined') && (errors.expiredToken) )
 		| Your confirmation email token has expired, please click below to send a new one.

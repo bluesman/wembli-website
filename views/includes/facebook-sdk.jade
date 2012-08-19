@@ -9,12 +9,12 @@ script(type="text/javascript")
      ref.parentNode.insertBefore(js, ref);
   }(document));
   window.fbAsyncInit = function() {
-    var loggedIn = #{session.loggedIn}
+    var loggedIn = #{req.session.loggedIn}
     FB.init({
       appId      : #{fbCredentials.appId},
       channelUrl : '#{fbCredentials.host}.wembli.com/fbchannel', // Channel File
       status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the session
+      cookie     : true, // enable cookies to allow the server to access the req.session
       xfbml      : true,  // parse XFBML
       oauth      : true
     });

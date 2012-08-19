@@ -1,9 +1,0 @@
-include ../includes/modals/eventplan-options
-include ../includes/modals/no-tickets
-h3!= heading
-ul
-	- if (events && events.length > 0) 
-		- each event in events
-			li!= partial("includes/event",{event:event});
-	- else
-		li No Events Found.

@@ -16,17 +16,17 @@ labelIcon    = 'icon-question-sign';
 .friendContainer
 	.friend.clearfix(class="#{rowClass}",id="#{htmlId}")
 		include friend/friend-info
-		- if (session.isOrganizer)
-			- if ((typeof friend.addMethod == "undefined") || (friend.addMethod == 'facebook')) 
+		- if (req.session.isOrganizer)
+			- if ((typeof friend.addMethod == "undefined") || (friend.addMethod == 'facebook'))
 				include friend/invitation-facebook-status
 			- else
 				include friend/invitation-email-status
-			- if (session.currentPlan.config.payment != 'self')
-				- if ((typeof friend.addMethod == "undefined") || (friend.addMethod == 'facebook')) 
+			- if (req.session.currentPlan.config.payment != 'self')
+				- if ((typeof friend.addMethod == "undefined") || (friend.addMethod == 'facebook'))
 					include friend/payment-facebook-status
 				- else
 					include friend/payment-email-status
 			- if (friend.payment && friend.payment.payment)
 				include friend/payment-amount
 	//- include friend/popover
-	
+

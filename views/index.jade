@@ -1,75 +1,14 @@
-#homeContent
-	h1 The free and easy way for friends to plan, coordinate and split the cost of going to live events.
-	#circles
-		#step1Circle.homeCircle
-			#step1Icon.stepIcon
-		#step2Circle.homeCircle
-			#step2Icon.stepIcon
-		#step3Circle.homeCircle
-			#step3Icon.stepIcon
-	#steps
-		section#step1
-			h3 Choose an Event
-			#step1Info.tunga.hidden Find an event by performer, city, venue or team then invite a friend or two...or ten!
-		section#step2
-			h3 Coordinate Details
-			#step2Info.tunga.hidden Build the plan yourself or invite your friends to vote on which seats, parking, restaurants or hotel they like best.
-		section#step3
-			h3 Split the Cost
-			#step3Info.tunga.hidden Everyone who's going deposits their share in your event account and you never get stuck with a bill you didn't expect to pay.
-	include widgets/search-box
-	#belowFold
-		- var heading = 'Upcoming Events';
-		- if (typeof session.ipinfo.city != "undefined")
-			- heading += ' near '+session.ipinfo.city;
-		.event-list.span6.offset1!= partial("widgets/event-list",{heading: heading,events:events});
-			- var url = "/events/search/"
-			- if (session.ipinfo.city)
-				- url += session.ipinfo.city+"/"
-			- url += Date.today().format("mm-dd-yy")
-			a#moreEvents(href="#{url}")
-				input(type="hidden",id="moreEventsZipCode",value="#{session.ipinfo.postal_code}")
-				- if (events.length > 0)
-					- var d = new Date(Date.parse(events[events.length-1].Date))
-					- var lastDate = d.format("mm-dd-yy")
-					input(type="hidden",id="moreEventsBeginDate",value="#{lastDate}")
-					span See more events 
-					- if (session.ipinfo.city)
-						span.lowercase!= 'near '+session.ipinfo.city
-				img.spinner.pull-right.hide(src="/images/ajax-loader-small.gif")
-		.quoteContainer
-			h3 PEOPLE ARE TALKING...
-			.quote "This is the expedia.com of live events!"
-			.quote "A one-stop-shop for concert and event-goers - It's about time!"
-		hr
-		.twitterContainer
-			h3 TWITTER FEED...
-			script(charset="utf-8",src="https://widgets.twimg.com/j/2/widget.js")
-			script
-				new TWTR.Widget({
-				version: 2,
-				type: 'profile',
-				rpp: 4,
-				interval: 30000,
-				width: 'auto',
-				height: 300,
-				theme: {
-				shell: {
-				background: '#ffffff',
-				color: '#ffffff'
-				},
-				tweets: {
-				background: '#ffffff',
-				color: '#767676',
-				links: '#ff6600'
-				}
-				},
-				features: {
-				scrollbar: false,
-				loop: false,
-				live: false,
-				behavior: 'all'
-				}
-				}).render().setUser('wembli').start();
-		a.mobileAd.offset8(href="#")
-			span.btn.btn-primary Coming Soon
+extends layout
+block append backgrounds
+	#blue-tall.stripe
+
+block content
+	#homeContent
+		include includes/index/circles
+		include includes/big-search-box
+		#belowFold
+			include includes/index/event-list
+			include includes/index/quotes
+			hr
+			include includes/index/twitter-feed
+			include includes/index/mobile-ad

@@ -1,9 +1,9 @@
-- var lastSearch = session.lastSearch ? session.lastSearch : '/events/search';
+- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/events/search';
 - lastSearch += '?updateEvent=1';
 - if (typeof event == "undefined")
-	- var event = session.currentPlan.event
+	- var event = req.session.currentPlan.event
 - var date = new Date(Date.parse(event.Date));
-p.info 
+p.info
 	- if (typeof link != "undefined" && link === false)
 		span.name.block!= event.Name
 	- else
@@ -14,7 +14,7 @@ p.info
 		- var mapQuery = event.Venue.Name+', '+event.Venue.Street1+' '+event.Venue.ZipCode;
 	- else
 		- var location = event.City+', '+event.StateProvince
-	span.location.block!= location 
+	span.location.block!= location
 		- if (typeof mapQuery != "undefined")
 			span.mapLink &nbsp;(&nbsp;
 				a(href="http://maps.google.com/?q=#{mapQuery}",target="_blank") Map Link
@@ -41,4 +41,4 @@ p.info
 span.event-date-box
 	span.day!=        date.format("ddd")
 	span.event-date!= date.format("mmm d")
-	span.time!=       date.format("h:MM TT") 
+	span.time!=       date.format("h:MM TT")

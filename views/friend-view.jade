@@ -1,8 +1,8 @@
 #planViewFriendContainer.planViewContainer
-	- if (!session.friend.decision)
+	- if (!req.session.friend.decision)
 		#rsvpContainer.alert.alert-success.alert-block!= partial("includes/plan-view/rsvp-alert",{})
 	#mainContainer.row
-		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
+		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:req.session.currentPlan.event});
 		#left.span8
 			case plan.config.payment
 				when 'self'
@@ -11,14 +11,14 @@
 					- if ((typeof plan.completed.voting == "undefined") || (!plan.completed.voting))
 						include includes/plan-view/voting
 					- else if ((typeof plan.completed.payment == "undefined") || (!plan.completed.payment))
-						- console.log(session.friend);
-						- if ((typeof session.friend.payment == "undefined") || (!session.friend.payment.initiated))
+						- console.log(req.session.friend);
+						- if ((typeof req.session.friend.payment == "undefined") || (!req.session.friend.payment.initiated))
 							- title = 'It\'s time to pony up!'
 							include includes/plan-view/payment
-						- else if (!session.friend.payment.payment)
+						- else if (!req.session.friend.payment.payment)
 							//- its initiated but not paid
 							include includes/plan-view/waiting-for-payment
-						- else 
+						- else
 							//- its paid
 							include includes/plan-view/paid
 					- else

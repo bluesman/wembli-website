@@ -1,20 +1,44 @@
-@backgroundTopMargin: 53px;
-@stripeHeight:        30px;
+@whiteHeight: 50px;
+@orangeHeight:40px;
+@blueTallHeight:450px;
+@blueShortHeight:80px;
 
-#backgrounds { 
+section#content {
+  min-height:450px;
+}
+
+#backgrounds {
   position:absolute;
   width:100%;
-  .clearfix(); 
-}
-#backgrounds #stripe {
-  position:relative;
-  margin-left:24%;
-  margin-top:       @backgroundTopMargin;
-  height:           @stripeHeight;
-  background-color: @orange;
-  z-index:-1;
-  @shadow:0 -1px 1px 0 rgba(0,0,0,.25);
-  .box-shadow(@shadow);  
-}
+  .clearfix();
 
+  .stripe {
+    position:relative;
+    z-index:-1;
+  }
+
+  #white {
+    height:@whiteHeight;
+  }
+
+  #orange {
+    height:           @orangeHeight;
+    background-color: @grayDark;
+    @shadow:0 -1px 1px 0 rgba(0,0,0,.25);
+
+    #gradient > .vertical(@grayDark, @grayDarker);
+  }
+
+  #blue-tall {
+    height:@blueTallHeight;
+    z-index:-2;
+    #gradient > .vertical(@blueDark, @blue);
+  }
+
+  #blue-short {
+    height: @blueShortHeight;
+    z-index:-2;
+    #gradient > .vertical(@blueDark, @blue);
+  }
+}
 

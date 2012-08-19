@@ -12,7 +12,7 @@ venueMapText = 'View Tickets On Venue Map';
 #planOptionsContainer.planOptions.module
 	h3 Plan
 		a#ticketsIcon(href="#")
-			i.icon-info-sign.pull-right.icon-white				
+			i.icon-info-sign.pull-right.icon-white
 	.body
 		#ticketsContainer
 			.header.clearfix
@@ -23,12 +23,12 @@ venueMapText = 'View Tickets On Venue Map';
 				.total.pull-right
 					strong#totalPrice(style="text-align:right")!= '$'+parseFloat(totalPrice).toFixed(2)
 				hr
-			a#finalChoice.ticketOption(href="/plan/tickets/#{session.currentPlan.config.guid}")
+			a#finalChoice.ticketOption(href="/plan/tickets/#{req.session.currentPlan.config.guid}")
 				.infoContainer
 					input#finalTicketId(type="hidden",value="#{ticket.ID}")
 					.info
 						#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
-						.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+						.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat
 						span.rating.block
 							em Wembli Rating:
 							span.stars!= (ticket.Rating ? ticket.Rating : 0)
@@ -39,4 +39,4 @@ venueMapText = 'View Tickets On Venue Map';
 					.ticket-price-box
 						include ../ticket-price-box
 					include ticket/cost-breakdown
-	
+

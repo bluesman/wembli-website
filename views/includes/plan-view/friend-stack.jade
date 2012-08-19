@@ -3,7 +3,7 @@ h3 Invitees
 		i.icon-info-sign.pull-right.icon-white
 .body
 	id           = 'organizer';
-	friendName   = session.organizer.first_name+' '+session.organizer.last_name;
+	friendName   = req.session.organizer.first_name+' '+req.session.organizer.last_name;
 	rowClass     = 'evenRow';
 	labelType    = 'label-success';
 	labelIcon    = 'icon-ok-sign';
@@ -11,8 +11,8 @@ h3 Invitees
 	.friendContainer: div.friend.clearfix(class="#{rowClass}",id="#{id}")
 		include friend/friend-info
 	- for (idx in plan.friends)
-		friend   = plan.friends[idx]; 
+		friend   = plan.friends[idx];
 		include friend
-- if (session.isOrganizer && (typeof session.currentPlan.completed.voting == "undefined"))
+- if (req.session.isOrganizer && (typeof req.session.currentPlan.completed.voting == "undefined"))
 	#inviteMoreContainer
 		a#inviteMoreFriends.btn.btn-success(href="/plan/friends") Add More Friends

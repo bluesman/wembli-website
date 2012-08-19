@@ -7,7 +7,7 @@ WATCHR ?= `which watchr`
 # BUILD DOCS
 #
 
-docs:
+
 	lessc ${STYLE_LESS} > ${STYLE}
 
 #

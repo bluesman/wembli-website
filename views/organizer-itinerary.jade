@@ -1,6 +1,6 @@
 .planViewContainer
 	#mainContainer.row
-		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
+		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:req.session.currentPlan.event});
 		#left.span8
 			#itineraryContainer This is the itinerary.
 			#wallContainer

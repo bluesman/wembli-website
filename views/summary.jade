@@ -1,5 +1,5 @@
 include includes/modals/vote-by
-- if (!session.loggedIn)
+- if (!req.session.loggedIn)
 	script(type="text/javascript")
 		$(document).ready(function() {
 		});
@@ -7,9 +7,9 @@ include includes/modals/vote-by
 #breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 //- compute the summary width
 - var summaryWidth = 400;
-- if (typeof session.currentPlan.friends != "undefined")
+- if (typeof req.session.currentPlan.friends != "undefined")
 	- summaryWidth += 360;
-- if (typeof session.currentPlan.tickets != "undefined")
+- if (typeof req.session.currentPlan.tickets != "undefined")
 	- summaryWidth += 440;
 #summaryContainer
 	#summaryModules.row(style="width:#{summaryWidth}px")
@@ -19,7 +19,7 @@ include includes/modals/vote-by
 				.body
 					- for (var idx in plan.friends)
 						- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
-						- var friend = session.currentPlan.friends[idx]; 
+						- var friend = req.session.currentPlan.friends[idx];
 						.friend.clearfix(class="#{rowClass}")
 							.name
 								- var cnt = parseInt(idx) + 1;
@@ -29,32 +29,32 @@ include includes/modals/vote-by
 								.email Invitation will be posted to #{friend.firstName}'s facebook wall
 							- else
 								.email Invitiation will be emailed to #{friend.email}
-					- if (Object.keys(plan.friends).length == 0) 
-	
+					- if (Object.keys(plan.friends).length == 0)
+
 				.footer
 					a#inviteMoreFriends.btn.btn-success.btn-large(href="/plan/friends") Manage Invitees
-		- if (typeof session.currentPlan.tickets != "undefined")
+		- if (typeof req.session.currentPlan.tickets != "undefined")
 			#tickets.center.module
 				h3 Tickets:
 				.body
 					- var idx = 0
-					- for (ticketId in session.currentPlan.tickets)
+					- for (ticketId in req.session.currentPlan.tickets)
 						- idx++;
 						- var rowClass = (idx % 2) ? 'oddRow' : 'evenRow';
 						- var ticket = plan.tickets[ticketId]
 						- var qtyStr = ticket.TicketQuantity
 						- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
 						- var friendCnt = 1
-						- if (typeof session.currentPlan.friends != "undefined")
-							- for friend in session.currentPlan.friends
+						- if (typeof req.session.currentPlan.friends != "undefined")
+							- for friend in req.session.currentPlan.friends
 								- if (typeof friend.decision != "undefined" && !friend.decision)
 									- continue;
 								- else
 									- friendCnt++;
 						a.ticketOption(class="#{rowClass}",href="#")
 							- if (parseInt(ticket.TicketQuantity) < friendCnt)
-								.alert 
-									strong Warning: 
+								.alert
+									strong Warning:
 									span There are more invitees than tickets in this ticket group.
 							- if (parseInt(ticket.TicketQuantity) > friendCnt)
 								- var err = true;
@@ -64,12 +64,12 @@ include includes/modals/vote-by
 											- var err = false;
 											- break;
 								- if (err)
-									.alert 
-										strong Warning: 
+									.alert
+										strong Warning:
 										span This ticket group cannot be split to accomodate your group size.
 							.info
 								#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
-								.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+								.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat
 								span.rating.block
 									em Wembli Rating:
 									span.stars!= (ticket.Rating ? ticket.Rating : 0)
@@ -79,7 +79,7 @@ include includes/modals/vote-by
 							include includes/plan-view/ticket/cost-breakdown
 				.footer
 					a#ticketButton.btn.btn-success.btn-large(href="/plan/tickets") CHANGE TICKET OPTIONS
-	
+
 		#whatNext.span5
 			h3 What Happens Next?
 			hr
@@ -90,4 +90,4 @@ include includes/modals/vote-by
 					li Votes help you decide which tickets work best.
 					li Each friend pays their portion into your PayPal account.
 					li You buy the tickets using the money deposited by your friends.
-					
+

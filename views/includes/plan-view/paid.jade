@@ -1,18 +1,18 @@
 #paymentContainer.module
 	h3 Payment Complete
 		a#paymentIcon(href="#")
-			i.icon-shopping-cart.pull-right.icon-white				
+			i.icon-shopping-cart.pull-right.icon-white
 	- if (typeof paymentMsg != "undefined")
 		.votingMsg.alert.alert-info!= paymentMsg
 	- var ticket = finalTicketChoice;
-	#paid.body 
+	#paid.body
 		span.label.label-success
 			strong Success!
-			span &nbsp;You have contributed $#{session.friend.payment.contribution} to #{session.organizer.first_name}. 
-				a(href="/plan/itinerary") Click Here 
+			span &nbsp;You have contributed $#{req.session.friend.payment.contribution} to #{req.session.organizer.first_name}.
+				a(href="/plan/itinerary") Click Here
 				span to view the itinerary.
 	- console.log(ticket)
 	- console.log(total)
-	- console.log(session.friend)
+	- console.log(req.session.friend)
 
-	
+

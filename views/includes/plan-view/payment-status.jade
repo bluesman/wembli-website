@@ -4,7 +4,7 @@ tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid='+brokerId+'&site
 skippedCnt = 0;
 validCnt = 0;
 ticket = finalTicketChoice;
-ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.selectedQty+'&SessionId='+ticketSessionId()
+ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.selectedQty+'&req.sessionId='+ticketreq.sessionId()
 shipping = 15;
 serviceCharge = (ticket.ActualPrice * .15) * ticket.selectedQty;
 actualPrice = ticket.ActualPrice * ticket.selectedQty;
@@ -14,7 +14,7 @@ venueMapText = 'View Tickets On Venue Map';
 #planOptionsContainer.planOptions.module
 	h3 Plan
 		a#ticketsIcon(href="#")
-			i.icon-info-sign.pull-right.icon-white				
+			i.icon-info-sign.pull-right.icon-white
 	.body
 		#ticketsContainer
 			.header.clearfix
@@ -32,7 +32,7 @@ venueMapText = 'View Tickets On Venue Map';
 					input#finalTicketId(type="hidden",value="#{ticket.ID}")
 					.info
 						#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
-						.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+						.seats!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat
 						span.rating.block
 							em Wembli Rating:
 							span.stars!= (ticket.Rating ? ticket.Rating : 0)
@@ -43,4 +43,4 @@ venueMapText = 'View Tickets On Venue Map';
 					.ticket-price-box
 						include ../ticket-price-box
 					include ticket/cost-breakdown
-	
+

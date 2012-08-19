@@ -1,33 +1,34 @@
 @import url('/css/plugins/jquery-ui-1.8.16.custom.css');
 
-@import "variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "tb-variables.less";
+@import "wembli-variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "mixins.less";
 
 form {
   margin-bottom:0px;
 }
 
-.container { width: 1000px;}
+.container { width: 1000px; margin-top:0px;}
 
 .module {
   .clearfix();
   .border-radius(4px);
-  .box-shadow(inset 0 2px 2px rgba(0,0,0,.05));   
-  
+  .box-shadow(inset 0 2px 2px rgba(0,0,0,.05));
+
   padding:0px;
   min-height: 20px;
   margin-bottom: 20px;
   background-color: @white;
   border: 1px solid @grayLight;
-  border: 1px solid rgba(0,0,0,.05);              
-  
-  blockquote {        
+  border: 1px solid rgba(0,0,0,.05);
+
+  blockquote {
     border-color: #ddd;
-    border-color: rgba(0,0,0,.15);                
-  } 
-  
+    border-color: rgba(0,0,0,.15);
+  }
+
   .alert {
-    .border-radius(0 0 0 0);    
+    .border-radius(0 0 0 0);
   }
 
   h3 {
@@ -35,18 +36,18 @@ form {
     background-color:lighten(@blue,20%);
     padding:0px 19px;
     border-bottom:thin solid @grayLight;
-    
+
     i {
       margin-top:7px;
     }
-  } 
-  
+  }
+
   .oddRow {
     background-color:@grayLighter;
   }
-  
+
   .body {
-    
+
   }
 }
 
@@ -74,4 +75,3 @@ form {
 @import "friends.less";
 @import "summary.less";
 @import "dashboard.less";
-

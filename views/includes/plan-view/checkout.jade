@@ -6,7 +6,7 @@
 #checkoutContainer.planOptions.module
 	h3 Finalized Plan
 		a#checkoutIcon(href="#")
-			i.icon-shopping-cart.pull-right.icon-white				
+			i.icon-shopping-cart.pull-right.icon-white
 	- if (typeof checkoutMsg != "undefined")
 		.checkoutMsg.alert.alert-info #{checkoutMsg}
 	form.body
@@ -21,12 +21,12 @@
 				ticket     = plan.tickets[ticketId]
 				rowClass   = (idx % 2) ? 'oddRow' : 'evenRow';
 				a.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
-					- if (session.isOrganizer)
+					- if (req.session.isOrganizer)
 						include ticket/organizer-checkout
 					- else
 						include ticket/friend-checkout
-				ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.selectedQty+'&SessionId='+ticketSessionId()
-		- if (session.isOrganizer)
+				ticketLink = tnUrl+'&tgid='+ticket.ID+'&evtid='+ticket.EventID+'&price='+ticket.ActualPrice+'&treq='+ticket.selectedQty+'&req.sessionId='+ticketreq.sessionId()
+		- if (req.session.isOrganizer)
 			.form-footer
 				a#checkout.btn.btn-success.btn-large(href="#{ticketLink}",target="_blank") CHECKOUT
-	
+

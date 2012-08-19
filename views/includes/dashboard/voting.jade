@@ -1,11 +1,11 @@
 - if (typeof plan.config.voteBy != "undefined")
-	voteMsg    = session.isOrganizer ? "Voting ends "+plan.config.voteBy : session.organizer.first_name+" asks to please vote by: "+session.currentPlan.config.voteBy;
-- var venueMapUrl  = session.isOrganizer ? '/plan/tickets' : '/plan/tickets/'+plan.config.guid;
-- var venueMapText = session.isOrganizer ? 'Modify Ticket Options' : 'View Tickets On Venue Map';
+	voteMsg    = req.session.isOrganizer ? "Voting ends "+plan.config.voteBy : req.session.organizer.first_name+" asks to please vote by: "+req.session.currentPlan.config.voteBy;
+- var venueMapUrl  = req.session.isOrganizer ? '/plan/tickets' : '/plan/tickets/'+plan.config.guid;
+- var venueMapText = req.session.isOrganizer ? 'Modify Ticket Options' : 'View Tickets On Venue Map';
 #votingContainer.planOptions.module
 	h3 Voting
 		a#votingIcon(href="#")
-			i.icon-info-sign.pull-right.icon-white				
+			i.icon-info-sign.pull-right.icon-white
 	- if (typeof voteMsg != "undefined")
 		.votingMsg.alert.alert-info
 			i.icon-calendar
@@ -29,11 +29,11 @@
 				- voteCntStr    += (ticket.voteCnt == 1) ? '' : 's';
 				- voteCntStr    += ' ('+votePct+'%)';
 				a.ticketOption(id="#{ticket.ID}",class="#{rowClass}",href="#")
-					- if (session.isOrganizer)
+					- if (req.session.isOrganizer)
 						include ticket/organizer-voting
 					- else
 						include ticket/friend-voting
-		- if (session.isOrganizer)
+		- if (req.session.isOrganizer)
 			.form-footer
 				a#collectMoney.btn.btn-success.btn-large(href="#") END VOTING & REQUEST PAYMENT
-	
+

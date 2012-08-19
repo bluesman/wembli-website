@@ -5,8 +5,8 @@
 - var services = tmp.concat('summary');
 - each service in services
 	- idx++;
-	- if (session.currentPlan.config[service])
-		- if (stop && (typeof session.currentPlan.completed[service] == "undefined"))
+	- if (req.session.currentPlan.config[service])
+		- if (stop && (typeof req.session.currentPlan.completed[service] == "undefined"))
 			- next = 'plan/'+service;
 			- break;
 		- if (typeof page != "undefined" && (service == page))
@@ -14,10 +14,10 @@
 a#continue.btn.btn-success.btn-large(href="/#{next}?completed=#{page}")!= (typeof buttonText != "undefined") ? buttonText : 'Continue';
 #links
 	- //a#howDoesItWork(data-toggle="modal",href="#howDoesItWorkModal") How Does It Work
-	- //span  | 
-	- if (session.isOrganizer)
-		- if(session.loggedIn)
+	- //span  |
+	- if (req.session.isOrganizer)
+		- if(req.session.loggedIn)
 			a.saveForLater(href="/event/save?redirectUrl=#{req.originalUrl}") Save For Later
 		- else
 			a.saveForLater(data-toggle="modal",href="#signupModal") Save For Later
-	
+

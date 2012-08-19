@@ -2,11 +2,11 @@
 - if (typeof buttonText != "undefined")
 	- actionArgs.buttonText = buttonText;
 #eventBuilder.block(href="#eventBuilder")
-	#event!= partial("includes/event",{changeEvent:true,cta:false,rating:false,link:false,event:session.currentPlan.event});
+	#event!= partial("includes/event",{changeEvent:true,cta:false,rating:false,link:false,event:req.session.currentPlan.event});
 	#split &nbsp;
 	#stepInfo
 		#summary
-			h5 Itinerary Summary: 
+			h5 Itinerary Summary:
 			#summaryContent Nothing added yet...
 		#actions!= partial("includes/event-builder-actions",actionArgs);
 #howDoesItWorkModal.modal.hide.fade

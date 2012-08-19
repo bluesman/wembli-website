@@ -2,7 +2,7 @@
 - //filter out the services in this plan
 - var services = [];
 - each service in globalViewVars.wembliServices
-	- if (session.currentPlan.config[service])
+	- if (req.session.currentPlan.config[service])
 		- services.push(service);
 - services.push('summary');
 - var maxWidth = 900;

@@ -1,7 +1,7 @@
 #paymentContainer.module
 	h3 Waiting For Payment
 		a#paymentIcon(href="#")
-			i.icon-shopping-cart.pull-right.icon-white				
+			i.icon-shopping-cart.pull-right.icon-white
 	- if (typeof paymentMsg != "undefined")
 		.votingMsg.alert.alert-info!= paymentMsg
 	- var ticket = finalTicketChoice;
@@ -10,7 +10,7 @@
 		p
 			span.label.label-warning
 				strong Head's Up!
-			span &nbsp;You have initiated a payment for $#{session.friend.payment.contribution}, however, it has not been completed.
+			span &nbsp;You have initiated a payment for $#{req.session.friend.payment.contribution}, however, it has not been completed.
 		h4 You have a few options:
 		ul
 			li
@@ -24,9 +24,9 @@
 			li
 				span.label.label-success Change Amount
 				span &nbsp;If you want to change your payment amount, you can&nbsp;
-					a(href="/plan/reset-payment") Click Here&nbsp; 
+					a(href="/plan/reset-payment") Click Here&nbsp;
 					span to pay a different amount.
 	- console.log(ticket)
 	- console.log(total)
-	- console.log(session.friend)
-	
+	- console.log(req.session.friend)
+

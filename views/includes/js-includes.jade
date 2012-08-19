@@ -1,0 +1,14 @@
+- if ("undefined" !== typeof jsIncludes)
+	- each file in jsIncludes
+		script(type="text/javascript", src="#{file}")
+	script(src="https://jotform.us/min/?g=feedback2", type="text/javascript")
+	script(type="text/javascript")
+		var uvOptions = {};
+		(function() {
+			var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+			uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/knxWmtXUBCcgrlednerg.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+		})();
+//-	script(type="text/javascript")
+//-		gapi.client.load('calendar', 'v3', function() { console.log('loaded google api.'); });
+//-		gapi.client.setApiKey('AIzaSyAmG1hix3hyx7PpEmIFYuSByECVi6M4j_o');

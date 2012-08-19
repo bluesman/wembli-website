@@ -1,6 +1,6 @@
 #planViewPublicContainer.planViewContainer
 	#mainContainer.row
-		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:session.currentPlan.event});
+		#eventDetails!= partial("includes/event",{cta:false,rating:false,link:false,event:req.session.currentPlan.event});
 		#left.span8
 			#upsell.module
 				h3 New To Wembl? Sign Up Here To See Your Invitation
@@ -10,9 +10,9 @@
 					#message.alert.alert-info.hide
 					form#signup.well.form-horizontal(method="POST",action="/signup")
 						div(style="text-align:center")
-							a#facebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Connect With Facebook 
+							a#facebookLogin.btn.btn-primary(href="/auth/facebook") Click Here To Connect With Facebook
 						hr
-						strong Sign Up without Facebook: 
+						strong Sign Up without Facebook:
 							- if (typeof errors != "undefined" && errors.length > 0)
 								span.error #{errors[0]}
 						br
@@ -58,7 +58,7 @@
 							.control-group
 								label.control-label(for="email") Email:
 								.controls
-									input#publicEmail(type="text",value=(session.remember ? params.email : friend.email),name="email")
+									input#publicEmail(type="text",value=(req.session.remember ? params.email : friend.email),name="email")
 							.control-group
 								label.control-label(for="password") Password:
 								.controls
@@ -79,5 +79,5 @@
 						$('#publicLoginModal').modal('hide');
 					});
 				});
-						
-			
+
+

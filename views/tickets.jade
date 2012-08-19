@@ -1,6 +1,6 @@
 script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
 #eventBuilderContainer!= partial("widgets/event-builder",{});
-- if (session.isOrganizer)
+- if (req.session.isOrganizer)
 	#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
 #ticketsContent
 	#thumbnail.thumbnail.hide
@@ -11,7 +11,7 @@ script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
 			#noTickets No tickets available for this event.
 #staticMapContainer
 	#staticMap
-		- if (typeof session.currentPlan.event.MapURL == "string")
-			img(src="#{session.currentPlan.event.MapURL}")
+		- if (typeof req.session.currentPlan.event.MapURL == "string")
+			img(src="#{req.session.currentPlan.event.MapURL}")
 		- else
 			#mapNotFound Venue Map Not Available

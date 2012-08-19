@@ -1,0 +1,30 @@
+//- set up some string vars to be used in this template
+- var heading = 'Upcoming Events';
+- if (typeof req.session.ipinfo.city != "undefined")
+	- heading += ' near '+req.session.ipinfo.city;
+
+.event-list.span6.offset1
+	//- event list
+	h3!= heading
+		ul
+			- if (events && events.length > 0)
+				- each event in events
+					- if (typeof event.TicketPricingInfo.ticketsAvailable != "undefined")
+						li
+							include ../event
+			- else
+				li No Events Found.
+	- var url = "/events/search/"
+	- if (req.session.ipinfo.city)
+		- url += req.session.ipinfo.city+"/"
+	- url += Date.today().format("mm-dd-yy")
+	a#moreEvents(href="#{url}")
+		input(type="hidden",id="moreEventsZipCode",value="#{req.session.ipinfo.postal_code}")
+		- if (events.length > 0)
+			- var d = new Date(Date.parse(events[events.length-1].Date))
+			- var lastDate = d.format("mm-dd-yy")
+			input(type="hidden",id="moreEventsBeginDate",value="#{lastDate}")
+			span See more events
+			- if (req.session.ipinfo.city)
+				span.lowercase!= 'near '+req.session.ipinfo.city
+		img.spinner.pull-right.hide(src="/images/ajax-loader-small.gif")

@@ -4,7 +4,7 @@
 - var skippedCnt = 0;
 - var validCnt = 0;
 // ----
-- if (session.isOrganizer && plan.config.payment == 'group' && !plan.completed.purchasedTickets)
+- if (req.session.isOrganizer && plan.config.payment == 'group' && !plan.completed.purchasedTickets)
 	.alert.alert-info CHOOSE A FEW TICKET OPTIONS TO VOTE ON:
 form
 	ul
@@ -15,7 +15,7 @@ form
 			- each split in ticket.ValidSplits.int
 				- if (parseInt(split) == friendsCount)
 					- selectQty = parseInt(split)
-			- if (((typeof session.currentPlan.tickets == "undefined") || (typeof session.currentPlan.tickets[ticket.ID] == "undefined")) && selectQty == 0)
+			- if (((typeof req.session.currentPlan.tickets == "undefined") || (typeof req.session.currentPlan.tickets[ticket.ID] == "undefined")) && selectQty == 0)
 				- skippedCnt++;
 				- continue
 			- validCnt++;
@@ -23,22 +23,22 @@ form
 			- qtyStr += (ticket.TicketQuantity > 1) ? " tickets " : " ticket "
 			- qtyStr = ''; //just for now - based on feedback from chris snook
 			li(id='ticket-id-'+ticket.ID)
-				p.info 
+				p.info
 					span#ticketSeat= "Section: "+ticket.Section + " - Row: " + ticket.Row
-					span.seats.block!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat 
+					span.seats.block!= (ticket.LowSeat == '*') ? "" : "Seats: "+ticket.LowSeat + '-' + ticket.HighSeat
 					span.rating.block
 						em Wembli Rating:
 						span.stars!= (ticket.Rating ? ticket.Rating : 0)
 						br
 						em.ratingDescription!= ticket.RatingDescription
-				- if ((session.isOrganizer) && ((typeof ticket.payment == "undefined") || (typeof ticket.payment.payment == "undefined") || (!ticket.payment.payment)))
+				- if ((req.session.isOrganizer) && ((typeof ticket.payment == "undefined") || (typeof ticket.payment.payment == "undefined") || (!ticket.payment.payment)))
 					p.cta
 						span.qty
-							strong Qty: 
+							strong Qty:
 							- if ((typeof ticket.ValidSplits != "undefined") && (typeof ticket.ValidSplits.int != "undefined"))
 								select(name="qty-#{ticket.ID}")
 									- each split in ticket.ValidSplits.int
-										- if (selectQty == parseInt(split)) 
+										- if (selectQty == parseInt(split))
 											option(value="#{split}",selected="selected")!= split
 										- else
 											option(value="#{split}")!= split

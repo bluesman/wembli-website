@@ -1,75 +1,87 @@
 @circleTopPosition: -266px;
 /* Home Page */
-#index section#content {padding-top:50px;min-height:400px;}
+#index {
 
-#index #backgrounds #blue {
-  position:relative;
-  height:450px;
-  z-index:-2;
-  #gradient > .horizontal(@blueDark, @blue);
-}
+  section#content {
+    padding-top:50px;min-height:400px;
 
-#homeContent {
-  .clearfix();
-  background:url('/images/pages/index/three-steps-bg.png') 153px 80px no-repeat;
-  margin:auto;
-  width:940px;
-}
+    #homeContent {
+      .clearfix();
+      background:url('/images/pages/index/three-steps-bg.png') 153px 80px no-repeat;
+      margin:auto;
+      width:940px;
 
-#homeContent h1 {text-align:center;color:#F7FEFE;font-size:22px;text-shadow:4px 7px 7px #000;}
+      h1 {
+        text-align:center;
+        color:#F7FEFE;
+        font-size:22px;
+        text-shadow:4px 7px 7px #000;
+      }
 
-#homeContent #circles {
-  position:relative; 
-  left:123px;
-  .clearfix();
-}
+      #circles {
+        position:relative;
+        left:123px;
+        .clearfix();
 
-#homeContent #circles .homeCircle {
-  position:absolute;
-  top:15px;
-  height:234px;
-  width:236px;
-  background-position:0px @circleTopPosition
-}
+        .homeCircle {
+          position:absolute;
+          top:15px;
+          height:234px;
+          width:236px;
+          background-position:0px @circleTopPosition;
 
-#homeContent #circles .homeCircle .stepIcon {
-  position:absolute;
-  top:15px;
-  background:url('/images/pages/index/step-icons.png') 0 0 no-repeat;
-}
+          .stepIcon {
+            position:absolute;
+            top:15px;
+            background:url('/images/pages/index/step-icons.png') 0 0 no-repeat;
+          }
+        }
 
-#homeContent #circles #step1Circle { 
-  left:-30px; 
-  background:url('/images/pages/index/step-1-circle.png') 0 0 no-repeat;
-}
+        #step1Circle {
+          left:-30px;
+          background:url('/images/pages/index/step-1-circle.png') 0 0 no-repeat;
+        }
 
-#homeContent #circles #step2Circle {
-  left:212px;
-  background:url('/images/pages/index/step-2-circle.png') 0 0 no-repeat;  
-}
+        #step2Circle {
+          left:212px;
+          background:url('/images/pages/index/step-2-circle.png') 0 0 no-repeat;
+        }
 
-#homeContent #circles #step3Circle {
-  left:445px;
-  background:url('/images/pages/index/step-3-circle.png') 0 0 no-repeat;  
-}
+        #step3Circle {
+          left:445px;
+          background:url('/images/pages/index/step-3-circle.png') 0 0 no-repeat;
+        }
+      }
 
-#homeContent #steps {margin:180px 0 0 100px;color:#FFF;font-size:1.2em;.clearfix()}
-#homeContent #steps > section {width:225px;height:100px;float:left;}
-#homeContent #steps h3 {font-family:"TungaRegular";color:#FF6600;font-size:20px;text-shadow:3px 3px 4px #000;}
-#homeContent #steps #step1 h3 {margin-left:30px;}
-#homeContent #steps #step1 #step1Info {width:200px;margin-left:30px;}
-#homeContent #steps #step2 h3 {margin-left:35px;}
-#homeContent #steps #step2 #step2Info {width:200px;margin-left:35px;}
-#homeContent #steps #step3 h3 {margin-left:70px;}
-#homeContent #steps #step3 #step3Info {width:200px;margin-left:70px;}
+      #steps > section {width:225px;height:100px;float:left;}
 
-#homeContent #belowFold {
-  .clearfix();
+      #steps {
+        margin:180px 0 0 100px;
+        color:#FFF;
+        font-size:1.2em;
+        .clearfix();
+
+        h3 {font-family:"TungaRegular";color:#FF6600;font-size:20px;text-shadow:3px 3px 4px #000;}
+
+        #step1 h3 {margin-left:30px;}
+        #step1 #step1Info {width:200px;margin-left:30px;}
+        #step2 h3 {margin-left:35px;}
+        #step2 #step2Info {width:200px;margin-left:35px;}
+        #step3 h3 {margin-left:70px;}
+        #step3 #step3Info {width:200px;margin-left:70px;}
+      }
+
+      #belowFold {
+        .clearfix();
+      }
+    }
+
+  }
 }
 
 .teaserResults {
-  background-color:@grayLighter; 
-  padding:15px; 
+  background-color:@grayLighter;
+  padding:15px;
   border-bottom:1px solid #CCC;
 }
 
@@ -125,7 +137,7 @@
 
   margin-left:630px;
   width:300px;
-  
+
   h3 {
     position:relative;
     width:200px;

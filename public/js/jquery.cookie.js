@@ -1,1 +1,1 @@
-/production/jquery-cookie/jquery.cookie.js
+../../../jquery-cookie/jquery.cookie.js

@@ -1,0 +1,29 @@
+.twitterContainer
+	h3 TWITTER FEED...
+	script(charset="utf-8",src="https://widgets.twimg.com/j/2/widget.js")
+	script
+		new TWTR.Widget({
+		version: 2,
+		type: 'profile',
+		rpp: 4,
+		interval: 30000,
+		width: 'auto',
+		height: 300,
+		theme: {
+		shell: {
+		background: '#ffffff',
+		color: '#ffffff'
+		},
+		tweets: {
+		background: '#ffffff',
+		color: '#767676',
+		links: '#ff6600'
+		}
+		},
+		features: {
+		scrollbar: false,
+		loop: false,
+		live: false,
+		behavior: 'all'
+		}
+		}).render().setUser('wembli').start();
