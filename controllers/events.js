@@ -11,8 +11,8 @@ module.exports = function(app) {
 			console.log('results from eventrpc: ');
 			console.log(results);
 			res.render('test',{
-				jsIncludes:["/js/plugins/excanvas.js","/js/plugins/jquery.tuMap.js"],
-				//jsIncludes:["/js/plugins/excanvas.js","http://chart.demo.ticketutils.com/js/jquery.tuMap.js"],
+				//jsIncludes:["/js/plugins/excanvas.js","/js/plugins/jquery.tuMap.js"],
+				jsIncludes:["/js/plugins/excanvas.js","http://chart.demo.ticketutils.com/js/jquery.tuMap.js"],
 				//tickets:results.tickets,
 				//event:results.event
 				mapId:req.param('mapId'),
