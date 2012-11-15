@@ -1,18 +1,92 @@
 doc = document;
 
 // Global Wembli Object
-$w = {
-	initEventPlanOptionsModal: function() {
-		$('.planOption').each(function(idx, el) {
-			$(el).click(function(e) {
-				$(el).find('input').each(function(idx, i) {
-					$(i).attr('checked', true);
-				});
-			});
-		});
-	},
+$w = {};
 
-	initStarRatings: function() {
+(function($, window, undefined) {
+
+	//figure out what page they are asking for and set that in $w.currentFrameHref
+	function initFrame() {
+		$w.initFrame = function() {
+			var ary = window.location.href.split('#');
+			$w.currentFrameHref = (typeof ary[1] != "undefined") ? '#' + ary[1] : '#home';
+			console.log('initFrame: ' + $w.currentFrameHref);
+			//if this page is search, make the search box active
+			if ($w.currentFrameHref == '#search') {
+				$('#nav-search').addClass('active');
+			} else {
+				$('#nav-search').removeClass('active');
+			}
+		}
+		$w.initFrame();
+	}
+
+	function initNavArrow() {
+		//this function will slide the nav arrow to the correct nav element
+		//NOTE: its not actually called until initSequence()
+		$w.slideNavArrow = function(start, end) {
+			//append a fake element to #footer to get the left css property of end
+			var startClass = 'center-' + start.split('#')[1];
+			var endClass = 'center-' + end.split('#')[1];
+			console.log('end class:' + endClass);
+			$('#footer').append('<div class="' + endClass + '"" style="display:none;position:absolute;height:0;width:0;"/>');
+			var moveTo = $('#footer .' + endClass).css('left');
+			console.log('sliding nav arrow over ' + moveTo);
+			$('#nav-arrow').animate({
+				left: moveTo
+			}, 1000, function() {
+				console.log('removing class: ' + startClass)
+				$('#nav-arrow').removeClass(startClass)
+				$('#nav-arrow').addClass(endClass);
+			});
+		}
+	}
+
+	function initSequence() {
+		//http://www.sequencejs.com/documentation.html
+		var options = {
+			preloader: false,
+			animateStartingFrameIn: false,
+			transitionThreshold: false,
+			autoPlay: false,
+			cycle: true,
+			keyNavigation: false,
+			swipeNavigation: false
+		};
+		$w.sequence = $("#content").sequence(options).data("sequence");
+
+		//create a new sequence obj with diff options for the first page load
+		console.log('going to ' + $w.currentFrameHref);
+		//the page they loaded is not home, so we need to goTo it
+		var path = $w.currentFrameHref.split('#')[1]; //href tells us what page to fetch via ajax
+
+		//if its not #home we need to fetch the html
+		if ($w.currentFrameHref != '#home') {
+			//get the page data for this frame
+			options.beforeNextFrameAnimatesIn = function() {
+				//get the html for the new page
+				$.ajax({
+					url: '/' + path,
+					//TODO: do something slick on error...
+					success: function(data) {
+						console.log(data);
+						//put the new page in the DOM
+						$('#content ul li .frame2').html(data);
+						//might need to kick off the angular app here..
+					}
+				});
+			};
+			var sequence = $("#content").sequence(options).data("sequence");
+			//go to frame 2 (we can assume its frame 2 cause this is the init func)
+			$w.slideNavArrow('#home', $w.currentFrameHref);
+			sequence.goTo(2, 1);
+		} else {
+			//home is a special case - html is already loaded..just need the js which will fetch the data and finish making the rest of the page
+			//just maybe need to init the angular app
+		}
+	};
+
+	function initStarRatings() {
 		// get and parse the rating
 		var rating;
 		var nums;
@@ -27,9 +101,9 @@ $w = {
 		$('.stars').each(function() {
 			// get and parse the rating
 			rating = $(this).html();
-			nums   = rating.split('.');
-			whole  = parseInt(nums[0]);
-			frac   = parseInt(nums[1]);
+			nums = rating.split('.');
+			whole = parseInt(nums[0]);
+			frac = parseInt(nums[1]);
 
 			// save these now
 			halfUsed = false;
@@ -52,197 +126,95 @@ $w = {
 				$(span).appendTo(me);
 			}
 		});
-	},
+	};
 
-	init: function() {
-		$('input.date').datepicker({
-			minDate: 0
-		});
-		$('input.time').timepicker({
-			ampm: true,
-			stepHour: 1,
-			stepMinute: 5
-		});
-		if ($('#eventplanOptionsModal').length > 0) {
-			$w.initEventPlanOptionsModal();
-		}
-		$w.initStarRatings();
-	}
-}
-
-
-/* eventPlan widget utilities */
-$w.eventplan = {
-	init: function() {
-		//init the notickets close button
-		$('#noTicketsModal #notifyMe a').click(function(e) {
-			e.preventDefault();
-			$('#noTicketsModal').modal('hide');
-		});
-
-		//every I'm Going button gets caught to display options overlay
-		$('.choose-event').click(function(e) {
-			e.preventDefault();
-			var me = this;
-			//check if there are tickets for this event
-			var eventId = me.id
-
-			//get tix for this event
-			wembli.event.getTickets({
-				eventID: eventId
-			}, function(err, results) {
-				console.log(results);
-				if (results.tickets && results.tickets.length > 0) {
-					//prepare the modal form action
-					$('form#wembliOptions').attr('action', $(me).attr('href'));
-					$('#eventplanOptionsModal').modal('show');
-				} else {
-					$('#noTicketsModal').modal('show');
-				}
-			});
-		});
-
-		$('button.more-info').click(function(e) {
-			e.preventDefault();
-			window.location.href = '/more-info';
-		});
-
-		//set signup/login redirect url when they click save for later
-		$('.saveForLater').each(function(idx, el) {
-			$(el).click(function(e) {
-				$('.redirect-url').each(function(idx, el) {
-					console.log(location.pathname);
-					$(el).val(location.pathname);
+	//event-wrappers are clickable
+	function initEventWrapper() {
+		if ($('.event-wrapper').length) {
+			$('.event-wrapper').each(function(idx) {
+				var eventId = $(this).attr('id').split('-')[0];
+				$(this).click(function(e) {
+					//load the event
+					console.log('loading event: ' + eventId);
 				});
 			});
-		});
-
-	},
-	toggleButton: function(args, el) {
-		console.log(args);
-		var c = 'btn btn-' + args.action;
-		if (typeof args.appendClass != "undefined") {
-			c += ' ' + args.appendClass;
 		}
-		$(el).attr('class', c);
-		$(el).html(args.text);
-	},
-	alertMsg: function(status, msg) {
-		//use header flash msg?
-		$('.flash-info').each(function(idx, el) {
-			console.log(idx);
-			if (idx > 1) {
-				return;
-			}
-			$(el).html(msg).addClass('alert-' + status).fadeIn(800).delay(1000).fadeOut(600);
-		});
-	},
-	friendsNotDeclined: function() {
-		var friendCnt = 1;
-		if (typeof this.data != "undefined") {
-			for (idx in this.data.friends) {
-				var friend = this.data.friends[idx];
-				if (typeof friend.decision != "undefined" && !friend.decision) {
-					continue;
-				} else {
-					friendCnt++;
-				}
-			}
-		}
-		return friendCnt;
-	},
-	updateSummary: function() {
-
-		//update the eventplan summary
-		if (typeof this.data != "undefined") {
-			var summaryMsg = '';
-			if (typeof this.data.friends != "undefined") {
-				var count = this.friendsNotDeclined();
-				var peopleStr = (count > 1) ? ' people' : ' person';
-				summaryMsg = count + peopleStr;
-			}
-
-			if (typeof this.data.tickets != "undefined") {
-				var count = Object.keys(this.data.tickets).length;
-				var addS = (count == 1) ? '' : 's';
-				if (summaryMsg != '') {
-					summaryMsg += ', ';
-				}
-				summaryMsg += count + ' ticket option' + addS;
-			}
-			summaryMsg += ' in your plan.';
-			if (summaryMsg == ' in your plan.') {
-				summaryMsg = 'Nothing added yet.';
-			}
-			$('#summaryContent').html(summaryMsg);
-		}
-	},
-};
-
-$w.sideNav = function() {
-
-	/* Properties */
-
-	/* Methods */
-
-	function change(toggler) {
-		var current = $($('#sideNav .active a:first').attr('href'));
-		var target = $($(toggler).attr('href'));
-
-		$(current).fadeOut('fast', function() {
-			$(target).fadeIn('fast');
-		});
-
-		$('#sideNav .active').removeClass('active');
-		$(toggler).parent().addClass('active');
-
 	}
 
-	function init() {
-		$('#sideNav a').on('click', function(e) {
-			e.preventDefault();
+	//setup funcs for global $w obj
+	$w.init = function() {
+		initFrame();
+		initNavArrow();
+		initStarRatings();
+		initSequence();
+		initEventWrapper();
+	};
 
-			if (!$(this).hasClass('active')) {
-				change(this);
-			}
-		});
+})($, window);
 
-		$('.navTrigger').live('click', function(e) {
-			e.preventDefault();
-			change($($(this).attr('href')));
-		});
-	} /* Return */
-	return {
-		init: init,
-		change: change
-	}
-}();
 
 $(document).ready(function() {
 	$w.init();
-	$w.eventplan.init();
 
-	if ($('#homeContent .mobileAd').length > 0) {
-		$('#homeContent .mobileAd').click(function(e) {
-			e.preventDefault();
+	//this should come from a config somewhere
+	var framesMap = {
+		'#search': 0,
+		'#home': 1,
+		'#invitation': 2,
+		'#tickets': 3,
+		'#parking': 4,
+		'#restaurants': 5,
+		'#hotels': 6,
+		'#login': 7
+	};
+
+
+	//click a nav element loads the page and slides the arrow
+	$('#nav li a').each(function(idx) {
+
+		var me = this;
+		$(this).click(function(e) {
+			console.log('current frame is: ' + $w.sequence.currentFrameID);
+
+			//sequence.nextFrameID seems to not work...hardcode nextframeid
+			var nextFrameID = ($w.sequence.currentFrameID === 1) ? 2 : 1;
+			console.log('next frame is: ' + nextFrameID);
+			//make an ajax call to get html for whatever frame is next
+			var path = $(me).attr('href').split('#')[1]; //href tells us what page to fetch via ajax
+			//get the html for the new page
+			$.ajax({
+				url: '/' + path,
+				//TODO: do something slick on error...
+				success: function(data) {
+					console.log(data);
+					//set the html of 'nextframe'
+					var selector = '#content ul li .frame' + nextFrameID;
+					console.log('selector:' + selector)
+
+					//put the new page in the DOM
+					$(selector).html(data);
+
+					//kick off angular app?
+
+					//goTo nextframe
+					//determine which direction to go
+					//if current frame href in framesmap is > next frame then go prev
+
+					var currNavIndex = framesMap[$w.currentFrameHref];
+					var nextNavIndex = framesMap[$(me).attr('href')];
+
+					if (currNavIndex === nextNavIndex) {
+						return false;
+					}
+					var direction = (currNavIndex < nextNavIndex) ? 1 : -1;
+					console.log('going to next framID:' + nextFrameID + ' direction: ' + direction)
+
+					$w.slideNavArrow($w.currentFrameHref, $(me).attr('href'));
+					$w.currentFrameHref = $(me).attr('href');
+					$w.sequence.goTo(nextFrameID, direction);
+					$w.initFrame();
+				}
+			});
 		});
-	}
-
-	if ($('#searchBox').length > 0) {
-		$w.searchBox();
-	}
-
-	if ($('#moreEvents').length > 0) {
-		$w.moreEvents();
-	}
-
-	if ($('#organizerSidebar').length > 0) {
-		$w.sideNav.init();
-	}
-
-	if ($('#homeContent').length > 0) {
-		$w.stepInfo();
-	}
-
-
+	});
 });

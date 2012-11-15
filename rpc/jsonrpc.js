@@ -82,7 +82,7 @@ function jsonrpc(rpcDispatchHooks) {
      * @param  {Object} rpc
      * @param  {Function} respond
      */
-    
+
     function handleRequest(rpc, respond){
         if (validRequest(rpc)) {
 	    if (typeof rpcDispatchHooks.initMethod === 'function') {
@@ -145,7 +145,6 @@ function jsonrpc(rpcDispatchHooks) {
             req.addListener('end', function() {
 
                 // Attempt to parse incoming JSON string
-		//sys.log(data);
                 try {
                     var rpc = JSON.parse(data),
                         batch = Array.isArray(rpc);
@@ -153,8 +152,8 @@ function jsonrpc(rpcDispatchHooks) {
                     return respond(normalize(rpc, { error: { code: PARSE_ERROR }}));
                 }
 
-		rpc.params.req = req;
-		rpc.params.res = res;
+        		rpc.params.req = req;
+	            rpc.params.res = res;
 
                 /**
                  * Normalize response object.

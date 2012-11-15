@@ -1,0 +1,13 @@
+#interactive-venue-map
+	#left.pull-left
+		a#refresh(href="#") REFRESH
+		#map-container
+	#right.pull-right
+		#groups-container
+		#event-details
+		ul#ticket-list-container
+			li.ticket(ng-repeat="ticket in tickets")
+				span.ticketRow {{ticket.Row}}
+				span.ticketSection {{ticket.Section}}
+				span.ticketPrice {{ticket.ActualPrice}}
+				span.ticketQuantity {{ticket.TicketQuantity}}

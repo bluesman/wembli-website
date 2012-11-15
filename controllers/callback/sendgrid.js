@@ -8,8 +8,8 @@ module.exports = function(app) {
 	if (typeof req.body.organizer == "undefined") {
 	    return res.send(200);
 	}
-	
-	Customer.findOne({email:req.body.organizer},function(err,c) {	
+
+	Customer.findOne({email:req.body.organizer},function(err,c) {
 	    if (err || !c) {
 		console.log('error handling sendgrid callback: '+err);
 		return res.send(200);

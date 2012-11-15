@@ -3,12 +3,41 @@
 @import "tb-variables.less";
 @import "wembli-variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "mixins.less";
+@import "wembli-mixins.less"; // Modify this for custom colors, font-sizes, etc
 
-form {
-  margin-bottom:0px;
-}
+form { margin-bottom:0px; }
 
 .container { width: 1000px; margin-top:0px;}
+
+h2 {
+  font-family: "architects_daughterregular";
+  font-size:18px;
+}
+
+h3 {
+  font-family: "architects_daughterregular";
+  font-size:15px;
+}
+
+.arrow {
+  border:none;
+  background: transparent url('/images/transparent-arrow.png') no-repeat center center;
+  width:112px;
+  height:84px;
+  color:@orange;
+  text-transform:uppercase;
+  text-align:left;
+
+  .arrow-text {
+    padding:0px 0 0 15px;
+  }
+
+}
+
+.arrow:hover {
+  color:@white;
+  background-image:url('/images/orange-arrow.png');
+}
 
 .module {
   .clearfix();
@@ -55,23 +84,16 @@ form {
 @import "fonts.less";
 @import "type.less";
 @import "layout.less";
-@import "backgrounds.less";
 @import "header.less";
 @import "footer.less";
 
 @import "stars.less";
 @import "event-list.less";
-@import "ticket-list.less";
-@import "search-box.less";
-@import "event-builder.less";
-@import "signup.less";
-@import "login.less";
-@import "plan-view.less";
-@import "public-view.less";
+@import "event.less";
 
 @import "index.less";
-@import "events.less";
 @import "tickets.less";
-@import "friends.less";
-@import "summary.less";
-@import "dashboard.less";
+@import "login.less";
+@import "signup.less";
+@import "confirm.less";
+@import "event-options.less";

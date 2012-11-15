@@ -1,24 +1,98 @@
-footer {
-  text-align:left;
-  border-top:40px solid #524F45;
-  padding:10px 0;
-  font-size:14px;
-  min-height:100px;
-  .body {
-    .clearfix();
-    width:720px;
-    margin:auto;
+#footer {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: block;
+  height: 90px;
+  z-index: 4000;
+	@navHeight:60px;
+
+  #nav-arrow {
+		width: 0;
+		height: 0;
+		border-top: 15px solid @orange;
+		border-right: 15px solid transparent;
+		border-left: 15px solid transparent;
+		position:relative;
+		top:8px;
+		@shadow:0 -4px 2px -2px rgba(0,0,0,.25);
+		.box-shadow(@shadow);
+
   }
 
-  .span3 {
-    div {
-      margin:auto;
-      text-align:left;
-      height:26px;
-    }
+  .center-, .center-search { left:145px; }
+  .center-invitation { left:220px; }
+  .center-tickets { left:305px; }
+  .center-parking { left:400px; }
+  .center-restaurants { left:512px; }
+  .center-hotels { left:626px; }
+  .center-login { left:710px; }
+  .center-dashboard {left:730px;}
+  .center-signup { left:790px; }
+
+  ul#nav {
+		.clearfix();
+		height:@navHeight;
+		@shadow:0 -4px 4px 0 rgba(0,0,0,.25);
+		.box-shadow(@shadow);
+		#gradient > .vertical(@gray, @grayDarker);
+
+  	li {
+  		line-height:@navHeight;
+      a {
+        text-transform: uppercase;
+        float:left;
+        font-size:15px;
+        padding:0 15px 0;
+        color:@grayLighter
+      }
+      a:link, a:visited {color:@grayLighter;}
+      a:hover {color:@orange;}
+      a.active:link, a.active:hover, a.active:visited {color:@white;}
+
+      a#nav-search {
+				width:115px;
+ 				padding:0 10px 0 0;
+
+  			#search-title {
+  				color:@orange;
+  				font-size:16px;
+  				float:left;
+  				padding-left: 10px;
+  				text-transform: none;
+  				padding:right:0;
+  				background-color:@white;
+  				width:75px;
+  			}
+
+ 				.arrow-right {
+					width: 0;
+					height: 0;
+					border-top: 30px solid transparent;
+					border-bottom: 30px solid transparent;
+					border-left: 30px solid @white;
+					float:right;
+					position:relative;
+					left:-1px;
+				}
+			}
+
+			a#nav-search:hover, a#nav-search.active {
+				#search-title {
+					color:@white;
+					background-color:@orange;
+				}
+				.arrow-right {
+					border-left: 30px solid @orange;
+				}
+			}
+  	}
   }
 
-}
+  #info {
+  	height:30px;
+  	background-color: @white;
+  }
 
-#index #maincontentWrapper footer {
 }

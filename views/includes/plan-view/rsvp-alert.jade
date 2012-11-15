@@ -1,8 +1,0 @@
-input#guid(type="hidden",name="guid",value="#{req.session.currentPlan.config.guid}")
-input#token(type="hidden",name="token",value="#{req.session.friend.token.token}")
-- friendId = (typeof req.session.friend.email != "undefined") ? req.session.friend.email : req.session.friend.fbId;
-input#friendEmail(type="hidden",name="friendEmail",value="#{friendId}")
-.message.pull-left!= 'Hey '+req.session.friend.first_name+', <br/>'+req.session.organizer.first_name+' '+req.session.organizer.last_name+' is planning an outing and you\'re invited! Are you in?'
-.buttons.pull-right.row
-	a#rsvpYes(href="#").btn.btn-success.btn-large Yes
-	a#rsvpNo(href="#").btn.btn-warning.btn-large No

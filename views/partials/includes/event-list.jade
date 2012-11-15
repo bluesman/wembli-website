@@ -1,0 +1,5 @@
+#event-list-wrapper
+	h2= heading
+	ul
+		li.event-wrapper.wembli-sequence-link(id="{{event.ID}}-wrapper",ng-repeat="event in events")
+			include event

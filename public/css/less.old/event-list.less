@@ -1,0 +1,121 @@
+
+.event-list {
+  min-height:600px;
+  background-color:@grayLighter;
+  padding:15px;
+  border-bottom:1px solid #CCC;
+  h3 {
+    text-shadow:1px 1px #b4b4b4;
+    margin-bottom:25px;
+  }
+
+  ul li {
+    .clearfix();
+    font-size:11px;
+    padding:0 0 25px 0;
+    border-bottom:1px solid #a4a4a4;
+    margin-bottom:15px;
+    position:relative;
+
+    p {font-size:11px;}
+
+    p.info {
+      float:left; margin:0 10px 0 75px;
+      line-height:15px;
+      max-width:300px;
+    }
+    p.cta {float:right; text-align:center;}
+    p.cta em {display:block; margin-top:5px;}
+
+  }
+
+  #searchBox {
+    margin:0 0 20px 0;
+
+    #searchForm input#q {
+      font-size:22px;
+    }
+  }
+
+  .span4 ul li p.info { width:125px; }
+  .span5 ul li p.info { width:205px; }
+  .span6 ul li p.info { width:285px; }
+  .span7 ul li p.info { width:365px; }
+  .span8 ul li p.info { width:445px; }
+  .span9 ul li p.info { width:525px; }
+  .span10 ul li p.info { width:605px; }
+  .span11 ul li p.info { width:685px; }
+  .span12 ul li p.info { width:765px; }
+
+  #seeMore {display:block;width:200px;margin:auto;}
+}
+
+/* the event date box */
+.event-date-box {
+  background-color:@grayLight;
+  text-transform:uppercase;
+  text-align:center;
+  display:block;
+  height:60px;
+  width:56px;
+  position:absolute;
+  border-radius:10px;
+  color:@grayDark;
+  padding:5px;
+}
+
+.event-date-box span { display:block; }
+
+.event-date-box span.event-date {
+  font-size:16px;
+  line-height:18px;
+  margin-bottom:2px;
+  text-transform:capitalize;
+}
+
+#wembliOptions {
+  hr {margin:0}
+
+  a.planOption {
+    display:block;
+    padding:20px 0;
+    min-height:20px;
+    font-size:14px;
+
+    input {
+      float:left;
+      margin-left:20px;
+    }
+
+    .info {
+      margin-left:40px;
+    }
+    .moreInfo {
+      margin-left:40px;
+      font-size:12px;
+      color:@black;
+    }
+  }
+
+  .comingSoon {
+    padding:20px 0;
+}
+
+}
+
+a.planOption:hover {
+  background-color:lighten(@yellow,20%);
+}
+
+a#moreEvents {
+  display:block;
+  line-height:16px;
+  vertical-align:middle;
+  height:16px;
+  padding:10px;
+
+}
+
+a#moreEvents:hover {
+    background-color:lighten(@yellow,20%);
+}

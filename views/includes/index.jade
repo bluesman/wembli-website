@@ -1,0 +1,44 @@
+//- set up some string vars to be used in this template
+heading       = 'Upcoming Events';
+url           = '/events/search/';
+seeMore       = 'See more events';
+lastEventDate = '';
+lastEventId   = undefined;
+
+- if (typeof events != "undefined")
+	- console.log(events.length);
+	- lastEventDate = new Date(events[events.length-1].Date).format('mm-dd-yy');
+	- lastEventId = events[events.length-1].ID;
+
+- if (req.session.ipinfo.city)
+	- heading += ' Near '+req.session.ipinfo.city;
+	- url     += req.session.ipinfo.city+'/';
+	- seeMore += ' near '+req.session.ipinfo.city;
+- url += Date.today().format("mm-dd-yy")
+
+input(type="hidden", name="city", value="#{req.session.ipinfo.city}", ng-init="city='#{req.session.ipinfo.city}'")
+input(type="hidden", name="postalCode", value="#{req.session.ipinfo.postal_code}", ng-init="postalCode='#{req.session.ipinfo.postal_code}'")
+input(type="hidden", name="lastEventDate", ng-init="lastEventDate='#{lastEventDate}'", value="#{lastEventDate}")
+input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'", value="#{lastEventId}")
+#index-frame
+	#left
+		#copy.architect Plan, vote on and split the cost of going to live events with friends!
+	#right
+		#search-wrapper
+			#search
+				#search-results(ng-controller="EventListCtrl")
+					#search-box
+						form#search-form.form-search(method="GET", action="/search")
+							input#query(name="search",placeholder="Enter an event, team, venue or date...")
+							button#submit(href="#")
+								#magnifying-glass
+					if (typeof partial != "undefined")
+						include ../partials/includes/event-list
+					else
+						include event-list
+					a#more-events(href="#{url}" ,ng-click="moreEvents()")
+						span= seeMore
+						i.icon-chevron-down
+						img.spinner.hide(src="/images/ajax-loader-small.gif")
+				#arrow
+					h3.arrow-text Search

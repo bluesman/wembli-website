@@ -1,13 +1,17 @@
 !!!
-html
+html.trigger-partial(ng-app="wembliApp")
   head
-    include head
-  body(id="#{pageId}")
+    include includes/head
+  body(ng-controller="MainCtrl")
     include includes/facebook-sdk
-    include includes/backgrounds
     include includes/header
-    #maincontentWrapper.container
-      section#content
-        block content
+    #content
+      ul
+        li
+          #frame1.frame1
+            block frame1
+        li
+          #frame2.frame2
+            block frame2
     include includes/footer
   include includes/js-includes

@@ -1,7 +1,0 @@
-#eventsContent
-	#searchBox
-		form#searchForm.form-search(method="GET", action="/events/search/")
-			input.search-query.span10(id="q",placeholder="Enter an event, team, performer, city, venue")
-			a#go(href="#").segoeBold Go!
-	- var heading = q ? 'Upcoming Events For "'+q+'"' : 'Upcoming Events';
-	.event-list.span8.pull-left!= partial("widgets/event-list",{heading: heading,events:events});

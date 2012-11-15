@@ -1,0 +1,84 @@
+!!!
+html.trigger-partial
+	head
+		include includes/head
+	body
+		include includes/facebook-sdk
+		include includes/header
+		#content
+			#test-hero-left.hero-left
+				ul#ticket-list-container
+					- each ticket in tickets
+						li.ticket(ng-repeat="ticket in tickets")
+							span.ticketRow #{ticket.Row}
+							span.ticketSection #{ticket.Section}
+							span.ticketPrice #{ticket.ActualPrice}
+							span.ticketQuantity #{ticket.TicketQuantity}
+			.hero-right
+				#groups-container
+				#map-container
+		include includes/footer
+		include includes/js-includes
+		script(type="text/javascript")
+			$('#map-container').tuMap({
+				ServiceUrl: "https://imap.ticketutils.com",
+				MapId:"05f64774-adfc-4950-a892-2cff9b5f8f92",
+				MapSet: "tu",
+				ColorScheme: 1,
+				AutoSwitchToStatic: true,
+				ControlsPosition: "Outside",
+				ZoomLevel: 2,
+				GroupsContainer: "#groups-container",
+
+				RowSelector: ".ticketRow",
+				SectionSelector: ".ticketSection",
+				PriceSelector: ".ticketPrice",
+				QuantitySelector: ".ticketQuantity",
+				eTicketSelector: ".eTicket",
+
+				OnMouseover: function(e, Section) {
+				console.log(Section);
+				if(Section.Active) {
+				console.log("Section " + Section.Name + " in Group " + Section.Group.Name);
+				} else {
+				console.log('no tickets');
+				}
+				},
+
+				OnError: function(e, Error) {
+				console.log(Error);
+				},
+
+				OnMouseout: function(e, Section) {
+				if(Section.Active) {
+				console.log("Section " + Section.Name + " in Group " + Section.Group.Name);
+				}
+				},
+
+				OnClick: function(e, Section) {
+				if(Section.Active && Section.Selected) {
+				console.log("Selected Section " + Section.Name + " in Group " + Section.Group.Name);
+				}
+				},
+
+				OnControlClick: function(e, Data) {
+				if(Section.Selected) {
+				console.log("Selected Button " + Data.Name);
+				}
+				},
+
+				OnGroupClick: function(e, Group) {
+				if(Group.Selected) {
+				console.log("Selected Group " + Group.Name);
+				}
+				},
+
+				OnTicketSelected: function(e, Ticket) {
+				console.log("TicketId:" + Ticket.Id + ", Quantity:" + Ticket.Quantity);
+				},
+
+				OnReset: function(e) {
+				//Write Code Here
+				console.log('they want to reset');
+				},
+			});

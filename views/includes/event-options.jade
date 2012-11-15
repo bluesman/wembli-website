@@ -1,0 +1,55 @@
+block hero-left
+	#event-options-hero-left.hero-left
+		.event-data(event-id="#{eventId}")
+		#copy.architect Customize your plan by choosing your payment, add-ons & invite preferences.
+		#cartoon-man
+		#dotted-line
+
+block hero-right
+	#event-options-hero-right.hero-right(ng-controller="EventOptionsCtrl")
+		form#event-options-form(name="eventOptionsForm",method="post",action="/event/#{eventId}/#{eventName}",enctype="application/x-www-form-urlencoded")
+			fieldset
+				#payment-options.options-group
+					h2 Payment Options:
+					.error-text(ng-show="paymentOptionsError") Dude, SOMEONE has to pay for this...please choose a payment option.
+					.control-group
+						input(type="radio",name="payment",value="group",ng-checked="payment=='group'")
+						label I'm coordinating this outing with friends and we're splitting the bill
+					.control-group
+						input(type="radio",name="payment",value="self",ng-checked="payment=='self'")
+						label I'm planning this outing and footing the bill (that's how i roll)
+				#add-ons.options-group
+					h2 Add-Ons:
+					.error-text(ng-show="addOnsError") Error with add-ons...
+					.control-group
+						input#parking(type="checkbox",name="parking",ng-checked="parking")
+						label I want to lock in parking spot(s) ahead of time
+					.control-group
+						input#restaurant(type="checkbox",name="restaurant",ng-checked="restaurant")
+						label I want to add restaurant reservations to my outing
+					.control-group
+						input#hotel(type="checkbox",name="hotel",ng-checked="hotel")
+						label I need to book a hotel room(s)
+				#invite-options.options-group
+					h2 Invite Preferences:
+					.error-text(ng-show="inviteOptionsError") Error with invite preferences...
+					.control-group
+						input#guest-friends(type="checkbox",name="guest_friends",ng-checked="guest_friends")
+						label My guests can invite their friends/family
+					.control-group
+						input#over-21(type="checkbox",name="over_21",ng-checked="over_21")
+						label This outing is for people over 21 (sorry no kids this time)
+				#guest-list-options.options-group
+					h2 Guest List:
+					.error-text(ng-show="guestListOptionsError") Dude, you need to pick one of these...
+					.control-group
+						input(type="radio",name="guest_list",value="full",ng-checked="guest_list=='full'")
+						label My guests can see the full invite list
+					.control-group
+						input(type="radio",name="guest_list",value="rsvp",ng-checked="guest_list=='rsvp'")
+						label My guests can only see who's RSVP'd 'yes'
+					.control-group
+						input(type="radio",name="guest_list",value="private",ng-checked="guest_list=='private'")
+						label My guests can not see who else is invited
+			button#arrow.arrow.wembli-sequence-link
+				.arrow-text.architect Continue

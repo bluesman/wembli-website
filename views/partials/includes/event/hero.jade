@@ -1,0 +1,13 @@
+- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/events/search';
+- lastSearch += '?updateEvent=1';
+.event-date-box
+	span.day {{getDate(event.Date)| date:'EEE'}}
+	span.event-date {{getDate(event.Date)| date:'MMM d'}}
+	span.time {{getDate(event.Date)| date:'h:mm a'}}
+.info.pull-left
+	span.name.block {{event.Name}}
+	span.venue.block {{ event.Venue.Name || event.Venue }}
+		span.location.block {{event.City+', '+event.StateProvince}}
+	- if (typeof changeEvent != "undefined" && changeEvent == true)
+		span.changeEvent.block
+			a#changeEvent(href="/search?search=#{lastSearch}") Change Event

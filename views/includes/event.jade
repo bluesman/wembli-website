@@ -1,44 +1,31 @@
 - var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/events/search';
 - lastSearch += '?updateEvent=1';
-- if (typeof event == "undefined")
-	- var event = req.session.currentPlan.event
 - var date = new Date(Date.parse(event.Date));
-p.info
-	- if (typeof link != "undefined" && link === false)
-		span.name.block!= event.Name
-	- else
-		a.choose-event.name.block(href="/event/"+event.ID+"/"+encodeURIComponent(event.Name)+"#eventBuilder")!= event.Name
-	span.venue.block!= (typeof event.Venue.Name != "undefined") ? event.Venue.Name : event.Venue
-	- if (typeof event.Venue != "undefined" && typeof event.Venue.Street1 != "undefined" && typeof event.Venue.ZipCode != "undefined")
-		- var location = event.Venue.Street1+', '+event.City+', '+event.StateProvince+' '+event.Venue.ZipCode;
-		- var mapQuery = event.Venue.Name+', '+event.Venue.Street1+' '+event.Venue.ZipCode;
-	- else
-		- var location = event.City+', '+event.StateProvince
-	span.location.block!= location
-		- if (typeof mapQuery != "undefined")
-			span.mapLink &nbsp;(&nbsp;
-				a(href="http://maps.google.com/?q=#{mapQuery}",target="_blank") Map Link
-			span &nbsp;)
-	- if (typeof rating == "undefined" || rating !== false)
-		span.rating.block
-			em Expert Rating:
-			span.stars!= (event.Rating ? event.Rating : 0)
-	- if (typeof changeEvent != "undefined" && changeEvent == true)
-		span.changeEvent.block
-			a#changeEvent(href="/events/search/#{lastSearch}") Change Event
-- if (typeof cta == "undefined" || cta !== false)
-	p.cta.center
-		a.choose-event.btn.btn-primary(id="#{event.ID}",href="/event/"+event.ID+"/"+event.Name+"#eventBuilder") Plan It!
-		- if (typeof event.TicketPricingInfo != "undefined")
-			- if (event.TicketPricingInfo.ticketsAvailable == '0')
-				em.orange No tix available
-			- else
-				em.ticketsAvailable #{event.TicketPricingInfo.ticketsAvailable} tix
-				- if (event.TicketPricingInfo.lowPrice == event.TicketPricingInfo.highPrice)
-					em.priceRange from $#{parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)}
-				- else
-					em.priceRange ($#{parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)} - $#{parseFloat(event.TicketPricingInfo.highPrice).toFixed(0)})
-span.event-date-box
+- var location = event.City+', '+event.StateProvince;
+a.hide(id="#{event.ID}",href="/event/"+event.ID+"/"+event.Name)
+.event-date-box
 	span.day!=        date.format("ddd")
 	span.event-date!= date.format("mmm d")
 	span.time!=       date.format("h:MM TT")
+.info
+	.pull-left
+		span.name.block= event.Name
+		span.venue.block= (typeof event.Venue.Name != "undefined") ? event.Venue.Name : event.Venue
+		span.location.block= location
+		- if (typeof changeEvent != "undefined" && changeEvent == true)
+			span.changeEvent.block
+				a#changeEvent.wembli-sequence-link(href="/events/search/#{lastSearch}") Change Event
+	.pull-right
+		- if ((typeof event.TicketPricingInfo !== "undefined") && (typeof event.TicketPricingInfo.ticketsAvailable !== "undefined"))
+			span.pricing.pull-right
+				- if (event.TicketPricingInfo.ticketsAvailable == '0')
+					em No tix available
+				- else
+					em.ticketsAvailable #{event.TicketPricingInfo.ticketsAvailable} tix&nbsp;
+					- if (event.TicketPricingInfo.lowPrice == event.TicketPricingInfo.highPrice)
+						em.priceRange from $#{parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)}
+					- else
+						em.priceRange ($#{parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)} - $#{parseFloat(event.TicketPricingInfo.highPrice).toFixed(0)})
+		.cta.architect
+			a.choose-event(id="#{event.ID}",href="/event/"+event.ID+"/"+event.Name)
+				span Plan It!

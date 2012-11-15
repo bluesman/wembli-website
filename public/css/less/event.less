@@ -1,0 +1,80 @@
+.event-wrapper:hover {
+	background-color:lighten(@blueLight,30%);
+	cursor:pointer;
+}
+
+.event-wrapper {
+	.clearfix();
+	position:relative;
+	padding:10px;
+
+	.event-link {
+		display:block;
+	}
+	.cta {
+		position:absolute;
+		bottom:0;
+		right:0;
+		.clearfix();
+
+		.choose-event {
+			float:right;
+			height:62px;
+			width:98px;
+			background: transparent url('/images/blue-ticket.png') no-repeat center top;
+			text-align: center;
+			line-height: 60px;
+			vertical-align: middle;
+			color:@white;
+			font-size:16px;
+			span {
+				.rotate(-5deg);
+			}
+		}
+		.choose-event:hover {
+			color:@blueDark;
+		}
+	}
+
+	.event-date-box {
+		float:left;
+		background: transparent url('/images/date-box.png') no-repeat center top;
+		width:90px;
+		height:70px;
+
+		span {
+			display:block;
+			text-align:center;
+		}
+
+		.day,.time {
+				margin-top:2px;
+				text-transform: uppercase;
+				font-size:14px;
+		}
+
+		.event-date {
+			margin:4px 0;
+			font-size:18px;
+			font-weight:bold;
+		}
+	}
+
+	.info {
+		margin-left:100px;
+		.clearfix();
+
+		span {
+			display:block;
+		}
+
+		.name {
+			font-weight:bold;
+			font-size: 14px;
+		}
+
+		.name, .venue,.location {
+			width:380px;
+		}
+	}
+}

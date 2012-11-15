@@ -1,0 +1,72 @@
+header {
+  .clearfix();
+  position:relative;
+  z-index:3;
+  margin-top:10px;
+
+  #logo {
+    float:left;
+    display:block;
+    margin-top: 5px;
+    height:85px;
+    width:200px;
+    background: url('/images/layout/wembli-orange-beta-small.png') @white center center no-repeat;
+  }
+
+  #utility {
+    float:right;
+    margin-top:13px;
+
+    li {
+      display:inline-block;
+      text-align:right;
+      margin-right:6px;
+      padding-right:6px;
+
+      #fbIcon {
+        display:block;
+        height:27px;
+        width:26px;
+        background-image:url('/images/icons/social-icons.png');
+        background-repeat:no-repeat;
+        background-position:-6px -6px;
+      }
+
+      #twitterIcon {
+        display:block;
+        height:27px;
+        width:30px;
+        background-image:url('/images/icons/social-icons.png');
+        background-repeat:no-repeat;
+        background-position:-41px -6px;
+      }
+    }
+
+    li#followUs {
+      color:#2A2651;
+      font-size:20px;
+      display:block;
+      margin-top:4px;
+      float:left;
+    }
+
+  }
+
+  ul#nav {
+    padding-top: 10px;
+
+    li {
+      margin-top:@whiteHeight;
+      a {
+        text-transform: uppercase;
+        float:left;
+        font-size:15px;
+        padding:0 10px 0;
+        color:@grayLighter
+      }
+      a:link, a:visited {color:@grayLighter;}
+      a:hover {color:@white;}
+      a.active:link, a.active:hover, a.active:visited {color:@white;}
+    }
+  }
+}

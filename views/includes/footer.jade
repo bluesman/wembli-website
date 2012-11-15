@@ -1,15 +1,32 @@
-footer
-	.body.row
-		div.span3
-			div
-				a(href="#") CONTACT US
-			div
-				a(href="http://blog.wembli.com/") BLOG
-		div.span3
-			div
-				a(href="/terms-policies") TERMS OF SERVICE & PRIVACY POLICY
-		div.span3
-			div
-				a(href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=ua/AcceptableUse_full") PayPal™ Acceptable Use Policy
-		
-				
+footer#footer(ng-controller="FooterCtrl")
+	#nav-arrow.center-
+	ul#nav
+		//- the id here actually helps build the framesMap which tells sequence which direction to scroll when clicking
+		//- make sure you give every li an id this must correspond with location.href.
+		li#search.wembli-sequence-link
+			a#nav-search(ng-class="{'/search':'active'}[currentPath]", href="/search")
+				#search-title.architect Search
+				.arrow-right
+		li#index.wembli-sequence-link
+			a(href="/") Home
+		li#invitation.wembli-sequence-link
+			a(href="/invitation") Invite
+		li#tickets.wembli-sequence-link
+			a(href="/tickets") Tickets
+		li#parking.wembli-sequence-link
+			a(href="/parking") Parking
+		li#restaurants.wembli-sequence-link
+			a(href="/restaurants") Restaurants
+		li#hotels.wembli-sequence-link
+			a(href="/hotels") Hotels
+		- if (req.session.loggedIn)
+			li#dashboard.wembli-sequence-link
+				a(href="/dashboard") Dashboard
+			li#logout
+				a(href="/logout",target="_self") Log out
+		- else
+			li#login.wembli-sequence-link
+				a(href="/login") Log in
+			li#signup.wembli-sequence-link
+				a(href="/signup") Sign up
+	#info

@@ -1,0 +1,29 @@
+block hero-left
+	#login-hero-left.hero-left
+		#copy.architect Did you know your plan is automatically saved when you're logged in?
+		#cartoon-man
+		#dotted-line
+
+block hero-right
+	#login-hero-right.hero-right
+		#login-right(ng-controller="LoginCtrl")
+			a#facebook-login.architect(target="_self",href="/auth/facebook")
+				span Login with Facebook
+			#or.architect OR
+			form#login-form(name="loginForm",method="post",action="/login",enctype="application/x-www-form-urlencoded")
+				input.redirect-url(type="hidden",name="redirectUrl",value="")
+				input(type="hidden",ng-model="formError", value="")
+				fieldset
+					#error
+						.error-text(ng-show="error") Doh! Your email or password is incorrect.
+					#email-group.control-group
+						input#email(ng-model="email",placeholder="EMAIL ADDRESS",type="text",name="email")
+					.control-group
+						input(ng-model="password",placeholder="PASSWORD", type="password",value="",name="password")
+					#remember-group.control-group
+						input#remember-input.pull-left(ng-model="remember",type="checkbox",name="remember")
+						label#remember-label.pull-left(for="remember") Remember Me
+						a#forgot-password-link.pull-right(ng-click="forgotPassword()",href="#") forgot your password?
+				a#signup-link.wembli-sequence-link(href="/signup") New to Wembli? Click here to Sign Up.
+				button#arrow.arrow
+					.arrow-text.architect Login

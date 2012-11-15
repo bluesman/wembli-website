@@ -1,0 +1,40 @@
+// Mixin for form field states
+.formFieldState(@textColor: #555, @borderColor: #ccc, @backgroundColor: #f5f5f5, @glowColor: #FF6700) {
+  // Set the text color
+  > label,
+  .help-block,
+  .help-inline {
+    color: @textColor;
+  }
+  // Style inputs accordingly
+  .checkbox,
+  .radio,
+  input,
+  select,
+  textarea {
+    color: @textColor;
+    border-color: @borderColor;
+    &:focus {
+      color:darken(@textColor,40%);
+      border-color: darken(@glowColor, 10%);
+      .box-shadow(0 0 6px lighten(@glowColor, 20%));
+    }
+  }
+  // Give a small background color for input-prepend/-append
+  .input-prepend .add-on,
+  .input-append .add-on {
+    color: @textColor;
+    background-color: @backgroundColor;
+    border-color: @textColor;
+  }
+}
+
+
+// Transitions
+.transition-duration(@transition) {
+  -webkit-transition-duration: @transition;
+     -moz-transition-duration: @transition;
+      -ms-transition-duration: @transition;
+       -o-transition-duration: @transition;
+          transition-duration: @transition;
+}

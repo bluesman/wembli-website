@@ -1,9 +1,0 @@
-#feedContainer
-	h3 Activity Feed
-	ul
-		- if (typeof feed != "undefined")
-			- each f in feed
-				- var feedStr = makeFeedString(f);
-				li.feed
-					strong #{f.actor.name} 
-					span #{feedStr}

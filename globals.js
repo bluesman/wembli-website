@@ -13,6 +13,6 @@ module.exports = {
 	{
 	    title:'Concerts',
 	    links:['Blues', 'Classical', 'Country', 'Hip Hop', 'Jazz', 'Latin &amp Reggaeton', 'Pop', 'R & B', 'Reggae', 'Rock', 'Other Music']
-	}	      
+	}
     ]
 }

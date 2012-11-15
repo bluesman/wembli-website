@@ -1,17 +1,3 @@
-script!= 'var ticketList='+fanvenuesTicketList(tickets)+';'
-#eventBuilderContainer!= partial("widgets/event-builder",{});
-- if (req.session.isOrganizer)
-	#breadcrumbsContainer!= partial("includes/event-builder-breadcrumbs",{});
-#ticketsContent
-	#thumbnail.thumbnail.hide
-	- if ((typeof tickets != "undefined") && (tickets.length > 0))
-		.ticket-list.span5!=partial("widgets/ticket-list",{tickets:tickets});
-	- else
-		.ticket-list.span5
-			#noTickets No tickets available for this event.
-#staticMapContainer
-	#staticMap
-		- if (typeof req.session.currentPlan.event.MapURL == "string")
-			img(src="#{req.session.currentPlan.event.MapURL}")
-		- else
-			#mapNotFound Venue Map Not Available
+extends layout
+block frame2
+	include includes/tickets

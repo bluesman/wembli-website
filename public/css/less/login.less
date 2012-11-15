@@ -1,17 +1,70 @@
-#loginWrapper {
-  .clearfix();
+/* this applies to login and signup */
+a#facebook-login {
+	background: transparent url('/images/facebook-login.png') no-repeat center center;
+	display:block;
+	margin:30px auto 0;
+	height:82px;
+	width:258px;
+	color:white;
+	font-size:14px;
+
+	span {
+		display:block;
+		width:196px;
+		position:relative;
+		top:30px;
+		left:61px;
+	}
 }
 
-#loginWrapper #loginLeft {
-  float:left;
+a#facebook-login:hover {
+	color:@orange;
 }
 
-#loginModal #loginForm #rememberInput {float:left;}
-#loginModal #loginForm #rememberLabel {padding:1px;margin-left:20px;}
-#loginModal #loginForm #forgotPasswordLink {margin-right:20px;}
+#or {
+	font-size:18px;
+	padding:10px;
+	width:40px;
+	margin:10px auto;
+}
 
-#resetWrapper {
-  form {
-    margin:10px 0 0 0;
-  }
+.hero {
+
+	#login-hero-right {
+
+		.clearfix();
+
+		#login-right {
+
+			#remember-label {
+				margin-left: 10px;
+			}
+
+			#email-group,#password-group {
+				margin-top:0px;
+			}
+
+			#remember-group {
+				margin-bottom:30px;
+			}
+
+			#signup-link {
+				margin:20px;
+				display:block;
+			}
+
+			#check-email {
+				text-align:left;
+				margin:100px auto;
+				width:400px;
+			}
+			#confirm-password-form {
+				margin-top:80px;
+
+				button {
+					margin-top:115px;
+				}
+			}
+		}
+	}
 }

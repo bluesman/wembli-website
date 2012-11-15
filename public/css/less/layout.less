@@ -1,9 +1,143 @@
+html {
+	overflow-x:hidden;
+	height:100%;
+}
+
+body {
+	height:100%;
+}
+
 * {outline:none !important;}
 
 .block {display:block;}
 .clearfix:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
-section#content { .clearfix(); }
-.modal {
-  max-height:600px;
+
+#content {
+	width:100%;
+	height:100%;
+	position:relative;
+	text-align:center;
+	margin:auto;
+	.clearfix();
+
 }
 
+#content > ul > li > * {
+	position:absolute;
+	overflow-x:hidden;
+}
+
+#content > ul > li > div {
+	background-color: @white;
+	left: 100%;
+	width:100%;
+	height:100%;
+	.transition-duration(1s);
+
+}
+
+/* this is so the footer doesn't block scrolling down */
+#content > ul > li > div > div {
+	margin-bottom:90px;
+}
+
+#content > ul > li > div.animate-in {
+   	left: 0px;
+   	.transition-duration(1s);
+	}
+
+#content > ul > li > div.animate-out {
+		left:-100%;
+		.transition-duration(1s);
+}
+
+.hero {
+	width:1024px;
+	margin:100px auto 0;
+	.clearfix();
+
+	.hero-left {
+		position:relative;
+		float:left;
+		width:400px;
+		height:100%;
+
+		#copy {
+			position:absolute;
+			.rotate(-4deg);
+			width:220px;
+			top:190px;
+			left:60px;
+			text-align:center;
+			font-size:16px;
+		}
+
+		#cartoon-man {
+			background: transparent url('/images/question.png') no-repeat center center;
+			height:164px;
+			width:200px;
+			margin:270px 0 0 50px;
+		}
+
+		#dotted-line {
+			position:absolute;
+			background: transparent url('/images/login-dotted-line.png') no-repeat center center;
+			height:83px;
+			width:616px;
+			left:220px;
+			top:440px;
+		}
+
+	}
+
+	.hero-right {
+		position:relative;
+		margin-left:400px;
+		width:560px;
+		min-height:450px;
+		background-color: @grayLighter;
+
+		form {
+			.formFieldState(@grayLight,@gray);
+
+			fieldset {
+				background-color:@white;
+				border: 2px solid @gray;
+				width:400px;
+				margin:0 auto;
+				min-height:200px;
+
+				#error,.error {
+					height:30px;
+					padding-left:20px;
+				}
+
+				.error-text {
+					line-height:30px;
+					text-align:left;
+					color:@orange;
+				}
+
+				.control-group {
+					.clearfix();
+					margin:20px 30px 20px 20px;
+				}
+
+				input[type="text"],input[type="password"] {
+					height:30px;
+					width:100%;
+					margin:0 auto;
+				}
+			}
+
+			.arrow {
+				position:absolute;
+				top:410px;
+				left:460px;
+				.rotate(-5deg);
+			}
+		}
+	}
+
+
+}
