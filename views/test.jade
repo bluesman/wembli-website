@@ -6,24 +6,14 @@ html.trigger-partial
 		include includes/facebook-sdk
 		include includes/header
 		#content
-			#test-hero-left.hero-left
-				ul#ticket-list-container
-					- each ticket in tickets
-						li.ticket(ng-repeat="ticket in tickets")
-							span.ticketRow #{ticket.Row}
-							span.ticketSection #{ticket.Section}
-							span.ticketPrice #{ticket.ActualPrice}
-							span.ticketQuantity #{ticket.TicketQuantity}
-			.hero-right
-				#groups-container
-				#map-container
+			#map-container
 		include includes/footer
 		include includes/js-includes
 		script(type="text/javascript")
 			$('#map-container').tuMap({
 				ServiceUrl: "https://imap.ticketutils.com",
-				MapId:"05f64774-adfc-4950-a892-2cff9b5f8f92",
-				MapSet: "tu",
+				MapId:"#{mapId}",
+				MapSet: "#{mapType}",
 				ColorScheme: 1,
 				AutoSwitchToStatic: true,
 				ControlsPosition: "Outside",
