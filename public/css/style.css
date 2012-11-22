@@ -458,13 +458,17 @@ body {
   width: 200px;
   background: url('/images/layout/wembli-orange-beta-small.png') #ffffff center center no-repeat;
 }
-#footer {
+#footerContainer {
   position: fixed;
   right: 0;
   left: 0;
-  bottom: 0;
+  bottom: -300px;
   display: block;
-  height: 90px;
+  height: 675px;
+}
+#footer {
+  position: relative;
+  top: 300px;
   z-index: 4000;
 }
 #footer #nav-arrow {
@@ -586,8 +590,19 @@ body {
 #footer ul#nav li a#nav-search.active .arrow-right {
   border-left: 30px solid #ff6700;
 }
+#footer ul#nav li#handle {
+  margin: 20px;
+}
+#footer ul#nav li#handle a {
+  display: block;
+  height: 19px;
+  width: 37px;
+  background: transparent url('/images/handle.png') no-repeat 0 center;
+}
 #footer #info {
-  height: 30px;
+  position: relative;
+  height: 300px;
+  overflow: hidden;
   background-color: #ffffff;
 }
 /* Stars */
@@ -685,8 +700,8 @@ body {
 .event-wrapper .event-date-box {
   float: left;
   background: transparent url('/images/date-box.png') no-repeat center top;
-  width: 90px;
-  height: 70px;
+  width: 75px;
+  height: 75px;
 }
 .event-wrapper .event-date-box span {
   display: block;
@@ -699,7 +714,7 @@ body {
   font-size: 14px;
 }
 .event-wrapper .event-date-box .event-date {
-  margin: 4px 0;
+  margin: 6px 0 2px;
   font-size: 18px;
   font-weight: bold;
 }
@@ -814,6 +829,10 @@ body {
 #content #index-frame #right #search-wrapper #search #search-results {
   background: #fcfcfc;
   padding-top: 40px;
+}
+#content #index-frame #right #search-wrapper #search #search-results .loading {
+  padding: 4px;
+  text-align: center;
 }
 #content #index-frame #right #search-wrapper #search #search-results #search-box {
   margin: auto;
@@ -937,7 +956,6 @@ body {
 }
 #tickets-frame #left {
   width: 60%;
-  height: 100%;
 }
 #tickets-frame #right {
   width: 40%;

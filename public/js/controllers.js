@@ -82,14 +82,14 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 		//transformRequest
 
 		function(data, headersGetter) {
-			$('#more-events .spinner').show();
+			$('.loading-icon').show();
 			return data;
 		},
 
 		//transformResponse
 
 		function(data, headersGetter) {
-			$('#more-events .spinner').hide();
+			$('.loading-icon').hide();
 			return JSON.parse(data);
 		});
 
@@ -192,7 +192,9 @@ function SupplyPasswordCtrl($scope) {
 	});
 };
 
-function FooterCtrl($scope, $location, $window) {};
+function FooterCtrl($scope, $location, $window) {
+	$('#footer').draggable({snap:"#footerContainer",snapTolerance:30,snapMode:"inner",cursor:"move",axis:"y",containment:"parent",handle:"#handle"});
+};
 
 function TicketsCtrl($scope, wembliRpc) {
 	//console.log('eventId:' + $scope.eventId);

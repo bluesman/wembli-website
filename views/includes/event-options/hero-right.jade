@@ -1,10 +1,3 @@
-block hero-left
-	#event-options-hero-left.hero-left
-		.event-data(event-id="#{eventId}")
-		#copy.architect Customize your plan by choosing your payment, add-ons & invite preferences.
-		#cartoon-man
-		#dotted-line
-
 block hero-right
 	#event-options-hero-right.hero-right(ng-controller="EventOptionsCtrl")
 		form#event-options-form(name="eventOptionsForm",method="post",action="/event/#{eventId}/#{eventName}",enctype="application/x-www-form-urlencoded")

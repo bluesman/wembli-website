@@ -25,7 +25,7 @@ exports.event = {
 
 	get: function(args, req, res) {
 		var me = this;
-
+		console.log('here');
 		args.cnt = (args.cnt) ? args.cnt : 15;
 
 		if (args.nearZip == "undefined") {

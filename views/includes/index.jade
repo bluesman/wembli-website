@@ -36,9 +36,10 @@ input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'",
 						include ../partials/includes/event-list
 					else
 						include event-list
+					.loading
+						img.loading-icon.hide(src="/images/loading-small.gif")
 					a#more-events(href="#{url}" ,ng-click="moreEvents()")
 						span= seeMore
 						i.icon-chevron-down
-						img.spinner.hide(src="/images/ajax-loader-small.gif")
 				#arrow
 					h3.arrow-text Search

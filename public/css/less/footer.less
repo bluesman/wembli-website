@@ -1,12 +1,17 @@
-#footer {
+#footerContainer {
   position: fixed;
   right: 0;
   left: 0;
-  bottom: 0;
+  bottom: -300px;
   display: block;
-  height: 90px;
-  z-index: 4000;
+  height: 675px;
+}
+
+#footer {
+  position: relative;
+  top:300px;
 	@navHeight:60px;
+  z-index: 4000;
 
   #nav-arrow {
 		width: 0;
@@ -88,10 +93,22 @@
 				}
 			}
   	}
+
+    li#handle {
+      margin:20px;
+      a {
+        display:block;
+        height:19px;
+        width:37px;
+        background:transparent url('/images/handle.png') no-repeat 0 center;
+      }
+    }
   }
 
   #info {
-  	height:30px;
+    position:relative;
+  	height:300px;
+    overflow:hidden;
   	background-color: @white;
   }
 
