@@ -1,4 +1,5 @@
 input(type="hidden", name="eventId", value="#{eventId}", ng-init="eventId='#{eventId}'")
 input(type="hidden", name="eventName", value="#{eventName}", ng-init="eventName='#{eventName}'")
+input#tnMapUrl(type="hidden", name="tnMapUrl", value="#{tnMapUrl}", ng-init="tnMapUrl='#{tnMapUrl}'")
 #tickets-frame.animate-in(ng-controller="TicketsCtrl")
 	interactive-venue-map(event-id="#{eventId}")

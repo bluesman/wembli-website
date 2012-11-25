@@ -1,8 +1,8 @@
-- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/events/search';
+- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 - lastSearch += '?updateEvent=1';
 - var date = new Date(Date.parse(event.Date));
 - var location = event.City+', '+event.StateProvince;
-a.hide(id="#{event.ID}",href="/event/"+event.ID+"/"+event.Name)
+a.hide(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)
 .event-date-box
 	span.day!=        date.format("ddd")
 	span.event-date!= date.format("mmm d")
@@ -14,18 +14,8 @@ a.hide(id="#{event.ID}",href="/event/"+event.ID+"/"+event.Name)
 		span.location.block= location
 		- if (typeof changeEvent != "undefined" && changeEvent == true)
 			span.changeEvent.block
-				a#changeEvent.wembli-sequence-link(href="/events/search/#{lastSearch}") Change Event
+				a#changeEvent.wembli-sequence-link(href="/search/#{lastSearch}") Change Event
 	.pull-right
-		- if ((typeof event.TicketPricingInfo !== "undefined") && (typeof event.TicketPricingInfo.ticketsAvailable !== "undefined"))
-			span.pricing.pull-right
-				- if (event.TicketPricingInfo.ticketsAvailable == '0')
-					em No tix available
-				- else
-					em.ticketsAvailable #{event.TicketPricingInfo.ticketsAvailable} tix&nbsp;
-					- if (event.TicketPricingInfo.lowPrice == event.TicketPricingInfo.highPrice)
-						em.priceRange from $#{parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)}
-					- else
-						em.priceRange ($#{parseFloat(event.TicketPricingInfo.lowPrice).toFixed(0)} - $#{parseFloat(event.TicketPricingInfo.highPrice).toFixed(0)})
-		.cta.architect
-			a.choose-event(id="#{event.ID}",href="/event/"+event.ID+"/"+event.Name)
-				span Plan It!
+		.cta
+			a.btn.btn-primary.choose-event(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)
+				span Find Tickets

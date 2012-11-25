@@ -8,6 +8,8 @@
 angular.module('wembliApp.services', [])
 
 .factory('initRootScope', ['$window', '$rootScope', function($window, $rootScope) {
+	$rootScope.tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid=5006&sitenumber=0';
+
 	$rootScope.partial = false; //partial starts as false, indicating the the full page was loaded from server without any ajax partials
 	//init some scope vars
 	$rootScope.currentPath = $window.location.pathname;
@@ -20,6 +22,24 @@ angular.module('wembliApp.services', [])
 		//return $filter('date')(d, "MM-dd-yy");
 	}
 
+}])
+
+.factory('interactiveMapDefaults', [function() {
+	return {
+		ServiceUrl:"https://imap.ticketutils.com",
+		MapSet:"tn",
+		ZoomLevel:2,
+		ColorScheme:1,
+		//AutoSwitchToStatic: true,
+		ControlsPosition: "Outside",
+		FailOverMapUrl:"http://data.ticketutils.com/Charts/No-Seating-Chart.jpg",
+		GroupsContainer: "#groups-container",
+		RowSelector: ".ticket-row",
+		SectionSelector: ".ticket-section",
+		PriceSelector: ".actual-price",
+		QuantitySelector: ".ticket-quantity",
+		eTicketSelector: ".e-ticket"
+	};
 }])
 
 .factory('wembliRpc',['$rootScope','$http', function($rootScope,$http) {
@@ -52,7 +72,7 @@ angular.module('wembliApp.services', [])
 			transformResponse = function(data) {	return JSON.parse(data); }
 		}
 
-		$http.post('/', data, {
+		return $http.post('/', data, {
 			headers: {"Content-Type": "application/json"},
 			transformRequest: transformRequest,
 			transformResponse: transformResponse

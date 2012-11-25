@@ -1,4 +1,6 @@
-function MainCtrl($scope, $window, footer) {};
+function MainCtrl($scope, $window, footer) {
+	//$('#page-loading-modal').modal({backdrop:"static",keyboard:false,hide:true});
+};
 
 function IndexCtrl($scope) {};
 
@@ -51,16 +53,89 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc) {
 
 function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 
+	$scope.showTicketSummary = function(e) {
+		var elId = (typeof $(e.target).parents('li').attr('id') == "undefined") ? $(e.target).attr('id') : $(e.target).parents('li').attr('id');
+
+		if (typeof $scope.ticketSummaryData == "undefined") {
+			$scope.ticketSummaryData = {};
+		}
+
+    //fetch the event data
+    var args = {"eventID": elId.split('-')[0]};
+
+    if (typeof $scope.ticketSummaryData[elId.split('-')[0]] != "undefined") {
+    	return $('#'+elId).popover('show');
+    }
+
+    wembliRpc.fetch('event.getPricingInfo', args,
+
+      //response callback
+      function(err, result) {
+      	if(err) {
+          //handle err
+          alert('error happened - contact help@wembli.com');
+          return;
+        }
+
+        $scope.ticketSummaryData[elId.split('-')[0]] = result;
+        console.log(result);
+        //init the popover
+        var summaryContent = "";
+        if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
+        	if (result.ticketPricingInfo.ticketsAvailable === '0') {
+        		summaryContent = "Click for ticket information";
+        	} else {
+        		summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketPricingInfo.ticketsAvailable + " ticket choice" : result.ticketPricingInfo.ticketsAvailable + " ticket choices";
+        		if (parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
+        			summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
+        		} else {
+        			summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " to $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
+						}
+					}
+				} else {
+					summaryContent = "Click for ticket information";
+				}
+
+        $('#'+elId).popover({placement:"left",animation:true,title:'Tickets Summary',content:summaryContent});
+        $('#'+elId).popover('show');
+      },
+
+      //transformRequest
+      function(data, headersGetter) {
+        //$('#more-events .spinner').show();
+        return data;
+      },
+
+      //transformResponse
+      function(data, headersGetter) {
+        //$('#more-events .spinner').hide();
+        return JSON.parse(data);
+      }
+    );
+	};
+
+	$scope.hideTicketSummary = function(e) {
+		var elId = (typeof $(e.target).parents('li').attr('id') == "undefined") ? $(e.target).attr('id') : $(e.target).parents('li').attr('id');
+		$('#'+elId).popover('hide');
+	};
+
 	$scope.moreEvents = function() {
 		//fetch the upcoming events
 		var args = {
 			"beginDate": $scope.lastEventDate,
-			"nearZip": $scope.postalCode,
 			"orderByClause": "Date",
 			"lastEventId": $scope.lastEventId
 		};
 
-		wembliRpc.fetch('event.get', args,
+		if ($scope.search) {
+			args.searchTerms = $scope.search;
+			var method = 'event.search';
+		} else {
+			args.nearZip = $scope.postalCode;
+			var method = 'event.get';
+		}
+
+		wembliRpc.fetch(method, args,
 		//response callback
 
 		function(err, result) {
@@ -200,5 +275,8 @@ function TicketsCtrl($scope, wembliRpc) {
 	//console.log('eventId:' + $scope.eventId);
 	//console.log($scope.eventName);
 	console.log('tickets controller');
+	$('#page-loading-modal').modal({backdrop:"static",keyboard:false,hide:true});
+}
 
+function VenueMapCtrl($scope,interactiveMapDefaults) {
 }

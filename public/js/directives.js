@@ -13,20 +13,16 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('interactiveVenueMap', ['wembliRpc', function(wembliRpc) {
+.directive('interactiveVenueMap', ['interactiveMapDefaults','wembliRpc','$window', function(interactiveMapDefaults,wembliRpc,$window) {
   return {
     restrict: 'E',
     replace: true,
     templateUrl: "/partials/interactive-venue-map",
     compile: function(element, attr, transclude) {
       console.log('compile func');
+
       //return linking function
       return function(scope, element, attr) {
-        $('#refresh').click(function(e) {
-          e.preventDefault();
-          console.log('refreshing map');
-          $('#map-container').tuMap("Refresh", "Reset");
-        });
 
         scope.$watch('tickets', function(newVal, oldVal) {
           console.log('tickets watch expression');
@@ -49,84 +45,153 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             alert('error happened - contact help@wembli.com');
             return;
           }
-          console.log('map for: '+scope.event.VenueConfigurationID);
           console.log('updating tickets');
           scope.event = result.event;
           scope.tickets = result.tickets;
+          console.log('map for: '+scope.event.VenueConfigurationID);
           //$scope.$broadcast('TicketsCtrl-ticketsLoaded',{});
-          $('#map-container').tuMap({
-            ServiceUrl: "https://imap.ticketutils.com",
-            //MapId:"05f64774-adfc-4950-a892-2cff9b5f8f92", //qualcomm
-            MapId: scope.event.VenueConfigurationID,
-            MapSet: "tn",
-            ColorScheme: 1,
-            AutoSwitchToStatic: true,
-            ControlsPosition: "Outside",
-            //FailOverMapUrl:$('#failOverMapUrl').val(), //set this to tn mapUrl
-            ZoomLevel: 2,
-            GroupsContainer: "#groups-container",
-            RowSelector: ".ticketRow",
-            SectionSelector: ".ticketSection",
-            PriceSelector: ".ticketPrice",
-            QuantitySelector: ".ticketQuantity",
-            eTicketSelector: ".eTicket",
-
-            OnMouseover: function(e, Section) {
-              console.log(Section);
-              if(Section.Active) {
-                console.log("Section " + Section.Name + " in Group " + Section.Group.Name);
-              } else {
-                console.log('no tickets');
-              }
-            },
-
-            OnMouseout: function(e, Section) {
-              if(Section.Active) {
-                console.log("Section " + Section.Name + " in Group " + Section.Group.Name);
-              }
-            },
-
-            OnClick: function(e, Section) {
-              if(Section.Active && Section.Selected) {
-                console.log("Selected Section " + Section.Name + " in Group " + Section.Group.Name);
-              }
-            },
-
-            OnControlClick: function(e, Data) {
-              if(Section.Selected) {
-                console.log("Selected Button " + Data.Name);
-              }
-            },
-
-            OnGroupClick: function(e, Group) {
-              if(Group.Selected) {
-                console.log("Selected Group " + Group.Name);
-              }
-            },
-
-            OnTicketSelected: function(e, Ticket) {
-              console.log("TicketId:" + Ticket.Id + ", Quantity:" + Ticket.Quantity);
-            },
-
-            OnReset: function(e) {
-              //Write Code Here
-              console.log('they want to reset');
-            },
+          /* get min and max tix price for this set of tix */
+          var minTixPrice = 100;
+          var maxTixPrice = 200;
+          angular.forEach(scope.tickets,function(el) {
+            if (parseInt(el.ActualPrice) < minTixPrice) {
+              minTixPrice = parseInt(el.ActualPrice);
+            }
+            if (parseInt(el.ActualPrice) > maxTixPrice) {
+              maxTixPrice = parseInt(el.ActualPrice);
+            }
           });
+
+
+          var initSlider = function () {
+
+            /*Set Minimum and Maximum Price from your Dataset*/
+            $("#price-slider").slider("option","min", minTixPrice);
+            $("#price-slider").slider("option","max", maxTixPrice);
+            $("#price-slider").slider("option","values", [minTixPrice,maxTixPrice]);
+            $("#amount").val("$" + minTixPrice + " - $" + maxTixPrice );
+          }
+
+          var filterTickets = function() {
+            var PriceRange = $("#price-slider").slider("option", "values");
+
+            $("#map-container").tuMap("SetOptions",{
+              TicketsFilter:{
+                MinPrice: PriceRange[0],
+                MaxPrice: PriceRange[1],
+                Quantity: $("#quantity-filter").val(),
+                eTicket:$("#e-ticket-filter").is(":checked")
+              }
+            }).tuMap("Refresh");
+          };
+
+
+          var options = interactiveMapDefaults;
+          options.MapId = scope.event.VenueConfigurationID;
+
+          options.OnInit = function(e,MapType) {
+            console.log('in init mapType: '+MapType);
+            $(".ZoomIn").html('+');
+            $(".ZoomOut").html('-');
+
+          };
+
+          options.OnError = function(e,Error) {
+            console.log('error: ');
+            console.log(Error);
+            if (Error.Code === 1) {
+              /* chart not found - display the tn chart */
+              console.log('setting map background to: '+$('#tnMapUrl').val());
+              $('#map-container').css("background",'url('+$('#tnMapUrl').val()+') no-repeat center center');
+            }
+          };
+
+          options.ToolTipFormatter = function(Data) {
+            console.log('tooltip formatteR: ');
+            console.log(data);
+          };
+
+          options.OnMouseover = function(e, Section) {
+            console.log(Section);
+            if(Section.Active) {
+              console.log("Section " + Section.Name + " in Group " + Section.Group.Name);
+            } else {
+              console.log('no tickets');
+            }
+          };
+
+          options.OnMouseout = function(e, Section) {
+            if(Section.Active) {
+              console.log("Section " + Section.Name + " in Group " + Section.Group.Name);
+            }
+          };
+
+          options.OnClick = function(e, Section) {
+            if(Section.Active && Section.Selected) {
+              console.log("Selected Section " + Section.Name + " in Group " + Section.Group.Name);
+            }
+          };
+
+          options.OnControlClick = function(e, Data) {
+            if(Section.Selected) {
+              console.log("Selected Button " + Data.Name);
+            }
+          };
+
+          options.OnGroupClick = function(e, Group) {
+            if(Group.Selected) {
+              console.log("Selected Group " + Group.Name);
+            }
+          };
+
+          options.OnTicketSelected = function(e, Ticket) {
+            console.log("TicketId:" + Ticket.Id + ", Quantity:" + Ticket.Quantity);
+          }
+
+          options.OnReset = function(e) {
+            //Write Code Here
+            console.log('they want to reset');
+          };
+
+          //set the height of the map-container to the window height
+          $('#map-container').css("height",$($window).height()-60);
+          $('#tickets').css("height",$($window).height()-60);
+          $('#map-container').css("width",$($window).width()-480);
+          $('#map-container').tuMap(options);
+
+          $('#price-slider').slider({
+            range: true,
+            min: minTixPrice,
+            max: maxTixPrice,
+            step:5,
+            values: [ minTixPrice, maxTixPrice ],
+            slide: function( event, ui ) {
+              $( "#amount" ).val( "$" + ui.values[0] + " - $" +  ui.values[1]);
+            },
+            stop: function(event, ui) {
+              filterTickets();
+            }
+
+          });
+
+          var amtVal = "$" + $( "#price-slider" ).slider( "values", 0 ) + " - $" + $( "#price-slider" ).slider( "values", 1 );
+          $( "#amount" ).val(amtVal);
+
+          /* filter tix when the drop down changes */
+          $("#quantity-filter").change(function(){ filterTickets(); });
 
         },
 
         //transformRequest
-
         function(data, headersGetter) {
-          //$('#more-events .spinner').show();
+          console.log('showing modal');
+          $('#page-loading-modal').modal("show");
           return data;
         },
 
         //transformResponse
-
         function(data, headersGetter) {
-          //$('#more-events .spinner').hide();
+          $('#page-loading-modal').modal("hide");
           return JSON.parse(data);
         });
       }
@@ -137,21 +202,16 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 .directive('eventData', ['$filter', 'wembliRpc', function($filter, wembliRpc) {
   return {
     restrict: 'C',
-    templateUrl: '/partials/includes/event/hero',
-    scope: {
-      eventId: '@eventId',
-    },
+    templateUrl: '/partials/event-data',
     compile: function(element, attr, transclude) {
 
       return function(scope, element, attr) {
         //fetch the event data
-        var args = {
-          "eventID": element.attr('event-id')
-        };
+        var args = {"eventID": scope.eventId};
 
         wembliRpc.fetch('event.get', args,
-        //response callback
 
+        //response callback
         function(err, result) {
           if(err) {
             //handle err
@@ -163,14 +223,12 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         },
 
         //transformRequest
-
         function(data, headersGetter) {
           //$('#more-events .spinner').show();
           return data;
         },
 
         //transformResponse
-
         function(data, headersGetter) {
           //$('#more-events .spinner').hide();
           return JSON.parse(data);
@@ -269,6 +327,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             //what frame to go to:
             var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
+
+            console.log('next frame'+nextFrameID);
 
             //compile the page we just fetched and link the scope
             angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));

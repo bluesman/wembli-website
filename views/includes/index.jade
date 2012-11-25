@@ -1,6 +1,6 @@
 //- set up some string vars to be used in this template
 heading       = 'Upcoming Events';
-url           = '/events/search/';
+url           = '/search/';
 seeMore       = 'See more events';
 lastEventDate = '';
 lastEventId   = undefined;
@@ -14,8 +14,19 @@ lastEventId   = undefined;
 	- heading += ' Near '+req.session.ipinfo.city;
 	- url     += req.session.ipinfo.city+'/';
 	- seeMore += ' near '+req.session.ipinfo.city;
+
+- if (search)
+	- heading = 'Events matching "'+search+'"'
+	- seeMore = 'See more events matching "'+search+'"'
+	- var placeholder = search
+	- url = '/search/' + search + '/';
+- else
+	- var search = "";
+	- var placeholder = 'Enter an event, team or venue...'
+
 - url += Date.today().format("mm-dd-yy")
 
+input(type="hidden", name="search", value="#{search}", ng-init="search='#{search}'")
 input(type="hidden", name="city", value="#{req.session.ipinfo.city}", ng-init="city='#{req.session.ipinfo.city}'")
 input(type="hidden", name="postalCode", value="#{req.session.ipinfo.postal_code}", ng-init="postalCode='#{req.session.ipinfo.postal_code}'")
 input(type="hidden", name="lastEventDate", ng-init="lastEventDate='#{lastEventDate}'", value="#{lastEventDate}")
@@ -29,7 +40,7 @@ input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'",
 				#search-results(ng-controller="EventListCtrl")
 					#search-box
 						form#search-form.form-search(method="GET", action="/search")
-							input#query(name="search",placeholder="Enter an event, team, venue or date...")
+							input#query(name="search",placeholder="#{placeholder}",value="#{search}")
 							button#submit(href="#")
 								#magnifying-glass
 					if (typeof partial != "undefined")

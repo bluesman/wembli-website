@@ -12,69 +12,69 @@
 		display:block;
 	}
 	.cta {
-		position:absolute;
-		bottom:0;
-		right:0;
+		margin:20px;
 		.clearfix();
 
 		.choose-event {
 			float:right;
-			height:62px;
-			width:98px;
-			background: transparent url('/images/blue-ticket.png') no-repeat center top;
 			text-align: center;
-			line-height: 60px;
-			vertical-align: middle;
 			color:@white;
 			font-size:16px;
-			span {
-				.rotate(-5deg);
-			}
+
+			.buttonBackground(@blueLight,@blue);
 		}
 		.choose-event:hover {
 			color:@blueDark;
 		}
 	}
+}
 
-	.event-date-box {
-		float:left;
-		background: transparent url('/images/date-box.png') no-repeat center top;
-		width:75px;
-		height:75px;
+.event-data {
+	.clearfix();
+	#translucent > .background(@orange,0.25);
+}
 
-		span {
-			display:block;
-			text-align:center;
-		}
+.event-date-box {
+	float:left;
+	background: transparent url('/images/date-box.png') no-repeat center top;
+	width:75px;
+	height:75px;
+	margin:10px;
 
-		.day,.time {
-				margin-top:2px;
-				text-transform: uppercase;
-				font-size:14px;
-		}
-
-		.event-date {
-			margin:6px 0 2px;
-			font-size:18px;
-			font-weight:bold;
-		}
+	span {
+		display:block;
+		text-align:center;
 	}
 
-	.info {
-		margin-left:100px;
-		.clearfix();
+	.day,.time {
+		margin-top:2px;
+		text-transform: uppercase;
+		font-size:14px;
+	}
 
-		span {
-			display:block;
-		}
+	.event-date {
+		margin:6px 0 2px;
+		font-size:18px;
+		font-weight:bold;
+	}
+}
 
-		.name {
-			font-weight:bold;
-			font-size: 14px;
-		}
+.info {
+	text-align:left;
+	margin-left:100px;
+	margin-top:10px;
+	.clearfix();
 
-		.name, .venue,.location {
-			width:380px;
-		}
+	span {
+		display:block;
+	}
+
+	.name {
+		font-weight:bold;
+		font-size: 16px;
+	}
+
+	.name, .venue,.location {
+		width:340px;
 	}
 }

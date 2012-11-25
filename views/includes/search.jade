@@ -1,1 +1,29 @@
-#search-frame.animate-in search page
+heading = 'Events matching "' + search + '"'
+url           = '/search/';
+seeMore       = 'See more events';
+lastEventDate = '';
+lastEventId   = undefined;
+
+#search-frame.animate-in
+	#left
+	#right
+		#search-wrapper
+			#search
+				#search-results(ng-controller="EventListCtrl")
+					#search-box
+						form#search-form.form-search(method="GET", action="/search")
+							input#query(name="search",placeholder="Enter an event, team, venue or date...")
+							button#submit(href="#")
+								#magnifying-glass
+					if (typeof partial != "undefined")
+						include ../partials/includes/event-list
+					else
+						include event-list
+					.loading
+						img.loading-icon.hide(src="/images/loading-small.gif")
+					a#more-events(href="#{url}" ,ng-click="moreEvents()")
+						span= seeMore
+						i.icon-chevron-down
+				#arrow
+					h3.arrow-text Search
+

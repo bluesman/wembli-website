@@ -1,3 +1,47 @@
+#search-box {
+	margin:auto;
+	width:500px;
+	height:70px;
+	background: @white url('/images/search-box.png') no-repeat center top;
+	form#search-form {
+		.clearfix();
+		.formFieldState(@grayLight,@gray);
+
+		#query {
+			height:40px;
+			width:400px;
+			float:left;
+			font-size:18px;
+			margin:10px 0 0 10px;
+		}
+
+		button#submit {
+			float:left;
+			display:block;
+			width:60px;
+			height:48px;
+			margin:10px 0 0 10px;
+			background-color:@blue;
+			border:none;
+			.border-radius(2px);
+
+			#magnifying-glass {
+				.transition-duration(0s);
+				width:25px;
+				height:50px;
+				margin:auto;
+				background:transparent url('/images/magnifying-glass.png') no-repeat 0 center;
+			}
+		}
+
+		button#submit:hover {
+			#magnifying-glass {
+				background:transparent url('/images/magnifying-glass.png') no-repeat -24px center;
+			}
+		}
+	}
+}
+
 #content {
 	#index-frame {
 		background: @white url('/images/home.png') no-repeat left 40px;
@@ -44,7 +88,7 @@
 						.rotate(6deg);
 						text-transform:uppercase;
 						position:absolute;
-						top:28px;
+						top:21px;
 						left:15px;
 					}
 				}
@@ -56,54 +100,11 @@
 					#search-results {
 						background:@grayLighter;
 						padding-top:40px;
+						min-height:600px;
 
 						.loading {
 							padding: 4px;
 							text-align:center;
-						}
-
-						#search-box {
-							margin:auto;
-							width:500px;
-							height:70px;
-							background: @white url('/images/search-box.png') no-repeat center top;
-							form#search-form {
-								.clearfix();
-								.formFieldState(@grayLight,@gray);
-
-								#query {
-									height:40px;
-									width:400px;
-									float:left;
-									font-size:18px;
-									margin:10px 0 0 10px;
-								}
-
-								button#submit {
-									float:left;
-									display:block;
-									width:60px;
-									height:48px;
-									margin:10px 0 0 10px;
-									background-color:@blue;
-									border:none;
-									.border-radius(2px);
-
-									#magnifying-glass {
-										.transition-duration(0s);
-										width:25px;
-										height:50px;
-										margin:auto;
-										background:transparent url('/images/magnifying-glass.png') no-repeat 0 center;
-									}
-								}
-
-								button#submit:hover {
-									#magnifying-glass {
-										background:transparent url('/images/magnifying-glass.png') no-repeat -24px center;
-									}
-								}
-							}
 						}
 
 						a#more-events {

@@ -1,6 +1,6 @@
-- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/events/search';
+- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 - lastSearch += '?updateEvent=1';
-a.hide(id="{{event.ID}}",href="/event/{{event.ID}}/{{event.Name}}")
+a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 .event-date-box
 	span.day {{getDate(event.Date)| date:'EEE'}}
 	span.event-date {{getDate(event.Date)| date:'MMM d'}}
@@ -12,13 +12,8 @@ a.hide(id="{{event.ID}}",href="/event/{{event.ID}}/{{event.Name}}")
 		span.location.block {{event.City+', '+event.StateProvince}}
 		- if (typeof changeEvent != "undefined" && changeEvent == true)
 			span.changeEvent.block
-				a#changeEvent(href="/events/search/#{lastSearch}") Change Event
+				a#changeEvent(href="/search/#{lastSearch}") Change Event
 	.pull-right
-		span.pricing.pull-right(ng-show="event.TicketPricingInfo && event.TicketPricingInfo.ticketsAvailable && event.TicketPricingInfo.ticketsAvailable == 0") No tix available
-		span.pricing.pull-right(ng-show="event.TicketPricingInfo && event.TicketPricingInfo.ticketsAvailable && event.TicketPricingInfo.ticketsAvailable != 0")
-			em.ticketsAvailable {{event.TicketPricingInfo.ticketsAvailable}} tix&nbsp;
-				em.priceRange(ng-show="event.TicketPricingInfo.lowPrice == event.TicketPricingInfo.highPrice") from ${{event.TicketPricingInfo.lowPrice | number:0}}
-				em.priceRange(ng-show="event.TicketPricingInfo.lowPrice != event.TicketPricingInfo.highPrice") (${{event.TicketPricingInfo.lowPrice | number:0 }} - ${{event.TicketPricingInfo.highPrice | number}})
-		.cta.architect
-			a.choose-event(id="{{event.ID}}",href="/event/{{event.ID}}/{{event.Name}}")
-				span Plan It!
+		.cta
+			a.btn.btn-primary.choose-event(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
+				span Find Tickets

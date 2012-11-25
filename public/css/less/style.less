@@ -19,6 +19,12 @@ h3 {
   font-size:15px;
 }
 
+#page-loading-modal {
+  background: url('/images/loading-med.gif') no-repeat center center @grayLight;
+  height:150px;
+  width:250px;
+}
+
 .arrow {
   border:none;
   background: transparent url('/images/transparent-arrow.png') no-repeat center center;
@@ -80,6 +86,36 @@ h3 {
   }
 }
 
+#no-event-background {
+  background: transparent url('/images/invite-no-event-bg.jpg') no-repeat center center;
+  margin:100px auto 0;
+  width:940px;
+  height:376px;
+  position:relative;
+
+  #no-event-container {
+    position:relative;
+    top:35px;
+    left:-15px;
+    margin:0 auto;
+    width:500px;
+    h3 {
+      text-align:left;
+    }
+  }
+  #no-event-container a, #no-event-container > .architect {
+    padding:10px;
+  }
+
+  #no-event-arrow-text {
+    color: @white;
+    left: 90px;
+    position: absolute;
+    text-transform: uppercase;
+    top: 68px;
+    transform: rotate(6deg);
+  }
+}
 
 @import "fonts.less";
 @import "type.less";

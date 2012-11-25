@@ -3,7 +3,7 @@
 	h2= heading
 	ul
 		each event in events
-			li.event-wrapper.wembli-sequence-link(id="#{event.ID}-wrapper")
+			li.event-wrapper.wembli-sequence-link(id="#{event.ID}-wrapper",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)")
 				include event
-		li.event-wrapper.wembli-sequence-link(id="{{event.ID}}-wrapper",ng-repeat="event in events")
+		li.event-wrapper.wembli-sequence-link(id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)")
 			include ../partials/includes/event

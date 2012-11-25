@@ -7,20 +7,6 @@
 // GLOBAL VALUES
 // --------------------------------------------------
 
-// Links
-@linkColor:             #6EA1B7;
-@linkColorHover:        #1AFC65;
-@linkColorVisited:      #524F45;
-
-// Grays
-@black:                 #000;
-@grayDarker:            #333;
-@grayDark:              #524F45;
-@gray:                  #767676;
-@grayLight:             #D8D6D7;
-@grayLighter:           #FCFCFC;
-@white:                 #FFF;
-
 // Accent colors
 @blue:                  #4380B8;
 @blueDark:              #2A2651;
@@ -33,6 +19,20 @@
 @pink:                  #c3325f;
 @purple:                #7a43b6;
 
+// Grays
+@black:                 #000;
+@grayDarker:            #333;
+@grayDark:              #524F45;
+@gray:                  #767676;
+@grayLight:             #D8D6D7;
+@grayLighter:           #FCFCFC;
+@white:                 #FFF;
+
+// Links
+@linkColor:             @blue;
+@linkColorHover:        darken(@linkColor, 15%);
+@linkColorVisited:      #524F45;
+
 // Typography
 @baseFontSize:          13px;
 @baseFontFamily:        Arial, "Helvetica Neue", Helvetica, sans-serif;
@@ -40,7 +40,8 @@
 @textColor:             @grayDark;
 
 // Buttons
-@primaryButtonBackground:    @linkColor;
+@btnPrimaryBackground:    @linkColor;
+@btnPrimaryBackgroundHighlight:     spin(@btnPrimaryBackground, 15%);
 
 // Input placeholder text color
 @placeholderText:       @grayLight;

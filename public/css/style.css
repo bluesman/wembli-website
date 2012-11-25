@@ -41,6 +41,11 @@ h3 {
   font-family: "architects_daughterregular";
   font-size: 15px;
 }
+#page-loading-modal {
+  background: url('/images/loading-med.gif') no-repeat center center #d8d6d7;
+  height: 150px;
+  width: 250px;
+}
 .arrow {
   border: none;
   background: transparent url('/images/transparent-arrow.png') no-repeat center center;
@@ -102,6 +107,35 @@ h3 {
 }
 .module .oddRow {
   background-color: #fcfcfc;
+}
+#no-event-background {
+  background: transparent url('/images/invite-no-event-bg.jpg') no-repeat center center;
+  margin: 100px auto 0;
+  width: 940px;
+  height: 376px;
+  position: relative;
+}
+#no-event-background #no-event-container {
+  position: relative;
+  top: 35px;
+  left: -15px;
+  margin: 0 auto;
+  width: 500px;
+}
+#no-event-background #no-event-container h3 {
+  text-align: left;
+}
+#no-event-background #no-event-container a,
+#no-event-background #no-event-container > .architect {
+  padding: 10px;
+}
+#no-event-background #no-event-arrow-text {
+  color: #ffffff;
+  left: 90px;
+  position: absolute;
+  text-transform: uppercase;
+  top: 68px;
+  transform: rotate(6deg);
 }
 @font-face {
   font-family: 'SegoeScriptRegular';
@@ -223,6 +257,7 @@ html {
 }
 body {
   height: 100%;
+  overflow-x: hidden;
 }
 * {
   outline: none !important;
@@ -255,7 +290,7 @@ body {
 }
 #content > ul > li > * {
   position: absolute;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 #content > ul > li > div {
   background-color: #ffffff;
@@ -663,9 +698,7 @@ body {
   display: block;
 }
 .event-wrapper .cta {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  margin: 20px;
   *zoom: 1;
 }
 .event-wrapper .cta:before,
@@ -678,69 +711,208 @@ body {
 }
 .event-wrapper .cta .choose-event {
   float: right;
-  height: 62px;
-  width: 98px;
-  background: transparent url('/images/blue-ticket.png') no-repeat center top;
   text-align: center;
-  line-height: 60px;
-  vertical-align: middle;
   color: #ffffff;
   font-size: 16px;
+  background-color: #5c94b7;
+  background-image: -moz-linear-gradient(top, #6da1b7, #4380b8);
+  background-image: -ms-linear-gradient(top, #6da1b7, #4380b8);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6da1b7), to(#4380b8));
+  background-image: -webkit-linear-gradient(top, #6da1b7, #4380b8);
+  background-image: -o-linear-gradient(top, #6da1b7, #4380b8);
+  background-image: linear-gradient(top, #6da1b7, #4380b8);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6da1b7', endColorstr='#4380b8', GradientType=0);
+  border-color: #4380b8 #4380b8 #2f5980;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #4380b8;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
-.event-wrapper .cta .choose-event span {
-  -webkit-transform: rotate(-5deg);
-  -moz-transform: rotate(-5deg);
-  -ms-transform: rotate(-5deg);
-  -o-transform: rotate(-5deg);
-  transform: rotate(-5deg);
+.event-wrapper .cta .choose-event:hover,
+.event-wrapper .cta .choose-event:active,
+.event-wrapper .cta .choose-event.active,
+.event-wrapper .cta .choose-event.disabled,
+.event-wrapper .cta .choose-event[disabled] {
+  background-color: #4380b8;
+  *background-color: #3c73a5;
+}
+.event-wrapper .cta .choose-event:active,
+.event-wrapper .cta .choose-event.active {
+  background-color: #356693 \9;
 }
 .event-wrapper .cta .choose-event:hover {
   color: #2a2651;
 }
-.event-wrapper .event-date-box {
+.event-data {
+  *zoom: 1;
+  background-color: rgba(255, 102, 0, 0.25);
+}
+.event-data:before,
+.event-data:after {
+  display: table;
+  content: "";
+}
+.event-data:after {
+  clear: both;
+}
+.event-date-box {
   float: left;
   background: transparent url('/images/date-box.png') no-repeat center top;
   width: 75px;
   height: 75px;
+  margin: 10px;
 }
-.event-wrapper .event-date-box span {
+.event-date-box span {
   display: block;
   text-align: center;
 }
-.event-wrapper .event-date-box .day,
-.event-wrapper .event-date-box .time {
+.event-date-box .day,
+.event-date-box .time {
   margin-top: 2px;
   text-transform: uppercase;
   font-size: 14px;
 }
-.event-wrapper .event-date-box .event-date {
+.event-date-box .event-date {
   margin: 6px 0 2px;
   font-size: 18px;
   font-weight: bold;
 }
-.event-wrapper .info {
+.info {
+  text-align: left;
   margin-left: 100px;
+  margin-top: 10px;
   *zoom: 1;
 }
-.event-wrapper .info:before,
-.event-wrapper .info:after {
+.info:before,
+.info:after {
   display: table;
   content: "";
 }
-.event-wrapper .info:after {
+.info:after {
   clear: both;
 }
-.event-wrapper .info span {
+.info span {
   display: block;
 }
-.event-wrapper .info .name {
+.info .name {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
 }
-.event-wrapper .info .name,
-.event-wrapper .info .venue,
-.event-wrapper .info .location {
-  width: 380px;
+.info .name,
+.info .venue,
+.info .location {
+  width: 340px;
+}
+#search-box {
+  margin: auto;
+  width: 500px;
+  height: 70px;
+  background: #ffffff url('/images/search-box.png') no-repeat center top;
+}
+#search-box form#search-form {
+  *zoom: 1;
+}
+#search-box form#search-form:before,
+#search-box form#search-form:after {
+  display: table;
+  content: "";
+}
+#search-box form#search-form:after {
+  clear: both;
+}
+#search-box form#search-form > label,
+#search-box form#search-form .help-block,
+#search-box form#search-form .help-inline {
+  color: #d8d6d7;
+}
+#search-box form#search-form .checkbox,
+#search-box form#search-form .radio,
+#search-box form#search-form input,
+#search-box form#search-form select,
+#search-box form#search-form textarea {
+  color: #d8d6d7;
+  border-color: #767676;
+}
+#search-box form#search-form .checkbox:focus,
+#search-box form#search-form .radio:focus,
+#search-box form#search-form input:focus,
+#search-box form#search-form select:focus,
+#search-box form#search-form textarea:focus {
+  border-color: #5d5d5d;
+  -webkit-box-shadow: 0 0 6px #a9a9a9;
+  -moz-box-shadow: 0 0 6px #a9a9a9;
+  box-shadow: 0 0 6px #a9a9a9;
+}
+#search-box form#search-form .input-prepend .add-on,
+#search-box form#search-form .input-append .add-on {
+  color: #d8d6d7;
+  background-color: #f5f5f5;
+  border-color: #d8d6d7;
+}
+#search-box form#search-form > label,
+#search-box form#search-form .help-block,
+#search-box form#search-form .help-inline {
+  color: #d8d6d7;
+}
+#search-box form#search-form .checkbox,
+#search-box form#search-form .radio,
+#search-box form#search-form input,
+#search-box form#search-form select,
+#search-box form#search-form textarea {
+  color: #d8d6d7;
+  border-color: #767676;
+}
+#search-box form#search-form .checkbox:focus,
+#search-box form#search-form .radio:focus,
+#search-box form#search-form input:focus,
+#search-box form#search-form select:focus,
+#search-box form#search-form textarea:focus {
+  color: #746e71;
+  border-color: #cc5200;
+  -webkit-box-shadow: 0 0 6px #ffa466;
+  -moz-box-shadow: 0 0 6px #ffa466;
+  box-shadow: 0 0 6px #ffa466;
+}
+#search-box form#search-form .input-prepend .add-on,
+#search-box form#search-form .input-append .add-on {
+  color: #d8d6d7;
+  background-color: #f5f5f5;
+  border-color: #d8d6d7;
+}
+#search-box form#search-form #query {
+  height: 40px;
+  width: 400px;
+  float: left;
+  font-size: 18px;
+  margin: 10px 0 0 10px;
+}
+#search-box form#search-form button#submit {
+  float: left;
+  display: block;
+  width: 60px;
+  height: 48px;
+  margin: 10px 0 0 10px;
+  background-color: #4380b8;
+  border: none;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+#search-box form#search-form button#submit #magnifying-glass {
+  -webkit-transition-duration: 0s;
+  -moz-transition-duration: 0s;
+  -ms-transition-duration: 0s;
+  -o-transition-duration: 0s;
+  transition-duration: 0s;
+  width: 25px;
+  height: 50px;
+  margin: auto;
+  background: transparent url('/images/magnifying-glass.png') no-repeat 0 center;
+}
+#search-box form#search-form button#submit:hover #magnifying-glass {
+  background: transparent url('/images/magnifying-glass.png') no-repeat -24px center;
 }
 #content #index-frame {
   background: #ffffff url('/images/home.png') no-repeat left 40px;
@@ -819,7 +991,7 @@ body {
   transform: rotate(6deg);
   text-transform: uppercase;
   position: absolute;
-  top: 28px;
+  top: 21px;
   left: 15px;
 }
 #content #index-frame #right #search-wrapper #search {
@@ -829,119 +1001,11 @@ body {
 #content #index-frame #right #search-wrapper #search #search-results {
   background: #fcfcfc;
   padding-top: 40px;
+  min-height: 600px;
 }
 #content #index-frame #right #search-wrapper #search #search-results .loading {
   padding: 4px;
   text-align: center;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box {
-  margin: auto;
-  width: 500px;
-  height: 70px;
-  background: #ffffff url('/images/search-box.png') no-repeat center top;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form {
-  *zoom: 1;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form:before,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form:after {
-  display: table;
-  content: "";
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form:after {
-  clear: both;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form > label,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .help-block,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .help-inline {
-  color: #d8d6d7;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .checkbox,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .radio,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form input,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form select,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form textarea {
-  color: #d8d6d7;
-  border-color: #767676;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .checkbox:focus,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .radio:focus,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form input:focus,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form select:focus,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form textarea:focus {
-  border-color: #5d5d5d;
-  -webkit-box-shadow: 0 0 6px #a9a9a9;
-  -moz-box-shadow: 0 0 6px #a9a9a9;
-  box-shadow: 0 0 6px #a9a9a9;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .input-prepend .add-on,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .input-append .add-on {
-  color: #d8d6d7;
-  background-color: #f5f5f5;
-  border-color: #d8d6d7;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form > label,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .help-block,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .help-inline {
-  color: #d8d6d7;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .checkbox,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .radio,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form input,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form select,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form textarea {
-  color: #d8d6d7;
-  border-color: #767676;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .checkbox:focus,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .radio:focus,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form input:focus,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form select:focus,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form textarea:focus {
-  color: #746e71;
-  border-color: #cc5200;
-  -webkit-box-shadow: 0 0 6px #ffa466;
-  -moz-box-shadow: 0 0 6px #ffa466;
-  box-shadow: 0 0 6px #ffa466;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .input-prepend .add-on,
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form .input-append .add-on {
-  color: #d8d6d7;
-  background-color: #f5f5f5;
-  border-color: #d8d6d7;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form #query {
-  height: 40px;
-  width: 400px;
-  float: left;
-  font-size: 18px;
-  margin: 10px 0 0 10px;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form button#submit {
-  float: left;
-  display: block;
-  width: 60px;
-  height: 48px;
-  margin: 10px 0 0 10px;
-  background-color: #4380b8;
-  border: none;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form button#submit #magnifying-glass {
-  -webkit-transition-duration: 0s;
-  -moz-transition-duration: 0s;
-  -ms-transition-duration: 0s;
-  -o-transition-duration: 0s;
-  transition-duration: 0s;
-  width: 25px;
-  height: 50px;
-  margin: auto;
-  background: transparent url('/images/magnifying-glass.png') no-repeat 0 center;
-}
-#content #index-frame #right #search-wrapper #search #search-results #search-box form#search-form button#submit:hover #magnifying-glass {
-  background: transparent url('/images/magnifying-glass.png') no-repeat -24px center;
 }
 #content #index-frame #right #search-wrapper #search #search-results a#more-events {
   display: block;
@@ -954,11 +1018,270 @@ body {
 #content #index-frame #right #search-wrapper #search #search-results a#more-events i {
   margin: 1px 0px 0px 8px;
 }
-#tickets-frame #left {
-  width: 60%;
+#tickets-frame {
+  *zoom: 1;
 }
-#tickets-frame #right {
-  width: 40%;
+#tickets-frame:before,
+#tickets-frame:after {
+  display: table;
+  content: "";
+}
+#tickets-frame:after {
+  clear: both;
+}
+#tickets-frame #map-background {
+  text-align: center;
+  position: absolute;
+}
+#tickets-frame #map-background .tuMapContainer {
+  overflow: visible !important;
+}
+#tickets-frame #map-background .tuMapControl {
+  background-color: #ffffff;
+  padding: 6px;
+  cursor: pointer;
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  background-color: #5c94b7;
+  background-image: -moz-linear-gradient(top, #6da1b7, #4380b8);
+  background-image: -ms-linear-gradient(top, #6da1b7, #4380b8);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6da1b7), to(#4380b8));
+  background-image: -webkit-linear-gradient(top, #6da1b7, #4380b8);
+  background-image: -o-linear-gradient(top, #6da1b7, #4380b8);
+  background-image: linear-gradient(top, #6da1b7, #4380b8);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6da1b7', endColorstr='#4380b8', GradientType=0);
+  border-color: #4380b8 #4380b8 #2f5980;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #4380b8;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  color: #ffffff;
+}
+#tickets-frame #map-background .tuMapControl:hover,
+#tickets-frame #map-background .tuMapControl:active,
+#tickets-frame #map-background .tuMapControl.active,
+#tickets-frame #map-background .tuMapControl.disabled,
+#tickets-frame #map-background .tuMapControl[disabled] {
+  background-color: #4380b8;
+  *background-color: #3c73a5;
+}
+#tickets-frame #map-background .tuMapControl:active,
+#tickets-frame #map-background .tuMapControl.active {
+  background-color: #356693 \9;
+}
+#tickets-frame #map-background .tuMapTooltip {
+  background: none repeat scroll 0 0 #FCF1BD;
+  border: 1px solid #666666;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  padding: 5px;
+  left: 0;
+}
+#tickets-frame #map-background .ZoomControls {
+  position: absolute;
+  right: 5px;
+  top: 40px;
+  z-index: 10;
+  color: #ffffff;
+  font-weight: bold;
+}
+#tickets-frame #map-background .ZoomControls div {
+  background-color: #4380b8;
+  background-image: url("images/Zoom.png");
+  background-repeat: no-repeat;
+  border: 0 none;
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  height: 19px;
+  margin-bottom: 5px;
+  width: 22px;
+}
+#tickets-frame #map-background #map-container {
+  width: 1000px;
+  height: 800px;
+}
+#tickets-frame #map-background #groups-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+#tickets-frame #tickets {
+  position: absolute;
+  right: 0;
+  width: 465px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row,
+#tickets-frame #tickets #ticket-filter-container,
+#tickets-frame #tickets #ticket-list-header-container {
+  background-color: rgba(215, 213, 214, 0.25);
+}
+#tickets-frame #tickets #ticket-filter-container {
+  margin-top: 20px;
+  *zoom: 1;
+}
+#tickets-frame #tickets #ticket-filter-container:before,
+#tickets-frame #tickets #ticket-filter-container:after {
+  display: table;
+  content: "";
+}
+#tickets-frame #tickets #ticket-filter-container:after {
+  clear: both;
+}
+#tickets-frame #tickets #ticket-filter-container h3 {
+  margin: 15px 10px 10px 10px;
+  float: left;
+}
+#tickets-frame #tickets #ticket-filter-container .qty-filter {
+  float: left;
+  margin: 10px 10px 5px 25px;
+}
+#tickets-frame #tickets #ticket-filter-container .qty-filter strong {
+  margin-right: 4px;
+}
+#tickets-frame #tickets #ticket-filter-container .qty-filter select {
+  margin-top: 6px;
+  width: 50px;
+}
+#tickets-frame #tickets #ticket-filter-container .price-filter {
+  margin: 5px;
+  float: right;
+  width: 220px;
+}
+#tickets-frame #tickets #ticket-filter-container .price-filter p label {
+  float: left;
+  font-size: 11px;
+  margin: 4px 0 0 15px;
+}
+#tickets-frame #tickets #ticket-filter-container .price-filter p input {
+  border: 0;
+  color: #4380b8;
+  font-weight: bold;
+  background: transparent;
+  width: 100px;
+  -webkit-box-shadow: 0 0 0 0;
+  -moz-box-shadow: 0 0 0 0;
+  box-shadow: 0 0 0 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+#tickets-frame #tickets #ticket-filter-container .price-filter #price-slider {
+  width: 200px;
+  height: 6px;
+}
+#tickets-frame #tickets #ticket-filter-container .price-filter #price-slider .ui-slider-handle {
+  height: 12px;
+  width: 12px;
+}
+#tickets-frame #tickets #ticket-list-header-container {
+  margin-top: 2px;
+  *zoom: 1;
+}
+#tickets-frame #tickets #ticket-list-header-container:before,
+#tickets-frame #tickets #ticket-list-header-container:after {
+  display: table;
+  content: "";
+}
+#tickets-frame #tickets #ticket-list-header-container:after {
+  clear: both;
+}
+#tickets-frame #tickets #ticket-list-header-container a {
+  margin: 6px 0;
+  display: block;
+  float: left;
+  color: #333333;
+  font-weight: bold;
+  text-decoration: underline;
+}
+#tickets-frame #tickets #ticket-list-header-container a:hover {
+  color: #000000;
+}
+#tickets-frame #tickets #ticket-list-header-container a#price-header {
+  width: 65px;
+}
+#tickets-frame #tickets #ticket-list-header-container a#section-header {
+  width: 200px;
+}
+#tickets-frame #tickets #ticket-list-header-container a#qty-header {
+  width: 100px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row:hover {
+  background-color: rgba(66, 127, 184, 0.25);
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row {
+  *zoom: 1;
+  padding: 10px;
+  margin-top: 2px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row:before,
+#tickets-frame #tickets #ticket-list-container .ticket-row:after {
+  display: table;
+  content: "";
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row:after {
+  clear: both;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row a {
+  margin-top: 6px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-price {
+  background: transparent url('/images/price-box-small.png') no-repeat center center;
+  height: 50px;
+  width: 50px;
+  font-weight: bold;
+  font-size: 16px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-price .actual-price {
+  margin-top: 10px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-price .each {
+  font-size: 10px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-info {
+  text-align: left;
+  font-weight: bold;
+  font-size: 14px;
+  width: 180px;
+  margin: 6px 0 0 20px;
+  *zoom: 1;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-info:before,
+#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-info:after {
+  display: table;
+  content: "";
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-info:after {
+  clear: both;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .qty-container {
+  margin: 6px 0 0 10px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .qty-container strong {
+  padding: 4px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row .qty-container select {
+  width: 50px;
+  margin-top: 6px;
+}
+#tickets-frame #tickets #ticket-list-container .ticket-row > div {
+  float: left;
 }
 /* this applies to login and signup */
 a#facebook-login {
