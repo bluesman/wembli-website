@@ -290,7 +290,6 @@ body {
 }
 #content > ul > li > * {
   position: absolute;
-  overflow: hidden;
 }
 #content > ul > li > div {
   background-color: #ffffff;
@@ -1019,6 +1018,7 @@ body {
   margin: 1px 0px 0px 8px;
 }
 #tickets-frame {
+  overflow: hidden;
   *zoom: 1;
 }
 #tickets-frame:before,
