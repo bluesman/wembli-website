@@ -1376,8 +1376,8 @@ a#facebook-login:hover {
   top: 520px;
 }
 .hero #confirm-hero-left #copy {
-  top: 320px;
-  left: 320px;
+  top: 230px;
+  left: 110px;
 }
 .hero #confirm-hero-left #cartoon-man {
   background: transparent url('/images/wifi.png') no-repeat center center;
@@ -1421,7 +1421,8 @@ a#facebook-login:hover {
 }
 .hero #confirm-hero-right #confirm-right a {
   margin: 100px auto 0;
-  width: 260px;
+  width: 300px;
+  text-align: center;
   display: block;
 }
 .hero #confirm-hero-right #arrow {
