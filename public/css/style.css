@@ -44,7 +44,8 @@ h3 {
 #page-loading-modal {
   background: url('/images/loading-med.gif') no-repeat center center #d8d6d7;
   height: 150px;
-  width: 250px;
+  width: 400px;
+  margin: -250px 0 0 -200px;
 }
 .arrow {
   border: none;
@@ -279,6 +280,7 @@ body {
   text-align: center;
   margin: auto;
   *zoom: 1;
+  overflow-x: hidden;
 }
 #content:before,
 #content:after {

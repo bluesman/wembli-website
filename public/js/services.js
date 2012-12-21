@@ -108,7 +108,8 @@ angular.module('wembliApp.services', [])
 		//append a fake element to #footer to get the left css property of end
 		var startClass = 'center-' + $scope.currentPath.split('/')[1];
 		var endClass = 'center-' + $location.path().split('/')[1];
-
+		console.log('end-class:'+endClass);
+		console.log('startclass:'+startClass);
 		if (startClass == endClass) {
 			startClass = 'center-';
 		}

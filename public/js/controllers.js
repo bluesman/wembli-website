@@ -54,18 +54,25 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc) {
 function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 
 	$scope.showTicketSummary = function(e) {
+
 		var elId = (typeof $(e.target).parents('li').attr('id') == "undefined") ? $(e.target).attr('id') : $(e.target).parents('li').attr('id');
 
 		if (typeof $scope.ticketSummaryData == "undefined") {
 			$scope.ticketSummaryData = {};
+			$scope.ticketSummaryData.locked = false;
 		}
+
+		//if its locked that means we moused in while doing a fetch
+		if ($scope.ticketSummaryData.locked) {return;}
 
     //fetch the event data
     var args = {"eventID": elId.split('-')[0]};
 
-    if (typeof $scope.ticketSummaryData[elId.split('-')[0]] != "undefined") {
-    	return $('#'+elId).popover('show');
-    }
+    //we have a cache of the data - gtfo
+    if (typeof $scope.ticketSummaryData[elId.split('-')[0]] != "undefined") {	return; }
+
+    //lock so we don't fetch more than once (we will unlock when the http req returns)
+    $scope.ticketSummaryData.locked = true;
 
     wembliRpc.fetch('event.getPricingInfo', args,
 
@@ -78,7 +85,10 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
         }
 
         $scope.ticketSummaryData[elId.split('-')[0]] = result;
-        console.log(result);
+        //we cached the result..lets unlock
+        $scope.ticketSummaryData.locked = false;
+        //console.log('result for:'+elId);
+        //console.log(result);
         //init the popover
         var summaryContent = "";
         if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
@@ -96,7 +106,7 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 					summaryContent = "Click for ticket information";
 				}
 
-        $('#'+elId).popover({placement:"left",animation:true,title:'Tickets Summary',content:summaryContent});
+        $('#'+elId).popover({placement:"left",trigger:'hover',animation:true,title:'Tickets Summary',content:summaryContent});
         $('#'+elId).popover('show');
       },
 
@@ -117,6 +127,7 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 	$scope.hideTicketSummary = function(e) {
 		var elId = (typeof $(e.target).parents('li').attr('id') == "undefined") ? $(e.target).attr('id') : $(e.target).parents('li').attr('id');
 		$('#'+elId).popover('hide');
+		//console.log('mouseout: '+elId);
 	};
 
 	$scope.moreEvents = function() {

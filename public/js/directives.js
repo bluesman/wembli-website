@@ -335,15 +335,21 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             //find out what direction to go to we sliding in this element
             var direction = 1; //default to go to the right
+
+            //split location path on '/' to get the right framesMap key
+            var nextPath = '/'+$location.path().split('/')[1];
+            console.log('next path is: '+nextPath);
+            console.log(footer.framesMap[nextPath]);
             //if footer.framesMap[$location.path()] (where they are going) is undefined
             //then don't move the arrow and slide to the right
             //if footer.framesMap[$rootScope.currentPath] (where they are coming from) is undefined
             //then move the arrow, but still slide to the right
+            console.log('currentpath: '+$rootScope.currentPath);
             if(typeof footer.framesMap[$rootScope.currentPath] == "undefined") {
               if(typeof footer.framesMap[footer.currentPath] !== "undefined") {
                 //direction depends on where the arrow is compared to where they are going
                 var currNavIndex = footer.framesMap[footer.currentPath];
-                var nextNavIndex = footer.framesMap[$location.path()];
+                var nextNavIndex = footer.framesMap[nextPath];
                 direction = (currNavIndex < nextNavIndex) ? 1 : -1;
               }
               footer.slideNavArrow();
@@ -351,9 +357,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             //if both are defined
             //then move the arrow and figure out which way to slide
-            if((typeof footer.framesMap[$location.path()] !== "undefined") && (typeof footer.framesMap[$rootScope.currentPath] !== "undefined")) {
+            if((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[$rootScope.currentPath] !== "undefined")) {
               var currNavIndex = footer.framesMap[$rootScope.currentPath];
-              var nextNavIndex = footer.framesMap[$location.path()];
+              var nextNavIndex = footer.framesMap[nextPath];
               direction = (currNavIndex < nextNavIndex) ? 1 : -1;
               //slide the nav arrow - this should be async with using sequence to transition to the next frame
               footer.slideNavArrow();
