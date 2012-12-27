@@ -30,7 +30,8 @@ module.exports = function(app) {
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 				eventId:req.param('eventId'),
 				eventName:req.param('eventName'),
-				tnMapUrl:results.event[0].MapURL
+				tnMapUrl:results.event[0].MapURL,
+				fixedHeight:true
 			});
 
 

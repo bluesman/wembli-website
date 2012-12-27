@@ -290,6 +290,9 @@ body {
 #content:after {
   clear: both;
 }
+#content.fixed-height {
+  overflow: hidden;
+}
 #content > ul > li > * {
   position: absolute;
 }

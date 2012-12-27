@@ -365,12 +365,15 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             //do the animations
             sequence.goTo(nextFrameID, direction);
-
+            console.log('scrolling to top');
+            $('#content').scrollTop(0);
             $('#content').css('overflow','visible');
             $('#content').css('overflow-x','hidden');
+            console.log('overflow?');
             if(typeof headers()['x-wembli-overflow'] !== "undefined") {
+              console.log(headers()['x-wembli-overflow']);
               if(headers()['x-wembli-overflow'] === 'hidden') {
-                              console.log('overflow');
+                console.log('overflow');
                 $('#content').css('overflow','hidden');
               }
             }

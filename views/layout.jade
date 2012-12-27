@@ -6,13 +6,23 @@ html.trigger-partial(ng-app="wembliApp")
     include includes/facebook-sdk
     include includes/header
     #page-loading-modal.modal.hide
-    #content
-      ul
-        li
-          #frame1.frame1
-            block frame1
-        li
-          #frame2.frame2
-            block frame2
+    - if (typeof fixedHeight !== "undefined")
+      #content.fixed-height
+        ul
+          li
+            #frame1.frame1
+              block frame1
+          li
+            #frame2.frame2
+              block frame2
+    - else
+      #content
+        ul
+          li
+            #frame1.frame1
+              block frame1
+          li
+            #frame2.frame2
+              block frame2
     include includes/footer
   include includes/js-includes
