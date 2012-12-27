@@ -287,6 +287,74 @@ function TicketsCtrl($scope, wembliRpc) {
 	//console.log($scope.eventName);
 	console.log('tickets controller');
 	$('#page-loading-modal').modal({backdrop:"static",keyboard:false,hide:true});
+
+	$scope.sortByPrice = function() {
+		if (typeof $scope.ticketSort === "undefined") {
+			$scope.ticketSort = 1;
+		}
+
+		$scope.tickets.sort(function(a,b) {
+			if ($scope.ticketSort) {
+				return a.ActualPrice - b.ActualPrice;
+			} else {
+				return b.ActualPrice - a.ActualPrice;
+			}
+		});
+
+		$scope.ticketSort = ($scope.ticketSort) ? 0 : 1;
+	}
+
+	$scope.sortBySection = function() {
+		if (typeof $scope.sectionSort === "undefined") {
+			$scope.sectionSort = 1;
+		}
+
+		$scope.tickets.sort(function(a,b) {
+			if ($scope.sectionSort) {
+				return a.Section.localeCompare(b.Section);
+			} else {
+				return b.Section.localeCompare(a.Section);
+			}
+		});
+
+		$scope.sectionSort = ($scope.sectionSort) ? 0 : 1;
+	}
+
+	$scope.sortByQty = function() {
+		if (typeof $scope.qtySort === "undefined") {
+			$scope.qtySort = 1;
+		}
+
+		$scope.tickets.sort(function(a,b) {
+			var cmpA = '';
+			var cmpB = '';
+
+			if (typeof a.ValidSplits.int === 'string') {
+				cmpA = a.ValidSplits.int;
+			} else {
+
+				a.ValidSplits.int.sort();
+				cmpA = a.ValidSplits.int[a.ValidSplits.int.length-1];
+			}
+
+
+			if (typeof b.ValidSplits.int === 'string') {
+				cmpB = b.ValidSplits.int;
+			} else {
+
+				b.ValidSplits.int.sort();
+				cmpB = b.ValidSplits.int[b.ValidSplits.int.length-1];
+			}
+
+			if ($scope.qtySort) {
+				return parseInt(cmpA) - parseInt(cmpB);
+			} else {
+				return parseInt(cmpB) - parseInt(cmpA);
+			}
+		});
+
+		$scope.qtySort = ($scope.qtySort) ? 0 : 1;
+	}
 }
 
 function VenueMapCtrl($scope,interactiveMapDefaults) {

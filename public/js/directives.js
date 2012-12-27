@@ -25,9 +25,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       return function(scope, element, attr) {
 
         scope.$watch('tickets', function(newVal, oldVal) {
-          console.log('tickets watch expression');
-          console.log('new:' + newVal);
-          console.log('old:' + oldVal);
           if (newVal !== oldVal) {
             $('#map-container').tuMap("Refresh", "Reset");
           }
@@ -45,10 +42,11 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             alert('error happened - contact help@wembli.com');
             return;
           }
-          console.log('updating tickets');
+
           scope.event = result.event;
           scope.tickets = result.tickets;
-          console.log('map for: '+scope.event.VenueConfigurationID);
+
+          console.log('tickets:'+scope.tickets.length);
           //$scope.$broadcast('TicketsCtrl-ticketsLoaded',{});
           /* get min and max tix price for this set of tix */
           var minTixPrice = 100;
@@ -367,6 +365,15 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             //do the animations
             sequence.goTo(nextFrameID, direction);
+
+            $('#content').css('overflow','visible');
+            $('#content').css('overflow-x','hidden');
+            if(typeof headers()['x-wembli-overflow'] !== "undefined") {
+              if(headers()['x-wembli-overflow'] === 'hidden') {
+                              console.log('overflow');
+                $('#content').css('overflow','hidden');
+              }
+            }
 
             //update the currentPath and the currentFrame
             $rootScope.currentPath = $location.path();

@@ -23,6 +23,9 @@ module.exports = function(app) {
 			console.log('results from eventrpc: ');
 			console.log(results.event[0]);
 
+			//set a special header to tell angular to update the browser location
+			res.setHeader('x-wembli-overflow','hidden');
+
 			res.render('tickets', {
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 				eventId:req.param('eventId'),
@@ -42,7 +45,11 @@ module.exports = function(app) {
 			console.log('results from eventrpc: ');
 			console.log(results.event[0]);
 
+			//set a special header to tell angular to update the browser location
+			res.setHeader('x-wembli-overflow','hidden');
+
 			res.render('partials/tickets', {
+				partial:true,
 				eventId:req.param('eventId'),
 				eventName:req.param('eventName'),
 				tnMapUrl:results.event[0].MapURL
