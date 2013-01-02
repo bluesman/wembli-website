@@ -507,9 +507,10 @@ body {
   z-index: 4000;
 }
 #footer {
-  position: relative;
-  top: 300px;
+  position: fixed;
+  bottom: -300px;
   z-index: 4000;
+  width: 100%;
 }
 #footer #nav-arrow {
   width: 0;

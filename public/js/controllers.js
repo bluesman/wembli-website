@@ -279,7 +279,9 @@ function SupplyPasswordCtrl($scope) {
 };
 
 function FooterCtrl($scope, $location, $window) {
-	$('#footer').draggable({snap:"#footerContainer",snapTolerance:30,snapMode:"inner",cursor:"move",axis:"y",containment:"parent",handle:"#handle"});
+	//this is how high they can drag it
+	var y = $("#footer").offset().top - $("#footer").height() + ($("#nav").offset().top - $("#footer").offset().top) + $("#nav").height();
+	$('#footer').draggable({snap:"#footerContainer",snapTolerance:30,snapMode:"inner",cursor:"move",axis:"y",containment:[0,y,0,$("#footer").offset().top],handle:"#handle"});
 };
 
 function TicketsCtrl($scope, wembliRpc) {
