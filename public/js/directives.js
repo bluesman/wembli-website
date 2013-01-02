@@ -49,7 +49,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           console.log('tickets:'+scope.tickets.length);
           //$scope.$broadcast('TicketsCtrl-ticketsLoaded',{});
           /* get min and max tix price for this set of tix */
-          var minTixPrice = 100;
+          var minTixPrice = 0;
           var maxTixPrice = 200;
           angular.forEach(scope.tickets,function(el) {
             if (parseInt(el.ActualPrice) < minTixPrice) {

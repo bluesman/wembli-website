@@ -130,7 +130,7 @@ exports.event = {
 				if (err) {
 					return me(err);
 				}
-				ret.tickets = results.TicketGroup;
+				ret.tickets = (typeof results.TicketGroup.length == "undefined") ? [results.TicketGroup] : results.TicketGroup;
 				me(null, ret);
 			});
 		});
