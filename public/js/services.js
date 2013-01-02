@@ -105,6 +105,7 @@ angular.module('wembliApp.services', [])
 
 	footer.slideNavArrow = function() {
 		footer.currentPath = $location.path();
+		console.log('footer.currentPath is now set to: '+footer.currentPath);
 		//append a fake element to #footer to get the left css property of end
 		var startClass = 'center-' + $scope.currentPath.split('/')[1];
 		var endClass = 'center-' + $location.path().split('/')[1];

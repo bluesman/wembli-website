@@ -326,7 +326,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             //what frame to go to:
             var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
 
-            console.log('next frame'+nextFrameID);
+            console.log('next frame '+nextFrameID);
 
             //compile the page we just fetched and link the scope
             angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
@@ -344,10 +344,13 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             //then move the arrow, but still slide to the right
             console.log('currentpath: '+$rootScope.currentPath);
             if(typeof footer.framesMap[$rootScope.currentPath] == "undefined") {
-              if(typeof footer.framesMap[footer.currentPath] !== "undefined") {
+              console.log('no naxindex for this path');
+              var currentPath = '/'+footer.currentPath.split('/')[1];
+              if(typeof footer.framesMap[currentPath] !== "undefined") {
                 //direction depends on where the arrow is compared to where they are going
-                var currNavIndex = footer.framesMap[footer.currentPath];
+                var currNavIndex = footer.framesMap[currentPath];
                 var nextNavIndex = footer.framesMap[nextPath];
+                console.log(currNavIndex + '<>' + nextNavIndex);
                 direction = (currNavIndex < nextNavIndex) ? 1 : -1;
               }
               footer.slideNavArrow();
