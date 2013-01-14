@@ -189,7 +189,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
         //transformResponse
         function(data, headersGetter) {
-          $('#page-loading-modal').modal("hide");
+          setTimeout(function() {
+            $('#page-loading-modal').modal("hide");
+          },3000);
           return JSON.parse(data);
         });
       }

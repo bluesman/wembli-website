@@ -5,8 +5,7 @@ seeMore       = 'See more events';
 lastEventDate = '';
 lastEventId   = undefined;
 
-- if (typeof events != "undefined")
-	- console.log(events.length);
+- if ((typeof events != "undefined") && (typeof events[0] !== "undefined"))
 	- lastEventDate = new Date(events[events.length-1].Date).format('mm-dd-yy');
 	- lastEventId = events[events.length-1].ID;
 
@@ -46,11 +45,16 @@ input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'",
 					if (typeof partial != "undefined")
 						include ../partials/includes/event-list
 					else
-						include event-list
-					.loading
-						img.loading-icon.hide(src="/images/loading-small.gif")
-					a#more-events(href="#{url}" ,ng-click="moreEvents()")
-						span= seeMore
-						i.icon-chevron-down
+						if ((typeof events == "undefined") || (typeof events[0] === "undefined"))
+							#event-list-wrapper
+								h2= heading
+								.no-results Aww man! We didn't find any matching events...
+						else
+							include event-list
+						.loading
+							img.loading-icon.hide(src="/images/loading-small.gif")
+						a#more-events(href="#{url}" ,ng-click="moreEvents()")
+							span= seeMore
+							i.icon-chevron-down
 				#arrow
 					h3.arrow-text Search

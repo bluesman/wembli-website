@@ -42,10 +42,14 @@ h3 {
   font-size: 15px;
 }
 #page-loading-modal {
-  background: url('/images/loading-med.gif') no-repeat center center #d8d6d7;
-  height: 150px;
   width: 400px;
   margin: -250px 0 0 -200px;
+}
+#page-loading-modal .modal-body p {
+  font-style: italic;
+}
+#page-loading-modal .progress {
+  margin-bottom: 0;
 }
 .arrow {
   border: none;
@@ -497,15 +501,6 @@ body {
   width: 200px;
   background: url('/images/layout/wembli-orange-beta-small.png') #ffffff center center no-repeat;
 }
-#footerContainer {
-  position: fixed;
-  right: 0;
-  left: 0;
-  bottom: -300px;
-  display: block;
-  height: 675px;
-  z-index: 4000;
-}
 #footer {
   position: fixed;
   bottom: -300px;
@@ -682,6 +677,10 @@ body {
 }
 #event-list-wrapper ul li > * {
   position: static;
+}
+#event-list-wrapper .no-results {
+  text-align: center;
+  width: 100%;
 }
 .event-wrapper:hover {
   background-color: #d3e3ea;

@@ -43,6 +43,9 @@ module.exports = function(app) {
 
 		query.replace('+',' ');
 
+		//try to parse out a date from the search string
+
+
 		var args = {
 			searchTerms: query,
 			orderByClause: 'Date'

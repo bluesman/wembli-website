@@ -32,7 +32,6 @@ exports.event = {
 		ticketNetwork.SearchEvents(args, function(err, results) {
 			if (err) { return me(err);	}
 
-
 			//if lastEventId is passed in, determine which element has that Id and start the splice there
 			var beginIdx = 0;
 			if (args.lastEventId) {
