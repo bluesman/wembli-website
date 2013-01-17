@@ -519,8 +519,10 @@ body {
   -moz-box-shadow: 0 -4px 2px -2px rgba(0, 0, 0, 0.25);
   box-shadow: 0 -4px 2px -2px rgba(0, 0, 0, 0.25);
 }
-#footer .center-,
 #footer .center-search {
+  display: none;
+}
+#footer .center- {
   left: 145px;
 }
 #footer .center-invitation {
