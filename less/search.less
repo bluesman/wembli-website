@@ -1,0 +1,128 @@
+#search-box {
+	margin:auto;
+	width:500px;
+	height:70px;
+	background: @white url('/images/search-box.png') no-repeat center top;
+	form#search-form {
+		.clearfix();
+		.formFieldState(@grayLight,@gray);
+
+		#query {
+			height:40px;
+			width:400px;
+			float:left;
+			font-size:18px;
+			margin:10px 0 0 10px;
+		}
+
+		button#submit {
+			float:left;
+			display:block;
+			width:60px;
+			height:48px;
+			margin:10px 0 0 10px;
+			background-color:@blue;
+			border:none;
+			.border-radius(2px);
+
+			#magnifying-glass {
+				.transition-duration(0s);
+				width:25px;
+				height:50px;
+				margin:auto;
+				background:transparent url('/images/magnifying-glass.png') no-repeat 0 center;
+			}
+		}
+
+		button#submit:hover {
+			#magnifying-glass {
+				background:transparent url('/images/magnifying-glass.png') no-repeat -24px center;
+			}
+		}
+	}
+}
+
+#content {
+	#search-frame {
+		background: @white url('/images/home.png') no-repeat left 40px;
+		.clearfix();
+
+		#left {
+			float:left;
+			min-width:400px;
+			#copy {
+				position:absolute;
+				.rotate(-4deg);
+				width:220px;
+				top:245px;
+				left:60px;
+				text-align:center;
+				font-size:16px;
+			}
+		}
+
+		#right {
+			margin-left:450px;
+			.clearfix();
+			#search-wrapper {
+				background-color:@white;
+				float:right;
+				position:relative;
+				max-width:800px;
+				min-width:650px;
+				padding-right: 20px;
+				.clearfix();
+
+				#arrow {
+					position:absolute;
+					top:0px;
+					left:-60px;
+					float:left;
+					background: transparent url('/images/orange-arrow.png') no-repeat center center;
+					width:112px;
+					height:84px;
+					margin-top:20px;
+
+					.arrow-text {
+						color:@white;
+						.rotate(6deg);
+						text-transform:uppercase;
+						position:absolute;
+						top:21px;
+						left:15px;
+					}
+				}
+
+				#search {
+					background-color: @white;
+					text-align:left;
+
+					#search-results {
+						background:@grayLighter;
+						padding-top:40px;
+						min-height:600px;
+
+						.loading {
+							padding: 4px;
+							text-align:center;
+						}
+
+						a#more-events {
+							display:block;
+							background-color: @grayLight;
+							text-align:center;
+							height:30px;
+							line-height: 30px;
+							vertical-align: middle;
+
+							i {
+								margin:1px 0px 0px 8px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+

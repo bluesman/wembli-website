@@ -1,3 +1,7 @@
+- var ticketsLink = '/tickets';
+- if (typeof plan.event !== "undefined")
+	- ticketsLink = ticketsLink + '/' + plan.event.eventId + '/' + plan.event.eventName;
+
 footer#footer(ng-controller="FooterCtrl")
 	#nav-arrow.center-
 	ul#nav
@@ -9,17 +13,17 @@ footer#footer(ng-controller="FooterCtrl")
 				.arrow-right
 		li#index.wembli-sequence-link
 			a(href="/") Home
+		li#tickets.wembli-sequence-link
+			a(href="#{ticketsLink}") Tickets
 		li#invitation.wembli-sequence-link
 			a(href="/invitation") Invite
-		li#tickets.wembli-sequence-link
-			a(href="/tickets") Tickets
 		li#parking.wembli-sequence-link
 			a(href="/parking") Parking
 		li#restaurants.wembli-sequence-link
 			a(href="/restaurants") Restaurants
 		li#hotels.wembli-sequence-link
 			a(href="/hotels") Hotels
-		- if (req.session.loggedIn)
+		- if (session.loggedIn)
 			li#dashboard.wembli-sequence-link
 				a(href="/dashboard") Dashboard
 			li#logout

@@ -3,10 +3,15 @@
 		#no-event-container
 			h3 FIND SOMETHING TO DO WITH YOUR FRIENDS
 			#search-box
-				form#search-form.form-search(method="GET", action="/search")
+				form#search-form.form-search(method="GET", action="/search/events")
 					input#query(name="search",placeholder="Enter an event, team, city or venue...")
 					button#submit(href="#")
 						#magnifying-glass
 			.architect Hold on speedster - You need to choose an event before you can start planning! Once you choose an event, you can use WEMbli to find tickets, parking, restaurant deals and hotels.  Plan your next live event outing all in one place using WEMbli!
-			a(href="/faq") Need some help? Click here to get more info about WEMbli
+			.log-in
+				.copy.pull-left Already working on a plan?
+				.login-button.pull-left
+					a.btn.btn-primary.wembli-sequence-link(href="/login") Click Here To Login
+				.signup.pull-left
+					a.wembli-sequence-link(href="/signup") or Click Here To Signup
 		h3#no-event-arrow-text SEARCH

@@ -16,48 +16,34 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/tickets/:eventId/:eventName', function(req, res) {
-		var args = {"eventID":req.param("eventId")};
-		//get nearby events:
-		eventRpc['get'].apply(function(err,results) {
-			console.log('results from eventrpc: ');
-			console.log(results.event[0]);
 
+	var ticketsView = function(req,res,template,locals) {
+		var args = {"eventID" : req.param("eventId")};
+		req.session.plan.event.eventId   = req.param("eventId");
+		req.session.plan.event.eventName = req.param("eventName");
+
+		eventRpc['get'].apply(function(err,results) {
 			//set a special header to tell angular to update the browser location
 			res.setHeader('x-wembli-overflow','hidden');
 
-			res.render('tickets', {
-				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
-				eventId:req.param('eventId'),
-				eventName:req.param('eventName'),
-				tnMapUrl:results.event[0].MapURL,
-				fixedHeight:true
-			});
+			locals.eventId   = req.param('eventId');
+			locals.eventName = req.param('eventName');
+			locals.tnMapUrl  = results.event[0].MapURL;
 
-
+			res.render(template, locals);
 		},[args,req,res]);
+
+	};
+
+	app.get('/tickets/:eventId/:eventName', function(req, res) {
+		return ticketsView(req,res,'tickets',{
+			title:'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+			fixedHeight:true
+		});
 	});
 
 	app.get('/partials/tickets/:eventId/:eventName', function(req, res) {
-		var args = {"eventID":req.param("eventId")};
-
-		/* get the event data for the tn map url */
-		eventRpc['get'].apply(function(err,results) {
-			console.log('results from eventrpc: ');
-			console.log(results.event[0]);
-
-			//set a special header to tell angular to update the browser location
-			res.setHeader('x-wembli-overflow','hidden');
-
-			res.render('partials/tickets', {
-				partial:true,
-				eventId:req.param('eventId'),
-				eventName:req.param('eventName'),
-				tnMapUrl:results.event[0].MapURL
-			});
-
-		},[args,req,res]);
-
+		return ticketsView(req,res,'partials/tickets',{partial:true})
 	});
 
 }

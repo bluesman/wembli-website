@@ -8,12 +8,63 @@ module.exports = {
 	res: function(req, res) {
 		return res;
 	},
+	params: function(req, res) {
+		return req.params;
+	},
 	session: function(req, res) {
-		console.log('here');
 		return req.session
+	},
+	plan: function(req, res) {
+		return req.session.plan;
+	},
+	visitor: function(req, res) {
+		return req.session.visitor;
+	},
+	customer: function(req, res) {
+		return req.session.customer;
 	},
 
 	/* STATIC */
+	initInviteFriendsWizard : function() {
+		var nav = [
+		{
+			'icon':"icon-share-alt",
+			'text':"Who's It From",
+		},
+		{
+			'icon':"icon-facebook",
+			'text':"Facebook",
+		},
+		{
+			'icon':"icon-twitter",
+			'text':"Twitter",
+		},
+		{
+			'icon':"icon-envelope",
+			'text':"Wembli Mail",
+		},
+		{
+			'icon':"icon-reorder",
+			'text':"Summary",
+		},
+		{
+			'icon':"icon-calendar",
+			'text':"RSVP Date",
+		}
+		];
+
+		for (var i=0; i < 6; i++) {
+			nav[i]['step'] = "step" + (i + 1);
+			nav[i]['id']   = "nav-" + nav[i]['step'];
+			nav[i]['href'] = "#" + nav[i]['step'];
+		}
+		if (req.session.loggedIn) {
+			nav.shift();
+		}
+		nav[0]['active'] = 'active';
+		return nav;
+	},
+
 	getAppSettings: function() {
 		return app.settings;
 	},

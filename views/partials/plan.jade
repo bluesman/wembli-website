@@ -1,0 +1,8 @@
+if (typeof req.session.plan === "undefined")
+	include ../includes/no-event
+else
+	//- have plan but no organizer? its a friend viewing a plan
+	if (typeof req.session.plan.isOrganizer)
+		include ../includes/plan/organizer-view
+	else
+		include ../includes/plan/friend-view

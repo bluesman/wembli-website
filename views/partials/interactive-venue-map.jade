@@ -1,9 +1,14 @@
+- var btnText = "Buy";
+- ctaUrl = "{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticketreq.sessionId()}}";
+- if (plan.preferences.payment === 'group')
+	- btnText = 'Choose';
+	- ctaUrl = '/event-options/' + plan.event.eventId + '/' + plan.event.eventName;
 #interactive-venue-map(ng-controller="VenueMapCtrl")
 	#map-background
 		#map-container
 		//- #groups-container
 	#tickets.pull-right
-		.event-data(event-id="{{eventId}}")
+		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
 		#ticket-filter-container
 			h3 Filter:
@@ -40,4 +45,7 @@
 					select(name="qty-{{ticket.ID}}")
 						option(ng-repeat="split in ticket.ValidSplits.int") {{split}}
 					.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
-				a.btn.btn-primary.btn-large(href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticketreq.sessionId()}}",target="_blank") Buy
+				- if (btnText == 'Buy')
+					a.btn.btn-primary.btn-large(href=ctaUrl,target="_blank")= btnText
+				- else
+					a.btn.btn-primary.wembli-sequence-link(href=ctaUrl,direction="1")= btnText

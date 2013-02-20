@@ -1,4 +1,3 @@
-
 /*!
  * Ext JS Connect
  * Copyright(c) 2010 Sencha Inc.
@@ -83,30 +82,36 @@ function jsonrpc(rpcDispatchHooks) {
      * @param  {Function} respond
      */
 
-    function handleRequest(rpc, respond){
-        if (validRequest(rpc)) {
-	    if (typeof rpcDispatchHooks.initMethod === 'function') {
-		var method = rpcDispatchHooks.initMethod(rpc);
-	    }
+    function handleRequest(rpc, respond) {
+        if(validRequest(rpc)) {
+            if(typeof rpcDispatchHooks.initMethod === 'function') {
+                var method = rpcDispatchHooks.initMethod(rpc);
+            }
 
-            if (typeof method === 'function') {
+            if(typeof method === 'function') {
                 var params = [];
-                if (Array.isArray(rpc.params)) {
+                if(Array.isArray(rpc.params)) {
                     params = rpc.params;
-                } else if (typeof rpc.params === 'object') {
+                } else if(typeof rpc.params === 'object') {
                     var names = method.toString().match(/\((.*?)\)/)[1].match(/[\w]+/g);
-                    if (names) {
-                        for (var i = 0, len = names.length; i < len; ++i) {
+                    if(names) {
+                        for(var i = 0, len = names.length; i < len; ++i) {
                             params.push(rpc.params[names[i]]);
                         }
                     } else {
                         // Function does not have named parameters
-                        return respond({ error: { code: INVALID_PARAMS, message: 'This service does not support named parameters.' }});
+                        return respond({
+                            error: {
+                                code: INVALID_PARAMS,
+                                message: 'This service does not support named parameters.'
+                            }
+                        });
                     }
                 }
-                function reply(err, result){
-                    if (err) {
-                        if (typeof err === 'number') {
+
+                function reply(err, result) {
+                    if(err) {
+                        if(typeof err === 'number') {
                             respond({
                                 error: {
                                     code: err
@@ -121,90 +126,89 @@ function jsonrpc(rpcDispatchHooks) {
                             });
                         }
                     } else {
-                        respond({
-                            result: result
+                        //call the rpcDispatchHooks.post method
+                        rpcDispatchHooks.post(rpc.params.req,rpc.params.res,result,function(result) {
+                            respond({result:result})
                         });
                     }
                 }
                 method.apply(reply, params);
             } else {
-                respond({ error: { code: METHOD_NOT_FOUND }});
+                respond({
+                    error: {
+                        code: METHOD_NOT_FOUND
+                    }
+                });
             }
         } else {
-            respond({ error: { code: INVALID_REQUEST }});
+            respond({
+                error: {
+                    code: INVALID_REQUEST
+                }
+            });
         }
     }
 
     return function jsonrpc(req, res, next) {
         var me = this,
             contentType = req.headers['content-type'] || '';
-        if (req.method === 'POST' && contentType.indexOf('application/json') >= 0) {
-            var data = '';
-            req.setEncoding('utf8');
-            req.addListener('data', function(chunk) { data += chunk; });
-            req.addListener('end', function() {
 
-                // Attempt to parse incoming JSON string
-                try {
-                    var rpc = JSON.parse(data),
-                        batch = Array.isArray(rpc);
-                } catch (err) {
-                    return respond(normalize(rpc, { error: { code: PARSE_ERROR }}));
+        if(req.method === 'POST' && contentType.indexOf('application/json') >= 0) {
+            var rpc = req.body;
+            var batch = Array.isArray(rpc);
+
+            /**
+             * Normalize response object.
+             */
+
+            function normalize(rpc, obj) {
+                obj.id = rpc && typeof rpc.id === 'number' ? rpc.id : null;
+                obj.jsonrpc = VERSION;
+                if(obj.error && !obj.error.message) {
+                    obj.error.message = errorMessages[obj.error.code];
                 }
+                return obj;
+            }
 
-        		rpc.params.req = req;
-	            rpc.params.res = res;
+            /**
+             * Respond with the given response object.
+             */
 
-                /**
-                 * Normalize response object.
-                 */
+            function respond(obj) {
+                var body = JSON.stringify(obj);
+                res.writeHead(200, {
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(body)
+                });
+                res.end(body);
+            }
 
-                function normalize(rpc, obj) {
-                    obj.id = rpc && typeof rpc.id === 'number'
-                        ? rpc.id
-                        : null;
-                    obj.jsonrpc = VERSION;
-                    if (obj.error && !obj.error.message) {
-                        obj.error.message = errorMessages[obj.error.code];
-                    }
-                    return obj;
+            // Handle requests
+            if(batch) {
+                var responses = [],
+                    len = rpc.length,
+                    pending = len;
+
+                for(var i = 0; i < len; ++i) {
+                    (function(rpc) {
+                        rpc.params.req = req;
+                        rpc.params.res = res;
+
+                        handleRequest.call(me, rpc, function(obj) {
+                            responses.push(normalize(rpc, obj));
+                            if(!--pending) {
+                                respond(responses);
+                            }
+                        });
+                    })(rpc[i]);
                 }
-
-                /**
-                 * Respond with the given response object.
-                 */
-
-                function respond(obj) {
-                    var body = JSON.stringify(obj);
-                    res.writeHead(200, {
-                        'Content-Type': 'application/json',
-                        'Content-Length': Buffer.byteLength(body)
-                    });
-                    res.end(body);
-                }
-
-                // Handle requests
-
-                if (batch) {
-                    var responses = [],
-                        len = rpc.length,
-                        pending = len;
-                    for (var i = 0; i < len; ++i) {
-                        (function(rpc){
-                            handleRequest.call(me, rpc, function(obj){
-                                responses.push(normalize(rpc, obj));
-                                if (!--pending) {
-                                    respond(responses);
-                                }
-                            });
-                        })(rpc[i]);
-                    }
-                } else {
-                    handleRequest.call(me, rpc, function(obj){
-                        respond(normalize(rpc, obj));
-                    });
-                }
-            });
+            } else {
+                rpc.params.req = req;
+                rpc.params.res = res;
+                handleRequest.call(me, rpc, function(obj) {
+                    respond(normalize(rpc, obj));
+                });
+            }
         } else {
             next();
         }
@@ -224,9 +228,6 @@ function jsonrpc(rpcDispatchHooks) {
  * @api private
  */
 
-function validRequest(rpc){
-    return rpc.jsonrpc === VERSION
-        && typeof rpc.id === 'number'
-        && typeof rpc.method === 'string';
+function validRequest(rpc) {
+    return rpc.jsonrpc === VERSION && typeof rpc.id === 'number' && typeof rpc.method === 'string';
 }
-

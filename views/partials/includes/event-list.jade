@@ -1,5 +1,5 @@
 #event-list-wrapper
 	h2= heading
 	ul
-		li.event-wrapper.wembli-sequence-link(id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)")
+		li.event-wrapper.wembli-sequence-link(id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)",ng-cloak)
 			include event

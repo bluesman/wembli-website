@@ -15,13 +15,13 @@ var access_logfile = fs.createWriteStream('./logs/access.log', {
 app = module.exports = express();
 
 //static helper functions
-//app.helpers(require('./controllers/helpers/static-view-helpers'));
-globals = require('./globals');
-app.locals = require('./locals');
+app.locals = require('./static-helpers.js');
 
-//app globals
+//app.settings
 app.set('host', 'beta');
 app.set('secure', false);
+app.set('autoIndex', false); //tell mongoose not to do autoIndex in produciton
+
 var port = 8001;
 
 if (process.env.NODE_ENV == 'development') {
@@ -31,6 +31,7 @@ if (process.env.NODE_ENV == 'development') {
 	app.set('fbAppSecret', 'ce9779873babc764c3e07efb24a34e69');
 	app.set('host', 'tom');
 	app.set('tnUrl', 'tn.wembli.com');
+	app.set('autoIndex', true);
 }
 
 if (process.env.NODE_ENV == 'secure') {
@@ -45,8 +46,6 @@ var wembliEveryauth = require('./lib/wembli/everyauth.js');
 wembliEveryauth.init(everyauth);
 app.set('fbAppId', wembliEveryauth.conf.fb.appId);
 app.set('fbAppSecret', wembliEveryauth.conf.fb.appSecret);
-
-app.use(require('./controllers/helpers/dynamic-view-helpers'));
 
 //redirect to https if not development
 app.use(function(req, res, next) {
@@ -76,15 +75,29 @@ app.use(express.session({
 	store: new redis
 }));
 app.use(everyauth.middleware());
+app.use(express.bodyParser());
+app.use(require('./lib/wembli/visitor'));
+app.use(require('./lib/wembli/customer'));
+app.use(require('./lib/wembli/plan'));
 app.use(wemblirpc.server(wemblirpc.rpcDispatchHooks));
 app.set('views', __dirname + '/views');
 app.set('controllers', __dirname + '/controllers');
 app.set('view engine', 'jade');
-app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(require('./lib/wembli/secure'));
-app.use(require('./lib/wembli/eventplan'));
 app.use(require('./lib/wembli/ipinfodb'));
+app.use(function(req, res, next) {
+	res.locals.req      = req;
+	res.locals.res      = res;
+	res.locals.params   = req.params;
+	res.locals.session  = req.session;
+	res.locals.ipinfo   = req.session.ipinfo;
+	res.locals.visitor  = req.session.visitor;
+	res.locals.customer = req.session.customer;
+	res.locals.plan     = req.session.plan;
+
+	next();
+});
 app.use(app.router);
 
 if (process.env.NODE_ENV === 'development') {
@@ -98,7 +111,7 @@ if (process.env.NODE_ENV === 'development') {
 require('./controllers/index')(app);
 require('./controllers/search')(app);
 require('./controllers/events')(app);
-require('./controllers/invitation')(app);
+require('./controllers/plan')(app);
 require('./controllers/tickets')(app);
 require('./controllers/parking')(app);
 require('./controllers/restaurants')(app);

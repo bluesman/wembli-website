@@ -5,14 +5,7 @@ html.trigger-partial(ng-app="wembliApp")
   body(ng-controller="MainCtrl")
     include includes/facebook-sdk
     include includes/header
-    #page-loading-modal.modal.hide
-      .modal-header
-        h2 WEMBli Quick Tip:
-      .modal-body
-        p You can share your favorite ticket options with your friends before you decide what to buy...
-      .modal-footer
-        .progress.progress-striped.active
-          .bar(style="width:100%")
+    include includes/modals
     - if (typeof fixedHeight !== "undefined")
       #content.fixed-height
         ul

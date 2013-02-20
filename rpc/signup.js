@@ -22,6 +22,12 @@ exports.signup = {
 			data.exists     = req.session.signupForm.exists    ? req.session.signupForm.exists    : data.exists;
 		}
 
+		data.loginRedirect = req.session.loginRedirect ? req.session.loginRedirect : data.loginRedirect;
+		data.redirectUrl   = req.session.redirectUrl ? req.session.redirectUrl : data.redirectUrl;
+
 		me(null,data);
-	}
+	},
+
+
+
 }

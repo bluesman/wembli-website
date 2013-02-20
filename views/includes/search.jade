@@ -9,7 +9,7 @@ lastEventId   = undefined;
 	- lastEventDate = new Date(events[events.length-1].Date).format('mm-dd-yy');
 	- lastEventId = events[events.length-1].ID;
 
-- if (req.session.ipinfo.city)
+- if (ipinfo.city)
 	- heading += ' Near '+req.session.ipinfo.city;
 	- url     += req.session.ipinfo.city+'/';
 	- seeMore += ' near '+req.session.ipinfo.city;
@@ -30,7 +30,7 @@ input(type="hidden", name="city", value="#{req.session.ipinfo.city}", ng-init="c
 input(type="hidden", name="postalCode", value="#{req.session.ipinfo.postal_code}", ng-init="postalCode='#{req.session.ipinfo.postal_code}'")
 input(type="hidden", name="lastEventDate", ng-init="lastEventDate='#{lastEventDate}'", value="#{lastEventDate}")
 input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'", value="#{lastEventId}")
-#index-frame
+#search-frame()
 	#left
 		#copy.architect Plan, vote on and split the cost of going to live events with friends!
 	#right

@@ -1,0 +1,13 @@
+form#invite-wizard-step-3-form(novalidate)
+	fieldset
+		h2 Invite Friends Via Twitter
+		p Tweet a message at your friends inviting them to your outing
+		textarea#twitter-message-text(ng-model="twitter.message.text", name="twitter_message_text", required)
+		h2 Select Friends You Follow On Twitter
+		//- check if we're already connected with facebook - if so fetch the friends
+		//- else show a connect with facebook button
+
+	.form-controls
+		a.skip-step(ng-click="skipStep('step-3')") Skip this step
+		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step-3')") Continue to invite friends via Wembli Mail
+

@@ -4,29 +4,13 @@ var async = require('async');
 exports.event = {
 	init: function(args, req, res) {
 		var me = this;
-		var data = {
-			payment:'group',
-			restaurant:true,
-			parking:true,
-			hotel:false,
-			over21: false,
-			guestFriends: true,
-			guestList: 'full',
-			errors: {}
-		};
-
-		if (typeof req.session.eventOptionsForm != "undefined") {
-			data = req.session.eventOptionsForm;
-		}
-
 		me(null,data);
-
 	},
 
 	search: function(args, req, res) {
 		var me = this;
-		console.log('search args:');
-		console.log(args);
+		//console.log('search args:');
+		//console.log(args);
 		args.cnt = (args.cnt) ? args.cnt : 15;
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.SearchEvents(args, function(err, results) {
@@ -58,7 +42,6 @@ exports.event = {
 
 	get: function(args, req, res) {
 		var me = this;
-		console.log('here');
 		args.cnt = (args.cnt) ? args.cnt : 15;
 
 		if (args.nearZip == "undefined") {
@@ -104,7 +87,6 @@ exports.event = {
 			if (err) {
 				return me(err);
 			}
-			console.log(results);
 			var ret = {
 				success: 1,
 				ticketPricingInfo: results

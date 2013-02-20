@@ -19,6 +19,15 @@ h3 {
   font-size:15px;
 }
 
+.btn-primary {
+  .buttonBackground(@blue,@blue);
+  font-size:16px;
+}
+
+.btn-primary:hover {
+  color:@blueDark;
+
+}
 #page-loading-modal {
   //background: url('/images/loading-med.gif') no-repeat center center @grayLight;
   width:400px;
@@ -110,6 +119,31 @@ h3 {
     h3 {
       text-align:left;
     }
+
+    .log-in {
+      .clearfix();
+      padding:20px;
+      height:40px;
+      line-height:20px;
+      vertical-align:middle;
+
+      .copy {
+        width:110px;
+      }
+
+      .login-button {
+        width:200px;
+        margin-top:2px;
+      }
+
+      .signup {
+        width:110px;
+        text-align:center;
+
+        a {padding:0;}
+      }
+    }
+
   }
   #no-event-container a, #no-event-container > .architect {
     padding:10px;
@@ -125,6 +159,7 @@ h3 {
   }
 }
 
+@import "font-awesome.less";
 @import "fonts.less";
 @import "type.less";
 @import "layout.less";
@@ -136,8 +171,12 @@ h3 {
 @import "event.less";
 
 @import "index.less";
+@import "search.less";
 @import "tickets.less";
 @import "login.less";
 @import "signup.less";
 @import "confirm.less";
 @import "event-options.less";
+@import "plan.less";
+@import "invite-friends-wizard.less";
+

@@ -1,0 +1,31 @@
+//- see dynamic-view-helpers helpers for wizardNav var
+- var wizardNav = initInviteFriendsWizard();
+-	if (req.session.loggedIn)
+	- wizardNav.shift();
+- wizardNav[0]['active'] = 'active';
+#invitation-modal.modal.hide(ng-controller="InviteFriendsWizardCtrl")
+	#invite-friends-wizard
+		.modal-header
+			h2 Choose Friends To Invite
+		.modal-body
+			#left.pull-left
+				each navItem in wizardNav
+					a(ng-class="{'#{navItem.id}':'active'}[currentStep]",ng-click="gotoStep('#{navItem.step}')",href="#{navItem.href}",id="#{navItem.id}",class="wizard-step-nav")
+						i(class="#{navItem.icon}")
+						div
+							span #{navItem.text}
+							i.icon-double-angle-right.pull-right
+			#right.pull-left
+				- if (!req.session.loggedIn)
+					#step1.wizard-step(ng-show="{'step1':true}[showStep]")
+						include invite-friends-wizard/step-1
+				#step2.wizard-step(ng-show="{'step2':true}[showStep]")
+					include invite-friends-wizard/step-2
+				#step3.wizard-step(ng-show="{'step3':true}[showStep]")
+					include invite-friends-wizard/step-3
+				#step4.wizard-step(ng-show="{'step4':true}[showStep]")
+					include invite-friends-wizard/step-4
+				#step5.wizard-step(ng-show="{'step5':true}[showStep]")
+					include invite-friends-wizard/step-5
+				#step6.wizard-step(ng-show="{'step6':true}[showStep]")
+					include invite-friends-wizard/step-6

@@ -1,10 +1,7 @@
-var querystring = require('querystring');
-var fs = require('fs');
-var mailer = require("../lib/wembli/sendgrid");
-var crypto = require('crypto');
 var wembliUtils = require('wembli/utils');
+var wembliMail  = require('../lib/wembli/email');
 var wembliModel = require('../lib/wembli-model');
-var Customer = wembliModel.load('customer');
+var Customer    = wembliModel.load('customer');
 
 module.exports = function(app) {
 	/*
@@ -34,13 +31,13 @@ module.exports = function(app) {
 				return res.redirect('/');
 			}
 
-			if (typeof c.forgot_password[0] == "undefined") {
+			if (typeof c.forgotPassword[0] == "undefined") {
 				//no crystal
 				return res.redirect('/');
 			}
 
 			//check if this token is expired
-			var dbTimestamp = c.forgot_password[0].timestamp;
+			var dbTimestamp = c.forgotPassword[0].timestamp;
 			var currentTimestamp = new Date().getTime();
 			var timePassed = (currentTimestamp - dbTimestamp) / 1000;
 			//has it been more than 2 days?
@@ -53,7 +50,7 @@ module.exports = function(app) {
 			return res.render('supply-password', {
 				title: 'wembli.com - reset password',
 				email: c.email,
-				token: c.forgot_password[0].token,
+				token: c.forgotPassword[0].token,
 			});
 		});
 	});
@@ -69,21 +66,19 @@ module.exports = function(app) {
 		}
 
 		//validate email and token again
-		Customer.findOne({
-			email: req.param('email')
-		}, function(err, c) {
+		Customer.findOne({email: req.param('email')}, function(err, c) {
 			if (c == null) {
 				//TODO: wonky
 				return res.redirect('/');
 			}
 
-			if (typeof c.forgot_password == "undefined") {
+			if (typeof c.forgotPassword == "undefined") {
 				//no crystal
 				return res.redirect('/');
 			}
 
 			//check if this token is expired
-			var dbTimestamp = c.forgot_password[0].timestamp;
+			var dbTimestamp = c.forgotPassword[0].timestamp;
 			var currentTimestamp = new Date().getTime();
 			var timePassed = (currentTimestamp - dbTimestamp) / 1000;
 			//has it been more than 2 days?
@@ -93,18 +88,13 @@ module.exports = function(app) {
 			}
 
 			//make sure the passed in token matches the db token
-			if (req.param('token') != c.forgot_password[0].token) {
+			if (req.param('token') != c.forgotPassword[0].token) {
 				return res.redirect('/');
 			}
 
-			//all good, update the password in the db, log in and send to dashboard
-			var hash = crypto.createHash('sha512');
-			hash.update(req.param('password'));
-			var digest = hash.digest(encoding = 'base64');
-			digest = digest.replace(/\//g, '');
-			c.password = digest;
-			c.forgot_password = [];
-			c.save(function(err) {
+			var password = Customer.encryptPassword(req.param('password'));
+			var forgotPassword = [];
+			c.update({forgotPassword: [], password:password}, function(err) {
 				//log em in
 				req.session.loggedIn = true;
 				req.session.customer = c;
@@ -129,90 +119,56 @@ module.exports = function(app) {
 			return res.redirect('/dashboard');
 		}
 
-		Customer.findOne({
-			email: req.param('email')
-		}, function(err, c) {
+		Customer.findOne({email: req.param('email')}, function(err, c) {
 			if (c == null) {
-				//clear out any existing customer (logout doesn't do this by design
+				/* clear out any existing customer (logout doesn't do this by design */
 				delete req.session.customer;
 				//TODO: fix this - they tried to give us an email for an account that doesn't exist
 				return res.redirect('/');
 			}
 
 			var noToken = true;
-			var tokenHash = '';
-			var tokenTimestamp = '';
 
-			//have a c, make a forgot password token (or if there is already one in the db that is not expired, use it
-			if (typeof c.forgot_password[0] != "undefined") {
-				//check if this token is expired
-				var dbTimestamp = c.forgot_password[0].timestamp;
+			/* have a c, make a forgot password token (or if there is already one in the db that is not expired, use it) */
+			if (typeof c.forgotPassword[0] != "undefined") {
+				/* check if this token is expired */
+				var dbTimestamp      = c.forgotPassword[0].timestamp;
 				var currentTimestamp = new Date().getTime();
-				var timePassed = (currentTimestamp - dbTimestamp) / 1000;
+				var timePassed       = (currentTimestamp - dbTimestamp) / 1000;
 				//has it been more than 2 days?
-				if (timePassed < 172800) {
-					noToken = false; //they have a valid token
-				}
+				var noToken = (timePassed < 172800) ? false : true;
 			}
 
 			if (noToken) {
 				//make a new token
-				var hash = crypto.createHash('md5');
-				tokenTimestamp = new Date().getTime().toString();
-				hash.update(req.param('email') + tokenTimestamp);
-				tokenHash = hash.digest(encoding = 'base64');
-				tokenHash = tokenHash.replace(/\//g, '');
+				var tokenTimestamp = new Date().getTime().toString();
+				var tokenHash      = wembliUtils.digest(req.param('email') + tokenTimestamp);
 			} else {
 				//use the existing token
-				tokenHash = c.forgot_password[0].token;
-				tokenTimestamp = c.forgot_password[0].timestamp;
+				var tokenHash      = c.forgotPassword[0].token;
+				var tokenTimestamp = c.forgotPassword[0].timestamp;
 			}
 
-			//send an email with the link
-			var resetLink = "http://" + app.settings.host + ".wembli.com/reset-password";
-			var emailEsc = encodeURIComponent(c.email);
-			var tokenEsc = encodeURIComponent(tokenHash);
-			var resetLinkEncoded = resetLink + '/' + emailEsc + '/' + tokenEsc;
-			c.forgot_password = {
+			var forgotPassword = [{
 				timestamp: tokenTimestamp,
 				token: tokenHash
-			};
-			c.save(function(err) {
-				if (!err) {
-					res.render('email-templates/forgot-password', {
-						resetLink: resetLinkEncoded,
-						layout: 'email-templates/layout',
-						token: tokenHash,
-						c: c
-					}, function(err, htmlStr) {
-						var mail = {
-							from: '"Wembli Support" <help@wembli.com>',
-							to: c.email,
-							headers: {
-								'X-SMTPAPI': {
-									category: "forgotPassword",
-								}
-							},
+			}];
 
-						};
+			c.update({forgotPassword:forgotPassword},function(err) {
+				if (err) {	return res.redirect('/');	}
 
-						mail.subject = "Reset Your Password";
-						mail.text = 'Click here to reset your password: ' + resetLinkEncoded;
-						mail.html = htmlStr;
-						mailer.sendMail(mail, function(error, success) {
-							console.log("Message " + (success ? "sent" : "failed:" + error));
-						});
-
-
-						//load check your email page
-						return res.render('reset-password-sent', {
-							title: 'wembli.com - reset password email sent',
-							email: req.param('email'),
-						});
-					});
-				} else {
-					res.redirect('/');
+				var args = {
+					res:res,
+					tokenHash:tokenHash,
+					customer:c
 				}
+				wembliMail.sendForgotPasswordEmail(args)
+
+				/* load check your email page */
+				return res.render('reset-password-sent', {
+					title: 'wembli.com - reset password email sent',
+					email: req.param('email'),
+				});
 			});
 		});
 	});

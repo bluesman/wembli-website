@@ -1,6 +1,9 @@
 - var fbCredentials = fbCredentials()
 #fb-root
 script(type="text/javascript")
+  fbAppId = "#{fbCredentials.appId}";
+  fbChannelUrl = "#{fbCredentials.host}.wembli.com/fbchannel";
+
   (function(d){
      var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
      if (d.getElementById(id)) {return;}
@@ -8,56 +11,5 @@ script(type="text/javascript")
      js.src = "//connect.facebook.net/en_US/all.js";
      ref.parentNode.insertBefore(js, ref);
   }(document));
-  window.fbAsyncInit = function() {
-    var loggedIn = #{req.session.loggedIn}
-    FB.init({
-      appId      : #{fbCredentials.appId},
-      channelUrl : '#{fbCredentials.host}.wembli.com/fbchannel', // Channel File
-      status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the req.session
-      xfbml      : true,  // parse XFBML
-      oauth      : true
-    });
-
-    if (!loggedIn) {
-      FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-          //take this out for now - seems like not a good user experience
-          //window.location = '/auth/facebook';
-        }
-      });
-
-      if ($('#summaryContainer').length > 0) {
-        /*
-        FB.getLoginStatus(function(response) {
-          if (response.status === 'connected') {
-            var uid = response.authResponse.userID;
-            var accessToken = response.authResponse.accessToken;
-            location.replace('/auth/facebook');
-          } else {
-            $('.redirect-url').each(function(idx,el) {
-              $(el).val('/plan/summary');
-            });
-            $('#signupModal #message').html("You've done a lot of work.  Sign up for Wembli now to make sure your plan is saved.").show();
-            $('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
-          }
-        });
-        */
-        $('.redirect-url').each(function(idx,el) {
-          $(el).val('/plan/summary');
-        });
-        $('#signupModal #message').html("You've done a lot of work.  Sign up for Wembli now to make sure your plan is saved.").show();
-        $('#signupModal').modal({backdrop:'static',show:true,keyboard:false});
-
-      }
-
-    }
-
-
-    if ($('#facebook a').length > 0) {
-      initFacebookFriendStack();
-    }
-  };
-
 
 

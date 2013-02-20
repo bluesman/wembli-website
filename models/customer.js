@@ -1,263 +1,128 @@
 var wembliUtils = require('wembli/utils');
 var async = require('async');
 var wembliModel = require('../lib/wembli-model');
-var Feed = wembliModel.load('feed');
+//var Feed = wembliModel.load('feed');
+var Plan = wembliModel.load('plan');
+var crypto = require('crypto');
 
 this.Model = function(mongoose) {
 	var Schema = mongoose.Schema;
-	var ObjectId = Schema.ObjectId;
 
 	var Confirmations = new Schema({
-		timestamp: {
-			type: String
-		},
-		token: {
-			type: String
-		}
+		timestamp: String,
+		token: String
 	});
 
 	var ForgotPassword = new Schema({
-		timestamp: {
-			type: String
-		},
-		token: {
-			type: String
-		}
+		timestamp: String,
+		token: String
 	});
 
-	var mapFriends = function(f) {
-			var friends = {};
-			for (idx in f) {
-				friends[f[idx].email] = f[idx];
-			}
-			return friends;
-		};
-
-	var unMapFriends = function(f) {
-			var friends = [];
-			for (email in f) {
-				friends.push(f[email]);
-			}
-			return friends;
-		};
-
-	var EventPlan = new Schema({
-		date_created: {
-			type: Date,
-		default:
-			Date.now
-		},
-		tickets: {
-			type: {}
-		},
-		ticketIds: {
-			type: []
-		},
-		event: {
-			type: {}
-		},
-		//friends: {type:{},get:mapFriends,set:unMapFriends},
-		friends: {
-			type: {}
-		},
-		friendIds: {
-			type: []
-		},
-		completed: {
-			type: {}
-		},
-		config: {
-			type: {}
-		}
-	});
+	var schemaOptions = {
+		autoIndex : (typeof app !== "undefined") ? app.settings.autoIndex : true,
+		collection: "customer",
+	};
 
 	var Customer = new Schema({
-		fbId: {
-			type: String
-		},
-		first_name: {
-			type: String
-		},
-		last_name: {
-			type: String
-		},
-		birthday: {
-			type: String
-		},
-		zip_code: {
-			type: Number
-		},
-		gender: {
-			type: String
-		},
+		firstName: String,
+		lastName: String,
+		birthday: String,
+		zipCode: Number,
+		gender: String,
 		email: {
 			type: String,
-			unique: true
+			required : true,
+			index : {	unique: true }
 		},
-		password: {
-			type: String
+		socialProfiles : {
+			twitter : {},
+			facebook: {}
 		},
+		password: String,
 		confirmed: {
 			type: Boolean,
-		default:
-			false
+			default:false
 		},
 		confirmation: [Confirmations],
-		forgot_password: [ForgotPassword],
-		eventplan: [EventPlan],
-		date_created: {
-			type: Date,
-		default:
-			Date.now
-		},
-		last_modified: {
-			type: Date
-		}
+		forgotPassword: [ForgotPassword],
+		plans : [String],
+		created: {type: Date,	default:Date.now},
+		updated: Date,
+	},schemaOptions);
+
+
+	/* pre func */
+	Customer.pre('remove', function(next) {
+		console.log('post remove');
+		console.log('plans:');
+		console.log(this.plans);
+
+		/* remove customer.plans */
+		async.forEach(this.plans,function(guid,callback) {
+			console.log('removing plan for customer with guid: '+guid);
+
+			Plan.findByGuid(guid,function(err,p) {
+				console.log('got plan by guid:'+err);
+				console.log(p);
+				console.log('removing it..');
+				p.remove(function() {
+					callback();
+				});
+			});
+
+		}, function(err) {
+			console.log('deleted plans for customer');
+			next();
+		});
 	});
 
 	Customer.pre('save', function(next) {
 		console.log('customer email is: ' + this.email);
-		//if no email throw an error
-		if (!this.email) {
-			return next(new Error('error - no email for customer'));
-		}
+		this.updated = new Date();
 
-		this.last_modified = new Date();
-		console.log('pre save');
 		next();
 	});
+	/* done prefunk */
 
-	Customer.methods.test = function() {
-		console.log('test');
-	};
+	Customer.methods.addPlan = function(plan,callback) {
+		console.log('add plan: '+plan+ 'to customer '+ this.email);
+		var guid = (typeof plan === "string") ? plan : plan.guid;
+		if (!guid) {
+			return callback('no guid');
+		}
 
-	Customer.methods.saveCurrentPlan = function(plan, callback) {
 		var c = this;
-		console.log('customer model');
-		console.log(plan);
-		//plan must have a config.organizer
-		if (typeof plan.config.organizer == "undefined") {
-			console.log('plan does not have an organizer..not saving it..');
-			if (typeof callback != "undefined") {
-				return callback('plan must have a config.organizer');
+		//check if this plan is in the list yet
+		async.detect(c.plans,function(el,cb) {
+			 return cb((guid === el));
+		}, function(result) {
+			if (typeof result === "undefined") {
+				console.log('this guid was not already in customer.plans so adding it');
+				c.plans.push(guid);
+				c.markModified('plans');
+				c.save(callback);
 			} else {
-				return;
-			}
-
-		}
-		//if the organizer email for plan is not c.email gtfo
-		if (plan.config.organizer != c.email) {
-			console.log('organizer is not the customer');
-			if (typeof callback != "undefined") {
-				return callback('the plan does not belong to this customer');
-			} else {
-				return;
-			}
-		}
-
-		var plans = [];
-		var saved = false;
-		for (var idx in this.eventplan) {
-			//housekeeping
-			if ((typeof this.eventplan[idx].config == "undefined") || (typeof this.eventplan[idx].config.guid == "undefined")) {
-				continue;
-			}
-
-			//add this plan if its one of the plans
-			if (this.eventplan[idx].config.guid == plan.config.guid) {
-				plans.push(plan);
-				saved = true;
-			} else {
-				plans.push(this.eventplan[idx]);
-			}
-		}
-
-		//no plans, put this one in
-		if (!saved) {
-			plans.push(plan);
-		}
-
-		this.eventplan = plans;
-		this.markModified('eventplan');
-
-		this.save(function(err) {
-			if (err) {
-				console.log('error saving customer: ' + err);
-				callback(err);
-			}
-
-			//check if there any currentPlan.feed elements to save
-			//there's an existing feed
-			if ((typeof plan.feed != "undefined") && plan.feed.length > 0) {
-				//look for an existing feed
-				Feed.findOne({
-					guid: plan.config.guid
-				}, function(err, feed) {
-					if (err) {
-						console.log('feed saving err:' + err);
-						if (typeof callback != "undefined") {
-							callback(err);
-						}
-					} else {
-						if (feed == null) {
-							//create a new one
-							var newFeed = new Feed({
-								guid: plan.config.guid,
-								activity: []
-							});
-							for (var idx in plan.feed) {
-								var f = plan.feed[idx];
-								if (typeof f.actor == "undefined") {
-									f.actor = {
-										name: c.first_name + ' ' + c.last_name,
-										keyName: 'organizer',
-										keyValue: 'organizer'
-									};
-
-								}
-								newFeed.activity.push(f);
-							}
-
-
-							console.log('saving new feed');
-							newFeed.save(function(err) {
-								plan.feed = [];
-								if (typeof callback != "undefined") {
-									callback(err);
-								}
-							});
-						} else {
-							console.log('adding to feed');
-							for (var idx in plan.feed) {
-								var f = plan.feed[idx];
-								if (typeof f.actor == "undefined") {
-									f.actor = {
-										name: c.first_name + ' ' + c.last_name,
-										keyName: 'organizer',
-										keyValue: 'organizer'
-									};
-
-								}
-								feed.activity.push(f);
-							}
-							feed.markModified('activity');
-							feed.save(function(err) {
-								plan.feed = [];
-								if (typeof callback != "undefined") {
-									callback(err);
-								}
-							});
-						}
-					}
-				});
-			} else {
-				//console.log(c);
-				if (typeof callback != "undefined") {
-					callback(err);
-				}
+				callback();
 			}
 		});
 	};
+
+	Customer.statics.makeConfirmation = function(prefix) {
+		hash = crypto.createHash('md5');
+		var confirmationTimestamp = new Date().getTime().toString();
+		hash.update(prefix+confirmationTimestamp);
+		var confirmationToken = hash.digest(encoding='base64');
+		confirmationToken.replace('/','');
+		return {timestamp: confirmationTimestamp,token: confirmationToken};
+	};
+
+	Customer.statics.encryptPassword = function(password) {
+		/* all good, update the password in the db, log in and send to dashboard */
+		var hash = crypto.createHash('sha512');
+		hash.update(password);
+		var digest = hash.digest(encoding = 'base64');
+		return digest.replace(/\//g, '');
+	}
 
 	Customer.statics.findFriendEmailByFriendToken = function(token, callback) {
 		var Customer = this;
@@ -397,7 +262,7 @@ this.Model = function(mongoose) {
 	};
 
 
-	Customer.methods.full_name = function() {
+	Customer.methods.fullName = function() {
 		return this.first_name + ' ' + this.last_name
 	};
 
@@ -407,9 +272,9 @@ this.Model = function(mongoose) {
 		}, callback);
 	};
 
-
-	//not sure if mongoose does connection pooling - i hope so :)
-	//var db = mongoose.connect(mongoose.dbSetting);
-	mongoose.model('customer', Customer);
-	return mongoose.model('customer');
+	try {
+		return mongoose.model('customer');
+	} catch(e) {
+		return mongoose.model('customer',Customer);
+	}
 };

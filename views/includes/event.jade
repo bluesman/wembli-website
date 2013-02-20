@@ -1,7 +1,10 @@
-- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
+- var lastSearch = visitor.lastSearch ? visitor.lastSearch : '/search';
 - lastSearch += '?updateEvent=1';
 - var date = new Date(Date.parse(event.Date));
 - var location = event.City+', '+event.StateProvince;
+- var btnText = "Find Tickets";
+- if (typeof plan.preferences.payment != "undefined")
+	- btnText = (plan.preferences.payment == 'self') ? 'Find Tickets' : 'Start Plan';
 a.hide(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)
 .event-date-box
 	span.day!=        date.format("ddd")
@@ -18,4 +21,4 @@ a.hide(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)
 	.pull-right
 		.cta
 			a.btn.btn-primary.choose-event(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)
-				span Find Tickets
+				span= btnText

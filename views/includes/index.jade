@@ -1,3 +1,10 @@
-#index-frame
-	#left left frame
-	#right right frame
+#index-frame(ng-controller="IndexCtrl")
+	#left
+	#right
+		.friends-pay-first
+			.cta
+				a.btn.btn-primary.wembli-sequence-link(href="/start-plan",direction="-1") Friends Pay Up Front
+		.you-pay-first
+			.cta
+				a.btn.btn-primary.wembli-sequence-link(href="/buy-now",direction="-1") I'll Pay Up Front
+

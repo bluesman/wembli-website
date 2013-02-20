@@ -1,7 +1,8 @@
 block hero-right
 	#event-options-hero-right.hero-right(ng-controller="EventOptionsCtrl")
-		form#event-options-form(name="eventOptionsForm",method="post",action="/event/#{eventId}/#{eventName}",enctype="application/x-www-form-urlencoded")
+		form#event-options-form(name="eventOptionsForm",method="post",action="/event-options/#{eventId}/#{eventName}",enctype="application/x-www-form-urlencoded")
 			fieldset
+				- /*
 				#payment-options.options-group
 					h2 Payment Options:
 					.error-text(ng-show="paymentOptionsError") Dude, SOMEONE has to pay for this...please choose a payment option.
@@ -11,6 +12,7 @@ block hero-right
 					.control-group
 						input(type="radio",name="payment",value="self",ng-checked="payment=='self'")
 						label I'm planning this outing and footing the bill (that's how i roll)
+				- */
 				#add-ons.options-group
 					h2 Add-Ons:
 					.error-text(ng-show="addOnsError") Error with add-ons...
@@ -44,5 +46,5 @@ block hero-right
 					.control-group
 						input(type="radio",name="guest_list",value="private",ng-checked="guest_list=='private'")
 						label My guests can not see who else is invited
-			button#arrow.arrow.wembli-sequence-link
+			button#arrow.arrow.wembli-sequence-link(ng-click="fetchModals.fetch('/invitation')",direction="1")
 				.arrow-text.architect Continue

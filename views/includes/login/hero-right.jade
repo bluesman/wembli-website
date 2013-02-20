@@ -1,11 +1,13 @@
 block hero-right
 	#login-hero-right.hero-right
 		#login-right(ng-controller="LoginCtrl")
-			a#facebook-login.architect(target="_self",href="/auth/facebook")
+			//- a#facebook-login.architect(target="_self",href="/auth/facebook")
+			a#facebook-login-button.btn.btn-primary(target="_self",href="/auth/facebook")
+				i.icon-facebook.icon-2x.pull-left
 				span Login with Facebook
 			#or.architect OR
 			form#login-form(name="loginForm",method="post",action="/login",enctype="application/x-www-form-urlencoded")
-				input.redirect-url(type="hidden",name="redirectUrl",value="")
+				input.redirect-url(ng-model="redirectUrl", type="hidden",name="redirectUrl",value="")
 				input(type="hidden",ng-model="formError", value="")
 				fieldset
 					#error

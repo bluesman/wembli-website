@@ -1,5 +1,8 @@
 - var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 - lastSearch += '?updateEvent=1';
+- var btnText = "Find Tickets";
+- if (typeof req.session.payment != "undefined")
+	- btnText = (req.session.payment == 'self') ? 'Find Tickets' : 'Start Plan';
 a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 .event-date-box
 	span.day {{getDate(event.Date)| date:'EEE'}}
@@ -16,4 +19,4 @@ a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 	.pull-right
 		.cta
 			a.btn.btn-primary.choose-event(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
-				span Find Tickets
+				span= btnText

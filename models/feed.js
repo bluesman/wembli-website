@@ -30,7 +30,7 @@ this.Model = function(mongoose) {
 	var activity = {action:action,
 			actor:actor,
 			meta:meta};
-	
+
 	*/
 	Feed.findOne({guid:args.guid},function(err,feed) {
 	    if (err) {
@@ -42,7 +42,7 @@ this.Model = function(mongoose) {
 		    f.save();
 		} else {
 		    feed.activity.push(activity);
-		    feed.markModified('activity');	
+		    feed.markModified('activity');
 		    feed.save();
 		}
 	    }
@@ -50,9 +50,10 @@ this.Model = function(mongoose) {
     };
 
 
-    //not sure if mongoose does connection pooling - i hope so :)
-    //var db = mongoose.connect(mongoose.dbSetting);
-    mongoose.model('feed',Feed);
-    return mongoose.model('feed');
+    try {
+    	return mongoose.model('feed');
+    } catch(e) {
+    	return mongoose.model('feed',Feed);
+    }
 };
 

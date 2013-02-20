@@ -7,7 +7,7 @@
 		"express": "3.x",
 		"connect-redis": "1.4.x",
 		"everyauth": "0.3.x",
-		"mongoose": "3.0.x",
+		"mongoose": "3.x",
 		"async": "0.1.x",
 		"nodemailer": "0.3.x",
 		"geoip": "0.4.x",

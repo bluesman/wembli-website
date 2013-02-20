@@ -1,0 +1,12 @@
+extends layout
+block frame2
+	if (typeof req.session.plan === "undefined")
+		include includes/no-event
+	else
+		//- if this plan has an organizer, then
+		if ( (visitor.context === 'organizer') || ((visitor.context === 'visitor') && (req.session.plan.organizer === "undefined")))
+			include includes/plan/organizer-view
+		else
+			include includes/plan/friend-view
+
+

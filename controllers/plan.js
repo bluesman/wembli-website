@@ -1,0 +1,42 @@
+module.exports = function(app) {
+
+	var planView = function(req, res, view) {
+		var viewData = {
+			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+		}
+
+		//TODO - handle this in a more global way
+		//if they are logged in then clear out any redirectUrl that may have been set
+		if (req.session.loggedIn) {
+			delete req.session.redirectUrl;
+			req.session.loginRedirect = false;
+		} else {
+			//they're going to get a login overlay if they aren't logged in - set the redirectUrl here
+			req.session.redirectUrl = '/plan';
+			req.session.loginRedirect = true;
+		}
+
+
+		/*
+		session will dictate what view we display (check out the view files to see this logic)
+
+		a) there is a req.session.plan and the organizer is "undefined"
+	     then this is the organizer event dashboard view
+
+	  b) there is a req.session.plan but plan.organizer is set
+	     then this is a plan someone else is organizing
+
+	  c) there is no req.session.plan
+	     then display no-event
+	  */
+
+		return res.render(view,viewData);
+	};
+
+	app.get('/plan', function(req,res) { planView(req, res, 'plan'); });
+	app.get('/partials/plan', function(req, res) { planView(req, res, 'partials/plan'); });
+
+	app.get('/invitation', function(req,res) { planView(req, res, 'plan'); });
+	app.get('/partials/invitation', function(req,res) { planView(req, res, 'partials/plan'); });
+
+}
