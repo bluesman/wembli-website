@@ -566,7 +566,7 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 				console.log('already have a plan');
 
 				/* seems like the right place to add our messaging to the scope */
-				if (typeof plan.get().messaging !== "undefiend") {
+				if (typeof plan.get().messaging !== "undefined") {
 					$scope.facebook.messageText = plan.get().messaging.facebook;
 				}
 
