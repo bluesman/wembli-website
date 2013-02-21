@@ -12,15 +12,14 @@ function MainCtrl($scope, $location, $window, footer) {
 * Index Controller
 */
 function IndexCtrl($scope, $templateCache, wembliRpc) {
-	//console.log($templateCache.info());
+
 	//clear the cache when the home page loads to make sure we start fresh
 	$templateCache.removeAll();
-	//console.log($templateCache.info());
-	wembliRpc.fetch('index.init', {},
-	//response
 
+	wembliRpc.fetch('index.init', {},
+	/* response */
 	function(err, result) {
-		console.log(result);
+
 	});
 };
 
@@ -88,10 +87,9 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 
 	wembliRpc.fetch('eventlist.init', {},
-	//response
-
+	/* response */
 	function(err, result) {
-		console.log(result);
+
 	});
 
 
@@ -136,8 +134,6 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 			$scope.ticketSummaryData[elId.split('-')[0]] = result;
 			//we cached the result..lets unlock
 			$scope.ticketSummaryData.locked = false;
-			//console.log('result for:'+elId);
-			//console.log(result);
 			//init the popover
 			var summaryContent = "";
 			if(typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
@@ -183,7 +179,7 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 	$scope.hideTicketSummary = function(e) {
 		var elId = (typeof $(e.target).parents('li').attr('id') == "undefined") ? $(e.target).attr('id') : $(e.target).parents('li').attr('id');
 		$('#' + elId).popover('hide');
-		//console.log('mouseout: '+elId);
+
 	};
 
 	$scope.moreEvents = function() {
@@ -265,7 +261,7 @@ function EventCtrl($scope) {};
 * Invite Friends Wizard Controller
 */
 function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc, customer, plan, facebook, twitter) {
-	console.log('invite friends wizard controller running');
+
 	if ($location.path() !== '/invitation') {
 		return;
 	}
@@ -290,15 +286,12 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 		},
 
 		formSubmitCallback: function(err, result) {
-			console.log('back from submit step1')
-			console.log(result);
 			$scope.step1.formError = false;
 			$scope.step1.error = false;
 			//error checking
 			$scope.step1.accountExists = (result.exists) ? true : false;
 
 			if(result.formError) {
-				console.log('formError is true');
 				$scope.step1.error = true;
 				$scope.step1.formError = true;
 			}
@@ -325,7 +318,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 			return rpcArgs;
 		},
 		formSubmitCallback: function(err, result) {
-			console.log(result);
 			/* if there's a no cust error send them back to step-1 with an error */
 			if (result.noCustomer) {
 				$scope.step1.error = true;
@@ -343,8 +335,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 
 	/* view methods */
 	$scope.submitForm = function(step,args) {
-		console.log('submitForm for ' + step);
-		console.log($scope[step]);
 		if ($scope[step].$valid) {
 			wembliRpc.fetch('invite-friends.submit-' + step, wizard[step].rpcArgs(args), wizard[step].formSubmitCallback);
 		}
@@ -396,11 +386,8 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 	//facebook first
 	wizard.facebook = {
 		handleFriendsFetch : function(response) {
-			console.log('got friends');
 
 			var mergePlanFriends = function(fbFriends,planFriends) {
-				console.log('merging friends');
-				console.log(planFriends);
 
 				/* optimize this... */
 				angular.forEach(fbFriends, function(f) {
@@ -422,7 +409,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 
 			if (plan.getFriends() === null) {
 				$scope.$on('plan-fetched',function(e,args) {
-					console.log('registering listener for plan-fetched')
 					planFriends = plan.getFriends();
 					mergePlanFriends(fbFriends,planFriends);
 				})
@@ -432,8 +418,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 			}
 		},
 		handleProfileFetch : function(response) {
-			console.log('facebook profile response');
-			console.log(response);
 
 			if (typeof response != "undefined") {
 				$scope.facebook.firstName = response.first_name;
@@ -465,7 +449,7 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 
 	//if getAuth is null then set a listener
 	if (facebook.getAuth() === null) {
-		console.log('facebook auth is null - set a listener');
+
 		$scope.$on('facebook-login-status',function(e,args) {
 			$scope.$apply(function() {
 				$scope.facebook.loginStatusLoaded = true;
@@ -477,7 +461,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 		});
 	} else {
 		//its already been loaded
-		console.log('facebook auth is not null - update scope now');
 		$scope.facebook.loginStatusLoaded = true;
 		if (facebook.getAuth()) {
 			facebook.api('/me',wizard.facebook.handleProfileFetch);
@@ -533,17 +516,14 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 		} else {
 			$scope.customer = {};
 		}
-		console.log('starting on '+initialStep);
 		$scope.gotoStep(initialStep);
 	};
 
 	//decide which step to start on depending on if they are logged in or not
 	if (typeof customer.get() === null) {
-		console.log('customer has not been fetched');
 		//customer has not been fetched yet set up a listener
 		$scope.$on('customer-fetched', handleCustomerFetched);
 	} else {
-		console.log('customer has been fetched');
 		//customer has already been fetched
 		handleCustomerFetched();
 	}
@@ -553,17 +533,12 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 	//controller runs before the modal actually gets attached to the DOM
 	//so setting up a listener for the event that is triggered when the modal is attached
 	$scope.$on('invitation-modal-fetched', function(e, args) {
-		console.log('invitation-modal-fetched');
 
 		//make sure plan is also fetched
 		var handlePlanFetched = function(e, args) {
-			console.log('plan has been fetched');
-			console.log('plan is:');
-			console.log(plan.get());
 
 			//display the modal if there's a plan
 			if(plan.get()) {
-				console.log('already have a plan');
 
 				/* seems like the right place to add our messaging to the scope */
 				if (typeof plan.get().messaging !== "undefined") {
@@ -592,7 +567,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 						});
 					} else {
 						if ($location.path() === '/invitation') {
-							console.log('showing the modal');
 							$('#invitation-modal').modal({
 								'backdrop': 'static',
 								'keyboard': false,
@@ -604,7 +578,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 
 				//if the event already fired and I missed it
 				if ($scope.beforeNextFrameAnimatesIn || $scope.afterNextFrameAnimatesIn) {
-					console.log('after nextframe animates in');
 					//show the modal right now
 					showModal();
 					//unregisterListener();
@@ -616,7 +589,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 					});
 				}
 	    } else {
-	    	console.log("no plan :( don't display the wizard modal");
 		    //no plan - reload the invitation page
 		    //$window.location.reload();
 		  }
@@ -646,8 +618,6 @@ function PlanCtrl($rootScope, $scope, wembliRpc, plan, customer) {
 
 	//response
 	function(err, result) {
-		console.log(result);
-
 		if(typeof result.plan !== "undefined") {
 			plan.set(result.plan,result.friends);
 			$rootScope.$broadcast('plan-fetched',{});
@@ -739,7 +709,6 @@ function LoginCtrl($scope, $http, wembliRpc) {
 function SupplyPasswordCtrl($scope) {
 	$('#confirm-password-form').submit(function(e) {
 		if((typeof $scope.password == "undefined") || ($scope.password !== $scope.password2)) {
-			console.log('no match');
 			$('#error .error-text').show();
 			return false;
 		}
@@ -761,9 +730,7 @@ function FooterCtrl($scope, $location, $window) {
 };
 
 function TicketsCtrl($scope, wembliRpc) {
-	//console.log('eventId:' + $scope.eventId);
-	//console.log($scope.eventName);
-	console.log('tickets controller');
+
 	$('#page-loading-modal').modal({
 		backdrop: "static",
 		keyboard: false,

@@ -88,66 +88,53 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           options.MapId = scope.event.VenueConfigurationID;
 
           options.OnInit = function(e, MapType) {
-            console.log('in init mapType: ' + MapType);
             $(".ZoomIn").html('+');
             $(".ZoomOut").html('-');
 
           };
 
           options.OnError = function(e, Error) {
-            console.log('error: ');
-            console.log(Error);
             if(Error.Code === 1) { /* chart not found - display the tn chart */
-              console.log('setting map background to: ' + $('#tnMapUrl').val());
               $('#map-container').css("background", 'url(' + $('#tnMapUrl').val() + ') no-repeat center center');
             }
           };
 
           options.ToolTipFormatter = function(Data) {
-            console.log('tooltip formatteR: ');
-            console.log(data);
+
           };
 
           options.OnMouseover = function(e, Section) {
-            console.log(Section);
             if(Section.Active) {
-              console.log("Section " + Section.Name + " in Group " + Section.Group.Name);
             } else {
-              console.log('no tickets');
             }
           };
 
           options.OnMouseout = function(e, Section) {
             if(Section.Active) {
-              console.log("Section " + Section.Name + " in Group " + Section.Group.Name);
             }
           };
 
           options.OnClick = function(e, Section) {
             if(Section.Active && Section.Selected) {
-              console.log("Selected Section " + Section.Name + " in Group " + Section.Group.Name);
             }
           };
 
           options.OnControlClick = function(e, Data) {
             if(Section.Selected) {
-              console.log("Selected Button " + Data.Name);
             }
           };
 
           options.OnGroupClick = function(e, Group) {
             if(Group.Selected) {
-              console.log("Selected Group " + Group.Name);
+
             }
           };
 
           options.OnTicketSelected = function(e, Ticket) {
-            console.log("TicketId:" + Ticket.Id + ", Quantity:" + Ticket.Quantity);
           }
 
           options.OnReset = function(e) {
             //Write Code Here
-            console.log('they want to reset');
           };
 
           //set the height of the map-container to the window height
@@ -181,11 +168,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
         },
 
-        //transformRequest
-
-
+        /* transformRequest */
         function(data, headersGetter) {
-          console.log('showing modal');
           $('#page-loading-modal').modal("show");
           return data;
         },
@@ -301,7 +285,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           samePage = (path === $rootScope.currentPath) ? true : false;
 
           $location.path(path);
-          $rootScope.currentPath = path;
+
           //fetchModals
           fetchModals.fetch(path);
 

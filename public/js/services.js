@@ -94,14 +94,13 @@ angular.module('wembliApp.services', [])
 	var modalFetched = {};
 	return {
 		'fetch': function(path, callback) {
-			console.log('fetching modals for path:' + path);
 			if(typeof modalPageMap[path] !== "undefined") {
 				for(var i = 0; i < modalPageMap[path].length; i++) {
 					//if the modal has already been fetched, don't fetch it again but do fire the broadcast
 					if(typeof modalFetched[path] === "undefined") {
 
 						var partialUrl = modalPageMap[path][i];
-						console.log(partialUrl);
+
 						$http({
 							method: 'get',
 							url: partialUrl,
@@ -112,7 +111,6 @@ angular.module('wembliApp.services', [])
 							modalFetched[path] = $('body :first-child').attr('id');
 
 							//send a broadcast that the modal is loaded
-							console.log('broadcast modal-fetched');
 							$rootScope.$broadcast($('body :first-child').attr('id') + '-fetched', {
 								modalId: $('body :first-child').attr('id')
 							});
@@ -121,15 +119,12 @@ angular.module('wembliApp.services', [])
 						});
 					} else {
 						//send a broadcast that the modal is loaded
-						console.log('broadcast modal-fetched');
 						$rootScope.$broadcast(modalFetched[path]+'-fetched', {
 							modalId: modalFetched[path]
 						});
 					}
 
 				}
-			} else {
-				console.log('no modals for path: ' + path)
 			}
 		}
 	};
@@ -464,12 +459,9 @@ login: function() {
 
 	footer.slideNavArrow = function() {
 		footer.currentPath = $location.path();
-		console.log('footer.currentPath is now set to: ' + footer.currentPath);
 		//append a fake element to #footer to get the left css property of end
 		var startClass = 'center-' + $scope.currentPath.split('/')[1];
 		var endClass = 'center-' + $location.path().split('/')[1];
-		console.log('end-class:' + endClass);
-		console.log('startclass:' + startClass);
 		if(startClass == endClass) {
 			startClass = 'center-';
 		}
