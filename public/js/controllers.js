@@ -545,17 +545,18 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 					$scope.facebook.messageText = plan.get().messaging.facebook;
 				}
 
-				var showModal = function() {
-
+				var showModal = function(dereg) {
 					/*
 					there's a race condition
 					sometimes we get here before the location.path has been set by wembli-sequence-link
 					we know this if $scope.currentPath !== location.path()
 					if that happens we have to set a watcher for currentPath instead of just using location.path()
 						*/
-
+					console.log('showing invite wizard modal');
 					if ($location.path() !== $scope.currentPath) {
+						console.log('location.path != currentpath');
 						$scope.$watch('currentPath',function(newVal,oldVal) {
+							console.log('newVal: '+newVal)
 							if (newVal === '/invitation') {
 								/* show the modal */
 								$('#invitation-modal').modal({
@@ -566,6 +567,7 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 							}
 						});
 					} else {
+						console.log('location.path == currentpath');
 						if ($location.path() === '/invitation') {
 							$('#invitation-modal').modal({
 								'backdrop': 'static',
@@ -574,17 +576,23 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 							$('#invitation-modal').modal("show");
 						}
 					};
-				}
+					if (typeof dereg !== "undefined") {
+						dereg();
+					}
+
+				};
 
 				//if the event already fired and I missed it
 				if ($scope.beforeNextFrameAnimatesIn || $scope.afterNextFrameAnimatesIn) {
+					console.log('before next frame animates in or after nextframe animates in');
 					//show the modal right now
 					showModal();
 					//unregisterListener();
 				} else {
-					$scope.$watch('beforeNextFrameAnimatesIn',function(newVal, oldVal) {
+					var dereg = $scope.$watch('beforeNextFrameAnimatesIn',function(newVal, oldVal) {
+						console.log('waiting for frame to animate in: '+newVal);
 						if (newVal) {
-							showModal();
+							showModal(dereg);
 						}
 					});
 				}

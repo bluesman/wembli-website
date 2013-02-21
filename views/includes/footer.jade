@@ -1,5 +1,6 @@
 - var ticketsLink = '/tickets';
-- if (typeof plan.event !== "undefined")
+- if (typeof plan.event.eventId !== "undefined")
+	- console.log(plan.event)
 	- ticketsLink = ticketsLink + '/' + plan.event.eventId + '/' + plan.event.eventName;
 
 footer#footer(ng-controller="FooterCtrl")

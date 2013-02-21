@@ -19,6 +19,7 @@ module.exports = function(app) {
 
 	var ticketsView = function(req,res,template,locals) {
 		var args = {"eventID" : req.param("eventId")};
+		console.log('tickets view: '+req.param("eventId"));
 		req.session.plan.event.eventId   = req.param("eventId");
 		req.session.plan.event.eventName = req.param("eventName");
 
