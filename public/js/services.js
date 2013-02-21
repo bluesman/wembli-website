@@ -527,29 +527,31 @@ login: function() {
 
 	footer.slideNavArrow();
 
-	options.beforeCurrentFrameAnimatesIn = function() {
+	var sequence = angular.element("#content").sequence(options).data("sequence");
+
+	sequence.beforeCurrentFrameAnimatesIn = function() {
 		$scope.$broadcast('sequence-beforeCurrentFrameAnimatesIn');
 		$scope.afterNextFrameAnimatesIn = false;
 		$scope.beforeCurrentFrameAnimatesIn = true;
 	};
-	options.afterCurrentFrameAnimatesIn = function() {
+	sequence.afterCurrentFrameAnimatesIn = function() {
 		$scope.$broadcast('sequence-afterCurrentFrameAnimatesIn');
 		$scope.beforeCurrentFrameAnimatesIn = false;
 		$scope.afterCurrentFrameAnimatesIn = true;
 	};
 
-	options.beforeNextFrameAnimatesIn = function() {
+	sequence.beforeNextFrameAnimatesIn = function() {
 		$scope.$broadcast('sequence-beforeNextFrameAnimatesIn');
 		$scope.afterCurrentFrameAnimatesIn = false;
 		$scope.beforeNextFrameAnimatesIn = true;
 	};
-	options.afterNextFrameAnimatesIn = function() {
+	sequence.afterNextFrameAnimatesIn = function() {
 		$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 		$scope.afterNextFrameAnimatesIn = true;
 		$scope.beforeNextFrameAnimatesIn = false;
 	};
 
 	//init the sequence (page slider)
-	return angular.element("#content").sequence(options).data("sequence");
+	return sequence;
 
 }]).value('version', '0.0.1');

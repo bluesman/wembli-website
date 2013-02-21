@@ -572,9 +572,7 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 
 				var showModal = function() {
 
-					console.log('location path is: '+$location.path())
 					if ($location.path() === '/invitation') {
-						console.log('showing the modal');
             //show the modal
             $('#invitation-modal').modal({
             	'backdrop': 'static',
