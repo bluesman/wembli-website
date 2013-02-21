@@ -572,15 +572,35 @@ function InviteFriendsWizardCtrl($scope, $window, $location, sequence, wembliRpc
 
 				var showModal = function() {
 
-					if ($location.path() === '/invitation') {
-            //show the modal
-            $('#invitation-modal').modal({
-            	'backdrop': 'static',
-            	'keyboard': false,
-            });
-            $('#invitation-modal').modal("show");
-          }
-				};
+					/*
+					there's a race condition
+					sometimes we get here before the location.path has been set by wembli-sequence-link
+					we know this if $scope.currentPath !== location.path()
+					if that happens we have to set a watcher for currentPath instead of just using location.path()
+						*/
+
+					if ($location.path() !== $scope.currentPath) {
+						$scope.$watch('currentPath',function(newVal,oldVal) {
+							if (newVal === '/invitation') {
+								/* show the modal */
+								$('#invitation-modal').modal({
+									'backdrop': 'static',
+									'keyboard': false,
+								});
+								$('#invitation-modal').modal("show");
+							}
+						});
+					} else {
+						if ($location.path() === '/invitation') {
+							console.log('showing the modal');
+							$('#invitation-modal').modal({
+								'backdrop': 'static',
+								'keyboard': false,
+							});
+							$('#invitation-modal').modal("show");
+						}
+					};
+				}
 
 				//if the event already fired and I missed it
 				if ($scope.beforeNextFrameAnimatesIn || $scope.afterNextFrameAnimatesIn) {

@@ -301,7 +301,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           samePage = (path === $rootScope.currentPath) ? true : false;
 
           $location.path(path);
-
+          $rootScope.currentPath = path;
           //fetchModals
           fetchModals.fetch(path);
 
