@@ -71,7 +71,6 @@ exports.customer = {
 			if(c !== null) {
 				//they've already signed up
 				data.exists = true;
-				data.formError = true;
 				return respond(data);
 			}
 

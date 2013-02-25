@@ -12,7 +12,7 @@ this.Model = function(mongoose) {
 		planId: {type:String, index:true, required:true},
 		contactInfo:{
 			service:String,
-			serviceId:String,
+			serviceId:{type: String, index:true, required:true},
 			name:String,
 			imageUrl:String
 		},

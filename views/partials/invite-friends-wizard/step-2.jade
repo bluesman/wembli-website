@@ -8,17 +8,18 @@ form#invite-wizard-step2-form(name="step2",ng-cloak,ng-show="facebook.loginStatu
 		#facebook-need-login(ng-hide="facebook.service.getAuth()")
 			p Connect with Facebook to view your friends.
 			button#facebook-login.btn.btn-primary(ng-click="facebook.service.login()") Connect With Facebook
-		#facebook-friends-list(ng-show="facebook.service.getAuth()")
+		#facebook-friends-list.friends-list-container(ng-show="facebook.service.getAuth()")
 			.control-group
 				.input-append
-					input#fb-filter(type="text",placeholder="Enter friend name to filter",on-keyup="facebook.filterFriends",ng-model="facebook.friendFilterKey"))
+					input.friend-filter(type="text",placeholder="Enter friend name to filter",on-keyup="facebook.filterFriends",ng-model="facebook.friendFilterKey"))
 					span.add-on
 						i.icon-search
-			i.icon-spinner.icon-spin(ng-hide="facebook.friends")
+			.spinner(ng-hide="facebook.friends")
+				i.icon-spinner.icon-spin.icon-2x(ng-hide="facebook.friends")
 			.friends-list(ng-show="facebook.friends")
 				.friend.pull-left(ng-repeat="friend in facebook.friends",ng-click="handleFriendClick('step2',friend)")
 					.friend-top
-						img.picture(src="https://graph.facebook.com/{{friend.id}}/picture")
+						img.picture(ng-src="https://graph.facebook.com/{{friend.id}}/picture")
 						.friend-controls
 							input(id="{{friend.id}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
 							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")
@@ -27,4 +28,4 @@ form#invite-wizard-step2-form(name="step2",ng-cloak,ng-show="facebook.loginStatu
 						.name {{friend.name}}
 	.form-controls
 		a.skip-step(ng-click="skipStep('step2')") Skip this step
-		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step2',{next:true})") Continue to add friends via Twitter
+		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step2',{next:true})") Continue

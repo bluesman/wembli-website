@@ -29,6 +29,8 @@ if (process.env.NODE_ENV == 'development') {
 	//tom.wembli.com fb app
 	app.set('fbAppId', '364157406939543');
 	app.set('fbAppSecret', 'ce9779873babc764c3e07efb24a34e69');
+	app.set('twitAppId', 'aGekerxvrd9RczHHEOLEw');
+	app.set('twitAppSecret', 'PUdQVzslAATiRCFhTXetmjbaFGoWIM092bSkuulFdk');
 	app.set('host', 'tom');
 	app.set('tnUrl', 'tn.wembli.com');
 	app.set('autoIndex', true);
@@ -46,6 +48,8 @@ var wembliEveryauth = require('./lib/wembli/everyauth.js');
 wembliEveryauth.init(everyauth);
 app.set('fbAppId', wembliEveryauth.conf.fb.appId);
 app.set('fbAppSecret', wembliEveryauth.conf.fb.appSecret);
+app.set('twitAppId', wembliEveryauth.conf.twit.appId);
+app.set('twitAppSecret', wembliEveryauth.conf.twit.appSecret);
 
 //redirect to https if not development
 app.use(function(req, res, next) {
@@ -74,11 +78,11 @@ app.use(express.session({
 	secret: '@$!#SCDFdsa',
 	store: new redis
 }));
-app.use(everyauth.middleware());
 app.use(express.bodyParser());
 app.use(require('./lib/wembli/visitor'));
 app.use(require('./lib/wembli/customer'));
 app.use(require('./lib/wembli/plan'));
+app.use(everyauth.middleware());
 app.use(wemblirpc.server(wemblirpc.rpcDispatchHooks));
 app.set('views', __dirname + '/views');
 app.set('controllers', __dirname + '/controllers');

@@ -1,13 +1,32 @@
-form#invite-wizard-step-3-form(novalidate)
+.social-loader(ng-hide="twitter.loginStatusLoaded") Loading...
+form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="twitter.loginStatusLoaded", novalidate)
 	fieldset
-		h2 Invite Friends Via Twitter
-		p Tweet a message at your friends inviting them to your outing
-		textarea#twitter-message-text(ng-model="twitter.message.text", name="twitter_message_text", required)
-		h2 Select Friends You Follow On Twitter
-		//- check if we're already connected with facebook - if so fetch the friends
-		//- else show a connect with facebook button
-
+		h2 Invite Friends Via twitter
+		p Tweet at your friends to let them new they're invited!
+		textarea#twitter-message-text(ng-init="twitter.messageText='This is what the tweet will say...'",ng-model="twitter.messageText", name="twitter_message_text", required)
+		h2 Search For Twitter Friends To Invite
+		#twitter-need-login(ng-hide="twitter.service.getAuth()")
+			p Connect with twitter to view your friends.
+			a#twitter-login.btn.btn-primary(href="/auth/twitter",target="_self") Connect With twitter
+		#twitter-friends-list.friends-list-container(ng-show="twitter.service.getAuth()")
+			.control-group
+				.input-append
+					input.friend-filter(type="text",placeholder="Search for friends on twitter",on-keyup="twitter.searchUsers",ng-model="twitter.friendFilterKey"))
+					span.add-on
+						i.icon-search
+			.search-for-friends(ng-hide="twitter.friends || twitter.spinner") Enter a friend name or twitter @screen_name to find and invite via twitter.
+			.spinner(ng-show="twitter.spinner")
+				i.icon-spinner.icon-spin.icon-2x(ng-show="twitter.spinner")
+			.friends-list(ng-show="twitter.friends",ng-hide="twitter.spinner" )
+				.friend.pull-left(ng-repeat="friend in twitter.friends",ng-click="handleFriendClick('step3',friend)")
+					.friend-top
+						img.picture(ng-src="{{friend.profile_image_url_https}}")
+						.friend-controls
+							input(id="{{friend.id}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
+							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")
+							i.icon-remove-circle.icon-large(ng-show="rsvpDeclined(friend)")
+					.friend-bottom
+						.name {{friend.name}}
 	.form-controls
-		a.skip-step(ng-click="skipStep('step-3')") Skip this step
-		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step-3')") Continue to invite friends via Wembli Mail
-
+		a.skip-step(ng-click="skipStep('step3')") Skip this step
+		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step3',{next:true})") Continue

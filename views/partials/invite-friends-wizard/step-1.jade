@@ -1,11 +1,8 @@
 form#invite-wizard-step1-form(name="step1")
-	fieldset(ng-show="step1.readonly")
-		h2 Account Info Saved
-		p Thanks for signing up! Your messages will come from {{customer.firstName}} {{customer.lastName}} ({{customer.email}})
-	fieldset(ng-hide="step1.readonly")
+	fieldset()
 		h2 Enter Your Deets
 		#error.alert.alert-block.fade.in(ng-show="step1.error")
-			.error-text(ng-show="step1.formError") All fields are required and your passwords need to match.
+			.error-text(ng-show="step1.formError") All fields are required.
 			.error-text(ng-show="step1.noCustomer")
 				p Please provide your info so we can save your plan and invite people. Or
 				a.btn.btn-warning.wembli-sequence-link(href="/login") Click Here to Log In
@@ -13,18 +10,17 @@ form#invite-wizard-step1-form(name="step1")
 				p We've already got an account for that email address.
 				a.btn.btn-warning.wembli-sequence-link(href="/login") Click Here to Log In
 		p We'll use this info to let your guests know who the invitation is from.
-		#first-name-group.control-group
-			input#first-name(ng-model="customer.firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
-			input#last-name(ng-model="customer.lastName",placeholder="LAST NAME",type="text",name="lastName",required)
+		.name-group.control-group
+			input.first-name(ng-model="customer.firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
+			input.last-name(ng-model="customer.lastName",placeholder="LAST NAME",type="text",name="lastName",required)
 		.control-group
-			input#email(ng-model="customer.email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
-		h2() Enter A Password
-		p() Set your wembli password so we can securely save this plan for you.
-		.control-group()
-			input#password(ng-model="customer.password",placeholder="PASSWORD", type="password",value="",name="password", required)
-		.control-group()
-			input#password2(ng-model="customer.password2",placeholder="CONFIRM PASSWORD", type="password",value="",name="password2", required)
+			input.email(ng-model="customer.email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
 	.form-controls()
 		//- a.skip-step(ng-click="skipStep('step1')") Skip this step
-		button.submit-step.btn.btn-primary.btn-large(ng-hide="step1.readonly",ng-click="submitForm('step1')") Continue to add friends
-		a.submit-step.btn.btn-primary.btn-large(ng-show="step1.readonly") Continue to add friends
+		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step1')") Continue
+a.wembli-sequence-link(href="/login",ng-hide="customer.id") Already have an account? Log in here.&nbsp;
+span(ng-hide="customer.id || facebook.service.getAuth()") Or...
+.facebook-login(ng-hide="customer.id || facebook.service.getAuth()")
+	a#facebook-login-button.btn.btn-primary(target="_self",href="/auth/facebook")
+		i.icon-facebook.icon-2x.pull-left
+		span Login with Facebook

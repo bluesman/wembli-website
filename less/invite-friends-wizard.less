@@ -68,6 +68,32 @@
 					width:320px;
 				}
 
+				form {
+					fieldset {
+						.clearfix();
+					}
+				}
+
+				.name-group {
+					width:340px;
+
+					.first-name {
+						width:100px;
+						float:left;
+					}
+					.last-name {
+						width:200px;
+						margin-left:10px;
+					}
+				}
+
+				.form-status {
+					color: @green;
+					width:145px;
+					text-align:center;
+					margin-top:5px;
+				}
+
 				.form-controls {
 					position:absolute;
 					bottom:30px;
@@ -78,53 +104,50 @@
 					}
 				}
 
-				#step1 {
-					#first-name {
-						width:100px;
-						float:left;
+				.friends-list-container {
+					.spinner {
+						height:30px;
+						width:30px;
+						margin:50px auto;
 					}
-					#last-name {
-						width:200px;
-						margin-left:10px;
-					}
-				}
 
-				#step2 {
-					#fb-filter {
+					.friend-filter {
 						width:448px;
 					}
 
-					#facebook-friends-list {
-						.friends-list {
-							margin-left:2px;
+					.friends-list {
+						margin-left:2px;
 
-							.friend:hover {
-								background-color:lighten(@blueLight,30%);
+						.friend:hover {
+							background-color:lighten(@blueLight,30%);
+						}
+
+						.friend {
+							padding:6px;
+							width:148px;
+							.friend-top {
+								.clearfix();
+
+								i {
+									color:@blueLight;
+									margin:0;
+								}
+								.picture {
+									float:left;
+								}
+								.friend-controls {
+									float:right;
+									width:98px;
+									color:@green;
+									text-align:center;
+									line-height:50px;
+									height:50px;
+								}
 							}
 
-							.friend {
-								padding:6px;
-								width:148px;
-								.friend-top {
-									.clearfix();
-
-									.picture {
-										float:left;
-									}
-									.friend-controls {
-										float:right;
-										width:98px;
-										color:@green;
-										text-align:center;
-										line-height:50px;
-										height:50px;
-									}
-								}
-
-								.name {
-									padding:4px 0;
-									font-size:14px;
-								}
+							.name {
+								padding:4px 0;
+								font-size:14px;
 							}
 						}
 					}

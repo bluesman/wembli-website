@@ -24,7 +24,7 @@ angular.module('wembliApp.services', [])
 
 }])
 
-.factory('plan',['$rootScope','wembliRpc',function($rootScope,wembliRpc) {
+.factory('plan', ['$rootScope', 'wembliRpc', function($rootScope, wembliRpc) {
 	var self = this;
 	self.plan = null;
 	self.tickets = null;
@@ -34,7 +34,7 @@ angular.module('wembliApp.services', [])
 			return self.plan;
 		},
 
-		set: function(plan,friends) {
+		set: function(plan, friends) {
 			self.plan = plan;
 			self.friends = friends;
 			return self.plan;
@@ -47,7 +47,7 @@ angular.module('wembliApp.services', [])
 		//get plan from server and return it
 		fetch: function() {
 			//if ther eis no plan set self.plan to false
-			$rootScope.$broadcast('plan-fetched',{});
+			$rootScope.$broadcast('plan-fetched', {});
 		},
 
 		//push $rootScope.plan to server and save
@@ -57,7 +57,7 @@ angular.module('wembliApp.services', [])
 	}
 }])
 
-.factory('customer',['$rootScope','$q','wembliRpc', function($rootScope, wembliRpc) {
+.factory('customer', ['$rootScope', '$q', 'wembliRpc', function($rootScope, wembliRpc) {
 	var self = this;
 	self.customer = null;
 
@@ -75,7 +75,7 @@ angular.module('wembliApp.services', [])
 		//get plan from server and return it
 		fetch: function() {
 			//if there is no customer set it to false to indicate we explicitly know there is no customer
-			$rootScope.$broadcast('customer-fetched',{});
+			$rootScope.$broadcast('customer-fetched', {});
 		},
 
 		//push $rootScope.plan to server and save
@@ -119,7 +119,7 @@ angular.module('wembliApp.services', [])
 						});
 					} else {
 						//send a broadcast that the modal is loaded
-						$rootScope.$broadcast(modalFetched[path]+'-fetched', {
+						$rootScope.$broadcast(modalFetched[path] + '-fetched', {
 							modalId: modalFetched[path]
 						});
 					}
@@ -130,12 +130,12 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-.factory('friendFilter',[function() {
+.factory('friendFilter', [function() {
 	return {
-		filter: function(key,self) {
+		filter: function(key, self) {
 			var r = new RegExp("^" + key, "i");
 
-			if (key.length <= 1) {
+			if(key.length <= 1) {
 				self.friends = self.allFriends;
 				return;
 			}
@@ -152,7 +152,7 @@ angular.module('wembliApp.services', [])
 
 				var ary = f.name.split(' ');
 
-				angular.forEach(ary,function(name) {
+				angular.forEach(ary, function(name) {
 					if(r.test(name)) {
 						me.push(f);
 						return;
@@ -165,7 +165,7 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-.factory('facebook', ['$rootScope','$q','friendFilter', function($rootScope, $q, friendFilter) {
+.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', function($rootScope, $q, friendFilter, wembliRpc) {
 
 	var self = this;
 	this.auth = null;
@@ -192,7 +192,7 @@ angular.module('wembliApp.services', [])
 	return {
 		//TODO make a filterFriend service to be used by the different social network api services
 		filterFriends: function(filterKey) {
-			friendFilter.filter(filterKey,self);
+			friendFilter.filter(filterKey, self);
 		},
 
 		getAuth: function() {
@@ -203,6 +203,15 @@ angular.module('wembliApp.services', [])
 			FB.getLoginStatus(function(response) {
 				if(response.status === 'connected') {
 					self.auth = response.authResponse;
+					console.log(response.authResonse);
+					/* send the accessToken to wembli to auto log in */
+					wembliRpc.fetch('facebook.setAccessToken', {accessToken:response.authResponse.accessToken},
+						function(err, result) {
+							if(err) {
+								console.log(err);
+								return false;
+							}
+						});
 				} else {
 					self.auth = false;
 				}
@@ -215,106 +224,6 @@ angular.module('wembliApp.services', [])
 		getFriends: function(callback) {
 			return self.friends;
 		},
-login: function() {
-
-			FB.login(function(response) {
-				if(response.authResponse) {
-					self.auth = response.authResponse;
-					$rootScope.$broadcast('facebook-login', {
-						auth: self.auth
-					});
-				} else {
-					console.log('Facebook login failed', response);
-				}
-			});
-
-		},
-
-		logout: function() {
-			FB.logout(function(response) {
-				if(response) {
-					self.auth = false;
-					$rootScope.$broadcast('facebook-logout', {
-						auth: self.auth
-					});
-				} else {
-					console.log('Facebook logout failed.', response);
-				}
-
-			});
-		},
-
-		api: function(method, callback) {
-			if(typeof self.preApi[method] !== "undefined") {
-				self.preApi[method]();
-			}
-
-			FB.api(method, function(response) {
-				$rootScope.$broadcast('facebook-api-response', {
-					method: method,
-					response: response
-				});
-				if(typeof self.postApi[method] !== "undefined") {
-					self.postApi[method](response, callback);
-				} else {
-					callback(response);
-				}
-			});
-		}
-	}
-}])
-
-.factory('twitter', ['$rootScope','friendFilter', function($rootScope,friendFilter) {
-
-	var self = this;
-	this.auth = null;
-	this.friends = null;
-	this.allFriends = null;
-
-	/* preApi methods here */
-	self.preApi = {};
-
-	/* postApi methods here */
-	self.postApi = {
-		//set friends in the obj
-		'/me/friends': function(response, cb) {
-			if(typeof response.data !== "undefined") {
-				self.friends = response.data;
-				self.allFriends = response.data;
-			} else {
-				self.friends = null;
-			}
-			cb(response);
-		}
-	}
-
-	return {
-		//TODO make a filterFriend service to be used by the different social network api services
-		filterFriends: function(filterKey) {
-			friendFilter.filter(filterKey,self);
-		},
-
-		getAuth: function() {
-			return self.auth;
-		},
-
-		getLoginStatus: function() {
-			FB.getLoginStatus(function(response) {
-				if(response.status === 'connected') {
-					self.auth = response.authResponse;
-				} else {
-					self.auth = false;
-				}
-				$rootScope.$broadcast('facebook-login-status', {
-					auth: self.auth
-				});
-			});
-		},
-
-		getFriends: function(callback) {
-			return self.friends;
-		},
-
 		login: function() {
 
 			FB.login(function(response) {
@@ -331,7 +240,6 @@ login: function() {
 		},
 
 		logout: function() {
-
 			FB.logout(function(response) {
 				if(response) {
 					self.auth = false;
@@ -343,7 +251,6 @@ login: function() {
 				}
 
 			});
-
 		},
 
 		api: function(method, callback) {
@@ -356,7 +263,6 @@ login: function() {
 					method: method,
 					response: response
 				});
-
 				if(typeof self.postApi[method] !== "undefined") {
 					self.postApi[method](response, callback);
 				} else {
@@ -367,6 +273,81 @@ login: function() {
 	}
 }])
 
+.factory('twitter', ['$rootScope', 'friendFilter', 'wembliRpc', function($rootScope, friendFilter, wembliRpc) {
+
+	var self = this;
+	this.auth = null;
+	this.selectedFriends = {};
+	this.friends = null;
+	this.allFriends = null;
+
+	return {
+		//TODO make a filterFriend service to be used by the different social network api services
+		filterFriends: function(filterKey) {
+			friendFilter.filter(filterKey, self);
+		},
+
+		getAuth: function() {
+			return self.auth;
+		},
+
+		getLoginStatus: function() {
+			wembliRpc.fetch('twitter.getLoginStatus', {},
+
+				function(err, result) {
+					if(err) {
+						console.log(err);
+						return false;
+					}
+					self.auth = result.loginStatus;
+					$rootScope.$broadcast('twitter-login-status', {
+						auth: self.auth
+					});
+			});
+		},
+
+		searchUsers: function(q,args,callback) {
+			console.log('search for: '+q + ' with args:');
+			console.log(args);
+			wembliRpc.fetch('twitter.searchUsers', {q:q,args:args},
+				function(err, result) {
+					console.log('back from searchUsers');
+					console.log(result);
+					if(err) {
+						console.log(err);
+						callback(false);
+					}
+					self.friends = result.friends;
+					self.allFriends = result.friends;
+					callback(result);
+				});
+		},
+
+		getFriends: function() {
+			return self.friends;
+		},
+
+		fetchFriends: function(callback) {
+			wembliRpc.fetch('twitter.getFriends', {},
+
+				function(err, result) {
+					if(err) {
+						console.log(err);
+						callback(false);
+					}
+					self.friends = result.friends.users;
+					self.allFriends = result.friends.users;
+					callback(result);
+				});
+		},
+
+		fetchProfile: function() { /* wembliRpc call to get twitter user info */
+		},
+
+		login: function() { /* wembliRpc call? */
+		},
+	};
+}])
 
 .factory('interactiveMapDefaults', [function() {
 	return {

@@ -1,1 +1,30 @@
-#step-4 step 4
+form#invite-wizard-step4-form(name="step4")
+	fieldset()
+		h2 Go old skool and send an eMail
+		#error.alert.alert-block.fade.in(ng-show="step4.error")
+			.error-text(ng-show="step4.formError") All fields are required.
+		p We'll send your potentials an email letting them know they are invited.
+		textarea#step4-message-text(ng-init="wemblimail.messageText='This is what the email will say...'",ng-model="wemblimail.messageText", name="step4_message_text", required)
+		p Provide names and email addresses below for the people you want to invite.
+		.name-group.control-group.pull-left
+			input#step4-first-name.first-name(ng-model="wemblimail.firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
+			input.last-name(ng-model="wemblimail.lastName",placeholder="LAST NAME",type="text",name="lastName",required)
+			input#email(ng-model="wemblimail.email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
+			button.btn.btn-primary(ng-click="submitForm('step4')") Add Invitee
+		#step4-form-status.form-status.pull-right(fade-element="wemblimail.formStatus")
+			i.icon-ok-circle.icon-3x
+			.form-status-text Added Invitee
+		#step4-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
+			.friends-list(ng-show="wemblimail.friends[0]")
+				.friend.pull-left(ng-repeat="friend in wemblimail.friends",ng-click="handleFriendClick('step4',friend)")
+					.friend-top
+						i.friend-no-img.icon-user.icon-4x
+						.friend-controls
+							input(id="{{friend.id}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
+							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")
+							i.icon-remove-circle.icon-large(ng-show="rsvpDeclined(friend)")
+					.friend-bottom
+						.name {{friend.contactInfo.name}}
+	.form-controls()
+		a.skip-step(ng-click="skipStep('step4')") Skip this step
+		a.submit-step.btn.btn-primary.btn-large(type="submit",ng-click="skipStep('step4')") Continue

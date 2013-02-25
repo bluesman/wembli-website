@@ -392,6 +392,19 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   };
 }])
 
+.directive('fadeElement', function () {
+    return function (scope, element, attrs) {
+        element.css('display', 'none');
+        scope.$watch(attrs.fadeElement, function (value) {
+            if (value) {
+                element.fadeIn(400);
+            } else {
+                element.fadeOut(1000);
+            }
+        });
+    }
+})
+
 .directive('onKeyup', function() {
     return function(scope, elm, attrs) {
         //Evaluate the variable that was passed

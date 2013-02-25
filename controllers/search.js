@@ -33,6 +33,8 @@ module.exports = function(app) {
 
 		//get nearby events:
 		eventRpc['get'].apply(function(err,results) {
+			console.log(results);
+			console.log(err);
 			res.render('search', {
 				events: results.event,
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
@@ -82,9 +84,6 @@ module.exports = function(app) {
 		};
 
 		eventRpc['search'].apply(function(err,results) {
-			console.log('results from eventrpc: ');
-			console.log(results);
-
 			res.render('search', {
 				search: req.param('city'),
 				events: results.event,

@@ -58,9 +58,6 @@ module.exports = {
 			nav[i]['id']   = "nav-" + nav[i]['step'];
 			nav[i]['href'] = "#" + nav[i]['step'];
 		}
-		if (req.session.loggedIn) {
-			nav.shift();
-		}
 		nav[0]['active'] = 'active';
 		return nav;
 	},

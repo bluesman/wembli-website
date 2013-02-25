@@ -26,9 +26,6 @@ module.exports = function(app) {
 		eventRpc['get'].apply(function(err,results) {
 			//set a special header to tell angular to update the browser location
 			res.setHeader('x-wembli-overflow','hidden');
-
-			locals.eventId   = req.param('eventId');
-			locals.eventName = req.param('eventName');
 			locals.tnMapUrl  = results.event[0].MapURL;
 
 			res.render(template, locals);

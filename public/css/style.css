@@ -105,9 +105,6 @@ h3 {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
@@ -134,14 +131,8 @@ h3 {
   -webkit-border-radius: 0 0 0 0;
   -moz-border-radius: 0 0 0 0;
   border-radius: 0 0 0 0;
-  -webkit-border-radius: 0 0 0 0;
-  -moz-border-radius: 0 0 0 0;
-  border-radius: 0 0 0 0;
 }
 .module h3 {
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
   -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
@@ -365,18 +356,12 @@ ul.icons li [class*=" icon-"] {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
 }
 .icon-2x {
   font-size: 2em;
 }
 .icon-2x.icon-border {
   border-width: 2px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -389,18 +374,12 @@ ul.icons li [class*=" icon-"] {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
 }
 .icon-4x {
   font-size: 4em;
 }
 .icon-4x.icon-border {
   border-width: 4px;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
@@ -2034,9 +2013,6 @@ body {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
 }
 #search-box form#search-form button#submit #magnifying-glass {
   -webkit-transition-duration: 0s;
@@ -2200,9 +2176,6 @@ body {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   color: #ffffff;
 }
 #tickets-frame #map-background .tuMapControl:hover,
@@ -2220,9 +2193,6 @@ body {
 #tickets-frame #map-background .tuMapTooltip {
   background: none repeat scroll 0 0 #FCF1BD;
   border: 1px solid #666666;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -2323,9 +2293,6 @@ body {
   -webkit-box-shadow: 0 0 0 0;
   -moz-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -2736,6 +2703,34 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right input[type=password] {
   width: 320px;
 }
+#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset {
+  *zoom: 1;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:before,
+#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
+  display: table;
+  content: "";
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
+  clear: both;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group {
+  width: 340px;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group .first-name {
+  width: 100px;
+  float: left;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group .last-name {
+  width: 200px;
+  margin-left: 10px;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .form-status {
+  color: #46a546;
+  width: 145px;
+  text-align: center;
+  margin-top: 5px;
+}
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .form-controls {
   position: absolute;
   bottom: 30px;
@@ -2744,42 +2739,42 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .form-controls .skip-step {
   margin-right: 20px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step1 #first-name {
-  width: 100px;
-  float: left;
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .spinner {
+  height: 30px;
+  width: 30px;
+  margin: 50px auto;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step1 #last-name {
-  width: 200px;
-  margin-left: 10px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #fb-filter {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friend-filter {
   width: 448px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list {
   margin-left: 2px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend:hover {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:hover {
   background-color: #d3e3ea;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend {
   padding: 6px;
   width: 148px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend .friend-top {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top {
   *zoom: 1;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend .friend-top:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend .friend-top:after {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top:before,
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top:after {
   display: table;
   content: "";
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend .friend-top:after {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top:after {
   clear: both;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend .friend-top .picture {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top i {
+  margin: 0;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top .picture {
   float: left;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend .friend-top .friend-controls {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top .friend-controls {
   float: right;
   width: 98px;
   color: #46a546;
@@ -2787,7 +2782,7 @@ a#facebook-login-button {
   line-height: 50px;
   height: 50px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step2 #facebook-friends-list .friends-list .friend .name {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .name {
   padding: 4px 0;
   font-size: 14px;
 }

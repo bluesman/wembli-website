@@ -22,16 +22,12 @@ module.exports = {
 			'text':"Wembli Mail",
 		},
 		{
-			'icon':"icon-reorder",
-			'text':"Summary",
-		},
-		{
 			'icon':"icon-calendar",
-			'text':"RSVP Date",
+			'text':"Send RSVP",
 		}
 		];
 
-		for (var i=0; i < 6; i++) {
+		for (var i=0; i < 5; i++) {
 			nav[i]['step'] = "step" + (i + 1);
 			nav[i]['id']   = "nav-" + nav[i]['step'];
 			nav[i]['href'] = "#" + nav[i]['step'];

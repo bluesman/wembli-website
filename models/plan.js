@@ -36,7 +36,7 @@ this.Model = function(mongoose) {
 		messaging : {
 			facebook:String,
 			twitter:String,
-			wembliMail:String
+			wemblimail:String
 		},
 		organizer : {type: String, index : true},
 		friends: [String],
