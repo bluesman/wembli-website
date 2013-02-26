@@ -1,5 +1,22 @@
 module.exports = function(app) {
 
+
+	var invitationView = function(req,res,view) {
+		var viewData = {
+			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+		}
+		if (req.session.loggedIn) {
+			delete req.session.redirectUrl;
+			req.session.loginRedirect = false;
+		} else {
+			//they're going to get a login overlay if they aren't logged in - set the redirectUrl here
+			req.session.redirectUrl = '/invitation';
+			req.session.loginRedirect = true;
+		}
+		console.log('render view: '+view);
+		return res.render(view,viewData);
+	};
+
 	var planView = function(req, res, view) {
 		var viewData = {
 			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
@@ -36,7 +53,7 @@ module.exports = function(app) {
 	app.get('/plan', function(req,res) { planView(req, res, 'plan'); });
 	app.get('/partials/plan', function(req, res) { planView(req, res, 'partials/plan'); });
 
-	app.get('/invitation', function(req,res) { planView(req, res, 'plan'); });
-	app.get('/partials/invitation', function(req,res) { planView(req, res, 'partials/plan'); });
+	app.get('/invitation', function(req,res) { invitationView(req, res, 'plan'); });
+	app.get('/partials/invitation', function(req,res) { invitationView(req, res, 'partials/plan'); });
 
 }

@@ -16,11 +16,11 @@ form#invite-wizard-step4-form(name="step4")
 			.form-status-text Added Invitee
 		#step4-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
 			.friends-list(ng-show="wemblimail.friends[0]")
-				.friend.pull-left(ng-repeat="friend in wemblimail.friends",ng-click="handleFriendClick('step4',friend)")
+				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends",ng-click="handleFriendClick('step4',friend,$event)")
 					.friend-top
 						i.friend-no-img.icon-user.icon-4x
 						.friend-controls
-							input(id="{{friend.id}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
+							input(id="{{friend.contactInfo.serviceId}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
 							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")
 							i.icon-remove-circle.icon-large(ng-show="rsvpDeclined(friend)")
 					.friend-bottom

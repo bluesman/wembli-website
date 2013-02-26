@@ -398,11 +398,8 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 				$scope.step1.noCustomer = true;
 				return $scope.gotoStep('step1');
 			}
-
 			var friend     = result.friend;
 			friend.checked = friend.inviteStatus;
-			console.log('selected frineds');
-			console.log($scope.selectedFriends.step4);
 			if (typeof $scope.selectedFriends['step4'][friend.contactInfo.serviceId] === "undefined") {
 				$scope.wemblimail.friends.push(friend);
 				/* in submit reponse, do the formStatus fade */
@@ -416,7 +413,6 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 				$scope.wemblimail.email       = null;
 				$scope.wemblimail.formStatus   = false;
 			},1500);
-
 
 			$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.checked;
 
@@ -462,13 +458,13 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 		return (friend.rsvp.decision === null) ? true : false;
 	};
 
-	$scope.handleFriendClick = function(step,friend) {
-		console.log('handlefriendclick');
-		console.log(friend);
-
-		friend.checked = friend.checked ? false : true;
-		/* TODO - hydrate this from the plan when the page loads */
-		$scope.selectedFriends[step][friend.id] = friend.checked;
+	$scope.handleFriendClick = function(step,friend,$event) {
+		/* if the thing that was clicked is the input we don't need to set checked */
+		if ($event.target.localName !== "input") {
+			friend.checked = friend.checked ? false : true;
+		}
+		friend.inviteStatus = friend.checked;
+		$scope.selectedFriends[step][friend.contactInfo.serviceId] = friend.checked;
 		return wembliRpc.fetch('invite-friends.submit-' + step, wizard[step].rpcArgs({friend:friend}), wizard[step].formSubmitCallback);
 	};
 
@@ -649,34 +645,9 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 	});
 
 	/* done with twitter code */
-
 	$scope.wemblimail = {
 		friends:[]
 	};
-
-
-	/* now we can try to display the wizard */
-	/* make sure customer is fetched */
-	var handleCustomerFetched = function(e,args) {
-		var initialStep = 'step1';
-		if (customer.get()) {
-			initialStep = 'step2';
-			$scope.customer = customer.get();
-		} else {
-			$scope.customer = {};
-		}
-		$scope.gotoStep(initialStep);
-	};
-
-	//decide which step to start on depending on if they are logged in or not
-	if (typeof customer.get() === null) {
-		//customer has not been fetched yet set up a listener
-		$scope.$on('customer-fetched', handleCustomerFetched);
-	} else {
-		//customer has already been fetched
-		handleCustomerFetched();
-	}
-
 
 	//finally, show the invite friends modal once the document is ready
 	//controller runs before the modal actually gets attached to the DOM
@@ -688,15 +659,30 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 
 			//display the modal if there's a plan
 			if(plan.get()) {
+				console.log(plan.get());
 				if (typeof plan.get().event.eventId === "undefined") {
+					console.log('eventid is undefined');
 					return;
 				}
 
-
 				/* seems like the right place to add our messaging to the scope */
 				if (typeof plan.get().messaging !== "undefined") {
-					$scope.facebook.messageText = plan.get().messaging.facebook;
+					$scope.facebook.messageText   = plan.get().messaging.facebook;
+					$scope.twitter.messageText    = plan.get().messaging.twitter;
+					$scope.wemblimail.messageText = plan.get().messaging.wemblimail;
 				}
+
+				/* set up the wemblimail friends array with friends in the plan */
+				if (typeof plan.getFriends() !== "undefined") {
+					for (var i = plan.getFriends().length - 1; i >= 0; i--) {
+						var friend = plan.getFriends()[i];
+						friend.checked = friend.inviteStatus;
+						if (friend.contactInfo.service === 'wemblimail') {
+							$scope.wemblimail.friends.push(friend);
+						}
+					};
+				}
+
 
 				var showModal = function(dereg) {
 					/*
@@ -751,14 +737,37 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 
 		};
 
-		//check if plan is already fetched
-		if (plan.get() === null) {
-			//not fetched yet, set a watcher
-		  //dont do anything until the plan is loaded
-		  $scope.$on('plan-fetched', handlePlanFetched)
+		/* now we can try to display the wizard */
+		/* make sure customer is fetched */
+		var handleCustomerFetched = function(e,args) {
+			console.log('customer fetched');
+			var initialStep = 'step1';
+			if (customer.get() && Object.keys(customer.get()).length > 0) {
+				initialStep = 'step2';
+				$scope.customer = customer.get();
+			} else {
+				$scope.customer = {};
+				customer.set($scope.customer);
+			}
+			$scope.gotoStep(initialStep);
+			//check if plan is already fetched
+			if (plan.get() === null) {
+				//not fetched yet, set a watcher
+		  	//dont do anything until the plan is loaded
+			  $scope.$on('plan-fetched', handlePlanFetched)
+			} else {
+				//plan has already been fetched
+				handlePlanFetched();
+			}
+		};
+
+		//decide which step to start on depending on if they are logged in or not
+		if (customer.get() === null) {
+			//customer has not been fetched yet set up a listener
+			$scope.$on('customer-fetched', handleCustomerFetched);
 		} else {
-			//plan has already been fetched
-			handlePlanFetched();
+			//customer has already been fetched
+			handleCustomerFetched();
 		}
 	});
 }
@@ -774,16 +783,19 @@ function PlanCtrl($rootScope, $scope, wembliRpc, plan, customer) {
 
 	//response
 	function(err, result) {
+
 		if(typeof result.plan !== "undefined") {
 			plan.set(result.plan,result.friends);
-			$rootScope.$broadcast('plan-fetched',{});
 		}
 
 		if(typeof result.customer !== "undefined") {
 			customer.set(result.customer);
-			$rootScope.$broadcast('customer-fetched',{});
+		} else {
+			customer.set({});
 		}
 
+		$rootScope.$broadcast('customer-fetched',{});
+		$rootScope.$broadcast('plan-fetched',{});
 	});
 
 };
@@ -871,7 +883,7 @@ function SupplyPasswordCtrl($scope) {
 	});
 };
 
-function FooterCtrl($scope, $location, $window) {
+function FooterCtrl($scope, $location, $window, facebook) {
 	//this is how high they can drag it
 	var y = $("#footer").offset().top - $("#footer").height() + ($("#nav").offset().top - $("#footer").offset().top) + $("#nav").height();
 	$('#footer').draggable({
@@ -883,6 +895,8 @@ function FooterCtrl($scope, $location, $window) {
 		containment: [0, y, 0, $("#footer").offset().top],
 		handle: "#handle"
 	});
+
+	$scope.facebook = facebook;
 };
 
 function TicketsCtrl($scope, wembliRpc) {

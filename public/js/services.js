@@ -165,7 +165,7 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', function($rootScope, $q, friendFilter, wembliRpc) {
+.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window', function($rootScope, $q, friendFilter, wembliRpc, $window) {
 
 	var self = this;
 	this.auth = null;
@@ -203,7 +203,6 @@ angular.module('wembliApp.services', [])
 			FB.getLoginStatus(function(response) {
 				if(response.status === 'connected') {
 					self.auth = response.authResponse;
-					console.log(response.authResonse);
 					/* send the accessToken to wembli to auto log in */
 					wembliRpc.fetch('facebook.setAccessToken', {accessToken:response.authResponse.accessToken},
 						function(err, result) {
@@ -249,7 +248,7 @@ angular.module('wembliApp.services', [])
 				} else {
 					console.log('Facebook logout failed.', response);
 				}
-
+				$window.location = '/logout';
 			});
 		},
 
@@ -307,12 +306,8 @@ angular.module('wembliApp.services', [])
 		},
 
 		searchUsers: function(q,args,callback) {
-			console.log('search for: '+q + ' with args:');
-			console.log(args);
 			wembliRpc.fetch('twitter.searchUsers', {q:q,args:args},
 				function(err, result) {
-					console.log('back from searchUsers');
-					console.log(result);
 					if(err) {
 						console.log(err);
 						callback(false);

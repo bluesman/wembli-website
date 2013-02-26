@@ -79,6 +79,7 @@ app.use(express.session({
 	store: new redis
 }));
 app.use(express.bodyParser());
+app.use(require('./lib/wembli/ipinfodb'));
 app.use(require('./lib/wembli/visitor'));
 app.use(require('./lib/wembli/customer'));
 app.use(require('./lib/wembli/plan'));
@@ -89,7 +90,6 @@ app.set('controllers', __dirname + '/controllers');
 app.set('view engine', 'jade');
 app.use(express.methodOverride());
 app.use(require('./lib/wembli/secure'));
-app.use(require('./lib/wembli/ipinfodb'));
 app.use(function(req, res, next) {
 	res.locals.req      = req;
 	res.locals.res      = res;
@@ -99,7 +99,6 @@ app.use(function(req, res, next) {
 	res.locals.visitor  = req.session.visitor;
 	res.locals.customer = req.session.customer;
 	res.locals.plan     = req.session.plan;
-
 	next();
 });
 app.use(app.router);

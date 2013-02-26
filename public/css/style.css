@@ -2769,6 +2769,7 @@ a#facebook-login-button {
   clear: both;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top i {
+  color: #6da1b7;
   margin: 0;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top .picture {

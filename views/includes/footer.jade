@@ -1,6 +1,5 @@
 - var ticketsLink = '/tickets';
-- if (typeof plan.event.eventId !== "undefined")
-	- console.log(plan.event)
+- if (plan && typeof plan.event.eventId !== "undefined")
 	- ticketsLink = ticketsLink + '/' + plan.event.eventId + '/' + plan.event.eventName;
 
 footer#footer(ng-controller="FooterCtrl")
@@ -28,7 +27,7 @@ footer#footer(ng-controller="FooterCtrl")
 			li#dashboard.wembli-sequence-link
 				a(href="/dashboard") Dashboard
 			li#logout
-				a(href="/logout",target="_self") Log out
+				a(href="/logout", ng-click="facebook.logout()") Log out
 		- else
 			li#login.wembli-sequence-link
 				a(href="/login") Log in

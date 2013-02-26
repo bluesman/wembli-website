@@ -18,11 +18,11 @@ form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="twitter.loginStatus
 			.spinner(ng-show="twitter.spinner")
 				i.icon-spinner.icon-spin.icon-2x(ng-show="twitter.spinner")
 			.friends-list(ng-show="twitter.friends",ng-hide="twitter.spinner" )
-				.friend.pull-left(ng-repeat="friend in twitter.friends",ng-click="handleFriendClick('step3',friend)")
+				.friend.pull-left(ng-repeat="friend in twitter.friends",ng-click="handleFriendClick('step3',friend, $event)")
 					.friend-top
 						img.picture(ng-src="{{friend.profile_image_url_https}}")
 						.friend-controls
-							input(id="{{friend.id}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
+							input(id="{{friend.contactInfo.serviceId}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
 							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")
 							i.icon-remove-circle.icon-large(ng-show="rsvpDeclined(friend)")
 					.friend-bottom

@@ -6,24 +6,19 @@ var Customer = wembliModel.load('customer');
 
 module.exports = function(app) {
 
-	app.get('/login/facebook', function(req, res, next) {
+	app.get('/login/social/?', function(req, res, next) {
+		console.log('in login social');
 		console.log('login redirect: ' + req.session.loginRedirect);
+		var r = '/dashboard';
 		if (req.session.loginRedirect) {
-			var r = req.session.redirectUrl ? req.session.redirectUrl : '/dashboard';
-			console.log('redirecturl: ' + req.session.redirectUrl);
+			r = req.session.redirectUrl ? req.session.redirectUrl : r;
+			console.log('redirecturl: ' + r);
 
-			var rm = req.session.redirectMsg ? req.session.redirectMsg : '';;
-			if (rm != '') {
-				req.flash('info', rm);
-			}
 			delete req.session.redirectUrl;
 			delete req.session.loginRedirect;
-			delete req.session.redirectMsg;
-			console.log('redirecting to:' + r);
-			return res.redirect(r);
 		}
-
-		next();
+		console.log('redirecting to:' + r);
+		return res.redirect(r);
 	});
 
 	app.get('/login/?', function(req, res, next) {

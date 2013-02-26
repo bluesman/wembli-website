@@ -2,8 +2,7 @@ if (typeof req.session.plan === "undefined" || (typeof req.session.plan.event.ev
 	include ../includes/no-event
 else
 	//- have plan but no organizer? its my plan
-	if ( (visitor.context === 'organizer') || ((visitor.context === 'visitor') && (plan.organizer === "undefined")))
+	if ( (visitor.context === 'organizer') || ((visitor.context === 'visitor') && (!plan.organizer)))
 		include ../includes/plan/organizer-view
 	else
-		console.log('wat')
 		include ../includes/plan/friend-view

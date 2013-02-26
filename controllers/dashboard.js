@@ -11,14 +11,15 @@ var async = require('async');
 module.exports = function(app) {
 
 	app.get('/dashboard/?', function(req, res) {
-
+		console.log('dashboard');
 		//not logged in? send to login page
 		if (!req.session.loggedIn) {
-			res.redirect('/login', 302);
+			return res.redirect('/login', 302);
 		}
 
 		//they need to confirm their email before they can use the dashboard
 		if (req.session.customer.confirmed === false) {
+			console.log('not confirmed');
 			//need email confirmation
 			return res.render('confirm-email-sent', {
 				title: 'wembli.com - check your email!.'
@@ -27,7 +28,7 @@ module.exports = function(app) {
 
 		//clear the updateEvent session so searches start over
 		delete req.session.updateEvent;
-
+		console.log('here in dashboard');
 		/*
 			ok how does this work?
 			1. get all the plans this customer is planning

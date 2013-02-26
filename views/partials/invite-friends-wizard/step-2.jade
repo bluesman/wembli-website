@@ -17,11 +17,11 @@ form#invite-wizard-step2-form(name="step2",ng-cloak,ng-show="facebook.loginStatu
 			.spinner(ng-hide="facebook.friends")
 				i.icon-spinner.icon-spin.icon-2x(ng-hide="facebook.friends")
 			.friends-list(ng-show="facebook.friends")
-				.friend.pull-left(ng-repeat="friend in facebook.friends",ng-click="handleFriendClick('step2',friend)")
+				.friend.pull-left(ng-repeat="friend in facebook.friends",ng-click="handleFriendClick('step2',friend,$event)")
 					.friend-top
 						img.picture(ng-src="https://graph.facebook.com/{{friend.id}}/picture")
 						.friend-controls
-							input(id="{{friend.id}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
+							input(id="{{friend.contactInfo.serviceId}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
 							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")
 							i.icon-remove-circle.icon-large(ng-show="rsvpDeclined(friend)")
 					.friend-bottom
