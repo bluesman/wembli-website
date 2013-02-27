@@ -2,7 +2,7 @@
 form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="twitter.loginStatusLoaded", novalidate)
 	fieldset
 		h2 Invite Friends Via twitter
-		p Tweet at your friends to let them new they're invited!
+		p Tweet at your friends to let them know they're invited!
 		textarea#twitter-message-text(ng-init="twitter.messageText='This is what the tweet will say...'",ng-model="twitter.messageText", name="twitter_message_text", required)
 		h2 Search For Twitter Friends To Invite
 		#twitter-need-login(ng-hide="twitter.service.getAuth()")

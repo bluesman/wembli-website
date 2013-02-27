@@ -18,7 +18,10 @@ this.Model = function(mongoose) {
 		event : {
 			eventServiceProvider : {type:String, default: 'tn' },
 			eventId : String,
-			eventName : String
+			eventName : String,
+			eventDate : Date,
+			eventVenue: String,
+			eventCity: String,
 		},
 		preferences : {
 			payment: String,

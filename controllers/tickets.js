@@ -24,6 +24,11 @@ module.exports = function(app) {
 		req.session.plan.event.eventName = req.param("eventName");
 
 		eventRpc['get'].apply(function(err,results) {
+			console.log(results);
+			req.session.plan.event.eventDate = results.event[0].Date;
+			req.session.plan.event.eventVenue = results.event[0].Venue;
+			req.session.plan.event.eventCity = results.event[0].City;
+			req.session.plan.event.data = results.event[0];
 			//set a special header to tell angular to update the browser location
 			res.setHeader('x-wembli-overflow','hidden');
 			locals.tnMapUrl  = results.event[0].MapURL;

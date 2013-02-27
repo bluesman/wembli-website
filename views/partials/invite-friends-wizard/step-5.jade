@@ -1,1 +1,22 @@
-#step-5 step 5
+form#invite-wizard-step5-form(name="step5")
+	fieldset()
+		h2 When Should They Respond By?
+		p The event is at {{plan.event.eventVenue}} in {{plan.event.eventCity}} on {{plan.event.eventDate| date:'MMM d, yyyy'}}.  Let your friends know when they should respond by if they want to be included in this plan.
+		#step5-datepicker
+			h3 RSVP By:
+			.input-append.date.datepicker
+				input#rsvp-date(type="text",ng-model="step5.rsvpDate",readonly)
+				span.add-on
+					i.icon-calendar
+	h2 Recipients
+	p Here's who you're inviting...these folks will get a message from you to the Facebook, Twitter or eMail (depending on how you selected them) letting them know that they are invited!
+		#step5-friends-list.friends-list-container(ng-show="invitedFriends[0]")
+			.friends-list(ng-show="invitedFriends[0]")
+				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in invitedFriends",ng-click="")
+					.friend-top
+						i.friend-no-img.icon-user.icon-4x(ng-show="friend.contactInfo.service=='wemblimail'")
+						img.picture(ng-src="{{friend.profile_image_url_https}}",ng-show="friend.contactInfo.service=='twitter'")
+						img.picture(ng-src="https://graph.facebook.com/{{friend.contactInfo.serviceId}}/picture",ng-show="friend.contactInfo.service=='facebook'")
+						.friend-controls
+					.friend-bottom
+						.name {{friend.contactInfo.name}}

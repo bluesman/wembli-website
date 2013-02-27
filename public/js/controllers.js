@@ -260,17 +260,66 @@ function EventCtrl($scope) {};
 /*
 * Invite Friends Wizard Controller
 */
-function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence, wembliRpc, customer, plan, facebook, twitter) {
+function InviteFriendsWizardCtrl($scope, $filter, $window, $location, $timeout, sequence, wembliRpc, customer, plan, facebook, twitter) {
 
 	if ($location.path() !== '/invitation') {
 		return;
 	}
+
+	$scope.invitedFriends = [];
 
 	$scope.selectedFriends = {
 		'step2':{},
 		'step3':{},
 		'step4':{}
 	}
+
+	var addToInvitedFriends = function(friend) {
+		/* detect this friend in the invitedFriends list - if not there, add it */
+		var exists = false;
+		var found = false;
+		var newList = [];
+		console.log('adding friend');
+		console.log(friend.contactInfo.name);
+
+		angular.forEach($scope.invitedFriends,function(f) {
+			console.log('comparing to');
+			console.log(f.contactInfo.name);
+			/* if this friend in the loop is the same as the one passed in */
+			if ((f.contactInfo.service === friend.contactInfo.service) &&
+				  (f.contactInfo.serviceId === friend.contactInfo.serviceId)) {
+				console.log('this friend exists '+f.contactInfo.name);
+				/* this friend is in the list */
+				exists = true;
+				found = true;
+				/* this friend is no longer invited */
+				if (!friend.inviteStatus) {
+					console.log('friend is no longer invited');
+					exists = false;
+					return; /* don't add this friend to the newList */
+				}
+
+			}
+
+			if (exists) {
+				console.log('friend exists so add the new one to the list')
+				newList.push(friend); /* push the new one and skip the old one */
+			} else {
+				if (f.inviteStatus) {
+					console.log('friend does not exist')
+					/* this friend can stay in the list */
+					newList.push(f);
+				}
+			}
+			exists = false;
+		});
+		/* this friend wasn't already in the list so add it */
+		if (!found && friend.inviteStatus) {
+			newList.push(friend);
+		}
+		console.log(newList);
+		$scope.invitedFriends = newList;
+	};
 	/* set up the view scope for the wizard */
 	/* set up locally scoped variables */
 	var wizard = {};
@@ -334,6 +383,9 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 				return $scope.gotoStep('step1');
 			}
 
+			console.log('add to invited friends');
+			addToInvitedFriends(result.friend);
+
 			if (result.next) {
 				return $scope.gotoStep('step3');
 			}
@@ -361,6 +413,8 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 				$scope.step1.noCustomer = true;
 				return $scope.gotoStep('step1');
 			}
+
+			addToInvitedFriends(result.friend);
 
 			if (result.next) {
 				return $scope.gotoStep('step4');
@@ -405,6 +459,7 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 				/* in submit reponse, do the formStatus fade */
 				$scope.wemblimail.formStatus = true; /* this will make the element fade in */
 			}
+			addToInvitedFriends(friend);
 
 			/* tihs should make it fade out */
 			var promise = $timeout(function() {
@@ -416,6 +471,7 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 
 			$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.checked;
 
+			addToInvitedFriends(friend);
 		},
 
 	};
@@ -424,6 +480,12 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 	$scope.submitForm = function(step,args) {
 		if ($scope[step].$valid) {
 			wembliRpc.fetch('invite-friends.submit-' + step, wizard[step].rpcArgs(args), wizard[step].formSubmitCallback);
+		}
+	};
+
+	$scope.getEventDate = function() {
+		if (plan.get()) {
+			return plan.get().event.eventDate;
 		}
 	};
 
@@ -464,10 +526,10 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 			friend.checked = friend.checked ? false : true;
 		}
 		friend.inviteStatus = friend.checked;
-		$scope.selectedFriends[step][friend.contactInfo.serviceId] = friend.checked;
+		console.log(friend);
+		$scope.selectedFriends[step][friend.id] = friend.checked;
 		return wembliRpc.fetch('invite-friends.submit-' + step, wizard[step].rpcArgs({friend:friend}), wizard[step].formSubmitCallback);
 	};
-
 
 	//done with view methods
 
@@ -667,6 +729,9 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 					return;
 				}
 
+				/* put the plan in the scope for the view */
+				$scope.plan = plan.get();
+
 				/* seems like the right place to add our messaging to the scope */
 				if (typeof plan.get().messaging !== "undefined") {
 					$scope.facebook.messageText   = plan.get().messaging.facebook;
@@ -679,8 +744,19 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 					for (var i = plan.getFriends().length - 1; i >= 0; i--) {
 						var friend = plan.getFriends()[i];
 						friend.checked = friend.inviteStatus;
+						if (friend.contactInfo.service === 'facebook') {
+							$scope.selectedFriends['step2'][friend.contactInfo.serviceId] = friend.inviteStatus;
+						}
+						if (friend.contactInfo.service === 'twitter') {
+							$scope.wemblimail.friends.push(friend);
+							$scope.selectedFriends['step3'][friend.contactInfo.serviceId] = friend.inviteStatus;
+						}
 						if (friend.contactInfo.service === 'wemblimail') {
 							$scope.wemblimail.friends.push(friend);
+							$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.inviteStatus;
+						}
+						if (friend.inviteStatus) {
+								$scope.invitedFriends.push(friend);
 						}
 					};
 				}
@@ -693,6 +769,11 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 					we know this if $scope.currentPath !== location.path()
 					if that happens we have to set a watcher for currentPath instead of just using location.path()
 						*/
+					var startDate = new Date();
+					var endDate = new Date($scope.plan.event.eventDate);
+					$('.datepicker').datepicker({format:'DD, M d, yyyy' ,startDate: startDate ,endDate:endDate});
+					/* TODO - determine an appropriate rsvp date to default to */
+					$('.datepicker').datepicker('update',endDate);
 
 					if ($location.path() !== $scope.currentPath) {
 						$scope.$watch('currentPath',function(newVal,oldVal) {
@@ -733,6 +814,7 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 					});
 				}
 	    } else {
+	    	console.log('no plan...');
 		    //no plan - reload the invitation page
 		    //$window.location.reload();
 		  }
@@ -745,7 +827,7 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 			console.log('customer fetched');
 			var initialStep = 'step1';
 			if (customer.get() && Object.keys(customer.get()).length > 0) {
-				initialStep = 'step2';
+				initialStep = $location.hash() ? $location.hash() : 'step2';
 				$scope.customer = customer.get();
 			} else {
 				$scope.customer = {};
@@ -754,10 +836,12 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 			$scope.gotoStep(initialStep);
 			//check if plan is already fetched
 			if (plan.get() === null) {
+				console.log(plan.get());
 				//not fetched yet, set a watcher
 		  	//dont do anything until the plan is loaded
 			  $scope.$on('plan-fetched', handlePlanFetched)
 			} else {
+				console.log(plan.get());
 				//plan has already been fetched
 				handlePlanFetched();
 			}

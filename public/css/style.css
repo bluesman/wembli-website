@@ -2689,6 +2689,10 @@ a#facebook-login-button {
   overflow-y: auto;
   padding: 5px 20px;
 }
+#invitation-modal.modal #invite-friends-wizard .modal-body #right #step5-datepicker {
+  margin: auto;
+  width: 400px;
+}
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .wizard-step {
   width: 485px;
 }

@@ -2,7 +2,7 @@
 form#invite-wizard-step2-form(name="step2",ng-cloak,ng-show="facebook.loginStatusLoaded", novalidate)
 	fieldset
 		h2 Invite Friends Via Facebook
-		p Post a message on your friend's wall to let them know they're invited
+		p Post a message on your friend's wall to let them know they're invited.
 		textarea#facebook-message-text(ng-init="facebook.messageText='This is what the post to their wall will say...'",ng-model="facebook.messageText", name="facebook_message_text", required)
 		h2 Select Facebook Friends To Invite
 		#facebook-need-login(ng-hide="facebook.service.getAuth()")
