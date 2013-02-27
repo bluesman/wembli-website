@@ -348,7 +348,7 @@ angular.module('wembliApp.services', [])
 	return {
 		ServiceUrl: "https://imap.ticketutils.com",
 		MapSet: "tn",
-		ZoomLevel: 2,
+		ZoomLevel: 1,
 		ColorScheme: 1,
 		//AutoSwitchToStatic: true,
 		ControlsPosition: "Outside",

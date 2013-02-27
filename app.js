@@ -25,24 +25,32 @@ app.set('autoIndex', false); //tell mongoose not to do autoIndex in produciton
 var port = 8001;
 
 if (process.env.NODE_ENV == 'development') {
+	app.set('host', 'tom');
+}
+
+if (process.env.NODE_ENV == 'www2') {
+	app.set('host', 'www2');
+	process.env.NODE_ENV = 'development';
+}
+
+if (process.env.NODE_ENV == 'development') {
 	port = 8000;
 	//tom.wembli.com fb app
 	app.set('fbAppId', '364157406939543');
 	app.set('fbAppSecret', 'ce9779873babc764c3e07efb24a34e69');
 	app.set('twitAppId', 'aGekerxvrd9RczHHEOLEw');
 	app.set('twitAppSecret', 'PUdQVzslAATiRCFhTXetmjbaFGoWIM092bSkuulFdk');
-	app.set('host', 'tom');
 	app.set('tnUrl', 'tn.wembli.com');
 	app.set('autoIndex', true);
 }
 
-if (process.env.NODE_ENV == 'secure') {
-	port = 8010;
+if (process.env.NODE_ENV == 'secure-www2') {
+	port = 8001;
 	app.set('secure', true);
-	app.set('host', 'beta');
-
+	app.set('host', 'www2');
+	app.set('tnUrl', 'tn.wembli.com');
 }
-
+console.log(app.settings);
 //init the openauth thing
 var wembliEveryauth = require('./lib/wembli/everyauth.js');
 wembliEveryauth.init(everyauth);
@@ -54,12 +62,12 @@ app.set('twitAppSecret', wembliEveryauth.conf.twit.appSecret);
 //redirect to https if not development
 app.use(function(req, res, next) {
 	if (process.env.NODE_ENV != 'development') {
-		var schema = req.headers["x-forwarded-for"];
+		var proto = req.headers["x-forwarded-proto"];
 		// --- Do nothing if schema is already https
-		if (schema === "https") return next();
+		if (proto === "https") return next();
 
 		// --- Redirect to https
-		var host = 'beta.wembli.com'; //use req.headers.host eventually
+		var host = 'www2.wembli.com'; //use req.headers.host eventually
 		res.redirect("https://" + host + req.url);
 	} else {
 		next();

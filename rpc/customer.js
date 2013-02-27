@@ -21,8 +21,6 @@ exports.customer = {
 			success: 1,
 			firstName: null,
 			lastName: null,
-			password: null,
-			password2: null,
 			email: null,
 			formError: false,
 			exists: false
@@ -46,16 +44,6 @@ exports.customer = {
 			return respond(data);
 		}
 
-		if(!args.password || !args.password2) {
-			data.formError = true;
-			return respond(data);
-		}
-
-		if(args.password != args.password2) {
-			data.formError = true;
-			return respond(data);
-		}
-
 		//fetch the customer by email
 		Customer.findOne({
 			email: args.email
@@ -75,6 +63,7 @@ exports.customer = {
 			}
 
 			//if no c make one email param
+			args.password = (args.password) ? args.password : 'temp';
 			var digest = wembliUtils.digest(args.password);
 
 			var newC = {
