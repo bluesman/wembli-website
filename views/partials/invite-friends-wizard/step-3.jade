@@ -7,7 +7,7 @@ form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="twitter.loginStatus
 		h2 Search For Twitter Friends To Invite
 		#twitter-need-login(ng-hide="twitter.service.getAuth()")
 			p Connect with twitter to view your friends.
-			a#twitter-login.btn.btn-primary(href="/auth/twitter",target="_self") Connect With twitter
+			a#twitter-login.btn.btn-primary(href="/auth/twitter?redirectUrl=/invitation",target="_self") Connect With twitter
 		#twitter-friends-list.friends-list-container(ng-show="twitter.service.getAuth()")
 			.control-group
 				.input-append
@@ -29,4 +29,4 @@ form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="twitter.loginStatus
 						.name {{friend.name}}
 	.form-controls
 		a.skip-step(ng-click="skipStep('step3')") Skip this step
-		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step3',{next:true})") Continue
+		a.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step3',{next:true})") Continue

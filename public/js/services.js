@@ -248,8 +248,8 @@ angular.module('wembliApp.services', [])
 				} else {
 					console.log('Facebook logout failed.', response);
 				}
-				$window.location = '/logout';
 			});
+			$window.location = '/logout';
 		},
 
 		api: function(method, callback) {
@@ -363,7 +363,7 @@ angular.module('wembliApp.services', [])
 }])
 
 .factory('wembliRpc', ['$rootScope', '$http', function($rootScope, $http) {
-	var wembliRpc = {};
+	var wembliRpc = {_cache:{}};
 
 	var jsonRpc = {
 		"jsonrpc": "2.0",
@@ -373,20 +373,32 @@ angular.module('wembliApp.services', [])
 
 
 	wembliRpc.fetch = function(method, args, callback, transformRequest, transformResponse) {
+		var cache = (args.cache) ? true : false;
+		if (cache) { delete args.cache; }
+
 		jsonRpc.method = method;
 		jsonRpc.params.args = args;
 		var data = JSON.stringify(jsonRpc);
 
+		/* store this in a cache with stringified data as key */
+
 		var cb = function(err, data) {
-				var eventName = 'wembliRpc:';
-				$rootScope.$broadcast(eventName + 'success', {
-					'method': method
-				});
-				var ret = callback(err, data);
-				$rootScope.$broadcast(eventName + 'callbackComplete', {
-					'method': method
-				});
-			}
+			var eventName = 'wembliRpc:';
+			$rootScope.$broadcast(eventName + 'success', {
+				'method': method
+			});
+			var ret = callback(err, data);
+			$rootScope.$broadcast(eventName + 'callbackComplete', {
+				'method': method
+			});
+		};
+
+		if (cache && (typeof wembliRpc._cache[data] !== "undefined")) {
+			console.log('got cached data');
+			console.log(wembliRpc._cache[data]);
+			return cb(null,wembliRpc._cache[data]);
+		}
+
 
 		if(typeof transformRequest === "undefined") {
 			transformRequest = function(data) {
@@ -410,6 +422,9 @@ angular.module('wembliApp.services', [])
 			var result = {};
 			result.data = data;
 			result.status = status;
+			if (cache) {
+				wembliRpc._cache[data] = result.data.result;
+			}
 			return cb(null, result.data.result);
 		}).error(function(err) {
 			callback(err);

@@ -516,14 +516,16 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 				$scope.facebook.lastName  = response.last_name;
 				$scope.facebook.email     = response.email;
 
-				if (typeof $scope.customer.firstName === "undefined") {
-					$scope.customer.firstName = response.first_name;
-				}
-				if (typeof $scope.customer.lastName === "undefined") {
-					$scope.customer.lastName = response.last_name;
-				}
-				if (typeof $scope.customer.email === "undefined") {
-					$scope.customer.email = response.email;
+				if (typeof $scope.customer !== "undefined") {
+					if (typeof $scope.customer.firstName === "undefined") {
+						$scope.customer.firstName = response.first_name;
+					}
+					if (typeof $scope.customer.lastName === "undefined") {
+						$scope.customer.lastName = response.last_name;
+					}
+					if (typeof $scope.customer.email === "undefined") {
+						$scope.customer.email = response.email;
+					}
 				}
 			}
 		}
@@ -763,9 +765,11 @@ function InviteFriendsWizardCtrl($scope, $window, $location, $timeout, sequence,
 
 		//decide which step to start on depending on if they are logged in or not
 		if (customer.get() === null) {
+			console.log('customer get is null');
 			//customer has not been fetched yet set up a listener
 			$scope.$on('customer-fetched', handleCustomerFetched);
 		} else {
+			console.log('customer get is not null');
 			//customer has already been fetched
 			handleCustomerFetched();
 		}

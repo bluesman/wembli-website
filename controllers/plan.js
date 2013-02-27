@@ -9,10 +9,12 @@ module.exports = function(app) {
 			delete req.session.redirectUrl;
 			req.session.loginRedirect = false;
 		} else {
+			console.log('setting redirect url:');
 			//they're going to get a login overlay if they aren't logged in - set the redirectUrl here
 			req.session.redirectUrl = '/invitation';
 			req.session.loginRedirect = true;
 		}
+		console.log(req.session.redirectUrl);
 		console.log('render view: '+view);
 		return res.render(view,viewData);
 	};
@@ -55,5 +57,12 @@ module.exports = function(app) {
 
 	app.get('/invitation', function(req,res) { invitationView(req, res, 'plan'); });
 	app.get('/partials/invitation', function(req,res) { invitationView(req, res, 'partials/plan'); });
+
+	app.get('/partials/invite-friends-wizard', function(req, res) {
+		req.session.redirectUrl = '/invitation';
+		req.session.loginRedirect = true;
+		return res.render('partials/invite-friends-wizard',{partial:true});
+	});
+
 
 }

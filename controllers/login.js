@@ -7,17 +7,14 @@ var Customer = wembliModel.load('customer');
 module.exports = function(app) {
 
 	app.get('/login/social/?', function(req, res, next) {
-		console.log('in login social');
-		console.log('login redirect: ' + req.session.loginRedirect);
 		var r = '/dashboard';
 		if (req.session.loginRedirect) {
 			r = req.session.redirectUrl ? req.session.redirectUrl : r;
-			console.log('redirecturl: ' + r);
 
 			delete req.session.redirectUrl;
 			delete req.session.loginRedirect;
 		}
-		console.log('redirecting to:' + r);
+
 		return res.redirect(r);
 	});
 

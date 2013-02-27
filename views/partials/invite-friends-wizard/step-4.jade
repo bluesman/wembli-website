@@ -27,4 +27,4 @@ form#invite-wizard-step4-form(name="step4")
 						.name {{friend.contactInfo.name}}
 	.form-controls()
 		a.skip-step(ng-click="skipStep('step4')") Skip this step
-		a.submit-step.btn.btn-primary.btn-large(type="submit",ng-click="skipStep('step4')") Continue
+		button.submit-step.btn.btn-primary.btn-large(ng-click="skipStep('step4')") Continue

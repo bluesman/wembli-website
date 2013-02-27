@@ -198,8 +198,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       return function(scope, element, attr) {
         scope.direction = attr.direction;
 
-        //fetch the event data
+        /* fetch the event data */
         var args = {
+          "cache":true,
           "eventID": scope.eventId || attr.eventId
         };
 
