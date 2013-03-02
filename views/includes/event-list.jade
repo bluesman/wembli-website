@@ -1,6 +1,6 @@
 //- event list
 #event-list-wrapper
-	h2= heading
+	h3= heading
 	ul
 		each event in events
 			li.event-wrapper.wembli-sequence-link(id="#{event.ID}-wrapper",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)")

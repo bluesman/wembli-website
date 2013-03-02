@@ -18,7 +18,7 @@ form#invite-wizard-step4-form(name="step4")
 			.friends-list(ng-show="wemblimail.friends[0]")
 				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends",ng-click="handleFriendClick('step4',friend,$event)")
 					.friend-top
-						i.friend-no-img.icon-user.icon-4x
+						i.friend-no-img.icon-user
 						.friend-controls
 							input(id="{{friend.contactInfo.serviceId}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
 							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")

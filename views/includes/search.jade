@@ -32,7 +32,7 @@ input(type="hidden", name="lastEventDate", ng-init="lastEventDate='#{lastEventDa
 input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'", value="#{lastEventId}")
 #search-frame()
 	#left
-		#copy.architect Plan, vote on and split the cost of going to live events with friends!
+		#copy.segoe Plan, vote on and split the cost of going to live events with friends!
 	#right
 		#search-wrapper
 			#search
@@ -47,7 +47,7 @@ input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'",
 					else
 						if ((typeof events == "undefined") || (typeof events[0] === "undefined"))
 							#event-list-wrapper
-								h2= heading
+								h3= heading
 								.no-results Aww man! We didn't find any matching events...
 						else
 							include event-list
@@ -57,5 +57,5 @@ input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'",
 						span= seeMore
 						i.icon-chevron-down
 				#arrow
-					h3.arrow-text Search
+					h2.arrow-text Search
 

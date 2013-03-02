@@ -1,22 +1,30 @@
-form#invite-wizard-step5-form(name="step5")
+.sendingLoader(ng-show="sendingLoader")
+	h2 Sending Invitation...
+	.progress.progress-striped.active
+		.bar(style="width:100%")
+form#invite-wizard-step5-form(name="step5",ng-hide="sendingLoader")
 	fieldset()
-		h2 When Should They Respond By?
-		p The event is at {{plan.event.eventVenue}} in {{plan.event.eventCity}} on {{plan.event.eventDate| date:'MMM d, yyyy'}}.  Let your friends know when they should respond by if they want to be included in this plan.
+		h2 Choose The RSVP Date:
+		p You're going to {{plan.event.eventVenue}} in {{plan.event.eventCity}} on {{plan.event.eventDate| date:'MMM d, yyyy'}}.  Let your friends know when they should respond by if they want to be included in this plan.
 		#step5-datepicker
-			h3 RSVP By:
 			.input-append.date.datepicker
-				input#rsvp-date(type="text",ng-model="step5.rsvpDate",readonly)
+				input#rsvp-date(type="text",name="rsvpDate", placeholder="Choose an RSVP Date", ng-model="rsvpDate", readonly, required)
 				span.add-on
 					i.icon-calendar
 	h2 Recipients
 	p Here's who you're inviting...these folks will get a message from you to the Facebook, Twitter or eMail (depending on how you selected them) letting them know that they are invited!
 		#step5-friends-list.friends-list-container(ng-show="invitedFriends[0]")
 			.friends-list(ng-show="invitedFriends[0]")
-				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in invitedFriends",ng-click="")
+				.friend.pull-left(ng-repeat="friend in invitedFriends",ng-click="")
 					.friend-top
-						i.friend-no-img.icon-user.icon-4x(ng-show="friend.contactInfo.service=='wemblimail'")
-						img.picture(ng-src="{{friend.profile_image_url_https}}",ng-show="friend.contactInfo.service=='twitter'")
+						i.friend-no-img.icon-user(ng-show="friend.contactInfo.service=='wemblimail'")
+						img.picture(ng-src="{{friend.contactInfo.imageUrl}}",ng-show="friend.contactInfo.service=='twitter'")
 						img.picture(ng-src="https://graph.facebook.com/{{friend.contactInfo.serviceId}}/picture",ng-show="friend.contactInfo.service=='facebook'")
 						.friend-controls
+							i.icon-envelope.icon-2x(ng-show="friend.contactInfo.service=='wemblimail'")
+							i.icon-twitter.icon-2x(ng-show="friend.contactInfo.service=='twitter'")
+							i.icon-facebook.icon-2x(ng-show="friend.contactInfo.service=='facebook'")
 					.friend-bottom
 						.name {{friend.contactInfo.name}}
+	.form-controls
+		a.submit-step.btn.btn-primary.btn-large(ng-click="sendInvitation()") Send It Now!

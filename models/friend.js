@@ -26,6 +26,7 @@ this.Model = function(mongoose) {
 		inviteStatus:{type:Boolean,default:true},
 		rsvp:{
 			initiated:{type:Boolean, default:false},
+			initiatedLastdate:{type:Date, default: null},
 			viewed:{type:Number,default:0},
 			decision:{type:Boolean, default:null},
 			date:{type:Date,default:Date.now}

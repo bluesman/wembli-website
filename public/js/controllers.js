@@ -217,18 +217,18 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 			$scope.lastEventId = $scope.events[$scope.events.length - 1].ID;
 		},
 
-		//transformRequest
+		//transformrequest
 
-		function(data, headersGetter) {
+		function(data, Headersgetter) {
 			$('.loading-icon').show();
 			return data;
 		},
 
-		//transformResponse
+		//transformresponse
 
-		function(data, headersGetter) {
+		function(data, Headersgetter) {
 			$('.loading-icon').hide();
-			return JSON.parse(data);
+			return Json.parse(data);
 		});
 
 	};
@@ -383,7 +383,7 @@ function InviteFriendsWizardCtrl($scope, $filter, $window, $location, $timeout, 
 				return $scope.gotoStep('step1');
 			}
 
-			console.log('add to invited friends');
+			console.log('add facebook friend to invited friends');
 			addToInvitedFriends(result.friend);
 
 			if (result.next) {
@@ -413,7 +413,7 @@ function InviteFriendsWizardCtrl($scope, $filter, $window, $location, $timeout, 
 				$scope.step1.noCustomer = true;
 				return $scope.gotoStep('step1');
 			}
-
+			console.log('added twitter friend');
 			addToInvitedFriends(result.friend);
 
 			if (result.next) {
@@ -459,18 +459,17 @@ function InviteFriendsWizardCtrl($scope, $filter, $window, $location, $timeout, 
 				/* in submit reponse, do the formStatus fade */
 				$scope.wemblimail.formStatus = true; /* this will make the element fade in */
 			}
-			addToInvitedFriends(friend);
 
 			/* tihs should make it fade out */
-			var promise = $timeout(function() {
-				$scope.wemblimail.firstName   = null;
-				$scope.wemblimail.lastName    = null;
+			var Promise = $timeout(function() {
+				$scope.wemblimail.firstname   = null;
+				$scope.wemblimail.lastname    = null;
 				$scope.wemblimail.email       = null;
-				$scope.wemblimail.formStatus   = false;
+				$scope.wemblimail.formstatus   = false;
 			},1500);
 
 			$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.checked;
-
+			console.log('added wemblimail friend');
 			addToInvitedFriends(friend);
 		},
 
@@ -530,6 +529,36 @@ function InviteFriendsWizardCtrl($scope, $filter, $window, $location, $timeout, 
 		$scope.selectedFriends[step][friend.id] = friend.checked;
 		return wembliRpc.fetch('invite-friends.submit-' + step, wizard[step].rpcArgs({friend:friend}), wizard[step].formSubmitCallback);
 	};
+
+	$scope.sendInvitation = function() {
+
+		var transformReq = function() {
+			$scope.sendingLoader = true;
+		};
+
+		var transformRes = function() {
+
+		};
+
+		/* validate and then send */
+		console.log('send invitation');
+		console.log($('#rsvp-date').val());
+
+		wembliRpc.fetch('invite-friends.send-invitation', {rsvpDate: $('#rsvp-date').val()},
+		function(err, results) {
+			console.log(results);
+		},
+		function(data, headersGetter) {
+			$scope.sendingLoader = true;
+			return data;
+		},
+		function(data, headersGetter) {
+			//JSON.parse(data);
+			//$('#invitation-modal').modal("hide");
+			$scope.sendingLoader = false;
+		});
+
+	}
 
 	//done with view methods
 
@@ -732,15 +761,21 @@ function InviteFriendsWizardCtrl($scope, $filter, $window, $location, $timeout, 
 				/* put the plan in the scope for the view */
 				$scope.plan = plan.get();
 
+				/* default message text */
+				var eventDate = $filter('date')($scope.plan.event.eventDate,'M/d/yy');
+				$scope.facebook.messageText = 'Hey! I\'m using Wembli to plan an outing to '+$scope.plan.event.eventName+' on '+ eventDate+' and you\'re invited!';
+				$scope.facebook.messageText += 'Follow the link so you can RSVP and give me feedback on the plan.';
+
 				/* seems like the right place to add our messaging to the scope */
 				if (typeof plan.get().messaging !== "undefined") {
-					$scope.facebook.messageText   = plan.get().messaging.facebook;
+					$scope.facebook.messageText   = plan.get().messaging.facebook ? plan.get().messaging.facebook : $scope.facebook.defaultMessageText;
 					$scope.twitter.messageText    = plan.get().messaging.twitter;
 					$scope.wemblimail.messageText = plan.get().messaging.wemblimail;
 				}
 
 				/* set up the wemblimail friends array with friends in the plan */
 				if (typeof plan.getFriends() !== "undefined") {
+					$scope.invitedFriends = [];
 					for (var i = plan.getFriends().length - 1; i >= 0; i--) {
 						var friend = plan.getFriends()[i];
 						friend.checked = friend.inviteStatus;
@@ -748,7 +783,6 @@ function InviteFriendsWizardCtrl($scope, $filter, $window, $location, $timeout, 
 							$scope.selectedFriends['step2'][friend.contactInfo.serviceId] = friend.inviteStatus;
 						}
 						if (friend.contactInfo.service === 'twitter') {
-							$scope.wemblimail.friends.push(friend);
 							$scope.selectedFriends['step3'][friend.contactInfo.serviceId] = friend.inviteStatus;
 						}
 						if (friend.contactInfo.service === 'wemblimail') {
@@ -756,11 +790,13 @@ function InviteFriendsWizardCtrl($scope, $filter, $window, $location, $timeout, 
 							$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.inviteStatus;
 						}
 						if (friend.inviteStatus) {
+								console.log('pushing fetched plan friends into invitedFriends')
 								$scope.invitedFriends.push(friend);
 						}
 					};
 				}
 
+				console.log($scope.invitedFriends);
 
 				var showModal = function(dereg) {
 					/*

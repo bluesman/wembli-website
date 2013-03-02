@@ -373,7 +373,7 @@ angular.module('wembliApp.services', [])
 
 
 	wembliRpc.fetch = function(method, args, callback, transformRequest, transformResponse) {
-		var cache = (args.cache) ? true : false;
+	var cache = (args.cache) ? true : false;
 		if (cache) { delete args.cache; }
 
 		jsonRpc.method = method;
@@ -381,7 +381,6 @@ angular.module('wembliApp.services', [])
 		var data = JSON.stringify(jsonRpc);
 
 		/* store this in a cache with stringified data as key */
-
 		var cb = function(err, data) {
 			var eventName = 'wembliRpc:';
 			$rootScope.$broadcast(eventName + 'success', {

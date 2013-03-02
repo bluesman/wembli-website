@@ -13,5 +13,6 @@ exports.facebook = {
 		}
 
 		me(null,{success:1});
-	}
+	},
+
 };
