@@ -44,6 +44,10 @@ angular.module('wembliApp.services', [])
 			return self.friends;
 		},
 
+		addFriend: function(args,callback) {
+			wembliRpc.fetch('plan.addFriend', args, callback);
+		},
+
 		//get plan from server and return it
 		fetch: function() {
 			//if ther eis no plan set self.plan to false
@@ -165,7 +169,7 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window', function($rootScope, $q, friendFilter, wembliRpc, $window) {
+.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window','$filter', function($rootScope, $q, friendFilter, wembliRpc, $window,$filter) {
 
 	var self = this;
 	this.auth = null;
@@ -180,8 +184,8 @@ angular.module('wembliApp.services', [])
 		//set friends in the obj
 		'/me/friends': function(response, cb) {
 			if(typeof response.data !== "undefined") {
-				self.friends = response.data;
-				self.allFriends = response.data;
+				self.friends = $filter('orderBy')(response.data,'+name');
+				self.allFriends = self.friends;
 			} else {
 				self.friends = null;
 			}
@@ -193,6 +197,30 @@ angular.module('wembliApp.services', [])
 		//TODO make a filterFriend service to be used by the different social network api services
 		filterFriends: function(filterKey) {
 			friendFilter.filter(filterKey, self);
+		},
+
+		feedDialog: function(args,cb) {
+			console.log('display feed dialog');
+			console.log(args);
+			FB.getLoginStatus(function(response) {
+				if (response.authResponse) {
+					var actionLink = 'http://tom.wembli.com/rsvp/'+args.guid+'/'+args.token;
+					var obj = {
+						method: 'feed',
+						display:'iframe',
+						link: actionLink,
+						picture: 'http://www2.wembli.com/images/layout/wembli-orange-beta-small.png',
+						name: 'Click Here To Check Out The Details & RSVP',
+						caption: 'Wembli lets friends plan, vote and split the cost of going to live events.',
+						to:args.to,
+						properties: {'RSVP Before':args.rsvpDate,'Event':args.eventName +' @ '+args.venue},
+						actions:{name:'RSVP',link:actionLink},
+						ref:'rsvp'
+					};
+					FB.ui(obj,cb);
+
+				}
+			});
 		},
 
 		getAuth: function() {
@@ -272,18 +300,31 @@ angular.module('wembliApp.services', [])
 	}
 }])
 
-.factory('twitter', ['$rootScope', 'friendFilter', 'wembliRpc', function($rootScope, friendFilter, wembliRpc) {
+.factory('twitter', ['$rootScope', '$filter','friendFilter', 'wembliRpc', function($rootScope, $filter, friendFilter, wembliRpc) {
 
 	var self = this;
 	this.auth = null;
 	this.selectedFriends = {};
 	this.friends = null;
 	this.allFriends = null;
-
+	console.log('twitter here');
 	return {
 		//TODO make a filterFriend service to be used by the different social network api services
 		filterFriends: function(filterKey) {
 			friendFilter.filter(filterKey, self);
+		},
+
+		tweet: function(args,cb) {
+			wembliRpc.fetch('twitter.tweet', args,
+				function(err, result) {
+					if(err) {
+						console.log(err);
+						return cb(err);
+					}
+					$rootScope.$broadcast('twitter-tweet', {});
+					cb(err,result);
+			});
+
 		},
 
 		getAuth: function() {
@@ -292,7 +333,6 @@ angular.module('wembliApp.services', [])
 
 		getLoginStatus: function() {
 			wembliRpc.fetch('twitter.getLoginStatus', {},
-
 				function(err, result) {
 					if(err) {
 						console.log(err);
@@ -312,8 +352,10 @@ angular.module('wembliApp.services', [])
 						console.log(err);
 						callback(false);
 					}
-					self.friends = result.friends;
-					self.allFriends = result.friends;
+					console.log('friends');
+					console.log(result.friends);
+					self.friends = $filter('orderBy')(result.friends,'+name');
+					self.allFriends = self.friends;
 					callback(result);
 				});
 		},
@@ -418,6 +460,8 @@ angular.module('wembliApp.services', [])
 			transformRequest: transformRequest,
 			transformResponse: transformResponse
 		}).success(function(data, status) {
+			console.log(data);
+			console.log(status);
 			var result = {};
 			result.data = data;
 			result.status = status;

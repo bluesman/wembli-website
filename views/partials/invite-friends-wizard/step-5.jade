@@ -1,30 +1,28 @@
-.sendingLoader(ng-show="sendingLoader")
-	h2 Sending Invitation...
-	.progress.progress-striped.active
-		.bar(style="width:100%")
-form#invite-wizard-step5-form(name="step5",ng-hide="sendingLoader")
+form#invite-wizard-step5-form(name="step5")
 	fieldset()
-		h2 Choose The RSVP Date:
-		p You're going to {{plan.event.eventVenue}} in {{plan.event.eventCity}} on {{plan.event.eventDate| date:'MMM d, yyyy'}}.  Let your friends know when they should respond by if they want to be included in this plan.
-		#step5-datepicker
-			.input-append.date.datepicker
-				input#rsvp-date(type="text",name="rsvpDate", placeholder="Choose an RSVP Date", ng-model="rsvpDate", readonly, required)
-				span.add-on
-					i.icon-calendar
-	h2 Recipients
-	p Here's who you're inviting...these folks will get a message from you to the Facebook, Twitter or eMail (depending on how you selected them) letting them know that they are invited!
-		#step5-friends-list.friends-list-container(ng-show="invitedFriends[0]")
-			.friends-list(ng-show="invitedFriends[0]")
-				.friend.pull-left(ng-repeat="friend in invitedFriends",ng-click="")
-					.friend-top
-						i.friend-no-img.icon-user(ng-show="friend.contactInfo.service=='wemblimail'")
-						img.picture(ng-src="{{friend.contactInfo.imageUrl}}",ng-show="friend.contactInfo.service=='twitter'")
-						img.picture(ng-src="https://graph.facebook.com/{{friend.contactInfo.serviceId}}/picture",ng-show="friend.contactInfo.service=='facebook'")
-						.friend-controls
-							i.icon-envelope.icon-2x(ng-show="friend.contactInfo.service=='wemblimail'")
-							i.icon-twitter.icon-2x(ng-show="friend.contactInfo.service=='twitter'")
-							i.icon-facebook.icon-2x(ng-show="friend.contactInfo.service=='facebook'")
-					.friend-bottom
+		h2 Go old skool and send an eMail
+		#error.alert.alert-block.fade.in(ng-show="step5.error")
+			.error-text(ng-show="step5.formError") All fields are required.
+		p Email friends to let them know they're invited.  Supply a name, email address and a note and we'll send out an email for you.
+		.name-group.control-group.pull-left
+			input#step5-name.name(ng-model="wemblimail.name", placeholder="FULL NAME",type="text",name="name",required)
+			input#step5-email(ng-model="wemblimail.email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
+			p Include a personalized message:
+			textarea#step5-message-text(placeholder="MESSAGE TEXT",ng-model="wemblimail.messageText", name="step5_message_text", required)
+			button.btn.btn-primary.pull-right(ng-click="submitForm('step5')") Send WembliMail Now
+		#step5-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
+			.friends-list(ng-show="wemblimail.friends[0]")
+				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends")
+					.friend-img.pull-left
+						i.friend-no-img.icon-user
+					.friend-name.pull-left
 						.name {{friend.contactInfo.name}}
-	.form-controls
-		a.submit-step.btn.btn-primary.btn-large(ng-click="sendInvitation()") Send It Now!
+					.friend-status.pull-right(ng-show="friend.checked && rsvpUndecided(friend)")
+						span.label.label-info undecided
+					.friend-status.pull-right(ng-show="friend.checked && rsvpAccepted(friend)")
+						span.label.label-success accepted
+					.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
+						span.label.label-important declined
+	.form-controls()
+		a.skip-step(data-dismiss="modal",ng-click="finished()") Skip this step
+		button.submit-step.btn.btn-primary.btn-large(data-dismiss="modal",ng-click="finished()") Finished!

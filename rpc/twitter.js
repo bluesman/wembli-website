@@ -13,6 +13,29 @@ var getTwit = function(req,me) {
 }
 
 exports.twitter = {
+	tweet: function(args,req,res) {
+		var me = this;
+		var twit = getTwit(req,me);
+		if (typeof twit === "undefined") {
+			return me(null,{success:0});
+		}
+		var twit = getTwit(req,me);
+		console.log('tweeting!');
+		console.log(args);
+		twit.verifyCredentials(function(err,result) {
+			console.log('credentials');
+			console.log(result);
+			if (err) {
+				return me(null,{success:0,error:err});
+			}
+			twit.updateStatus(args.tweet,function(err,data) {
+				if (err) {
+					return me(null,{success:0,error:err});
+				}
+				return me(null,{success:1});
+			});
+		});
+	},
 	getLoginStatus: function(args,req,res) {
 		var me = this;
 		var twit = getTwit(req,me);

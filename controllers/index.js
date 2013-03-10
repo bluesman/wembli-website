@@ -16,5 +16,11 @@ module.exports = function(app) {
 
 	});
 
+
+	app.get('/style-guide', function(req, res) {
+		res.render('style-guide.jade', {
+			title: 'wembli.com - we got style yo!'
+		});
+	});
 };
 

@@ -187,7 +187,48 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     }
   }
 }])
+/*
+.directive('friendTweetButton', ['$window','wembliRpc',function($window,wembliRpc) {
+  return {
+    restrict: 'C',
+    compile:function(element,attr,transclude) {
 
+      return function(scope,element, attr) {
+        var href = element.attr('href') + scope.friend.screen_name;
+        element.attr('href',href);
+        element.attr('data-url',scope.friend.rsvpUrl);
+        element.attr('data-text',scope.friend.messageText);
+
+        element.bind('click',function(e) {
+          e.preventDefault();
+          console.log('clicked on the button');
+
+        });
+
+        $window.twttr.ready(function(twttr) {
+          twttr.events.bind('click',function(event) {
+            console.log(event);
+            wembliRpc.fetch('invite-friends.submit-step4', {friend:scope.friend}, function(err,result) {
+              scope.$apply(function(){
+                scope.friend.inviteStatus = true;
+              });
+            });
+          });
+
+          twttr.events.bind('tweet',function(event) {
+            console.log('actually tweeted');
+            console.log(event.data);
+          });
+
+          twttr.widgets.load();
+        });
+
+        $window.twttr.widgets.load();
+      }
+    },
+  }
+}])
+*/
 .directive('eventData', ['$filter', 'wembliRpc', function($filter, wembliRpc) {
   return {
     restrict: 'C',
@@ -416,7 +457,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             //$apply makes sure that angular knows
             //we're changing something
             scope.$apply(function() {
-                keyupFn.call();
+                keyupFn.call(scope,elm,attrs);
             });
         });
     };

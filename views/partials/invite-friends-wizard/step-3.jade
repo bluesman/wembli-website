@@ -1,34 +1,35 @@
-.social-loader(ng-hide="twitter.loginStatusLoaded") Loading...
-form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="twitter.loginStatusLoaded", novalidate)
+.social-loader(ng-hide="facebook.loginStatusLoaded") Loading...
+form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="facebook.loginStatusLoaded", novalidate)
 	fieldset
-		h2 Invite Friends Via twitter
-		p Tweet at your friends to let them know they're invited!
-		textarea#twitter-message-text(ng-init="twitter.messageText='This is what the tweet will say...'",ng-model="twitter.messageText", name="twitter_message_text", required)
-		h2 Search For Twitter Friends To Invite
-		#twitter-need-login(ng-hide="twitter.service.getAuth()")
-			p Connect with twitter to view your friends.
-			a#twitter-login.btn.btn-primary(href="/auth/twitter?redirectUrl=/invitation",target="_self")
-				i.icon-twitter
-				span &nbsp;Connect With twitter
-		#twitter-friends-list.friends-list-container(ng-show="twitter.service.getAuth()")
+		h2 Select Facebook Friends To Invite
+		p Post a message on your friends' wall to let them know they're invited. You can post a message on the wall of each facebook friend you invite and it will include a link to your Wembli plan so they can RSVP.
+		#facebook-need-login(ng-hide="facebook.service.getAuth()")
+			p Connect with Facebook to view your friends.
+			button#facebook-login.btn.btn-primary(ng-click="facebook.service.login()")
+				i.icon-facebook.pull-left
+				span &nbsp;Connect With Facebook
+		#facebook-friends-list.friends-list-container(ng-show="facebook.service.getAuth()")
 			.control-group
 				.input-append
-					input.friend-filter(type="text",placeholder="Search for friends on twitter",on-keyup="twitter.searchUsers",ng-model="twitter.friendFilterKey"))
+					input.friend-filter(type="text",placeholder="Enter friend name to filter",on-keyup="facebook.filterFriends",ng-model="facebook.friendFilterKey"))
 					span.add-on
 						i.icon-search
-			.search-for-friends(ng-hide="twitter.friends || twitter.spinner") Enter a friend name or twitter @screen_name to find and invite via twitter.
-			.spinner(ng-show="twitter.spinner")
-				i.icon-spinner.icon-spin.icon-2x(ng-show="twitter.spinner")
-			.friends-list(ng-show="twitter.friends",ng-hide="twitter.spinner" )
-				.friend.pull-left(ng-repeat="friend in twitter.friends",ng-click="handleFriendClick('step3',friend, $event)")
-					.friend-top
-						img.picture(ng-src="{{friend.profile_image_url_https}}")
-						.friend-controls
-							input(id="{{friend.contactInfo.serviceId}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
-							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")
-							i.icon-remove-circle.icon-large(ng-show="rsvpDeclined(friend)")
-					.friend-bottom
+			.spinner(ng-hide="facebook.friends")
+				i.icon-spinner.icon-spin.icon-2x(ng-hide="facebook.friends")
+			.friends-list(ng-show="facebook.friends")
+				.friend(ng-repeat="friend in facebook.friends",ng-click="facebook.handleFriendClick(friend,$event)")
+					.friend-controls.pull-left
+						input(id="{{friend.contactInfo.serviceId}}",type="checkbox",ng-model="friend.checked")
+					.friend-img.pull-left
+						img.picture(ng-src="https://graph.facebook.com/{{friend.id}}/picture?height=30&width=30")
+					.friend-name.pull-left
 						.name {{friend.name}}
+					.friend-status.pull-right(ng-show="friend.checked && rsvpUndecided(friend)")
+						span.label.label-info undecided&nbsp;
+					.friend-status.pull-right(ng-show="friend.checked && rsvpAccepted(friend)")
+						span.label.label-success accepted&nbsp;
+					.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
+						span.label.label-important declined&nbsp;
 	.form-controls
 		a.skip-step(ng-click="skipStep('step3')") Skip this step
-		a.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step3',{next:true})") Continue
+		button.submit-step.btn.btn-primary.btn-large(ng-click="skipStep('step3')") Continue

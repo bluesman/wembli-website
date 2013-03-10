@@ -1,30 +1,49 @@
-form#invite-wizard-step4-form(name="step4")
-	fieldset()
-		h2 Go old skool and send an eMail
-		#error.alert.alert-block.fade.in(ng-show="step4.error")
-			.error-text(ng-show="step4.formError") All fields are required.
-		p We'll send your potentials an email letting them know they are invited.
-		textarea#step4-message-text(ng-init="wemblimail.messageText='This is what the email will say...'",ng-model="wemblimail.messageText", name="step4_message_text", required)
-		p Provide names and email addresses below for the people you want to invite.
-		.name-group.control-group.pull-left
-			input#step4-first-name.first-name(ng-model="wemblimail.firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
-			input.last-name(ng-model="wemblimail.lastName",placeholder="LAST NAME",type="text",name="lastName",required)
-			input#email(ng-model="wemblimail.email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
-			button.btn.btn-primary(ng-click="submitForm('step4')") Add Invitee
-		#step4-form-status.form-status.pull-right(fade-element="wemblimail.formStatus")
-			i.icon-ok-circle.icon-3x
-			.form-status-text Added Invitee
-		#step4-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
-			.friends-list(ng-show="wemblimail.friends[0]")
-				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends",ng-click="handleFriendClick('step4',friend,$event)")
-					.friend-top
-						i.friend-no-img.icon-user
-						.friend-controls
-							input(id="{{friend.contactInfo.serviceId}}",type="checkbox",ng-model="friend.checked",ng-show="rsvpUndecided(friend)")
-							i.icon-ok-circle.icon-large(ng-show="rsvpAccepted(friend)")
-							i.icon-remove-circle.icon-large(ng-show="rsvpDeclined(friend)")
-					.friend-bottom
-						.name {{friend.contactInfo.name}}
-	.form-controls()
+.social-loader(ng-hide="twitter.loginStatusLoaded") Loading...
+form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="twitter.loginStatusLoaded", novalidate)
+	fieldset
+		h2 Search For Twitter Friends To Invite
+		#twitter-need-login(ng-hide="twitter.service.getAuth()")
+			p Connect with twitter to view your friends.
+			a#twitter-login.btn.btn-primary(href="/auth/twitter?redirectUrl=/invitation#step4",target="_self")
+				i.icon-twitter
+				span &nbsp;Connect With twitter
+		#twitter-friends-list.friends-list-container(ng-show="twitter.service.getAuth()")
+			p Search for twitter friends below and then click the Tweet @ button to send them a personalized invitation to your outing.
+			.control-group
+				.input-append
+					input.friend-filter(type="text",placeholder="Search for friends on twitter",on-keyup="twitter.searchUsers",ng-model="twitter.friendFilterKey"))
+					span.add-on
+						i.icon-search
+			.search-for-friends(ng-hide="twitter.friends || twitter.spinner") Enter a friend name or twitter @screen_name to find and invite via twitter.
+			.spinner(ng-show="twitter.spinner")
+				i.icon-spinner.icon-spin.icon-2x(ng-show="twitter.spinner")
+			.friends-list(ng-show="twitter.friends",ng-hide="twitter.spinner" )
+				.friend.pull-left(ng-repeat="friend in twitter.friends")
+					.friend-modal.modal.hide(id="modal-{{friend.screen_name}}",data-backdrop="false",data-focus-on="input:first",tabindex="-1")
+						.modal-header
+							i.icon-remove.close.pull-right(type="button",data-dismiss="modal",aria-hidden="true")
+							h2 Tweet An Invitation To @{{friend.screen_name}}
+						.modal-body
+							p Don't worry, Twitter will automatically shorten urls to 20 characters.
+							textarea(on-keyup="twitter.countChars",id="twitter-message-{{friend.screen_name}}",name="twitter-message-{{friend.screen_name}}",ng-model="twitter.messageText")
+						.modal-footer
+							input.char-count(ng-model="twitter.charCount",id="char-count-{{friend.screen_name}}",disabled,ng-class="{true:'red'}[twitter.charCount < 10]")
+							a.btn(href="#",data-dismiss="modal") Close
+							a.btn.btn-primary(href="#",ng-click="twitter.tweet(friend,$event)") Tweet
+					.friend-img.pull-left
+						img.picture(ng-src="{{friend.profile_image_url_https}}")
+					.friend-name.pull-left
+						.name {{friend.name}}
+					.friend-status.pull-right(ng-show="friend.checked && rsvpUndecided(friend)")
+						span.label.label-info undecided&nbsp;
+					.friend-status.pull-right(ng-show="friend.checked && rsvpAccepted(friend)")
+						span.label.label-success accepted&nbsp;
+					.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
+						span.label.label-important declined&nbsp;
+					.friend-controls.pull-right
+						a.btn.btn-mini(ng-click="twitter.handleFriendClick(friend,$event)")
+							i.icon-twitter(style="color:#0092BF")
+							strong &nbsp;Tweet to @{{friend.screen_name}}
+	.form-controls
 		a.skip-step(ng-click="skipStep('step4')") Skip this step
-		button.submit-step.btn.btn-primary.btn-large(ng-click="skipStep('step4')") Continue
+		a.submit-step.btn.btn-primary.btn-large(ng-click="skipStep('step4')") Continue

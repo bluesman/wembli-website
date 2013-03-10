@@ -1,6 +1,8 @@
 var customerRpc = require('../rpc/customer').customer;
+var planRpc = require('../rpc/plan').plan;
 var wembliUtils = require('../lib/wembli/utils');
 var wembliModel = require('../lib/wembli-model');
+var wembliEmail = require('wembli/email');
 var Customer = wembliModel.load('customer');
 var Friend = wembliModel.load('friend');
 var async = require('async');
@@ -27,25 +29,59 @@ exports["invite-friends"] = {
 
 		if (args.customerId) {
 			/* fetch it from the db and potentially update firstName, lastName and/or email */
-			var update = {
-				firstName: args.firstName,
-				lastName: args.lastName,
-				email: args.email
-			};
 			console.log('updating customer:');
 			console.log(args);
 
-			Customer.findByIdAndUpdate(args.customerId, update, function(err, c) {
+			Customer.findById(args.customerId, function(err, c) {
 				if (err) {
 					return me(err);
 				}
+
+				/* this should never happen unless there's some sort of funny biz */
 				if (c === null) {
 					return me('no crystal');
-				} /* this should never happen unless there's some sort of funny biz */
-				req.session.customer = c;
-				me(null, {
-					success: 1
-				})
+				}
+
+				/* ok got our cust from the db check if email is changing, if so - they need to reconfirm */
+				if (c.email !== args.email) {
+					var confirmationTimestamp = new Date().getTime().toString();
+					var digestKey = args.email + confirmationTimestamp;
+					var confirmationToken = wembliUtils.digest(digestKey);
+
+					c.confirmation.pop();
+					c.confirmation.unshift({
+						timestamp: confirmationTimestamp,
+						token: confirmationToken
+					});
+
+					c.confirmed = false;
+				}
+
+				c.firstName = args.firstName;
+				c.lastName  = args.lastName;
+				c.email     = args.email;
+				console.log('customer');
+				console.log(c);
+				c.save(function(err) {
+					if (err) {
+						return me(err);
+					}
+
+					if (confirmationToken) {
+						/* send signup email async */
+						wembliEmail.sendSignupEmail({
+							res: res,
+							confirmationToken: confirmationToken,
+							customer: c
+						});
+					}
+
+					req.session.customer = c;
+					me(null, {
+						success: 1
+					});
+
+				});
 			});
 
 		} else {
@@ -63,39 +99,28 @@ exports["invite-friends"] = {
 		}
 	},
 
-	/* add facebook friends */
+	/* save rsvp date */
 	"submit-step2": function(args, req, res) {
 		var me = this;
 		var data = {
 			success: 1,
-			formError: false,
 		};
 
-		/* must have a customer to create a plan in the db */
+		/* must have a customer to send invite */
 		if (!req.session.customer) {
 			console.log('no customer..back to step 1 please');
 			data.noCustomer = true;
 			return me(null, data);
 		}
 
+		console.log('saving rsvp date');
+		console.log(args);
+
 		if (typeof args.next !== "undefined") {
 			data.next = args.next;
 		}
 
-		console.log('step2 args:');
-		console.log(args);
-		console.log('does plan exist')
-
-		if (typeof args.friend !== "undefined") {
-			args.friend.inviteStatus = (args.friend.inviteStatus) ? true : false;
-		}
-		/*
-		step 2 is the first step if they're logged in
-		we may or may not already have a saved plan
-		*/
-
-		/* set plan.messaging.facebook */
-		req.session.plan.messaging.facebook = args.message;
+		req.session.plan.rsvpDate = args.rsvpDate;
 		/* call save with a callback - if this is a new plan it will make an id for me so I can add friends */
 		req.session.plan.save(function(err) {
 			if (err) {
@@ -103,364 +128,62 @@ exports["invite-friends"] = {
 				data.dbError = 'unable to save plan';
 				return me(null, data);
 			}
-			console.log('saved plan - plan id is:' + req.session.plan.id);
-
-			if (typeof args.friend === "undefined") {
-				return me(null, data);
-			}
-			/* add/update the friend */
-
-			var query = {
-				'planId': req.session.plan.id,
-				'contactInfo.service': 'facebook',
-				'contactInfo.serviceId': args.friend.id
-			};
-			Friend.findOne(query, function(err, friend) {
-				if (err) {
-					data.success = 0;
-					data.dbError = 'unable to find friends';
-					return me(null, data);
-				}
-
-				if (friend) {
-					console.log('updaing existing friend to tatus: ' + args.friend.checked);
-					friend.inviteStatus = args.friend.checked;
-				} else {
-					console.log('adding a new friend');
-					var set = {
-						planId: req.session.plan.id,
-						contactInfo: {
-							service: 'facebook',
-							serviceId: args.friend.id,
-							name: args.friend.name,
-							imageUrl: 'https://graph.facebook.com/' + args.friend.id + '/picture'
-						},
-						inviteStatus: args.friend.inviteStatus
-					}
-					console.log(set);
-					friend = new Friend(set);
-				}
-
-				friend.save(function(err) {
-					if (err) {
-						data.success = 0;
-						data.dbError = 'unable to save friend';
-						return me(null, data);
-					}
-					console.log('saved friend: ' + friend.id);
-					/* now add the friend to the plan */
-					req.session.plan.addFriend(friend, function(err) {
-						if (err) {
-							data.success = 0;
-							data.dbError = 'unable to add friend ' + friend.id;
-							return me(null, data);
-						}
-						console.log('added friend to plan: ' + req.session.plan.guid);
-						data.friend = friend;
-						return me(null, data);
-					});
-
-				});
-			});
-		});
-
-	},
-
-	"submit-step3": function(args, req, res) {
-		var me = this;
-		var data = {
-			success: 1,
-			formError: false,
-		};
-
-		/* must have a customer to create a plan in the db */
-		if (!req.session.customer) {
-			console.log('no customer..back to step 1 please');
-			data.noCustomer = true;
+			console.log('saved rsvp date for plan - plan id is:' + req.session.plan.id);
 			return me(null, data);
-		}
-
-		if (typeof args.next !== "undefined") {
-			data.next = args.next;
-		}
-
-		console.log('step2 args:');
-		console.log(args);
-		console.log('does plan exist')
-
-		if (typeof args.friend !== "undefined") {
-			args.friend.inviteStatus = (args.friend.inviteStatus) ? true : false;
-		}
-
-		/* set plan.messaging.facebook */
-		req.session.plan.messaging.twitter = args.message;
-		/* call save with a callback - if this is a new plan it will make an id for me so I can add friends */
-		req.session.plan.save(function(err) {
-			if (err) {
-				data.success = 0;
-				data.dbError = 'unable to save plan';
-				return me(null, data);
-			}
-			console.log('saved plan - plan id is:' + req.session.plan.id);
-
-			if (typeof args.friend === "undefined") {
-				return me(null, data);
-			}
-			/* add/update the friend */
-
-			var query = {
-				'planId': req.session.plan.id,
-				'contactInfo.service': 'twitter',
-				'contactInfo.serviceId': args.friend.id
-			};
-			Friend.findOne(query, function(err, friend) {
-				if (err) {
-					data.success = 0;
-					data.dbError = 'unable to find friends';
-					return me(null, data);
-				}
-
-				if (friend) {
-					console.log('updaing existing friend to status: ' + args.friend.checked);
-					friend.inviteStatus = args.friend.checked;
-				} else {
-					console.log('adding a new friend');
-					var set = {
-						planId: req.session.plan.id,
-						contactInfo: {
-							service: 'twitter',
-							serviceId: args.friend.id,
-							name: args.friend.name,
-							imageUrl: args.friend.profile_image_url_https,
-						},
-						inviteStatus: args.friend.inviteStatus
-					}
-					console.log(set);
-					friend = new Friend(set);
-				}
-
-				friend.save(function(err) {
-					if (err) {
-						data.success = 0;
-						data.dbError = 'unable to save friend';
-						return me(null, data);
-					}
-					console.log('saved friend: ' + friend.id);
-					/* now add the friend to the plan */
-					req.session.plan.addFriend(friend, function(err) {
-						if (err) {
-							data.success = 0;
-							data.dbError = 'unable to add friend ' + friend.id;
-							return me(null, data);
-						}
-						console.log('added friend to plan: ' + req.session.plan.guid);
-						data.friend = friend;
-						return me(null, data);
-					});
-
-				});
-			});
-		});
-
-	},
-	"submit-step4": function(args, req, res) {
-		var me = this;
-		var data = {
-			success: 1,
-		};
-
-		/* must have a customer to create a plan in the db */
-		if (!req.session.customer) {
-			console.log('no customer..back to step 1 please');
-			data.noCustomer = true;
-			return me(null, data);
-		}
-
-		if (typeof args.next !== "undefined") {
-			data.next = args.next;
-		}
-
-		console.log('step4 args:');
-		console.log(args);
-		console.log('does plan exist')
-
-		if (typeof args.friend !== "undefined") {
-			args.friend.inviteStatus = (args.friend.inviteStatus) ? true : false;
-		}
-
-		/* set plan.messaging.wemblimail */
-		req.session.plan.messaging.wemblimail = args.message;
-
-		/* call save with a callback - if this is a new plan it will make an id for me so I can add friends */
-		req.session.plan.save(function(err) {
-			if (err) {
-				data.success = 0;
-				data.dbError = 'unable to save plan';
-				return me(null, data);
-			}
-			console.log('saved plan - plan id is:' + req.session.plan.id);
-
-			if (typeof args.friend === "undefined") {
-				return me(null, data);
-			}
-			/* add/update the friend */
-
-			var query = {
-				'planId': req.session.plan.id,
-				'contactInfo.service': 'wemblimail',
-				'contactInfo.serviceId': args.friend.id
-			};
-			Friend.findOne(query, function(err, friend) {
-				if (err) {
-					data.success = 0;
-					data.dbError = 'unable to find friends';
-					return me(null, data);
-				}
-
-				if (friend) {
-					console.log('updaing existing friend to status: ' + args.friend.checked);
-					friend.inviteStatus = args.friend.checked;
-					friend.contactInfo.name = args.friend.name;
-				} else {
-					console.log('adding a new friend');
-					var set = {
-						planId: req.session.plan.id,
-						contactInfo: {
-							service: 'wemblimail',
-							serviceId: args.friend.id,
-							name: args.friend.name,
-						},
-						inviteStatus: args.friend.inviteStatus
-					}
-					console.log(set);
-					friend = new Friend(set);
-				}
-
-				friend.save(function(err) {
-					if (err) {
-						data.success = 0;
-						data.dbError = 'unable to save friend';
-						return me(null, data);
-					}
-					console.log('saved friend: ' + friend.id);
-					/* now add the friend to the plan */
-					req.session.plan.addFriend(friend, function(err) {
-						if (err) {
-							data.success = 0;
-							data.dbError = 'unable to add friend ' + friend.id;
-							return me(null, data);
-						}
-						console.log('added friend to plan: ' + req.session.plan.guid);
-						data.friend = friend;
-						return me(null, data);
-					});
-				});
-			});
 		});
 	},
-	"send-invitation": function(args, req, res) {
-		var me = this;
-		var data = {
-			success: 1,
-		};
 
-		console.log('send-invitation');
+	/* send wemblimail */
+	"submit-step5": function(args, req, res) {
+		var me = this;
+		var data = {success: 1};
+
+		console.log('step5 args:');
 		console.log(args);
 
-		var getToken = function(friend) {
-			/* generate a token to identify this friend when they RSVP */
-			var friendToken = "";
-			if (typeof friend.token == "undefined") {
-				var friendTimestamp = new Date().getTime().toString();
-				var string = friend.contactInfo.service + friend.contactInfo.serviceId + friendTimestamp;
-				var friendToken = wembliUtils.md5(string);
-				friend.token = {
-					timestamp: friendTimestamp,
-					token: friendToken
-				};
-				console.log(friend.token);
-			} else {
-				friendToken = friend.token.token;
+		var rpcArgs = {
+			service:args.service,
+			serviceId:args.serviceId,
+			imageUrl:args.imageUrl,
+			name:args.name,
+			inviteStatus:args.inviteStatus
+		};
+
+		planRpc['addFriend'].apply(function(err, results) {
+			/* must have a customer to create a plan in the db */
+			if (!req.session.customer) {
+				console.log('no customer..back to step 1 please');
+				data.noCustomer = true;
+				return me(null, data);
 			}
-			console.log(friendToken);
-			return friendToken;
-		};
 
-		var inviteMethods = {
-			'facebook': function(friend, callback) {
-				console.log('invite via facebook');
+			console.log('added friend to plan');
+			console.log(results.friend);
 
+			/* now that we have added the friend to the plan and have a token, send the wembli email */
+			var rsvpLink = "http://tom.wembli.com/rsvp/"+req.session.plan.guid+"/"+results.friend.inviteStatusConfirmation.token;
+			wembliEmail.sendRSVPEmail({
+				res: res,
+				req:req,
+				rsvpDate: results.friend.rsvp.date,
+				rsvpLink: rsvpLink,
+				email:results.friend.contactInfo.serviceId,
+				message:args.message
+			});
 
-				facebook_client.getSessionByAccessToken(req.session.facebook.accessToken)(function(facebook_session) {
-					if (!facebook_session) {
-						return me(null, {success: 0});
-					}
+			/* once the email is sent, we can update inviteStatus to true */
+			/* got a friend, set inviteStatus to true */
+			results.friend.inviteStatus = true;
+			/* clear out the token it is no longer valid - so nothing fishy can happen */
+			results.friend.inviteStatusConfirmation = {token:'',timestamp:Date.now()};
 
-					facebook_session.isValid()(function(is_valid) {
-						if (!is_valid) {
-							return me(null, {success: 0});
-						}
+			/* this is used on the event plan view */
+			results.friend.rsvp.initiated = true;
+			results.friend.rsvp.initiatedLastDate = Date.now();
 
-						//make a post for wembli
-						var apiCall = "/" + friend.contactInfo.serviceId + "/feed";
-
-						var name = req.session.customer.firstName + ' ' + req.session.customer.lastName;
-						var rsvpDate = new Date(args.rsvpDate);
-						console.log('rsvp date is: ' + rsvpDate);
-
-						var msg = name + ' is planning an outing and you\'re invited!';
-
-						var rsvpLink = "http://" + app.settings.host + ".wembli.com/rsvp/" + encodeURIComponent(req.session.plan.guid) + "/" + encodeURIComponent(getToken(friend));
-
-						var params = {
-							message: msg,
-							link: rsvpLink + '/fb',
-							name: 'Click To View Details & RSVP',
-							description: req.session.plan.messaging.facebook,
-						};
-						console.log('calling fb: ' + apiCall);
-						console.log('with params:');
-						console.log(params);
-						facebook_session.graphCall(apiCall, params, 'POST')(function(result) {
-							friend.rsvp.date = rsvpDate;
-							friend.rsvp.initiated = true;
-							friend.rsvp.initiatedLastDate = new Date().format("m/d/yy h:MM TT Z");
-							return callback();
-						});
-					});
-				});
-
-			},
-			'twitter': function(friend, callback) {
-				console.log('invite via twitter');
-				callback();
-			},
-			'wemblimail': function(friend, callback) {
-				console.log('invite via wemblimail');
-				callback();
-			}
-		};
-
-		var sendInvite = function(friend, callback) {
-			inviteMethods[friend.contactInfo.service](friend, callback);
-		};
-
-		var finished = function(err) {
-			console.log('finished async');
-
-			setTimeout(function() {
-				console.log('sennnnd....');
-				me(null, data);
-			}, 3000);
-
-
-		};
-
-		/* get the friends for this plan */
-		Friend.where('planId').equals(req.session.plan.id).exec(function(err, results) {
-			async.forEach(results, sendInvite, finished);
-		});
-
-	}
-
+			results.friend.save(function(err) {
+				me(null, results);
+			});
+		}, [rpcArgs, req, res]);
+	},
 };

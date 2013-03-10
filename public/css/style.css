@@ -87,6 +87,9 @@ h3 {
 #page-loading-modal .progress {
   margin-bottom: 0;
 }
+.red {
+  color: red !important;
+}
 .arrow {
   border: none;
   background: transparent url('/images/transparent-arrow.png') no-repeat center center;
@@ -2622,6 +2625,21 @@ a#facebook-login-button {
 .hero #event-options-hero-right .arrow .arrow-text {
   padding-left: 10px;
 }
+.modal textarea {
+  width: 520px;
+  height: 80px;
+}
+.modal .char-count {
+  display: inline-block;
+  vertical-align: middle;
+  background: none repeat scroll 0 0 #F5F5F5;
+  border: 0 none;
+  color: #524f45;
+  margin-right: 5px;
+  text-align: center;
+  width: 2em;
+  font-size: 12px;
+}
 #invitation-modal.modal {
   height: ;
   width: 750px;
@@ -2643,7 +2661,7 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #left {
   background-color: #d8d6d7;
   width: 30%;
-  height: 550px;
+  height: 500px;
   font-size: 18px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #left a.wizard-step-nav {
@@ -2670,7 +2688,7 @@ a#facebook-login-button {
   background-color: #6da1b7;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right {
-  height: 450px;
+  height: 400px;
   width: 485px;
   overflow-y: auto;
   padding: 5px 20px;
@@ -2704,16 +2722,15 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
   clear: both;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group {
-  width: 340px;
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group input {
+  width: 475px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group .first-name {
-  width: 100px;
-  float: left;
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group input.first-name {
+  width: 180px;
+  margin-right: 10px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group .last-name {
-  width: 200px;
-  margin-left: 10px;
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group input.last-name {
+  width: 275px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .form-status {
   color: #46a546;
@@ -2747,36 +2764,61 @@ a#facebook-login-button {
   background-color: #d3e3ea;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend {
-  padding: 6px;
-  width: 148px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top {
   *zoom: 1;
+  padding: 6px 0;
+  width: 100%;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top:after {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:before,
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:after {
   display: table;
   content: "";
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top:after {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:after {
   clear: both;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top i.icon-user {
-  font-size: 49px;
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-controls {
+  text-align: center;
+  padding: 5px 10px;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img {
+  *zoom: 1;
+  width: 45px;
+  text-align: center;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:before,
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:after {
+  display: table;
+  content: "";
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:after {
+  clear: both;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img i.icon-user {
+  font-size: 29px;
   margin: 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top .picture {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img .picture {
   float: left;
+  width: 30px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-top .friend-controls {
-  float: right;
-  width: 98px;
-  color: #46a546;
-  text-align: center;
-  line-height: 50px;
-  height: 50px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .name {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-name .name {
   padding: 4px 0;
   font-size: 14px;
+  height: 24px;
+  line-height: 24px;
+  vertical-align: middle;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status {
+  padding: 5px 10px 5px 5px;
+  width: 80px;
+  text-align: right;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-question-sign {
+  color: #4380b8;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-ok-circle {
+  color: #46a546;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-remove-circle {
+  color: #ff6700;
 }

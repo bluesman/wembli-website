@@ -41,6 +41,7 @@ this.Model = function(mongoose) {
 			twitter:String,
 			wemblimail:String
 		},
+		rsvpDate: {type:Date, index:true},
 		organizer : {type: String, index : true},
 		friends: [String],
 		tickets: [String],

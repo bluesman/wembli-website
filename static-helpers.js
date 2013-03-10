@@ -10,6 +10,10 @@ module.exports = {
 			'text':"Who's It From",
 		},
 		{
+			'icon':"icon-calendar",
+			'text':"Choose RSVP Date",
+		},
+		{
 			'icon':"icon-facebook",
 			'text':"Facebook",
 		},
@@ -20,10 +24,6 @@ module.exports = {
 		{
 			'icon':"icon-envelope",
 			'text':"Wembli Mail",
-		},
-		{
-			'icon':"icon-calendar",
-			'text':"Send RSVP",
 		}
 		];
 

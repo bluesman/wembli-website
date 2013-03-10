@@ -1,3 +1,22 @@
+.modal {
+	textarea {
+		width:520px;
+		height:80px;
+	}
+
+	.char-count {
+		display:inline-block;
+		vertical-align:middle;
+		background: none repeat scroll 0 0 #F5F5F5;
+		border: 0 none;
+		color: @grayDark;
+		margin-right: 5px;
+		text-align: center;
+		width: 2em;
+		font-size:12px;
+	}
+}
+
 #invitation-modal.modal {
 	height:;
 	width:750px;
@@ -12,7 +31,7 @@
 			#left {
 				background-color:@grayLight;
 				width:30%;
-				height:550px;
+				height:500px;
 				font-size:18px;
 
 				a.wizard-step-nav {
@@ -46,7 +65,7 @@
 
 
 			#right {
-				height:450px;
+				height:400px;
 				width:485px;
 				overflow-y:auto;
 				padding:5px 20px;
@@ -79,15 +98,15 @@
 				}
 
 				.name-group {
-					width:340px;
-
-					.first-name {
-						width:100px;
-						float:left;
+					input {
+						width:475px;
 					}
-					.last-name {
-						width:200px;
-						margin-left:10px;
+					input.first-name {
+						width:180px;
+						margin-right:10px;
+					}
+					input.last-name {
+						width:275px;
 					}
 				}
 
@@ -133,30 +152,57 @@
 						}
 
 						.friend {
-							padding:6px;
-							width:148px;
-							.friend-top {
+
+
+							.clearfix();
+							padding:6px 0;
+							width:100%;
+
+							.friend-controls {
+								text-align:center;
+								padding:5px 10px;
+
+							}
+
+							.friend-img {
 								.clearfix();
+								width:45px;
+								text-align:center;
+
 								i.icon-user {
-									font-size:49px;
+									font-size:29px;
 									margin:0;
 								}
 								.picture {
 									float:left;
-								}
-								.friend-controls {
-									float:right;
-									width:98px;
-									color:@green;
-									text-align:center;
-									line-height:50px;
-									height:50px;
+									width:30px;
 								}
 							}
 
-							.name {
-								padding:4px 0;
-								font-size:14px;
+							.friend-name {
+
+								.name {
+									padding:4px 0;
+									font-size:14px;
+									height:24px;
+									line-height:24px;
+									vertical-align:middle;
+								}
+							}
+							.friend-status {
+								padding:5px 10px 5px 5px;
+								width:80px;
+								text-align:right;
+
+								.icon-question-sign {
+									color:@blue;
+								}
+								.icon-ok-circle {
+									color:@green;
+								}
+								.icon-remove-circle {
+									color:@orange;
+								}
 							}
 						}
 					}
