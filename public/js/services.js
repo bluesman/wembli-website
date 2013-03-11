@@ -267,17 +267,23 @@ angular.module('wembliApp.services', [])
 		},
 
 		logout: function() {
-			FB.logout(function(response) {
-				if(response) {
-					self.auth = false;
-					$rootScope.$broadcast('facebook-logout', {
-						auth: self.auth
-					});
-				} else {
-					console.log('Facebook logout failed.', response);
-				}
-			});
-			$window.location = '/logout';
+			console.log('bam logging out of fb');
+			if (self.auth) {
+				FB.logout(function(response) {
+					console.log(response);
+					if(response) {
+						self.auth = false;
+						$rootScope.$broadcast('facebook-logout', {
+							auth: self.auth
+						});
+					} else {
+						console.log('Facebook logout failed.', response);
+					}
+					$window.location = '/logout';
+				});
+			} else {
+				$window.location = '/logout';
+			}
 		},
 
 		api: function(method, callback) {

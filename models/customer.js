@@ -116,14 +116,6 @@ this.Model = function(mongoose) {
 		return {timestamp: confirmationTimestamp,token: confirmationToken};
 	};
 
-	Customer.statics.encryptPassword = function(password) {
-		/* all good, update the password in the db, log in and send to dashboard */
-		var hash = crypto.createHash('sha512');
-		hash.update(password);
-		var digest = hash.digest(encoding = 'base64');
-		return digest.replace(/\//g, '');
-	}
-
 	Customer.statics.findFriendEmailByFriendToken = function(token, callback) {
 		var Customer = this;
 		var friendEmail = null;

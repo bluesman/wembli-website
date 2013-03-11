@@ -22,5 +22,26 @@ module.exports = function(app) {
 			title: 'wembli.com - we got style yo!'
 		});
 	});
+
+	app.get('/email/:template', function(req,res) {
+		var argsMap = {
+			'welcome': {
+
+			},
+			'signup' : {
+				confirmLink:'#',
+			},
+			'rsvp': {
+				rsvpDate: Date.today(),
+				rsvpLink:'#',
+				message: "hey man come join me at this event - it'll be a blast",
+			}
+
+		};
+
+		return res.render('email-templates/'+req.param('template'),argsMap[req.param('template')]);
+
+	});
+
 };
 

@@ -339,6 +339,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 		},
 
 		formSubmitCallback: function(err, result) {
+			$('#invitation-modal').modal('loading');
 			$scope.step1.formError = false;
 			$scope.step1.error = false;
 			//error checking
@@ -375,6 +376,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 			return rpcArgs;
 		},
 		formSubmitCallback: function(err, result) {
+			$('#invitation-modal').modal('loading');
 			/* If There's A No Cust Error Send Them Back To Step-1 With An Error */
 			if (result.nocustomer) {
 				$scope.step1.error = True;
@@ -403,6 +405,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 			return rpcArgs;
 		},
 		formSubmitCallback: function(err, result) {
+			$('#invitation-modal').modal('loading');
 			/* if there's a no cust error send them back to step-1 with an error */
 			if (result.noCustomer) {
 				$scope.step1.error = true;
@@ -439,6 +442,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 	/* view methods */
 	$scope.submitForm = function(step,args) {
 		if ($scope[step].$valid) {
+			$('#invitation-modal').modal('loading');
 			wembliRpc.fetch('invite-friends.submit-' + step, wizard[step].rpcArgs(args), wizard[step].formSubmitCallback);
 		} else {
 			console.log('form not valid');
@@ -577,7 +581,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 			if ($event.target.localName !== "input") {
 				friend.checked = friend.checked ? false : true;
 			}
-
+			$('#invitation-modal').modal('loading');
 			return plan.addFriend({
 				name:friend.name,
 				inviteStatus: false,
@@ -606,6 +610,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 						venue:$scope.plan.event.eventVenue,
 						rsvpDate:$('#rsvp-date').val()
 					},function(response) {
+						$('#invitation-modal').modal('loading');
 						console.log('back from posting to friends wall');
 						console.log(response);
 						if (response === null) {
@@ -719,6 +724,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 
 		tweet: function(friend,$event) {
 			twitter.tweet({tweet:$scope.twitter.messageText},function(err,res) {
+				$('#invitation-modal').modal('loading');
 				console.log('back from tweeting to friend');
 				console.log(res);
 				if (res === null) {
@@ -739,7 +745,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 		handleFriendClick: function(friend,$event) {
 			console.log('friend clicked');
 			console.log(friend);
-
+			$('#invitation-modal').modal('loading');
 			return plan.addFriend({
 				name:friend.name,
 				inviteStatus: false,
@@ -757,7 +763,9 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 				console.log('add twitter friend to invited friends');
 				addToInvitedFriends(result.friend);
 
+				/* should i just overwrite friend completely here? */
 				friend.inviteStatusConfirmation = result.friend.inviteStatusConfirmation;
+				friend.rsvp = result.friend.rsvp;
 				/* display the tweet dialog box */
 				$('#modal-'+friend.screen_name).modal("show");
 				/* reset the tweet form data */

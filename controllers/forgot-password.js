@@ -92,16 +92,12 @@ module.exports = function(app) {
 				return res.redirect('/');
 			}
 
-			var password = Customer.encryptPassword(req.param('password'));
+			var password = wembliUtils.digest(req.param('password'));
 			var forgotPassword = [];
 			c.update({forgotPassword: [], password:password}, function(err) {
 				//log em in
 				req.session.loggedIn = true;
 				req.session.customer = c;
-				req.session.message = {
-					status: 'success',
-					message: 'Successfully updated your password.'
-				};
 				res.redirect('/dashboard');
 			});
 		});

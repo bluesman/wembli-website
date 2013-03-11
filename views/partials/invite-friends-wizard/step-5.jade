@@ -6,7 +6,7 @@ form#invite-wizard-step5-form(name="step5")
 		p Email friends to let them know they're invited.  Supply a name, email address and a note and we'll send out an email for you.
 		.name-group.control-group.pull-left
 			input#step5-name.name(ng-model="wemblimail.name", placeholder="FULL NAME",type="text",name="name",required)
-			input#step5-email(ng-model="wemblimail.email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
+			input#step5-email(ng-model="wemblimail.email",placeholder="EMAIL ADDRESS",type="email",name="email",required)
 			p Include a personalized message:
 			textarea#step5-message-text(placeholder="MESSAGE TEXT",ng-model="wemblimail.messageText", name="step5_message_text", required)
 			button.btn.btn-primary.pull-right(ng-click="submitForm('step5')") Send WembliMail Now

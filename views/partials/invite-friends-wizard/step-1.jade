@@ -13,7 +13,7 @@ form#invite-wizard-step1-form(name="step1")
 		.name-group.control-group
 			input.first-name.pull-left(ng-model="customer.firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
 			input.last-name.pull-left(ng-model="customer.lastName",placeholder="LAST NAME",type="text",name="lastName",required)
-			input.email(ng-model="customer.email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
+			input.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="email",required)
 	.form-controls()
 		//- a.skip-step(ng-click="skipStep('step1')") Skip this step
 		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step1')") Continue
