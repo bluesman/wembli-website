@@ -858,7 +858,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 						*/
 					var startDate = new Date();
 					var endDate = new Date($scope.plan.event.eventDate);
-					$('.datepicker').datepicker({format:'DD, M d, yyyy' ,startDate: startDate ,endDate:endDate});
+
 
 					/* if there's an rsvp date, set it in the datepicker */
 					if (typeof $scope.plan.rsvpDate !== "undefined") {
@@ -866,9 +866,11 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 						console.log('init datepicker with plan rsvpdate:');
 						console.log($scope.plan.rsvpDate);
 						var existingDate = new Date($scope.plan.rsvpDate);
+						$('.datepicker').datepicker({format:'DD, M d, yyyy' ,startDate: startDate ,endDate:endDate});
 						$('.datepicker').datepicker('update',existingDate);
 					} else {
 						/* TODO - determine an appropriate rsvp date to default to */
+						$('.datepicker').datepicker({format:'DD, M d, yyyy' ,startDate: startDate ,endDate:endDate});
 						$('.datepicker').datepicker('update',endDate);
 					}
 

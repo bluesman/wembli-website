@@ -812,13 +812,16 @@
 		var args = Array.apply(null, arguments);
 		args.shift();
 		return this.each(function () {
+			console.log(this);
 			var $this = $(this),
 				data = $this.data('datepicker'),
 				options = typeof option == 'object' && option;
 			if (!data) {
+				console.log('no data :(');
 				$this.data('datepicker', (data = new Datepicker(this, $.extend({}, $.fn.datepicker.defaults,options))));
 			}
 			if (typeof option == 'string' && typeof data[option] == 'function') {
+				console.log('applying:'+option);
 				data[option].apply(data, args);
 			}
 		});
