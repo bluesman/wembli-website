@@ -366,7 +366,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 	wizard.step2 = {
 		rpcArgs: function(args) {
 			var rpcArgs = {
-				rsvpDate : $('#rsvp-date').val(),
+				rsvpDate : $scope.plan.rsvpDate,
 			};
 			if (typeof args.next !== "undefined") {
 				rpcArgs.next = args.next;
@@ -379,9 +379,9 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 			$('#invitation-modal').modal('loading');
 			/* If There's A No Cust Error Send Them Back To Step-1 With An Error */
 			if (result.nocustomer) {
-				$scope.step1.error = True;
-				$scope.step1.nocustomer = True;
-				return $scope.gotostep('step1');
+				$scope.step1.error = true;
+				$scope.step1.nocustomer = true;
+				return $scope.gotoStep('step1');
 			}
 
 			if (result.next) {
@@ -858,21 +858,29 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 						*/
 					var startDate = new Date();
 					var endDate = new Date($scope.plan.event.eventDate);
-
-
+					var defaultDate = endDate;
 					/* if there's an rsvp date, set it in the datepicker */
 					if (typeof $scope.plan.rsvpDate !== "undefined") {
 						/* init the date picker */
 						console.log('init datepicker with plan rsvpdate:');
 						console.log($scope.plan.rsvpDate);
-						var existingDate = new Date($scope.plan.rsvpDate);
-						$('.datepicker').datepicker({format:'DD, M d, yyyy' ,startDate: startDate ,endDate:endDate});
-						$('.datepicker').datepicker('update',existingDate);
-					} else {
-						/* TODO - determine an appropriate rsvp date to default to */
-						$('.datepicker').datepicker({format:'DD, M d, yyyy' ,startDate: startDate ,endDate:endDate});
-						$('.datepicker').datepicker('update',endDate);
+						var defaultDate = new Date($scope.plan.rsvpDate);
 					}
+
+					$('.datepicker').pikaday({
+						bound:false,
+						minDate: startDate,
+						maxDate:endDate,
+						defaultDate:defaultDate,
+						setDefaultDate:true,
+						onSelect: function() {
+							$scope.plan.rsvpDate = this.getDate();
+							wembliRpc.fetch('invite-friends.submit-step2',{rsvpDate : $scope.plan.rsvpDate}, function(err,res) {
+								console.log('changed rsvpdate');
+								console.log(res);
+							});
+						}
+					});
 
 					if ($location.path() !== $scope.currentPath) {
 						console.log('location path is diff from current path');

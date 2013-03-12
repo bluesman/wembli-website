@@ -87,6 +87,19 @@ h3 {
 #page-loading-modal .progress {
   margin-bottom: 0;
 }
+.pika-single {
+  position: inherit;
+}
+.pika-single * {
+  position: inherit;
+}
+.is-selected .pika-button {
+  background: none repeat scroll 0 0 #ff6700;
+  box-shadow: 0 1px 3px #ff6700 inset;
+}
+.pika-button:hover {
+  background: none repeat scroll 0 0 #4380b8 !important;
+}
 .red {
   color: red !important;
 }
@@ -1593,7 +1606,7 @@ body {
 #footer {
   position: fixed;
   bottom: -300px;
-  z-index: 1040;
+  z-index: 4000;
   width: 100%;
 }
 #footer #nav-arrow {
@@ -2693,9 +2706,9 @@ a#facebook-login-button {
   overflow-y: auto;
   padding: 5px 20px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step5-datepicker {
-  margin: auto;
-  width: 400px;
+#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step2-form .datepicker-container {
+  margin: 40px auto;
+  width: 260px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .wizard-step {
   width: 485px;

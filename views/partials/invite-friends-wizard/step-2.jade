@@ -3,13 +3,9 @@
 	.progress.progress-striped.active
 		.bar(style="width:100%")
 form#invite-wizard-step2-form(name="step2",ng-hide="sendingLoader")
-	fieldset()
-		h2 Choose The RSVP Date:
-		p OK! Your plan is to go to {{plan.event.eventVenue}} in {{plan.event.eventCity}} on {{plan.event.eventDate| date:'MMM d, yyyy'}}.  When should your guests RSVP?
-		#step2-datepicker
-			.input-append.date.datepicker
-				input#rsvp-date(type="text",name="rsvpDate", placeholder="Choose an RSVP Date", ng-model="rsvpDate", readonly)
-				span.add-on
-					i.icon-calendar
+	h2 Choose The RSVP Date:
+	p OK! Your plan is to go to {{plan.event.eventVenue}} in {{plan.event.eventCity}} on {{plan.event.eventDate| date:'MMM d, yyyy'}}.  When should your guests RSVP?
+	.datepicker-container
+		.datepicker
 	.form-controls
 		a.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step2',{next:true})") Continue
