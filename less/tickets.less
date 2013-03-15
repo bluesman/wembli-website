@@ -73,8 +73,50 @@
 		overflow-y:scroll;
 		overflow-x:hidden;
 
-		#ticket-list-container .ticket-row, #ticket-filter-container, #ticket-list-header-container {
+		.ticket-list-container .ticket-row, #ticket-filter-container, .ticket-list-header-container {
 				#translucent > .background(@grayLight,0.25);
+		}
+
+		.dollar-sign {
+			font-size:20px;
+			font-weight:bold;
+		}
+
+		#tickets-price-range {
+			margin-top:20px;
+			text-align:left;
+			h3 {
+				font-size:20px;
+				font-weight:bold;
+				.popover {
+					top:-3px;
+					padding:0;
+				}
+
+			}
+
+			#price-range-form {
+				.clearfix();
+				#translucent > .background(@grayLight,0.25);
+
+				fieldset {
+
+					label.checkbox {
+						margin:10px;
+						padding:10px;
+						color:@grayDark;
+					}
+					label.checkbox:hover {
+						#translucent > .background(@blue,0.25);
+						color:@orange;
+					}
+				}
+
+				a {
+					margin: 10px;
+				}
+			}
+
 		}
 
 		#ticket-filter-container {
@@ -132,11 +174,23 @@
 			}
 		}
 
-		#ticket-list-header-container {
+		.ticket-list-header-container {
+			padding:10px;
 			margin-top:2px;
 			.clearfix();
+
+			h4 {
+				font-weight:bold;
+				font-size:16px;
+				text-align:left;
+				margin:10px 0;
+				.popover {
+					padding:3px;
+				}
+			}
+
+
 			a {
-				margin:6px 0;
 				display:block;
 				float:left;
 				color:@grayDarker;
@@ -146,6 +200,25 @@
 			a:hover {
 				color:@black;
 			}
+		}
+
+		#group-ticket-list-header-container {
+			a#range-header {
+				width:65px;
+			}
+			a#section-header {
+				text-align:left;
+				width:180px;
+			}
+			a#qty-header {
+				width:100px;
+			}
+			a#price-header {
+				width:65px;
+			}
+		}
+
+		#ticket-list-header-container {
 			a#price-header {
 				width:65px;
 			}
@@ -157,7 +230,8 @@
 			}
 		}
 
-		#ticket-list-container {
+
+		.ticket-list-container {
 			.ticket-row:hover {
 				#translucent > .background(@blue,0.25);
 			}
@@ -168,6 +242,15 @@
 
 				a {
 					margin-top:6px;
+				}
+
+				.ticket-range {
+					text-align:center;
+					font-weight:bold;
+					font-size:14px;
+					width:65px;
+					padding:18px 0;
+
 				}
 
 				.ticket-price {
@@ -189,8 +272,15 @@
 					font-weight:bold;
 					font-size:14px;
 					width:180px;
-					margin:6px 0 0 20px;
+					margin-top:10px;
 					.clearfix();
+				}
+
+				.tix-available {
+					text-align:center;
+					font-size:12px;
+					width:80px;
+					padding:10px 10px;
 				}
 
 				.qty-container {

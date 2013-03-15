@@ -31,15 +31,45 @@ this.Model = function(mongoose) {
 				hotels : {type: Boolean, default:false},
 			},
 			inviteOptions: {
+				/* can guests invite their friends? */
 				guestFriends : {type: Boolean, default:true},
+
+				/* should we let guests know this is a 21 and over event? */
 				over21 : {type: Boolean, default:false},
 			},
-			guestList: {type: String, default: 'rsvp'}
-		},
-		messaging : {
-			facebook:String,
-			twitter:String,
-			wemblimail:String
+			/* who is allowed to view the guest list */
+			guestList: {type: String, default: 'rsvp'},
+
+			/* individual plan component preferences */
+			tickets : {
+				priceRange: {
+					low:{type:Boolean,default:true},
+					med:{type:Boolean,default:true},
+					high:{type:Boolean,default:true},
+				}
+			},
+			parking : {
+				priceRange: {
+					low:{type:Boolean,default:true},
+					med:{type:Boolean,default:true},
+					high:{type:Boolean,default:true},
+				}
+			},
+			hotels : {
+				priceRange: {
+					low:{type:Boolean,default:true},
+					med:{type:Boolean,default:true},
+					high:{type:Boolean,default:true},
+				}
+			},
+			restaurants : {
+				priceRange: {
+					low:{type:Boolean,default:true},
+					med:{type:Boolean,default:true},
+					high:{type:Boolean,default:true},
+				}
+			},
+
 		},
 		rsvpDate: {type:Date, index:true},
 		organizer : {type: String, index : true},

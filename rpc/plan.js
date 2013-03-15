@@ -17,6 +17,31 @@ exports.plan = {
 			me(null,data);
 		})
 	},
+	save: function(args, req, res) {
+		var me = this;
+		var data = {success:1};
+		console.log('plan.save');
+		console.log(args);
+		req.session.plan.update(args,function(err,res) {
+			data.plan = req.session.plan;
+			me(null,data);
+		});
+
+	},
+
+	setTicketsPriceRange: function(args, req, res) {
+		var me = this;
+		var data = {success:1};
+		console.log(args);
+		req.session.plan.preferences.tickets.priceRange = args;
+		req.session.plan.save(function(err,res) {
+			data.plan = req.session.plan;
+			me(null,data);
+		});
+
+	},
+
+
 	addFriend: function(args, req, res) {
 		var me = this;
 

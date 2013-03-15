@@ -27,7 +27,7 @@ h3 {
 }
 
 .btn-primary:hover {
-  color:@blueDark;
+  .buttonBackground(@orange,@orange);
 
 }
 #page-loading-modal {
@@ -59,6 +59,7 @@ h3 {
 };
 
 .red { color:red !important; }
+.orange {color:@orange;}
 .arrow {
   border:none;
   background: transparent url('/images/transparent-arrow.png') no-repeat center center;
@@ -174,6 +175,10 @@ h3 {
     top: 68px;
     transform: rotate(6deg);
   }
+}
+
+span.popover-container {
+  position:relative;
 }
 
 @import "font-awesome.less";

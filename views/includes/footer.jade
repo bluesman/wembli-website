@@ -1,7 +1,3 @@
-- var ticketsLink = '/tickets';
-- if (plan && typeof plan.event.eventId !== "undefined")
-	- ticketsLink = ticketsLink + '/' + plan.event.eventId + '/' + plan.event.eventName;
-
 footer#footer(ng-controller="FooterCtrl")
 	#nav-arrow.center-
 	ul#nav
@@ -14,7 +10,7 @@ footer#footer(ng-controller="FooterCtrl")
 		li#index.wembli-sequence-link
 			a(href="/") Home
 		li#tickets.wembli-sequence-link
-			a(href="#{ticketsLink}") Tickets
+			a(ng-href="{{ticketsLink}}") Tickets
 		li#invitation.wembli-sequence-link
 			a(href="/invitation") Invite
 		li#parking.wembli-sequence-link

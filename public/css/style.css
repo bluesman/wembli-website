@@ -75,7 +75,33 @@ h3 {
   background-color: #356693 \9;
 }
 .btn-primary:hover {
-  color: #426799;
+  background-color: #ff6700;
+  background-image: -moz-linear-gradient(top, #ff6700, #ff6700);
+  background-image: -ms-linear-gradient(top, #ff6700, #ff6700);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff6700), to(#ff6700));
+  background-image: -webkit-linear-gradient(top, #ff6700, #ff6700);
+  background-image: -o-linear-gradient(top, #ff6700, #ff6700);
+  background-image: linear-gradient(top, #ff6700, #ff6700);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff6700', endColorstr='#ff6700', GradientType=0);
+  border-color: #ff6700 #ff6700 #b34800;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #ff6700;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-primary:hover:hover,
+.btn-primary:hover:active,
+.btn-primary:hover.active,
+.btn-primary:hover.disabled,
+.btn-primary:hover[disabled] {
+  background-color: #ff6700;
+  *background-color: #e65d00;
+}
+.btn-primary:hover:active,
+.btn-primary:hover.active {
+  background-color: #cc5200 \9;
 }
 #page-loading-modal {
   width: 400px;
@@ -102,6 +128,9 @@ h3 {
 }
 .red {
   color: red !important;
+}
+.orange {
+  color: #ff6700;
 }
 .arrow {
   border: none;
@@ -222,6 +251,9 @@ h3 {
   text-transform: uppercase;
   top: 68px;
   transform: rotate(6deg);
+}
+span.popover-container {
+  position: relative;
 }
 /*!
  *  Font Awesome 3.0.2
@@ -1829,7 +1861,7 @@ body {
 }
 .event-data {
   *zoom: 1;
-  background-color: rgba(255, 102, 0, 0.25);
+  background-color: rgba(66, 127, 184, 0.25);
 }
 .event-data:before,
 .event-data:after {
@@ -2244,10 +2276,50 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row,
+#tickets-frame #tickets .ticket-list-container .ticket-row,
 #tickets-frame #tickets #ticket-filter-container,
-#tickets-frame #tickets #ticket-list-header-container {
+#tickets-frame #tickets .ticket-list-header-container {
   background-color: rgba(215, 213, 214, 0.25);
+}
+#tickets-frame #tickets .dollar-sign {
+  font-size: 20px;
+  font-weight: bold;
+}
+#tickets-frame #tickets #tickets-price-range {
+  margin-top: 20px;
+  text-align: left;
+}
+#tickets-frame #tickets #tickets-price-range h3 {
+  font-size: 20px;
+  font-weight: bold;
+}
+#tickets-frame #tickets #tickets-price-range h3 .popover {
+  top: -3px;
+  padding: 0;
+}
+#tickets-frame #tickets #tickets-price-range #price-range-form {
+  *zoom: 1;
+  background-color: rgba(215, 213, 214, 0.25);
+}
+#tickets-frame #tickets #tickets-price-range #price-range-form:before,
+#tickets-frame #tickets #tickets-price-range #price-range-form:after {
+  display: table;
+  content: "";
+}
+#tickets-frame #tickets #tickets-price-range #price-range-form:after {
+  clear: both;
+}
+#tickets-frame #tickets #tickets-price-range #price-range-form fieldset label.checkbox {
+  margin: 10px;
+  padding: 10px;
+  color: #524f45;
+}
+#tickets-frame #tickets #tickets-price-range #price-range-form fieldset label.checkbox:hover {
+  background-color: rgba(66, 127, 184, 0.25);
+  color: #ff6700;
+}
+#tickets-frame #tickets #tickets-price-range #price-range-form a {
+  margin: 10px;
 }
 #tickets-frame #tickets #ticket-filter-container {
   margin-top: 20px;
@@ -2307,28 +2379,50 @@ body {
   height: 12px;
   width: 12px;
 }
-#tickets-frame #tickets #ticket-list-header-container {
+#tickets-frame #tickets .ticket-list-header-container {
+  padding: 10px;
   margin-top: 2px;
   *zoom: 1;
 }
-#tickets-frame #tickets #ticket-list-header-container:before,
-#tickets-frame #tickets #ticket-list-header-container:after {
+#tickets-frame #tickets .ticket-list-header-container:before,
+#tickets-frame #tickets .ticket-list-header-container:after {
   display: table;
   content: "";
 }
-#tickets-frame #tickets #ticket-list-header-container:after {
+#tickets-frame #tickets .ticket-list-header-container:after {
   clear: both;
 }
-#tickets-frame #tickets #ticket-list-header-container a {
-  margin: 6px 0;
+#tickets-frame #tickets .ticket-list-header-container h4 {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: left;
+  margin: 10px 0;
+}
+#tickets-frame #tickets .ticket-list-header-container h4 .popover {
+  padding: 3px;
+}
+#tickets-frame #tickets .ticket-list-header-container a {
   display: block;
   float: left;
   color: #333333;
   font-weight: bold;
   text-decoration: underline;
 }
-#tickets-frame #tickets #ticket-list-header-container a:hover {
+#tickets-frame #tickets .ticket-list-header-container a:hover {
   color: #000000;
+}
+#tickets-frame #tickets #group-ticket-list-header-container a#range-header {
+  width: 65px;
+}
+#tickets-frame #tickets #group-ticket-list-header-container a#section-header {
+  text-align: left;
+  width: 180px;
+}
+#tickets-frame #tickets #group-ticket-list-header-container a#qty-header {
+  width: 100px;
+}
+#tickets-frame #tickets #group-ticket-list-header-container a#price-header {
+  width: 65px;
 }
 #tickets-frame #tickets #ticket-list-header-container a#price-header {
   width: 65px;
@@ -2339,65 +2433,78 @@ body {
 #tickets-frame #tickets #ticket-list-header-container a#qty-header {
   width: 100px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row:hover {
+#tickets-frame #tickets .ticket-list-container .ticket-row:hover {
   background-color: rgba(66, 127, 184, 0.25);
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row {
+#tickets-frame #tickets .ticket-list-container .ticket-row {
   *zoom: 1;
   padding: 10px;
   margin-top: 2px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row:before,
-#tickets-frame #tickets #ticket-list-container .ticket-row:after {
+#tickets-frame #tickets .ticket-list-container .ticket-row:before,
+#tickets-frame #tickets .ticket-list-container .ticket-row:after {
   display: table;
   content: "";
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row:after {
+#tickets-frame #tickets .ticket-list-container .ticket-row:after {
   clear: both;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row a {
+#tickets-frame #tickets .ticket-list-container .ticket-row a {
   margin-top: 6px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-price {
+#tickets-frame #tickets .ticket-list-container .ticket-row .ticket-range {
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  width: 65px;
+  padding: 18px 0;
+}
+#tickets-frame #tickets .ticket-list-container .ticket-row .ticket-price {
   background: transparent url('/images/price-box-small.png') no-repeat center center;
   height: 50px;
   width: 50px;
   font-weight: bold;
   font-size: 16px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-price .actual-price {
+#tickets-frame #tickets .ticket-list-container .ticket-row .ticket-price .actual-price {
   margin-top: 10px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-price .each {
+#tickets-frame #tickets .ticket-list-container .ticket-row .ticket-price .each {
   font-size: 10px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-info {
+#tickets-frame #tickets .ticket-list-container .ticket-row .ticket-info {
   text-align: left;
   font-weight: bold;
   font-size: 14px;
   width: 180px;
-  margin: 6px 0 0 20px;
+  margin-top: 10px;
   *zoom: 1;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-info:before,
-#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-info:after {
+#tickets-frame #tickets .ticket-list-container .ticket-row .ticket-info:before,
+#tickets-frame #tickets .ticket-list-container .ticket-row .ticket-info:after {
   display: table;
   content: "";
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .ticket-info:after {
+#tickets-frame #tickets .ticket-list-container .ticket-row .ticket-info:after {
   clear: both;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .qty-container {
+#tickets-frame #tickets .ticket-list-container .ticket-row .tix-available {
+  text-align: center;
+  font-size: 12px;
+  width: 80px;
+  padding: 10px 10px;
+}
+#tickets-frame #tickets .ticket-list-container .ticket-row .qty-container {
   margin: 6px 0 0 10px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .qty-container strong {
+#tickets-frame #tickets .ticket-list-container .ticket-row .qty-container strong {
   padding: 4px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row .qty-container select {
+#tickets-frame #tickets .ticket-list-container .ticket-row .qty-container select {
   width: 50px;
   margin-top: 6px;
 }
-#tickets-frame #tickets #ticket-list-container .ticket-row > div {
+#tickets-frame #tickets .ticket-list-container .ticket-row > div {
   float: left;
 }
 /* this applies to login and signup */
@@ -2740,7 +2847,7 @@ a#facebook-login-button {
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group input.first-name {
   width: 180px;
-  margin-right: 10px;
+  margin-right: 6px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group input.last-name {
   width: 275px;

@@ -5,7 +5,7 @@ angular.module('wembliApp', ['wembliApp.filters', 'wembliApp.services', 'wembliA
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
 }])
-.run(['initRootScope','$rootScope', '$location', '$route', '$window','fetchModals', 'facebook','twitter', function(initRootScope, $scope, $location, $route, $window, fetchModals, facebook, twitter) {
+.run(['initRootScope','$rootScope', '$location', '$route', '$window','fetchModals', 'facebook','twitter', 'plan', function(initRootScope, $scope, $location, $route, $window, fetchModals, facebook, twitter, plan) {
 	fetchModals.fetch($location.path());
 
   $window.fbAsyncInit = function() {
@@ -30,4 +30,6 @@ angular.module('wembliApp', ['wembliApp.filters', 'wembliApp.services', 'wembliA
   }(document, "script", "twitter-wjs"));
 
   twitter.getLoginStatus();
+
+  plan.fetch();
 }]);

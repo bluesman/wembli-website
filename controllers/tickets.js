@@ -24,6 +24,13 @@ module.exports = function(app) {
 		req.session.plan.event.eventName = req.param("eventName");
 
 		eventRpc['get'].apply(function(err,results) {
+			/* its possible that this event is no longer available - if that is the case, send them to the no-event page */
+			if (err || !results.event[0]) {
+				console.log('no event from tn: '+err);
+				var noEventUrl = locals.partial ? '/partials/tickets' : '/tickets';
+				return res.redirect(noEventUrl);
+			}
+
 			console.log(results);
 			req.session.plan.event.eventDate = results.event[0].Date;
 			req.session.plan.event.eventVenue = results.event[0].Venue;

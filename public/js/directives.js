@@ -14,7 +14,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 }])
 
 .directive('interactiveVenueMap', ['interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', function(interactiveMapDefaults, wembliRpc, $window, $templateCache) {
-
   return {
     restrict: 'E',
     replace: true,
@@ -229,7 +228,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 */
-.directive('eventData', ['$filter', 'wembliRpc', function($filter, wembliRpc) {
+.directive('eventData', ['$rootScope','$filter', 'wembliRpc', function($rootScope, $filter, wembliRpc) {
   return {
     restrict: 'C',
     templateUrl: '/partials/event-data',
@@ -275,8 +274,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
 //directive to cause link click to go to next frame rather than fetch a new page
 .directive('wembliSequenceLink',
-  ['$rootScope', '$window', '$templateCache', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals',
-  function($rootScope, $window, $templateCache, $location, $http, $compile, footer, sequence, fetchModals) {
+  ['$rootScope', '$window', '$templateCache', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan',
+  function($rootScope, $window, $templateCache, $location, $http, $compile, footer, sequence, fetchModals, plan) {
 
   return {
     restrict: 'EAC',
@@ -284,7 +283,10 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       //return linking function
       return function(scope, element, attr) {
         element.click(function(e) {
+          console.log('clicked sequence link');
           e.preventDefault();
+          console.log('fetching plan');
+          plan.fetch();
 
           var direction = 1;
 
@@ -373,6 +375,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
 
             //compile the page we just fetched and link the scope
+            console.log(data);
             angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
 
             //split location path on '/' to get the right framesMap key
@@ -432,6 +435,25 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       };
     }
   };
+}])
+.directive('popover', [function() {
+  return {
+    restrict: 'C',
+    cache:false,
+    compile: function(element, attr, transclude) {
+
+      return function(scope, element, attr) {
+        console.log(attr);
+        element.popover({
+          placement: attr.placement,
+          trigger: attr.trigger,
+          animation: (attr.animation === 'true') ? true : false,
+          title: attr.title,
+          content: attr.content
+        });
+      }
+    }
+  }
 }])
 
 .directive('fadeElement', function () {

@@ -885,6 +885,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 					if ($location.path() !== $scope.currentPath) {
 						console.log('location path is diff from current path');
 						$scope.$watch('currentPath',function(newVal,oldVal) {
+							console.log('currentPath changed from: '+newVal+' to '+oldVal);
 							if (newVal === '/invitation') {
 								/* show the modal */
 								$('#invitation-modal').modal({
@@ -905,7 +906,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 							});
 							$('#invitation-modal').modal("show");
 						} else {
-							console.log('locatino path is not /invitation');
+							console.log('locatino path is not /invitation its' + $location.path());
 						}
 					};
 					if (typeof dereg !== "undefined") {
@@ -1098,7 +1099,7 @@ function SupplyPasswordCtrl($scope) {
 	});
 };
 
-function FooterCtrl($scope, $location, $window, facebook) {
+function FooterCtrl($scope, $location, $window, facebook, plan) {
 	//this is how high they can drag it
 	var y = $("#footer").offset().top - $("#footer").height() + ($("#nav").offset().top - $("#footer").offset().top) + $("#nav").height();
 	$('#footer').draggable({
@@ -1112,15 +1113,57 @@ function FooterCtrl($scope, $location, $window, facebook) {
 	});
 
 	$scope.facebook = facebook;
+
+	//check if plan is already fetched
+	if (plan.get() === null) {
+		console.log('set plan get listener');
+		//not fetched yet, set a watcher
+  	//dont do anything until the plan is loaded
+	  var $dereg = $scope.$on('plan-fetched', function() {
+		  	$scope.ticketsLink = '/tickets/'+plan.get().event.eventId+'/'+plan.get().event.eventName;
+		  	$dereg();
+	  });
+	} else {
+
+		console.log('plan has already been fetched');
+		//plan has already been fetched
+		$scope.ticketsLink = '/tickets/'+plan.get().event.eventId+'/'+plan.get().event.eventName;
+	}
+
 };
 
 function TicketsCtrl($scope, wembliRpc) {
 
-	$('#page-loading-modal').modal({
-		backdrop: "static",
-		keyboard: false,
-		hide: true
-	});
+	$scope.handlePriceRange = function() {
+		/* post the updated preferences to the server */
+		wembliRpc.fetch('plan.setTicketsPriceRange',{
+			"low":$scope.priceRange.low,
+			"med":$scope.priceRange.med,
+			"high":$scope.priceRange.high,
+		},
+		function(err,res) {
+			console.log('back from setting price range');
+			console.log(res);
+		});
+
+
+		/* hide the tix they don't want to see */
+		angular.forEach($scope.tickets,function(t) {
+			/* if the price is <= 100 and priceRange.low filter is not checked then hide it*/
+			t.hide = false;
+			if( (parseInt(t.ActualPrice) <= 100) ) {
+				return t.hide = !$scope.priceRange.low;
+			}
+			/* if the price is <= 300 and > 100 and priceRange.med filter is not checked then hide it*/
+			if ((parseInt(t.ActualPrice) > 100) && (parseInt(t.ActualPrice) <= 300)) {
+				return t.hide = !$scope.priceRange.med;
+			}
+			/* if the price is > 300 and priceRange.high filter is not checked then hide it*/
+			if (parseInt(t.ActualPrice) > 300) {
+				return t.hide = !$scope.priceRange.high;
+			}
+		});
+	};
 
 	$scope.sortByPrice = function() {
 		if(typeof $scope.ticketSort === "undefined") {
@@ -1191,4 +1234,41 @@ function TicketsCtrl($scope, wembliRpc) {
 	}
 }
 
-function VenueMapCtrl($scope, interactiveMapDefaults) {}
+function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter) {
+	var initScope = function(plan) {
+		$scope.priceRange = {};
+		$scope.eventOptionsLink = $scope.eventOptionsLink + '/'+plan.event.eventId+'/'+plan.event.eventName;
+		$scope.priceRange.low   = plan.preferences.tickets.priceRange.low || true;
+		$scope.priceRange.med   = plan.preferences.tickets.priceRange.med || true;
+		$scope.priceRange.high  = plan.preferences.tickets.priceRange.high || true;
+	};
+	//check if plan is already fetched
+	$scope.eventOptionsLink = '/event-options';
+	if (plan.get() === null) {
+	  $scope.$on('plan-fetched', function() {
+			initScope(plan.get());
+	  });
+	} else {
+		initScope(plan.get());
+	}
+
+	$scope.determineRange = function(price) {
+		/* hard coded price range for now */
+		var i = parseInt(price);
+		if (i <= 100) { return '$'; }
+		if (i > 100 && i <= 300) { return '$$'; }
+		if (i > 300) { return '$$$'; }
+	}
+
+	$scope.determineTixAvailable = function(tix) {
+		var highest = tix[0];
+		angular.forEach(tix,function(el) {
+			if (el > highest) {
+				highest = el;
+			}
+		});
+		var str = 'up to '+highest+' tix available';
+		return str;
+	}
+
+}

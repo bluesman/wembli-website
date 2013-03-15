@@ -24,10 +24,11 @@ angular.module('wembliApp.services', [])
 
 }])
 
-.factory('plan', ['$rootScope', 'wembliRpc', function($rootScope, wembliRpc) {
+.factory('plan', ['$rootScope', 'wembliRpc', 'customer',function($rootScope, wembliRpc, customer) {
 	var self = this;
 	self.plan = null;
 	self.tickets = null;
+	self.fetchInProgress = false;
 
 	return {
 		get: function() {
@@ -50,8 +51,33 @@ angular.module('wembliApp.services', [])
 
 		//get plan from server and return it
 		fetch: function() {
-			//if ther eis no plan set self.plan to false
-			$rootScope.$broadcast('plan-fetched', {});
+			if (self.fetchInProgress) {
+				return;
+			} else {
+				self.fetchInProgress = true;
+			}
+			if (self.plan) {
+				$rootScope.$broadcast('plan-fetched', {});
+				return;
+			}
+
+			wembliRpc.fetch('plan.init', {},
+				//response
+				function(err, result) {
+
+					if(typeof result.plan !== "undefined") {
+						self.plan = result.plan
+						self.friends = result.friends;
+						$rootScope.$broadcast('plan-fetched',{});
+						self.fetchInProgress = false;
+					}
+
+					if(typeof result.customer !== "undefined") {
+						$rootScope.$broadcast('customer-fetched',{});
+						customer.set(result.customer);
+					}
+				}
+			);
 		},
 
 		//push $rootScope.plan to server and save
@@ -101,7 +127,7 @@ angular.module('wembliApp.services', [])
 			if(typeof modalPageMap[path] !== "undefined") {
 				for(var i = 0; i < modalPageMap[path].length; i++) {
 					//if the modal has already been fetched, don't fetch it again but do fire the broadcast
-					if(typeof modalFetched[path] === "undefined") {
+					if(true || (typeof modalFetched[path] === "undefined")) {
 
 						var partialUrl = modalPageMap[path][i];
 
@@ -466,8 +492,6 @@ angular.module('wembliApp.services', [])
 			transformRequest: transformRequest,
 			transformResponse: transformResponse
 		}).success(function(data, status) {
-			console.log(data);
-			console.log(status);
 			var result = {};
 			result.data = data;
 			result.status = status;
@@ -562,22 +586,26 @@ angular.module('wembliApp.services', [])
 	var sequence = angular.element("#content").sequence(options).data("sequence");
 
 	sequence.beforeCurrentFrameAnimatesIn = function() {
+		console.log('beforecurrentanimatesin');
 		$scope.$broadcast('sequence-beforeCurrentFrameAnimatesIn');
 		$scope.afterNextFrameAnimatesIn = false;
 		$scope.beforeCurrentFrameAnimatesIn = true;
 	};
 	sequence.afterCurrentFrameAnimatesIn = function() {
+		console.log('after currentanimatesin');
 		$scope.$broadcast('sequence-afterCurrentFrameAnimatesIn');
 		$scope.beforeCurrentFrameAnimatesIn = false;
 		$scope.afterCurrentFrameAnimatesIn = true;
 	};
 
 	sequence.beforeNextFrameAnimatesIn = function() {
+		console.log('before next animatesin');
 		$scope.$broadcast('sequence-beforeNextFrameAnimatesIn');
 		$scope.afterCurrentFrameAnimatesIn = false;
 		$scope.beforeNextFrameAnimatesIn = true;
 	};
 	sequence.afterNextFrameAnimatesIn = function() {
+		console.log('after next animatesin');
 		$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 		$scope.afterNextFrameAnimatesIn = true;
 		$scope.beforeNextFrameAnimatesIn = false;
