@@ -1061,13 +1061,14 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 
 	var updateTicketsLink = function() {
 		console.log('plan.get to updateTicketsLink');
-		plan.get(function(plan) {
-			$scope.ticketsLink = plan ? '/tickets/'+plan.event.eventId+'/'+plan.event.eventName : '/tickets';
-		});
-	}
-	$scope.$on('plan-fetched',updateTicketsLink);
-	updateTicketsLink();
+		console.log(plan.get());
+		$scope.ticketsLink = plan.get() ? '/tickets/'+plan.get().event.eventId+'/'+plan.get().event.eventName : '/tickets';
+	};
 
+	$scope.$on('plan-fetched',updateTicketsLink);
+	plan.get(function(plan) {
+		updateTicketsLink();
+	});
 };
 
 function TicketsCtrl($scope, wembliRpc) {
