@@ -35,7 +35,7 @@ module.exports = function(app) {
 			if (req.session.plan && req.session.plan.id) {
 				var savePrefs = req.session.plan.preferences;
 				req.session.plan = new Plan({guid: Plan.makeGuid()});
-				req.session.plan.preferences = savePrefs;
+				req.session.plan.preferences = {payment:savePrefs.payment};
 			}
 
 			req.session.plan.event.eventId    = req.param("eventId");
