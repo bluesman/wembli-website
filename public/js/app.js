@@ -31,5 +31,4 @@ angular.module('wembliApp', ['wembliApp.filters', 'wembliApp.services', 'wembliA
 
   twitter.getLoginStatus();
 
-  plan.fetch();
 }]);

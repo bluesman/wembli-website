@@ -1467,7 +1467,7 @@ body {
 }
 .hero {
   width: 1024px;
-  margin: 100px auto 0;
+  margin: 60px auto 0;
   *zoom: 1;
 }
 .hero:before,
@@ -1856,9 +1856,6 @@ body {
   color: #ffffff;
   font-size: 16px;
 }
-.event-wrapper .cta .choose-event:hover {
-  color: #426799;
-}
 .event-data {
   *zoom: 1;
   background-color: rgba(66, 127, 184, 0.25);
@@ -2192,18 +2189,18 @@ body {
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  background-color: #5c94b7;
-  background-image: -moz-linear-gradient(top, #6da1b7, #4380b8);
-  background-image: -ms-linear-gradient(top, #6da1b7, #4380b8);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6da1b7), to(#4380b8));
-  background-image: -webkit-linear-gradient(top, #6da1b7, #4380b8);
-  background-image: -o-linear-gradient(top, #6da1b7, #4380b8);
-  background-image: linear-gradient(top, #6da1b7, #4380b8);
+  background-color: #ff6700;
+  background-image: -moz-linear-gradient(top, #ff6700, #ff6700);
+  background-image: -ms-linear-gradient(top, #ff6700, #ff6700);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff6700), to(#ff6700));
+  background-image: -webkit-linear-gradient(top, #ff6700, #ff6700);
+  background-image: -o-linear-gradient(top, #ff6700, #ff6700);
+  background-image: linear-gradient(top, #ff6700, #ff6700);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6da1b7', endColorstr='#4380b8', GradientType=0);
-  border-color: #4380b8 #4380b8 #2f5980;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff6700', endColorstr='#ff6700', GradientType=0);
+  border-color: #ff6700 #ff6700 #b34800;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #4380b8;
+  *background-color: #ff6700;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
@@ -2217,12 +2214,12 @@ body {
 #tickets-frame #map-background .tuMapControl.active,
 #tickets-frame #map-background .tuMapControl.disabled,
 #tickets-frame #map-background .tuMapControl[disabled] {
-  background-color: #4380b8;
-  *background-color: #3c73a5;
+  background-color: #ff6700;
+  *background-color: #e65d00;
 }
 #tickets-frame #map-background .tuMapControl:active,
 #tickets-frame #map-background .tuMapControl.active {
-  background-color: #356693 \9;
+  background-color: #cc5200 \9;
 }
 #tickets-frame #map-background .tuMapTooltip {
   background: none repeat scroll 0 0 #FCF1BD;
@@ -2239,15 +2236,16 @@ body {
 }
 #tickets-frame #map-background .ZoomControls {
   position: absolute;
-  right: 5px;
+  left: 5px;
   top: 40px;
   z-index: 10;
   color: #ffffff;
   font-weight: bold;
 }
 #tickets-frame #map-background .ZoomControls div {
-  background-color: #4380b8;
-  background-image: url("images/Zoom.png");
+  background-color: #ff6700;
+  /* background-image: url("images/Zoom.png"); */
+
   background-repeat: no-repeat;
   border: 0 none;
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
@@ -2257,8 +2255,9 @@ body {
   display: block;
   font-size: 14px;
   height: 19px;
-  margin-bottom: 5px;
-  width: 22px;
+  margin: 0 4px;
+  width: 25px;
+  float: left;
 }
 #tickets-frame #map-background #map-container {
   width: 1000px;
@@ -2692,13 +2691,13 @@ a#facebook-login-button {
   background-image: url('/images/orange-arrow.png');
 }
 .hero #event-options-hero-left #copy {
-  top: 240px;
+  top: 210px;
 }
 .hero #event-options-hero-left #cartoon-man {
-  margin-top: 260px;
+  margin-top: 340px;
 }
 .hero #event-options-hero-left #dotted-line {
-  top: 505px;
+  top: 520px;
   z-index: 2;
 }
 .hero #event-options-hero-right {
@@ -2713,10 +2712,14 @@ a#facebook-login-button {
 .hero #event-options-hero-right:after {
   clear: both;
 }
+.hero #event-options-hero-right .event-data {
+  height: 95px;
+}
 .hero #event-options-hero-right fieldset {
   border: none;
   background: transparent;
   width: 525px;
+  min-height: 400px;
 }
 .hero #event-options-hero-right fieldset .options-group {
   margin-top: 20px;
@@ -2739,11 +2742,12 @@ a#facebook-login-button {
 .hero #event-options-hero-right fieldset .control-group label {
   margin-left: 20px;
 }
-.hero #event-options-hero-right .arrow {
-  top: 480px;
+.hero #event-options-hero-right fieldset button {
+  margin: 20px;
 }
-.hero #event-options-hero-right .arrow .arrow-text {
-  padding-left: 10px;
+.hero #event-options-hero-right .arrow {
+  top: 500px;
+  width: 110px;
 }
 .modal textarea {
   width: 520px;

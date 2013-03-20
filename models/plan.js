@@ -22,6 +22,7 @@ this.Model = function(mongoose) {
 			eventDate : Date,
 			eventVenue: String,
 			eventCity: String,
+			eventState: String
 		},
 		preferences : {
 			payment: String,

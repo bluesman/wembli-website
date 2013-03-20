@@ -13,7 +13,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('interactiveVenueMap', ['interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', function(interactiveMapDefaults, wembliRpc, $window, $templateCache) {
+.directive('interactiveVenueMap', ['interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function(interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
   return {
     restrict: 'E',
     replace: true,
@@ -28,48 +28,45 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           }
         });
 
-        //get the tix and make the ticket list
-        wembliRpc.fetch('event.getTickets', {
-          eventID: attr.eventId
-        },
+        console.log('plan.get interactive venuemap');
+        plan.get(function(plan) {
+          //get the tix and make the ticket list
+          wembliRpc.fetch('event.getTickets', {
+            eventID: plan.event.eventId
+          },
 
-        //response callback
-
-
-        function(err, result) {
-          if(err) {
-            //handle err
-            alert('error happened - contact help@wembli.com');
-            return;
-          }
-
-          scope.event = result.event;
-          scope.tickets = result.tickets;
-
-          //scope.$broadcast('TicketsCtrl-ticketsLoaded',{});
-          /* get min and max tix price for this set of tix */
-          var minTixPrice = 0;
-          var maxTixPrice = 200;
-          angular.forEach(scope.tickets, function(el) {
-            if(parseInt(el.ActualPrice) < minTixPrice) {
-              minTixPrice = parseInt(el.ActualPrice);
+          function(err, result) {
+            if(err) {
+              //handle err
+              alert('error happened - contact help@wembli.com');
+              return;
             }
-            if(parseInt(el.ActualPrice) > maxTixPrice) {
-              maxTixPrice = parseInt(el.ActualPrice);
-            }
-          });
 
+            scope.event   = result.event;
+            scope.tickets = result.tickets;
 
-          var initSlider = function() {
+            //scope.$broadcast('TicketsCtrl-ticketsLoaded',{});
+            /* get min and max tix price for this set of tix */
+            var minTixPrice = 0;
+            var maxTixPrice = 200;
+            angular.forEach(scope.tickets, function(el) {
+              if(parseInt(el.ActualPrice) < minTixPrice) {
+                minTixPrice = parseInt(el.ActualPrice);
+              }
+              if(parseInt(el.ActualPrice) > maxTixPrice) {
+                maxTixPrice = parseInt(el.ActualPrice);
+              }
+            });
 
+            var initSlider = function() {
               /*Set Minimum and Maximum Price from your Dataset*/
               $("#price-slider").slider("option", "min", minTixPrice);
               $("#price-slider").slider("option", "max", maxTixPrice);
               $("#price-slider").slider("option", "values", [minTixPrice, maxTixPrice]);
               $("#amount").val("$" + minTixPrice + " - $" + maxTixPrice);
-            }
+            };
 
-          var filterTickets = function() {
+            var filterTickets = function() {
               var PriceRange = $("#price-slider").slider("option", "values");
 
               $("#map-container").tuMap("SetOptions", {
@@ -82,105 +79,102 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               }).tuMap("Refresh");
             };
 
+            var options = interactiveMapDefaults;
+            options.MapId = scope.event.VenueConfigurationID;
 
-          var options = interactiveMapDefaults;
-          options.MapId = scope.event.VenueConfigurationID;
+            options.OnInit = function(e, MapType) {
+              $(".ZoomIn").html('+');
+              $(".ZoomOut").html('-');
+              $(".tuMapControl").parent("div").attr('style',"position:absolute;left:5px;top:5px;font-size:12px");
+            };
 
-          options.OnInit = function(e, MapType) {
-            $(".ZoomIn").html('+');
-            $(".ZoomOut").html('-');
+            options.OnError = function(e, Error) {
+              if(Error.Code === 1) { /* chart not found - display the tn chart */
+                $('#map-container').css("background", 'url(' + $('#tnMapUrl').val() + ') no-repeat center center');
+              }
+            };
 
-          };
+            options.ToolTipFormatter = function(Data) {
 
-          options.OnError = function(e, Error) {
-            if(Error.Code === 1) { /* chart not found - display the tn chart */
-              $('#map-container').css("background", 'url(' + $('#tnMapUrl').val() + ') no-repeat center center');
+            };
+
+            options.OnMouseover = function(e, Section) {
+              if(Section.Active) {
+              } else {
+              }
+            };
+
+            options.OnMouseout = function(e, Section) {
+              if(Section.Active) {
+              }
+            };
+
+            options.OnClick = function(e, Section) {
+              if(Section.Active && Section.Selected) {
+              }
+            };
+
+            options.OnControlClick = function(e, Data) {
+              if(Section.Selected) {
+              }
+            };
+
+            options.OnGroupClick = function(e, Group) {
+              if(Group.Selected) {
+
+              }
+            };
+
+            options.OnTicketSelected = function(e, Ticket) {
             }
-          };
 
-          options.ToolTipFormatter = function(Data) {
+            options.OnReset = function(e) {
+              //Write Code Here
+            };
 
-          };
+            //set the height of the map-container to the window height
+            $('#map-container').css("height", $($window).height() - 60);
+            $('#tickets').css("height", $($window).height() - 60);
+            $('#map-container').css("width", $($window).width() - 480);
+            $('#map-container').tuMap(options);
 
-          options.OnMouseover = function(e, Section) {
-            if(Section.Active) {
-            } else {
-            }
-          };
+            $('#price-slider').slider({
+              range: true,
+              min: minTixPrice,
+              max: maxTixPrice,
+              step: 5,
+              values: [minTixPrice, maxTixPrice],
+              slide: function(event, ui) {
+                $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+              },
+              stop: function(event, ui) {
+                filterTickets();
+              }
 
-          options.OnMouseout = function(e, Section) {
-            if(Section.Active) {
-            }
-          };
+            });
 
-          options.OnClick = function(e, Section) {
-            if(Section.Active && Section.Selected) {
-            }
-          };
+            var amtVal = "$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1);
+            $("#amount").val(amtVal);
 
-          options.OnControlClick = function(e, Data) {
-            if(Section.Selected) {
-            }
-          };
-
-          options.OnGroupClick = function(e, Group) {
-            if(Group.Selected) {
-
-            }
-          };
-
-          options.OnTicketSelected = function(e, Ticket) {
-          }
-
-          options.OnReset = function(e) {
-            //Write Code Here
-          };
-
-          //set the height of the map-container to the window height
-          $('#map-container').css("height", $($window).height() - 60);
-          $('#tickets').css("height", $($window).height() - 60);
-          $('#map-container').css("width", $($window).width() - 480);
-          $('#map-container').tuMap(options);
-
-          $('#price-slider').slider({
-            range: true,
-            min: minTixPrice,
-            max: maxTixPrice,
-            step: 5,
-            values: [minTixPrice, maxTixPrice],
-            slide: function(event, ui) {
-              $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-            },
-            stop: function(event, ui) {
+            /* filter tix when the drop down changes */
+            $("#quantity-filter").change(function() {
               filterTickets();
-            }
+            });
 
+          },
+
+          /* transformRequest */
+          function(data, headersGetter) {
+            $('#page-loading-modal').modal("show");
+            return data;
+          },
+
+          function(data, headersGetter) {
+            setTimeout(function() {
+              $('#page-loading-modal').modal("hide");
+            }, 3000);
+            return JSON.parse(data);
           });
-
-          var amtVal = "$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1);
-          $("#amount").val(amtVal);
-
-          /* filter tix when the drop down changes */
-          $("#quantity-filter").change(function() {
-            filterTickets();
-          });
-
-        },
-
-        /* transformRequest */
-        function(data, headersGetter) {
-          $('#page-loading-modal').modal("show");
-          return data;
-        },
-
-        //transformResponse
-
-
-        function(data, headersGetter) {
-          setTimeout(function() {
-            $('#page-loading-modal').modal("hide");
-          }, 3000);
-          return JSON.parse(data);
         });
       }
     }
@@ -228,44 +222,21 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 */
-.directive('eventData', ['$rootScope','$filter', 'wembliRpc', function($rootScope, $filter, wembliRpc) {
+.directive('eventData', ['$rootScope','$filter', 'wembliRpc', 'plan', function($rootScope, $filter, wembliRpc, plan) {
   return {
     restrict: 'C',
     templateUrl: '/partials/event-data',
     cache:false,
+    scope:{eventId:'@eventId'},
     compile: function(element, attr, transclude) {
 
       return function(scope, element, attr) {
         scope.direction = attr.direction;
-
-        /* fetch the event data */
-        var args = {
-          "cache":true,
-          "eventID": scope.eventId || attr.eventId
-        };
-
-        wembliRpc.fetch('event.get', args,
-
-        //response callback
-        function(err, result) {
-          if(err) {
-            //handle err
-            alert('error happened - contact help@wembli.com');
-            return;
-          }
-          scope.event = result['event'][0];
-        },
-
-        //transformRequest
-        function(data, headersGetter) {
-          //$('#more-events .spinner').show();
-          return data;
-        },
-
-        //transformResponse
-        function(data, headersGetter) {
-          //$('#more-events .spinner').hide();
-          return JSON.parse(data);
+        console.log('plan.get in event-data');
+        plan.get(function(plan) {
+          console.log('init event data');
+          console.log(plan.event);
+          scope.event = plan.event;
         });
       }
     }
@@ -285,8 +256,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         element.click(function(e) {
           console.log('clicked sequence link');
           e.preventDefault();
-          console.log('fetching plan');
-          plan.fetch();
 
           var direction = 1;
 
@@ -374,10 +343,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             //what frame to go to:
             var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
 
-            //compile the page we just fetched and link the scope
-            console.log(data);
-            angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
-
             //split location path on '/' to get the right framesMap key
             var nextPath = '/' + $location.path().split('/')[1];
             //if footer.framesMap[$location.path()] (where they are going) is undefined
@@ -407,26 +372,34 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             //find out what direction to go to we sliding in this element
             direction = parseInt(attr.direction)  || parseInt(scope.direction) || direction;
-            //do the animations
-            sequence.goTo(nextFrameID, direction);
 
-            $('#content').scrollTop(0);
-            $('#content').css('overflow', 'visible');
-            $('#content').css('overflow-x', 'hidden');
+            //fetch the plan
+            console.log('wembli-sequence-link force fetching updated plan');
+            plan.fetch(function() {
+              //compile the page we just fetched and link the scope
+              angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
 
-            //server can tell us to overflow hidden or not - this is for the venue map pages
-            if(typeof headers['x-wembli-overflow'] !== "undefined") {
-              if(headers['x-wembli-overflow'] === 'hidden') {
-                $('#content').css('overflow', 'hidden');
+              //do the animations
+              sequence.goTo(nextFrameID, direction);
+
+              $('#content').scrollTop(0);
+              $('#content').css('overflow', 'visible');
+              $('#content').css('overflow-x', 'hidden');
+
+              //server can tell us to overflow hidden or not - this is for the venue map pages
+              if(typeof headers['x-wembli-overflow'] !== "undefined") {
+                if(headers['x-wembli-overflow'] === 'hidden') {
+                  $('#content').css('overflow', 'hidden');
+                }
               }
-            }
 
-            //update the currentPath and the currentFrame
-            $rootScope.currentPath = $location.path();
-            $rootScope.currentFrame = nextFrameID;
+              //update the currentPath and the currentFrame
+              $rootScope.currentPath = $location.path();
+              $rootScope.currentFrame = nextFrameID;
 
-            //dismiss any modals
-            $(".modal").modal("hide");
+              //dismiss any modals
+              $(".modal").modal("hide");
+            });
 
           }).error(function() {
             console.log('error getting: ' + url);
@@ -443,7 +416,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     compile: function(element, attr, transclude) {
 
       return function(scope, element, attr) {
-        console.log(attr);
         element.popover({
           placement: attr.placement,
           trigger: attr.trigger,

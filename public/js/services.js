@@ -31,8 +31,20 @@ angular.module('wembliApp.services', [])
 	self.fetchInProgress = false;
 
 	return {
-		get: function() {
-			return self.plan;
+		get: function(callback) {
+			if (callback) {
+				if (self.plan) {
+					callback(self.plan);
+				} else {
+					var dereg = $rootScope.$on('plan-fetched',function() {
+						dereg();
+						callback(self.plan);
+					});
+					this.fetch();
+				}
+			} else {
+				return self.plan;
+			}
 		},
 
 		set: function(plan, friends) {
@@ -50,31 +62,35 @@ angular.module('wembliApp.services', [])
 		},
 
 		//get plan from server and return it
-		fetch: function() {
+		fetch: function(callback) {
 			if (self.fetchInProgress) {
+				if (callback) {
+					var dereg = $rootScope.$on('plan-fetched', function(self) {
+						dereg();
+						callback(self);
+					});
+				}
 				return;
-			} else {
-				self.fetchInProgress = true;
 			}
-			if (self.plan) {
-				$rootScope.$broadcast('plan-fetched', {});
-				return;
-			}
+
+			self.fetchInProgress = true;
 
 			wembliRpc.fetch('plan.init', {},
 				//response
 				function(err, result) {
-
+					console.log('result from plan init');
+					console.log(result);
 					if(typeof result.plan !== "undefined") {
-						self.plan = result.plan
+						self.plan    = result.plan
 						self.friends = result.friends;
-						$rootScope.$broadcast('plan-fetched',{});
-						self.fetchInProgress = false;
 					}
+					console.log('plan.init results');
+					console.log(result);
 
-					if(typeof result.customer !== "undefined") {
-						$rootScope.$broadcast('customer-fetched',{});
-						customer.set(result.customer);
+					self.fetchInProgress = false;
+					$rootScope.$broadcast('plan-fetched',{});
+					if (callback) {
+						callback(self);
 					}
 				}
 			);
@@ -87,13 +103,12 @@ angular.module('wembliApp.services', [])
 	}
 }])
 
-.factory('customer', ['$rootScope', '$q', 'wembliRpc', function($rootScope, wembliRpc) {
+.factory('customer', ['$rootScope', '$q', function($rootScope) {
 	var self = this;
 	self.customer = null;
 
 	return {
 		get: function() {
-
 			return self.customer;
 		},
 
@@ -101,17 +116,6 @@ angular.module('wembliApp.services', [])
 			self.customer = customer;
 			return self.customer;
 		},
-
-		//get plan from server and return it
-		fetch: function() {
-			//if there is no customer set it to false to indicate we explicitly know there is no customer
-			$rootScope.$broadcast('customer-fetched', {});
-		},
-
-		//push $rootScope.plan to server and save
-		push: function() {
-
-		}
 	}
 }])
 
@@ -195,7 +199,7 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window','$filter', function($rootScope, $q, friendFilter, wembliRpc, $window,$filter) {
+.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window','$filter', 'customer', function($rootScope, $q, friendFilter, wembliRpc, $window,$filter,customer) {
 
 	var self = this;
 	this.auth = null;
@@ -339,7 +343,7 @@ angular.module('wembliApp.services', [])
 	this.selectedFriends = {};
 	this.friends = null;
 	this.allFriends = null;
-	console.log('twitter here');
+
 	return {
 		//TODO make a filterFriend service to be used by the different social network api services
 		filterFriends: function(filterKey) {
@@ -432,11 +436,12 @@ angular.module('wembliApp.services', [])
 		SectionSelector: ".ticket-section",
 		PriceSelector: ".actual-price",
 		QuantitySelector: ".ticket-quantity",
-		eTicketSelector: ".e-ticket"
+		eTicketSelector: ".e-ticket",
+		ResetButtonText:"Reset Map"
 	};
 }])
 
-.factory('wembliRpc', ['$rootScope', '$http', function($rootScope, $http) {
+.factory('wembliRpc', ['$rootScope', '$http', 'customer', function($rootScope, $http, customer) {
 	var wembliRpc = {_cache:{}};
 
 	var jsonRpc = {
@@ -460,6 +465,12 @@ angular.module('wembliApp.services', [])
 			$rootScope.$broadcast(eventName + 'success', {
 				'method': method
 			});
+
+			/* every wembliRpc call should try to return the customer */
+			if(typeof data.customer !== "undefined") {
+				customer.set(data.customer);
+				$rootScope.$broadcast('customer-fetched',{});
+			}
 			var ret = callback(err, data);
 			$rootScope.$broadcast(eventName + 'callbackComplete', {
 				'method': method

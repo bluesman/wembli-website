@@ -26,76 +26,90 @@ exports["invite-friends"] = {
 		}
 
 		/* few different cases here... */
-
-		if (args.customerId) {
-			/* fetch it from the db and potentially update firstName, lastName and/or email */
-			console.log('updating customer:');
-			console.log(args);
-
-			Customer.findById(args.customerId, function(err, c) {
-				if (err) {
-					return me(err);
+		if (args.password) {
+			customerRpc['login'].apply(function(err, results) {
+				/* set the login redirect url if the cust already exists */
+				console.log('login results');
+				console.log(results);
+				if (results.error) {
+					results.formError = true;
+					results.exists = true;
 				}
+				return me(null, results);
+			}, [args, req, res]);
+		} else {
 
-				/* this should never happen unless there's some sort of funny biz */
-				if (c === null) {
-					return me('no crystal');
-				}
+			if (args.customerId) {
+				/* fetch it from the db and potentially update firstName, lastName and/or email */
+				console.log('updating customer:');
+				console.log(args);
 
-				/* ok got our cust from the db check if email is changing, if so - they need to reconfirm */
-				if (c.email !== args.email) {
-					var confirmationTimestamp = new Date().getTime().toString();
-					var digestKey = args.email + confirmationTimestamp;
-					var confirmationToken = wembliUtils.digest(digestKey);
-
-					c.confirmation.pop();
-					c.confirmation.unshift({
-						timestamp: confirmationTimestamp,
-						token: confirmationToken
-					});
-
-					c.confirmed = false;
-				}
-
-				c.firstName = args.firstName;
-				c.lastName  = args.lastName;
-				c.email     = args.email;
-				console.log('customer');
-				console.log(c);
-				c.save(function(err) {
+				Customer.findById(args.customerId, function(err, c) {
 					if (err) {
 						return me(err);
 					}
 
-					if (confirmationToken) {
-						/* send signup email async */
-						wembliEmail.sendSignupEmail({
-							res: res,
-							confirmationToken: confirmationToken,
-							customer: c
-						});
+					/* this should never happen unless there's some sort of funny biz */
+					if (c === null) {
+						return me('no crystal');
 					}
 
-					req.session.customer = c;
-					me(null, {
-						success: 1
+					/* ok got our cust from the db check if email is changing, if so - they need to reconfirm */
+					if (c.email !== args.email) {
+						var confirmationTimestamp = new Date().getTime().toString();
+						var digestKey = args.email + confirmationTimestamp;
+						var confirmationToken = wembliUtils.digest(digestKey);
+
+						c.confirmation.pop();
+						c.confirmation.unshift({
+							timestamp: confirmationTimestamp,
+							token: confirmationToken
+						});
+
+						c.confirmed = false;
+					}
+
+					c.firstName = args.firstName;
+					c.lastName = args.lastName;
+					c.email = args.email;
+					console.log('customer');
+					console.log(c);
+					c.save(function(err) {
+						if (err) {
+							return me(err);
+						}
+
+						if (confirmationToken) {
+							/* send signup email async */
+							wembliEmail.sendSignupEmail({
+								res: res,
+								confirmationToken: confirmationToken,
+								customer: c
+							});
+						}
+
+						req.session.customer = c;
+						me(null, {
+							success: 1
+						});
+
 					});
-
 				});
-			});
 
-		} else {
-			/* new customer.  That means req.session.customer does not exist and there is no args.customerId*/
-			customerRpc['signup'].apply(function(err, results) {
-				/* set the login redirect url if the cust already exists */
-				if (results.exists) {
-					req.session.loginRedirect = true;
-					req.session.redirectUrl = '/invitation';
-				}
-				console.log('signup results');
-				console.log(results);
-				me(null, results);
-			}, [args, req, res]);
+			} else {
+				/* new customer.  That means req.session.customer does not exist and there is no args.customerId*/
+				customerRpc['signup'].apply(function(err, results) {
+					/* set the login redirect url if the cust already exists */
+					if (results.exists) {
+						req.session.loginRedirect = true;
+						req.session.redirectUrl = '/invitation';
+					}
+					console.log('signup results');
+					console.log(results);
+
+					me(null, results);
+				}, [args, req, res]);
+			}
 		}
 	},
 
@@ -136,17 +150,19 @@ exports["invite-friends"] = {
 	/* send wemblimail */
 	"submit-step5": function(args, req, res) {
 		var me = this;
-		var data = {success: 1};
+		var data = {
+			success: 1
+		};
 
 		console.log('step5 args:');
 		console.log(args);
 
 		var rpcArgs = {
-			service:args.service,
-			serviceId:args.serviceId,
-			imageUrl:args.imageUrl,
-			name:args.name,
-			inviteStatus:args.inviteStatus
+			service: args.service,
+			serviceId: args.serviceId,
+			imageUrl: args.imageUrl,
+			name: args.name,
+			inviteStatus: args.inviteStatus
 		};
 
 		planRpc['addFriend'].apply(function(err, results) {
@@ -161,21 +177,24 @@ exports["invite-friends"] = {
 			console.log(results.friend);
 
 			/* now that we have added the friend to the plan and have a token, send the wembli email */
-			var rsvpLink = "http://tom.wembli.com/rsvp/"+req.session.plan.guid+"/"+results.friend.inviteStatusConfirmation.token;
+			var rsvpLink = "http://tom.wembli.com/rsvp/" + req.session.plan.guid + "/" + results.friend.inviteStatusConfirmation.token;
 			wembliEmail.sendRSVPEmail({
 				res: res,
-				req:req,
+				req: req,
 				rsvpDate: results.friend.rsvp.date,
 				rsvpLink: rsvpLink,
-				email:results.friend.contactInfo.serviceId,
-				message:args.message
+				email: results.friend.contactInfo.serviceId,
+				message: args.message
 			});
 
 			/* once the email is sent, we can update inviteStatus to true */
 			/* got a friend, set inviteStatus to true */
 			results.friend.inviteStatus = true;
 			/* clear out the token it is no longer valid - so nothing fishy can happen */
-			results.friend.inviteStatusConfirmation = {token:'',timestamp:Date.now()};
+			results.friend.inviteStatusConfirmation = {
+				token: '',
+				timestamp: Date.now()
+			};
 
 			/* this is used on the event plan view */
 			results.friend.rsvp.initiated = true;

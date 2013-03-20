@@ -16,11 +16,12 @@ function IndexCtrl($scope, $templateCache, wembliRpc) {
 	//clear the cache when the home page loads to make sure we start fresh
 	$templateCache.removeAll();
 
+	/* this doesn't do anything right now
 	wembliRpc.fetch('index.init', {},
-	/* response */
 	function(err, result) {
 
 	});
+	*/
 };
 
 
@@ -53,7 +54,6 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 	$scope.guestListOptionsError = false;
 
 	wembliRpc.fetch('event-options.init', {},
-	//response
 
 	function(err, result) {
 		//$scope.payment = result.payment;
@@ -85,13 +85,12 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 * Event List Controller
 */
 function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
-
+	/* does nothing right now
 	wembliRpc.fetch('eventlist.init', {},
-	/* response */
 	function(err, result) {
 
 	});
-
+	*/
 
 	$scope.showTicketSummary = function(e) {
 
@@ -103,26 +102,18 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
 		}
 
 		//if its locked that means we moused in while doing a fetch
-		if($scope.ticketSummaryData.locked) {
-			return;
-		}
+		if($scope.ticketSummaryData.locked) {	return;	}
 
 		//fetch the event data
-		var args = {
-			"eventID": elId.split('-')[0]
-		};
+		var args = { "eventID": elId.split('-')[0]	};
 
 		//we have a cache of the data - gtfo
-		if(typeof $scope.ticketSummaryData[elId.split('-')[0]] != "undefined") {
-			return;
-		}
+		if(typeof $scope.ticketSummaryData[elId.split('-')[0]] != "undefined") { return; }
 
 		//lock so we don't fetch more than once (we will unlock when the http req returns)
 		$scope.ticketSummaryData.locked = true;
 
 		wembliRpc.fetch('event.getPricingInfo', args,
-
-		//response callback
 
 		function(err, result) {
 			if(err) {
@@ -332,8 +323,11 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 				'lastName':$scope.customer.lastName,
 				'email':$scope.customer.email,
 			};
-			if ($scope.customer) {
+			if ($scope.customer.id) {
 				rpcArgs.customerId = $scope.customer.id;
+			}
+			if ($scope.customer.password) {
+				rpcArgs.password = $scope.customer.password;
 			}
 			return rpcArgs;
 		},
@@ -348,6 +342,10 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 			if (result.formError) {
 				$scope.step1.error = true;
 				$scope.step1.formError = true;
+			}
+
+			if (result.invalidCredentials) {
+				$scope.step1.invalidCredentials = true;
 			}
 
 			if (result.exists) {
@@ -810,143 +808,15 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 	$scope.$on('invitation-modal-fetched', function(e, args) {
 		console.log('modal fetched');
 		//make sure plan is also fetched
-		var handlePlanFetched = function(e, args) {
+		plan.get(function(planData) {
 			console.log('handling fetched plan');
 			//display the modal if there's a plan
-			if(plan.get()) {
-				console.log(plan.get());
-				if (typeof plan.get().event.eventId === "undefined") {
-					console.log('eventid is undefined');
-					return;
-				}
+			console.log(plan.get());
+			if (typeof plan.get().event.eventId === "undefined") {
+				console.log('eventid is undefined');
+				return;
+			}
 
-				/* put the plan in the scope for the view */
-				$scope.plan = plan.get();
-
-				/* set up the wemblimail friends array with friends in the plan */
-				if (typeof plan.getFriends() !== "undefined") {
-					$scope.invitedFriends = [];
-					for (var i = plan.getFriends().length - 1; i >= 0; i--) {
-						var friend = plan.getFriends()[i];
-						friend.checked = friend.inviteStatus;
-						if (friend.contactInfo.service === 'facebook') {
-							$scope.selectedFriends['step3'][friend.contactInfo.serviceId] = friend.inviteStatus;
-						}
-						if (friend.contactInfo.service === 'twitter') {
-							$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.inviteStatus;
-						}
-						if (friend.contactInfo.service === 'wemblimail') {
-							$scope.wemblimail.friends.push(friend);
-							$scope.selectedFriends['step5'][friend.contactInfo.serviceId] = friend.inviteStatus;
-						}
-						if (friend.inviteStatus) {
-								console.log('pushing fetched plan friends into invitedFriends')
-								$scope.invitedFriends.push(friend);
-						}
-					};
-				}
-				console.log('invited friends');
-				console.log($scope.invitedFriends);
-
-				var showModal = function(dereg) {
-					console.log('showing modal');
-					/*
-					there's a race condition
-					sometimes we get here before the location.path has been set by wembli-sequence-link
-					we know this if $scope.currentPath !== location.path()
-					if that happens we have to set a watcher for currentPath instead of just using location.path()
-						*/
-					var startDate = new Date();
-					var endDate = new Date($scope.plan.event.eventDate);
-					var defaultDate = endDate;
-					/* if there's an rsvp date, set it in the datepicker */
-					if (typeof $scope.plan.rsvpDate !== "undefined") {
-						/* init the date picker */
-						console.log('init datepicker with plan rsvpdate:');
-						console.log($scope.plan.rsvpDate);
-						var defaultDate = new Date($scope.plan.rsvpDate);
-					}
-
-					$('.datepicker').pikaday({
-						bound:false,
-						minDate: startDate,
-						maxDate:endDate,
-						defaultDate:defaultDate,
-						setDefaultDate:true,
-						onSelect: function() {
-							$scope.plan.rsvpDate = this.getDate();
-							wembliRpc.fetch('invite-friends.submit-step2',{rsvpDate : $scope.plan.rsvpDate}, function(err,res) {
-								console.log('changed rsvpdate');
-								console.log(res);
-							});
-						}
-					});
-
-					if ($location.path() !== $scope.currentPath) {
-						console.log('location path is diff from current path');
-						$scope.$watch('currentPath',function(newVal,oldVal) {
-							console.log('currentPath changed from: '+newVal+' to '+oldVal);
-							if (newVal === '/invitation') {
-								/* show the modal */
-								$('#invitation-modal').modal({
-									'backdrop': 'static',
-									'keyboard': false,
-								});
-								$('#invitation-modal').modal("show");
-							} else {
-								console.log('new location is not invitation');
-							}
-						});
-					} else {
-						console.log('location path is the same as current path');
-						if ($location.path() === '/invitation') {
-							$('#invitation-modal').modal({
-								'backdrop': 'static',
-								'keyboard': false,
-							});
-							$('#invitation-modal').modal("show");
-						} else {
-							console.log('locatino path is not /invitation its' + $location.path());
-						}
-					};
-					if (typeof dereg !== "undefined") {
-						dereg();
-					}
-
-				};
-
-				//if the event already fired and I missed it
-				if ($scope.beforeNextFrameAnimatesIn || $scope.afterNextFrameAnimatesIn) {
-					console.log('before next frame or afternext frame?');
-					console.log('before:'+$scope.beforeNextFrameAnimatesIn);
-					console.log('after'+$scope.afterNextFrameAnimatesIn);
-
-					//show the modal right now
-					showModal();
-					//unregisterListener();
-				} else {
-					console.log('watch for beforeNextFrameAnimatesIn');
-					var dereg = $scope.$watch('beforeNextFrameAnimatesIn',function(newVal, oldVal) {
-						console.log('beforeNextFrameAnimatesIn happened');
-						console.log(newVal);
-						console.log(oldVal);
-						if (newVal) {
-							showModal(dereg);
-						}
-					});
-				}
-	    } else {
-	    	console.log('no plan...');
-		    //no plan - reload the invitation page
-		    //$window.location.reload();
-		  }
-
-		};
-
-		/* now we can try to display the wizard */
-		/* make sure customer is fetched */
-		var handleCustomerFetched = function(e,args) {
-			console.log('customer fetched');
 			var initialStep = 'step1';
 			if (customer.get() && Object.keys(customer.get()).length > 0) {
 				initialStep = $location.hash() ? $location.hash() : 'step2';
@@ -962,62 +832,137 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 			}
 			console.log('initial step: '+initialStep);
 			$scope.gotoStep(initialStep);
-			//check if plan is already fetched
-			if (plan.get() === null) {
-				console.log('set plan get listener');
-				//not fetched yet, set a watcher
-		  	//dont do anything until the plan is loaded
-			  $scope.$on('plan-fetched', handlePlanFetched)
-			} else {
-				console.log('plan has already been fetched');
-				//plan has already been fetched
-				handlePlanFetched();
-			}
-		};
 
-		//decide which step to start on depending on if they are logged in or not
-		if (customer.get() === null) {
-			console.log('customer get is null');
-			//customer has not been fetched yet set up a listener
-			$scope.$on('customer-fetched', handleCustomerFetched);
-		} else {
-			console.log('customer get is not null');
-			//customer has already been fetched
-			handleCustomerFetched();
-		}
+			/* put the plan in the scope for the view */
+			$scope.plan = plan.get();
+
+			/* set up the wemblimail friends array with friends in the plan */
+			if (typeof plan.getFriends() !== "undefined") {
+				$scope.invitedFriends = [];
+				for (var i = plan.getFriends().length - 1; i >= 0; i--) {
+					var friend = plan.getFriends()[i];
+					friend.checked = friend.inviteStatus;
+					if (friend.contactInfo.service === 'facebook') {
+						$scope.selectedFriends['step3'][friend.contactInfo.serviceId] = friend.inviteStatus;
+					}
+					if (friend.contactInfo.service === 'twitter') {
+						$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.inviteStatus;
+					}
+					if (friend.contactInfo.service === 'wemblimail') {
+						$scope.wemblimail.friends.push(friend);
+						$scope.selectedFriends['step5'][friend.contactInfo.serviceId] = friend.inviteStatus;
+					}
+					if (friend.inviteStatus) {
+							console.log('pushing fetched plan friends into invitedFriends')
+							$scope.invitedFriends.push(friend);
+					}
+				};
+			}
+			console.log('invited friends');
+			console.log($scope.invitedFriends);
+
+			var showModal = function(dereg) {
+				console.log('showing modal');
+				/*
+				there's a race condition
+				sometimes we get here before the location.path has been set by wembli-sequence-link
+				we know this if $scope.currentPath !== location.path()
+				if that happens we have to set a watcher for currentPath instead of just using location.path()
+					*/
+				var startDate = new Date();
+				var endDate = new Date($scope.plan.event.eventDate);
+				var defaultDate = endDate;
+				/* if there's an rsvp date, set it in the datepicker */
+				if (typeof $scope.plan.rsvpDate !== "undefined") {
+					/* init the date picker */
+					console.log('init datepicker with plan rsvpdate:');
+					console.log($scope.plan.rsvpDate);
+					var defaultDate = new Date($scope.plan.rsvpDate);
+				}
+
+				$('.datepicker').pikaday({
+					bound:false,
+					minDate: startDate,
+					maxDate:endDate,
+					defaultDate:defaultDate,
+					setDefaultDate:true,
+					onSelect: function() {
+						$scope.plan.rsvpDate = this.getDate();
+						wembliRpc.fetch('invite-friends.submit-step2',{rsvpDate : $scope.plan.rsvpDate}, function(err,res) {
+							console.log('changed rsvpdate');
+							console.log(res);
+						});
+					}
+				});
+
+				if ($location.path() !== $scope.currentPath) {
+					console.log('location path is diff from current path');
+					$scope.$watch('currentPath',function(newVal,oldVal) {
+						console.log('currentPath changed from: '+newVal+' to '+oldVal);
+						if (newVal === '/invitation') {
+							/* show the modal */
+							$('#invitation-modal').modal({
+								'backdrop': 'static',
+								'keyboard': false,
+							});
+							$('#invitation-modal').modal("show");
+						} else {
+							console.log('new location is not invitation');
+						}
+					});
+				} else {
+					console.log('location path is the same as current path');
+					if ($location.path() === '/invitation') {
+						$('#invitation-modal').modal({
+							'backdrop': 'static',
+							'keyboard': false,
+						});
+						$('#invitation-modal').modal("show");
+					} else {
+						console.log('locatino path is not /invitation its' + $location.path());
+					}
+				};
+				if (typeof dereg !== "undefined") {
+					dereg();
+				}
+
+			};
+
+			//if the event already fired and I missed it
+			if ($scope.beforeNextFrameAnimatesIn || $scope.afterNextFrameAnimatesIn) {
+				console.log('before next frame or afternext frame?');
+				console.log('before:'+$scope.beforeNextFrameAnimatesIn);
+				console.log('after'+$scope.afterNextFrameAnimatesIn);
+
+				//show the modal right now
+				showModal();
+				//unregisterListener();
+			} else {
+				console.log('watch for beforeNextFrameAnimatesIn');
+				var dereg = $scope.$watch('beforeNextFrameAnimatesIn',function(newVal, oldVal) {
+					console.log('beforeNextFrameAnimatesIn happened');
+					console.log(newVal);
+					console.log(oldVal);
+					if (newVal) {
+						showModal(dereg);
+					}
+				});
+			}
+		});
 	});
-}
+};
 
 /*
 * Plan Controller
 */
 function PlanCtrl($rootScope, $scope, wembliRpc, plan, customer) {
-	//init vars
-	var args = {};
-
-	wembliRpc.fetch('plan.init', {},
-
-	//response
-	function(err, result) {
-
-		if(typeof result.plan !== "undefined") {
-			plan.set(result.plan,result.friends);
-		}
-
-		if(typeof result.customer !== "undefined") {
-			customer.set(result.customer);
-		} else {
-			customer.set({});
-		}
-
-		$rootScope.$broadcast('customer-fetched',{});
-		$rootScope.$broadcast('plan-fetched',{});
+	console.log('get plan in PlanCtrl');
+	plan.get(function(plan) {
+		console.log('got plan')
 	});
-
 };
 
 function SearchCtrl($scope) {
-
 }
 
 function SignupCtrl($scope, $http, wembliRpc) {
@@ -1114,21 +1059,14 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 
 	$scope.facebook = facebook;
 
-	//check if plan is already fetched
-	if (plan.get() === null) {
-		console.log('set plan get listener');
-		//not fetched yet, set a watcher
-  	//dont do anything until the plan is loaded
-	  var $dereg = $scope.$on('plan-fetched', function() {
-		  	$scope.ticketsLink = '/tickets/'+plan.get().event.eventId+'/'+plan.get().event.eventName;
-		  	$dereg();
-	  });
-	} else {
-
-		console.log('plan has already been fetched');
-		//plan has already been fetched
-		$scope.ticketsLink = '/tickets/'+plan.get().event.eventId+'/'+plan.get().event.eventName;
+	var updateTicketsLink = function() {
+		console.log('plan.get to updateTicketsLink');
+		plan.get(function(plan) {
+			$scope.ticketsLink = plan ? '/tickets/'+plan.event.eventId+'/'+plan.event.eventName : '/tickets';
+		});
 	}
+	$scope.$on('plan-fetched',updateTicketsLink);
+	updateTicketsLink();
 
 };
 
@@ -1235,22 +1173,14 @@ function TicketsCtrl($scope, wembliRpc) {
 }
 
 function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter) {
-	var initScope = function(plan) {
-		$scope.priceRange = {};
-		$scope.eventOptionsLink = $scope.eventOptionsLink + '/'+plan.event.eventId+'/'+plan.event.eventName;
-		$scope.priceRange.low   = plan.preferences.tickets.priceRange.low || true;
-		$scope.priceRange.med   = plan.preferences.tickets.priceRange.med || true;
+	console.log('plan.get venuemapctrl');
+	plan.get(function(plan) {
+		$scope.priceRange       = {};
+		$scope.eventOptionsLink = '/event-options/'+plan.event.eventId+'/'+plan.event.eventName;
+		$scope.priceRange.low   = plan.preferences.tickets.priceRange.low  || true;
+		$scope.priceRange.med   = plan.preferences.tickets.priceRange.med  || true;
 		$scope.priceRange.high  = plan.preferences.tickets.priceRange.high || true;
-	};
-	//check if plan is already fetched
-	$scope.eventOptionsLink = '/event-options';
-	if (plan.get() === null) {
-	  $scope.$on('plan-fetched', function() {
-			initScope(plan.get());
-	  });
-	} else {
-		initScope(plan.get());
-	}
+	});
 
 	$scope.determineRange = function(price) {
 		/* hard coded price range for now */

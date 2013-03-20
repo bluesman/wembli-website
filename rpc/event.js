@@ -48,9 +48,13 @@ exports.event = {
 			//get more top events
 			delete args.nearZip;
 		}
+		console.log('args for event.get');
+		console.log(args);
 
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.GetEvents(args, function(err, results) {
+			console.log('event.get');
+			console.log(results);
 			if (err) {
 				return me(err);
 			}

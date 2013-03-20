@@ -1,13 +1,13 @@
 - var lastSearch = req.session.lastSearch ? req.session.lastSearch : '';
 .event-date-box.pull-left(ng-cloak)
-	span.day {{getDate(event.Date)| date:'EEE'}}
-	span.event-date {{getDate(event.Date)| date:'MMM d'}}
-	span.time {{getDate(event.Date)| date:'h:mm a'}}
+	span.day {{event.eventDate| date:'EEE'}}
+	span.event-date {{event.eventDate| date:'MMM d'}}
+	span.time {{event.eventDate| date:'h:mm a'}}
 .info(ng-cloak)
-	span.name.block {{event.Name}}
-	span.venue.block {{ event.Venue.Name || event.Venue }}
-		span.location.block {{event.City+', '+event.StateProvince}}
-	- if (typeof req.session.plan !== "undefined" && req.session.plan.isOrganizer)
+	span.name.block {{event.eventName}}
+	span.venue.block {{ event.eventVenue || event.eventVenue }}
+		span.location.block {{event.eventCity+', '+event.eventState}}
+	- if (req.session.visitor.context === 'organizer')
 		span.change-event.block.pull-left
 			a#change-event.wembli-sequence-link(href="/search?search=#{lastSearch}") Change Event
 		span.block.pull-left &nbsp;-&nbsp;

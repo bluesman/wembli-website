@@ -147,6 +147,32 @@ exports.customer = {
 			}
 		});
 	},
+	login: function(args,req,res) {
+		var me = this;
+		console.log('customer.login args');
+		console.log(args);
+
+		//validate email/password against the db
+		Customer.findOne({email: args.email}, function(err, c) {
+			if (err) {return me(err);}
+
+			if (c != null) {
+				//make a digest from the email
+				var digest = wembliUtils.digest(args.password);
+				if (typeof c.password != "undefined" && c.password == digest) {
+					req.session.loggedIn = true;
+					req.session.customer = c;
+					req.session.rememberEmail = c.email;
+					return me(null,{success:1,customer:c});
+				}
+			}
+
+			return me(null,{success:1,error:true,invalidCredentials:true});
+
+		}, false);
+
+
+	},
 
 	//some methodsi should probably make:
 	get: function(args, req, res) {

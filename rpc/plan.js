@@ -10,12 +10,15 @@ exports.plan = {
 			success:1,
 			plan: req.session.plan
 		};
-
-		/* get friends for this plan */
-		Friend.find({planId:req.session.plan.id}, function(err,results) {
-			data.friends = results;
-			me(null,data);
-		})
+		if (req.session.plan) {
+			/* get friends for this plan */
+			Friend.find({planId:req.session.plan.id}, function(err,results) {
+				data.friends = results;
+				me(null,data);
+			});
+		} else {
+				me(null,data);
+		}
 	},
 	save: function(args, req, res) {
 		var me = this;

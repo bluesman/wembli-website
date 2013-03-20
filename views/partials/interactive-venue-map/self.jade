@@ -1,0 +1,36 @@
+#ticket-filter-container
+	h3 Filter:
+	.qty-filter
+		strong Qty:
+		select#quantity-filter
+			option --
+			option(value="1") 1
+			option(value="2") 2
+			option(value="3") 3
+			option(value="4") 4
+			option(value="5") 5+
+	.price-filter
+		p
+			label(for="amount") Price range:
+			input#amount(type="text")
+		#price-slider
+#ticket-list-header-container
+	a#price-header(href="#",ng-click="sortByPrice()") Price
+	a#section-header(href="#",ng-click="sortBySection()") Section
+	a#qty-header(href="#",ng-click="sortByQty()") Qty
+ul#ticket-list-container
+	li.ticket-row(ng-repeat="ticket in tickets")
+		.ticket-section.hide {{ticket.Section}}
+		.seat-row.hide {{ticket.Row}}
+		.ticket-price
+			.actual-price ${{ticket.ActualPrice}}
+			.each (each)
+		.ticket-info
+			.ticket-section-name Section: {{ticket.Section}}
+			.seat-row-name Row: {{ticket.Row}}
+		.qty-container
+			strong Qty:
+			select(name="qty-{{ticket.ID}}")
+				option(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+			.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+		a.btn.btn-primary.btn-large(ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticketreq.sessionId()}}",target="_blank") Buy

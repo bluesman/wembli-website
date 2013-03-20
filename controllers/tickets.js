@@ -1,6 +1,10 @@
 var ticketNetwork = require('../lib/wembli/ticketnetwork');
 var async = require('async');
 var eventRpc      = require('../rpc/event').event;
+var wembliModel = require('wembli-model'),
+    Customer    = wembliModel.load('customer'),
+    Plan        = wembliModel.load('plan');
+
 
 module.exports = function(app) {
 	//if no event is defined just show the teaser telling them to search and pick an event
@@ -19,10 +23,6 @@ module.exports = function(app) {
 
 	var ticketsView = function(req,res,template,locals) {
 		var args = {"eventID" : req.param("eventId")};
-		console.log('tickets view: '+req.param("eventId"));
-		req.session.plan.event.eventId   = req.param("eventId");
-		req.session.plan.event.eventName = req.param("eventName");
-
 		eventRpc['get'].apply(function(err,results) {
 			/* its possible that this event is no longer available - if that is the case, send them to the no-event page */
 			if (err || !results.event[0]) {
@@ -31,15 +31,26 @@ module.exports = function(app) {
 				return res.redirect(noEventUrl);
 			}
 
-			console.log(results);
-			req.session.plan.event.eventDate = results.event[0].Date;
+			/* if the plan in session plan has already been saved, don't overwrite it */
+			if (req.session.plan && req.session.plan.id) {
+				var savePrefs = req.session.plan.preferences;
+				req.session.plan = new Plan({guid: Plan.makeGuid()});
+				req.session.plan.preferences = savePrefs;
+			}
+
+			req.session.plan.event.eventId    = req.param("eventId");
+			req.session.plan.event.eventName  = req.param("eventName");
+			req.session.plan.event.eventDate  = results.event[0].Date;
 			req.session.plan.event.eventVenue = results.event[0].Venue;
-			req.session.plan.event.eventCity = results.event[0].City;
-			req.session.plan.event.data = results.event[0];
+			req.session.plan.event.eventCity  = results.event[0].City;
+			req.session.plan.event.eventState = results.event[0].StateProvince;
+			req.session.plan.event.data       = results.event[0];
+
 			//set a special header to tell angular to update the browser location
 			res.setHeader('x-wembli-overflow','hidden');
 			locals.tnMapUrl  = results.event[0].MapURL;
-
+			console.log('req session event in tickets view');
+			console.log(req.session.plan.event);
 			res.render(template, locals);
 		},[args,req,res]);
 

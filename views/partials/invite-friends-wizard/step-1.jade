@@ -1,13 +1,18 @@
 form#invite-wizard-step1-form(name="step1")
-	fieldset()
+	fieldset(ng-show="step1.accountExists")
+		h2 Provide your password
+		#error.alert.alert-block.fade.in(ng-show="step1.error")
+			.error-text Please provide a password to log in.
+			.error-text(ng-show="step1.invalidCredentials") Shoot! We were not able to log you in using this email and password.
+		.name-group.control-group
+			input.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="email")
+			input.password(type="password",ng-model="customer.password",placeholder="PASSWORD",name="password")
+	fieldset(ng-hide="step1.accountExists")
 		h2 Enter Your Info
 		#error.alert.alert-block.fade.in(ng-show="step1.error")
 			.error-text(ng-show="step1.formError") All fields are required.
 			.error-text(ng-show="step1.noCustomer")
 				p Please provide your info so we can save your plan and invite people. Or
-				a.btn.btn-warning.wembli-sequence-link(href="/login") Click Here to Log In
-			.error-text(ng-show="step1.accountExists")
-				p We've already got an account for that email address.
 				a.btn.btn-warning.wembli-sequence-link(href="/login") Click Here to Log In
 		p We'll use this info to let your guests know who the invitation is from.
 		.name-group.control-group
