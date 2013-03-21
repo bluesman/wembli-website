@@ -89,6 +89,8 @@ exports.plan = {
 				friend.inviteStatus = args.inviteStatus || false;
 				/* make a new inviteStatusToken that will be used to confirm the facebook callback */
 				friend.inviteStatusConfirmation = {token:confirmationToken,timestamp:confirmationTimestamp};
+				/* update the name */
+				friend.contactInfo.name = args.name;
 			} else {
 				console.log('adding a new friend');
 				var set = {
@@ -114,9 +116,11 @@ exports.plan = {
 					return me(null, data);
 				}
 				console.log('saved friend: ' + friend.id);
+				console.log(friend);
 				/* now add the friend to the plan */
 				req.session.plan.addFriend(friend, function(err) {
 					if (err) {
+						console.log(err);
 						data.success = 0;
 						data.dbError = 'unable to add friend ' + friend.id;
 						return me(null, data);

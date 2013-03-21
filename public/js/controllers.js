@@ -376,9 +376,9 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 		formSubmitCallback: function(err, result) {
 			$('#invitation-modal').modal('loading');
 			/* If There's A No Cust Error Send Them Back To Step-1 With An Error */
-			if (result.nocustomer) {
+			if (result.noCustomer) {
 				$scope.step1.error = true;
-				$scope.step1.nocustomer = true;
+				$scope.step1.noCustomer = true;
 				return $scope.gotoStep('step1');
 			}
 
@@ -590,8 +590,10 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 				console.log('back from plan.addFriend')
 				/* If There's A No Cust Error Send Them Back To Step-1 With An Error */
 				if (result.noCustomer) {
-					$scope.step1.error = True;
-					$scope.step1.noCustomer = True;
+					console.log(result);
+					$scope.step1.error = true;
+					$scope.step1.noCustomer = true;
+					$('#invitation-modal').modal('loading');
 					return $scope.gotoStep('step1');
 				}
 
