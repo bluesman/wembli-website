@@ -1,0 +1,24 @@
+#payment-type-modal.modal.hide(ng-controller="PaymentTypeCtrl")
+	#payment-type
+		.modal-header
+			h2 Start Planning!
+		.modal-body
+			p Share the cost with your friends or pay for it all on your own?
+			form#payment-type-form(name="payment-type-form")
+				label.radio
+					input#option-group(ng-model="paymentType",type="radio",name="payment_type",value="group-friends",ng-init="paymentType='group-friends'")
+					.option-content
+						h3 Friends Pay First
+						p Tired of getting stuck with the bill? Breathe easy, just pick an event, invite friends, and have them pony up before shelling out any cash.
+				label.radio
+					input#option-group-self(ng-model="paymentType",type="radio",name="payment_type",value="group-self")
+					.option-content
+						h3 I'll Pay First
+						p Want to guarantee you all get seats together?  Buy the tickets now then use Wembli to split the bill later. Better safe than sitting solo!
+				label.radio
+					input#option-self(ng-model="paymentType", type="radio",name="payment_type",value="self")
+					.option-content
+						h3 I'm Footing The Entire Bill
+						p No need to get paid back?  No problem.  Just buy your tickets, make a plan and send it out to your friends.  They'll get the itinerary and you'll get all the love!
+		.modal-footer
+			a.btn.btn-primary.btn-large.wembli-sequence-link(ng-click="submitForm()",href="{{nextPage}}") Shoot! Let's Do This!

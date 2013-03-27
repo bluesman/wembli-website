@@ -122,8 +122,11 @@ angular.module('wembliApp.services', [])
 .factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
 
 	var inviteFriendsWizard = '/partials/invite-friends-wizard';
+	var paymentType = '/partials/payment-type';
 	var modalPageMap = {
-		'/invitation': [inviteFriendsWizard]
+		'/invitation': [inviteFriendsWizard],
+		'/index':[paymentType],
+		'/':[paymentType],
 	};
 	var modalFetched = {};
 	return {
@@ -132,7 +135,6 @@ angular.module('wembliApp.services', [])
 				for(var i = 0; i < modalPageMap[path].length; i++) {
 					//if the modal has already been fetched, don't fetch it again but do fire the broadcast
 					if(true || (typeof modalFetched[path] === "undefined")) {
-
 						var partialUrl = modalPageMap[path][i];
 
 						$http({

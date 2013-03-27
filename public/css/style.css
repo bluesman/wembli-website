@@ -1916,38 +1916,26 @@ body {
 .info .location {
   width: 340px;
 }
-#content #index-frame {
-  *zoom: 1;
+#payment-type-modal form {
+  margin: 20px;
 }
-#content #index-frame:before,
-#content #index-frame:after {
-  display: table;
-  content: "";
+#payment-type-modal form label.radio {
+  padding: 0 30px;
 }
-#content #index-frame:after {
-  clear: both;
+#payment-type-modal form label.radio input {
+  margin-top: 20px;
 }
-#content #index-frame #left {
-  float: left;
-  min-width: 400px;
+#payment-type-modal form label.radio .option-content {
+  padding: 10px;
 }
-#content #index-frame #right {
-  margin-left: 450px;
-  *zoom: 1;
+#payment-type-modal form label.radio .option-content h3 {
+  color: #6da1b7;
 }
-#content #index-frame #right:before,
-#content #index-frame #right:after {
-  display: table;
-  content: "";
+#payment-type-modal form label.radio:hover {
+  background-color: rgba(66, 127, 184, 0.25);
 }
-#content #index-frame #right:after {
-  clear: both;
-}
-#content #index-frame #right .friends-pay-first {
-  margin-top: 100px;
-}
-#content #index-frame #right .you-pay-first {
-  margin-top: 100px;
+#content #index-frame a {
+  margin-top: 50px;
 }
 #search-box {
   margin: auto;
@@ -2423,14 +2411,17 @@ body {
 #tickets-frame #tickets #group-ticket-list-header-container a#price-header {
   width: 65px;
 }
-#tickets-frame #tickets #ticket-list-header-container a#price-header {
+#tickets-frame #tickets #self-ticket-list-header-container a#price-header {
   width: 65px;
 }
-#tickets-frame #tickets #ticket-list-header-container a#section-header {
-  width: 200px;
+#tickets-frame #tickets #self-ticket-list-header-container a#section-header {
+  width: 195px;
+  text-align: left;
+  margin-left: 5px;
 }
-#tickets-frame #tickets #ticket-list-header-container a#qty-header {
+#tickets-frame #tickets #self-ticket-list-header-container a#qty-header {
   width: 100px;
+  text-align: left;
 }
 #tickets-frame #tickets .ticket-list-container .ticket-row:hover {
   background-color: rgba(66, 127, 184, 0.25);
@@ -2505,6 +2496,12 @@ body {
 }
 #tickets-frame #tickets .ticket-list-container .ticket-row > div {
   float: left;
+}
+#tickets-frame #tickets #self-ticket-list-container .ticket-info {
+  margin-top: 0;
+}
+#tickets-frame #tickets #self-ticket-list-container .ticket-row .ticket-price {
+  margin: 0 10px;
 }
 /* this applies to login and signup */
 /* this is the old facebook login with the image */

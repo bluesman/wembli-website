@@ -1,20 +1,29 @@
-#content {
-	#index-frame {
-		.clearfix();
-		#left {
-			float:left;
-			min-width:400px;
-
+#payment-type-modal {
+	form {
+		margin:20px;
+		label.radio {
+			padding:0 30px;
+			input {
+				margin-top:20px;
+			}
+			.option-content {
+				padding:10px;
+				h3 {
+					color:@blueLight;
+				}
+			}
 		}
-		#right {
-			margin-left:450px;
-			.clearfix();
-			.friends-pay-first {
-				margin-top:100px;
-			}
-			.you-pay-first {
-				margin-top:100px;
-			}
+		label.radio:hover {
+			#translucent > .background(@blue,0.25);
+		}
+	}
+}
+
+#content {
+
+	#index-frame {
+		a {
+			margin-top:50px;
 		}
 	}
 }

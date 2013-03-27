@@ -11,10 +11,20 @@ function MainCtrl($scope, $location, $window, footer) {
 /*
 * Index Controller
 */
-function IndexCtrl($scope, $templateCache, wembliRpc) {
-
+function IndexCtrl($scope, $location, $templateCache, wembliRpc, fetchModals) {
 	//clear the cache when the home page loads to make sure we start fresh
 	$templateCache.removeAll();
+
+	$scope.startPlan = function() {
+		$('#payment-type-modal').modal('show');
+	}
+
+	$scope.$on('payment-type-modal-fetched', function(e, args) {
+		console.log('index location hash '+$location.hash());
+		if ($location.hash() === "payment-type-modal") {
+			$('#payment-type-modal').modal('show');
+		}
+	});
 
 	/* this doesn't do anything right now
 	wembliRpc.fetch('index.init', {},
@@ -24,7 +34,17 @@ function IndexCtrl($scope, $templateCache, wembliRpc) {
 	*/
 };
 
-
+function PaymentTypeCtrl($scope) {
+	var linkMap = {
+		'group-friends':'/start-plan/first',
+		'group-self':'/start-plan/last',
+		'self':'/buy-now'
+	};
+	$scope.submitForm = function() {
+		console.log($scope.paymentType);
+		$scope.nextPage = linkMap[$scope.paymentType];
+	}
+};
 
 /*
 * Confirm Email Controller

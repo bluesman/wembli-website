@@ -42,28 +42,28 @@ module.exports = function(app) {
 		},[args,req,res]);
 	};
 
-	app.get('/partials/start-plan',function(req,res) {
+	app.get('/partials/start-plan/:groupPayment',function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.payment = 'group';
+		req.session.plan.preferences.groupPayment = (req.param('groupPayment') === 'first' ? 'first' : 'last');
 		res.render('partials/start-plan',{partial:true});
 	});
 
-	app.get('/start-plan',function(req,res) {
+	app.get('/start-plan/:groupPayment',function(req,res) {
 		//set session pref to indicate that this person wants to have friends pay up front
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.payment = 'group';
+		req.session.plan.preferences.groupPayment = (req.param('groupPayment') === 'first' ? 'first' : 'last');
 		searchView(req,res);
 	});
 
 	app.get('/partials/buy-now',function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.payment = 'self';
+		req.session.plan.preferences.groupPayment = 'never';
 		res.render('partials/buy-now',{partial:true});
 	});
 
 	app.get('/buy-now',function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.payment = 'self';
+		req.session.plan.preferences.groupPayment = 'never';
 		searchView(req,res);
 	});
 

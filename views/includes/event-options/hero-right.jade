@@ -3,17 +3,6 @@ block hero-right
 		.event-data(ng-cloak, event-id="#{eventId}",direction="-1")
 		form#event-options-form(name="eventOptionsForm",method="post",action="/event-options/#{eventId}/#{eventName}",enctype="application/x-www-form-urlencoded")
 			fieldset
-				- /*
-				#payment-options.options-group
-					h2 Payment Options:
-					.error-text(ng-show="paymentOptionsError") Dude, SOMEONE has to pay for this...please choose a payment option.
-					.control-group
-						input(type="radio",name="payment",value="group",ng-checked="payment=='group'")
-						label I'm coordinating this outing with friends and we're splitting the bill
-					.control-group
-						input(type="radio",name="payment",value="self",ng-checked="payment=='self'")
-						label I'm planning this outing and footing the bill (that's how i roll)
-				- */
 				#add-ons.options-group
 					h2 Add-Ons:
 					.error-text(ng-show="addOnsError") Error with add-ons...

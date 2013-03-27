@@ -77,7 +77,6 @@ module.exports = function(app) {
 
 		//set the form data in the session so the angular app can read any errors
 		req.session.eventOptionsForm = {
-			//payment:      req.param('payment'),
 			parking:      req.param('parking') ? true : false,
 			restaurant:   req.param('restaurant') ? true : false,
 			hotel:        req.param('hotel') ? true : false,
@@ -138,7 +137,7 @@ module.exports = function(app) {
 			});
 		}
 
-		options.payment = req.session.plan.preferences.payment;
+		options.groupPayment = req.session.plan.preferences.groupPayment;
 
 		/* if this visitor already has a req.session.plan and they are the organizer and it is the same eventId as req.session.eventId
 		then override only the preferences */
