@@ -243,6 +243,34 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
+.directive('buyTicketsOffsite',
+  ['$rootScope', '$window', '$location', '$http', 'fetchModals', 'plan',
+  function($rootScope, $window, $location, $http, fetchModals, plan) {
+
+    /* display a modal when they click to go off and buy tickets */
+    fetchModals.fetch('/tickets-offsite',function(err) {
+      if (err) {
+        return console.log('no modal for buy tickets offsite');
+      }
+      plan.get(function(plan) {
+        $rootScope.plan = plan;
+        console.log('plan in butTicketsOffsite:'+plan.event.eventId);
+      });
+    });
+
+
+  return {
+    restrict:'EAC',
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+        element.click(function(e) {
+          $('#tickets-offsite-modal').modal('show');
+        });
+      }
+    }
+  };
+}])
+
 //directive to cause link click to go to next frame rather than fetch a new page
 .directive('wembliSequenceLink',
   ['$rootScope', '$window', '$templateCache', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan',

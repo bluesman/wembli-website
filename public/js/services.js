@@ -127,6 +127,7 @@ angular.module('wembliApp.services', [])
 		'/invitation': [inviteFriendsWizard],
 		'/index':[paymentType],
 		'/':[paymentType],
+		'/tickets-offsite':['/partials/tickets-offsite']
 	};
 	var modalFetched = {};
 	return {
@@ -146,14 +147,20 @@ angular.module('wembliApp.services', [])
 
 							modalFetched[path] = $('body :first-child').attr('id');
 
+							if (callback) {	callback();	};
+
 							//send a broadcast that the modal is loaded
 							$rootScope.$broadcast($('body :first-child').attr('id') + '-fetched', {
 								modalId: $('body :first-child').attr('id')
 							});
-						}).error(function() {
+						}).error(function(err) {
+							if (callback) { callback(err); };
 							console.log('error getting: ' + partialUrl);
 						});
 					} else {
+
+						if (callback) {	callback();	};
+
 						//send a broadcast that the modal is loaded
 						$rootScope.$broadcast(modalFetched[path] + '-fetched', {
 							modalId: modalFetched[path]

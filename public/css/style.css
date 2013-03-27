@@ -2224,8 +2224,9 @@ body {
 }
 #tickets-frame #map-background .ZoomControls {
   position: absolute;
-  left: 5px;
-  top: 40px;
+  left: 75px;
+  top: 6px;
+  width: 35px;
   z-index: 10;
   color: #ffffff;
   font-weight: bold;
@@ -2242,8 +2243,8 @@ body {
   cursor: pointer;
   display: block;
   font-size: 14px;
-  height: 19px;
-  margin: 0 4px;
+  height: 20px;
+  margin: 5px 4px;
   width: 25px;
   float: left;
 }

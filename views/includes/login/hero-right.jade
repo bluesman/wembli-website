@@ -5,7 +5,7 @@ block hero-right
 			a#facebook-login-button.btn.btn-primary(target="_self",href="/auth/facebook")
 				i.icon-facebook.icon-2x.pull-left
 				span Login with Facebook
-			#or.architect OR
+			#or.segoe OR
 			form#login-form(name="loginForm",method="post",action="/login",enctype="application/x-www-form-urlencoded")
 				input.redirect-url(ng-model="redirectUrl", type="hidden",name="redirectUrl",value="")
 				input(type="hidden",ng-model="formError", value="")

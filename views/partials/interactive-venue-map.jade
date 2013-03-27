@@ -7,8 +7,8 @@
 		.event-social-links
 		- console.log('plan prefs in interactive venuemap');
 		- console.log(plan.preferences);
-		- if (plan.preferences.groupPayment === 'never')
-			include interactive-venue-map/self
+		- if (plan.preferences.payment === 'split-first')
+			include interactive-venue-map/read-only
 		- else
-			include interactive-venue-map/group
+			include interactive-venue-map/buy-now
 

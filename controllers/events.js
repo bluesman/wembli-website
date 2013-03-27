@@ -137,7 +137,7 @@ module.exports = function(app) {
 			});
 		}
 
-		options.groupPayment = req.session.plan.preferences.groupPayment;
+		options.payment = req.session.plan.preferences.payment;
 
 		/* if this visitor already has a req.session.plan and they are the organizer and it is the same eventId as req.session.eventId
 		then override only the preferences */

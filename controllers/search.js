@@ -12,11 +12,6 @@ var wembliModel = require('wembli-model'),
 module.exports = function(app) {
 
 	var searchView = function(req, res) {
-
-		//clear the updateEvent session so searches start over
-		//this session variable allows you to swap out the event for an existing plan
-		//delete req.session.updateEvent;
-
 		/*
 			args holds the args for the TN GetEvent call
 			args.beginDate
@@ -42,28 +37,17 @@ module.exports = function(app) {
 		},[args,req,res]);
 	};
 
-	app.get('/partials/start-plan/:groupPayment',function(req,res) {
+	app.get(/\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.groupPayment = (req.param('groupPayment') === 'first' ? 'first' : 'last');
+		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
 		res.render('partials/start-plan',{partial:true});
 	});
 
-	app.get('/start-plan/:groupPayment',function(req,res) {
-		//set session pref to indicate that this person wants to have friends pay up front
+	app.get(/\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
+		console.log('payment: '+req.param[0]);
+		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.groupPayment = (req.param('groupPayment') === 'first' ? 'first' : 'last');
-		searchView(req,res);
-	});
-
-	app.get('/partials/buy-now',function(req,res) {
-		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.groupPayment = 'never';
-		res.render('partials/buy-now',{partial:true});
-	});
-
-	app.get('/buy-now',function(req,res) {
-		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.groupPayment = 'never';
+		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
 		searchView(req,res);
 	});
 

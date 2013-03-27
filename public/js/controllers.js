@@ -34,18 +34,6 @@ function IndexCtrl($scope, $location, $templateCache, wembliRpc, fetchModals) {
 	*/
 };
 
-function PaymentTypeCtrl($scope) {
-	var linkMap = {
-		'group-friends':'/start-plan/first',
-		'group-self':'/start-plan/last',
-		'self':'/buy-now'
-	};
-	$scope.submitForm = function() {
-		console.log($scope.paymentType);
-		$scope.nextPage = linkMap[$scope.paymentType];
-	}
-};
-
 /*
 * Confirm Email Controller
 */
