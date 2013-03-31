@@ -48,6 +48,7 @@ module.exports = function(app) {
 			if ((err == null) && (c != null)) {
 				//make a digest from the email
 				var digest = wembliUtils.digest(req.param('password'));
+				console.log('comparing: '+digest+' to '+c.password);
 				if (typeof c.password != "undefined" && c.password == digest) {
 					req.session.loggedIn = true;
 					req.session.customer = c;
