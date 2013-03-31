@@ -5,11 +5,13 @@ footer#footer(ng-controller="FooterCtrl")
 		//- make sure you give every li an id this must correspond with location.href.
 		li#search.wembli-sequence-link
 			a#nav-search(ng-class="{'/search':'active'}[currentPath]", href="/search")
-				#search-title.segoe Search
+				#search-title.segoe
+					i.icon-search
+					span &nbsp;Search
 				.arrow-right
 		li#index.wembli-sequence-link
 			a(href="/") Home
-		li#tickets.wembli-sequence-link
+		li#tickets.wembli-sequence-link(loading-duration="1500")
 			a(ng-href="{{ticketsLink}}") Tickets
 		li#invitation.wembli-sequence-link
 			a(href="/invitation") Invite

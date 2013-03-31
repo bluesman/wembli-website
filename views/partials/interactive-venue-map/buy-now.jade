@@ -30,7 +30,7 @@ ul#self-ticket-list-container.ticket-list-container
 			.seat-row-name Row: {{ticket.Row}}
 		.qty-container
 			strong Qty:
-			select(name="qty-{{ticket.ID}}")
-				option(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+			select(id="qty-{{ticket.ID}}",name="qty-{{ticket.ID}}")
+				option(value="{{split}}", ng-repeat="split in ticket.ValidSplits.int") {{split}}
 			.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
-		a.btn.btn-primary.btn-large.buy-tickets-offsite(ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticketreq.sessionId()}}",target="_blank") Buy
+		a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket-price="{{ticket.ActualPrice}}",ticket-id="{{ticket.ID}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticketreq.sessionId()}}",target="_blank") Buy

@@ -1,5 +1,5 @@
 .social-loader(ng-hide="twitter.loginStatusLoaded") Loading...
-form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="twitter.loginStatusLoaded", novalidate)
+form#invite-wizard-step3-form.twitter-widget(name="step3",ng-cloak,ng-show="twitter.loginStatusLoaded", novalidate)
 	fieldset
 		h2 Search For Twitter Friends To Invite
 		#twitter-need-login(ng-hide="twitter.service.getAuth()")

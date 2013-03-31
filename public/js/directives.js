@@ -28,7 +28,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           }
         });
 
-        console.log('plan.get interactive venuemap');
         plan.get(function(plan) {
           //get the tix and make the ticket list
           wembliRpc.fetch('event.getTickets', {
@@ -165,15 +164,15 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
           /* transformRequest */
           function(data, headersGetter) {
-            $('#page-loading-modal').modal("show");
+            //$('#page-loading-modal').modal("show");
             return data;
           },
 
           function(data, headersGetter) {
-            setTimeout(function() {
+/*            setTimeout(function() {
               $('#page-loading-modal').modal("hide");
             }, 3000);
-            return JSON.parse(data);
+*/            return JSON.parse(data);
           });
         });
       }
@@ -232,10 +231,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
       return function(scope, element, attr) {
         scope.direction = attr.direction;
-        console.log('plan.get in event-data');
         plan.get(function(plan) {
-          console.log('init event data');
-          console.log(plan.event);
           scope.event = plan.event;
         });
       }
@@ -243,38 +239,99 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('buyTicketsOffsite',
-  ['$rootScope', '$window', '$location', '$http', 'fetchModals', 'plan',
-  function($rootScope, $window, $location, $http, fetchModals, plan) {
+.directive('twitterWidget',['$window',function($window) {
+  return {
+    restrict: 'C',
+    compile: function(element, attr, transclude) {
 
-    /* display a modal when they click to go off and buy tickets */
-    fetchModals.fetch('/tickets-offsite',function(err) {
-      if (err) {
-        return console.log('no modal for buy tickets offsite');
+      $window.twttr = (function (d,s,id) {
+        var t, js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
+        js.src="//platform.twitter.com/widgets.js"; element.append(js);
+        return $window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+      }(document, "script", "twitter-wjs"));
+
+
+      return function(scope, element, attr) {
+        console.log('twitter timeline');
+        $window.twttr.ready(function(twttr) {
+          //-twttr.widgets.load();
+        });
       }
-      plan.get(function(plan) {
-        $rootScope.plan = plan;
-        console.log('plan in butTicketsOffsite:'+plan.event.eventId);
-      });
-    });
+    }
+  }
+}])
+
+.directive('buyTicketsOffsite',
+  ['$rootScope', '$window', '$location', '$http', '$timeout','fetchModals', 'plan',
+  function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 
 
   return {
     restrict:'EAC',
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
+
         element.click(function(e) {
-          $('#tickets-offsite-modal').modal('show');
+          var qty = $('#qty-'+attr.ticketId).val();
+          var shipping = 15;
+          var serviceCharge = (parseFloat(attr.ticketPrice) * .15) * parseInt(qty);
+          var actualPrice = attr.ticketPrice * parseInt(qty);
+          var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
+          $('#amount-paid').val(parseFloat(amountPaid).toFixed(2));
+          $('#qty').val(parseInt(qty));
+
+          var Promise = $timeout(function() {
+            $('#tickets-offsite-modal').modal('show');
+          },1500);
         });
       }
     }
   };
 }])
 
+.directive('focusOnClick',['$timeout', function($timeout) {
+  return {
+    restrict:'C',
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+        var focus = function() {
+          console.log('trying to set focus');
+          $timeout(function() {
+            element.focus();
+            if (!element.is(':focus')) {
+              focus();
+            }
+          },100);
+        };
+
+        element.click(function(e) {
+          focus();
+        })
+      }
+    }
+  }
+}])
+
+.directive('startPlan',['$rootScope',function($rootScope) {
+  return {
+    restrict:'C',
+    compile: function(element, attr, transclude) {
+      return function(scope,element,attr) {
+        element.click(function() {
+          $rootScope.$broadcast('paymentTypeModalNextLink',{nextLink:attr.href});
+          /* show the popup to collect payment type */
+          $('#payment-type-modal').modal('show');
+        });
+      }
+    }
+  }
+}])
+
 //directive to cause link click to go to next frame rather than fetch a new page
 .directive('wembliSequenceLink',
-  ['$rootScope', '$window', '$templateCache', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan',
-  function($rootScope, $window, $templateCache, $location, $http, $compile, footer, sequence, fetchModals, plan) {
+  ['$rootScope', '$window', '$templateCache', '$timeout','$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan',
+  function($rootScope, $window, $templateCache, $timeout,$location, $http, $compile, footer, sequence, fetchModals, plan) {
 
   return {
     restrict: 'EAC',
@@ -282,7 +339,25 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       //return linking function
       return function(scope, element, attr) {
         element.click(function(e) {
-          console.log('clicked sequence link');
+          var loadingDuration = 500;
+
+          if (attr.loadingDuration) {
+            loadingDuration = parseInt(attr.loadingDuration);
+          }
+
+          /* hide any modals right now */
+          $(".modal").modal("hide");
+          /* show the page loading modal */
+          $('#page-loading-modal').modal("show");
+          console.log('loading duration');
+          console.log(loadingDuration);
+          $rootScope.$on('sequence-afterNextFrameAnimatesIn', function() {
+            //dismiss any modals
+            $timeout(function() {
+              $('#page-loading-modal').modal("hide");
+            },loadingDuration);
+          });
+
           e.preventDefault();
 
           var direction = 1;
@@ -365,8 +440,11 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             }
 
             if(samePage) {
+              $(".modal").modal("hide");
               return angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
             }
+
+            scope.$emit('viewContentLoaded',{});
 
             //what frame to go to:
             var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
@@ -402,7 +480,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             direction = parseInt(attr.direction)  || parseInt(scope.direction) || direction;
 
             //fetch the plan
-            console.log('wembli-sequence-link force fetching updated plan');
             plan.fetch(function() {
               //compile the page we just fetched and link the scope
               angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
@@ -425,8 +502,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               $rootScope.currentPath = $location.path();
               $rootScope.currentFrame = nextFrameID;
 
-              //dismiss any modals
-              $(".modal").modal("hide");
             });
 
           }).error(function() {

@@ -1,4 +1,4 @@
-#payment-type-modal.modal.hide
+#payment-type-modal.modal.hide(ng-controller="PaymentTypeModalCtrl")
 	#payment-type
 		.modal-header
 			h2 Start Planning!
@@ -8,12 +8,12 @@
 				label.radio
 					input#option-split-first(ng-model="paymentType",type="radio",name="payment_type",value="split-first",ng-init="paymentType='split-first'")
 					.option-content
-						h3 Friends Pay First
+						h3 Friends Chip In Up Front
 						p Tired of getting stuck with the bill? Breathe easy, just pick an event, invite friends, and have them pony up before shelling out any cash.
 				label.radio
 					input#option-split-after(ng-model="paymentType",type="radio",name="payment_type",value="split-after")
 					.option-content
-						h3 I'll Pay First
+						h3 I'll Pay First, Then Collect Later
 						p Want to guarantee you all get seats together?  Buy the tickets now then use Wembli to split the bill later. Better safe than sitting solo!
 				label.radio
 					input#option-no-split(ng-model="paymentType", type="radio",name="payment_type",value="no-split")
@@ -21,4 +21,6 @@
 						h3 I'm Footing The Entire Bill
 						p No need to get paid back?  No problem.  Just buy your tickets, make a plan and send it out to your friends.  They'll get the itinerary and you'll get all the love!
 		.modal-footer
-			a.btn.btn-primary.btn-large.wembli-sequence-link(ng-href="/start-plan/{{paymentType}}") Let's Do This!
+			a.btn.btn-primary.btn-large.wembli-sequence-link(ng-href="/start-plan/{{paymentType}}?next={{nextLink}}")
+				span Let's Do This!&nbsp;
+				i.icon-double-angle-right

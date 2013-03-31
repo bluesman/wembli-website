@@ -36,6 +36,7 @@ module.exports = function(app) {
 				var savePrefs = req.session.plan.preferences;
 				req.session.plan = new Plan({guid: Plan.makeGuid()});
 				req.session.plan.preferences = {payment:savePrefs.payment};
+				req.session.plan.preferences.tickets = savePrefs.tickets;
 			}
 
 			req.session.plan.event.eventId    = req.param("eventId");

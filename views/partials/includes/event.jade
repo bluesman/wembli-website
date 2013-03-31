@@ -1,8 +1,8 @@
 - var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 - lastSearch += '?updateEvent=1';
-- var btnText = "Find Tickets";
-- if (typeof req.session.payment != "undefined")
-	- btnText = (req.session.payment == 'self') ? 'Find Tickets' : 'Start Plan';
+- var payment;
+- if (plan && (typeof plan.preferences !== "undefined"))
+	- payment = plan.preferences.payment;
 a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 .event-date-box
 	span.day {{getDate(event.Date)| date:'EEE'}}
@@ -18,5 +18,13 @@ a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 				a#changeEvent(href="/search/#{lastSearch}") Change Event
 	.pull-right
 		.cta
-			a.btn.btn-primary.choose-event(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
-				span= btnText
+			case payment
+				when "split-first"
+					a.btn.btn-primary.choose-event.wembli-sequence-link(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+				when "split-after"
+					a.btn.btn-primary.choose-event.wembli-sequence-link(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+				when "no-split"
+					a.btn.btn-primary.choose-event.wembli-sequence-link(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+				default
+					a.btn.btn-primary.choose-event.start-plan(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+

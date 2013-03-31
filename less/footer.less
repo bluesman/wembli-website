@@ -19,15 +19,15 @@
   }
 
   .center-search { display:none;}
-  .center- { left:145px; }
-  .center-tickets { left:230px; }
-  .center-invitation { left:313px; }
-  .center-parking { left:400px; }
-  .center-restaurants { left:512px; }
-  .center-hotels { left:626px; }
-  .center-login { left:710px; }
-  .center-dashboard {left:730px;}
-  .center-signup { left:790px; }
+  .center- { left:185px; }
+  .center-tickets { left:272px; }
+  .center-invitation { left:362px; }
+  .center-parking { left:455px; }
+  .center-restaurants { left:576px; }
+  .center-hotels { left:690px; }
+  .center-login { left:782px; }
+  .center-dashboard {left:795px;}
+  .center-signup { left:873px; }
 
   ul#nav {
 		.clearfix();
@@ -43,14 +43,15 @@
         float:left;
         font-size:18px;
         padding:0 15px 0;
-        color:@grayLighter
+        color:@grayLighter;
+        text-align:center;
       }
       a:link, a:visited {color:@grayLighter;}
       a:hover {color:@orange;}
       a.active:link, a.active:hover, a.active:visited {color:@white;}
 
       a#nav-search {
-				width:115px;
+				width:150px;
  				padding:0 10px 0 0;
 
   			#search-title {
@@ -61,7 +62,7 @@
   				text-transform: none;
   				padding:right:0;
   				background-color:@white;
-  				width:75px;
+  				width:110px;
   			}
 
  				.arrow-right {
@@ -86,6 +87,17 @@
 				}
 			}
   	}
+
+    li#index { a {width:50px;} }
+    li#tickets { a {width:60px;} }
+    li#invitation { a { width:60px;} }
+    li#parking { a {width:70px;} }
+    li#restaurants { a {width:110px;} }
+    li#hotels { a {width:60px;} }
+    li#signup { a { width:70px;} }
+    li#login { a {width:60px;} }
+    li#dashboard { a { width:100px;} }
+    li#logout { a {width:80px;} }
 
     li#handle {
       margin:20px;

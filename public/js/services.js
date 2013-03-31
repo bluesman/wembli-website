@@ -16,6 +16,10 @@ angular.module('wembliApp.services', [])
 	//if there is a class 'animate-in' in the doc,then set currentFrame = 2 which will make the frame animate in
 	$rootScope.currentFrame = ($('#content').find('.animate-in')[0]) ? 2 : 1;
 
+	$rootScope.pageLoadingModal = {};
+	$rootScope.pageLoadingModal.header = 'Loading the next bit of awesome...';
+	$rootScope.pageLoadingModal.body = 'When you can take the pebble from my hand, it will be time for you to leave.'
+
 	//templates can't make a date for some reason
 	$rootScope.getDate = function(d) {
 		return new Date(d);
@@ -78,14 +82,11 @@ angular.module('wembliApp.services', [])
 			wembliRpc.fetch('plan.init', {},
 				//response
 				function(err, result) {
-					console.log('result from plan init');
-					console.log(result);
+
 					if(typeof result.plan !== "undefined") {
 						self.plan    = result.plan
 						self.friends = result.friends;
 					}
-					console.log('plan.init results');
-					console.log(result);
 
 					self.fetchInProgress = false;
 					$rootScope.$broadcast('plan-fetched',{});
@@ -127,6 +128,7 @@ angular.module('wembliApp.services', [])
 		'/invitation': [inviteFriendsWizard],
 		'/index':[paymentType],
 		'/':[paymentType],
+		'/search':[paymentType],
 		'/tickets-offsite':['/partials/tickets-offsite']
 	};
 	var modalFetched = {};
@@ -461,7 +463,7 @@ angular.module('wembliApp.services', [])
 
 
 	wembliRpc.fetch = function(method, args, callback, transformRequest, transformResponse) {
-	var cache = (args.cache) ? true : false;
+		var cache = (args.cache) ? true : false;
 		if (cache) { delete args.cache; }
 
 		jsonRpc.method = method;
@@ -469,18 +471,32 @@ angular.module('wembliApp.services', [])
 		var data = JSON.stringify(jsonRpc);
 
 		/* store this in a cache with stringified data as key */
-		var cb = function(err, data) {
+		var cb = function(err, result) {
 			var eventName = 'wembliRpc:';
+
+			if (err) {
+				console.log(err);
+				$rootScope.$broadcast(eventName + 'error', {
+					'method': method
+				});
+				/* show error modal? */
+				var ret = callback(err);
+				$rootScope.$broadcast(eventName + 'callbackComplete', {
+					'method': method
+				});
+				return;
+			}
+
 			$rootScope.$broadcast(eventName + 'success', {
 				'method': method
 			});
 
 			/* every wembliRpc call should try to return the customer */
-			if(typeof data.customer !== "undefined") {
-				customer.set(data.customer);
-				$rootScope.$broadcast('customer-fetched',{});
+			if(typeof result.customer !== "undefined") {
+				customer.set(result.customer);
+				$rootScope.$broadcast('customer-fetched',{customer:customer});
 			}
-			var ret = callback(err, data);
+			var ret = callback(err, result);
 			$rootScope.$broadcast(eventName + 'callbackComplete', {
 				'method': method
 			});
@@ -518,7 +534,11 @@ angular.module('wembliApp.services', [])
 			if (cache) {
 				wembliRpc._cache[data] = result.data.result;
 			}
-			return cb(null, result.data.result);
+			if (result.data.error) {
+				return cb(result.data.error);
+			} else {
+				return cb(null, result.data.result);
+			}
 		}).error(function(err) {
 			callback(err);
 		});
@@ -572,7 +592,7 @@ angular.module('wembliApp.services', [])
 			$('#nav-arrow').show();
 			$('#nav-arrow').animate({
 				left: moveTo
-			}, 1000, function() {
+			}, 750, function() {
 				$('#nav-arrow').removeClass(startClass)
 				$('#nav-arrow').addClass(endClass);
 			});

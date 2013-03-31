@@ -1,11 +1,55 @@
+var ticketNetwork = require('../lib/wembli/ticketnetwork');
+var async         = require('async');
+var eventRpc      = require('../rpc/event').event;
+var dateUtils     = require('date-utils');
+var ua            = require('useragent');
+//ua(true); //sync with remote server to make sure we have the latest and greatest
+var querystring = require('querystring');
+var wembliModel = require('wembli-model'),
+    Customer    = wembliModel.load('customer'),
+    Plan        = wembliModel.load('plan');
 
 module.exports = function(app) {
 
-	app.get('/', function(req, res) {
+	app.get(/^\/(index)?$/, function(req, res) {
+		var args = {};
+		args.beginDate     = getBeginDate();
+		args.orderByClause = 'Date'; //order by date
 
-		res.render('index', {
-			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
-		});
+		if (typeof req.session.ipinfo != "undefined") {
+			args.nearZip = req.session.ipinfo.postal_code;
+		}
+
+		//get nearby events:
+		eventRpc['get'].apply(function(err,results) {
+			console.log(results);
+			console.log(err);
+			res.render('index', {
+				events: results.event,
+				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+			});
+		},[args,req,res]);
+
+	});
+
+	app.get('/partials/index', function(req, res) {
+		var args = {};
+		args.beginDate     = getBeginDate();
+		args.orderByClause = 'Date'; //order by date
+
+		if (typeof req.session.ipinfo != "undefined") {
+			args.nearZip = req.session.ipinfo.postal_code;
+		}
+
+		//get nearby events:
+		eventRpc['get'].apply(function(err,results) {
+			console.log(results);
+			console.log(err);
+			res.render('partials/index', {
+				events: results.event,
+				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+			});
+		},[args,req,res]);
 
 	});
 
@@ -45,3 +89,11 @@ module.exports = function(app) {
 
 };
 
+function getBeginDate() {
+	var daysPadding = 2; //how many days from today for the beginDate
+	var d = Date.today();
+	d2 = new Date(d);
+	d2.setDate(d.getDate() + 2);
+	//format the beginDate for the tn query
+	return d2.format("shortDate");
+}

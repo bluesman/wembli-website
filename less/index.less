@@ -20,10 +20,215 @@
 }
 
 #content {
-
 	#index-frame {
-		a {
-			margin-top:50px;
+		.clearfix();
+		background: transparent url('/images/home-background-top.jpg') no-repeat center top ;
+		min-height:300px;
+
+		.copy {
+			position:relative;
+			left:360px;
+			width:510px;
+			font-size:28px;
+			color:@blueDark;
+			text-shadow: #000 1px 2px 1px;
+			top:80px;
+		}
+
+		a#start-now {
+			background:transparent url('/images/layout/start-now-button.png') no-repeat center center;
+			height:130px;
+			width:202px;
+			display:block;
+			position:relative;
+			left:840px;
+			margin:40px 0;
+		}
+		a#start-now:hover {
+			background:transparent url('/images/layout/start-now-button-yellow.png') no-repeat center center;
+		}
+
+		#how-it-works {
+			margin:130px auto 0;
+			width:600px;
+			color:@blueDarker;
+			font-size: 20px;
+			text-align:center;
+		}
+
+		#circles {
+			width:600px;
+			.clearfix();
+			margin:15px auto;
+
+			.circle {
+				background:transparent url('/images/home-circle.png') no-repeat center center;
+				height:109px;
+				width:140px;
+				float:left;
+
+				i {
+					margin-top:32px;
+				}
+			}
+
+			.alligator {
+				margin:40px 22px;
+			}
+
+			.circle-text {
+				font-size:16px;
+				color:@blueDarker;
+				margin-top:35px;
+			}
+
+			#circle-left {
+				margin-left:10px;
+			}
+			#circle-middle {
+				margin:0;
+			}
+			#circle-right {
+				margin-right:10px;
+			}
+
+		}
+
+		#feeds {
+			width: 1024px;
+			margin:60px auto 0;
+			.clearfix();
+
+			.feed {
+				float:left;
+				font-family: "Calibri";
+
+				.header {
+					text-align:center;
+					color:#FFF;
+					font-size: 18px;
+					line-height: 64px;
+					vertical-align: middle;
+				}
+
+				.body {
+					.clearfix();
+					height:500px;
+					overflow: auto;
+					padding:40px 0;
+				}
+			}
+			#feed-left {
+				.header {
+					margin-top:11px;
+					background:transparent url('/images/upcoming-events.png') no-repeat center top;
+					height:83px;
+					width:356px;
+					line-height:94px;
+					position:relative;
+					z-index: 1;
+				}
+				.body {
+					background-color:#CCC;
+					margin:-30px 1px;
+
+					.event-wrapper {
+
+						.event-date-box {
+							background: @grayLighter;
+							width:50px;
+							height:50px;
+							margin:10px;
+
+							.day,.time {
+								margin-top:2px;
+								text-transform: uppercase;
+								font-size:10px;
+								line-height:14px;
+							}
+
+							.event-date {
+								margin:0 0 2px;
+								font-size:11px;
+								font-weight:bold;
+								line-height:14px;
+							}
+						}
+
+						.info {
+							margin-left:20px;
+							margin-top:4px;
+
+							.cta {
+								margin:4px;
+								.clearfix();
+
+								.choose-event {
+									font-size:14px;
+									padding: 2px 5px;
+								}
+							}
+
+							.name, .venue,.location {
+								width:190px;
+								font-size:14px;
+							}
+						}
+					}
+				}
+			}
+
+			#feed-middle {
+				.header {
+					margin:10px 8px;
+					background:transparent url('/images/twitter-feed.png') no-repeat center top;
+					height:84px;
+					width:267px;
+					line-height:95px;
+					position:relative;
+					z-index: 1;
+				}
+				.body {
+					background-color:#333;
+					margin:-40px 10px;
+					padding:40px 0px 0px;
+					height:540px;
+				}
+
+			}
+
+			#feed-right {
+				.header {
+					margin-top:23px;
+					background:transparent url('/images/recent-posts.png') no-repeat center top;
+					height:70px;
+					width:360px;
+					position:relative;
+					z-index: 1;
+				}
+				.body {
+					background-color:#808080;
+					margin:-30px 1px;
+					font-size:18px;
+					height:501px;
+					.quote {
+						width:298px;
+						margin:0px 30px 65px;
+						text-align:left;
+					}
+
+					.name {
+						font-style: italic;
+						margin:12px;
+					}
+				}
+
+			}
+
+		}
+
+		#directory {
+			height:60px;
 		}
 	}
 }

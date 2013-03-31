@@ -40,7 +40,12 @@ module.exports = function(app) {
 	app.get(/\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
-		res.render('partials/start-plan',{partial:true});
+
+		if(req.param('next')) {
+			res.redirect(req.param('next'));
+		} else {
+			res.render('partials/start-plan',{partial:true});
+		}
 	});
 
 	app.get(/\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
@@ -48,7 +53,11 @@ module.exports = function(app) {
 		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
-		searchView(req,res);
+		if(req.param('next')) {
+			res.redirect(req.param('next'));
+		} else {
+			searchView(req,res);
+		}
 	});
 
 	app.get('/search/?', searchView);

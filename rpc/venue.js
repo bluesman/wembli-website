@@ -1,87 +1,75 @@
-var sys = require('sys'),
-    venue = require('../models/venue'),
-    venue = require('../models/media');
+var ticketNetwork = require('../lib/wembli/ticketnetwork');
+var async = require('async');
 
 exports.venue = {
 
-    get: function(id,name) {
-	var me = this;
-	//get the matching mongo row for this
-	var venueObj = new Venue();
+	get: function(args, req, res) {
+		var me = this;
+		args.cnt = (args.cnt) ? args.cnt : 15;
 
-	if ("undefined" !== typeof id) {
-	    //have an id? use it
-	    venueObj.findById(id,function(err,venue) {
-		    if(venue){venue.id = venue._id.toHexString();}
-		    me(null,venue);
-		});
+		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
+		ticketNetwork.GetVenue(args, function(err, results) {
+			console.log('venue.get');
+			console.log(results);
+			if (err) {
+				return me(err);
+			}
 
-	} else if("undefined" !== typeof name) {
-	    venueObj.findByName(name,function(err,venue) {
-		    if(venue != null){venue.id = venue._id.toHexString();}
-		    me(null,venue);
-		});
+			//if lastEventId is passed in, determine which element has that Id and start the splice there
+			var beginIdx = 0;
+			if (args.lastEventId) {
+				for (var i = results.Venue.length - 1; i >= 0; i--) {
+					if (results.Venue[i].ID == args.lastVenueId) {
+						beginIdx = i+1;
+					}
+				}
+			}
 
-	} else {
-	    me("Invalid parameters supplied to venue.get(): id or name is required");
-	}
-    },
-
-
-    search: function(name,event_type,address,ip,lat,lon,proximity) {
-	var me = this;
-	//get the matching mongo row for this
-	var venueObj = new Venue();
-
-
-	if ("undefined" !== typeof name) {
-	    //have an id? use it
-	    venueObj.findAll(name.toLowerCase(),function(error,venues) {
-		    if( error ) {
-			me(error);
-		    } else {
-			venues.forEach(function(venue) {
-			    sys.log(venue.name);
-			    venue.id = venue._id.toHexString();
+			if (Object.prototype.toString.call( results.Venue ) === '[object Array]') {
+				var events = results.Venue.slice(beginIdx,args.cnt+beginIdx);
+			} else {
+				//there's only 1 and its not an array
+				var events = [results.Venue];
+			}
+			return me(null, {
+				success: 1,
+				venue: events
 			});
-			me(null,venues);
-
-		    }
 		});
+	},
 
-	} else {
-	    me("Invalid parameters supplied to venue.search(): id or name is required");
-	}
-	
-    },
+	getConfigurations: function(args,req,res) {
+		var me = this;
+		args.cnt = (args.cnt) ? args.cnt : 15;
 
-    upsertByName: function(venue) {
-	var me = this;
-	var venueObj = new Venue();
-	venueObj.upsertByName(venue,function(error,venue) {
-		if (error) {
-		    me(error);
-		} else {
-		    venue.id = venue._id.toHexString();
-		    me(null,venue);
-		}
-	    });
-    },
-    
-    gallery: function(venue_id) {
-	var me = this;
-	var mediaObj = new Media();
-	mediaObj.find({venue_id:venue_id},function(error,gallery) {
-		if (error) {
-		    me(error);
-		} else {
-		    gallery.forEach(function(media) {
-			    media.id = media._id.toHexString();
+		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
+		ticketNetwork.GetVenueConfigurations(args, function(err, results) {
+			console.log('venue.getConfigurations');
+			console.log(results);
+			if (err) {
+				return me(err);
+			}
+
+			//if lastEventId is passed in, determine which element has that Id and start the splice there
+			var beginIdx = 0;
+			if (args.lastEventId) {
+				for (var i = results.VenueConfiguration.length - 1; i >= 0; i--) {
+					if (results.VenueConfiguration[i].ID == args.lastVenueConfigurationId) {
+						beginIdx = i+1;
+					}
+				}
+			}
+
+			if (Object.prototype.toString.call( results.VenueConfiguration ) === '[object Array]') {
+				var events = results.VenueConfiguration.slice(beginIdx,args.cnt+beginIdx);
+			} else {
+				//there's only 1 and its not an array
+				var events = [results.VenueConfiguration];
+			}
+			return me(null, {
+				success: 1,
+				venue: events
 			});
-		    me(null,gallery);
-		}
-		
-	    });
-    }
-
+		});
+        }
 }

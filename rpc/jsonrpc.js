@@ -152,7 +152,6 @@ function jsonrpc(rpcDispatchHooks) {
     return function jsonrpc(req, res, next) {
         var me = this,
             contentType = req.headers['content-type'] || '';
-
         if(req.method === 'POST' && contentType.indexOf('application/json') >= 0) {
             var rpc = req.body;
             var batch = Array.isArray(rpc);

@@ -1,2 +1,64 @@
+.wembli-logo
 #index-frame(ng-controller="IndexCtrl")
-	a.btn.btn-primary.btn-large(href="#payment-type-modal", role="button",data-toggle="modal") Start Your Plan ->
+	.copy.segoe Plan an Outing, Split the Cost!
+	a#start-now(href="#payment-type-modal", role="button",ng-click="startPlan()")
+	section#how-it-works.helvetica How It Works
+	section#circles
+		#circle-left.circle
+			i.icon-calendar.icon-3x
+			.circle-text.segoe Choose an event
+		#first-arrow.alligator.pull-left
+			i.icon-chevron-right.icon-2x
+		#circle-middle.circle
+			i.icon-comments.icon-3x
+			.circle-text.segoe Vote on details
+		#second-arrow.alligator.pull-left
+			i.icon-chevron-right.icon-2x
+		#circle-right.circle
+			i.icon-money.icon-3x
+			.circle-text.segoe Split the cost
+	section#feeds
+		#feed-left.feed
+			.header.segoe
+				span Upcoming Events&nbsp;
+				i.icon-star
+			.body
+				- var btnText = 'Plan It';
+				if ((typeof events == "undefined") || (typeof events[0] === "undefined"))
+					#event-list-wrapper
+						h3 Uh Oh!
+						.no-results One of the hamsters that powers our site must be on a break!  Check back in a minute.
+				else
+					include event-list
+		#feed-middle.feed
+			.header.segoe
+				i.icon-twitter
+				span &nbsp;Tweet Feed
+			.body.twitter-widget
+				a.twitter-timeline(href="//twitter.com/search?q=%40wembli",data-link-color="#0088CC", data-theme="dark",data-widget-id="318018385696915459", data-chrome="nofooter noborders noheader", height="536px" ,width="288px").segoe
+		#feed-right.feed
+			.header.segoe
+				span People Are Talking&nbsp;
+				i.icon-comment-alt
+			.body
+				.quote
+					.text
+						i.icon-quote-left.icon-2x
+						span Wembli is the expedia.com of live events. You get tickets, parking, restaurants and even hotels - all in one place!
+					.name.pull-right - Jim L., OH
+				.quote
+					.text
+						i.icon-quote-left.icon-2x
+						span Wembli saved me so much hassle! No more hunting my friends down to get paid back...
+					.name.pull-right - Katie R., WA
+				.quote
+					.text
+						i.icon-quote-left.icon-2x
+						span Plan it. Split it. Love it!
+					.name.pull-right - Gina T., CA
+				.quote
+					.text
+						i.icon-quote-left.icon-2x
+						span So easy to invite my friends on facebook...and they loved getting to vote on the plan.
+					.name.pull-right - Caleb O., FL
+	section#directory

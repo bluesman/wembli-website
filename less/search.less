@@ -45,17 +45,21 @@
 
 #content {
 	#search-frame {
-		background: @white url('/images/home.png') no-repeat left 40px;
+		background: @white url('/images/home.png') no-repeat 100px 40px;
 		.clearfix();
 
 		#left {
 			float:left;
 			min-width:400px;
+			.clearfix();
+			position:relative;
+			margin-left:100px;
+
 			#copy {
-				position:absolute;
+				position:relative;
 				.rotate(-4deg);
 				width:220px;
-				top:245px;
+				top:250px;
 				left:60px;
 				text-align:center;
 				font-size:16px;
@@ -63,7 +67,7 @@
 		}
 
 		#right {
-			margin-left:450px;
+			margin-left:350px;
 			.clearfix();
 			#search-wrapper {
 				background-color:@white;

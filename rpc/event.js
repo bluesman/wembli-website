@@ -100,10 +100,13 @@ exports.event = {
 	},
 	getTickets: function(args, req, res) {
 		var me = this;
-
+		console.log("GET TICKETS:");
+		console.log(args);
 		ticketNetwork.GetEvents({
 			eventID: args.eventID
 		}, function(err, results) {
+		console.log("GET TICKETS");
+		console.log(results);
 			if (err) {
 				return me(err);
 			}
@@ -112,6 +115,8 @@ exports.event = {
 				event: results.Event
 			};
 			ticketNetwork.GetTickets(args, function(err, results) {
+		console.log("GET TICKETS");
+		console.log(results);
 				if (err) {
 					return me(err);
 				}

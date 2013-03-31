@@ -11,17 +11,20 @@ function MainCtrl($scope, $location, $window, footer) {
 /*
 * Index Controller
 */
-function IndexCtrl($scope, $location, $templateCache, wembliRpc, fetchModals) {
+function IndexCtrl($scope, $location, $window, $templateCache, wembliRpc, fetchModals) {
 	//clear the cache when the home page loads to make sure we start fresh
 	$templateCache.removeAll();
 
 	$scope.startPlan = function() {
+			if ($location.path() !== '/index') {
+				$location.path('/index');
+			}
 		$('#payment-type-modal').modal('show');
 	}
 
 	$scope.$on('payment-type-modal-fetched', function(e, args) {
-		console.log('index location hash '+$location.hash());
 		if ($location.hash() === "payment-type-modal") {
+			console.log('path'+$location.path());
 			$('#payment-type-modal').modal('show');
 		}
 	});
@@ -92,13 +95,21 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 /*
 * Event List Controller
 */
-function EventListCtrl($scope, wembliRpc, $filter, $rootScope) {
+function EventListCtrl($scope, wembliRpc, $filter, $rootScope, plan, fetchModals) {
 	/* does nothing right now
 	wembliRpc.fetch('eventlist.init', {},
 	function(err, result) {
 
 	});
 	*/
+
+	plan.get(function(planData) {
+		$scope.plan = planData;
+		if ((planData === null) || ($scope.plan.preferences.payment === "undefined")) {
+			/* fetch the payment-type-modal  */
+			fetchModals.fetch('/partials/payment-type');
+		}
+	});
 
 	$scope.showTicketSummary = function(e) {
 
@@ -821,8 +832,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 		plan.get(function(planData) {
 			console.log('handling fetched plan');
 			//display the modal if there's a plan
-			console.log(plan.get());
-			if (typeof plan.get().event.eventId === "undefined") {
+			if (planData && typeof planData.event.eventId === "undefined") {
 				console.log('eventid is undefined');
 				return;
 			}
@@ -863,7 +873,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 						$scope.selectedFriends['step5'][friend.contactInfo.serviceId] = friend.inviteStatus;
 					}
 					if (friend.inviteStatus) {
-							console.log('pushing fetched plan friends into invitedFriends')
+							console.log('pushing fetched plan friends into invitedFriends');
 							$scope.invitedFriends.push(friend);
 					}
 				};
@@ -949,7 +959,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 				//unregisterListener();
 			} else {
 				console.log('watch for beforeNextFrameAnimatesIn');
-				var dereg = $scope.$watch('beforeNextFrameAnimatesIn',function(newVal, oldVal) {
+				var dereg = $scope.$watch('afterNextFrameAnimatesIn',function(newVal, oldVal) {
 					console.log('beforeNextFrameAnimatesIn happened');
 					console.log(newVal);
 					console.log(oldVal);
@@ -961,6 +971,12 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 		});
 	});
 };
+
+function PaymentTypeModalCtrl($scope) {
+	$scope.$on('paymentTypeModalNextLink',function(e,args) {
+		$scope.nextLink = args.nextLink;
+	});
+}
 
 /*
 * Plan Controller
@@ -1070,8 +1086,6 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 	$scope.facebook = facebook;
 
 	var updateTicketsLink = function() {
-		console.log('plan.get to updateTicketsLink');
-		console.log(plan.get());
 		$scope.ticketsLink = plan.get() ? '/tickets/'+plan.get().event.eventId+'/'+plan.get().event.eventName : '/tickets';
 	};
 
@@ -1081,7 +1095,17 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 	});
 };
 
-function TicketsCtrl($scope, wembliRpc) {
+function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
+  /* display a modal when they click to go off and buy tickets */
+  fetchModals.fetch('/tickets-offsite',function(err) {
+    if (err) {
+      return console.log('no modal for buy tickets offsite');
+    }
+    plan.get(function(plan) {
+      $scope.plan = plan;
+      console.log('plan in butTicketsOffsite:'+plan.event.eventId);
+    });
+  });
 
 	$scope.handlePriceRange = function() {
 		/* post the updated preferences to the server */
@@ -1181,6 +1205,27 @@ function TicketsCtrl($scope, wembliRpc) {
 
 		$scope.qtySort = ($scope.qtySort) ? 0 : 1;
 	}
+
+}
+
+function TicketsOffsiteCtrl($scope) {
+
+  $scope.showButton = function() {
+    return ($scope.ticketsOffsite==='bought');
+  };
+
+  $scope.submitForm = function() {
+  	$scope.$digest();
+    console.log('submit buy tickets offsite form');
+    console.log('qty: '+$scope.qty);
+    console.log('amount: '+$scope.amountPaid );
+    console.log('radio: '+$scope.ticketsOffsite);
+  };
+
+  $scope.cancelForm = function() {
+    $('#tickets-offsite-modal').modal('hide');
+  };
+
 }
 
 function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter) {
