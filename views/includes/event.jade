@@ -34,5 +34,5 @@ a.hide(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)
 					a.btn.btn-primary.choose-event(loading-duration="1500",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
 				default
 					- btnText = btnText ? btnText : 'Start Plan';
-					a.btn.btn-primary.choose-event.start-plan(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
+					a.btn.btn-primary.choose-event(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
 
