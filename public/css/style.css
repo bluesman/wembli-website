@@ -263,6 +263,12 @@ h3 {
 span.popover-container {
   position: relative;
 }
+span.popover-container i {
+  border: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
 /*!
  *  Font Awesome 3.0.2
  *  the iconic font designed for use with Twitter Bootstrap
