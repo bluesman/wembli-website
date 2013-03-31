@@ -1,6 +1,7 @@
 #event-list-wrapper
-	- if (typeof heading !== "undefined")
+	- var wslClass = (plan && (typeof plan.preferences !== "undefined") && (plan.preferences.payment)) ? 'wembli-sequence-link' : '';
+		- if (typeof heading !== "undefined")
 		h3= heading
 	ul
-		li.event-wrapper(id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)",ng-cloak)
+		li(class="event-wrapper #{wslClass}",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)",ng-cloak)
 			include event
