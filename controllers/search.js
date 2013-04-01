@@ -42,7 +42,9 @@ module.exports = function(app) {
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
 
 		if(req.param('next')) {
-			res.redirect(req.param('next'));
+			console.log('redirect to next partial');
+			/* tell app to update the location using this header */
+			res.redirect('partials'+req.param('next'));
 		} else {
 			res.render('partials/start-plan',{partial:true});
 		}
@@ -54,6 +56,7 @@ module.exports = function(app) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
 		if(req.param('next')) {
+			res.setHeader('x-wembli-location',req.param('next'));
 			res.redirect(req.param('next'));
 		} else {
 			searchView(req,res);
@@ -94,6 +97,7 @@ module.exports = function(app) {
 		var query = req.param('query') ? querystring.unescape(req.param('query')).replace(/\+/g,' ') : querystring.unescape(req.param('search')).replace(/\+/g,' ');
 		console.log('query: '+query);
 		if (!query) {
+			res.setHeader('x-wembli-location','/search');
 			return res.redirect('/search');
 		}
 

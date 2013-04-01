@@ -15,6 +15,7 @@ function IndexCtrl($scope, $location, $window, $templateCache, wembliRpc, fetchM
 	//clear the cache when the home page loads to make sure we start fresh
 	$templateCache.removeAll();
 
+	/*
 	$scope.startPlan = function() {
 			if ($location.path() !== '/index') {
 				$location.path('/index');
@@ -28,6 +29,7 @@ function IndexCtrl($scope, $location, $window, $templateCache, wembliRpc, fetchM
 			$('#payment-type-modal').modal('show');
 		}
 	});
+	*/
 
 	/* this doesn't do anything right now
 	wembliRpc.fetch('index.init', {},
@@ -973,7 +975,10 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 };
 
 function PaymentTypeModalCtrl($scope) {
-	$scope.$on('paymentTypeModalNextLink',function(e,args) {
+	$scope.$on('payment-type-modal-clicked',function(e,args) {
+		console.log('payment-type-modal-clicked');
+		console.log(args);
+		$scope.name = args.name;
 		$scope.nextLink = args.nextLink;
 	});
 }

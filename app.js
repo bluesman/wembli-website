@@ -106,7 +106,6 @@ app.use(function(req, res, next) {
 	res.locals.ipinfo   = req.session.ipinfo;
 	res.locals.visitor  = req.session.visitor;
 	res.locals.customer = req.session.customer;
-	res.locals.plan     = req.session.plan;
 	next();
 });
 app.use(app.router);

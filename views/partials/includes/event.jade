@@ -3,7 +3,7 @@
 - var payment;
 - if (plan && (typeof plan.preferences !== "undefined"))
 	- payment = plan.preferences.payment;
-a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
+//- a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 .event-date-box
 	span.day {{getDate(event.Date)| date:'EEE'}}
 	span.event-date {{getDate(event.Date)| date:'MMM d'}}
@@ -26,5 +26,5 @@ a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 				when "no-split"
 					a.btn.btn-primary.choose-event(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
 				default
-					a.btn.btn-primary.choose-event(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+					a.btn.btn-primary.choose-event.next-link(id="{{event.ID}}",name="{{event.Name}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
 

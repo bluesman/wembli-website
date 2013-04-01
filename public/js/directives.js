@@ -313,13 +313,23 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('startPlan',['$rootScope',function($rootScope) {
+.directive('startPlan',['$rootScope','fetchModals',function($rootScope, fetchModals) {
   return {
     restrict:'C',
     compile: function(element, attr, transclude) {
+      fetchModals.fetch('/partials/payment-type');
+
       return function(scope,element,attr) {
         element.click(function() {
-          $rootScope.$broadcast('paymentTypeModalNextLink',{nextLink:attr.href});
+          var nextLink = '';
+
+          if (attr.href) {
+            nextLink = attr.href;
+          } else {
+            nextLink = element.find('.next-link').attr('href');
+          }
+
+          $rootScope.$broadcast('payment-type-modal-clicked',{nextLink:nextLink,name:attr.name});
           /* show the popup to collect payment type */
           $('#payment-type-modal').modal('show');
         });
@@ -369,12 +379,14 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
           //a tags will have href
           if(element.is('a')) {
+            console.log('path is href in a tag');
             path = element.attr('href');
           }
 
           //if its a button
           if(element.is('button')) {
             //get the action of the form
+            console.log('path is action of a form button');
             path = element.closest('form').attr('action');
             method = element.closest('form').attr('method');
 
@@ -387,7 +399,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           }
 
           if(path === "") {
-            path = element.children('a').attr('href');
+            console.log('path is child');
+            path = element.find('a').attr('href');
           }
 
           if(path === "/") {
@@ -427,6 +440,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           //fetch the partial
           $http(args).success(function(data, status, headers, config) {
             var headers = headers();
+            console.log(headers);
 
             //if the server tells us explicitly what the location should be, set it here:
             if(typeof headers['x-wembli-location'] !== "undefined") {

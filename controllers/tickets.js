@@ -31,27 +31,63 @@ module.exports = function(app) {
 				return res.redirect(noEventUrl);
 			}
 
-			/* if the plan in session plan has already been saved, don't overwrite it */
-			if (req.session.plan && req.session.plan.id) {
-				var savePrefs = req.session.plan.preferences;
-				req.session.plan = new Plan({guid: Plan.makeGuid()});
-				req.session.plan.preferences = {payment:savePrefs.payment};
-				req.session.plan.preferences.tickets = savePrefs.tickets;
+			res.setHeader('x-wembli-overflow','hidden');
+			res.setHeader('x-wembli-location','/tickets/'+req.param("eventId")+'/'+req.param("eventName"));
+
+			locals.tnMapUrl  = results.event[0].MapURL;
+
+			/* friends just get to view */
+			if (req.session.visitor.context === 'friend') {
+				return res.render(template, locals);
 			}
 
-			req.session.plan.event.eventId    = req.param("eventId");
-			req.session.plan.event.eventName  = req.param("eventName");
-			req.session.plan.event.eventDate  = results.event[0].Date;
-			req.session.plan.event.eventVenue = results.event[0].Venue;
-			req.session.plan.event.eventCity  = results.event[0].City;
-			req.session.plan.event.eventState = results.event[0].StateProvince;
-			req.session.plan.event.data       = results.event[0];
+			if (typeof req.session.plan === "undefined") {
+				req.session.plan = new Plan({guid: Plan.makeGuid()});
+				req.session.plan.event.eventId    = req.param("eventId");
+				req.session.plan.event.eventName  = req.param("eventName");
+				req.session.plan.event.eventDate  = results.event[0].Date;
+				req.session.plan.event.eventVenue = results.event[0].Venue;
+				req.session.plan.event.eventCity  = results.event[0].City;
+				req.session.plan.event.eventState = results.event[0].StateProvince;
+				req.session.plan.event.data       = results.event[0];
 
-			//set a special header to tell angular to update the browser location
-			res.setHeader('x-wembli-overflow','hidden');
-			locals.tnMapUrl  = results.event[0].MapURL;
-			console.log('req session event in tickets view');
-			console.log(req.session.plan.event);
+				/* you are now the organizer */
+				req.session.visitor.context = 'organizer';
+			}
+
+			/* if they don't have a plan or this event is different
+				than the current plan then over write the plan
+				save prefs only if the customer is logged in */
+			if (typeof req.session.plan !== "undefined" &&
+					typeof req.session.plan.event !== "undefined" &&
+					(req.session.plan.event.eventId !== req.param("eventId"))) {
+
+				/* if they are the plan organizer, safe their prefs - thy ar ejust changing plans */
+				if (req.session.visitor.context === "organizer") {
+					var savePrefs = req.session.plan.preferences;
+				}
+
+				/* overwrite the existing plan keeping the prefs but nothing else */
+				req.session.plan = new Plan({guid: Plan.makeGuid()});
+
+				if (savePrefs) {
+					req.session.plan.preferences = {payment:savePrefs.payment};
+					req.session.plan.preferences.tickets = savePrefs.tickets;
+				}
+
+				req.session.plan.event.eventId    = req.param("eventId");
+				req.session.plan.event.eventName  = req.param("eventName");
+				req.session.plan.event.eventDate  = results.event[0].Date;
+				req.session.plan.event.eventVenue = results.event[0].Venue;
+				req.session.plan.event.eventCity  = results.event[0].City;
+				req.session.plan.event.eventState = results.event[0].StateProvince;
+				req.session.plan.event.data       = results.event[0];
+
+				/* you are now the organizer */
+				req.session.visitor.context = 'organizer';
+
+			}
+
 			res.render(template, locals);
 		},[args,req,res]);
 
