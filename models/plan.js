@@ -25,7 +25,7 @@ this.Model = function(mongoose) {
 			eventState: String
 		},
 		preferences : {
-			payment: {type: String,default:'split-first'},
+			payment: String,
 			addOns: {
 				parking : {type: Boolean, default:true},
 				restaurants : {type: Boolean, default:false},

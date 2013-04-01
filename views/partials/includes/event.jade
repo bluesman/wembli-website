@@ -1,7 +1,7 @@
 - var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 - lastSearch += '?updateEvent=1';
 - var payment;
-- if (plan && (typeof plan.preferences !== "undefined"))
+- if ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined"))
 	- payment = plan.preferences.payment;
 //- a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 .event-date-box

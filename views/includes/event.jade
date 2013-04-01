@@ -5,7 +5,7 @@
 - var payment;
 - if (typeof btnText === "undefined")
 	- var btnText = 'Plan It';
-- if (plan && (typeof plan.preferences !== "undefined"))
+- if ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined"))
 	- payment = plan.preferences.payment;
 //- a.hide(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)
 .event-date-box

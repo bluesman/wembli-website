@@ -50,7 +50,7 @@ module.exports = function(app) {
 				req.session.plan.event.eventCity  = results.event[0].City;
 				req.session.plan.event.eventState = results.event[0].StateProvince;
 				req.session.plan.event.data       = results.event[0];
-
+				req.session.plan.preferences.payment = 'split-first';
 				/* you are now the organizer */
 				req.session.visitor.context = 'organizer';
 			}

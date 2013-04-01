@@ -1,3 +1,6 @@
+- plan = req.session.plan;
+- console.log('in layout:')
+- console.log(plan);
 input(type="hidden", name="eventId", value="#{plan.event.eventId}", ng-init="eventId='#{plan.event.eventId}'")
 input(type="hidden", name="eventName", value="#{plan.event.eventName}", ng-init='eventName="#{escape(plan.event.eventName)}"')
 input#tnMapUrl(type="hidden", name="tnMapUrl", value="#{tnMapUrl}", ng-init="tnMapUrl='#{tnMapUrl}'")
