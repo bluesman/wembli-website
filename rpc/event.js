@@ -9,8 +9,6 @@ exports.event = {
 
 	search: function(args, req, res) {
 		var me = this;
-		//console.log('search args:');
-		//console.log(args);
 		args.cnt = (args.cnt) ? args.cnt : 15;
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.SearchEvents(args, function(err, results) {
@@ -48,8 +46,6 @@ exports.event = {
 			//get more top events
 			delete args.nearZip;
 		}
-		console.log('args for event.get');
-		console.log(args);
 
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.GetEvents(args, function(err, results) {

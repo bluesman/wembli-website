@@ -26,14 +26,14 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
         scope.$watch('tickets', function(newVal, oldVal) {
           if(newVal !== oldVal) {
+            console.log('refreshing map');
             $('#map-container').tuMap("Refresh", "Reset");
           }
         });
 
-        plan.fetch(function(planObj) {
+        plan.get(function(plan) {
           console.log('getting tickets for plan:');
-          console.log(planObj);
-          var plan = planObj.plan;
+          console.log(plan);
           //get the tix and make the ticket list
           wembliRpc.fetch('event.getTickets', {
             eventID: plan.event.eventId
@@ -228,7 +228,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 */
-.directive('eventData', ['$rootScope','$filter', 'wembliRpc', 'plan', function($rootScope, $filter, wembliRpc, plan) {
+.directive('eventData', ['$rootScope','$filter', 'wembliRpc', 'plan', 'sequence', function($rootScope, $filter, wembliRpc, plan, sequence) {
   return {
     restrict: 'C',
     templateUrl: '/partials/event-data',
@@ -237,9 +237,14 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     compile: function(element, attr, transclude) {
 
       return function(scope, element, attr) {
+        /* why is this here?
         scope.direction = attr.direction;
-        plan.get(function(plan) {
-          scope.event = plan.event;
+        */
+        sequence.ready(function() {
+          console.log('getting plan in eventData after sequence is ready');
+          plan.get(function(plan) {
+            scope.event = plan.event;
+          });
         });
       }
     }
@@ -353,166 +358,179 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   return {
     restrict: 'EAC',
     compile: function(element, attr, transclude) {
-      //return linking function
       return function(scope, element, attr) {
-        element.click(function(e) {
-          var loadingDuration = 500;
+        /* init some defaults */
+        var direction = 1;  //default to slide right
+        var path      = "";
+        var samePage  = true; //load the same page by default in case there are errors
+        var args      = {method: 'get',cache: false}; //args for the http request
 
-          if (attr.loadingDuration) {
-            loadingDuration = parseInt(attr.loadingDuration);
-          }
+        element.click(function(e) {
+          e.preventDefault();
 
           /* hide any modals right now */
           $(".modal").modal("hide");
+
           /* show the page loading modal */
           $('#page-loading-modal').modal("show");
-          console.log('loading duration');
-          console.log(loadingDuration);
-          $rootScope.$on('sequence-afterNextFrameAnimatesIn', function() {
-            //dismiss any modals
+
+          /* dismiss any modals once the page loads */
+          var loadingDuration = (attr.loadingDuration) ? parseInt(attr.loadingDuration) : 500;
+          sequence.ready(function() {
             $timeout(function() {
               $('#page-loading-modal').modal("hide");
             },loadingDuration);
           });
 
-          e.preventDefault();
+          /*
+            figure out where we're going next
+            the directive may be attached to an a tag
+            or a parent of an a tag
+            or a button in a form
+          */
 
-          var direction = 1;
-
-          var path = "";
-          var method = "get";
-          var url = "";
-          var samePage = false;
-
-          //a tags will have href
+          /* a tags will have href */
           if(element.is('a')) {
             console.log('path is href in a tag');
             path = element.attr('href');
           }
 
-          //if its a button
+          /* if its a button */
           if(element.is('button')) {
-            //get the action of the form
+            /* get the action of the form */
             console.log('path is action of a form button');
-            path = element.closest('form').attr('action');
-            method = element.closest('form').attr('method');
+            path   = element.closest('form').attr('action');
 
-            var headers = {
+            args.method = element.closest('form').attr('method');
+            args.headers = {
               "Content-Type": "application/x-www-form-urlencoded"
             };
             if(typeof element.closest('form').attr('enctype') !== "undefined") {
-              headers['Content-Type'] = element.closest('form').attr('enctype');
+              args.headers['Content-Type'] = element.closest('form').attr('enctype');
             }
           }
 
+          /* element is a parent of the thing with the href */
           if(path === "") {
-            console.log('path is child');
             path = element.find('a').attr('href');
           }
 
-          if(path === "/") {
-            url = path + "index";
-          } else {
-            url = path;
+          args.url = (path === "/") ? path + "index" : path;
+
+          /* if we still don't know the path then make this the same page */
+          if (path === "") { samePage = true };
+
+          /*
+            if the path in the action is the same as the current location
+            set a flag here to tell the success callback not to slide
+          */
+          if (path !== $rootScope.currentPath) {
+            samePage = false;
           }
 
-          //if the path in the action is the same as the current location
-          //set a flag here to tell the success callback not to slide
-          samePage = (path === $rootScope.currentPath) ? true : false;
+          /* ok all set lets start the transition */
 
-          $location.path(path);
-
-          //fetchModals
+          /* fetchModals for this new path */
           fetchModals.fetch(path);
 
-          if(method === "get") {
-            url = "/partials" + url;
+          /* if its not a form submit then we'll be getting a partial to load in a sequence frame */
+          if(args.method === "get") {
+            args.url = "/partials" + args.url;
           }
-
-          var args = {
-            method: method,
-            url: url,
-            cache: false,
-          };
-
-          if(typeof headers !== "undefined") {
-            args.headers = headers;
-          }
-
-          //if its a post put the post body together
-          if(method === "post") {
+          /* if its a post put the post body together */
+          if(args.method === "post") {
             args.data = element.closest('form').serialize();
           }
 
-          //fetch the partial
+          /* fetch the partial */
           $http(args).success(function(data, status, headers, config) {
-            var headers = headers();
-            console.log(headers);
+            var headerFunc = headers;
+            /* fetch the plan once we have the html */
+            plan.fetch(function(planObj) {
+              /* update the path */
+              $location.path(path);
 
-            //if the server tells us explicitly what the location should be, set it here:
-            if(typeof headers['x-wembli-location'] !== "undefined") {
-              //if x-location comes back and its the same as $location.path() - don't slide
-              if($location.path() === headers['x-wembli-location']) {
-                samePage = true;
-              } else {
-                samePage = false;
-                $location.path(headers['x-wembli-location']);
+              /* do i need to do anything with the planObj? or just make sure it is fetched */
+
+              var headers = headerFunc();
+
+              /* if the server tells us explicitly what the location should be, set it here: */
+              if(typeof headers['x-wembli-location'] !== "undefined") {
+                /* if x-location comes back and its the same as $location.path() - don't slide */
+                if($rootScope.currentPath === headers['x-wembli-location']) {
+                  console.log('location path is the same as x-wembli-location');
+                  samePage = true;
+                } else {
+                  samePage = false;
+                  $location.path(headers['x-wembli-location']);
+                }
               }
-            }
 
-            if(samePage) {
-              $(".modal").modal("hide");
-              return angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
-            }
+              if(samePage) {
+                console.log('wembli-sequence-link: same page...');
+                $(".modal").modal("hide");
+                angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
+                scope.$emit('viewContentLoaded',{});
+                return;
+              }
 
-            scope.$emit('viewContentLoaded',{});
+              /* not on the same page so we're gonna slide to the other frame */
+              var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
 
-            //what frame to go to:
-            var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
+              /*
+                split location path on '/' to get the right framesMap key
+                this is so we know where to slide the footer arrow to
+              */
+              var nextPath = '/' + $location.path().split('/')[1];
 
-            //split location path on '/' to get the right framesMap key
-            var nextPath = '/' + $location.path().split('/')[1];
-            //if footer.framesMap[$location.path()] (where they are going) is undefined
-            //then don't move the arrow and slide to the right
-            //if footer.framesMap[$rootScope.currentPath] (where they are coming from) is undefined
-            //then move the arrow, but still slide to the right
-            if(typeof footer.framesMap[$rootScope.currentPath] == "undefined") {
-              var currentPath = '/' + footer.currentPath.split('/')[1];
-              if(typeof footer.framesMap[currentPath] !== "undefined") {
-                //direction depends on where the arrow is compared to where they are going
-                var currNavIndex = footer.framesMap[currentPath];
+              /*
+                if footer.framesMap[$location.path()] (where they are going) is undefined
+                then don't move the arrow and slide to the right
+                if footer.framesMap[$rootScope.currentPath] (where they are coming from) is undefined
+                then move the arrow, but still slide to the right
+              */
+              if(typeof footer.framesMap[$rootScope.currentPath] === "undefined") {
+                var currentPath = nextPath;
+                if(typeof footer.framesMap[currentPath] !== "undefined") {
+                  //direction depends on where the arrow is compared to where they are going
+                  var currNavIndex = footer.framesMap[currentPath];
+                  var nextNavIndex = footer.framesMap[nextPath];
+                  direction = (currNavIndex < nextNavIndex) ? 1 : -1;
+                }
+                footer.slideNavArrow();
+              }
+
+              /*
+                if both are defined
+                then move the arrow and figure out which way to slide
+              */
+              if((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[$rootScope.currentPath] !== "undefined")) {
+                var currNavIndex = footer.framesMap[$rootScope.currentPath];
                 var nextNavIndex = footer.framesMap[nextPath];
                 direction = (currNavIndex < nextNavIndex) ? 1 : -1;
+                /* slide the nav arrow - this should be async with using sequence to transition to the next frame */
+                footer.slideNavArrow();
               }
-              footer.slideNavArrow();
-            }
 
-            //if both are defined
-            //then move the arrow and figure out which way to slide
-            if((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[$rootScope.currentPath] !== "undefined")) {
-              var currNavIndex = footer.framesMap[$rootScope.currentPath];
-              var nextNavIndex = footer.framesMap[nextPath];
-              direction = (currNavIndex < nextNavIndex) ? 1 : -1;
-              //slide the nav arrow - this should be async with using sequence to transition to the next frame
-              footer.slideNavArrow();
-            }
+              /* find out what direction to go to we sliding in this element */
+              direction = parseInt(attr.direction)  || parseInt(scope.direction) || direction;
 
-            //find out what direction to go to we sliding in this element
-            direction = parseInt(attr.direction)  || parseInt(scope.direction) || direction;
-
-            //fetch the plan
-            plan.fetch(function() {
-              //compile the page we just fetched and link the scope
+              /* compile the page we just fetched and link the scope */
               angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
 
-              //do the animations
+              /* should this go before the compile? or after? */
+              scope.$emit('viewContentLoaded',{});
+
+              /* do the animations */
+              console.log('sequence sliding to next frame: '+nextFrameID+' direction: '+direction);
               sequence.goTo(nextFrameID, direction);
+
 
               $('#content').scrollTop(0);
               $('#content').css('overflow', 'visible');
               $('#content').css('overflow-x', 'hidden');
 
-              //server can tell us to overflow hidden or not - this is for the venue map pages
+              /* server can tell us to overflow hidden or not - this is for the venue map pages */
               if(typeof headers['x-wembli-overflow'] !== "undefined") {
                 if(headers['x-wembli-overflow'] === 'hidden') {
                   $('#content').css('overflow', 'hidden');

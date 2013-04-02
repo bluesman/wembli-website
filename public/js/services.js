@@ -701,6 +701,20 @@ angular.module('wembliApp.services', [])
 		$scope.beforeNextFrameAnimatesIn = false;
 	};
 
+	sequence.ready = function(callback) {
+		if ($scope.afterNextFrameAnimatesIn) {
+			console.log('next frame has already animated in');
+			callback();
+		} else {
+			console.log('waiting for frame to animate in before calling sequence ready function')
+			var dereg = $scope.$on('sequence-afterNextFrameAnimatesIn', function() {
+				callback();
+				dereg();
+			});
+		}
+	};
+
+
 	//init the sequence (page slider)
 	return sequence;
 

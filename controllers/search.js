@@ -28,8 +28,6 @@ module.exports = function(app) {
 
 		//get nearby events:
 		eventRpc['get'].apply(function(err,results) {
-			console.log(results);
-			console.log(err);
 			res.render('search', {
 				events: results.event,
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
@@ -40,10 +38,9 @@ module.exports = function(app) {
 	app.get(/\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
-		/* must be the organizer if we're creating a new plan */
+		/* must be the organizer if we're creating a new plan - this won't stick if they're not logged in */
 		req.session.visitor.context = 'organizer';
 		if(req.param('next')) {
-			console.log('redirect to next partial');
 			/* tell app to update the location using this header */
 			res.redirect('partials'+req.param('next'));
 		} else {
@@ -52,7 +49,6 @@ module.exports = function(app) {
 	});
 
 	app.get(/\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
-		console.log('payment: '+req.param[0]);
 		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
@@ -64,7 +60,7 @@ module.exports = function(app) {
 		}
 	});
 
-	app.get('/search/?', searchView);
+	//app.get('/search/?', searchView);
 
 	//these come from the more events button
 	app.get('/search/events/:city/:from', function(req,res) {
@@ -90,22 +86,21 @@ module.exports = function(app) {
 	});
 
 
-	app.get('/search/events/:query?', function(req, res) {
+	app.get(/\/search(\/events\/(.+)$)?/, function(req, res) {
 
 		var title = 'Wembli Search';
 
-		var query = req.param('query') ? querystring.unescape(req.param('query')).replace(/\+/g,' ') : querystring.unescape(req.param('search')).replace(/\+/g,' ');
+		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];
 
 		if (!query) {
 			res.setHeader('x-wembli-location','/search');
-			return res.redirect('/search');
+			return searchView(req,res);
 		}
-
 		query.replace('+',' ');
 		req.session.lastSearch = query;
 
 		/* TODO: try to parse out a date from the search string */
-		if (typeof req.session.visitor.lastsearch === "undefined") {
+		if (typeof req.session.visitor.lastSearch === "undefined") {
 			req.session.visitor.lastSearch = {
 				searchTerms: query,
 				orderByClause: 'Date'

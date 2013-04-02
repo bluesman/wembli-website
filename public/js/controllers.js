@@ -214,6 +214,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 		//response callback
 
 		function(err, result) {
+			console.log('back grom event.search');
 			if(err) {
 				//handle err
 				alert('error happened - contact help@wembli.com');
@@ -1242,8 +1243,7 @@ function TicketsOffsiteCtrl($scope) {
 
 function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter) {
 	console.log('plan.get venuemapctrl');
-	plan.fetch(function(planObj) {
-		plan = planObj.plan;
+	plan.get(function(plan) {
 		$scope.priceRange       = {};
 		$scope.eventOptionsLink = '/event-options/'+plan.event.eventId+'/'+plan.event.eventName;
 		$scope.priceRange.low   = plan.preferences.tickets.priceRange.low  || true;

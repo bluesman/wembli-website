@@ -262,7 +262,6 @@ h3 {
 }
 span.popover-container {
   position: relative;
-  font-size: 12px;
 }
 span.popover-container i {
   border: none;
@@ -2579,14 +2578,19 @@ body {
 #tickets-frame #tickets #tickets-price-range {
   margin-top: 20px;
   text-align: left;
+  position: relative;
 }
 #tickets-frame #tickets #tickets-price-range h3 {
+  margin-left: 1.5em;
+  margin-top: 2px;
   font-size: 20px;
   font-weight: bold;
 }
-#tickets-frame #tickets #tickets-price-range h3 .popover {
-  top: -3px;
+#tickets-frame #tickets #tickets-price-range .popover {
+  margin-left: 2px;
+  font-size: 18px;
   padding: 0;
+  top: 3px;
 }
 #tickets-frame #tickets #tickets-price-range #price-range-form {
   *zoom: 1;
@@ -2601,7 +2605,7 @@ body {
   clear: both;
 }
 #tickets-frame #tickets #tickets-price-range #price-range-form fieldset label.checkbox {
-  margin: 10px;
+  margin: 6px;
   padding: 10px;
   color: #524f45;
 }

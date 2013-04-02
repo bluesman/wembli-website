@@ -12,14 +12,12 @@ var options = {'host':'tn.wembli.com',
                'port':80,
                'path':url};
 
-console.log(options);
-
 var XML = new xml2js.Parser(xml2js.defaults["0.1"]);
 XML.addListener('end', function(err,result) {
     if (err) {
 	console.log(err);
     } else {
-	console.log(result);
+
     }
     console.log('Done.');
 });
@@ -30,10 +28,9 @@ http.get(options,function (res) {
     var str = '';
     res.on('data', function(d) {
         str = str+d;
-        console.log(d);                                                                                                                                   
     });
 
     res.on('end', function() {
-	XML.parseString(str);
+    	XML.parseString(str);
     });
 });

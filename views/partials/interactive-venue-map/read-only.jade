@@ -1,7 +1,7 @@
 #tickets-price-range
-	h3 PICK YOUR PRICE RANGE:
-		span.popover-container
-			i.icon-question-sign.popover(placement="bottom",trigger="hover",animation="true",title="Pick A Price Range",content="Choose a price range to give your friends an idea of how much they can expect to pay for tickets.  Mouse over the dollar signs to see each price range then use the checkboxes to pick your options.")
+	h3.pull-left PICK YOUR PRICE RANGE:
+	.popover-container.pull-left
+		i.icon-question-sign.popover(placement="bottom",trigger="hover",animation="true",title="Pick A Price Range",content="Choose a price range to give your friends an idea of how much they can expect to pay for tickets.  Mouse over the dollar signs to see each price range then use the checkboxes to pick your options.")
 	form#price-range-form.form-inline
 		fieldset.pull-left
 			label.checkbox(ng-click="handlePriceRange()",title="LOW: Under $100")
