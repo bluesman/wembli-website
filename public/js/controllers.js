@@ -97,7 +97,7 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 /*
 * Event List Controller
 */
-function EventListCtrl($scope, wembliRpc, $filter, $rootScope, plan, fetchModals) {
+function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, fetchModals) {
 	/* does nothing right now
 	wembliRpc.fetch('eventlist.init', {},
 	function(err, result) {
@@ -245,7 +245,14 @@ function EventListCtrl($scope, wembliRpc, $filter, $rootScope, plan, fetchModals
 
 	};
 
+	console.log('partial?');
 	if($rootScope.partial) {
+		console.log('route params');
+		console.log($location.search());
+		if ($location.search().search) {
+			console.log('setting search in scope form route params');
+			$scope.search = $location.search().search;
+		}
 		//begin date for event list
 		var daysPadding = 2; //how many days from today for the beginDate
 		var d = new Date();

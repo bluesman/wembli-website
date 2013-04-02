@@ -1,6 +1,6 @@
 extends layout
 block frame2
-	if (!plan || typeof plan.event.eventId === "undefined")
+	if ((typeof plan === "undefined") || typeof plan.event.eventId === "undefined")
 		include includes/no-event
 	else
 		//- if this plan has an organizer, then

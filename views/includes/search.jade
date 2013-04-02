@@ -39,7 +39,7 @@ input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'",
 				#search-results(ng-controller="EventListCtrl")
 					#search-box
 						form#search-form.form-search(method="GET", action="/search/events")
-							input#query(name="search",placeholder="#{placeholder}",value="#{search}")
+							input#query(ng-model="search",name="search",placeholder="#{placeholder}",value="#{search}")
 							button#submit(href="#")
 								#magnifying-glass
 					if (typeof partial != "undefined")

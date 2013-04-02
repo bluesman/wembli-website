@@ -68,9 +68,12 @@ angular.module('wembliApp.services', [])
 		//get plan from server and return it
 		fetch: function(callback) {
 			if (self.fetchInProgress) {
+				console.log('fetch in progress');
 				if (callback) {
+					console.log('waiting for plan-fetched event');
 					var dereg = $rootScope.$on('plan-fetched', function() {
 						dereg();
+					console.log('plan-fetched calling callback');
 						callback(self);
 					});
 				}
