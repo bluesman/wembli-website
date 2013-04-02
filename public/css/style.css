@@ -262,6 +262,7 @@ h3 {
 }
 span.popover-container {
   position: relative;
+  font-size: 12px;
 }
 span.popover-container i {
   border: none;
