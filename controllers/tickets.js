@@ -55,6 +55,9 @@ module.exports = function(app) {
 				req.session.visitor.context = 'organizer';
 			}
 
+			console.log('plan in tickets controller');
+			console.log(req.session.plan);
+
 			/* if they don't have a plan or this event is different
 				than the current plan then over write the plan
 				save prefs only if the customer is logged in */

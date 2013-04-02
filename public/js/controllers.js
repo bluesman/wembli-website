@@ -1235,7 +1235,8 @@ function TicketsOffsiteCtrl($scope) {
 
 function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter) {
 	console.log('plan.get venuemapctrl');
-	plan.get(function(plan) {
+	plan.fetch(function(planObj) {
+		plan = planObj.plan;
 		$scope.priceRange       = {};
 		$scope.eventOptionsLink = '/event-options/'+plan.event.eventId+'/'+plan.event.eventName;
 		$scope.priceRange.low   = plan.preferences.tickets.priceRange.low  || true;

@@ -17,10 +17,12 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   return {
     restrict: 'E',
     replace: true,
+    cache:false,
     templateUrl: "/partials/interactive-venue-map",
     compile: function(element, attr, transclude) {
       //return linking function
       return function(scope, element, attr) {
+        console.log('linking ivm');
 
         scope.$watch('tickets', function(newVal, oldVal) {
           if(newVal !== oldVal) {
@@ -28,7 +30,10 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           }
         });
 
-        plan.get(function(plan) {
+        plan.fetch(function(planObj) {
+          console.log('getting tickets for plan:');
+          console.log(planObj);
+          var plan = planObj.plan;
           //get the tix and make the ticket list
           wembliRpc.fetch('event.getTickets', {
             eventID: plan.event.eventId
@@ -80,6 +85,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             var options = interactiveMapDefaults;
             options.MapId = scope.event.VenueConfigurationID;
+            console.log('mapid:'+options.MapId);
 
             options.OnInit = function(e, MapType) {
               $(".ZoomIn").html('+');
@@ -136,6 +142,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             $('#tickets').css("height", $($window).height() - 60);
             $('#map-container').css("width", $($window).width() - 480);
             $('#map-container').tuMap(options);
+            console.log('made new interactive venue map');
 
             $('#price-slider').slider({
               range: true,

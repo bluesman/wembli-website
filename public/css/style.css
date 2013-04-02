@@ -2991,13 +2991,15 @@ a#facebook-login-button {
   background-image: url('/images/orange-arrow.png');
 }
 .hero #event-options-hero-left #copy {
-  top: 210px;
+  top: 230px;
 }
 .hero #event-options-hero-left #cartoon-man {
-  margin-top: 340px;
+  background: transparent url('/images/event-options.png') no-repeat center center;
+  margin: 340px 0 0 90px;
+  width: 180px;
 }
 .hero #event-options-hero-left #dotted-line {
-  top: 520px;
+  top: 545px;
   z-index: 2;
 }
 .hero #event-options-hero-right {
@@ -3046,7 +3048,7 @@ a#facebook-login-button {
   margin: 20px;
 }
 .hero #event-options-hero-right .arrow {
-  top: 500px;
+  top: 520px;
   width: 110px;
 }
 .modal textarea {

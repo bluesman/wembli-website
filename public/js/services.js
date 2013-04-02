@@ -69,7 +69,7 @@ angular.module('wembliApp.services', [])
 		fetch: function(callback) {
 			if (self.fetchInProgress) {
 				if (callback) {
-					var dereg = $rootScope.$on('plan-fetched', function(self) {
+					var dereg = $rootScope.$on('plan-fetched', function() {
 						dereg();
 						callback(self);
 					});

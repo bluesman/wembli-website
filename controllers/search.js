@@ -40,7 +40,8 @@ module.exports = function(app) {
 	app.get(/\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
-
+		/* must be the organizer if we're creating a new plan */
+		req.session.visitor.context = 'organizer';
 		if(req.param('next')) {
 			console.log('redirect to next partial');
 			/* tell app to update the location using this header */
@@ -90,12 +91,11 @@ module.exports = function(app) {
 
 
 	app.get('/search/events/:query?', function(req, res) {
-		console.log(req.param('search'));
 
 		var title = 'Wembli Search';
 
 		var query = req.param('query') ? querystring.unescape(req.param('query')).replace(/\+/g,' ') : querystring.unescape(req.param('search')).replace(/\+/g,' ');
-		console.log('query: '+query);
+
 		if (!query) {
 			res.setHeader('x-wembli-location','/search');
 			return res.redirect('/search');
@@ -113,9 +113,6 @@ module.exports = function(app) {
 		}
 
 		eventRpc['search'].apply(function(err,results) {
-			console.log('results from eventrpc: ');
-			console.log(results);
-
 			res.render('search', {
 				search: query,
 				events: results.event,
