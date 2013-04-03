@@ -91,7 +91,7 @@ module.exports = function(app) {
 		var title = 'Wembli Search';
 
 		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];
-
+		console.log('search query:'+query);
 		if (!query) {
 			res.setHeader('x-wembli-location','/search');
 			return searchView(req,res);
@@ -100,14 +100,14 @@ module.exports = function(app) {
 		req.session.lastSearch = query;
 
 		/* TODO: try to parse out a date from the search string */
-		if (typeof req.session.visitor.lastSearch === "undefined") {
-			req.session.visitor.lastSearch = {
-				searchTerms: query,
-				orderByClause: 'Date'
-			};
-		}
+		req.session.visitor.lastSearch = {
+			searchTerms: query,
+			orderByClause: 'Date'
+		};
 
 		eventRpc['search'].apply(function(err,results) {
+			console.log('results from search');
+			console.log(results);
 			res.render('search', {
 				search: query,
 				events: results.event,

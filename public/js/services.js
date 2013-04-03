@@ -68,12 +68,9 @@ angular.module('wembliApp.services', [])
 		//get plan from server and return it
 		fetch: function(callback) {
 			if (self.fetchInProgress) {
-				console.log('fetch in progress');
 				if (callback) {
-					console.log('waiting for plan-fetched event');
 					var dereg = $rootScope.$on('plan-fetched', function() {
 						dereg();
-					console.log('plan-fetched calling callback');
 						callback(self);
 					});
 				}
@@ -127,6 +124,7 @@ angular.module('wembliApp.services', [])
 
 	/* put stuff in here to load a modal everytime */
 	var modalPageMap = {
+		'/invitation': ['/partials/invite-friends-wizard'],
 		'/tickets-offsite': ['/partials/tickets-offsite']
 	};
 	var modalFetched = {};
@@ -141,8 +139,6 @@ angular.module('wembliApp.services', [])
 
 	var fetchPartial = function(path, partialUrl, callback) {
 		modalFetchInProgress = path;
-		console.log('fetching modal: '+path);
-		console.log('partial url for modal is '+partialUrl);
 
 		$http({
 			method: 'get',
@@ -169,11 +165,12 @@ angular.module('wembliApp.services', [])
 
 	return {
 		'fetch': function(path, callback) {
-			console.log("fetchmodal:"+path);
+			/* clean the path */
+			var pathKey = path.split('/')[1].split('?')[0];
 			/* its already fetched and cached and prepended to the body */
-			if (modalFetched[path]) {	return success();	}
+			if (modalFetched[pathKey]) {	return success();	}
 			/* this fetch is alredy in progress call the callback when the event is called */
-			if (modalFetchInProgress === path) {
+			if (modalFetchInProgress === pathKey) {
 				if (callback) {
 					var dereg = $rootScope.$on($('body :first-child').attr('id') + '-fetched', function() {
 						callback();
@@ -183,15 +180,16 @@ angular.module('wembliApp.services', [])
 				return;
 			}
 
-			if (typeof modalPageMap[path] !== "undefined") {
-				for (var i = 0; i < modalPageMap[path].length; i++) {
+
+			if (typeof modalPageMap[pathKey] !== "undefined") {
+				for (var i = 0; i < modalPageMap[pathKey].length; i++) {
 					//if the modal has already been fetched, don't fetch it again but do fire the broadcast
-					fetchPartial(path, modalPageMap[path][i], callback);
+					fetchPartial(path, modalPageMap[pathKey][i], callback);
 				}
 				return;
 			}
 
-			if (path.split('/')[1] === 'partials' ) {
+			if ( /^\/partials/.test(path) ) {
 				/* modalPageMap has no key for this url - try to just fetch ot */
 				return fetchPartial(path,path,callback);
 			}
@@ -265,8 +263,6 @@ angular.module('wembliApp.services', [])
 		},
 
 		feedDialog: function(args, cb) {
-			console.log('display feed dialog');
-			console.log(args);
 			FB.getLoginStatus(function(response) {
 				if (response.authResponse) {
 					var actionLink = 'http://tom.wembli.com/rsvp/' + args.guid + '/' + args.token;
@@ -341,10 +337,8 @@ angular.module('wembliApp.services', [])
 		},
 
 		logout: function() {
-			console.log('bam logging out of fb');
 			if (self.auth) {
 				FB.logout(function(response) {
-					console.log(response);
 					if (response) {
 						self.auth = false;
 						$rootScope.$broadcast('facebook-logout', {
@@ -438,8 +432,6 @@ angular.module('wembliApp.services', [])
 					console.log(err);
 					callback(false);
 				}
-				console.log('friends');
-				console.log(result.friends);
 				self.friends = $filter('orderBy')(result.friends, '+name');
 				self.allFriends = self.friends;
 				callback(result);
@@ -548,8 +540,6 @@ angular.module('wembliApp.services', [])
 		};
 
 		if (cache && (typeof wembliRpc._cache[data] !== "undefined")) {
-			console.log('got cached data');
-			console.log(wembliRpc._cache[data]);
 			return cb(null, wembliRpc._cache[data]);
 		}
 

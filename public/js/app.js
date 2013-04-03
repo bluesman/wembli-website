@@ -22,9 +22,7 @@ angular.module('wembliApp', ['wembliApp.filters', 'wembliApp.services', 'wembliA
   twitter.getLoginStatus();
 
   plan.fetch(function(planObj) {
-    console.log('fetched plan from in app.run')
-    console.log('calling fetchModals.fetch in app.run');
-    fetchModals.fetch($location.path());
+    fetchModals.fetch('/'+$location.path().split('/')[1].split('?')[0]);
   });
 
 }]);

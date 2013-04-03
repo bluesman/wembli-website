@@ -1,7 +1,9 @@
 #event-list-wrapper
 	- var wslClass = ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined") && (plan.preferences.payment)) ? 'wembli-sequence-link' : 'start-plan';
+	//- added this here for now so that you are always asked to provide payment type when choosing an event
+	- wslClass = 'start-plan'
 		- if (typeof heading !== "undefined")
 		h3= heading
 	ul
-		li(class="event-wrapper #{wslClass}",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)",ng-cloak)
+		li(class="event-wrapper #{wslClass}",loading-duration="1500",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)",ng-cloak)
 			include event

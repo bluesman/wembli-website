@@ -4,11 +4,9 @@ url           = '/search/events/';
 seeMore       = 'See more events';
 lastEventDate = '';
 lastEventId   = undefined;
-
 - if ((typeof events != "undefined") && (typeof events[0] !== "undefined"))
 	- lastEventDate = new Date(events[events.length-1].Date).format('mm-dd-yy');
 	- lastEventId = events[events.length-1].ID;
-
 - if (ipinfo.city)
 	- heading += ' Near '+req.session.ipinfo.city;
 	- url     += req.session.ipinfo.city+'/';
@@ -22,9 +20,7 @@ lastEventId   = undefined;
 - else
 	- var search = "";
 	- var placeholder = 'Enter an event, team or venue...'
-
 - url += Date.today().format("mm-dd-yy")
-
 input(type="hidden", name="search", value="#{search}", ng-init="search='#{search}'")
 input(type="hidden", name="city", value="#{req.session.ipinfo.city}", ng-init="city='#{req.session.ipinfo.city}'")
 input(type="hidden", name="postalCode", value="#{req.session.ipinfo.postal_code}", ng-init="postalCode='#{req.session.ipinfo.postal_code}'")

@@ -20,20 +20,16 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     cache:false,
     templateUrl: "/partials/interactive-venue-map",
     compile: function(element, attr, transclude) {
-      //return linking function
+
       return function(scope, element, attr) {
-        console.log('linking ivm');
 
         scope.$watch('tickets', function(newVal, oldVal) {
           if(newVal !== oldVal) {
-            console.log('refreshing map');
             $('#map-container').tuMap("Refresh", "Reset");
           }
         });
 
         plan.get(function(plan) {
-          console.log('getting tickets for plan:');
-          console.log(plan);
           //get the tix and make the ticket list
           wembliRpc.fetch('event.getTickets', {
             eventID: plan.event.eventId
@@ -83,9 +79,10 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               }).tuMap("Refresh");
             };
 
-            var options = interactiveMapDefaults;
-            options.MapId = scope.event.VenueConfigurationID;
-            console.log('mapid:'+options.MapId);
+            var options            = interactiveMapDefaults;
+            options.MapId          = scope.event.VenueConfigurationID;
+            options.EventId        = scope.event.ID;
+            //options.FailoverMapUrl = scope.event.MapURL;
 
             options.OnInit = function(e, MapType) {
               $(".ZoomIn").html('+');
@@ -95,7 +92,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             options.OnError = function(e, Error) {
               if(Error.Code === 1) { /* chart not found - display the tn chart */
-                $('#map-container').css("background", 'url(' + $('#tnMapUrl').val() + ') no-repeat center center');
+                $('#map-container').css("background", 'url(' + scope.event.MapURL + ') no-repeat center center');
               }
             };
 
@@ -142,7 +139,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             $('#tickets').css("height", $($window).height() - 60);
             $('#map-container').css("width", $($window).width() - 480);
             $('#map-container').tuMap(options);
-            console.log('made new interactive venue map');
+            $('#map-container').tuMap("Refresh", "Reset");
 
             $('#price-slider').slider({
               range: true,
@@ -242,10 +239,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         */
         /* do i need to wait for sequence.ready? */
         //sequence.ready(function() {
-          console.log('getting plan in eventData after sequence is ready');
           plan.get(function(plan) {
-            console.log('got plan for event-data: ');
-            console.log(plan);
             scope.event = plan.event;
           });
         //});
@@ -268,7 +262,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
 
       return function(scope, element, attr) {
-        console.log('twitter timeline');
         $window.twttr.ready(function(twttr) {
           //-twttr.widgets.load();
         });
@@ -311,7 +304,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
         var focus = function() {
-          console.log('trying to set focus');
           $timeout(function() {
             element.focus();
             if (!element.is(':focus')) {
@@ -372,8 +364,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           var direction = 1;                            //default to slide right
           var samePage  = true;                         //load the same page by default in case there are errors
 
-          console.log('CLICKED SEQUENCE LINK');
-
           /* hide any modals right now */
           $(".modal").modal("hide");
 
@@ -389,14 +379,12 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
           /* a tags will have href */
           if(element.is('a')) {
-            console.log('path is href in a tag');
             path = element.attr('href');
           }
 
           /* if its a button */
           if(element.is('button')) {
             /* get the action of the form */
-            console.log('path is action of a form button');
             path   = element.closest('form').attr('action');
 
             args.method = element.closest('form').attr('method');
@@ -418,19 +406,20 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           /* if we still don't know the path then make this the same page */
           if (path === "") { samePage = true };
 
+          /* clear out the search args from the path */
+          path = path.split('?')[0];
+
           /*
             if the path in the action is the same as the current location
             set a flag here to tell the success callback not to slide
           */
           if (path !== $rootScope.currentPath) {
-            console.log('same page is false');
             samePage = false;
           }
 
           /* ok all set lets start the transition */
 
           /* fetchModals for this new path */
-          console.log('calling fetchModals.fetch in wembli-sequence-link on path: '+path);
           fetchModals.fetch(path);
 
           /* if its not a form submit then we'll be getting a partial to load in a sequence frame */
@@ -441,9 +430,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           if(/post/i.test(args.method)) {
             args.data = element.closest('form').serialize();
           }
-
-          console.log('http args');
-          console.log(args);
 
           /* fetch the partial */
           $http(args).success(function(data, status, headers, config) {
@@ -461,7 +447,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               if(typeof headers['x-wembli-location'] !== "undefined") {
                 /* if x-location comes back and its the same as $location.path() - don't slide */
                 if($rootScope.currentPath === headers['x-wembli-location']) {
-                  console.log('location path is the same as x-wembli-location');
                   samePage = true;
                 } else {
                   samePage = false;
@@ -470,7 +455,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               }
 
               if(samePage) {
-                console.log('wembli-sequence-link: same page...');
                 $(".modal").modal("hide");
                 angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
                 scope.$emit('viewContentLoaded',{});
@@ -515,8 +499,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               }
 
               /* find out what direction to go to we sliding in this element */
-              console.log('scope.direction:'+scope.direction);
-              console.log('attr.direction:'+attr.direction);
               direction = parseInt(attr.direction)  || parseInt(scope.direction) || direction;
 
               /* compile the page we just fetched and link the scope */
@@ -526,7 +508,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               scope.$emit('viewContentLoaded',{});
 
               /* do the animations */
-              console.log('sequence sliding to next frame: '+nextFrameID+' direction: '+direction);
               sequence.goTo(nextFrameID, direction);
 
               /* dismiss any modals once the page loads */
