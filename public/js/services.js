@@ -125,13 +125,8 @@ angular.module('wembliApp.services', [])
 
 	.factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
 
-	var inviteFriendsWizard = '/partials/invite-friends-wizard';
-	//var paymentType = '/partials/payment-type';
+	/* put stuff in here to load a modal everytime */
 	var modalPageMap = {
-		'/invitation': [inviteFriendsWizard],
-		//'/index':[paymentType],
-		//'/':[paymentType],
-		//'/search':[paymentType],
 		'/tickets-offsite': ['/partials/tickets-offsite']
 	};
 	var modalFetched = {};
@@ -714,8 +709,7 @@ angular.module('wembliApp.services', [])
 		}
 	};
 
-
-	//init the sequence (page slider)
+	/* init the sequence (page slider) */
 	return sequence;
 
 }]).value('version', '0.0.1');

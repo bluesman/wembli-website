@@ -3,7 +3,7 @@ footer#footer(ng-controller="FooterCtrl")
 	ul#nav
 		//- the id here actually helps build the framesMap which tells sequence which direction to scroll when clicking
 		//- make sure you give every li an id this must correspond with location.href.
-		li#search.wembli-sequence-link
+		li#search.wembli-sequence-link(direction="-1")
 			a#nav-search(ng-class="{'/search':'active'}[currentPath]", href="/search")
 				#search-title.segoe
 					i.icon-search

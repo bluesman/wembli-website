@@ -4,6 +4,7 @@ module.exports = function(app) {
 	var invitationView = function(req,res,view) {
 		var viewData = {
 			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+			plan: req.session.plan
 		}
 		if (req.session.loggedIn) {
 			delete req.session.redirectUrl;
@@ -22,6 +23,7 @@ module.exports = function(app) {
 	var planView = function(req, res, view) {
 		var viewData = {
 			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+			plan: req.session.plan
 		}
 
 		//TODO - handle this in a more global way

@@ -1,4 +1,4 @@
-if (!plan || typeof plan.event.eventId === "undefined")
+if ((typeof plan === "undefined") || typeof plan.event.eventId === "undefined")
 	include ../includes/no-event
 else
 	//- have plan but no organizer? its my plan

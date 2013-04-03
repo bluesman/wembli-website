@@ -6,8 +6,6 @@ angular.module('wembliApp', ['wembliApp.filters', 'wembliApp.services', 'wembliA
   $locationProvider.html5Mode(true);
 }])
 .run(['initRootScope','$rootScope', '$location', '$route', '$window','fetchModals', 'facebook','twitter', 'plan', function(initRootScope, $scope, $location, $route, $window, fetchModals, facebook, twitter, plan) {
-	fetchModals.fetch($location.path());
-
   $window.fbAsyncInit = function() {
     FB.init({
       appId      : fbAppId,
@@ -22,5 +20,11 @@ angular.module('wembliApp', ['wembliApp.filters', 'wembliApp.services', 'wembliA
   };
 
   twitter.getLoginStatus();
+
+  plan.fetch(function(planObj) {
+    console.log('fetched plan from in app.run')
+    console.log('calling fetchModals.fetch in app.run');
+    fetchModals.fetch($location.path());
+  });
 
 }]);

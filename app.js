@@ -98,6 +98,7 @@ app.set('controllers', __dirname + '/controllers');
 app.set('view engine', 'jade');
 app.use(express.methodOverride());
 app.use(require('./lib/wembli/secure'));
+/* remember this happens before the controller runs :( */
 app.use(function(req, res, next) {
 	res.locals.req      = req;
 	res.locals.res      = res;

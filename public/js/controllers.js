@@ -1,8 +1,8 @@
 /*
 * Main Controller
 */
-function MainCtrl($scope, $location, $window, footer) {
-	//$('#page-loading-modal').modal({backdrop:"static",keyboard:false,hide:true});
+function MainCtrl($scope, $location, $window, footer, plan) {
+
 };
 
 
@@ -930,12 +930,13 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 					$scope.$watch('currentPath',function(newVal,oldVal) {
 						console.log('currentPath changed from: '+newVal+' to '+oldVal);
 						if (newVal === '/invitation') {
-							/* show the modal */
+							/* show the modal
 							$('#invitation-modal').modal({
 								'backdrop': 'static',
 								'keyboard': false,
 							});
-							$('#invitation-modal').modal("show");
+*/
+							//$('#invitation-modal').modal("show");
 						} else {
 							console.log('new location is not invitation');
 						}
@@ -943,11 +944,13 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 				} else {
 					console.log('location path is the same as current path');
 					if ($location.path() === '/invitation') {
+
 						$('#invitation-modal').modal({
 							'backdrop': 'static',
 							'keyboard': false,
 						});
-						$('#invitation-modal').modal("show");
+
+						//$('#invitation-modal').modal("show");
 					} else {
 						console.log('locatino path is not /invitation its' + $location.path());
 					}

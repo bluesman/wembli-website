@@ -35,7 +35,7 @@ module.exports = function(app) {
 		},[args,req,res]);
 	};
 
-	app.get(/\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
+	app.get(/^\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
 		/* must be the organizer if we're creating a new plan - this won't stick if they're not logged in */
@@ -48,7 +48,7 @@ module.exports = function(app) {
 		}
 	});
 
-	app.get(/\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
+	app.get(/^\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
@@ -86,8 +86,8 @@ module.exports = function(app) {
 	});
 
 
-	app.get(/\/search(\/events\/(.+)$)?/, function(req, res) {
-
+	app.get(/^\/search(\/events\/(.+)$)?/, function(req, res) {
+		console.log('get: '+req.url);
 		var title = 'Wembli Search';
 
 		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];

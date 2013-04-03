@@ -240,12 +240,15 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         /* why is this here?
         scope.direction = attr.direction;
         */
-        sequence.ready(function() {
+        /* do i need to wait for sequence.ready? */
+        //sequence.ready(function() {
           console.log('getting plan in eventData after sequence is ready');
           plan.get(function(plan) {
+            console.log('got plan for event-data: ');
+            console.log(plan);
             scope.event = plan.event;
           });
-        });
+        //});
       }
     }
   }
@@ -359,28 +362,23 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     restrict: 'EAC',
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
-        /* init some defaults */
-        var direction = 1;  //default to slide right
-        var path      = "";
-        var samePage  = true; //load the same page by default in case there are errors
-        var args      = {method: 'get',cache: false}; //args for the http request
 
         element.click(function(e) {
           e.preventDefault();
+
+          /* init some defaults */
+          var path      = "";                           //defaulting to empty string for path will result in samePage on error
+          var args      = {method: 'get',cache: false}; //args for the http request
+          var direction = 1;                            //default to slide right
+          var samePage  = true;                         //load the same page by default in case there are errors
+
+          console.log('CLICKED SEQUENCE LINK');
 
           /* hide any modals right now */
           $(".modal").modal("hide");
 
           /* show the page loading modal */
           $('#page-loading-modal').modal("show");
-
-          /* dismiss any modals once the page loads */
-          var loadingDuration = (attr.loadingDuration) ? parseInt(attr.loadingDuration) : 500;
-          sequence.ready(function() {
-            $timeout(function() {
-              $('#page-loading-modal').modal("hide");
-            },loadingDuration);
-          });
 
           /*
             figure out where we're going next
@@ -425,22 +423,27 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             set a flag here to tell the success callback not to slide
           */
           if (path !== $rootScope.currentPath) {
+            console.log('same page is false');
             samePage = false;
           }
 
           /* ok all set lets start the transition */
 
           /* fetchModals for this new path */
+          console.log('calling fetchModals.fetch in wembli-sequence-link on path: '+path);
           fetchModals.fetch(path);
 
           /* if its not a form submit then we'll be getting a partial to load in a sequence frame */
-          if(args.method === "get") {
+          if(/get/i.test(args.method)) {
             args.url = "/partials" + args.url;
           }
           /* if its a post put the post body together */
-          if(args.method === "post") {
+          if(/post/i.test(args.method)) {
             args.data = element.closest('form').serialize();
           }
+
+          console.log('http args');
+          console.log(args);
 
           /* fetch the partial */
           $http(args).success(function(data, status, headers, config) {
@@ -482,6 +485,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
                 this is so we know where to slide the footer arrow to
               */
               var nextPath = '/' + $location.path().split('/')[1];
+              var currentPath = '/' + $rootScope.currentPath.split('/')[1];
 
               /*
                 if footer.framesMap[$location.path()] (where they are going) is undefined
@@ -489,14 +493,12 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
                 if footer.framesMap[$rootScope.currentPath] (where they are coming from) is undefined
                 then move the arrow, but still slide to the right
               */
-              if(typeof footer.framesMap[$rootScope.currentPath] === "undefined") {
-                var currentPath = nextPath;
-                if(typeof footer.framesMap[currentPath] !== "undefined") {
-                  //direction depends on where the arrow is compared to where they are going
-                  var currNavIndex = footer.framesMap[currentPath];
-                  var nextNavIndex = footer.framesMap[nextPath];
-                  direction = (currNavIndex < nextNavIndex) ? 1 : -1;
-                }
+
+              /* if where they are coming from doesn't have an arrow location */
+              if(typeof footer.framesMap[currentPath] === "undefined") {
+                currentPath = nextPath;
+                direction   = 1;
+                /* slide the arrow only if where they are coming from is undefined */
                 footer.slideNavArrow();
               }
 
@@ -504,8 +506,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
                 if both are defined
                 then move the arrow and figure out which way to slide
               */
-              if((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[$rootScope.currentPath] !== "undefined")) {
-                var currNavIndex = footer.framesMap[$rootScope.currentPath];
+              if((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[currentPath] !== "undefined")) {
+                var currNavIndex = footer.framesMap[currentPath];
                 var nextNavIndex = footer.framesMap[nextPath];
                 direction = (currNavIndex < nextNavIndex) ? 1 : -1;
                 /* slide the nav arrow - this should be async with using sequence to transition to the next frame */
@@ -513,6 +515,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               }
 
               /* find out what direction to go to we sliding in this element */
+              console.log('scope.direction:'+scope.direction);
+              console.log('attr.direction:'+attr.direction);
               direction = parseInt(attr.direction)  || parseInt(scope.direction) || direction;
 
               /* compile the page we just fetched and link the scope */
@@ -525,6 +529,13 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               console.log('sequence sliding to next frame: '+nextFrameID+' direction: '+direction);
               sequence.goTo(nextFrameID, direction);
 
+              /* dismiss any modals once the page loads */
+              var loadingDuration = (attr.loadingDuration) ? parseInt(attr.loadingDuration) : 500;
+              sequence.ready(function() {
+                $timeout(function() {
+                  $('#page-loading-modal').modal("hide");
+                },loadingDuration);
+              });
 
               $('#content').scrollTop(0);
               $('#content').css('overflow', 'visible');
