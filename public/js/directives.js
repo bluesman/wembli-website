@@ -17,14 +17,28 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   return {
     restrict: 'E',
     replace: true,
-    cache:false,
+    cache: false,
     templateUrl: "/partials/interactive-venue-map",
     compile: function(element, attr, transclude) {
+
+      var generateTnSessionId = function() {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+        var sid_length = 5;
+        var sid = '';
+        for (var i=0; i<sid_length; i++) {
+          var rnum = Math.floor(Math.random() * chars.length);
+          sid += chars.substring(rnum,rnum+1);
+        }
+        return sid;
+      };
 
       return function(scope, element, attr) {
 
         scope.$watch('tickets', function(newVal, oldVal) {
-          if(newVal !== oldVal) {
+          console.log('tickets changed to');
+          console.log(newVal);
+          console.log(oldVal);
+          if (newVal !== oldVal) {
             $('#map-container').tuMap("Refresh", "Reset");
           }
         });
@@ -36,13 +50,13 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           },
 
           function(err, result) {
-            if(err) {
+            if (err) {
               //handle err
               alert('error happened - contact help@wembli.com');
               return;
             }
 
-            scope.event   = result.event;
+            scope.event = result.event;
             scope.tickets = result.tickets;
 
             //scope.$broadcast('TicketsCtrl-ticketsLoaded',{});
@@ -50,12 +64,15 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             var minTixPrice = 0;
             var maxTixPrice = 200;
             angular.forEach(scope.tickets, function(el) {
-              if(parseInt(el.ActualPrice) < minTixPrice) {
+              if (parseInt(el.ActualPrice) < minTixPrice) {
                 minTixPrice = parseInt(el.ActualPrice);
               }
-              if(parseInt(el.ActualPrice) > maxTixPrice) {
+              if (parseInt(el.ActualPrice) > maxTixPrice) {
                 maxTixPrice = parseInt(el.ActualPrice);
               }
+
+              el.selectedQty = el.ValidSplits.int[0];
+              el.sessionId   = generateTnSessionId();
             });
 
             var initSlider = function() {
@@ -79,19 +96,19 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               }).tuMap("Refresh");
             };
 
-            var options            = interactiveMapDefaults;
-            options.MapId          = scope.event.VenueConfigurationID;
-            options.EventId        = scope.event.ID;
+            var options = interactiveMapDefaults;
+            options.MapId = scope.event.VenueConfigurationID;
+            options.EventId = scope.event.ID;
             //options.FailoverMapUrl = scope.event.MapURL;
 
             options.OnInit = function(e, MapType) {
               $(".ZoomIn").html('+');
               $(".ZoomOut").html('-');
-              $(".tuMapControl").parent("div").attr('style',"position:absolute;left:5px;top:5px;font-size:12px");
+              $(".tuMapControl").parent("div").attr('style', "position:absolute;left:5px;top:5px;font-size:12px");
             };
 
             options.OnError = function(e, Error) {
-              if(Error.Code === 1) { /* chart not found - display the tn chart */
+              if (Error.Code === 1) { /* chart not found - display the tn chart */
                 $('#map-container').css("background", 'url(' + scope.event.MapURL + ') no-repeat center center');
               }
             };
@@ -101,34 +118,28 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             };
 
             options.OnMouseover = function(e, Section) {
-              if(Section.Active) {
-              } else {
-              }
+              if (Section.Active) {} else {}
             };
 
             options.OnMouseout = function(e, Section) {
-              if(Section.Active) {
-              }
+              if (Section.Active) {}
             };
 
             options.OnClick = function(e, Section) {
-              if(Section.Active && Section.Selected) {
-              }
+              if (Section.Active && Section.Selected) {}
             };
 
             options.OnControlClick = function(e, Data) {
-              if(Section.Selected) {
-              }
+              if (Section.Selected) {}
             };
 
             options.OnGroupClick = function(e, Group) {
-              if(Group.Selected) {
+              if (Group.Selected) {
 
               }
             };
 
-            options.OnTicketSelected = function(e, Ticket) {
-            }
+            options.OnTicketSelected = function(e, Ticket) {}
 
             options.OnReset = function(e) {
               //Write Code Here
@@ -167,16 +178,18 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           },
 
           /* transformRequest */
+
           function(data, headersGetter) {
             //$('#page-loading-modal').modal("show");
             return data;
           },
 
           function(data, headersGetter) {
-/*            setTimeout(function() {
+            /*            setTimeout(function() {
               $('#page-loading-modal').modal("hide");
             }, 3000);
-*/            return JSON.parse(data);
+            */
+            return JSON.parse(data);
           });
         });
       }
@@ -225,12 +238,14 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 */
-.directive('eventData', ['$rootScope','$filter', 'wembliRpc', 'plan', 'sequence', function($rootScope, $filter, wembliRpc, plan, sequence) {
+.directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence', function($rootScope, $filter, wembliRpc, plan, sequence) {
   return {
     restrict: 'C',
     templateUrl: '/partials/event-data',
-    cache:false,
-    scope:{eventId:'@eventId'},
+    cache: false,
+    scope: {
+      eventId: '@eventId'
+    },
     compile: function(element, attr, transclude) {
 
       return function(scope, element, attr) {
@@ -239,25 +254,129 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         */
         /* do i need to wait for sequence.ready? */
         //sequence.ready(function() {
-          plan.get(function(plan) {
-            scope.event = plan.event;
-          });
+        plan.get(function(plan) {
+          scope.event = plan.event;
+        });
         //});
       }
     }
   }
 }])
 
-.directive('twitterWidget',['$window',function($window) {
+  .directive('eventWrapper', ['wembliRpc','$window', function(wembliRpc,$window) {
+  return {
+    restrict: 'C',
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+        element.mouseover(function() {
+          if (attr.noPopover) {
+            return;
+          }
+          var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
+
+          if (typeof scope.ticketSummaryData == "undefined") {
+            scope.ticketSummaryData = {};
+            scope.ticketSummaryData.locked = false;
+          }
+
+          /* if its locked that means we moused in while doing a fetch */
+          if (scope.ticketSummaryData.locked) {
+            return;
+          }
+
+          //we have a cache of the data - gtfo
+          if (typeof scope.ticketSummaryData[elId.split('-')[0]] != "undefined") {
+            return;
+          }
+
+          /* lock so we don't fetch more than once (we will unlock when the http req returns) */
+          scope.ticketSummaryData.locked = true;
+
+          /* fetch the event data */
+          var args = {
+            "eventID": elId.split('-')[0]
+          };
+
+          wembliRpc.fetch('event.getPricingInfo', args,
+
+          function(err, result) {
+            if (err) {
+              alert('error happened - contact help@wembli.com');
+              return;
+            }
+
+            scope.ticketSummaryData[elId.split('-')[0]] = result;
+            /* we cached the result..lets unlock */
+            scope.ticketSummaryData.locked = false;
+            /* init the popover */
+            var summaryContent = "";
+
+            console.log('result from getpricinginfo');
+            console.log(result);
+
+            if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
+              if (result.ticketPricingInfo.ticketsAvailable === '0') {
+                summaryContent = "Click for ticket information";
+              } else {
+                summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketPricingInfo.ticketsAvailable + " ticket choice" : result.ticketPricingInfo.ticketsAvailable + " ticket choices";
+                if (parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
+                  summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
+                } else {
+                  summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " to $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
+                }
+              }
+            } else {
+              summaryContent = "Click for ticket information";
+            }
+
+            console.log('popver is going to the left of: ' + elId);
+            $('#' + elId).popover({
+              placement: "left",
+              trigger: 'hover',
+              animation: true,
+              title: 'Tickets Summary',
+              content: summaryContent
+            });
+            $('#' + elId).popover('show');
+          },
+
+          //transformRequest
+
+          function(data, headersGetter) {
+            //$('#more-events .spinner').show();
+            return data;
+          },
+
+          //transformResponse
+
+          function(data, headersGetter) {
+            //$('#more-events .spinner').hide();
+            return JSON.parse(data);
+          });
+        })
+      }
+    }
+  }
+}])
+
+  .directive('twitterWidget', ['$window', function($window) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
 
-      $window.twttr = (function (d,s,id) {
+      $window.twttr = (function(d, s, id) {
         var t, js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
-        js.src="//platform.twitter.com/widgets.js"; element.append(js);
-        return $window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//platform.twitter.com/widgets.js";
+        element.append(js);
+        return $window.twttr || (t = {
+          _e: [],
+          ready: function(f) {
+            t._e.push(f)
+          }
+        });
       }(document, "script", "twitter-wjs"));
 
 
@@ -270,37 +389,89 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('buyTicketsOffsite',
-  ['$rootScope', '$window', '$location', '$http', '$timeout','fetchModals', 'plan',
-  function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+.directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
 
+function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 
   return {
-    restrict:'EAC',
+    restrict: 'EAC',
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
 
-        element.click(function(e) {
-          var qty = $('#qty-'+attr.ticketId).val();
-          var shipping = 15;
-          var serviceCharge = (parseFloat(attr.ticketPrice) * .15) * parseInt(qty);
-          var actualPrice = attr.ticketPrice * parseInt(qty);
-          var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
-          $('#amount-paid').val(parseFloat(amountPaid).toFixed(2));
-          $('#qty').val(parseInt(qty));
+        attr.$observe('ticket',function(val) {
+          var ticket = JSON.parse(val);
 
-          var Promise = $timeout(function() {
-            $('#tickets-offsite-modal').modal('show');
-          },1500);
+          var displayTicketsLoginModal = function(e) {
+            $rootScope.$broadcast('tickets-login-clicked',{ticket:ticket});
+            if ($('#tickets-login-modal').length > 0) {
+              $('#tickets-login-modal').modal('show');
+            } else {
+              $rootScope.$on('tickets-login-modal-fetched',function() {
+                $('#tickets-login-modal').modal('show');
+              });
+            }
+          };
+
+          if (/tickets-login-modal/.test($location.hash())) {
+            /* if this button is the right one */
+            var h = $location.hash();
+            if (ticket.ID === h.split('-')[3]) {
+              displayTicketsLoginModal();
+            }
+          }
+
+          element.click(displayTicketsLoginModal);
+
         });
       }
     }
   };
 }])
 
-.directive('focusOnClick',['$timeout', function($timeout) {
+.directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
+
+function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+
   return {
-    restrict:'C',
+    restrict: 'EAC',
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+
+        attr.$observe('ticket', function(val) {
+          if (typeof val === "undefined" || val === "") {
+            return;
+          }
+          console.log('parsing string');
+          console.log(val);
+          var ticket        = JSON.parse(val);
+          element.click(function(e) {
+            var shipping      = 15;
+            var serviceCharge = (parseFloat(ticket.ActualPrice) * .15) * parseInt(ticket.selectedQty);
+            var actualPrice   = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
+            var amountPaid    = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
+
+            $rootScope.$broadcast('tickets-offsite-clicked',{
+              qty:ticket.selectedQty,
+              amountPaid:amountPaid,
+              ticketGroup:ticket,
+              eventId:ticket.RventId,
+              sessionId:ticket.sessionId
+            });
+
+            var Promise = $timeout(function() {
+              $('#tickets-login-modal').modal('show');
+              $('#tickets-offsite-modal').modal('show');
+            }, 1500);
+          });
+        });
+      }
+    }
+  };
+}])
+
+  .directive('focusOnClick', ['$timeout', function($timeout) {
+  return {
+    restrict: 'C',
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
         var focus = function() {
@@ -309,7 +480,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             if (!element.is(':focus')) {
               focus();
             }
-          },100);
+          }, 100);
         };
 
         element.click(function(e) {
@@ -320,13 +491,13 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('startPlan',['$rootScope','fetchModals',function($rootScope, fetchModals) {
+  .directive('startPlan', ['$rootScope', 'fetchModals', function($rootScope, fetchModals) {
   return {
-    restrict:'C',
+    restrict: 'C',
     compile: function(element, attr, transclude) {
       fetchModals.fetch('/partials/payment-type');
 
-      return function(scope,element,attr) {
+      return function(scope, element, attr) {
         element.click(function() {
           var nextLink = '';
 
@@ -336,7 +507,10 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             nextLink = element.find('.next-link').attr('href');
           }
 
-          $rootScope.$broadcast('payment-type-modal-clicked',{nextLink:nextLink,name:attr.name});
+          $rootScope.$broadcast('payment-type-modal-clicked', {
+            nextLink: nextLink,
+            name: attr.name
+          });
           /* show the popup to collect payment type */
           $('#payment-type-modal').modal('show');
         });
@@ -346,9 +520,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 }])
 
 //directive to cause link click to go to next frame rather than fetch a new page
-.directive('wembliSequenceLink',
-  ['$rootScope', '$window', '$templateCache', '$timeout','$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan',
-  function($rootScope, $window, $templateCache, $timeout,$location, $http, $compile, footer, sequence, fetchModals, plan) {
+.directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan',
+
+function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan) {
 
   return {
     restrict: 'EAC',
@@ -359,10 +533,13 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           e.preventDefault();
 
           /* init some defaults */
-          var path      = "";                           //defaulting to empty string for path will result in samePage on error
-          var args      = {method: 'get',cache: false}; //args for the http request
-          var direction = 1;                            //default to slide right
-          var samePage  = true;                         //load the same page by default in case there are errors
+          var path = ""; //defaulting to empty string for path will result in samePage on error
+          var args = {
+            method: 'get',
+            cache: false
+          }; //args for the http request
+          var direction = 1; //default to slide right
+          var samePage = true; //load the same page by default in case there are errors
 
           /* hide any modals right now */
           $(".modal").modal("hide");
@@ -378,33 +555,35 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           */
 
           /* a tags will have href */
-          if(element.is('a')) {
+          if (element.is('a')) {
             path = element.attr('href');
           }
 
           /* if its a button */
-          if(element.is('button')) {
+          if (element.is('button')) {
             /* get the action of the form */
-            path   = element.closest('form').attr('action');
+            path = element.closest('form').attr('action');
 
             args.method = element.closest('form').attr('method');
             args.headers = {
               "Content-Type": "application/x-www-form-urlencoded"
             };
-            if(typeof element.closest('form').attr('enctype') !== "undefined") {
+            if (typeof element.closest('form').attr('enctype') !== "undefined") {
               args.headers['Content-Type'] = element.closest('form').attr('enctype');
             }
           }
 
           /* element is a parent of the thing with the href */
-          if(path === "") {
+          if (path === "") {
             path = element.find('a').attr('href');
           }
 
           args.url = (path === "/") ? path + "index" : path;
 
           /* if we still don't know the path then make this the same page */
-          if (path === "") { samePage = true };
+          if (path === "") {
+            samePage = true
+          };
 
           /* clear out the search args from the path */
           path = path.split('?')[0];
@@ -423,11 +602,11 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           fetchModals.fetch(path);
 
           /* if its not a form submit then we'll be getting a partial to load in a sequence frame */
-          if(/get/i.test(args.method)) {
+          if (/get/i.test(args.method)) {
             args.url = "/partials" + args.url;
           }
           /* if its a post put the post body together */
-          if(/post/i.test(args.method)) {
+          if (/post/i.test(args.method)) {
             args.data = element.closest('form').serialize();
           }
 
@@ -444,9 +623,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               var headers = headerFunc();
 
               /* if the server tells us explicitly what the location should be, set it here: */
-              if(typeof headers['x-wembli-location'] !== "undefined") {
+              if (typeof headers['x-wembli-location'] !== "undefined") {
                 /* if x-location comes back and its the same as $location.path() - don't slide */
-                if($rootScope.currentPath === headers['x-wembli-location']) {
+                if ($rootScope.currentPath === headers['x-wembli-location']) {
                   samePage = true;
                 } else {
                   samePage = false;
@@ -454,10 +633,10 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
                 }
               }
 
-              if(samePage) {
+              if (samePage) {
                 $(".modal").modal("hide");
                 angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
-                scope.$emit('viewContentLoaded',{});
+                scope.$emit('viewContentLoaded', {});
                 return;
               }
 
@@ -479,9 +658,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               */
 
               /* if where they are coming from doesn't have an arrow location */
-              if(typeof footer.framesMap[currentPath] === "undefined") {
+              if (typeof footer.framesMap[currentPath] === "undefined") {
                 currentPath = nextPath;
-                direction   = 1;
+                direction = 1;
                 /* slide the arrow only if where they are coming from is undefined */
                 footer.slideNavArrow();
               }
@@ -490,7 +669,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
                 if both are defined
                 then move the arrow and figure out which way to slide
               */
-              if((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[currentPath] !== "undefined")) {
+              if ((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[currentPath] !== "undefined")) {
                 var currNavIndex = footer.framesMap[currentPath];
                 var nextNavIndex = footer.framesMap[nextPath];
                 direction = (currNavIndex < nextNavIndex) ? 1 : -1;
@@ -499,13 +678,13 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               }
 
               /* find out what direction to go to we sliding in this element */
-              direction = parseInt(attr.direction)  || parseInt(scope.direction) || direction;
+              direction = parseInt(attr.direction) || parseInt(scope.direction) || direction;
 
               /* compile the page we just fetched and link the scope */
               angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
 
               /* should this go before the compile? or after? */
-              scope.$emit('viewContentLoaded',{});
+              scope.$emit('viewContentLoaded', {});
 
               /* do the animations */
               sequence.goTo(nextFrameID, direction);
@@ -515,7 +694,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               sequence.ready(function() {
                 $timeout(function() {
                   $('#page-loading-modal').modal("hide");
-                },loadingDuration);
+                }, loadingDuration);
               });
 
               $('#content').scrollTop(0);
@@ -523,8 +702,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               $('#content').css('overflow-x', 'hidden');
 
               /* server can tell us to overflow hidden or not - this is for the venue map pages */
-              if(typeof headers['x-wembli-overflow'] !== "undefined") {
-                if(headers['x-wembli-overflow'] === 'hidden') {
+              if (typeof headers['x-wembli-overflow'] !== "undefined") {
+                if (headers['x-wembli-overflow'] === 'hidden') {
                   $('#content').css('overflow', 'hidden');
                 }
               }
@@ -543,10 +722,10 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     }
   };
 }])
-.directive('popover', [function() {
+  .directive('popover', [function() {
   return {
     restrict: 'C',
-    cache:false,
+    cache: false,
     compile: function(element, attr, transclude) {
 
       return function(scope, element, attr) {
@@ -562,43 +741,43 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('fadeElement', function () {
-    return function (scope, element, attrs) {
-        element.css('display', 'none');
-        scope.$watch(attrs.fadeElement, function (value) {
-            if (value) {
-                element.fadeIn(400);
-            } else {
-                element.fadeOut(1000);
-            }
-        });
-    }
+  .directive('fadeElement', function() {
+  return function(scope, element, attrs) {
+    element.css('display', 'none');
+    scope.$watch(attrs.fadeElement, function(value) {
+      if (value) {
+        element.fadeIn(400);
+      } else {
+        element.fadeOut(1000);
+      }
+    });
+  }
 })
 
-.directive('onKeyup', function() {
-    return function(scope, elm, attrs) {
-        //Evaluate the variable that was passed
-        //In this case we're just passing a variable that points
-        //to a function we'll call each keyup
-        var keyupFn = scope.$eval(attrs.onKeyup);
-        elm.bind('keyup', function(evt) {
-            //$apply makes sure that angular knows
-            //we're changing something
-            scope.$apply(function() {
-                keyupFn.call(scope,elm,attrs);
-            });
-        });
-    };
+  .directive('onKeyup', function() {
+  return function(scope, elm, attrs) {
+    //Evaluate the variable that was passed
+    //In this case we're just passing a variable that points
+    //to a function we'll call each keyup
+    var keyupFn = scope.$eval(attrs.onKeyup);
+    elm.bind('keyup', function(evt) {
+      //$apply makes sure that angular knows
+      //we're changing something
+      scope.$apply(function() {
+        keyupFn.call(scope, elm, attrs);
+      });
+    });
+  };
 })
 
-.directive('appVersion', ['version', function(version) {
+  .directive('appVersion', ['version', function(version) {
   return function(scope, elm, attrs) {
     elm.text(version);
   };
 
 }])
 
-.directive('dropdown', function() {
+  .directive('dropdown', function() {
   return function(scope, elm, attrs) {
     $(elm).dropdown();
   };

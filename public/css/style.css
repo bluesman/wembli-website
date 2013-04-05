@@ -2422,13 +2422,49 @@ body {
 #content #search-frame #right #search-wrapper #search #search-results a#more-events i {
   margin: 1px 0px 0px 8px;
 }
+#tickets-login-modal form {
+  margin: 20px;
+}
+#tickets-login-modal form label.radio {
+  padding: 0 20px;
+}
+#tickets-login-modal form label.radio input[type=radio] {
+  margin: 45px 25px 0 0;
+}
+#tickets-login-modal form label.radio .option-content {
+  padding: 10px;
+}
+#tickets-login-modal form label.radio .option-content h3 {
+  color: #6da1b7;
+}
+#tickets-login-modal form label.radio .option-content .first-name {
+  width: 100px;
+}
+#tickets-login-modal form label.radio .option-content .last-name {
+  margin-left: 10px;
+  width: 200px;
+}
+#tickets-login-modal form label.radio .option-content .password,
+#tickets-login-modal form label.radio .option-content .email {
+  width: 320px;
+}
+#tickets-login-modal form label.radio .option-content .facebook-login {
+  width: 400px;
+}
+#tickets-login-modal form label.radio .option-content .facebook-login #facebook-login-button {
+  margin: 0 auto;
+}
+#tickets-login-modal form label.radio.selected,
+#tickets-login-modal form label.radio:hover {
+  background-color: rgba(66, 127, 184, 0.25);
+}
 #tickets-offsite-modal form {
   margin: 20px;
 }
 #tickets-offsite-modal form label.radio {
   padding: 0 30px;
 }
-#tickets-offsite-modal form label.radio input {
+#tickets-offsite-modal form label.radio input[type=radio] {
   margin-top: 20px;
 }
 #tickets-offsite-modal form label.radio .option-content {
@@ -2437,6 +2473,7 @@ body {
 #tickets-offsite-modal form label.radio .option-content h3 {
   color: #6da1b7;
 }
+#tickets-offsite-modal form label.radio.selected,
 #tickets-offsite-modal form label.radio:hover {
   background-color: rgba(66, 127, 184, 0.25);
 }

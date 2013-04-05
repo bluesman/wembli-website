@@ -1,9 +1,49 @@
+
+#tickets-login-modal {
+	form {
+		margin:20px;
+		label.radio {
+			padding:0 20px;
+			input[type=radio] {
+				margin:45px 25px 0 0;
+			}
+
+			.option-content {
+				padding:10px;
+				h3 {
+					color:@blueLight;
+				}
+
+				.first-name {
+					width:100px;
+				}
+				.last-name {
+					margin-left: 10px;
+					width:200px;
+				}
+				.password, .email {
+					width: 320px;
+				}
+				.facebook-login {
+					width:400px;
+					#facebook-login-button {
+						margin:0 auto;
+					}
+				}
+			}
+		}
+		label.radio.selected,label.radio:hover {
+			#translucent > .background(@blue,0.25);
+		}
+	}
+}
+
 #tickets-offsite-modal {
 	form {
 		margin:20px;
 		label.radio {
 			padding:0 30px;
-			input {
+			input[type=radio] {
 				margin-top:20px;
 			}
 			.option-content {
@@ -13,7 +53,7 @@
 				}
 			}
 		}
-		label.radio:hover {
+		label.radio.selected,label.radio:hover {
 			#translucent > .background(@blue,0.25);
 		}
 

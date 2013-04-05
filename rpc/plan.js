@@ -1,6 +1,7 @@
 var wembliUtils = require('wembli/utils');
 var wembliModel = require('../lib/wembli-model');
 var Friend      = wembliModel.load('friend');
+var Ticket      = wembliModel.load('ticket');
 
 exports.plan = {
 	init: function(args,req,res) {
@@ -20,7 +21,23 @@ exports.plan = {
 				me(null,data);
 		}
 	},
+
 	save: function(args, req, res) {
+		var me = this;
+		var data = {success:1};
+		console.log('plan.save');
+		console.log(args);
+		console.log('saving plan in rpc');
+		console.log(req.session.plan);
+
+		req.session.plan.save(function(err,res) {
+			data.plan = req.session.plan;
+			me(null,data);
+		});
+
+	},
+
+	update: function(args, req, res) {
 		var me = this;
 		var data = {success:1};
 		console.log('plan.save');
@@ -133,4 +150,104 @@ exports.plan = {
 			});
 		});
 	},
+	addTicketGroup: function(args, req, res) {
+		var me = this;
+
+		var data = {success: 1};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add tickets to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		if (typeof args.ticketGroup === "undefined") {
+			console.log('no ticketGroup');
+			data.noTicketGroup = true;
+			return me(null,data);
+		}
+
+		console.log('add tickets to plan:');
+		console.log(args);
+
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+			'ticketGroup.ID':args.ticketGroup.ID
+		};
+
+		/* don't add if its already there */
+		Ticket.findOne(query, function(err, ticket) {
+			if (err) {
+				data.success = 0;
+				data.dbError = 'unable to find ticketGroup';
+				return me(null, data);
+			}
+
+			console.log('ticket in db?');
+			console.log(ticket);
+			if (ticket !== null) {
+				console.log('already added these tix');
+				data.ticketGroupExists = true;
+				return me(null,data);
+			}
+
+			var set = {
+				planId: req.session.plan.id,
+				planGuid: req.session.plan.guid,
+				service:'tn',
+				ticketGroup:JSON.parse(args.ticketGroup),
+				qty:args.qty,
+				total:args.total,
+			};
+			console.log(set);
+			if (typeof args.payment !== "undefined") {
+				console.log(args.payment);
+				var p = JSON.parse(args.payment);
+
+				set.purchased = true;
+				set.payment = {
+					organizer: true,
+					transactionToken: p.transactionToken,
+					amount: p.total,
+					qty: p.qty
+				};
+			}
+
+			console.log(set);
+			ticket = new Ticket(set);
+
+			ticket.save(function(err) {
+				if (err) {
+					data.success = 0;
+					data.dbError = 'unable to save ticketGroup';
+					return me(null, data);
+				}
+
+				console.log('saved ticket: ' + ticket.id);
+				console.log(ticket);
+
+				/* now add the friend to the plan */
+				req.session.plan.addTicket(ticket, function(err) {
+					if (err) {
+						console.log(err);
+						data.success = 0;
+						data.dbError = 'unable to add ticketGroup ' + ticket.id;
+						return me(null, data);
+					}
+					console.log('added ticketGroup to plan: ' + req.session.plan.guid);
+					data.ticketGroup = ticket;
+
+					return me(null, data);
+				});
+			});
+		});
+	}
 }

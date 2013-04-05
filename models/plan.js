@@ -136,7 +136,7 @@ this.Model = function(mongoose) {
 			 return cb((id === el));
 		}, function(result) {
 			if (typeof result === "undefined") {
-				console.log('this id '+id+' was not already in plan.friends so adding it');
+				console.log('this id '+id+' was not already in plan.'+key+' so adding it');
 				p[key].push(id);
 				p.markModified(key);
 				p.save(callback);

@@ -113,94 +113,6 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 		}
 	});
 
-
-	$scope.showTicketSummary = function(e) {
-
-		var elId = (typeof $(e.target).parents('li').attr('id') == "undefined") ? $(e.target).attr('id') : $(e.target).parents('li').attr('id');
-
-		if(typeof $scope.ticketSummaryData == "undefined") {
-			$scope.ticketSummaryData = {};
-			$scope.ticketSummaryData.locked = false;
-		}
-
-		/* if its locked that means we moused in while doing a fetch */
-		if($scope.ticketSummaryData.locked) {	return;	}
-
-		/* fetch the event data */
-		var args = { "eventID": elId.split('-')[0]	};
-
-		//we have a cache of the data - gtfo
-		if(typeof $scope.ticketSummaryData[elId.split('-')[0]] != "undefined") { return; }
-
-		/* lock so we don't fetch more than once (we will unlock when the http req returns) */
-		$scope.ticketSummaryData.locked = true;
-
-		wembliRpc.fetch('event.getPricingInfo', args,
-
-		function(err, result) {
-			if(err) {
-				alert('error happened - contact help@wembli.com');
-				return;
-			}
-
-			$scope.ticketSummaryData[elId.split('-')[0]] = result;
-			/* we cached the result..lets unlock */
-			$scope.ticketSummaryData.locked = false;
-			/* init the popover */
-			var summaryContent = "";
-
-			console.log('result from getpricinginfo');
-			console.log(result);
-
-			if(typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
-				if(result.ticketPricingInfo.ticketsAvailable === '0') {
-					summaryContent = "Click for ticket information";
-				} else {
-					summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketPricingInfo.ticketsAvailable + " ticket choice" : result.ticketPricingInfo.ticketsAvailable + " ticket choices";
-					if(parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
-						summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
-					} else {
-						summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " to $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
-					}
-				}
-			} else {
-				summaryContent = "Click for ticket information";
-			}
-
-			console.log('popver is going to the left of: '+elId);
-			$('#' + elId).popover({
-				placement: "left",
-				trigger: 'hover',
-				animation: true,
-				title: 'Tickets Summary',
-				content: summaryContent
-			});
-			$('#' + elId).popover('show');
-		},
-
-		//transformRequest
-
-		function(data, headersGetter) {
-			//$('#more-events .spinner').show();
-			return data;
-		},
-
-		//transformResponse
-
-		function(data, headersGetter) {
-			//$('#more-events .spinner').hide();
-			return JSON.parse(data);
-		});
-
-
-	};
-
-	$scope.hideTicketSummary = function(e) {
-		var elId = (typeof $(e.target).parents('li').attr('id') == "undefined") ? $(e.target).attr('id') : $(e.target).parents('li').attr('id');
-		$('#' + elId).popover('hide');
-
-	};
-
 	$scope.moreEvents = function() {
 		//fetch the upcoming events
 		var args = {
@@ -1078,9 +990,12 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 };
 
 function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
+  /* get the login modal */
+  fetchModals.fetch('/partials/tickets-login-modal');
+
   /* display a modal when they click to go off and buy tickets */
-  fetchModals.fetch('/tickets-offsite',function(err) {
-    if (err) {
+  fetchModals.fetch('/partials/tickets-offsite',function(err) {
+  	if (err) {
       return console.log('no modal for buy tickets offsite');
     }
     plan.get(function(plan) {
@@ -1190,18 +1105,61 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 
 }
 
-function TicketsOffsiteCtrl($scope) {
+function TicketsLoginCtrl($scope,$location,plan,customer) {
+	$scope.plan = plan.get();
+	$scope.$on('tickets-login-clicked',function(e,args){
+		$scope.redirectUrl = '/tickets/'+$scope.plan.event.eventId+'/'+$scope.plan.event.eventName+'/login/'+args.ticket.ID;
+		console.log('on tickets login clicked');
+		$scope.ticket = args.ticket,
+		console.log(args);
+	});
+}
+
+function TicketsOffsiteCtrl($scope,plan) {
+	$scope.plan = plan.get();
+	$scope.$on('tickets-offsite-clicked',function(e,args){
+		console.log('on tickets offsite clicked');
+		console.log(args);
+		$scope.qty        = args.qty;
+		$scope.amountPaid = args.amountPaid;
+		$scope.eventId    = args.eventId,
+		$scope.sessionId  = args.sessionId,
+		$scope.ticketGroup   = args.ticketGroup,
+		console.log(args);
+	})
 
   $scope.showButton = function() {
     return ($scope.ticketsOffsite==='bought');
   };
 
   $scope.submitForm = function() {
-  	$scope.$digest();
     console.log('submit buy tickets offsite form');
     console.log('qty: '+$scope.qty);
     console.log('amount: '+$scope.amountPaid );
     console.log('radio: '+$scope.ticketsOffsite);
+    console.log('session: '+$scope.sessionId);
+
+    console.log('submit tickets offsite form');
+    console.log($scope);
+
+    if ($scope.ticketGroup === null) {
+    	console.log('no ticket group :(');
+    	return;
+    }
+
+    plan.addTicketGroup({
+ 	  	service:'tn',
+   		ticketGroup: $scope.ticketGroup,
+   		qty:$scope.qty,
+    	total:$scope.amountPaid,
+ 	  	payment:JSON.stringify({
+   			transactionToken:$scope.sessionId,
+   			amount:$scope.amountPaid,
+   			qty: $scope.qty
+   		})
+   	},function(err,results){
+   		console.log(results);
+    });
   };
 
   $scope.cancelForm = function() {
@@ -1210,8 +1168,10 @@ function TicketsOffsiteCtrl($scope) {
 
 }
 
-function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter) {
+function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer) {
 	console.log('plan.get venuemapctrl');
+	console.log('scope.customer');
+	console.log($scope.customer);
 	plan.get(function(plan) {
 		$scope.priceRange       = {};
 		$scope.eventOptionsLink = '/event-options/'+plan.event.eventId+'/'+plan.event.eventName;

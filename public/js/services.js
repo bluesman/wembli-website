@@ -65,6 +65,10 @@ angular.module('wembliApp.services', [])
 			wembliRpc.fetch('plan.addFriend', args, callback);
 		},
 
+		addTicketGroup: function(args, callback) {
+			wembliRpc.fetch('plan.addTicketGroup', args, callback);
+		},
+
 		//get plan from server and return it
 		fetch: function(callback) {
 			if (self.fetchInProgress) {
@@ -87,14 +91,37 @@ angular.module('wembliApp.services', [])
 				if (typeof result.plan !== "undefined") {
 					self.plan = result.plan
 					self.friends = result.friends;
-				}
 
+				}
+				if (typeof result.customer !== "undefined" && result.customer) {
+					customer.set(result.customer);
+					$rootScope.customer = customer;
+				}
 				self.fetchInProgress = false;
 				$rootScope.$broadcast('plan-fetched', {});
 				if (callback) {
 					callback(self);
 				}
+
 			});
+		},
+		/* tell the server to save the plan in the session */
+		save: function(callback) {
+			wembliRpc.fetch('plan.save', {}, function(err,result) {
+				if (err) {
+					console.log('error saving plan:'+err);
+					return;
+				}
+				console.log('plan back from plan.save');
+				console.log(result.plan)
+				$rootScope.$broadcast('plan-saved', {});
+				self.plan = result.plan;
+				if (callback) {
+					callback(err,result);
+				}
+			});
+
+
 		},
 
 		//push $rootScope.plan to server and save
@@ -125,7 +152,6 @@ angular.module('wembliApp.services', [])
 	/* put stuff in here to load a modal everytime */
 	var modalPageMap = {
 		'/invitation': ['/partials/invite-friends-wizard'],
-		'/tickets-offsite': ['/partials/tickets-offsite']
 	};
 	var modalFetched = {};
 	var modalFetchInProgress = null;
@@ -147,7 +173,7 @@ angular.module('wembliApp.services', [])
 		}).success(function(data, status, headers, config) {
 			$('body').prepend($compile(data)($rootScope));
 
-			modalFetched[path]   = $('body :first-child').attr('id');
+			modalFetched[path] = $('body :first-child').attr('id');
 			modalFetchInProgress = null;
 
 			if (callback) {
@@ -165,10 +191,14 @@ angular.module('wembliApp.services', [])
 
 	return {
 		'fetch': function(path, callback) {
+
 			/* clean the path */
-			var pathKey = path.split('/')[1].split('?')[0];
+			var pathKey = path.split('?')[0];
+
 			/* its already fetched and cached and prepended to the body */
-			if (modalFetched[pathKey]) {	return success();	}
+			if (modalFetched[pathKey]) {
+				return success();
+			}
 			/* this fetch is alredy in progress call the callback when the event is called */
 			if (modalFetchInProgress === pathKey) {
 				if (callback) {
@@ -189,9 +219,9 @@ angular.module('wembliApp.services', [])
 				return;
 			}
 
-			if ( /^\/partials/.test(path) ) {
+			if (/^\/partials/.test(path)) {
 				/* modalPageMap has no key for this url - try to just fetch ot */
-				return fetchPartial(path,path,callback);
+				return fetchPartial(path, path, callback);
 			}
 		}
 	};

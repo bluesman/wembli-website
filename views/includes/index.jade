@@ -29,7 +29,16 @@
 						h3 Uh Oh!
 						.no-results One of the hamsters that powers our site must be on a break!  Check back in a minute.
 				else
-					include event-list
+					#event-list-wrapper()
+						- var wslClass = ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined") && (plan.preferences.payment)) ? 'wembli-sequence-link' : 'start-plan';
+						//- added this here for now so that you are always asked to provide payment type when choosing an event
+						- wslClass = 'start-plan'
+						ul
+							each event in events
+								li.event-wrapper(no-popover="true",class="#{wslClass}",loading-duration="1500",name="#{event.Name}",id="#{event.ID}-wrapper")
+									include event
+							li.event-wrapper(no-popover="true",loading-duration="1500",class="#{wslClass}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
+								include ../partials/includes/event
 		#feed-middle.feed
 			.header.segoe
 				i.icon-twitter

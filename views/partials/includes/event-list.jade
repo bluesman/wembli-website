@@ -5,5 +5,5 @@
 		- if (typeof heading !== "undefined")
 		h3= heading
 	ul
-		li(class="event-wrapper #{wslClass}",loading-duration="1500",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)",ng-cloak)
+		li(class="event-wrapper #{wslClass}",loading-duration="1500",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-cloak)
 			include event

@@ -7,7 +7,7 @@
 		h3= heading
 	ul
 		each event in events
-			li.event-wrapper(class="#{wslClass}",loading-duration="1500",name="#{event.Name}",id="#{event.ID}-wrapper",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)")
+			li.event-wrapper(class="#{wslClass}",loading-duration="1500",name="#{event.Name}",id="#{event.ID}-wrapper")
 				include event
-		li.event-wrapper(loading-duration="1500",class="#{wslClass}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-mouseleave="hideTicketSummary($event)",ng-mouseover="showTicketSummary($event)")
+		li.event-wrapper(loading-duration="1500",class="#{wslClass}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
 			include ../partials/includes/event

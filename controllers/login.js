@@ -34,21 +34,18 @@ module.exports = function(app) {
 	});
 
 	app.post('/login/?', function(req, res) {
-		console.log('started login');
+
 		req.session.remember  = req.param('remember');
 		req.session.loginForm = {
 			remember: req.param('remember'),
 			email: req.param('email')
 		};
 
-		console.log(req.session.loginForm);
-
 		//validate email/password against the db
 		Customer.findOne({email: req.param('email')}, function(err, c) {
 			if ((err == null) && (c != null)) {
 				//make a digest from the email
 				var digest = wembliUtils.digest(req.param('password'));
-				console.log('comparing: '+digest+' to '+c.password);
 				if (typeof c.password != "undefined" && c.password == digest) {
 					req.session.loggedIn = true;
 					req.session.customer = c;

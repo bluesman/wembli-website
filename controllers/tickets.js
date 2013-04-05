@@ -96,6 +96,10 @@ module.exports = function(app) {
 
 	};
 
+	app.get('/tickets/:eventId/:eventName/login/:ticketId', function(req, res) {
+		return res.redirect('/tickets/'+req.param('eventId')+'/'+req.param('eventName')+'#tickets-login-modal-'+req.param('ticketId'));
+	});
+
 	app.get('/tickets/:eventId/:eventName', function(req, res) {
 		return ticketsView(req,res,'tickets',{
 			title:'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
