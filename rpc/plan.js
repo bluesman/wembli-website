@@ -213,12 +213,12 @@ exports.plan = {
 				var p = JSON.parse(args.payment);
 
 				set.purchased = true;
-				set.payment = {
+				set.payment = [{
 					organizer: true,
 					transactionToken: p.transactionToken,
 					amount: p.total,
 					qty: p.qty
-				};
+				}];
 			}
 
 			console.log(set);
