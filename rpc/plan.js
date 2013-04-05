@@ -203,7 +203,7 @@ exports.plan = {
 				planId: req.session.plan.id,
 				planGuid: req.session.plan.guid,
 				service:'tn',
-				ticketGroup:JSON.parse(args.ticketGroup),
+				ticketGroup:args.ticketGroup,
 				qty:args.qty,
 				total:args.total,
 			};

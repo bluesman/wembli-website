@@ -61,7 +61,6 @@ this.Model = function(mongoose) {
 				this.payment[i].amount = parseFloat(this.payment[i].amount) / 100;
 			};
 		}
-		next();
 	});
 
 	try {
