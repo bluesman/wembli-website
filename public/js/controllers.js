@@ -194,6 +194,7 @@ function EventCtrl($scope) {};
 
 /*
 * Invite Friends Wizard Controller
+* this should be done as a directive
 */
 function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $timeout, sequence, wembliRpc, customer, plan, facebook, twitter) {
 
@@ -283,7 +284,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 				$scope.step1.invalidCredentials = true;
 			}
 
-			if (result.exists) {
+			if (result.exists && !scope.loginForm) {
 				$scope.step1.error = true;
 				$scope.step1.accoutExists = true;
 			}
@@ -291,6 +292,11 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 			if (!$scope.step1.error) {
 				/* success - go to next step */
 				$scope.gotoStep('step2');
+			}
+
+			if (result.customer) {
+				$rootScope.customer = result.customer;
+				$rootScope.loggedIn = result.loggedIn;
 			}
 		},
 	};
@@ -852,13 +858,9 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 				//unregisterListener();
 			} else {
 				console.log('watch for beforeNextFrameAnimatesIn');
-				var dereg = $scope.$watch('afterNextFrameAnimatesIn',function(newVal, oldVal) {
+				var dereg = $scope.$on('sequence-afterNextFrameAnimatesIn',function(e) {
 					console.log('beforeNextFrameAnimatesIn happened');
-					console.log(newVal);
-					console.log(oldVal);
-					if (newVal) {
-						showModal(dereg);
-					}
+					showModal(dereg);
 				});
 			}
 		});

@@ -59,6 +59,10 @@ exports.customer = {
 			if (c !== null) {
 				//they've already signed up
 				data.exists = true;
+				if (typeof c.password === "undefined") {
+					data.noPassword = true;
+					data.error = true;
+				}
 				return respond(data);
 			}
 
@@ -102,7 +106,7 @@ exports.customer = {
 					req.session.customer = customer;
 
 					/* send signup email async */
-					wembliEmail.sendSignupEmail({
+					wembliMail.sendSignupEmail({
 						res: res,
 						confirmationToken: confirmationToken,
 						customer: customer

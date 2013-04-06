@@ -33,6 +33,11 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       };
 
       return function(scope, element, attr) {
+
+
+
+
+
         scope.$watch('tickets', function(newVal, oldVal) {
           if (newVal !== oldVal) {
             $('#map-container').tuMap("Refresh", "Reset");
@@ -96,6 +101,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               $(".ZoomIn").html('+');
               $(".ZoomOut").html('-');
               $(".tuMapControl").parent("div").attr('style', "position:absolute;left:5px;top:5px;font-size:12px");
+              $('#map-loading-modal').modal("hide");
             };
 
             options.OnError = function(e, Error) {
@@ -166,6 +172,16 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             $("#quantity-filter").change(function() {
               filterTickets();
             });
+          },
+          /* transformRequest */
+          function(data, headersGetter) {
+            $('#map-loading-modal').modal("show");
+            return data;
+          },
+
+          /* transformResponse */
+          function(data, headersGetter) {
+            return JSON.parse(data);
           });
         });
       }

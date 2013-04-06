@@ -154,9 +154,9 @@ angular.module('wembliApp.services', [])
 
 	.factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
 
-	/* put stuff in here to load a modal everytime */
+	/* put stuff in here to load a modal everytime for a given url - i'm not using this */
 	var modalPageMap = {
-		'/invitation': ['/partials/invite-friends-wizard'],
+		//'/invitation': ['/partials/invite-friends-wizard'],
 	};
 	var modalFetched = {};
 	var modalFetchInProgress = null;
@@ -697,28 +697,28 @@ angular.module('wembliApp.services', [])
 
 	sequence.beforeCurrentFrameAnimatesIn = function() {
 		console.log('beforecurrentanimatesin');
-		$scope.$broadcast('sequence-beforeCurrentFrameAnimatesIn');
 		$scope.afterNextFrameAnimatesIn = false;
 		$scope.beforeCurrentFrameAnimatesIn = true;
+		$scope.$broadcast('sequence-beforeCurrentFrameAnimatesIn');
 	};
 	sequence.afterCurrentFrameAnimatesIn = function() {
 		console.log('after currentanimatesin');
-		$scope.$broadcast('sequence-afterCurrentFrameAnimatesIn');
 		$scope.beforeCurrentFrameAnimatesIn = false;
 		$scope.afterCurrentFrameAnimatesIn = true;
+		$scope.$broadcast('sequence-afterCurrentFrameAnimatesIn');
 	};
 
 	sequence.beforeNextFrameAnimatesIn = function() {
 		console.log('before next animatesin');
-		$scope.$broadcast('sequence-beforeNextFrameAnimatesIn');
 		$scope.afterCurrentFrameAnimatesIn = false;
 		$scope.beforeNextFrameAnimatesIn = true;
+		$scope.$broadcast('sequence-beforeNextFrameAnimatesIn');
 	};
 	sequence.afterNextFrameAnimatesIn = function() {
 		console.log('after next animatesin');
-		$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 		$scope.afterNextFrameAnimatesIn = true;
 		$scope.beforeNextFrameAnimatesIn = false;
+		$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 	};
 
 	sequence.ready = function(callback) {

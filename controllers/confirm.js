@@ -25,48 +25,81 @@ module.exports = function(app) {
 		//a) must not be expired (1 week)
 		//b) must be a token that belong to this customer
 		//if they're not logged in, make them provide a password before confirming
-		if (!req.session.loggedIn) {
-			//render password page
-			return res.render('confirm-need-password', {
-				email: req.params[0],
-				token: req.params[1],
-				title: 'wembli.com - supply your password!.'
-			});
-		}
+		var handleCustomer = function(err,c) {
+			/* no customer to handle */
+			if (c === null) {
+				/* token is expired - make them resend confirmation */
+				req.session.confirmEmailSent = {};
+				req.session.confirmEmailSent.expiredToken = true;
+				return res.render('confirm-email-sent', {
+					title: 'wembli.com - check your email!.'
+				});
+			}
 
-		var expired = true;
-		var dbTimestamp = req.session.customer.confirmation[0].timestamp;
-		var currentTimestamp = new Date().getTime();
-		var timePassed = (currentTimestamp - dbTimestamp) / 1000;
+			/* validate the token */
+			var dbToken = c.confirmation[0].token;
+			if (dbToken == req.params[1]) {
+				/* its valid, is it expired? */
+				var expired          = true;
+				var dbTimestamp      = c.confirmation[0].timestamp;
+				var currentTimestamp = new Date().getTime();
+				var timePassed       = (currentTimestamp - dbTimestamp) / 1000;
 
-		//has it been more than 1 week?
-		if (timePassed < 604800) {
-			expired = false;
-		}
-		if (expired) {
-			req.session.confirmEmailSent = {};
-			req.session.confirmEmailSent.expiredToken = true;
-			return res.render('confirm-email-sent', {
-				title: 'wembli.com - check your email!.'
-			});
-		}
+				/* has it been more than 1 week? */
+				var expired = (timePassed > 604800) ? true : false;
 
-		//not expired woot!
-		var dbToken = req.session.customer.confirmation[0].token;
-		if (dbToken == req.params[1]) {
-			//set customer to confirmed so they can access the dashboard
-			req.session.customer.confirmed = true;
-			req.session.customer.save(function(err) {
-				return res.redirect('/dashboard');
-			});
+				if (expired) {
+					/* token is expired - make them resend confirmation */
+					req.session.confirmEmailSent = {};
+					req.session.confirmEmailSent.expiredToken = true;
+					return res.render('confirm-email-sent', {
+						title: 'wembli.com - check your email!.'
+					});
+				}
+
+				/* not expired! set customer to confirmed so they can access the dashboard */
+				req.session.customer = c;
+				req.session.customer.confirmed = true;
+				return req.session.customer.save(function(err) {
+
+					var locals = {
+							email: req.params[0],
+							token: req.params[1],
+							title: 'wembli.com - supply your password!.'
+					};
+					if (typeof c.password === "undefined") {
+						/* they need to give us a new password */
+						locals.noPassword = true;
+					} else {
+						if (!req.session.loggedIn) {
+							/* render password page */
+							return res.render('confirm-need-password', {
+								email: req.params[0],
+								token: req.params[1],
+								title: 'wembli.com - supply your password!.'
+							});
+						} else {
+							return res.redirect('/dashboard');
+						}
+					}
+					return res.render('confirm-need-password', locals);
+				});
+			} else {
+				/* some sort of hackery is going down - gtfo */
+				req.session.confirmEmailSent = {};
+				req.session.confirmEmailSent.expiredToken = true;
+				return res.render('confirm-email-sent', {
+					title: 'wembli.com - check your email!.'
+				});
+			}
+		};
+
+
+		if (!req.session.customer) {
+			/* check the forgot password token for this email */
+			Customer.findOne({email: req.params[0]}, handleCustomer);
 		} else {
-			//some sort of hackery is going down - gtfo
-			req.session.confirmEmailSent = {};
-			req.session.confirmEmailSent.expiredToken = true;
-			return res.render('confirm-email-sent', {
-				title: 'wembli.com - check your email!.'
-			});
-
+			handleCustomer(null,req.session.customer);
 		}
 
 	});
@@ -82,31 +115,38 @@ module.exports = function(app) {
 		Customer.findOne({
 			email: req.param('email')
 		}, function(err, c) {
-			if ((err == null) && (c != null)) {
-				//set up the session and head to the redirect url
-				if (typeof c.password != "undefined" && c.password == digest) {
+			if ((err == null) || (c != null)) {
+				return res.redirect('/logout');
+			}
+
+			/* set up the session and head to the redirect url */
+			if (typeof c.password === "undefined") {
+				c.password = digest;
+				c.confirmed = true;
+				return c.save(function(err,result) {
 					req.session.loggedIn = true;
 					req.session.customer = c;
-					return res.redirect('/confirm/' + encodeURIComponent(req.param('email')) + '/' + encodeURIComponent(req.param('token')));
-				} else {
-					//password is wrong - try again
-					//count how many consecutive bad password attempts and lock them out after 3
-					//count in the db rather than the session
-					//render password page
-					return res.render('dashboard/confirm-need-password', {
-						errors: {
-							general: true
-						},
-						email: req.param('email'),
-						token: req.param('token'),
-						title: 'wembli.com - supply your password!.'
-					});
+					return res.redirect('/dashboard');
+				});
+			}
 
-
-				}
+			if (c.password == digest) {
+				req.session.loggedIn = true;
+				req.session.customer = c;
+				return res.redirect('/confirm/' + encodeURIComponent(req.param('email')) + '/' + encodeURIComponent(req.param('token')));
 			} else {
-				//no customer for that email?? wtf goto logout
-				return res.redirect('/logout');
+				/*
+					password is wrong - try again
+					count how many consecutive bad password attempts and lock them out after 3
+					count in the db rather than the session
+					render password page
+				*/
+				return res.render('dashboard/confirm-need-password', {
+					errors: {general: true},
+					email: req.param('email'),
+					token: req.param('token'),
+					title: 'wembli.com - supply your password!.'
+				});
 			}
 
 		});

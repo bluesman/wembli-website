@@ -2768,6 +2768,9 @@ body {
   width: 100px;
   text-align: left;
 }
+#tickets-frame #tickets #group-ticket-list-container .ticket-row:hover {
+  background-color: rgba(215, 213, 214, 0.25);
+}
 #tickets-frame #tickets .ticket-list-container .ticket-row:hover {
   background-color: rgba(66, 127, 184, 0.25);
 }
@@ -3160,6 +3163,16 @@ a#facebook-login-button {
   width: 485px;
   overflow-y: auto;
   padding: 5px 20px;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step1-form .switch-login,
+#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step1-form .or,
+#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step1-form .facebook-login {
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+#invitation-modal.modal #invite-friends-wizard .modal-body #right #facebook-login-button {
+  margin: 0;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step2-form .datepicker-container {
   margin: 40px auto;

@@ -1,30 +1,49 @@
 form#invite-wizard-step1-form(name="step1")
-	fieldset(ng-show="step1.accountExists")
+	fieldset(ng-show="step1.accountExists && !noPassword")
 		h2 Provide your password
 		#error.alert.alert-block.fade.in(ng-show="step1.error")
-			.error-text Please provide a password to log in.
 			.error-text(ng-show="step1.invalidCredentials") Shoot! We were not able to log you in using this email and password.
 		.name-group.control-group
 			input.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="email")
 			input.password(type="password",ng-model="customer.password",placeholder="PASSWORD",name="password")
-	fieldset(ng-hide="step1.accountExists")
+
+	//- this is the signup form
+	fieldset(ng-hide="step1.accountExists || step1.loginForm")
 		h2 Enter Your Info
 		#error.alert.alert-block.fade.in(ng-show="step1.error")
 			.error-text(ng-show="step1.formError") All fields are required.
 			.error-text(ng-show="step1.noCustomer")
-				p Please provide your info so we can save your plan and invite people. Or
-				a.btn.btn-warning.wembli-sequence-link(href="/login") Click Here to Log In
+				p Please provide your info so we can save your plan and invite people.
 		p We'll use this info to let your guests know who the invitation is from.
+		//- if they are logged in, this will be prefilled and they will start on step-2
 		.name-group.control-group
-			input.first-name.pull-left(ng-model="customer.firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
-			input.last-name.pull-left(ng-model="customer.lastName",placeholder="LAST NAME",type="text",name="lastName",required)
-			input.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="email",required)
+			input.first-name.pull-left(ng-model="customer.firstName", placeholder="FIRST NAME",type="text",name="firstName")
+			input.last-name.pull-left(ng-model="customer.lastName",placeholder="LAST NAME",type="text",name="lastName")
+			input.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="email")
+		.switch-login
+			a(ng-click="step1.loginForm=true",href="#",ng-hide="customer.id") Already have an account? Click here to log in.
+
+	//- login form
+	fieldset(ng-show="step1.loginForm")
+		h2 Login To Invite Friends
+		#error.alert.alert-block.fade.in(ng-show="step1.error")
+			.error-text(ng-show="step1.formError") All fields are required.
+			.error-text(ng-show="noPassword") No password was set for this account (did you login with facebook last time?).  A email has been sent you. Follow the instructions to set your password.
+			.error-text(ng-show="invalidCredentials") Woops! Looks like your email or password was incorrect.
+
+		.name-group.control-group
+			input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="login_email")
+			input.focus-on-click.password(type="password",ng-model="password",placeholder="PASSWORD",name="password")
+		.or(ng-hide="customer.id || facebook.service.getAuth()")
+			span OR
+		.facebook-login(ng-hide="customer.id || facebook.service.getAuth()")
+			a#facebook-login-button.btn.btn-primary(target="_self",href="/auth/facebook")
+				i.icon-facebook.icon-2x.pull-left
+				span Login with Facebook
+		.switch-login
+			a(ng-click="step1.loginForm=false",href="#",ng-hide="customer.id") Don't have an account or password yet? Click Here.
 	.form-controls()
 		//- a.skip-step(ng-click="skipStep('step1')") Skip this step
 		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step1')") Continue
-a.wembli-sequence-link(href="/login",ng-hide="customer.id") Already have an account? Log in here.&nbsp;
-span(ng-hide="customer.id || facebook.service.getAuth()") Or...
-.facebook-login(ng-hide="customer.id || facebook.service.getAuth()")
-	a#facebook-login-button.btn.btn-primary(target="_self",href="/auth/facebook")
-		i.icon-facebook.icon-2x.pull-left
-		span Login with Facebook
+
+
