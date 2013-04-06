@@ -93,6 +93,11 @@ angular.module('wembliApp.services', [])
 					self.friends = result.friends;
 
 				}
+
+				if (typeof result.loggedIn !== "undefined") {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
 				if (typeof result.customer !== "undefined" && result.customer) {
 					customer.set(result.customer);
 					$rootScope.customer = customer;

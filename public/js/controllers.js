@@ -867,8 +867,6 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 
 function PaymentTypeModalCtrl($scope) {
 	$scope.$on('payment-type-modal-clicked',function(e,args) {
-		console.log('payment-type-modal-clicked');
-		console.log(args);
 		$scope.name = args.name;
 		$scope.nextLink = args.nextLink;
 	});
@@ -1105,27 +1103,93 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 
 }
 
-function TicketsLoginCtrl($scope,$location,plan,customer) {
+function TicketsLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc) {
 	$scope.plan = plan.get();
 	$scope.$on('tickets-login-clicked',function(e,args){
 		$scope.redirectUrl = '/tickets/'+$scope.plan.event.eventId+'/'+$scope.plan.event.eventName+'/login/'+args.ticket.ID;
-		console.log('on tickets login clicked');
-		$scope.ticket = args.ticket,
-		console.log(args);
+		$scope.ticket = args.ticket;
 	});
+
+	$scope.authActions = {
+		signup : function() {
+			wembliRpc.fetch('customer.signup',{firstName:$scope.firstName,lastName:$scope.lastName,email:$scope.email}, function(err,result) {
+				console.log(result);
+
+				if (result.customer) {
+					console.log('returned a customer - im logged in!');
+					/* hide this modal and display the tickets offsite modal */
+					$scope.customer = result.customer;
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+				if (result.exists) {
+					$scope.formError     = false;
+					$scope.signupError   = true;
+					$scope.accountExists = result.exists;
+					return;
+				}
+
+				if (result.formError) {
+					$scope.signupError   = true;
+					$scope.formError     = true;
+					$scope.accountExists = false;
+					return;
+				}
+				$scope.signupError   = false;
+				$scope.formError     = false;
+				$scope.accountExists = false;
+
+			},
+      /* transformRequest */
+      function(data, headersGetter) {
+        $scope.continueSpinner = true;
+        return data;
+      },
+
+      /* transformResponse */
+      function(data, headersGetter) {
+        $scope.continueSpinner = false;
+        return JSON.parse(data);
+      });
+		},
+		login : function() {
+			wembliRpc.fetch('customer.login',{email:$scope.email,password:$scope.password}, function(err,result) {
+				console.log(result);
+				if (result.error) {
+					$scope.loginError = result.error;
+
+					if (typeof result.noPassword !== "undefined") {
+						$scope.noPassword = result.noPassword;
+					} else if(result.invalidCredentials) {
+						$scope.invalidCredentials = result.invalidCredentials;
+					}
+				}
+				if (result.customer) {
+					console.log('returned a customer im logged in!');
+					/* hide this modal and display the tickets offsite modal */
+					$scope.customer = result.customer;
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+			})
+		}
+	};
 }
 
 function TicketsOffsiteCtrl($scope,plan) {
 	$scope.plan = plan.get();
 	$scope.$on('tickets-offsite-clicked',function(e,args){
-		console.log('on tickets offsite clicked');
-		console.log(args);
 		$scope.qty        = args.qty;
 		$scope.amountPaid = args.amountPaid;
 		$scope.eventId    = args.eventId,
 		$scope.sessionId  = args.sessionId,
-		$scope.ticketGroup   = args.ticketGroup,
-		console.log(args);
+		$scope.ticketGroup   = args.ticketGroup;
 	})
 
   $scope.showButton = function() {
@@ -1133,15 +1197,6 @@ function TicketsOffsiteCtrl($scope,plan) {
   };
 
   $scope.submitForm = function() {
-    console.log('submit buy tickets offsite form');
-    console.log('qty: '+$scope.qty);
-    console.log('amount: '+$scope.amountPaid );
-    console.log('radio: '+$scope.ticketsOffsite);
-    console.log('session: '+$scope.sessionId);
-
-    console.log('submit tickets offsite form');
-    console.log($scope);
-
     if ($scope.ticketGroup === null) {
     	console.log('no ticket group :(');
     	return;
@@ -1169,9 +1224,6 @@ function TicketsOffsiteCtrl($scope,plan) {
 }
 
 function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer) {
-	console.log('plan.get venuemapctrl');
-	console.log('scope.customer');
-	console.log($scope.customer);
 	plan.get(function(plan) {
 		$scope.priceRange       = {};
 		$scope.eventOptionsLink = '/event-options/'+plan.event.eventId+'/'+plan.event.eventName;

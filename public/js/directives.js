@@ -25,19 +25,15 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
         var sid_length = 5;
         var sid = '';
-        for (var i=0; i<sid_length; i++) {
+        for (var i = 0; i < sid_length; i++) {
           var rnum = Math.floor(Math.random() * chars.length);
-          sid += chars.substring(rnum,rnum+1);
+          sid += chars.substring(rnum, rnum + 1);
         }
         return sid;
       };
 
       return function(scope, element, attr) {
-
         scope.$watch('tickets', function(newVal, oldVal) {
-          console.log('tickets changed to');
-          console.log(newVal);
-          console.log(oldVal);
           if (newVal !== oldVal) {
             $('#map-container').tuMap("Refresh", "Reset");
           }
@@ -45,11 +41,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
         plan.get(function(plan) {
           //get the tix and make the ticket list
-          wembliRpc.fetch('event.getTickets', {
-            eventID: plan.event.eventId
-          },
+          wembliRpc.fetch('event.getTickets', {eventID: plan.event.eventId}, function(err, result) {
 
-          function(err, result) {
             if (err) {
               //handle err
               alert('error happened - contact help@wembli.com');
@@ -59,7 +52,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             scope.event = result.event;
             scope.tickets = result.tickets;
 
-            //scope.$broadcast('TicketsCtrl-ticketsLoaded',{});
             /* get min and max tix price for this set of tix */
             var minTixPrice = 0;
             var maxTixPrice = 200;
@@ -72,7 +64,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               }
 
               el.selectedQty = el.ValidSplits.int[0];
-              el.sessionId   = generateTnSessionId();
+              el.sessionId = generateTnSessionId();
             });
 
             var initSlider = function() {
@@ -99,7 +91,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             var options = interactiveMapDefaults;
             options.MapId = scope.event.VenueConfigurationID;
             options.EventId = scope.event.ID;
-            //options.FailoverMapUrl = scope.event.MapURL;
 
             options.OnInit = function(e, MapType) {
               $(".ZoomIn").html('+');
@@ -108,7 +99,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             };
 
             options.OnError = function(e, Error) {
-              if (Error.Code === 1) { /* chart not found - display the tn chart */
+              if (Error.Code === 1) {
+                /* chart not found - display the tn chart */
                 $('#map-container').css("background", 'url(' + scope.event.MapURL + ') no-repeat center center');
               }
             };
@@ -174,22 +166,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             $("#quantity-filter").change(function() {
               filterTickets();
             });
-
-          },
-
-          /* transformRequest */
-
-          function(data, headersGetter) {
-            //$('#page-loading-modal').modal("show");
-            return data;
-          },
-
-          function(data, headersGetter) {
-            /*            setTimeout(function() {
-              $('#page-loading-modal').modal("hide");
-            }, 3000);
-            */
-            return JSON.parse(data);
           });
         });
       }
@@ -263,7 +239,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-  .directive('eventWrapper', ['wembliRpc','$window', function(wembliRpc,$window) {
+.directive('eventWrapper', ['wembliRpc', '$window', function(wembliRpc, $window) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -311,9 +287,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             /* init the popover */
             var summaryContent = "";
 
-            console.log('result from getpricinginfo');
-            console.log(result);
-
             if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
               if (result.ticketPricingInfo.ticketsAvailable === '0') {
                 summaryContent = "Click for ticket information";
@@ -340,15 +313,13 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             $('#' + elId).popover('show');
           },
 
-          //transformRequest
-
+          /* transformRequest */
           function(data, headersGetter) {
             //$('#more-events .spinner').show();
             return data;
           },
 
-          //transformResponse
-
+          /* transformResponse */
           function(data, headersGetter) {
             //$('#more-events .spinner').hide();
             return JSON.parse(data);
@@ -359,7 +330,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-  .directive('twitterWidget', ['$window', function($window) {
+.directive('twitterWidget', ['$window', function($window) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -389,24 +360,23 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
-
-function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+.directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 
   return {
     restrict: 'EAC',
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
-
-        attr.$observe('ticket',function(val) {
+        attr.$observe('ticket', function(val) {
           var ticket = JSON.parse(val);
 
           var displayTicketsLoginModal = function(e) {
-            $rootScope.$broadcast('tickets-login-clicked',{ticket:ticket});
+            $rootScope.$broadcast('tickets-login-clicked', {
+              ticket: ticket
+            });
             if ($('#tickets-login-modal').length > 0) {
               $('#tickets-login-modal').modal('show');
             } else {
-              $rootScope.$on('tickets-login-modal-fetched',function() {
+              $rootScope.$on('tickets-login-modal-fetched', function() {
                 $('#tickets-login-modal').modal('show');
               });
             }
@@ -428,9 +398,7 @@ function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
   };
 }])
 
-.directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
-
-function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+.directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 
   return {
     restrict: 'EAC',
@@ -441,25 +409,23 @@ function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
           if (typeof val === "undefined" || val === "") {
             return;
           }
-          console.log('parsing string');
-          console.log(val);
-          var ticket        = JSON.parse(val);
+          var ticket = JSON.parse(val);
           element.click(function(e) {
-            var shipping      = 15;
+            var shipping = 15;
             var serviceCharge = (parseFloat(ticket.ActualPrice) * .15) * parseInt(ticket.selectedQty);
-            var actualPrice   = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
-            var amountPaid    = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
+            var actualPrice = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
+            var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
 
-            $rootScope.$broadcast('tickets-offsite-clicked',{
-              qty:ticket.selectedQty,
-              amountPaid:amountPaid,
-              ticketGroup:ticket,
-              eventId:ticket.RventId,
-              sessionId:ticket.sessionId
+            $rootScope.$broadcast('tickets-offsite-clicked', {
+              qty: ticket.selectedQty,
+              amountPaid: amountPaid,
+              ticketGroup: ticket,
+              eventId: ticket.RventId,
+              sessionId: ticket.sessionId
             });
 
             var Promise = $timeout(function() {
-              $('#tickets-login-modal').modal('show');
+              $('#tickets-login-modal').modal('hide');
               $('#tickets-offsite-modal').modal('show');
             }, 1500);
           });
@@ -468,8 +434,39 @@ function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
     }
   };
 }])
+.directive('sendForgotPasswordEmail', ['wembliRpc', function(wembliRpc) {
 
-  .directive('focusOnClick', ['$timeout', function($timeout) {
+  return {
+    restrict: 'C',
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+          element.click(function(e) {
+
+            wembliRpc.fetch('customer.sendForgotPasswordEmail',{email:scope.email},function(err,result) {
+              console.log(result);
+              /* display an email sent message */
+              scope.forgotPasswordEmailSent = true;
+            },
+            /* transformRequest */
+            function(data, headersGetter) {
+              scope.accountExists = false; //will this work?
+              scope.signupSpinner = true;
+              return data;
+            },
+
+            /* transformResponse */
+            function(data, headersGetter) {
+              scope.signupSpinner = false;
+              return JSON.parse(data);
+            });
+
+          });
+        };
+      }
+    }
+}])
+
+.directive('focusOnClick', ['$timeout', function($timeout) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -491,7 +488,7 @@ function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
   }
 }])
 
-  .directive('startPlan', ['$rootScope', 'fetchModals', function($rootScope, fetchModals) {
+.directive('startPlan', ['$rootScope', 'fetchModals', function($rootScope, fetchModals) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -520,9 +517,7 @@ function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 }])
 
 //directive to cause link click to go to next frame rather than fetch a new page
-.directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan',
-
-function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan) {
+.directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan) {
 
   return {
     restrict: 'EAC',
@@ -722,7 +717,8 @@ function($rootScope, $window, $templateCache, $timeout, $location, $http, $compi
     }
   };
 }])
-  .directive('popover', [function() {
+
+.directive('popover', [function() {
   return {
     restrict: 'C',
     cache: false,
@@ -741,7 +737,7 @@ function($rootScope, $window, $templateCache, $timeout, $location, $http, $compi
   }
 }])
 
-  .directive('fadeElement', function() {
+.directive('fadeElement', function() {
   return function(scope, element, attrs) {
     element.css('display', 'none');
     scope.$watch(attrs.fadeElement, function(value) {
@@ -754,7 +750,7 @@ function($rootScope, $window, $templateCache, $timeout, $location, $http, $compi
   }
 })
 
-  .directive('onKeyup', function() {
+.directive('onKeyup', function() {
   return function(scope, elm, attrs) {
     //Evaluate the variable that was passed
     //In this case we're just passing a variable that points
@@ -770,14 +766,14 @@ function($rootScope, $window, $templateCache, $timeout, $location, $http, $compi
   };
 })
 
-  .directive('appVersion', ['version', function(version) {
+.directive('appVersion', ['version', function(version) {
   return function(scope, elm, attrs) {
     elm.text(version);
   };
 
 }])
 
-  .directive('dropdown', function() {
+.directive('dropdown', function() {
   return function(scope, elm, attrs) {
     $(elm).dropdown();
   };
