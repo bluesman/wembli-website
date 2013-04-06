@@ -101,7 +101,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               $(".ZoomIn").html('+');
               $(".ZoomOut").html('-');
               $(".tuMapControl").parent("div").attr('style', "position:absolute;left:5px;top:5px;font-size:12px");
-              $('#map-loading-modal').modal("hide");
+              $('#generic-loading-modal').modal("hide");
             };
 
             options.OnError = function(e, Error) {
@@ -175,7 +175,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           },
           /* transformRequest */
           function(data, headersGetter) {
-            $('#map-loading-modal').modal("show");
+            $rootScope.genericLoadingModal.header = 'Finding Tickets...';
+            $('#generic-loading-modal').modal("show");
             return data;
           },
 
@@ -341,6 +342,21 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             return JSON.parse(data);
           });
         })
+      }
+    }
+  }
+}])
+
+/* this doesn't really seem to do much */
+.directive('eventList', ['wembliRpc', '$window', function(wembliRpc, $window) {
+  return {
+    restrict: 'C',
+    compile: function(element, attr, transclude) {
+      console.log('show generic loading modal');
+      //$('#generic-loading-modal').modal("show");
+      return function(scope, element, attr) {
+        //
+        //$('#generic-loading-modal').modal("hide");
       }
     }
   }

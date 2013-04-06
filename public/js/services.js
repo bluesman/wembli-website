@@ -20,6 +20,10 @@ angular.module('wembliApp.services', [])
 	$rootScope.pageLoadingModal.header = 'Loading the next bit of awesome...';
 	$rootScope.pageLoadingModal.body = 'When you can take the pebble from my hand, it will be time for you to leave.'
 
+	$rootScope.genericLoadingModal = {};
+	$rootScope.genericLoadingModal.header = 'Patience Young Grasshopper...';
+
+
 	//templates can't make a date for some reason
 	$rootScope.getDate = function(d) {
 		return new Date(d);

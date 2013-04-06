@@ -149,17 +149,15 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			$scope.lastEventId = $scope.events[$scope.events.length - 1].ID;
 		},
 
-		//transformrequest
-
-		function(data, Headersgetter) {
-			$('.loading-icon').show();
+		function(data, headersGetter) {
+			$('#page-loading-modal').modal("hide");
+      $('#generic-loading-modal').modal("show");
 			return data;
 		},
 
-		//transformresponse
-
-		function(data, Headersgetter) {
-			$('.loading-icon').hide();
+		function(data, headersGetter) {
+			console.log('hide generic loading modal');
+      $('#generic-loading-modal').modal("hide");
 			return JSON.parse(data);
 		});
 
@@ -872,7 +870,7 @@ function PaymentTypeModalCtrl($scope) {
 		$scope.name = args.name;
 		$scope.nextLink = args.nextLink;
 	});
-}
+};
 
 /*
 * Plan Controller
@@ -883,7 +881,7 @@ function PlanCtrl($rootScope, $scope, wembliRpc, plan, customer, fetchModals) {
 };
 
 function SearchCtrl($scope) {
-}
+};
 
 function SignupCtrl($scope, $http, wembliRpc) {
 	//init login vars
@@ -1103,7 +1101,7 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 		$scope.qtySort = ($scope.qtySort) ? 0 : 1;
 	}
 
-}
+};
 
 function TicketsLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc) {
 	$scope.plan = plan.get();
@@ -1182,7 +1180,7 @@ function TicketsLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc) {
 			})
 		}
 	};
-}
+};
 
 function TicketsOffsiteCtrl($scope,plan) {
 	$scope.plan = plan.get();
@@ -1223,7 +1221,7 @@ function TicketsOffsiteCtrl($scope,plan) {
     $('#tickets-offsite-modal').modal('hide');
   };
 
-}
+};
 
 function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer) {
 	plan.get(function(plan) {
@@ -1253,4 +1251,4 @@ function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer) {
 		return str;
 	}
 
-}
+};

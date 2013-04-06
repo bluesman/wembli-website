@@ -4,6 +4,6 @@
 	- wslClass = 'start-plan'
 		- if (typeof heading !== "undefined")
 		h3= heading
-	ul
+	ul.event-list(events="{{events}}")
 		li(class="event-wrapper #{wslClass}",loading-duration="1500",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-cloak)
 			include event
