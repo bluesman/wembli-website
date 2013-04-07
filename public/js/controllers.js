@@ -194,7 +194,7 @@ function EventCtrl($scope) {};
 * Invite Friends Wizard Controller
 * this should be done as a directive
 */
-function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $timeout, sequence, wembliRpc, customer, plan, facebook, twitter) {
+function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $location, $timeout, sequence, wembliRpc, customer, plan, facebook, twitter) {
 
 	if ($location.path() !== '/invitation') {
 		return;
@@ -256,6 +256,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 				'firstName':$scope.customer.firstName,
 				'lastName':$scope.customer.lastName,
 				'email':$scope.customer.email,
+				'next': '/invitation#step2'
 			};
 			if ($scope.customer.id) {
 				rpcArgs.customerId = $scope.customer.id;
@@ -279,22 +280,42 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 			}
 
 			if (result.invalidCredentials) {
+				$scope.step1.error = true;
 				$scope.step1.invalidCredentials = true;
+				$scope.step1.loginForm = true;
 			}
 
-			if (result.exists && !scope.loginForm) {
+			if (result.exists && !$scope.loginForm) {
 				$scope.step1.error = true;
-				$scope.step1.accoutExists = true;
+				$scope.step1.accountExists = true;
+				$scope.step1.loginForm = true;
+			}
+
+			if (typeof result.noPassword !== "undefined") {
+				$scope.step1.error = true;
+				$scope.step1.noPassword = result.noPassword;
+				$scope.step1.loginForm = true;
 			}
 
 			if (!$scope.step1.error) {
 				/* success - go to next step */
+				$scope.step1.loginForm = false;
+				delete $scope.step1.password;
 				$scope.gotoStep('step2');
 			}
 
 			if (result.customer) {
 				$rootScope.customer = result.customer;
 				$rootScope.loggedIn = result.loggedIn;
+				if (typeof $scope.step1.customer === "undefined") {
+					$scope.step1.customer = {};
+				}
+				console.log(result.customer);
+				/* this isn't working for some reason */
+				$scope.step1.customer.email = result.customer.email;
+				$scope.step1.customer.firstName = result.customer.firstName;
+				$scope.step1.customer.email = result.customer.lastName;
+
 			}
 		},
 	};
@@ -372,6 +393,11 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 	};
 
 	/* view methods */
+	$scope.$on('forgot-password-email-sent',function() {
+		console.log('forgot password email sent');
+		$scope.step1.forgotPasswordEmailSent = true;
+	});
+
 	$scope.submitForm = function(step,args) {
 		if ($scope[step].$valid) {
 			$('#invitation-modal').modal('loading');
@@ -436,6 +462,12 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 		$location.hash('');
 		$location.path('/plan');
 	};
+
+	$scope.initSignupForm = function() {
+		console.log('init signup form');
+		$scope.step1.loginForm = false;
+		delete $scope.customer.password;
+	}
 
 	/* done with view methods */
 
@@ -737,6 +769,7 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 
 			var initialStep = 'step1';
 			if (customer.get() && Object.keys(customer.get()).length > 0) {
+				$scope.step1.loginForm = false;
 				initialStep = $location.hash() ? $location.hash() : 'step2';
 				/* hack to deal with everyauth weirdness */
 				if (initialStep === "_=_") {
@@ -867,8 +900,10 @@ function InviteFriendsWizardCtrl($http, $scope, $filter, $window, $location, $ti
 
 function PaymentTypeModalCtrl($scope) {
 	$scope.$on('payment-type-modal-clicked',function(e,args) {
-		$scope.name = args.name;
-		$scope.nextLink = args.nextLink;
+		$scope.$apply(function() {
+			$scope.name = args.name;
+			$scope.nextLink = args.nextLink;
+		});
 	});
 };
 

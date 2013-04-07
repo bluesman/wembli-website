@@ -17,9 +17,9 @@ exports["invite-friends"] = {
 	"submit-step1": function(args, req, res) {
 		var me = this;
 		console.log(args);
-		/* make sure we have a firstName, lastName and email */
-		if (!args.firstName || !args.lastName || !args.email) {
-			me(null, {
+		/* make sure we have email */
+		if (!args.email) {
+			return me(null, {
 				success: 1,
 				formError: true
 			});

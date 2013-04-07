@@ -34,6 +34,7 @@ exports.customer = {
 			req.session.signupForm.exists = data.exists;
 			req.session.signupForm.loginRedirect = data.loginRedirect ? data.loginRedirect : req.session.loginRedirect;
 			req.session.signupForm.redirectUrl = data.redirectUrl ? data.loginRedirect : req.session.redirectUrl;
+			req.session.signupForm.noPassword = data.noPassword;
 			console.log('responding customer.signup');
 			console.log(req.session.signupForm);
 			me(null, req.session.signupForm);
@@ -59,10 +60,59 @@ exports.customer = {
 			if (c !== null) {
 				//they've already signed up
 				data.exists = true;
+				console.log('customer signup - customer exists - what is password');
 				if (typeof c.password === "undefined") {
+					/* send forgot password email */
 					data.noPassword = true;
 					data.error = true;
+					/* send forgot password email */
+					var noToken = true;
+
+					/* have a c, make a forgot password token (or if there is already one in the db that is not expired, use it) */
+					if (typeof c.forgotPassword[0] != "undefined") {
+						/* check if this token is expired */
+						var dbTimestamp = c.forgotPassword[0].timestamp;
+						var currentTimestamp = new Date().getTime();
+						var timePassed = (currentTimestamp - dbTimestamp) / 1000;
+						//has it been more than 2 days?
+						var noToken = (timePassed < 172800) ? false : true;
+					}
+
+					if (noToken) {
+						//make a new token
+						var tokenTimestamp = new Date().getTime().toString();
+						var tokenHash = wembliUtils.digest(args.email + tokenTimestamp);
+					} else {
+						//use the existing token
+						var tokenHash = c.forgotPassword[0].token;
+						var tokenTimestamp = c.forgotPassword[0].timestamp;
+					}
+
+					var forgotPassword = [{
+						timestamp: tokenTimestamp,
+						token: tokenHash
+					}];
+
+					c.update({
+						forgotPassword: forgotPassword
+					}, function(err) {
+						if (err) {
+							console.log('error updating forgot password token');
+							return me('dbError: error updating forgotPassword Token');
+						}
+
+						var mailArgs = {
+							res: res,
+							tokenHash: tokenHash,
+							customer: c,
+							next: args.next
+						}
+
+						console.log('sending forgotpassword email in customer.login');
+						wembliMail.sendForgotPasswordEmail(mailArgs)
+					});
 				}
+				console.log(data);
 				return respond(data);
 			}
 
@@ -109,7 +159,8 @@ exports.customer = {
 					wembliMail.sendSignupEmail({
 						res: res,
 						confirmationToken: confirmationToken,
-						customer: customer
+						customer: customer,
+						next: args.next
 					});
 
 					console.log('saved customer: ' + customer.id);
@@ -181,6 +232,7 @@ exports.customer = {
 				}
 
 				if (typeof c.password === "undefined") {
+
 					data.noPassword = true;
 					data.error = true;
 					/* send forgot password email */
@@ -222,19 +274,25 @@ exports.customer = {
 						var mailArgs = {
 							res: res,
 							tokenHash: tokenHash,
-							customer: c
+							customer: c,
+							next: args.next
 						}
+
+						console.log('sending forgotpassword email in customer.login');
 						wembliMail.sendForgotPasswordEmail(mailArgs)
+						console.log('returning data from customer.login');
+						console.log(data);
 						return me(null,data);
 					});
-				}
-
-				if (c.password != digest) {
-					return me(null, {
-						success: 1,
-						error: true,
-						invalidCredentials: true
-					});
+				} else {
+					if (c.password != digest) {
+						console.log('password is not digest');
+						return me(null, {
+							success: 1,
+							error: true,
+							invalidCredentials: true
+						});
+					}
 				}
 			} else {
 				return me(null, {
@@ -303,7 +361,8 @@ exports.customer = {
 				var mailArgs = {
 					res: res,
 					tokenHash: tokenHash,
-					customer: c
+					customer: c,
+					next: args.next
 				}
 				wembliMail.sendForgotPasswordEmail(mailArgs)
 				return me(null,data);

@@ -18,7 +18,7 @@ module.exports = function(app) {
 	*/
 
 
-	app.get(/\/confirm\/(.*?)\/(.*)\/?/, function(req, res) {
+	app.get('/confirm/:email/:token', function(req, res) {
 		delete req.session.confirmEmailSent;
 
 		//validate the token
@@ -28,6 +28,7 @@ module.exports = function(app) {
 		var handleCustomer = function(err,c) {
 			/* no customer to handle */
 			if (c === null) {
+				console.log('no customer');
 				/* token is expired - make them resend confirmation */
 				req.session.confirmEmailSent = {};
 				req.session.confirmEmailSent.expiredToken = true;
@@ -35,10 +36,10 @@ module.exports = function(app) {
 					title: 'wembli.com - check your email!.'
 				});
 			}
-
 			/* validate the token */
 			var dbToken = c.confirmation[0].token;
-			if (dbToken == req.params[1]) {
+			if (dbToken == req.param('token')) {
+				console.log('dbToken matches params token');
 				/* its valid, is it expired? */
 				var expired          = true;
 				var dbTimestamp      = c.confirmation[0].timestamp;
@@ -49,6 +50,7 @@ module.exports = function(app) {
 				var expired = (timePassed > 604800) ? true : false;
 
 				if (expired) {
+					console.log('token is expired');
 					/* token is expired - make them resend confirmation */
 					req.session.confirmEmailSent = {};
 					req.session.confirmEmailSent.expiredToken = true;
@@ -61,30 +63,74 @@ module.exports = function(app) {
 				req.session.customer = c;
 				req.session.customer.confirmed = true;
 				return req.session.customer.save(function(err) {
-
+					console.log('saved customer');
 					var locals = {
-							email: req.params[0],
-							token: req.params[1],
+							email: req.param('email'),
+							token: req.param('token'),
 							title: 'wembli.com - supply your password!.'
 					};
+
+					locals.next = req.param('next') ? decodeURIComponent( req.param('next') ): '/dashboard';
+
 					if (typeof c.password === "undefined") {
 						/* they need to give us a new password */
 						locals.noPassword = true;
+
+						/* make a forgot password token */
+						var noToken = true;
+
+						/* have a c, make a forgot password token (or if there is already one in the db that is not expired, use it) */
+						if (typeof c.forgotPassword[0] != "undefined") {
+							/* check if this token is expired */
+							var dbTimestamp = c.forgotPassword[0].timestamp;
+							var currentTimestamp = new Date().getTime();
+							var timePassed = (currentTimestamp - dbTimestamp) / 1000;
+							//has it been more than 2 days?
+							var noToken = (timePassed < 172800) ? false : true;
+						}
+
+						if (noToken) {
+							//make a new token
+							var tokenTimestamp = new Date().getTime().toString();
+							var tokenHash = wembliUtils.digest(req.param('email') + tokenTimestamp);
+						} else {
+							//use the existing token
+							var tokenHash = c.forgotPassword[0].token;
+							var tokenTimestamp = c.forgotPassword[0].timestamp;
+						}
+
+						var forgotPassword = [{
+							timestamp: tokenTimestamp,
+							token: tokenHash
+						}];
+
+						c.update({forgotPassword: forgotPassword}, function(err) {
+							if (err) {
+								console.log('error updating forgot password token');
+								res.redirect('/');
+							}
+							console.log('locals for supply password');
+							console.log(locals);
+							locals.token = tokenHash;
+							return res.render('supply-password', locals);
+						});
 					} else {
 						if (!req.session.loggedIn) {
 							/* render password page */
-							return res.render('confirm-need-password', {
-								email: req.params[0],
-								token: req.params[1],
-								title: 'wembli.com - supply your password!.'
-							});
+							console.log('confirm need password');
+							console.log(locals);
+							return res.render('confirm-need-password', locals);
 						} else {
-							return res.redirect('/dashboard');
+							var r = req.param('next') ? decodeURIComponent( req.param('next') ): '/dashboard';
+							console.log('after successful confirm - redirecting to '+ r);
+							res.redirect(r);
+							return;
 						}
+						return res.render('confirm-need-password', locals);
 					}
-					return res.render('confirm-need-password', locals);
 				});
 			} else {
+				console.log('there is no confirmation token');
 				/* some sort of hackery is going down - gtfo */
 				req.session.confirmEmailSent = {};
 				req.session.confirmEmailSent.expiredToken = true;
@@ -96,8 +142,9 @@ module.exports = function(app) {
 
 
 		if (!req.session.customer) {
+
 			/* check the forgot password token for this email */
-			Customer.findOne({email: req.params[0]}, handleCustomer);
+			Customer.findOne({email: req.param('email')}, handleCustomer);
 		} else {
 			handleCustomer(null,req.session.customer);
 		}

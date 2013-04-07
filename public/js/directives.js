@@ -13,7 +13,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('interactiveVenueMap', ['interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function(interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
+.directive('interactiveVenueMap', ['$rootScope','interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
   return {
     restrict: 'E',
     replace: true,
@@ -33,10 +33,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       };
 
       return function(scope, element, attr) {
-
-
-
-
 
         scope.$watch('tickets', function(newVal, oldVal) {
           if (newVal !== oldVal) {
@@ -175,7 +171,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           },
           /* transformRequest */
           function(data, headersGetter) {
+
             $rootScope.genericLoadingModal.header = 'Finding Tickets...';
+            $('#page-loading-modal').modal("hide");
             $('#generic-loading-modal').modal("show");
             return data;
           },
@@ -347,21 +345,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-/* this doesn't really seem to do much */
-.directive('eventList', ['wembliRpc', '$window', function(wembliRpc, $window) {
-  return {
-    restrict: 'C',
-    compile: function(element, attr, transclude) {
-      console.log('show generic loading modal');
-      //$('#generic-loading-modal').modal("show");
-      return function(scope, element, attr) {
-        //
-        //$('#generic-loading-modal').modal("hide");
-      }
-    }
-  }
-}])
-
 .directive('twitterWidget', ['$window', function($window) {
   return {
     restrict: 'C',
@@ -474,10 +457,11 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       return function(scope, element, attr) {
           element.click(function(e) {
 
-            wembliRpc.fetch('customer.sendForgotPasswordEmail',{email:scope.email},function(err,result) {
+            wembliRpc.fetch('customer.sendForgotPasswordEmail',{email:attr.email || scope.email},function(err,result) {
               console.log(result);
               /* display an email sent message */
               scope.forgotPasswordEmailSent = true;
+              scope.$broadcast('forgot-password-email-sent');
             },
             /* transformRequest */
             function(data, headersGetter) {
@@ -529,13 +513,11 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       return function(scope, element, attr) {
         element.click(function() {
           var nextLink = '';
-
           if (attr.href) {
             nextLink = attr.href;
           } else {
             nextLink = element.find('.next-link').attr('href');
           }
-
           $rootScope.$broadcast('payment-type-modal-clicked', {
             nextLink: nextLink,
             name: attr.name

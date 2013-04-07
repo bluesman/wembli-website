@@ -1,10 +1,11 @@
 block hero-right
 	#confirm-hero-right.hero-right
-		#confirm-right(ng-controller="ConfirmNeedPasswordCtrl")
+		#confirm-right()
 			form#confirm-password-form(action="/confirm",name="confirmNeedPasswordForm",method="post",enctype="application/x-www-form-urlencoded")
 				input(type="hidden",name="token",value=token)
 				input(type="hidden",name="email",value=email)
-				h2.architect Enter Your Password
+				input(type="hidden",name="next",value=next)
+				h2.segoe Enter Your Password
 				fieldset
 					#error
 						.error-text(ng-show="error")
@@ -12,4 +13,4 @@ block hero-right
 						input(ng-model="password",placeholder="PASSWORD", type="password",value="",name="password",required)
 					.copy Continue to login to your dashboard and start inviting friends!
 				button#arrow
-					.arrow-text.architect Continue
+					.arrow-text.segoe Continue

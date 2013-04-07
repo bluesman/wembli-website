@@ -1,14 +1,11 @@
-form#invite-wizard-step1-form(name="step1")
-	fieldset(ng-show="step1.accountExists && !noPassword")
-		h2 Provide your password
-		#error.alert.alert-block.fade.in(ng-show="step1.error")
-			.error-text(ng-show="step1.invalidCredentials") Shoot! We were not able to log you in using this email and password.
-		.name-group.control-group
-			input.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="email")
-			input.password(type="password",ng-model="customer.password",placeholder="PASSWORD",name="password")
-
+//- scenarios:
+//- brand new customer - will have to signup and confirm before moving to step 2
+//- not logged in, existing customer without a password - must send forgot password email and provide password and confirm
+//- not logged in, existing customer with password - must just login to continue
+//- logged in - should skip this step and start on step 2
+form#invite-wizard-step1-form(name="step1", ng-init="step1.loginForm=false")
 	//- this is the signup form
-	fieldset(ng-hide="step1.accountExists || step1.loginForm")
+	fieldset(ng-hide="step1.loginForm")
 		h2 Enter Your Info
 		#error.alert.alert-block.fade.in(ng-show="step1.error")
 			.error-text(ng-show="step1.formError") All fields are required.
@@ -23,17 +20,13 @@ form#invite-wizard-step1-form(name="step1")
 		.switch-login
 			a(ng-click="step1.loginForm=true",href="#",ng-hide="customer.id") Already have an account? Click here to log in.
 
-	//- login form
-	fieldset(ng-show="step1.loginForm")
-		h2 Login To Invite Friends
-		#error.alert.alert-block.fade.in(ng-show="step1.error")
-			.error-text(ng-show="step1.formError") All fields are required.
-			.error-text(ng-show="noPassword") No password was set for this account (did you login with facebook last time?).  A email has been sent you. Follow the instructions to set your password.
-			.error-text(ng-show="invalidCredentials") Woops! Looks like your email or password was incorrect.
-
-		.name-group.control-group
-			input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="login_email")
-			input.focus-on-click.password(type="password",ng-model="password",placeholder="PASSWORD",name="password")
+	//- this account exists but they never set a password and did not confirm the email address
+	fieldset(ng-show="step1.loginForm && step1.noPassword")
+		h2 Check Your Email
+		#error.alert.alert-block.fade.in
+			.error-text(ng-hide="forgotPasswordEmailSent") An email has been sent to you. Follow the instructions to set your password.
+			.error-text(ng-show="forgotPasswordEmailSent") Successfully resent password email. Follow the instructions in the email to set your password.
+		a#forgot-password-link.send-forgot-password-email(email="{{customer.email}}",href="#") Resend password email.
 		.or(ng-hide="customer.id || facebook.service.getAuth()")
 			span OR
 		.facebook-login(ng-hide="customer.id || facebook.service.getAuth()")
@@ -41,7 +34,25 @@ form#invite-wizard-step1-form(name="step1")
 				i.icon-facebook.icon-2x.pull-left
 				span Login with Facebook
 		.switch-login
-			a(ng-click="step1.loginForm=false",href="#",ng-hide="customer.id") Don't have an account or password yet? Click Here.
+			a#switch-to-signup-link(ng-click="initSignupForm()",href="#",ng-hide="customer.id") Don't have an account or password yet? Click Here.
+	//- login form - existing account with a password - they just need to supply credentials to continue
+	fieldset(ng-show="step1.loginForm && !step1.noPassword")
+		h2 Login To Invite Friends
+		#error.alert.alert-block.fade.in(ng-show="step1.error")
+			.error-text(ng-show="step1.invalidCredentials") Shoot! We were not able to log you in using this email and password.
+			.error-text(ng-show="step1.accountExists") Provide your password to login.
+		.name-group.control-group
+			input.focus-on-click.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="login_email")
+			input.focus-on-click.password(type="password",ng-model="customer.password",placeholder="PASSWORD",name="password")
+			a#forgot-password-link.send-forgot-password-email(href="#") Forgot your password?
+		.or(ng-hide="customer.id || facebook.service.getAuth()")
+			span OR
+		.facebook-login(ng-hide="customer.id || facebook.service.getAuth()")
+			a#facebook-login-button.btn.btn-primary(target="_self",href="/auth/facebook")
+				i.icon-facebook.icon-2x.pull-left
+				span Login with Facebook
+		.switch-login
+			a#switch-to-signup-link(ng-click="initSignupForm()",href="#",ng-hide="customer.id") Don't have an account or password yet? Click Here.
 	.form-controls()
 		//- a.skip-step(ng-click="skipStep('step1')") Skip this step
 		button.submit-step.btn.btn-primary.btn-large(ng-click="submitForm('step1')") Continue
