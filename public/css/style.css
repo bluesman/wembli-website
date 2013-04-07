@@ -2951,8 +2951,16 @@ a#facebook-login-button {
   width: 130px;
 }
 .hero #signup-hero-right #first-name-group #last-name {
-  margin-left: 10px;
-  width: 190px;
+  margin-left: 12px;
+  width: 198px;
+}
+.hero #signup-hero-right .control-group {
+  margin: 20px;
+}
+.hero #signup-hero-right .control-group #email,
+.hero #signup-hero-right .control-group #password,
+.hero #signup-hero-right .control-group #password2 {
+  width: 346px;
 }
 .hero #signup-hero-right #login-link {
   margin: 20px;

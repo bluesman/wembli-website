@@ -97,6 +97,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               $(".ZoomIn").html('+');
               $(".ZoomOut").html('-');
               $(".tuMapControl").parent("div").attr('style', "position:absolute;left:5px;top:5px;font-size:12px");
+              console.log('hide generic modal');
               $('#generic-loading-modal').modal("hide");
             };
 
@@ -104,6 +105,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               if (Error.Code === 1) {
                 /* chart not found - display the tn chart */
                 $('#map-container').css("background", 'url(' + scope.event.MapURL + ') no-repeat center center');
+                console.log('hide generic modal');
+                $('#generic-loading-modal').modal("hide");
+
               }
             };
 
@@ -174,6 +178,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
             $rootScope.genericLoadingModal.header = 'Finding Tickets...';
             $('#page-loading-modal').modal("hide");
+            console.log('show generic modal');
             $('#generic-loading-modal').modal("show");
             return data;
           },
