@@ -13,30 +13,86 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('dashboard',['customer',function(customer) {
+  .directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', function(customer, fetchModals, $rootScope, wembliRpc) {
   return {
     restrict: 'E',
-    replace:true,
-    cache:false,
+    replace: true,
+    cache: false,
     templateUrl: "/partials/dashboard-app",
     controller: function($scope, $element, $attrs, $transclude) {
       console.log('init controller in dashboard');
-      var c = customer.get();
-      $scope.welcomeMessage = "Welcome, "+c.firstName+'!';
+
+      /* show the generic loading modal */
+      $rootScope.genericLoadingModal.header = 'Fetching Your Plans...';
+      $('#page-loading-modal').modal("hide");
+      console.log('show generic modal');
+      $('#generic-loading-modal').modal("show");
+
+      fetchModals.fetch('/partials/modals/dashboard', function() {
+        console.log('fetched dashboard modals');
+
+        var args = {
+
+        };
+
+        wembliRpc.fetch('dashboard.init', args,
+
+        function(err, result) {
+          if (err) {
+            alert('error happened - contact help@wembli.com');
+            return;
+          }
+
+          var c = result.customer;
+          $scope.welcomeMessage = "Welcome, " + c.firstName + '!';
+
+          console.log(result);
+          $rootScope.$broadcast('dashboard-fetched', result);
+        });
+      });
     },
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
         console.log('dashboard linking');
-      }
+      };
+    },
+  }
+}])
+
+  .directive('dashboardModal', ['customer', 'wembliRpc', function(customer, wembliRpc) {
+  return {
+    restrict: 'C',
+    replace: false,
+    cache: false,
+    controller: function($scope, $element, $attrs, $transclude) {
+      console.log('init dashboard modal controller');
+      $scope.$on('dashboard-fetched', function(e, args) {
+        $scope.dashboard = {};
+        $scope.dashboard.organizer = args.organizer;
+        $scope.dashboard.archived  = args.archived;
+        $scope.dashboard.invited   = args.invited;
+        $scope.dashboard.friends   = args.friends;
+
+        console.log('plans-fetched');
+        console.log($scope.dashboard);
+        $('#generic-loading-modal').modal("hide");
+
+      });
+
+    },
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        console.log('dashboard modal linking');
+      };
     }
   }
 }])
 
-.directive('activityFeed',[function() {
+  .directive('activityFeed', [function() {
   return {
     restrict: 'E',
-    replace:true,
-    cache:false,
+    replace: true,
+    cache: false,
     templateUrl: "/partials/activity-feed",
     compile: function(element, attr, transclude) {
       console.log('in dashboard');
@@ -44,7 +100,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('interactiveVenueMap', ['$rootScope','interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
+  .directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
   return {
     restrict: 'E',
     replace: true,
@@ -73,7 +129,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
         plan.get(function(plan) {
           //get the tix and make the ticket list
-          wembliRpc.fetch('event.getTickets', {eventID: plan.event.eventId}, function(err, result) {
+          wembliRpc.fetch('event.getTickets', {
+            eventID: plan.event.eventId
+          }, function(err, result) {
 
             if (err) {
               //handle err
@@ -205,6 +263,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             });
           },
           /* transformRequest */
+
           function(data, headersGetter) {
 
             $rootScope.genericLoadingModal.header = 'Finding Tickets...';
@@ -215,6 +274,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           },
 
           /* transformResponse */
+
           function(data, headersGetter) {
             return JSON.parse(data);
           });
@@ -366,12 +426,14 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           },
 
           /* transformRequest */
+
           function(data, headersGetter) {
             //$('#more-events .spinner').show();
             return data;
           },
 
           /* transformResponse */
+
           function(data, headersGetter) {
             //$('#more-events .spinner').hide();
             return JSON.parse(data);
@@ -382,7 +444,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('twitterWidget', ['$window', function($window) {
+  .directive('twitterWidget', ['$window', function($window) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -412,7 +474,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+  .directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 
   return {
     restrict: 'EAC',
@@ -450,7 +512,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   };
 }])
 
-.directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+  .directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 
   return {
     restrict: 'EAC',
@@ -486,40 +548,44 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     }
   };
 }])
-.directive('sendForgotPasswordEmail', ['wembliRpc', function(wembliRpc) {
+  .directive('sendForgotPasswordEmail', ['wembliRpc', function(wembliRpc) {
 
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
-          element.click(function(e) {
+        element.click(function(e) {
 
-            wembliRpc.fetch('customer.sendForgotPasswordEmail',{email:attr.email || scope.email},function(err,result) {
-              console.log(result);
-              /* display an email sent message */
-              scope.forgotPasswordEmailSent = true;
-              scope.$broadcast('forgot-password-email-sent');
-            },
-            /* transformRequest */
-            function(data, headersGetter) {
-              scope.accountExists = false; //will this work?
-              scope.signupSpinner = true;
-              return data;
-            },
+          wembliRpc.fetch('customer.sendForgotPasswordEmail', {
+            email: attr.email || scope.email
+          }, function(err, result) {
+            console.log(result);
+            /* display an email sent message */
+            scope.forgotPasswordEmailSent = true;
+            scope.$broadcast('forgot-password-email-sent');
+          },
+          /* transformRequest */
 
-            /* transformResponse */
-            function(data, headersGetter) {
-              scope.signupSpinner = false;
-              return JSON.parse(data);
-            });
+          function(data, headersGetter) {
+            scope.accountExists = false; //will this work?
+            scope.signupSpinner = true;
+            return data;
+          },
 
+          /* transformResponse */
+
+          function(data, headersGetter) {
+            scope.signupSpinner = false;
+            return JSON.parse(data);
           });
-        };
-      }
+
+        });
+      };
     }
+  }
 }])
 
-.directive('focusOnClick', ['$timeout', function($timeout) {
+  .directive('focusOnClick', ['$timeout', function($timeout) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -541,7 +607,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('startPlan', ['$rootScope', 'fetchModals', function($rootScope, fetchModals) {
+  .directive('startPlan', ['$rootScope', 'fetchModals', function($rootScope, fetchModals) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -769,7 +835,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   };
 }])
 
-.directive('popover', [function() {
+  .directive('popover', [function() {
   return {
     restrict: 'C',
     cache: false,
@@ -788,7 +854,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('fadeElement', function() {
+  .directive('fadeElement', function() {
   return function(scope, element, attrs) {
     element.css('display', 'none');
     scope.$watch(attrs.fadeElement, function(value) {
@@ -801,7 +867,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 })
 
-.directive('onKeyup', function() {
+  .directive('onKeyup', function() {
   return function(scope, elm, attrs) {
     //Evaluate the variable that was passed
     //In this case we're just passing a variable that points
@@ -817,14 +883,14 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   };
 })
 
-.directive('appVersion', ['version', function(version) {
+  .directive('appVersion', ['version', function(version) {
   return function(scope, elm, attrs) {
     elm.text(version);
   };
 
 }])
 
-.directive('dropdown', function() {
+  .directive('dropdown', function() {
   return function(scope, elm, attrs) {
     $(elm).dropdown();
   };

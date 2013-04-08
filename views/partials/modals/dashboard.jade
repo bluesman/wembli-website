@@ -1,0 +1,59 @@
+- var dashboardPlanCategory = 'organizer';
+.dashboard-modal
+#planning-modal.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Events You're Planning
+	.modal-body(ng-hide="dashboard.organizer")
+		.no-plans
+			p	You aren't planning anything! ...well what are you waiting for??
+			a.start-now.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
+				span START A NEW PLAN&nbsp;
+				i.icon-double-angle-right
+	.modal-body(ng-show="dashboard.organizer")
+		- dashboardPlanCategory = 'organizer';
+		include ../includes/dashboard-plan-list
+	.modal-footer
+		a.btn(href="#",data-dismiss="modal") Close
+#invited-modal.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Events You're Invited To
+	.modal-body(ng-hide="dashboard.invited")
+		.no-plans
+			p	You aren't invited to anything :( ...well if your friends won't take initiative, maybe you should!
+			a.start-now.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
+				span START A NEW PLAN&nbsp;
+				i.icon-double-angle-right
+	.modal-body(ng-show="dashboard.invited")
+		- dashboardPlanCategory = 'invited';
+		include ../includes/dashboard-plan-list
+	.modal-footer
+		a.btn(href="#",data-dismiss="modal") Close
+#contacts-modal.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Your Little Black Book
+	.modal-body(ng-hide="dashboard.contacts")
+		.no-plans You haven't invited anyone to anything! ...well what are you waiting for?
+		a.start-now.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
+			span START A NEW PLAN&nbsp;
+			i.icon-double-angle-right
+	.modal-body(ng-show="dashboard.contacts")
+		include ../includes/dashboard-contacts-list
+	.modal-footer
+		a.btn(href="#",data-dismiss="modal") Close
+#archive-modal.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Past Events
+	.modal-body(ng-hide="dashboard.archived")
+		.no-plans You haven't attended any events! ...well what are you waiting for?
+		a.start-now.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
+			span START A NEW PLAN&nbsp;
+			i.icon-double-angle-right
+	.modal-body(ng-show="dashboard.archived")
+		- dashboardPlanCategory = 'archived';
+		include ../includes/dashboard-plan-list
+	.modal-footer
+		a.btn(href="#",data-dismiss="modal") Close

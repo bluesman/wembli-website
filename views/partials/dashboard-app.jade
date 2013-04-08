@@ -6,16 +6,16 @@
 			i.icon-double-angle-right
 	#dashboard-body
 		.dashboard-row
-			#planning.btn.dashboard-button
-				h3 Events I'm Planning
+			a#planning.btn.dashboard-button(href="#planning-modal",data-toggle="modal")
+				h3 Events You're Planning
 				i.icon-beaker.icon-4x
-			#invited.btn.dashboard-button
-				h3 Events I'm Invited To
+			a#invited.btn.dashboard-button(href="#invited-modal",data-toggle="modal")
+				h3 Events You're Invited To
 				i.icon-group.icon-4x
 		.dashboard-row
-			#contacts.btn.dashboard-button
-				h3 My Little Black Book
+			a#contacts.btn.dashboard-button(href="#contacts-modal",data-toggle="modal")
+				h3 Your Little Black Book
 				i.icon-book.icon-4x
-			#archive.btn.dashboard-button
+			a#archive.btn.dashboard-button(href="#archive-modal",data-toggle="modal")
 				h3 Past Events
 				i.icon-list-alt.icon-4x

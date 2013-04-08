@@ -111,6 +111,9 @@ h3 {
   top: 18px;
   left: 60px;
 }
+.modal {
+  top: 40%;
+}
 #page-loading-modal {
   width: 400px;
   margin: -250px 0 0 -200px;
@@ -1864,38 +1867,49 @@ body {
   text-align: center;
   width: 100%;
 }
+.dashboard-plan:hover,
 .event-wrapper:hover {
   background-color: #d3e3ea;
   cursor: pointer;
 }
+.dashboard-plan,
 .event-wrapper {
   *zoom: 1;
   position: relative;
   padding: 10px;
 }
+.dashboard-plan:before,
 .event-wrapper:before,
+.dashboard-plan:after,
 .event-wrapper:after {
   display: table;
   content: "";
 }
+.dashboard-plan:after,
 .event-wrapper:after {
   clear: both;
 }
+.dashboard-plan .event-link,
 .event-wrapper .event-link {
   display: block;
 }
+.dashboard-plan .cta,
 .event-wrapper .cta {
   margin: 20px;
   *zoom: 1;
 }
+.dashboard-plan .cta:before,
 .event-wrapper .cta:before,
+.dashboard-plan .cta:after,
 .event-wrapper .cta:after {
   display: table;
   content: "";
 }
+.dashboard-plan .cta:after,
 .event-wrapper .cta:after {
   clear: both;
 }
+.dashboard-plan .cta .choose-event,
 .event-wrapper .cta .choose-event {
   float: right;
   text-align: center;
@@ -3311,6 +3325,37 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-remove-circle {
   color: #ff6700;
 }
+#planning-modal .no-plans,
+#invited-modal .no-plans,
+#contacts-modal .no-plans,
+#archived-modal .no-plans {
+  *zoom: 1;
+  text-align: center;
+}
+#planning-modal .no-plans:before,
+#invited-modal .no-plans:before,
+#contacts-modal .no-plans:before,
+#archived-modal .no-plans:before,
+#planning-modal .no-plans:after,
+#invited-modal .no-plans:after,
+#contacts-modal .no-plans:after,
+#archived-modal .no-plans:after {
+  display: table;
+  content: "";
+}
+#planning-modal .no-plans:after,
+#invited-modal .no-plans:after,
+#contacts-modal .no-plans:after,
+#archived-modal .no-plans:after {
+  clear: both;
+}
+#planning-modal .no-plans .start-now,
+#invited-modal .no-plans .start-now,
+#contacts-modal .no-plans .start-now,
+#archived-modal .no-plans .start-now {
+  width: 230px;
+  margin: 20px;
+}
 #dashboard-wrapper {
   *zoom: 1;
 }
@@ -3327,9 +3372,9 @@ a#facebook-login-button {
 }
 #dashboard-wrapper #left #dashboard-header {
   *zoom: 1;
-  width: 530px;
+  width: 600px;
   margin: auto;
-  padding: 50px;
+  padding: 20px 50px;
 }
 #dashboard-wrapper #left #dashboard-header:before,
 #dashboard-wrapper #left #dashboard-header:after {
@@ -3340,24 +3385,24 @@ a#facebook-login-button {
   clear: both;
 }
 #dashboard-wrapper #left #dashboard-header .welcome-message {
-  width: 200px;
+  width: 230px;
   line-height: 49px;
   vertical-align: middle;
   text-transform: capitalize;
   margin: 20px;
 }
 #dashboard-wrapper #left #dashboard-header #start-now {
-  width: 200px;
+  width: 230px;
   margin: 20px;
 }
 #dashboard-wrapper #left #dashboard-body {
   padding: 50px;
   margin: auto;
   border: thin solid #524f45;
-  width: 530px;
+  width: 600px;
 }
 #dashboard-wrapper #left #dashboard-body .dashboard-row .dashboard-button {
-  width: 200px;
+  width: 230px;
   height: 80px;
   margin: 20px;
 }

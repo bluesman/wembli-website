@@ -1,3 +1,7 @@
+var wembliModel = require('wembli-model'),
+    Customer    = wembliModel.load('customer'),
+    Plan        = wembliModel.load('plan');
+
 module.exports = function(app) {
 
 
@@ -56,6 +60,22 @@ module.exports = function(app) {
 
 	app.get('/plan', function(req,res) { planView(req, res, 'plan'); });
 	app.get('/partials/plan', function(req, res) { planView(req, res, 'partials/plan'); });
+
+	app.get('/plan/:guid', function(req,res) {
+		Plan.findOne({guid: req.session.plan.guid}, function(err, p) {
+			if (!p) { return res.redirect('/'); };
+			req.session.plan = p;
+			res.redirect('/plan');
+		});
+	});
+
+	app.get('/partials/plan/:guid', function(req, res) {
+		Plan.findOne({guid: req.session.plan.guid}, function(err, p) {
+			if (!p) { return res.redirect('/'); };
+			req.session.plan = p;
+			res.redirect('/partials/plan');
+		});
+	});
 
 	app.get('/invitation', function(req,res) { invitationView(req, res, 'plan'); });
 	app.get('/partials/invitation', function(req,res) { invitationView(req, res, 'partials/plan'); });

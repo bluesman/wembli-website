@@ -151,6 +151,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 
 		function(data, headersGetter) {
 			$('#page-loading-modal').modal("hide");
+      $rootScope.genericLoadingModal.header = 'Loading Event Search...';
       $('#generic-loading-modal').modal("show");
 			return data;
 		},

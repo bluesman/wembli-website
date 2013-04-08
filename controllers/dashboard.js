@@ -41,6 +41,10 @@ module.exports = function(app) {
 
 	app.get('(/partials)?/dashboard/?', viewDashboard);
 
+	app.get('(/partials)?/modals/dashboard/?', function(req,res) {
+		res.render('partials/modals/dashboard',{partial:true,plan:req.session.plan});
+	});
+
 
 	var foo = function( ) {
 

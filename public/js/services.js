@@ -165,11 +165,12 @@ angular.module('wembliApp.services', [])
 	var modalFetched = {};
 	var modalFetchInProgress = null;
 
-	var success = function() {
+	var success = function(callback) {
 		//send a broadcast that the modal is loaded
 		$rootScope.$broadcast($('body :first-child').attr('id') + '-fetched', {
 			modalId: $('body :first-child').attr('id')
 		});
+		if (callback) {	callback();	};
 	};
 
 	var fetchPartial = function(path, partialUrl, callback) {
@@ -206,7 +207,8 @@ angular.module('wembliApp.services', [])
 
 			/* its already fetched and cached and prepended to the body */
 			if (modalFetched[pathKey]) {
-				return success();
+				console.log('modal is already fetched');
+				return success(callback);
 			}
 			/* this fetch is alredy in progress call the callback when the event is called */
 			if (modalFetchInProgress === pathKey) {
