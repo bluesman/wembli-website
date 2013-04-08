@@ -10,10 +10,13 @@ var async = require('async');
 //var https = require('https');
 module.exports = function(app) {
 
-	app.get('/dashboard/?', function(req, res) {
-		console.log('dashboard');
+	var viewDashboard = function(req,res) {
+		var view = /partial/.test(req.url) ? 'partials/dashboard-wrapper' : 'dashboard-wrapper';
+
+		console.log('dashboard:'+req.url);
 		//not logged in? send to login page
 		if (!req.session.loggedIn) {
+			//this wont work for a partial
 			return res.redirect('/login', 302);
 		}
 
@@ -21,10 +24,25 @@ module.exports = function(app) {
 		if (req.session.customer.confirmed === false) {
 			console.log('not confirmed');
 			//need email confirmation
-			return res.render('confirm-email-sent', {
+			view = /partial/.test(req.url) ? 'partials/confirm-email-sent' : 'confirm-email-sent';
+			return res.render(view, {
 				title: 'wembli.com - check your email!.'
 			});
 		}
+
+
+		res.render(view, {
+			title: 'wembli.com - login to get the best seats.',
+		});
+
+
+	};
+
+
+	app.get('(/partials)?/dashboard/?', viewDashboard);
+
+
+	var foo = function( ) {
 
 		//clear the updateEvent session so searches start over
 		delete req.session.updateEvent;
@@ -97,5 +115,7 @@ module.exports = function(app) {
 				});
 			});
 		});
-	});
+	};
+
+
 };

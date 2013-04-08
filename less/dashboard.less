@@ -1,0 +1,71 @@
+#dashboard-wrapper {
+	.clearfix();
+
+
+	#left {
+		width:80%;
+
+		#dashboard-header {
+			.clearfix();
+			width:530px;
+			margin:auto;
+			padding:50px;
+
+			.welcome-message {
+				width:200px;
+				line-height:49px;
+				vertical-align:middle;
+				text-transform: capitalize;
+				margin:20px;
+			}
+			#start-now {
+				width:200px;
+				margin:20px;
+			}
+		}
+
+		#dashboard-body {
+			padding:50px;
+			margin: auto;
+			border:thin solid @grayDark;
+			width:530px;
+
+			.dashboard-row {
+				.dashboard-button {
+					width:200px;
+					height:80px;
+					margin:20px;
+				}
+
+				.dashboard-button:hover {
+					color:@orange;
+				}
+
+				#planning {
+
+				}
+
+				#invited {
+
+				}
+
+				#contacts {
+
+				}
+
+				#archive {
+
+				}
+
+			}
+
+		}
+	}
+
+	#right {
+		width:20%;
+		#activity-feed {
+			background-color: @grayLighter;
+		}
+	}
+}

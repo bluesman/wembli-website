@@ -13,6 +13,37 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
+.directive('dashboard',['customer',function(customer) {
+  return {
+    restrict: 'E',
+    replace:true,
+    cache:false,
+    templateUrl: "/partials/dashboard-app",
+    controller: function($scope, $element, $attrs, $transclude) {
+      console.log('init controller in dashboard');
+      var c = customer.get();
+      $scope.welcomeMessage = "Welcome, "+c.firstName+'!';
+    },
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        console.log('dashboard linking');
+      }
+    }
+  }
+}])
+
+.directive('activityFeed',[function() {
+  return {
+    restrict: 'E',
+    replace:true,
+    cache:false,
+    templateUrl: "/partials/activity-feed",
+    compile: function(element, attr, transclude) {
+      console.log('in dashboard');
+    }
+  }
+}])
+
 .directive('interactiveVenueMap', ['$rootScope','interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
   return {
     restrict: 'E',
@@ -265,6 +296,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
         element.mouseover(function() {
+          //console.log('mouseover happened');
           if (attr.noPopover) {
             return;
           }
@@ -326,7 +358,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             $('#' + elId).popover({
               placement: "left",
               trigger: 'hover',
-              animation: true,
+              animation: false,
               title: 'Tickets Summary',
               content: summaryContent
             });
@@ -344,8 +376,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             //$('#more-events .spinner').hide();
             return JSON.parse(data);
           });
-        })
-      }
+        });
+      };
     }
   }
 }])

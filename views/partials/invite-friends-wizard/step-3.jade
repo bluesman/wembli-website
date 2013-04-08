@@ -14,6 +14,7 @@ form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="facebook.loginStatu
 					input.friend-filter(type="text",placeholder="Enter friend name to filter",on-keyup="facebook.filterFriends",ng-model="facebook.friendFilterKey"))
 					span.add-on
 						i.icon-search
+			.error-text(ng-show="noResults") No matching friends were found...
 			.spinner(ng-hide="facebook.friends")
 				i.icon-spinner.icon-spin.icon-2x(ng-hide="facebook.friends")
 			.friends-list(ng-show="facebook.friends")

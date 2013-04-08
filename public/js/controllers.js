@@ -538,6 +538,11 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 		filterFriends     : function() {
 			facebook.filterFriends($scope.facebook.friendFilterKey);
 			$scope.facebook.friends = facebook.getFriends();
+			$scope.facebook.noResults = false;
+			if (typeof $scope.facebook.friends[0] === "undefined") {
+				$scope.facebook.friends = facebook.getAllFriends();
+				$scope.facebook.noResults = true;
+			}
 		},
 
 		handleFriendClick: function(friend,$event) {

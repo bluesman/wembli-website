@@ -3311,3 +3311,62 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-remove-circle {
   color: #ff6700;
 }
+#dashboard-wrapper {
+  *zoom: 1;
+}
+#dashboard-wrapper:before,
+#dashboard-wrapper:after {
+  display: table;
+  content: "";
+}
+#dashboard-wrapper:after {
+  clear: both;
+}
+#dashboard-wrapper #left {
+  width: 80%;
+}
+#dashboard-wrapper #left #dashboard-header {
+  *zoom: 1;
+  width: 530px;
+  margin: auto;
+  padding: 50px;
+}
+#dashboard-wrapper #left #dashboard-header:before,
+#dashboard-wrapper #left #dashboard-header:after {
+  display: table;
+  content: "";
+}
+#dashboard-wrapper #left #dashboard-header:after {
+  clear: both;
+}
+#dashboard-wrapper #left #dashboard-header .welcome-message {
+  width: 200px;
+  line-height: 49px;
+  vertical-align: middle;
+  text-transform: capitalize;
+  margin: 20px;
+}
+#dashboard-wrapper #left #dashboard-header #start-now {
+  width: 200px;
+  margin: 20px;
+}
+#dashboard-wrapper #left #dashboard-body {
+  padding: 50px;
+  margin: auto;
+  border: thin solid #524f45;
+  width: 530px;
+}
+#dashboard-wrapper #left #dashboard-body .dashboard-row .dashboard-button {
+  width: 200px;
+  height: 80px;
+  margin: 20px;
+}
+#dashboard-wrapper #left #dashboard-body .dashboard-row .dashboard-button:hover {
+  color: #ff6700;
+}
+#dashboard-wrapper #right {
+  width: 20%;
+}
+#dashboard-wrapper #right #activity-feed {
+  background-color: #f0f0f0;
+}

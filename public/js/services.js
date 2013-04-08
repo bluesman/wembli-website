@@ -360,6 +360,10 @@ angular.module('wembliApp.services', [])
 		getFriends: function(callback) {
 			return self.friends;
 		},
+
+		getAllFriends: function() {
+			return self.allFriends;
+		},
 		login: function() {
 
 			FB.login(function(response) {
