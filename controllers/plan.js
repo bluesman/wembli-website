@@ -62,7 +62,7 @@ module.exports = function(app) {
 	app.get('/partials/plan', function(req, res) { planView(req, res, 'partials/plan'); });
 
 	app.get('/plan/:guid', function(req,res) {
-		Plan.findOne({guid: req.session.plan.guid}, function(err, p) {
+		Plan.findOne({guid: req.param('guid')}, function(err, p) {
 			if (!p) { return res.redirect('/'); };
 			req.session.plan = p;
 			res.redirect('/plan');
@@ -70,7 +70,9 @@ module.exports = function(app) {
 	});
 
 	app.get('/partials/plan/:guid', function(req, res) {
-		Plan.findOne({guid: req.session.plan.guid}, function(err, p) {
+		Plan.findOne({guid: req.param('guid')}, function(err, p) {
+			console.log('finding plan for guid: '+req.session.plan.guid);
+			console.log(p);
 			if (!p) { return res.redirect('/'); };
 			req.session.plan = p;
 			res.redirect('/partials/plan');

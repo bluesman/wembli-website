@@ -99,17 +99,14 @@ module.exports = function(app) {
 									customer: customer,
 								}
 								wembliEmail.sendSignupEmail(args);
-
-								return respond(data);
+								/* if there is a redirectUrl, show a flash message indicating successful signup */
+								var redirectUrl = '/dashboard';
+								if (req.param('redirectUrl')) {
+									redirectUrl = req.param('redirectUrl');
+								}
+								return res.redirect(redirectUrl);
 							});
 						});
-
-						/* if there is a redirectUrl, show a flash message indicating successful signup */
-						var redirectUrl = '/dashboard';
-						if (req.param('redirectUrl')) {
-							redirectUrl = req.param('redirectUrl');
-						}
-						return res.redirect(redirectUrl);
 					});
 	      };
 

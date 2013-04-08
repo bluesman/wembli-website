@@ -9,11 +9,20 @@
 			margin:20px;
 		}
 	}
+	.modal-body {
+		max-height:400px;
+		overflow:auto;
+	}
+	.info {
+		.name, .venue,.location {
+			width:275px;
+		}
+	}
 }
 
 #dashboard-wrapper {
 	.clearfix();
-
+	height:100%;
 
 	#left {
 		width:80%;
@@ -24,30 +33,65 @@
 			margin:auto;
 			padding:20px 50px;
 
-			.welcome-message {
-				width:230px;
-				line-height:49px;
-				vertical-align:middle;
-				text-transform: capitalize;
-				margin:20px;
+			.dropdown-menu {
+				left:8px;
+				min-width:230px;
 			}
-			#start-now {
+			.dropdown {
+				margin-top:20px;
+				line-height:26px;
+				vertical-align: middle;
+				text-transform: capitalize;
+				text-align:left;
+				color:@grayDark;
+				a {
+					.clearfix();
+					color:@grayDark;
+					.border-radius(4px);
+					display:block;
+					padding:9px;
+				}
+				a.selected, a:hover {
+					background:@grayDark;
+					color:@white;
+				}
+			}
+
+			div {
 				width:230px;
 				margin:20px;
+				padding:4px 10px;
+
+				#start-now {
+					width:200px;
+				}
+				.welcome-message {
+					padding:10px;
+				}
+				.icon-cog {
+					float:left;
+				}
+				.icon-caret-down {
+
+				}
 			}
 		}
 
 		#dashboard-body {
 			padding:50px;
 			margin: auto;
-			border:thin solid @grayDark;
+			border:3px solid @grayDark;
 			width:600px;
 
 			.dashboard-row {
+				.clearfix();
+
 				.dashboard-button {
 					width:230px;
 					height:80px;
 					margin:20px;
+					display:block;
+					float:left;
 				}
 
 				.dashboard-button:hover {
@@ -77,8 +121,10 @@
 
 	#right {
 		width:20%;
+		height:100%;
 		#activity-feed {
 			background-color: @grayLighter;
+			height:100%;
 		}
 	}
 }

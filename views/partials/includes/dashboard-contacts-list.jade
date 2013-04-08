@@ -1,5 +1,5 @@
 ul.contacts-list
-	li.dashboard-plan.wembli-sequence-link(loading-duration="1500",id="{{contact.customerId}}-wrapper",ng-repeat="contact in dashboard.contacts",ng-cloak)
+	li.dashboard-plan.wembli-sequence-link(loading-duration="1500",id="{{friend.id}}-wrapper",ng-repeat="friend in dashboard.friends",ng-cloak)
 		.info
-			span.name.block {{contact.name}}
+			span.name.block {{friend.contactInfo.name}}
 

@@ -1465,7 +1465,8 @@ body {
 }
 /* this is so the footer doesn't block scrolling down */
 #content > ul > li > div > div {
-  margin-bottom: 90px;
+  /* i took this out for the activity feed on the dashboard...need to find another way to handle the footer blockage */
+
 }
 #content > ul > li.animate-in > div {
   left: 0%;
@@ -2415,6 +2416,7 @@ body {
 #content #search-frame #right #search-wrapper #search {
   background-color: #ffffff;
   text-align: left;
+  padding-bottom: 90px;
 }
 #content #search-frame #right #search-wrapper #search #search-results {
   background: #f0f0f0;
@@ -3356,8 +3358,30 @@ a#facebook-login-button {
   width: 230px;
   margin: 20px;
 }
+#planning-modal .modal-body,
+#invited-modal .modal-body,
+#contacts-modal .modal-body,
+#archived-modal .modal-body {
+  max-height: 400px;
+  overflow: auto;
+}
+#planning-modal .info .name,
+#invited-modal .info .name,
+#contacts-modal .info .name,
+#archived-modal .info .name,
+#planning-modal .info .venue,
+#invited-modal .info .venue,
+#contacts-modal .info .venue,
+#archived-modal .info .venue,
+#planning-modal .info .location,
+#invited-modal .info .location,
+#contacts-modal .info .location,
+#archived-modal .info .location {
+  width: 275px;
+}
 #dashboard-wrapper {
   *zoom: 1;
+  height: 100%;
 }
 #dashboard-wrapper:before,
 #dashboard-wrapper:after {
@@ -3384,34 +3408,86 @@ a#facebook-login-button {
 #dashboard-wrapper #left #dashboard-header:after {
   clear: both;
 }
-#dashboard-wrapper #left #dashboard-header .welcome-message {
-  width: 230px;
-  line-height: 49px;
+#dashboard-wrapper #left #dashboard-header .dropdown-menu {
+  left: 8px;
+  min-width: 230px;
+}
+#dashboard-wrapper #left #dashboard-header .dropdown {
+  margin-top: 20px;
+  line-height: 26px;
   vertical-align: middle;
   text-transform: capitalize;
-  margin: 20px;
+  text-align: left;
+  color: #524f45;
 }
-#dashboard-wrapper #left #dashboard-header #start-now {
+#dashboard-wrapper #left #dashboard-header .dropdown a {
+  *zoom: 1;
+  color: #524f45;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  display: block;
+  padding: 9px;
+}
+#dashboard-wrapper #left #dashboard-header .dropdown a:before,
+#dashboard-wrapper #left #dashboard-header .dropdown a:after {
+  display: table;
+  content: "";
+}
+#dashboard-wrapper #left #dashboard-header .dropdown a:after {
+  clear: both;
+}
+#dashboard-wrapper #left #dashboard-header .dropdown a.selected,
+#dashboard-wrapper #left #dashboard-header .dropdown a:hover {
+  background: #524f45;
+  color: #ffffff;
+}
+#dashboard-wrapper #left #dashboard-header div {
   width: 230px;
   margin: 20px;
+  padding: 4px 10px;
+}
+#dashboard-wrapper #left #dashboard-header div #start-now {
+  width: 200px;
+}
+#dashboard-wrapper #left #dashboard-header div .welcome-message {
+  padding: 10px;
+}
+#dashboard-wrapper #left #dashboard-header div .icon-cog {
+  float: left;
 }
 #dashboard-wrapper #left #dashboard-body {
   padding: 50px;
   margin: auto;
-  border: thin solid #524f45;
+  border: 3px solid #524f45;
   width: 600px;
+}
+#dashboard-wrapper #left #dashboard-body .dashboard-row {
+  *zoom: 1;
+}
+#dashboard-wrapper #left #dashboard-body .dashboard-row:before,
+#dashboard-wrapper #left #dashboard-body .dashboard-row:after {
+  display: table;
+  content: "";
+}
+#dashboard-wrapper #left #dashboard-body .dashboard-row:after {
+  clear: both;
 }
 #dashboard-wrapper #left #dashboard-body .dashboard-row .dashboard-button {
   width: 230px;
   height: 80px;
   margin: 20px;
+  display: block;
+  float: left;
 }
 #dashboard-wrapper #left #dashboard-body .dashboard-row .dashboard-button:hover {
   color: #ff6700;
 }
 #dashboard-wrapper #right {
   width: 20%;
+  height: 100%;
 }
 #dashboard-wrapper #right #activity-feed {
   background-color: #f0f0f0;
+  height: 100%;
 }

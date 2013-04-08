@@ -13,6 +13,24 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
+  .directive('toggleSelected',[function() {
+    return {
+      restrict:'C',
+      link: function(scope, element, attr) {
+        $(document).click(function() {
+          element.removeClass('selected');
+        });
+        element.click(function() {
+          if (element.hasClass('selected')) {
+            element.removeClass('selected');
+          } else {
+            element.addClass('selected');
+          }
+        })
+      }
+    }
+  }])
+
   .directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', function(customer, fetchModals, $rootScope, wembliRpc) {
   return {
     restrict: 'E',

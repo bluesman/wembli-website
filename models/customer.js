@@ -116,7 +116,7 @@ this.Model = function(mongoose) {
 	Customer.methods.getPlans = function(callback) {
 		var c = this;
 		console.log('getting customer plans where customer id: ' + c.id);
-		Plan.find().where('organizer').equals(c.id).sort('-event.eventDate').exec(function(err, plans) {
+		Plan.find().where('organizer').equals(c.id).sort('event.eventDate').exec(function(err, plans) {
 			if (err) {
 				return callback(err);
 			};
@@ -160,7 +160,7 @@ this.Model = function(mongoose) {
 			console.log('plan guids this customer was invited to');
 			console.log(guids);
 			/* get all the plans for these guids */
-			Plan.find().where('guid'). in (guids).sort('-event.eventDate').exec(function(err, plans) {
+			Plan.find().where('guid'). in (guids).sort('event.eventDate').exec(function(err, plans) {
 				if (err) {
 					return callback(err);
 				};

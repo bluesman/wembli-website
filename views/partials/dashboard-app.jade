@@ -1,9 +1,18 @@
 #dashboard
 	#dashboard-header
-		.welcome-message.helvetica.pull-left {{welcomeMessage}}
-		a#start-now.pull-right.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
-			span START A NEW PLAN&nbsp;
-			i.icon-double-angle-right
+		.dropdown.pull-left
+			a.toggle-selected.dropdown-toggle(data-toggle="dropdown", role="button",href="#")
+				i.icon-cog.icon-2x
+				span.welcome-message.helvetica {{welcomeMessage}}
+				i.icon-caret-down
+			ul.dropdown-menu(role="menu")
+				li
+					a(href="#") Account Settings
+					a(href="#") Plan Preferences
+		.pull-right
+			a#start-now.pull-left.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
+				span START A NEW PLAN&nbsp;
+				i.icon-double-angle-right
 	#dashboard-body
 		.dashboard-row
 			a#planning.btn.dashboard-button(href="#planning-modal",data-toggle="modal")

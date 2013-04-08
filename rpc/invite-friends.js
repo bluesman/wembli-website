@@ -35,6 +35,7 @@ exports["invite-friends"] = {
 					results.formError = true;
 					results.exists = true;
 				}
+
 				return me(null, results);
 			}, [args, req, res]);
 		} else {

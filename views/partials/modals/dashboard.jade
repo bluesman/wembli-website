@@ -34,12 +34,12 @@
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")
 		h2 Your Little Black Book
-	.modal-body(ng-hide="dashboard.contacts")
+	.modal-body(ng-hide="dashboard.friends")
 		.no-plans You haven't invited anyone to anything! ...well what are you waiting for?
 		a.start-now.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
 			span START A NEW PLAN&nbsp;
 			i.icon-double-angle-right
-	.modal-body(ng-show="dashboard.contacts")
+	.modal-body(ng-show="dashboard.friends")
 		include ../includes/dashboard-contacts-list
 	.modal-footer
 		a.btn(href="#",data-dismiss="modal") Close

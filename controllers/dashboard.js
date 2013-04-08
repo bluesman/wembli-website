@@ -26,7 +26,8 @@ module.exports = function(app) {
 			//need email confirmation
 			view = /partial/.test(req.url) ? 'partials/confirm-email-sent' : 'confirm-email-sent';
 			return res.render(view, {
-				title: 'wembli.com - check your email!.'
+				title: 'wembli.com - check your email!.',
+
 			});
 		}
 

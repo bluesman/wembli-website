@@ -207,7 +207,7 @@ angular.module('wembliApp.services', [])
 
 			/* its already fetched and cached and prepended to the body */
 			if (modalFetched[pathKey]) {
-				console.log('modal is already fetched');
+				console.log('modal is already fetched:'+path);
 				return success(callback);
 			}
 			/* this fetch is alredy in progress call the callback when the event is called */
