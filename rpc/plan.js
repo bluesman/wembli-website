@@ -216,6 +216,7 @@ exports.plan = {
 				set.payment = [{
 					organizer: true,
 					transactionToken: p.transactionToken,
+					customerId:req.session.customer.id,
 					amount: p.total,
 					qty: p.qty
 				}];
