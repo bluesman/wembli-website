@@ -2438,39 +2438,52 @@ body {
 #content #search-frame #right #search-wrapper #search #search-results a#more-events i {
   margin: 1px 0px 0px 8px;
 }
+#rsvp-login-modal form,
 #tickets-login-modal form {
   margin: 20px;
 }
+#rsvp-login-modal form label.radio,
 #tickets-login-modal form label.radio {
   padding: 0 20px;
 }
+#rsvp-login-modal form label.radio input[type=radio],
 #tickets-login-modal form label.radio input[type=radio] {
   margin: 45px 25px 0 0;
 }
+#rsvp-login-modal form label.radio .option-content,
 #tickets-login-modal form label.radio .option-content {
   padding: 10px;
 }
+#rsvp-login-modal form label.radio .option-content h3,
 #tickets-login-modal form label.radio .option-content h3 {
   color: #6da1b7;
 }
+#rsvp-login-modal form label.radio .option-content .first-name,
 #tickets-login-modal form label.radio .option-content .first-name {
   width: 100px;
 }
+#rsvp-login-modal form label.radio .option-content .last-name,
 #tickets-login-modal form label.radio .option-content .last-name {
   margin-left: 10px;
   width: 200px;
 }
+#rsvp-login-modal form label.radio .option-content .password,
 #tickets-login-modal form label.radio .option-content .password,
+#rsvp-login-modal form label.radio .option-content .email,
 #tickets-login-modal form label.radio .option-content .email {
   width: 320px;
 }
+#rsvp-login-modal form label.radio .option-content .facebook-login,
 #tickets-login-modal form label.radio .option-content .facebook-login {
   width: 400px;
 }
+#rsvp-login-modal form label.radio .option-content .facebook-login #facebook-login-button,
 #tickets-login-modal form label.radio .option-content .facebook-login #facebook-login-button {
   margin: 0 auto;
 }
+#rsvp-login-modal form label.radio.selected,
 #tickets-login-modal form label.radio.selected,
+#rsvp-login-modal form label.radio:hover,
 #tickets-login-modal form label.radio:hover {
   background-color: rgba(66, 127, 184, 0.25);
 }

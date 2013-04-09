@@ -156,7 +156,7 @@ angular.module('wembliApp.services', [])
 	}
 }])
 
-	.factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
+.factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
 
 	/* put stuff in here to load a modal everytime for a given url - i'm not using this */
 	var modalPageMap = {
@@ -170,6 +170,7 @@ angular.module('wembliApp.services', [])
 		$rootScope.$broadcast($('body :first-child').attr('id') + '-fetched', {
 			modalId: $('body :first-child').attr('id')
 		});
+		console.log('broadcasted: '+$('body :first-child').attr('id') + '-fetched');
 		if (callback) {	callback();	};
 	};
 
@@ -238,7 +239,22 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-	.factory('friendFilter', [function() {
+
+.factory('rsvpLoginModal', [function() {
+	var self = this;
+	return {
+		set:function(key,val) {
+			console.log('setting '+key);
+			self[key] = val;
+		},
+		get: function(key) {
+			console.log('getting '+key);
+			return self[key];
+		}
+	};
+}])
+
+.factory('friendFilter', [function() {
 	return {
 		filter: function(key, self) {
 			var r = new RegExp("^" + key, "i");
@@ -306,7 +322,7 @@ angular.module('wembliApp.services', [])
 		feedDialog: function(args, cb) {
 			FB.getLoginStatus(function(response) {
 				if (response.authResponse) {
-					var actionLink = 'http://tom.wembli.com/rsvp/' + args.guid + '/' + args.token;
+					var actionLink = 'http://tom.wembli.com/rsvp/' + args.guid + '/facebook';
 					var obj = {
 						method: 'feed',
 						display: 'iframe',

@@ -43,6 +43,7 @@ this.Model = function(mongoose) {
 			initiated:{type:Boolean, default:false},
 			initiatedLastDate:{type:Date, default: null},
 			viewed:{type:Number,default:0},
+			viewedLastDate:{type:Date, default: null},
 			decision:{type:Boolean, default:null},
 			date:{type:Date,default:Date.now}
 		},

@@ -7,13 +7,17 @@
 				i.icon-caret-down
 			ul.dropdown-menu(role="menu")
 				li
-					a(href="#") Account Settings
+					a(href="#") Profile Settings
 					a(href="#") Plan Preferences
+					a(href="#") Payment Information
 		.pull-right
 			a#start-now.pull-left.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
 				span START A NEW PLAN&nbsp;
 				i.icon-double-angle-right
 	#dashboard-body
+		.alert.hide
+			span You must provide payment information if you want to be paid back.
+			a(href="#") Click here to provide payment information.
 		.dashboard-row
 			a#planning.btn.dashboard-button(href="#planning-modal",data-toggle="modal")
 				h3 Events You're Planning

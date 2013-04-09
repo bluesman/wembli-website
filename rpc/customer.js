@@ -364,6 +364,8 @@ exports.customer = {
 					customer: c,
 					next: args.next
 				}
+				console.log('forgot password mail args');
+				console.log(mailArgs);
 				wembliMail.sendForgotPasswordEmail(mailArgs)
 				return me(null,data);
 			});

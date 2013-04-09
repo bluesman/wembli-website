@@ -1,24 +1,13 @@
-#tickets-login-modal.modal.hide(ng-controller="TicketsLoginCtrl")
+#rsvp-login-modal.modal.hide(ng-controller="RsvpLoginCtrl")
 	.confirm(ng-show="customer")
 		.modal-header
 			h2 Successfully Logged In
-		.modal-body
-			.ticket-wrapper
-				p Click continue to purchase these tickets:
-				h3 Ticket Group Info:
-				.ticket
-					.ticket-info
-						.ticket-section-name Section: {{ticket.Section}}
-						.seat-row-name Row: {{ticket.Row}}
-					.tix-available Total of {{ticket.selectedQty}} tix
-					.ticket-price
-						.actual-price ${{ticket.ActualPrice}}
-						.each (each)
+		.modal-body Click continue to view the plan
 	.login(ng-hide="customer")
 		.modal-header
-			h2 Login To Buy Your Tickets
+			h2 Login To View The Plan
 		.modal-body
-			form#tickets-login-form(name="tickets-login")
+			form#rsvp-login-form(name="rsvp-login")
 				p Choose from the options below:
 				label.radio
 					input#radio-signup(ng-model="authAction",type="radio",name="auth_action",value="signup",ng-init="authAction='signup'")
@@ -48,16 +37,8 @@
 							.name-group.control-group
 								input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="login_email",required)
 								input.focus-on-click.password(type="password",ng-model="password",placeholder="PASSWORD",name="password",required)
-				label.radio
-					input#radio-login(ng-model="authAction",type="radio",name="auth_action",value="facebook")
-					.option-content
-						h3 3. Login with facebook:
-						.facebook-login
-							a#facebook-login-button.btn.btn-primary(target="_self",ng-href="/auth/facebook?redirectUrl={{redirectUrl}}")
-								i.icon-facebook.icon-2x.pull-left
-								span Login with Facebook
 	.modal-footer
 		button.btn.btn-primary.btn-large(ng-click="authActions[authAction]()",ng-hide="customer")
 			span(ng-hide="continueSpinner") Continue
 			span.icon-spinner.icon-spin(ng-show="continueSpinner")
-		a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket="{{ticket}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",ng-show="customer",target="_blank") Buy Tickets
+		a.btn.btn-primary.btn-large.wembli-sequence-link(ng-href="/rsvp/{{guid}}/{{service}}",ng-show="customer") See The Plan!

@@ -13,7 +13,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-  .directive('toggleSelected',[function() {
+.directive('toggleSelected',[function() {
     return {
       restrict:'C',
       link: function(scope, element, attr) {
@@ -29,9 +29,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         })
       }
     }
-  }])
+}])
 
-  .directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', function(customer, fetchModals, $rootScope, wembliRpc) {
+.directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', function(customer, fetchModals, $rootScope, wembliRpc) {
   return {
     restrict: 'E',
     replace: true,
@@ -40,44 +40,44 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     controller: function($scope, $element, $attrs, $transclude) {
       console.log('init controller in dashboard');
 
-      /* show the generic loading modal */
-      $rootScope.genericLoadingModal.header = 'Fetching Your Plans...';
-      $('#page-loading-modal').modal("hide");
-      console.log('show generic modal');
-      $('#generic-loading-modal').modal("show");
-
-      fetchModals.fetch('/partials/modals/dashboard', function() {
-        console.log('fetched dashboard modals');
-
-        var args = {
-
-        };
-
-        wembliRpc.fetch('dashboard.init', args,
-
-        function(err, result) {
-          if (err) {
-            alert('error happened - contact help@wembli.com');
-            return;
-          }
-
-          var c = result.customer;
-          $scope.welcomeMessage = "Welcome, " + c.firstName + '!';
-
-          console.log(result);
-          $rootScope.$broadcast('dashboard-fetched', result);
-        });
-      });
     },
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
         console.log('dashboard linking');
+        /* show the generic loading modal */
+        $rootScope.genericLoadingModal.header = 'Fetching Your Plans...';
+        $('#page-loading-modal').modal("hide");
+        console.log('show generic modal');
+        $('#generic-loading-modal').modal("show");
+
+        fetchModals.fetch('/partials/modals/dashboard', function() {
+          console.log('fetched dashboard modals');
+
+          var args = {
+
+          };
+
+          wembliRpc.fetch('dashboard.init', args,
+
+          function(err, result) {
+            if (err) {
+              alert('error happened - contact help@wembli.com');
+              return;
+            }
+
+            var c = result.customer;
+            scope.welcomeMessage = "Welcome, " + c.firstName + '!';
+
+            console.log(result);
+            $rootScope.$broadcast('dashboard-fetched', result);
+          });
+        });
       };
     },
   }
 }])
 
-  .directive('dashboardModal', ['customer', 'wembliRpc', function(customer, wembliRpc) {
+.directive('dashboardModal', ['customer', 'wembliRpc', function(customer, wembliRpc) {
   return {
     restrict: 'C',
     replace: false,
@@ -106,7 +106,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-  .directive('activityFeed', [function() {
+.directive('activityFeed', [function() {
   return {
     restrict: 'E',
     replace: true,
@@ -118,7 +118,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-  .directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
+.directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
   return {
     restrict: 'E',
     replace: true,
@@ -492,7 +492,24 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-  .directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+.directive('rsvpLoginModal', ['fetchModals','rsvpLoginModal',function(fetchModals,rsvpLoginModal) {
+  return {
+    restrict: 'EAC',
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+        rsvpLoginModal.set('guid',attr.guid);
+        rsvpLoginModal.set('token',attr.token);
+        rsvpLoginModal.set('service',attr.service);
+
+        fetchModals.fetch('/partials/modals/rsvp-login',function() {
+          $('#rsvp-login-modal').modal("show");
+        });
+      };
+    }
+  };
+}])
+
+.directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 
   return {
     restrict: 'EAC',

@@ -727,7 +727,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				/* display the tweet dialog box */
 				$('#modal-'+friend.screen_name).modal("show");
 				/* reset the tweet form data */
-				var rsvpUrl = 'http://tom.wembli.com/rsvp/'+$scope.plan.guid+'/'+result.friend.inviteStatusConfirmation.token;
+				var rsvpUrl = 'http://tom.wembli.com/rsvp/'+$scope.plan.guid+'/twitter';
 				$scope.twitter.messageText = '@'+friend.screen_name+' You are invited to an outing I am planning with @wembli | RSVP By '+$filter('date')(result.friend.rsvp.date,'M/d/yy')+' | '+rsvpUrl;
 				$scope.twitter.countChars();
 			});
@@ -766,6 +766,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 	//controller runs before the modal actually gets attached to the DOM
 	//so setting up a listener for the event that is triggered when the modal is attached
 	$scope.$on('invitation-modal-fetched', function(e, args) {
+		console.log('invitation-modal-fetched happened');
 		//make sure plan is also fetched
 		plan.get(function(planData) {
 			//display the modal if there's a plan
@@ -1027,6 +1028,97 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 		updateTicketsLink();
 	});
 };
+
+function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpLoginModal) {
+	$scope.plan = plan.get();
+	console.log('rsvp login ctrl');
+
+	$scope.guid    = rsvpLoginModal.get('guid');
+	$scope.token   = rsvpLoginModal.get('token');
+	$scope.service = rsvpLoginModal.get('service');
+	$scope.next    = '/rsvp/'+$scope.guid+'/'+$scope.service;
+	$scope.$on('rsvp-login-modal-init',function(e, args) {
+		console.log('rsvp-login-modal-init happened');
+		$scope.guid    = rsvpLoginModal.get('guid');
+		$scope.token   = rsvpLoginModal.get('token');
+		$scope.service = rsvpLoginModal.get('service');
+	});
+
+
+	$scope.authActions = {
+		signup : function() {
+			wembliRpc.fetch('customer.signup',{firstName:$scope.firstName,lastName:$scope.lastName,email:$scope.email,next:$scope.next}, function(err,result) {
+				console.log(result);
+
+				if (result.customer) {
+					console.log('returned a customer - im logged in!');
+					/* hide this modal and display the tickets offsite modal */
+					$scope.customer = result.customer;
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+				if (result.exists) {
+					$scope.formError     = false;
+					$scope.signupError   = true;
+					$scope.accountExists = result.exists;
+					return;
+				}
+
+				if (result.formError) {
+					$scope.signupError   = true;
+					$scope.formError     = true;
+					$scope.accountExists = false;
+					return;
+				}
+				$scope.signupError   = false;
+				$scope.formError     = false;
+				$scope.accountExists = false;
+
+			},
+      /* transformRequest */
+      function(data, headersGetter) {
+        $scope.continueSpinner = true;
+        return data;
+      },
+
+      /* transformResponse */
+      function(data, headersGetter) {
+        $scope.continueSpinner = false;
+        return JSON.parse(data);
+      });
+		},
+		login : function() {
+			wembliRpc.fetch('customer.login',{email:$scope.email,password:$scope.password,next:$scope.next}, function(err,result) {
+				console.log(result);
+				if (result.error) {
+					$scope.loginError = result.error;
+
+					if (typeof result.noPassword !== "undefined") {
+						$scope.noPassword = result.noPassword;
+					} else if(result.invalidCredentials) {
+						$scope.invalidCredentials = result.invalidCredentials;
+					}
+				}
+				if (result.customer) {
+					console.log('returned a customer im logged in!');
+					/* hide this modal and display the tickets offsite modal */
+					$scope.customer = result.customer;
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+			})
+		}
+	};
+};
+
+
+
 
 function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
   /* get the login modal */
@@ -1293,3 +1385,5 @@ function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer) {
 	}
 
 };
+
+

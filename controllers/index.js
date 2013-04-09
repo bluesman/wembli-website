@@ -22,8 +22,6 @@ module.exports = function(app) {
 
 		//get nearby events:
 		eventRpc['get'].apply(function(err,results) {
-			console.log(results);
-			console.log(err);
 			res.render('index', {
 				events: results.event,
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
@@ -43,8 +41,6 @@ module.exports = function(app) {
 
 		//get nearby events:
 		eventRpc['get'].apply(function(err,results) {
-			console.log(results);
-			console.log(err);
 			res.render('partials/index', {
 				events: results.event,
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
