@@ -119,6 +119,7 @@ exports.plan = {
 						name: args.name,
 						imageUrl: args.imageUrl
 					},
+					rsvp: {token:confirmationToken,tokenTimestamp:confirmationTimestamp},
 					inviteStatus: args.inviteStatus || false,
 					inviteStatusConfirmation: {token:confirmationToken,timestamp:confirmationTimestamp}
 				}

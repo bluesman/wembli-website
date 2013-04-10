@@ -40,6 +40,8 @@ this.Model = function(mongoose) {
 			token:String
 		},
 		rsvp:{
+			token:String,
+			tokenTimestamp:String,
 			initiated:{type:Boolean, default:false},
 			initiatedLastDate:{type:Date, default: null},
 			viewed:{type:Number,default:0},
@@ -47,7 +49,6 @@ this.Model = function(mongoose) {
 			decision:{type:Boolean, default:null},
 			date:{type:Date,default:Date.now}
 		},
-		token: {timestamp:String,token:String},
 		payment: {type:{}},
 		created: {type: Date,	default: Date.now	},
 		updated: Date,

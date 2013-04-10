@@ -724,10 +724,12 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				/* should i just overwrite friend completely here? */
 				friend.inviteStatusConfirmation = result.friend.inviteStatusConfirmation;
 				friend.rsvp = result.friend.rsvp;
+				console.log('friend rsvp is: ');
+				console.log(friend.rsvp);
 				/* display the tweet dialog box */
 				$('#modal-'+friend.screen_name).modal("show");
 				/* reset the tweet form data */
-				var rsvpUrl = 'http://tom.wembli.com/rsvp/'+$scope.plan.guid+'/twitter';
+				var rsvpUrl = 'http://tom.wembli.com/rsvp/'+$scope.plan.guid+'/'+friend.rsvp.token+'/twitter';
 				$scope.twitter.messageText = '@'+friend.screen_name+' You are invited to an outing I am planning with @wembli | RSVP By '+$filter('date')(result.friend.rsvp.date,'M/d/yy')+' | '+rsvpUrl;
 				$scope.twitter.countChars();
 			});
@@ -1032,16 +1034,38 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpLoginModal) {
 	$scope.plan = plan.get();
 	console.log('rsvp login ctrl');
-
 	$scope.guid    = rsvpLoginModal.get('guid');
-	$scope.token   = rsvpLoginModal.get('token');
 	$scope.service = rsvpLoginModal.get('service');
-	$scope.next    = '/rsvp/'+$scope.guid+'/'+$scope.service;
+	$scope.token   = rsvpLoginModal.get('token');
+	$scope.friend  = rsvpLoginModal.get('friend');
+	$scope.event   = JSON.parse(rsvpLoginModal.get('event'));
+
+	console.log($scope.event);
+	$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
+	$scope.next    = '/rsvp/'+$scope.guid+'/'+$scope.token+'/'+$scope.service;
+
+	$scope.confirm = function(social) {
+		if (typeof social === "undefined") {
+			if ($scope.customer && ($scope.service !== 'twitter') && ($scope.service !== 'facebook')) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/* ghetto - bools become strings */
+		if ($scope.confirmSocial === 'false') {
+			return false;
+		}
+		return (social === $scope.service) ? true : false;
+	}
+
 	$scope.$on('rsvp-login-modal-init',function(e, args) {
 		console.log('rsvp-login-modal-init happened');
 		$scope.guid    = rsvpLoginModal.get('guid');
-		$scope.token   = rsvpLoginModal.get('token');
 		$scope.service = rsvpLoginModal.get('service');
+		$scope.token = rsvpLoginModal.get('token');
+		$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
 	});
 
 
@@ -1076,6 +1100,15 @@ function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpL
 				$scope.signupError   = false;
 				$scope.formError     = false;
 				$scope.accountExists = false;
+
+				var confirmSocialMap = {
+					facebook:true,
+					twitter:true
+				};
+				/* if the service is facebook or twitter they need to confirm social */
+				if ((typeof confirmSocialMap[$scope.service] !== "undefined") && confirmSocialMap[$scope.service]) {
+					$scope.confirmSocial = 'true';
+				}
 
 			},
       /* transformRequest */

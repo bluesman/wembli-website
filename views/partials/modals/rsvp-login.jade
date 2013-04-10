@@ -1,12 +1,41 @@
 #rsvp-login-modal.modal.hide(ng-controller="RsvpLoginCtrl")
-	.confirm(ng-show="customer")
+	.confirm(ng-show="confirm()")
 		.modal-header
 			h2 Successfully Logged In
-		.modal-body Click continue to view the plan
+		.modal-body
+			p Click the blue "See The Plan!" button to view the plan for this event:
+			.event-date-box
+				span.day {{getDate(event.eventDate)| date:'EEE'}}
+				span.event-date {{getDate(event.eventDate)| date:'MMM d'}}
+				span.time {{getDate(event.eventDate)| date:'h:mm a'}}
+			.info
+				.pull-left
+					span.name.block {{event.eventName}}
+					span.venue.block {{ event.eventVenue }}
+					span.location.block {{event.eventCity+', '+event.eventState}}
+	.confirm(ng-show="confirm('facebook')")
+		.modal-header
+			h2 Login With Facebook
+		.modal-body
+			p Since you were invited via facebook, you need to login with facebook to view your invitation.
+			.facebook-login
+				a#facebook-login-button.btn.btn-primary(target="_self",ng-href="/auth/facebook?redirectUrl={{next}}")
+					i.icon-facebook.icon-2x.pull-left
+					span Login with Facebook
+	.confirm(ng-show="confirm('twitter')")
+		.modal-header
+			h2 Login With Twitter
+		.modal-body
+			p Since you were invited via twitter, you need to login with twitter to view your invitation.
+			a#twitter-login.btn.btn-primary(href="/auth/twitter?redirectUrl={{next}}",target="_self")
+				i.icon-twitter
+				span &nbsp;Connect With twitter
 	.login(ng-hide="customer")
 		.modal-header
-			h2 Login To View The Plan
+			h2 {{friend}}, View Your Invitation
 		.modal-body
+			.not-friend
+				a(target="_self",href="/event/{{event.eventId}}/{{event.eventName}}") Not {{friend}}? Click Here!
 			form#rsvp-login-form(name="rsvp-login")
 				p Choose from the options below:
 				label.radio
@@ -41,4 +70,4 @@
 		button.btn.btn-primary.btn-large(ng-click="authActions[authAction]()",ng-hide="customer")
 			span(ng-hide="continueSpinner") Continue
 			span.icon-spinner.icon-spin(ng-show="continueSpinner")
-		a.btn.btn-primary.btn-large.wembli-sequence-link(ng-href="/rsvp/{{guid}}/{{service}}",ng-show="customer") See The Plan!
+		a.btn.btn-primary.btn-large.wembli-sequence-link(ng-href="/rsvp/{{guid}}/{{token}}/{{service}}",ng-show="customer") See The Plan!

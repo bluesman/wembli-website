@@ -3133,6 +3133,10 @@ a#facebook-login-button {
   top: 520px;
   width: 110px;
 }
+#rsvp-login-modal .not-friend {
+  width: 100%;
+  text-align: left;
+}
 .modal textarea {
   width: 520px;
   height: 80px;

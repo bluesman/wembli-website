@@ -7,6 +7,7 @@ module.exports = function(app) {
 
 	/* use case: visitor.context = 'visitor' trying to view the event details */
 	app.get('/event/:eventId/:eventName',function(req,res) {
+		console.log('render event detail');
 		res.render('event-detail');
 	});
 
@@ -141,8 +142,7 @@ module.exports = function(app) {
 
 		/* if this visitor already has a req.session.plan and they are the organizer and it is the same eventId as req.session.eventId
 		then override only the preferences */
-		if ((req.session.visitor.context === "organizer") ||
-			((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer === "undefined"))	) {
+		if ((req.session.visitor.context === "organizer") || ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer === "undefined"))	) {
 			/* let them save the options to their plan */
 			req.session.plan.preferences = options;
 

@@ -13,25 +13,25 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('toggleSelected',[function() {
-    return {
-      restrict:'C',
-      link: function(scope, element, attr) {
-        $(document).click(function() {
+  .directive('toggleSelected', [function() {
+  return {
+    restrict: 'C',
+    link: function(scope, element, attr) {
+      $(document).click(function() {
+        element.removeClass('selected');
+      });
+      element.click(function() {
+        if (element.hasClass('selected')) {
           element.removeClass('selected');
-        });
-        element.click(function() {
-          if (element.hasClass('selected')) {
-            element.removeClass('selected');
-          } else {
-            element.addClass('selected');
-          }
-        })
-      }
+        } else {
+          element.addClass('selected');
+        }
+      })
     }
+  }
 }])
 
-.directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', function(customer, fetchModals, $rootScope, wembliRpc) {
+  .directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', function(customer, fetchModals, $rootScope, wembliRpc) {
   return {
     restrict: 'E',
     replace: true,
@@ -77,7 +77,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('dashboardModal', ['customer', 'wembliRpc', function(customer, wembliRpc) {
+  .directive('dashboardModal', ['customer', 'wembliRpc', function(customer, wembliRpc) {
   return {
     restrict: 'C',
     replace: false,
@@ -87,9 +87,9 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       $scope.$on('dashboard-fetched', function(e, args) {
         $scope.dashboard = {};
         $scope.dashboard.organizer = args.organizer;
-        $scope.dashboard.archived  = args.archived;
-        $scope.dashboard.invited   = args.invited;
-        $scope.dashboard.friends   = args.friends;
+        $scope.dashboard.archived = args.archived;
+        $scope.dashboard.invited = args.invited;
+        $scope.dashboard.friends = args.friends;
 
         console.log('plans-fetched');
         console.log($scope.dashboard);
@@ -106,7 +106,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('activityFeed', [function() {
+  .directive('activityFeed', [function() {
   return {
     restrict: 'E',
     replace: true,
@@ -118,7 +118,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
+  .directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
   return {
     restrict: 'E',
     replace: true,
@@ -371,14 +371,19 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 .directive('eventWrapper', ['wembliRpc', '$window', function(wembliRpc, $window) {
   return {
     restrict: 'C',
+    controller: function($scope, $element, $attrs, $transclude) {
+
+
+    },
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
+        var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
+
         element.mouseover(function() {
           //console.log('mouseover happened');
           if (attr.noPopover) {
             return;
           }
-          var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
 
           if (typeof scope.ticketSummaryData == "undefined") {
             scope.ticketSummaryData = {};
@@ -432,35 +437,37 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               summaryContent = "Click for ticket information";
             }
 
-            console.log('popver is going to the left of: ' + elId);
             $('#' + elId).popover({
               placement: "left",
               trigger: 'hover',
               animation: false,
               title: 'Tickets Summary',
-              content: summaryContent
+              content:summaryContent
             });
-            $('#' + elId).popover('show');
-          },
+            $('#' + elId).popover("show");
+            },
 
-          /* transformRequest */
 
-          function(data, headersGetter) {
-            //$('#more-events .spinner').show();
-            return data;
-          },
 
-          /* transformResponse */
+            /* transformRequest */
 
-          function(data, headersGetter) {
-            //$('#more-events .spinner').hide();
-            return JSON.parse(data);
+            function(data, headersGetter) {
+              //$('#more-events .spinner').show();
+              return data;
+            },
+
+            /* transformResponse */
+
+            function(data, headersGetter) {
+              //$('#more-events .spinner').hide();
+              return JSON.parse(data);
+            });
           });
-        });
-      };
+
+        };
+      }
     }
-  }
-}])
+  }])
 
   .directive('twitterWidget', ['$window', function($window) {
   return {
@@ -492,16 +499,19 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('rsvpLoginModal', ['fetchModals','rsvpLoginModal',function(fetchModals,rsvpLoginModal) {
+.directive('rsvpLoginModal', ['fetchModals', 'rsvpLoginModal', function(fetchModals, rsvpLoginModal) {
   return {
     restrict: 'EAC',
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
-        rsvpLoginModal.set('guid',attr.guid);
-        rsvpLoginModal.set('token',attr.token);
-        rsvpLoginModal.set('service',attr.service);
-
-        fetchModals.fetch('/partials/modals/rsvp-login',function() {
+        rsvpLoginModal.set('guid', attr.guid);
+        rsvpLoginModal.set('service', attr.service);
+        rsvpLoginModal.set('token', attr.token);
+        rsvpLoginModal.set('friend', attr.friend);
+        rsvpLoginModal.set('event', attr.event);
+        rsvpLoginModal.set('confirmSocial', attr.confirmSocial);
+        console.log(rsvpLoginModal.get('event'));
+        fetchModals.fetch('/partials/modals/rsvp-login', function() {
           $('#rsvp-login-modal').modal("show");
         });
       };
@@ -509,7 +519,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   };
 }])
 
-.directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+  .directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
 
   return {
     restrict: 'EAC',

@@ -136,34 +136,35 @@ exports.customer = {
 			var customer = new Customer(newC);
 
 			//console.log(customer);
-			var createCustomer = function() {
-				var confirmationTimestamp = new Date().getTime().toString();
-				var digestKey = args.email + confirmationTimestamp;
-				var confirmationToken = wembliUtils.digest(digestKey);
+			var confirmationTimestamp = new Date().getTime().toString();
+			var digestKey = args.email + confirmationTimestamp;
+			var confirmationToken = wembliUtils.digest(digestKey);
 
-				customer.confirmation.push({
-					timestamp: confirmationTimestamp,
-					token: confirmationToken
+			customer.confirmation.push({
+				timestamp: confirmationTimestamp,
+				token: confirmationToken
+			});
+
+			customer.save(function(err) {
+				if (err) {
+					data.success = 0;
+					return respond(data);
+				}
+
+				req.session.loggedIn = true;
+				req.session.customer = customer;
+
+				/* send signup email async */
+				wembliMail.sendSignupEmail({
+					res: res,
+					confirmationToken: confirmationToken,
+					customer: customer,
+					next: args.next
 				});
 
-				customer.save(function(err) {
-					if (err) {
-						data.success = 0;
-						return respond(data);
-					}
+				console.log('saved customer: ' + customer.id);
 
-					req.session.loggedIn = true;
-					req.session.customer = customer;
-
-					/* send signup email async */
-					wembliMail.sendSignupEmail({
-						res: res,
-						confirmationToken: confirmationToken,
-						customer: customer,
-						next: args.next
-					});
-
-					console.log('saved customer: ' + customer.id);
+				if (typeof req.session.plan !== "undefined") {
 					/* sanity check - make sure this plan does not have an organizer */
 					if (req.session.plan.organizer) {
 						return respond(data);
@@ -183,25 +184,10 @@ exports.customer = {
 							return respond(data);
 						});
 					});
-				});
-			};
-
-			//if there's a token in the session it means they came from an email invite url
-			//check to make sure there is a friend with this token
-			console.log('token is: ' + req.session.visitor.token);
-			if (req.session.visitor.token) {
-				console.log('signup with a token:' + req.session.visitor.token);
-				Customer.findFriendEmailByFriendToken(req.session.visitor.token, function(err, email) {
-					if (email && (email == args.email)) {
-						//confirmation should be true
-						customer.confirmed = true;
-					}
-					createCustomer();
-				});
-			} else {
-				console.log('signup with out a token:' + req.session.visitor.token);
-				createCustomer();
-			}
+				} else {
+					return respond(data);
+				}
+			});
 		});
 	},
 	login: function(args, req, res) {
@@ -282,7 +268,7 @@ exports.customer = {
 						wembliMail.sendForgotPasswordEmail(mailArgs)
 						console.log('returning data from customer.login');
 						console.log(data);
-						return me(null,data);
+						return me(null, data);
 					});
 				} else {
 					if (c.password != digest) {
@@ -308,7 +294,9 @@ exports.customer = {
 
 	sendForgotPasswordEmail: function(args, req, res) {
 		var me = this;
-		var data = {success: 1};
+		var data = {
+			success: 1
+		};
 
 		console.log('sending forgotPassword email');
 		console.log(args);
@@ -316,11 +304,13 @@ exports.customer = {
 		Customer.findOne({
 			email: args.email
 		}, function(err, c) {
-			if (err) {return me(err);	}
-			if (c === null ) {
+			if (err) {
+				return me(err);
+			}
+			if (c === null) {
 				data.error = true;
 				data.noCustomer = true;
-				return me(null,data);
+				return me(null, data);
 			}
 			/* send forgot password email */
 			var noToken = true;
@@ -367,7 +357,7 @@ exports.customer = {
 				console.log('forgot password mail args');
 				console.log(mailArgs);
 				wembliMail.sendForgotPasswordEmail(mailArgs)
-				return me(null,data);
+				return me(null, data);
 			});
 
 		}, false);

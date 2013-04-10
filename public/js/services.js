@@ -322,7 +322,7 @@ angular.module('wembliApp.services', [])
 		feedDialog: function(args, cb) {
 			FB.getLoginStatus(function(response) {
 				if (response.authResponse) {
-					var actionLink = 'http://tom.wembli.com/rsvp/' + args.guid + '/facebook';
+					var actionLink = 'http://tom.wembli.com/rsvp/' + args.guid + '/'+args.token+'/facebook';
 					var obj = {
 						method: 'feed',
 						display: 'iframe',
