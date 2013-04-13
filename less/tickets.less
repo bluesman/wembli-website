@@ -161,19 +161,23 @@
 			font-weight:bold;
 		}
 
-		#tickets-price-range {
-			margin-top:20px;
-			text-align:left;
-			position:relative;
-
-			h3 {
-				margin-left:1.5em;
+		#tickets-price-range > h3 {
+				margin-left:0.5em;
 				margin-top:2px;
 				font-size:20px;
 				font-weight:bold;
 			}
 
-			.popover {
+		#tickets-price-range {
+			margin-top:20px;
+			text-align:left;
+			position:relative;
+
+			.popover-container {
+				margin:10px 0 0 10px;
+			}
+
+			.display-popover {
 				margin-left:2px;
 				font-size:18px;
 				padding:0;
@@ -270,9 +274,6 @@
 				font-size:16px;
 				text-align:left;
 				margin:10px 0;
-				.popover {
-					padding:3px;
-				}
 			}
 
 
@@ -289,6 +290,16 @@
 		}
 
 		#group-ticket-list-header-container {
+			#group-ticket-list-header {
+				.clearfix();
+			}
+			.popover {
+				font-weight:normal;
+			}
+			.popover-container {
+				margin:10px 0 0 10px;
+			}
+
 			a#range-header {
 				width:65px;
 			}

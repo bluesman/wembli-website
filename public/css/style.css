@@ -6,6 +6,7 @@
 .clearfix:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .clearfix:after {
   clear: both;
@@ -23,7 +24,6 @@
   min-height: 28px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
 form {
@@ -45,15 +45,16 @@ h3 {
   font-size: 14px;
 }
 .btn-primary {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #4380b8;
   background-image: -moz-linear-gradient(top, #4380b8, #4380b8);
-  background-image: -ms-linear-gradient(top, #4380b8, #4380b8);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4380b8), to(#4380b8));
   background-image: -webkit-linear-gradient(top, #4380b8, #4380b8);
   background-image: -o-linear-gradient(top, #4380b8, #4380b8);
-  background-image: linear-gradient(top, #4380b8, #4380b8);
+  background-image: linear-gradient(to bottom, #4380b8, #4380b8);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4380b8', endColorstr='#4380b8', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4380b8', endColorstr='#ff4380b8', GradientType=0);
   border-color: #4380b8 #4380b8 #2f5980;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   *background-color: #4380b8;
@@ -63,10 +64,12 @@ h3 {
   font-size: 16px;
 }
 .btn-primary:hover,
+.btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active,
 .btn-primary.disabled,
 .btn-primary[disabled] {
+  color: #ffffff;
   background-color: #4380b8;
   *background-color: #3c73a5;
 }
@@ -75,15 +78,16 @@ h3 {
   background-color: #356693 \9;
 }
 .btn-primary:hover {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #ff6700;
   background-image: -moz-linear-gradient(top, #ff6700, #ff6700);
-  background-image: -ms-linear-gradient(top, #ff6700, #ff6700);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff6700), to(#ff6700));
   background-image: -webkit-linear-gradient(top, #ff6700, #ff6700);
   background-image: -o-linear-gradient(top, #ff6700, #ff6700);
-  background-image: linear-gradient(top, #ff6700, #ff6700);
+  background-image: linear-gradient(to bottom, #ff6700, #ff6700);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff6700', endColorstr='#ff6700', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff6700', endColorstr='#ffff6700', GradientType=0);
   border-color: #ff6700 #ff6700 #b34800;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   *background-color: #ff6700;
@@ -92,10 +96,12 @@ h3 {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .btn-primary:hover:hover,
+.btn-primary:hover:focus,
 .btn-primary:hover:active,
 .btn-primary:hover.active,
 .btn-primary:hover.disabled,
 .btn-primary:hover[disabled] {
+  color: #ffffff;
   background-color: #ff6700;
   *background-color: #e65d00;
 }
@@ -179,6 +185,7 @@ h3 {
 .module:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .module:after {
   clear: both;
@@ -234,6 +241,7 @@ h3 {
 #no-event-background #no-event-container .log-in:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #no-event-background #no-event-container .log-in:after {
   clear: both;
@@ -263,16 +271,6 @@ h3 {
   text-transform: uppercase;
   top: 68px;
   transform: rotate(6deg);
-}
-span.popover-container {
-  position: relative;
-}
-span.popover-container i {
-  border: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background-color: transparent;
 }
 /*!
  *  Font Awesome 3.0.2
@@ -1443,6 +1441,7 @@ body {
 #content:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content:after {
   clear: both;
@@ -1494,6 +1493,7 @@ body {
 .hero:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .hero:after {
   clear: both;
@@ -1538,7 +1538,7 @@ body {
   min-height: 450px;
   background-color: #f0f0f0;
 }
-.hero .hero-right form > label,
+.hero .hero-right form .control-label,
 .hero .hero-right form .help-block,
 .hero .hero-right form .help-inline {
   color: #d8d6d7;
@@ -1549,17 +1549,22 @@ body {
 .hero .hero-right form select,
 .hero .hero-right form textarea {
   color: #d8d6d7;
-  border-color: #767676;
 }
-.hero .hero-right form .checkbox:focus,
-.hero .hero-right form .radio:focus,
+.hero .hero-right form input,
+.hero .hero-right form select,
+.hero .hero-right form textarea {
+  border-color: #767676;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
 .hero .hero-right form input:focus,
 .hero .hero-right form select:focus,
 .hero .hero-right form textarea:focus {
   border-color: #5d5d5d;
-  -webkit-box-shadow: 0 0 6px #a9a9a9;
-  -moz-box-shadow: 0 0 6px #a9a9a9;
-  box-shadow: 0 0 6px #a9a9a9;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #a9a9a9;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #a9a9a9;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #a9a9a9;
 }
 .hero .hero-right form .input-prepend .add-on,
 .hero .hero-right form .input-append .add-on {
@@ -1622,6 +1627,7 @@ body {
 .hero .hero-right form fieldset .control-group:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .hero .hero-right form fieldset .control-group:after {
   clear: both;
@@ -1711,18 +1717,18 @@ body {
   box-shadow: 0 -4px 4px 0 rgba(0, 0, 0, 0.25);
   background-color: #5b5b5b;
   background-image: -moz-linear-gradient(top, #767676, #333333);
-  background-image: -ms-linear-gradient(top, #767676, #333333);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#767676), to(#333333));
   background-image: -webkit-linear-gradient(top, #767676, #333333);
   background-image: -o-linear-gradient(top, #767676, #333333);
-  background-image: linear-gradient(top, #767676, #333333);
+  background-image: linear-gradient(to bottom, #767676, #333333);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#767676', endColorstr='#333333', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff767676', endColorstr='#ff333333', GradientType=0);
 }
 #footer ul#nav:before,
 #footer ul#nav:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #footer ul#nav:after {
   clear: both;
@@ -1886,6 +1892,7 @@ body {
 .event-wrapper:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .dashboard-plan:after,
 .event-wrapper:after {
@@ -1906,6 +1913,7 @@ body {
 .event-wrapper .cta:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .dashboard-plan .cta:after,
 .event-wrapper .cta:after {
@@ -1926,6 +1934,7 @@ body {
 .event-data:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .event-data:after {
   clear: both;
@@ -1962,6 +1971,7 @@ body {
 .info:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .info:after {
   clear: both;
@@ -2005,6 +2015,7 @@ body {
 #content #index-frame:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #index-frame:after {
   clear: both;
@@ -2046,6 +2057,7 @@ body {
 #content #index-frame #circles:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #index-frame #circles:after {
   clear: both;
@@ -2085,6 +2097,7 @@ body {
 #content #index-frame #feeds:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #index-frame #feeds:after {
   clear: both;
@@ -2110,6 +2123,7 @@ body {
 #content #index-frame #feeds .feed .body:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #index-frame #feeds .feed .body:after {
   clear: both;
@@ -2158,6 +2172,7 @@ body {
 #content #index-frame #feeds #feed-left .body .event-wrapper .info .cta:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #index-frame #feeds #feed-left .body .event-wrapper .info .cta:after {
   clear: both;
@@ -2226,11 +2241,12 @@ body {
 #search-box form#search-form:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #search-box form#search-form:after {
   clear: both;
 }
-#search-box form#search-form > label,
+#search-box form#search-form .control-label,
 #search-box form#search-form .help-block,
 #search-box form#search-form .help-inline {
   color: #d8d6d7;
@@ -2241,17 +2257,22 @@ body {
 #search-box form#search-form select,
 #search-box form#search-form textarea {
   color: #d8d6d7;
-  border-color: #767676;
 }
-#search-box form#search-form .checkbox:focus,
-#search-box form#search-form .radio:focus,
+#search-box form#search-form input,
+#search-box form#search-form select,
+#search-box form#search-form textarea {
+  border-color: #767676;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
 #search-box form#search-form input:focus,
 #search-box form#search-form select:focus,
 #search-box form#search-form textarea:focus {
   border-color: #5d5d5d;
-  -webkit-box-shadow: 0 0 6px #a9a9a9;
-  -moz-box-shadow: 0 0 6px #a9a9a9;
-  box-shadow: 0 0 6px #a9a9a9;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #a9a9a9;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #a9a9a9;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #a9a9a9;
 }
 #search-box form#search-form .input-prepend .add-on,
 #search-box form#search-form .input-append .add-on {
@@ -2331,6 +2352,7 @@ body {
 #content #search-frame:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #search-frame:after {
   clear: both;
@@ -2346,6 +2368,7 @@ body {
 #content #search-frame #left:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #search-frame #left:after {
   clear: both;
@@ -2371,6 +2394,7 @@ body {
 #content #search-frame #right:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #search-frame #right:after {
   clear: both;
@@ -2388,6 +2412,7 @@ body {
 #content #search-frame #right #search-wrapper:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #content #search-frame #right #search-wrapper:after {
   clear: both;
@@ -2528,6 +2553,7 @@ body {
 #tickets-frame:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #tickets-frame:after {
   clear: both;
@@ -2546,15 +2572,15 @@ body {
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #ff6700;
   background-image: -moz-linear-gradient(top, #ff6700, #ff6700);
-  background-image: -ms-linear-gradient(top, #ff6700, #ff6700);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ff6700), to(#ff6700));
   background-image: -webkit-linear-gradient(top, #ff6700, #ff6700);
   background-image: -o-linear-gradient(top, #ff6700, #ff6700);
-  background-image: linear-gradient(top, #ff6700, #ff6700);
+  background-image: linear-gradient(to bottom, #ff6700, #ff6700);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff6700', endColorstr='#ff6700', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff6700', endColorstr='#ffff6700', GradientType=0);
   border-color: #ff6700 #ff6700 #b34800;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   *background-color: #ff6700;
@@ -2567,10 +2593,12 @@ body {
   color: #ffffff;
 }
 #tickets-frame #map-background .tuMapControl:hover,
+#tickets-frame #map-background .tuMapControl:focus,
 #tickets-frame #map-background .tuMapControl:active,
 #tickets-frame #map-background .tuMapControl.active,
 #tickets-frame #map-background .tuMapControl.disabled,
 #tickets-frame #map-background .tuMapControl[disabled] {
+  color: #ffffff;
   background-color: #ff6700;
   *background-color: #e65d00;
 }
@@ -2642,18 +2670,21 @@ body {
   font-size: 20px;
   font-weight: bold;
 }
+#tickets-frame #tickets #tickets-price-range > h3 {
+  margin-left: 0.5em;
+  margin-top: 2px;
+  font-size: 20px;
+  font-weight: bold;
+}
 #tickets-frame #tickets #tickets-price-range {
   margin-top: 20px;
   text-align: left;
   position: relative;
 }
-#tickets-frame #tickets #tickets-price-range h3 {
-  margin-left: 1.5em;
-  margin-top: 2px;
-  font-size: 20px;
-  font-weight: bold;
+#tickets-frame #tickets #tickets-price-range .popover-container {
+  margin: 10px 0 0 10px;
 }
-#tickets-frame #tickets #tickets-price-range .popover {
+#tickets-frame #tickets #tickets-price-range .display-popover {
   margin-left: 2px;
   font-size: 18px;
   padding: 0;
@@ -2667,6 +2698,7 @@ body {
 #tickets-frame #tickets #tickets-price-range #price-range-form:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #tickets-frame #tickets #tickets-price-range #price-range-form:after {
   clear: both;
@@ -2691,6 +2723,7 @@ body {
 #tickets-frame #tickets #ticket-filter-container:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #tickets-frame #tickets #ticket-filter-container:after {
   clear: both;
@@ -2750,6 +2783,7 @@ body {
 #tickets-frame #tickets .ticket-list-header-container:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #tickets-frame #tickets .ticket-list-header-container:after {
   clear: both;
@@ -2760,9 +2794,6 @@ body {
   text-align: left;
   margin: 10px 0;
 }
-#tickets-frame #tickets .ticket-list-header-container h4 .popover {
-  padding: 3px;
-}
 #tickets-frame #tickets .ticket-list-header-container a {
   display: block;
   float: left;
@@ -2772,6 +2803,24 @@ body {
 }
 #tickets-frame #tickets .ticket-list-header-container a:hover {
   color: #000000;
+}
+#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header {
+  *zoom: 1;
+}
+#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:before,
+#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:after {
+  clear: both;
+}
+#tickets-frame #tickets #group-ticket-list-header-container .popover {
+  font-weight: normal;
+}
+#tickets-frame #tickets #group-ticket-list-header-container .popover-container {
+  margin: 10px 0 0 10px;
 }
 #tickets-frame #tickets #group-ticket-list-header-container a#range-header {
   width: 65px;
@@ -2813,6 +2862,7 @@ body {
 #tickets-frame #tickets .ticket-list-container .ticket-row:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #tickets-frame #tickets .ticket-list-container .ticket-row:after {
   clear: both;
@@ -2852,6 +2902,7 @@ body {
 #tickets-frame #tickets .ticket-list-container .ticket-row .ticket-info:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #tickets-frame #tickets .ticket-list-container .ticket-row .ticket-info:after {
   clear: both;
@@ -2921,6 +2972,7 @@ a#facebook-login-button {
 .hero #login-hero-right:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .hero #login-hero-right:after {
   clear: both;
@@ -2967,6 +3019,7 @@ a#facebook-login-button {
 .hero #signup-hero-right:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .hero #signup-hero-right:after {
   clear: both;
@@ -3015,6 +3068,7 @@ a#facebook-login-button {
 .hero #confirm-hero-right:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .hero #confirm-hero-right:after {
   clear: both;
@@ -3093,6 +3147,7 @@ a#facebook-login-button {
 .hero #event-options-hero-right:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .hero #event-options-hero-right:after {
   clear: both;
@@ -3117,6 +3172,7 @@ a#facebook-login-button {
 .hero #event-options-hero-right fieldset .control-group:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .hero #event-options-hero-right fieldset .control-group:after {
   clear: both;
@@ -3153,6 +3209,7 @@ a#facebook-login-button {
 #plan-frame #left:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #plan-frame #left:after {
   clear: both;
@@ -3179,6 +3236,7 @@ a#facebook-login-button {
 #plan-frame #left #plan-nav a.plan-section-nav:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #plan-frame #left #plan-nav a.plan-section-nav:after {
   clear: both;
@@ -3259,6 +3317,7 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body:after {
   clear: both;
@@ -3333,6 +3392,7 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
   clear: both;
@@ -3387,6 +3447,7 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:after {
   clear: both;
@@ -3404,6 +3465,7 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:after {
   clear: both;
@@ -3454,6 +3516,7 @@ a#facebook-login-button {
 #archived-modal .no-plans:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #planning-modal .no-plans:after,
 #invited-modal .no-plans:after,
@@ -3497,6 +3560,7 @@ a#facebook-login-button {
 #dashboard-wrapper:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #dashboard-wrapper:after {
   clear: both;
@@ -3514,6 +3578,7 @@ a#facebook-login-button {
 #dashboard-wrapper #left #dashboard-header:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #dashboard-wrapper #left #dashboard-header:after {
   clear: both;
@@ -3543,6 +3608,7 @@ a#facebook-login-button {
 #dashboard-wrapper #left #dashboard-header .dropdown a:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #dashboard-wrapper #left #dashboard-header .dropdown a:after {
   clear: both;
@@ -3579,6 +3645,7 @@ a#facebook-login-button {
 #dashboard-wrapper #left #dashboard-body .dashboard-row:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 #dashboard-wrapper #left #dashboard-body .dashboard-row:after {
   clear: both;

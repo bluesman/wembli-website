@@ -488,7 +488,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       return function(scope, element, attr) {
         element.mouseleave(function() {
           var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
-          console.log('hide popover');
           $(".event-wrapper").popover("hide");
         });
 
@@ -520,7 +519,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               title: 'Tickets Summary',
               content: scope.ticketSummaryData[elId.split('-')[0]],
             });
-            console.log("show cached popover: "+scope.ticketSummaryData[elId.split('-')[0]]);
             $('#' + elId).popover("show");
             return;
           }
@@ -532,7 +530,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           var args = {
             "eventID": elId.split('-')[0]
           };
-          console.log(args);
+
           wembliRpc.fetch('event.getPricingInfo', args,
 
           function(err, result) {
@@ -1004,7 +1002,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   };
 }])
 
-  .directive('popover', [function() {
+  .directive('displayPopover', [function() {
   return {
     restrict: 'C',
     cache: false,
