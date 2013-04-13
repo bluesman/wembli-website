@@ -3,33 +3,85 @@ var wembliModel = require('wembli-model'),
 
 module.exports = {
 	/* STATIC */
-	initInviteFriendsWizard : function() {
-		var nav = [
-		{
-			'icon':"icon-share-alt",
-			'text':"Who's It From",
-		},
-		{
-			'icon':"icon-calendar",
-			'text':"Choose RSVP Date",
-		},
-		{
-			'icon':"icon-facebook",
-			'text':"Facebook",
-		},
-		{
-			'icon':"icon-twitter",
-			'text':"Twitter",
-		},
-		{
-			'icon':"icon-envelope",
-			'text':"Wembli Mail",
+	planNav: function(mode) {
+		console.log('plan nav for: '+mode);
+		var nav = {
+			'organizer': [{
+				'icon': "icon-flag",
+				'text': "Event",
+			}, {
+				'icon': "icon-edit",
+				'text': "RSVP",
+			}, {
+				'icon': "icon-bar-chart",
+				'text': "Vote",
+			}, {
+				'icon': "icon-group",
+				'text': "Invitees",
+			}, {
+				'icon': "icon-money",
+				'text': "Pony Up!",
+			}, {
+				'icon': "icon-file-alt",
+				'text': "Itinerary",
+			}, {
+				'icon': "icon-comments-alt",
+				'text': "Chatter",
+			}],
+			'friend': [{
+				'icon': "icon-flag",
+				'text': "Event",
+			}, {
+				'icon': "icon-edit",
+				'text': "RSVP",
+			}, {
+				'icon': "icon-bar-chart",
+				'text': "Vote",
+			}, {
+				'icon': "icon-group",
+				'text': "Invitees",
+			}, {
+				'icon': "icon-money",
+				'text': "Pony Up!",
+			}, {
+				'icon': "icon-file-alt",
+				'text': "Itinerary",
+			}, {
+				'icon': "icon-comments-alt",
+				'text': "Chatter",
+			}]
+		};
+		var thisNav = nav[mode];
+		for (var i = 0; i < thisNav.length; i++) {
+			thisNav[i]['section'] = "section" + (i + 1);
+			thisNav[i]['id']      = "nav-" + thisNav[i]['section'];
+			thisNav[i]['href']    = "#" + thisNav[i]['section'];
 		}
-		];
+		return thisNav;
 
-		for (var i=0; i < 5; i++) {
+	},
+
+	initInviteFriendsWizard: function() {
+		var nav = [{
+			'icon': "icon-share-alt",
+			'text': "Who's It From",
+		}, {
+			'icon': "icon-calendar",
+			'text': "Choose RSVP Date",
+		}, {
+			'icon': "icon-facebook",
+			'text': "Facebook",
+		}, {
+			'icon': "icon-twitter",
+			'text': "Twitter",
+		}, {
+			'icon': "icon-envelope",
+			'text': "Wembli Mail",
+		}];
+
+		for (var i = 0; i < 5; i++) {
 			nav[i]['step'] = "step" + (i + 1);
-			nav[i]['id']   = "nav-" + nav[i]['step'];
+			nav[i]['id'] = "nav-" + nav[i]['step'];
 			nav[i]['href'] = "#" + nav[i]['step'];
 		}
 		return nav;
@@ -115,18 +167,18 @@ module.exports = {
 		}
 		console.log('feed: ' + f.action.name);
 		switch (f.action.name) {
-		case 'initPlan':
-			return 'created a new plan ' + dateStr;
-			break;
-		case 'updatePlan':
-			return 'updated a plan ' + dateStr;
-			break;
-		case 'removePlan':
-			return 'removed a plan ' + dateStr;
-			break;
-		case 'friendsCompleted':
-			return 'changed an invite list ' + dateStr;
-			break;
+			case 'initPlan':
+				return 'created a new plan ' + dateStr;
+				break;
+			case 'updatePlan':
+				return 'updated a plan ' + dateStr;
+				break;
+			case 'removePlan':
+				return 'removed a plan ' + dateStr;
+				break;
+			case 'friendsCompleted':
+				return 'changed an invite list ' + dateStr;
+				break;
 		}
 		return '';
 

@@ -77,6 +77,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
+
+
   .directive('dashboardModal', ['customer', 'wembliRpc', function(customer, wembliRpc) {
   return {
     restrict: 'C',
@@ -105,6 +107,113 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     }
   }
 }])
+
+  .directive('planNav', ['$location', function($location) {
+  return {
+    restrict: 'E',
+    replace: true,
+    templateUrl: "/partials/plan/nav",
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        var elId = '#' + element.attr('id').split('-')[1];
+        var multiplier = 0;
+        if ($location.hash()) {
+          var h = $location.hash();
+          multiplier = parseInt(h.charAt(h.length - 1)) - 1;
+          if (isNaN(multiplier)) {
+            multiplier = 0;
+          }
+        }
+        console.log($location.hash());
+        console.log('multiplier: ' + multiplier);
+        var scrollTo = 602 * multiplier;
+        $('#content').animate({
+          scrollTop: scrollTo
+        });
+
+        console.log('in plan nav');
+      };
+    }
+  }
+}])
+
+
+
+  .directive('scrollTo', ['$window', function($window) {
+  return {
+    restrict: 'EAC',
+    cache: false,
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        element.click(function() {
+          var elId = '#' + element.attr('id').split('-')[1];
+          var multiplier = parseInt(elId.charAt(elId.length - 1)) - 1;
+
+          console.log('scroll to: ' + elId + ' - ' + multiplier);
+          var scrollTo = 602 * multiplier;
+          $('#content').animate({
+            scrollTop: scrollTo
+          });
+        });
+      };
+    }
+  }
+}])
+
+
+  .directive('planDashboard', [function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    cache: false,
+    templateUrl: "/partials/plan/dashboard",
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        console.log('in plan dashboard');
+      };
+    }
+  }
+}])
+
+
+
+  .directive('planSection', ['$window', function($window) {
+  return {
+    restrict: 'EAC',
+    replace: true,
+    cache: false,
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        console.log('in plan dashboard');
+
+        angular.element('#content').on('scroll', function() {
+          scope.$apply(function() {
+            if (element.offset().top <= 0 && element.offset().top > -element.height()) {
+              $('.plan-section-nav').removeClass('active');
+              $('#nav-' + element.attr('id')).addClass('active');
+            }
+          });
+        });
+      };
+    }
+  }
+}])
+
+
+  .directive('planFeed', [function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    cache: false,
+    templateUrl: "/partials/plan/feed",
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        console.log('in plan feed');
+      };
+    }
+  }
+}])
+
 
   .directive('activityFeed', [function() {
   return {
@@ -368,7 +477,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('eventWrapper', ['wembliRpc', '$window', function(wembliRpc, $window) {
+  .directive('eventWrapper', ['wembliRpc', '$window', function(wembliRpc, $window) {
   return {
     restrict: 'C',
     controller: function($scope, $element, $attrs, $transclude) {
@@ -377,9 +486,15 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     },
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
-        var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
+        element.mouseleave(function() {
+          var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
+          console.log('hide popover');
+          $(".event-wrapper").popover("hide");
+        });
 
         element.mouseover(function() {
+          var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
+
           //console.log('mouseover happened');
           if (attr.noPopover) {
             return;
@@ -396,7 +511,17 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           }
 
           //we have a cache of the data - gtfo
+          $(".event-wrapper").popover("destroy");
           if (typeof scope.ticketSummaryData[elId.split('-')[0]] != "undefined") {
+            $('#' + elId).popover({
+              placement: "left",
+              trigger: 'hover',
+              animation: false,
+              title: 'Tickets Summary',
+              content: scope.ticketSummaryData[elId.split('-')[0]],
+            });
+            console.log("show cached popover: "+scope.ticketSummaryData[elId.split('-')[0]]);
+            $('#' + elId).popover("show");
             return;
           }
 
@@ -407,7 +532,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           var args = {
             "eventID": elId.split('-')[0]
           };
-
+          console.log(args);
           wembliRpc.fetch('event.getPricingInfo', args,
 
           function(err, result) {
@@ -416,7 +541,6 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               return;
             }
 
-            scope.ticketSummaryData[elId.split('-')[0]] = result;
             /* we cached the result..lets unlock */
             scope.ticketSummaryData.locked = false;
             /* init the popover */
@@ -436,38 +560,38 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             } else {
               summaryContent = "Click for ticket information";
             }
+            scope.ticketSummaryData[elId.split('-')[0]] = summaryContent;
 
             $('#' + elId).popover({
               placement: "left",
-              trigger: 'hover',
+              trigger: 'manual',
               animation: false,
               title: 'Tickets Summary',
-              content:summaryContent
+              content: summaryContent,
             });
             $('#' + elId).popover("show");
-            },
 
+          },
 
+          /* transformRequest */
 
-            /* transformRequest */
+          function(data, headersGetter) {
+            //$('#more-events .spinner').show();
+            return data;
+          },
 
-            function(data, headersGetter) {
-              //$('#more-events .spinner').show();
-              return data;
-            },
+          /* transformResponse */
 
-            /* transformResponse */
-
-            function(data, headersGetter) {
-              //$('#more-events .spinner').hide();
-              return JSON.parse(data);
-            });
+          function(data, headersGetter) {
+            //$('#more-events .spinner').hide();
+            return JSON.parse(data);
           });
+        });
 
-        };
-      }
+      };
     }
-  }])
+  }
+}])
 
   .directive('twitterWidget', ['$window', function($window) {
   return {
@@ -499,7 +623,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('rsvpLoginModal', ['fetchModals', 'rsvpLoginModal', function(fetchModals, rsvpLoginModal) {
+  .directive('rsvpLoginModal', ['fetchModals', 'rsvpLoginModal', function(fetchModals, rsvpLoginModal) {
   return {
     restrict: 'EAC',
     compile: function(element, attr, transclude) {

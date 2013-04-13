@@ -1,4 +1,9 @@
 //- should not ever load this partial if there is no plan in the session
 #plan-frame.animate-in(ng-controller="PlanCtrl")
-	.event-data(event-id="#{req.session.plan.event.eventId}",direction="-1")
-	#left this is the organizer view
+	#left
+		plan-nav
+	#middle
+		plan-dashboard
+	#right
+		plan-feed
+

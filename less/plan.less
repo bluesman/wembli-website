@@ -4,7 +4,94 @@
 		text-align:left;
 	}
 }
+
 #plan-frame {
+	height:100%;
 
+	#left {
+		float:left;
+		height:100%;
+		position:absolute;
+		top:0;
+		left:0;
+		.clearfix();
 
+		#plan-nav {
+			height:100%;
+			font-size:18px;
+			position:fixed;
+			width:18%;
+			background-color: @grayLighter;
+
+			.spacer {
+				height:90px;
+			}
+
+			a.plan-section-nav {
+				display:block;
+				color:@grayDark;
+				line-height:60px;
+				height:65px;
+				vertical-align:center;
+
+				.clearfix();
+
+				div {
+					width:100%;
+					text-align:left;
+
+					i {
+						margin-top:23px;
+						float:right;
+					}
+				}
+
+				i {
+					float:left;
+					margin:12px 20px;
+				}
+			}
+
+			a:hover, a.active {
+				color:@white;
+				background-color:@blueLight;
+			}
+		}
+	}
+
+	#middle {
+		width:64%;
+		float:left;
+		height:100%;
+		margin-left:18%;
+
+		#plan-dashboard {
+			height:100%;
+			.plan-section {
+				height:600px;
+				border:thin solid #000;
+			}
+
+		}
+
+		.spacer {
+			height:160px;
+		}
+	}
+
+	#right {
+		width:18%;
+		float:left;
+		height:100%;
+		position:absolute;
+		top:0;
+		right:0;
+
+		#plan-feed {
+			background-color: @grayLighter;
+			height:100%;
+			position:fixed;
+			width:18%;
+		}
+	}
 }

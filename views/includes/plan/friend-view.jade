@@ -1,4 +1,6 @@
 //- should not ever load this partial if there is no plan in the session
-#invitation-frame.animate-in(ng-controller="PlanCtrl")
-	.event-data(event-id="#{req.session.plan.event.eventId}")
-	#left this is the friend view foo
+#plan-frame.animate-in(ng-controller="PlanCtrl")
+	plan-nav
+	plan-dashboard
+	plan-feed
+
