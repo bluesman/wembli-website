@@ -50,6 +50,7 @@ module.exports = function(app) {
 				req.session.plan.event.eventCity  = results.event[0].City;
 				req.session.plan.event.eventState = results.event[0].StateProvince;
 				req.session.plan.event.data       = results.event[0];
+				req.ession.plan.venue.venueId     = result.event[0].VenueID;
 				req.session.plan.preferences.payment = 'split-first';
 				/* you are now the organizer */
 				req.session.visitor.context = 'organizer';
@@ -77,7 +78,6 @@ module.exports = function(app) {
 					req.session.plan.preferences = {payment:savePrefs.payment};
 					req.session.plan.preferences.tickets = savePrefs.tickets;
 				}
-
 				req.session.plan.event.eventId    = req.param("eventId");
 				req.session.plan.event.eventName  = req.param("eventName");
 				req.session.plan.event.eventDate  = results.event[0].Date;
@@ -85,12 +85,11 @@ module.exports = function(app) {
 				req.session.plan.event.eventCity  = results.event[0].City;
 				req.session.plan.event.eventState = results.event[0].StateProvince;
 				req.session.plan.event.data       = results.event[0];
-
+				req.session.plan.venue.venueId    = results.event[0].VenueID;
 				/* you are now the organizer */
 				req.session.visitor.context = 'organizer';
 
 			}
-
 			res.render(template, locals);
 		},[args,req,res]);
 

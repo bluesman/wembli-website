@@ -39,6 +39,7 @@ this.Model = function(mongoose) {
 			timestamp:Date,
 			token:String
 		},
+		totalInParty:Number,
 		rsvp:{
 			token:String,
 			tokenTimestamp:String,
@@ -47,10 +48,30 @@ this.Model = function(mongoose) {
 			viewed:{type:Number,default:0},
 			viewedLastDate:{type:Date, default: null},
 			decision:{type:Boolean, default:null},
-			date:{type:Date,default:Date.now}
+			date:{type:Date,default:Date.now()},
+			tickets: {
+				headCount:Number,
+				decision:Boolean,
+				date:Date
+			},
+			restaurant: {
+				headCount:Number,
+				decision:Boolean,
+				date:Date
+			},
+			hotel: {
+				headCount:Number,
+				decision:Boolean,
+				date:Date
+			},
+			parking: {
+				headCount:Number,
+				decision:Boolean,
+				date:Date
+			},
 		},
 		payment: {type:{}},
-		created: {type: Date,	default: Date.now	},
+		created: {type: Date,	default: Date.now()	},
 		updated: Date,
 	},{
 		autoIndex : (typeof app !== "undefined") ? app.settings.autoIndex : true,

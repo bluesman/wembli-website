@@ -12,6 +12,7 @@ module.exports = function(app) {
 
 	var viewDashboard = function(req,res) {
 		var view = /partial/.test(req.url) ? 'partials/dashboard-wrapper' : 'dashboard-wrapper';
+		res.setHeader('x-wembli-overflow','hidden');
 
 		console.log('dashboard:'+req.url);
 		//not logged in? send to login page
@@ -43,7 +44,7 @@ module.exports = function(app) {
 	app.get('(/partials)?/dashboard/?', viewDashboard);
 
 	app.get('(/partials)?/modals/dashboard/?', function(req,res) {
-		res.render('partials/modals/dashboard',{partial:true,plan:req.session.plan});
+			res.render('partials/modals/dashboard',{partial:true,plan:req.session.plan});
 	});
 
 

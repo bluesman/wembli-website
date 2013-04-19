@@ -1,12 +1,12 @@
 extends layout
-block frame2
+block frame1
 	if ((typeof plan === "undefined") || typeof plan.event.eventId === "undefined")
 		include includes/no-event
 	else
-		//- if this plan has an organizer, then
-		if ( (visitor.context === 'organizer') || ((visitor.context === 'visitor') && (!plan.organizer)))
-			include includes/plan/organizer-view
-		else
-			include includes/plan/friend-view
-
-
+		#plan-frame(ng-controller="PlanCtrl")
+			#left
+				plan-nav
+			#middle
+				plan-dashboard
+			#right
+				plan-feed

@@ -15,6 +15,10 @@ this.Model = function(mongoose) {
 
 	var Plan = new Schema({
 		guid : {type: String, index: {unique : true}, required:true },
+		venue : {
+			venueId: String,
+			data:{}
+		},
 		event : {
 			eventServiceProvider : {type:String, default: 'tn' },
 			eventId : String,
@@ -22,7 +26,10 @@ this.Model = function(mongoose) {
 			eventDate : Date,
 			eventVenue: String,
 			eventCity: String,
-			eventState: String
+			eventState: String,
+			eventLat: Number,
+			eventLng: Number,
+			data:{},
 		},
 		preferences : {
 			payment: String,

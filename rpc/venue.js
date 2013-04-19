@@ -26,14 +26,14 @@ exports.venue = {
 			}
 
 			if (Object.prototype.toString.call( results.Venue ) === '[object Array]') {
-				var events = results.Venue.slice(beginIdx,args.cnt+beginIdx);
+				var venues = results.Venue.slice(beginIdx,args.cnt+beginIdx);
 			} else {
 				//there's only 1 and its not an array
-				var events = [results.Venue];
+				var venues = [results.Venue];
 			}
 			return me(null, {
 				success: 1,
-				venue: events
+				venue: venues
 			});
 		});
 	},
@@ -42,7 +42,6 @@ exports.venue = {
 		var me = this;
 		args.cnt = (args.cnt) ? args.cnt : 15;
 
-		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.GetVenueConfigurations(args, function(err, results) {
 			console.log('venue.getConfigurations');
 			console.log(results);

@@ -70,14 +70,11 @@ module.exports = function(app) {
 	});
 
 	app.get(/^\/partials\/plan\/(nav|dashboard|feed)$/, function(req,res) {
-		console.log('plan ----------- '+req.url.split('/')[3]);
-		return res.render('partials/plan/'+req.url.split('/')[3],{partial:true});
+		return res.render('partials/plan/'+req.session.visitor.context+'-'+req.url.split('/')[3],{partial:true});
 	});
 
 	app.get('/partials/plan/:guid', function(req, res) {
 		Plan.findOne({guid: req.param('guid')}, function(err, p) {
-			console.log('finding plan for guid: '+req.session.plan.guid);
-			console.log(p);
 			if (!p) { return res.redirect('/'); };
 			req.session.plan = p;
 			res.redirect('/partials/plan');

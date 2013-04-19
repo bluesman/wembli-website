@@ -1,16 +1,17 @@
 /*
-* Main Controller
-*/
+ * Main Controller
+ */
+
 function MainCtrl($scope, $location, $window, footer, plan) {
 
 };
 
 
 
-
 /*
-* Index Controller
-*/
+ * Index Controller
+ */
+
 function IndexCtrl($scope, $location, $window, $templateCache, wembliRpc, fetchModals) {
 	//clear the cache when the home page loads to make sure we start fresh
 	$templateCache.removeAll();
@@ -40,8 +41,9 @@ function IndexCtrl($scope, $location, $window, $templateCache, wembliRpc, fetchM
 };
 
 /*
-* Confirm Email Controller
-*/
+ * Confirm Email Controller
+ */
+
 function ConfirmCtrl($scope, wembliRpc) {
 	wembliRpc.fetch('confirm.init', {},
 	//response
@@ -56,8 +58,9 @@ function ConfirmCtrl($scope, wembliRpc) {
 
 
 /*
-* Event Options Controller
-*/
+ * Event Options Controller
+ */
+
 function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 	//init login vars
 	var args = {};
@@ -77,7 +80,7 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 		$scope.guest_list = result.guestList;
 		$scope.over_21 = result.over21;
 
-		if(Object.keys(result.errors).length > 0) {
+		if (Object.keys(result.errors).length > 0) {
 			//$scope.paymentOptionsError = (result.errors.payment) ? true : false;
 			$scope.addOnsError = (result.errors.addOns) ? true : false;
 			$scope.inviteOptionsError = (result.errors.inviteOptions) ? true : false;
@@ -95,8 +98,9 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 
 
 /*
-* Event List Controller
-*/
+ * Event List Controller
+ */
+
 function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, fetchModals) {
 	/* does nothing right now
 	wembliRpc.fetch('eventlist.init', {},
@@ -121,7 +125,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			"lastEventId": $scope.lastEventId
 		};
 
-		if($scope.search) {
+		if ($scope.search) {
 			args.searchTerms = $scope.search;
 			var method = 'event.search';
 		} else {
@@ -134,13 +138,13 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 
 		function(err, result) {
 			console.log('back from event.search');
-			if(err) {
+			if (err) {
 				//handle err
 				alert('error happened - contact help@wembli.com');
 				return;
 			}
 
-			if(!$scope.events) {
+			if (!$scope.events) {
 				$scope.events = [];
 			}
 			$scope.events = $scope.events.concat(result['event']);
@@ -151,20 +155,20 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 
 		function(data, headersGetter) {
 			$('#page-loading-modal').modal("hide");
-      $rootScope.genericLoadingModal.header = 'Loading Event Search...';
-      $('#generic-loading-modal').modal("show");
+			$rootScope.genericLoadingModal.header = 'Loading Event Search...';
+			$('#generic-loading-modal').modal("show");
 			return data;
 		},
 
 		function(data, headersGetter) {
 			console.log('hide generic loading modal');
-      $('#generic-loading-modal').modal("hide");
+			$('#generic-loading-modal').modal("hide");
 			return JSON.parse(data);
 		});
 
 	};
 
-	if($rootScope.partial) {
+	if ($rootScope.partial) {
 		if ($location.search().search) {
 			$scope.search = $location.search().search;
 		}
@@ -183,30 +187,27 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 
 
 
-
 /*
-* Event Controller
-*/
+ * Event Controller
+ */
+
 function EventCtrl($scope) {};
 
 
 
 /*
-* Invite Friends Wizard Controller
-* this should be done as a directive
-*/
-function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $location, $timeout, sequence, wembliRpc, customer, plan, facebook, twitter) {
+ * Invite Friends Wizard Controller
+ * this should be done as a directive
+ */
 
-	if ($location.path() !== '/invitation') {
-		return;
-	}
+function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $location, $timeout, fetchModals, sequence, wembliRpc, customer, plan, facebook, twitter) {
 
 	$scope.invitedFriends = [];
 
 	$scope.selectedFriends = {
-		'step3':{},
-		'step4':{},
-		'step5':{}
+		'step3': {},
+		'step4': {},
+		'step5': {}
 	}
 
 	var addToInvitedFriends = function(friend) {
@@ -215,10 +216,9 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 		var found = false;
 		var newList = [];
 
-		angular.forEach($scope.invitedFriends,function(f) {
+		angular.forEach($scope.invitedFriends, function(f) {
 			/* if this friend in the loop is the same as the one passed in */
-			if ((f.contactInfo.service === friend.contactInfo.service) &&
-				  (f.contactInfo.serviceId === friend.contactInfo.serviceId)) {
+			if ((f.contactInfo.service === friend.contactInfo.service) && (f.contactInfo.serviceId === friend.contactInfo.serviceId)) {
 				/* this friend is in the list */
 				exists = true;
 				found = true;
@@ -254,9 +254,9 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 	wizard.step1 = {
 		rpcArgs: function() {
 			var rpcArgs = {
-				'firstName':$scope.customer.firstName,
-				'lastName':$scope.customer.lastName,
-				'email':$scope.customer.email,
+				'firstName': $scope.customer.firstName,
+				'lastName': $scope.customer.lastName,
+				'email': $scope.customer.email,
 				'next': '/invitation#step2'
 			};
 			if ($scope.customer.id) {
@@ -325,7 +325,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 	wizard.step2 = {
 		rpcArgs: function(args) {
 			var rpcArgs = {
-				rsvpDate : $scope.plan.rsvpDate,
+				rsvpDate: $scope.plan.rsvpDate,
 			};
 			if (typeof args.next !== "undefined") {
 				rpcArgs.next = args.next;
@@ -352,9 +352,9 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 			var rpcArgs = {
 				name: $scope.wemblimail.name,
 				message: $scope.wemblimail.messageText,
-				inviteStatus : false,
+				inviteStatus: false,
 				imageUrl: null,
-				service:'wemblimail',
+				service: 'wemblimail',
 				serviceId: $scope.wemblimail.email,
 			}
 			return rpcArgs;
@@ -368,7 +368,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				return $scope.gotoStep('step1');
 			}
 
-			var friend     = result.friend;
+			var friend = result.friend;
 			friend.checked = friend.inviteStatus;
 			/* if this friend is not in the list of step5 selected friends, push it on the the wemblimail friends scope cause its a new one */
 			if (typeof $scope.selectedFriends['step5'][friend.contactInfo.serviceId] === "undefined") {
@@ -379,11 +379,11 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 
 			/* tihs should make it fade out */
 			var Promise = $timeout(function() {
-				$scope.wemblimail.name        = null;
-				$scope.wemblimail.email       = null;
+				$scope.wemblimail.name = null;
+				$scope.wemblimail.email = null;
 				$scope.wemblimail.messageText = null;
-				$scope.wemblimail.formstatus  = false;
-			},1500);
+				$scope.wemblimail.formstatus = false;
+			}, 1500);
 
 			/* add this friend to the selected friends hash */
 			$scope.selectedFriends['step5'][friend.contactInfo.serviceId] = friend.checked;
@@ -394,12 +394,12 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 	};
 
 	/* view methods */
-	$scope.$on('forgot-password-email-sent',function() {
+	$scope.$on('forgot-password-email-sent', function() {
 		console.log('forgot password email sent');
 		$scope.step1.forgotPasswordEmailSent = true;
 	});
 
-	$scope.submitForm = function(step,args) {
+	$scope.submitForm = function(step, args) {
 		if ($scope[step].$valid) {
 			$('#invitation-modal').modal('loading');
 			wembliRpc.fetch('invite-friends.submit-' + step, wizard[step].rpcArgs(args), wizard[step].formSubmitCallback);
@@ -420,7 +420,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 	};
 
 	$scope.skipStep = function(step) {
-		var nextStep = 'step' + (parseInt(step.charAt(step.length-1)) + 1);
+		var nextStep = 'step' + (parseInt(step.charAt(step.length - 1)) + 1);
 		$scope.gotoStep(nextStep);
 	};
 
@@ -478,15 +478,15 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 
 	//facebook first
 	wizard.facebook = {
-		handleFriendsFetch : function(response) {
+		handleFriendsFetch: function(response) {
 
-			var mergePlanFriends = function(fbFriends,planFriends) {
+			var mergePlanFriends = function(fbFriends, planFriends) {
 
 				/* optimize this... */
 				angular.forEach(fbFriends, function(f) {
 					var me = this;
 					angular.forEach(planFriends, function(f2) {
-						if (f2.contactInfo.service === 'facebook' && (f2.contactInfo.serviceId == f.id) ) {
+						if (f2.contactInfo.service === 'facebook' && (f2.contactInfo.serviceId == f.id)) {
 							f.inviteStatus = f2.inviteStatus;
 							f.checked = f2.inviteStatus;
 							f.rsvp = f2.rsvp;
@@ -502,21 +502,21 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 			var fbFriends = facebook.getFriends();
 
 			if (plan.getFriends() === null) {
-				$scope.$on('plan-fetched',function(e,args) {
+				$scope.$on('plan-fetched', function(e, args) {
 					planFriends = plan.getFriends();
-					mergePlanFriends(fbFriends,planFriends);
+					mergePlanFriends(fbFriends, planFriends);
 				})
 			} else {
 				planFriends = plan.getFriends();
-				mergePlanFriends(fbFriends,planFriends);
+				mergePlanFriends(fbFriends, planFriends);
 			}
 		},
-		handleProfileFetch : function(response) {
+		handleProfileFetch: function(response) {
 
 			if (typeof response != "undefined") {
 				$scope.facebook.firstName = response.first_name;
-				$scope.facebook.lastName  = response.last_name;
-				$scope.facebook.email     = response.email;
+				$scope.facebook.lastName = response.last_name;
+				$scope.facebook.email = response.email;
 
 				if (typeof $scope.customer !== "undefined") {
 					if (typeof $scope.customer.firstName === "undefined") {
@@ -534,9 +534,9 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 	};
 
 	$scope.facebook = {
-		loginStatusLoaded : false,
-		friendFilterKey   : null,
-		filterFriends     : function() {
+		loginStatusLoaded: false,
+		friendFilterKey: null,
+		filterFriends: function() {
 			facebook.filterFriends($scope.facebook.friendFilterKey);
 			$scope.facebook.friends = facebook.getFriends();
 			$scope.facebook.noResults = false;
@@ -546,19 +546,19 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 			}
 		},
 
-		handleFriendClick: function(friend,$event) {
+		handleFriendClick: function(friend, $event) {
 			/* if the thing that was clicked is the input we don't need to set checked */
 			if ($event.target.localName !== "input") {
 				friend.checked = friend.checked ? false : true;
 			}
 			$('#invitation-modal').modal('loading');
 			return plan.addFriend({
-				name:friend.name,
+				name: friend.name,
 				inviteStatus: false,
-				imageUrl:'https://graph.facebook.com/' + friend.id + '/picture',
-				service:'facebook',
-				serviceId:friend.id
-			}, function(err,result) {
+				imageUrl: 'https://graph.facebook.com/' + friend.id + '/picture',
+				service: 'facebook',
+				serviceId: friend.id
+			}, function(err, result) {
 				/* If There's A No Cust Error Send Them Back To Step-1 With An Error */
 				if (result.noCustomer) {
 					$scope.step1.error = true;
@@ -572,13 +572,13 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				if (friend.checked) {
 					/* display the feed dialog */
 					facebook.feedDialog({
-						guid:$scope.plan.guid,
-						token:result.friend.inviteStatusConfirmation.token,
-						to:result.friend.contactInfo.serviceId,
-						eventName:$scope.plan.event.eventName,
-						venue:$scope.plan.event.eventVenue,
-						rsvpDate:$('#rsvp-date').val()
-					},function(response) {
+						guid: $scope.plan.guid,
+						token: result.friend.inviteStatusConfirmation.token,
+						to: result.friend.contactInfo.serviceId,
+						eventName: $scope.plan.event.eventName,
+						venue: $scope.plan.event.eventVenue,
+						rsvpDate: $('#rsvp-date').val()
+					}, function(response) {
 						$('#invitation-modal').modal('loading');
 						if (response === null) {
 							$scope.$apply(function() {
@@ -586,7 +586,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 							});
 						} else {
 							/* hit the callback to set the inviteStatus to true */
-							$http.get('/callback/facebook/rsvp/'+$scope.plan.guid+'/'+result.friend.inviteStatusConfirmation.token);
+							$http.get('/callback/facebook/rsvp/' + $scope.plan.guid + '/' + result.friend.inviteStatusConfirmation.token);
 							friend.rsvp = result.friend.rsvp;
 							//friend.rsvp.decision = null;
 						}
@@ -594,18 +594,18 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				}
 			});
 		},
-		service : facebook
+		service: facebook
 	}
 
 	//if getAuth is null then set a listener
 	if (facebook.getAuth() === null) {
 
-		$scope.$on('facebook-login-status',function(e,args) {
+		$scope.$on('facebook-login-status', function(e, args) {
 			$scope.$apply(function() {
 				$scope.facebook.loginStatusLoaded = true;
 			});
 			if (facebook.getAuth()) {
-				facebook.api('/me',wizard.facebook.handleProfileFetch);
+				facebook.api('/me', wizard.facebook.handleProfileFetch);
 				facebook.api('/me/friends', wizard.facebook.handleFriendsFetch);
 			}
 		});
@@ -613,14 +613,14 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 		//its already been loaded
 		$scope.facebook.loginStatusLoaded = true;
 		if (facebook.getAuth()) {
-			facebook.api('/me',wizard.facebook.handleProfileFetch);
+			facebook.api('/me', wizard.facebook.handleProfileFetch);
 			facebook.api('/me/friends', wizard.facebook.handleFriendsFetch);
 		}
 	}
 
 	$scope.$on('facebook-login', function(e, args) {
 		if (facebook.getAuth()) {
-			facebook.api('/me',wizard.facebook.handleProfileFetch);
+			facebook.api('/me', wizard.facebook.handleProfileFetch);
 			/* they just completed facebook login - get the friends list */
 			facebook.api('/me/friends', wizard.facebook.handleFriendsFetch);
 		}
@@ -631,13 +631,13 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 
 	/* twtter code */
 	wizard.twitter = {
-		handleSearchUsers:	function(response) {
-			var mergePlanFriends = function(twitFriends,planFriends) {
+		handleSearchUsers: function(response) {
+			var mergePlanFriends = function(twitFriends, planFriends) {
 				/* optimize this... */
 				angular.forEach(twitFriends, function(f) {
 					var me = this;
 					angular.forEach(planFriends, function(f2) {
-						if (f2.contactInfo.service === 'twitter' && (f2.contactInfo.serviceId == f.id) ) {
+						if (f2.contactInfo.service === 'twitter' && (f2.contactInfo.serviceId == f.id)) {
 							f.inviteStatus = f2.inviteStatus;
 							f.checked = f2.inviteStatus;
 							f.rsvp = f2.rsvp;
@@ -651,13 +651,13 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 			/* get the friends in the plan (if any) to know who is already invited */
 			var twitFriends = twitter.getFriends();
 			if (plan.getFriends() === null) {
-				$scope.$on('plan-fetched',function(e,args) {
+				$scope.$on('plan-fetched', function(e, args) {
 					planFriends = plan.getFriends();
-					mergePlanFriends(twitFriends,planFriends);
+					mergePlanFriends(twitFriends, planFriends);
 				})
 			} else {
 				planFriends = plan.getFriends();
-				mergePlanFriends(twitFriends,planFriends);
+				mergePlanFriends(twitFriends, planFriends);
 			}
 		},
 
@@ -665,53 +665,55 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 
 	var timer;
 	$scope.twitter = {
-		loginStatusLoaded : false,
-		friendFilterKey   : null,
-		filterFriends     : function() {
+		loginStatusLoaded: false,
+		friendFilterKey: null,
+		filterFriends: function() {
 			twitter.filterFriends($scope.twitter.friendFilterKey);
 			$scope.twitter.friends = twitter.getFriends();
 		},
 		charCount: 140,
-		countChars : function(scope,elm,attr) {
+		countChars: function(scope, elm, attr) {
 			/* if for every http:// in the textarea, subtract 20 */
 			var urlCount = ($scope.twitter.messageText.split('http').length - 1) * 20;
-			matchUrl = new RegExp("(^|[ \t\r\n])(http|https):([a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*)","g");
-			var rpl = $scope.twitter.messageText.replace(matchUrl,'');
+			matchUrl = new RegExp("(^|[ \t\r\n])(http|https):([a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*)", "g");
+			var rpl = $scope.twitter.messageText.replace(matchUrl, '');
 			$scope.twitter.charCount = 140 - rpl.length - urlCount;
 		},
-		searchUsers : function() {
+		searchUsers: function() {
 			$scope.twitter.spinner = true;
 			clearTimeout(timer);
-			timer=setTimeout(function() {
-				twitter.searchUsers($scope.twitter.friendFilterKey,{},wizard.twitter.handleSearchUsers);
-			},1000);
+			timer = setTimeout(function() {
+				twitter.searchUsers($scope.twitter.friendFilterKey, {}, wizard.twitter.handleSearchUsers);
+			}, 1000);
 		},
 
-		tweet: function(friend,$event) {
-			twitter.tweet({tweet:$scope.twitter.messageText},function(err,res) {
+		tweet: function(friend, $event) {
+			twitter.tweet({
+				tweet: $scope.twitter.messageText
+			}, function(err, res) {
 				$('#invitation-modal').modal('loading');
 				if (res === null) {
 					$scope.$apply(function() {
 						friend.checked = false;
 					});
 				} else {
-					$http.get('/callback/twitter/rsvp/'+$scope.plan.guid+'/'+friend.inviteStatusConfirmation.token);
+					$http.get('/callback/twitter/rsvp/' + $scope.plan.guid + '/' + friend.inviteStatusConfirmation.token);
 					friend.rsvp.decision = null;
 					friend.checked = true;
 				}
-				$('#modal-'+friend.screen_name).modal("hide");
+				$('#modal-' + friend.screen_name).modal("hide");
 			});
 		},
 
-		handleFriendClick: function(friend,$event) {
+		handleFriendClick: function(friend, $event) {
 			$('#invitation-modal').modal('loading');
 			return plan.addFriend({
-				name:friend.name,
+				name: friend.name,
 				inviteStatus: false,
-				imageUrl:friend.profile_image_url_https,
-				service:'twitter',
-				serviceId:friend.id
-			}, function(err,result) {
+				imageUrl: friend.profile_image_url_https,
+				service: 'twitter',
+				serviceId: friend.id
+			}, function(err, result) {
 				/* If There's A No Cust Error Send Them Back To Step-1 With An Error */
 				if (result.noCustomer) {
 					$scope.step1.error = True;
@@ -727,19 +729,19 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				console.log('friend rsvp is: ');
 				console.log(friend.rsvp);
 				/* display the tweet dialog box */
-				$('#modal-'+friend.screen_name).modal("show");
+				$('#modal-' + friend.screen_name).modal("show");
 				/* reset the tweet form data */
-				var rsvpUrl = 'http://tom.wembli.com/rsvp/'+$scope.plan.guid+'/'+friend.rsvp.token+'/twitter';
-				$scope.twitter.messageText = '@'+friend.screen_name+' You are invited to an outing I am planning with @wembli | RSVP By '+$filter('date')(result.friend.rsvp.date,'M/d/yy')+' | '+rsvpUrl;
+				var rsvpUrl = 'http://tom.wembli.com/rsvp/' + $scope.plan.guid + '/' + friend.rsvp.token + '/twitter';
+				$scope.twitter.messageText = '@' + friend.screen_name + ' You are invited to an outing I am planning with @wembli | RSVP By ' + $filter('date')(result.friend.rsvp.date, 'M/d/yy') + ' | ' + rsvpUrl;
 				$scope.twitter.countChars();
 			});
 		},
-		service : twitter
+		service: twitter
 	};
 
 	//if getAuth is null then set a listener
 	if (twitter.getAuth() === null) {
-		$scope.$on('twitter-login-status',function(e,args) {
+		$scope.$on('twitter-login-status', function(e, args) {
 			$scope.twitter.loginStatusLoaded = true;
 			if (twitter.getAuth()) {
 				twitter.fetchProfile(wizard.twitter.handleProfileFetch);
@@ -761,154 +763,64 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 
 	/* done with twitter code */
 	$scope.wemblimail = {
-		friends:[],
+		friends: [],
 	};
 
-	//finally, show the invite friends modal once the document is ready
-	//controller runs before the modal actually gets attached to the DOM
-	//so setting up a listener for the event that is triggered when the modal is attached
-	$scope.$on('invitation-modal-fetched', function(e, args) {
-		console.log('invitation-modal-fetched happened');
-		//make sure plan is also fetched
-		plan.get(function(planData) {
-			//display the modal if there's a plan
-			if (planData && typeof planData.event.eventId === "undefined") {
-				return;
+	/* put the plan in the scope for the view */
+	$scope.plan = plan.get();
+
+	//display the modal if there's a plan
+	if ($scope.plan && typeof $scope.plan.event.eventId === "undefined") {
+		console.log('log this - it should never happen');
+		return;
+	}
+
+	/* figure out which step to go to */
+	var initialStep = 'step1';
+	$scope.step1 = {};
+	if (customer.get() && Object.keys(customer.get()).length > 0) {
+		$scope.step1.loginForm = false;
+		var hash = $location.hash();
+		initialStep = /^step/.test(hash) ? hash : 'step2';
+		/* hack to deal with everyauth weirdness */
+		if (initialStep === "_=_") {
+			/* it means they logged in */
+			initialStep = 'step2';
+		}
+		$scope.customer = customer.get();
+	} else {
+		$scope.customer = {};
+		customer.set($scope.customer);
+	}
+	console.log('go to step: '+initialStep);
+	$scope.gotoStep(initialStep);
+
+	/* set up the wemblimail friends array with friends in the plan */
+	if (typeof plan.getFriends() !== "undefined") {
+		$scope.invitedFriends = [];
+		for (var i = plan.getFriends().length - 1; i >= 0; i--) {
+			var friend = plan.getFriends()[i];
+			friend.checked = friend.inviteStatus;
+			if (friend.contactInfo.service === 'facebook') {
+				$scope.selectedFriends['step3'][friend.contactInfo.serviceId] = friend.inviteStatus;
 			}
-
-			var initialStep = 'step1';
-			if (customer.get() && Object.keys(customer.get()).length > 0) {
-				$scope.step1.loginForm = false;
-				initialStep = $location.hash() ? $location.hash() : 'step2';
-				/* hack to deal with everyauth weirdness */
-				if (initialStep === "_=_") {
-					/* it means they logged in */
-					initialStep = 'step2';
-				}
-				$scope.customer = customer.get();
-			} else {
-				$scope.customer = {};
-				customer.set($scope.customer);
+			if (friend.contactInfo.service === 'twitter') {
+				$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.inviteStatus;
 			}
-			$scope.gotoStep(initialStep);
-
-			/* put the plan in the scope for the view */
-			$scope.plan = plan.get();
-
-			/* set up the wemblimail friends array with friends in the plan */
-			if (typeof plan.getFriends() !== "undefined") {
-				$scope.invitedFriends = [];
-				for (var i = plan.getFriends().length - 1; i >= 0; i--) {
-					var friend = plan.getFriends()[i];
-					friend.checked = friend.inviteStatus;
-					if (friend.contactInfo.service === 'facebook') {
-						$scope.selectedFriends['step3'][friend.contactInfo.serviceId] = friend.inviteStatus;
-					}
-					if (friend.contactInfo.service === 'twitter') {
-						$scope.selectedFriends['step4'][friend.contactInfo.serviceId] = friend.inviteStatus;
-					}
-					if (friend.contactInfo.service === 'wemblimail') {
-						$scope.wemblimail.friends.push(friend);
-						$scope.selectedFriends['step5'][friend.contactInfo.serviceId] = friend.inviteStatus;
-					}
-					if (friend.inviteStatus) {
-							$scope.invitedFriends.push(friend);
-					}
-				};
+			if (friend.contactInfo.service === 'wemblimail') {
+				$scope.wemblimail.friends.push(friend);
+				$scope.selectedFriends['step5'][friend.contactInfo.serviceId] = friend.inviteStatus;
 			}
-
-			var showModal = function(dereg) {
-				console.log('showing modal');
-				/*
-				there's a race condition
-				sometimes we get here before the location.path has been set by wembli-sequence-link
-				we know this if $scope.currentPath !== location.path()
-				if that happens we have to set a watcher for currentPath instead of just using location.path()
-					*/
-				var startDate = new Date();
-				var endDate = new Date($scope.plan.event.eventDate);
-				var defaultDate = endDate;
-				/* if there's an rsvp date, set it in the datepicker */
-				if (typeof $scope.plan.rsvpDate !== "undefined") {
-					/* init the date picker */
-					console.log('init datepicker with plan rsvpdate:');
-					console.log($scope.plan.rsvpDate);
-					var defaultDate = new Date($scope.plan.rsvpDate);
-				}
-
-				$('.datepicker').pikaday({
-					bound:false,
-					minDate: startDate,
-					maxDate:endDate,
-					defaultDate:defaultDate,
-					setDefaultDate:true,
-					onSelect: function() {
-						$scope.plan.rsvpDate = this.getDate();
-						wembliRpc.fetch('invite-friends.submit-step2',{rsvpDate : $scope.plan.rsvpDate}, function(err,res) {
-							console.log('changed rsvpdate');
-							console.log(res);
-						});
-					}
-				});
-
-				if ($location.path() !== $scope.currentPath) {
-					console.log('location path is diff from current path');
-					$scope.$watch('currentPath',function(newVal,oldVal) {
-						console.log('currentPath changed from: '+newVal+' to '+oldVal);
-						if (newVal === '/invitation') {
-							/* show the modal
-							$('#invitation-modal').modal({
-								'backdrop': 'static',
-								'keyboard': false,
-							});
-							*/
-							//$('#invitation-modal').modal("show");
-						} else {
-							console.log('new location is not invitation');
-						}
-					});
-				} else {
-					console.log('location path is the same as current path');
-					if ($location.path() === '/invitation') {
-
-						$('#invitation-modal').modal({
-							'backdrop': 'static',
-							'keyboard': false,
-						});
-
-						//$('#invitation-modal').modal("show");
-					} else {
-						console.log('locatino path is not /invitation its' + $location.path());
-					}
-				};
-				if (typeof dereg !== "undefined") {
-					dereg();
-				}
-
-			};
-
-			//if the event already fired and I missed it
-			if ($scope.beforeNextFrameAnimatesIn || $scope.afterNextFrameAnimatesIn) {
-				console.log('before next frame or afternext frame?');
-				console.log('before:'+$scope.beforeNextFrameAnimatesIn);
-				console.log('after'+$scope.afterNextFrameAnimatesIn);
-
-				//show the modal right now
-				showModal();
-				//unregisterListener();
-			} else {
-				console.log('watch for beforeNextFrameAnimatesIn');
-				var dereg = $scope.$on('sequence-afterNextFrameAnimatesIn',function(e) {
-					console.log('beforeNextFrameAnimatesIn happened');
-					showModal(dereg);
-				});
+			if (friend.inviteStatus) {
+				$scope.invitedFriends.push(friend);
 			}
-		});
-	});
+		};
+	}
+
 };
 
 function PaymentTypeModalCtrl($scope) {
-	$scope.$on('payment-type-modal-clicked',function(e,args) {
+	$scope.$on('payment-type-modal-clicked', function(e, args) {
 		$scope.$apply(function() {
 			$scope.name = args.name;
 			$scope.nextLink = args.nextLink;
@@ -917,15 +829,18 @@ function PaymentTypeModalCtrl($scope) {
 };
 
 /*
-* Plan Controller
-*/
+ * Plan Controller
+ */
+
 function PlanCtrl($rootScope, $scope, wembliRpc, plan, customer, fetchModals) {
 	/* fetch the invite friends wizard modal */
-	fetchModals.fetch('/partials/invite-friends-wizard');
+	//fetchModals.fetch('/partials/invite-friends-wizard');
+
+
+
 };
 
-function SearchCtrl($scope) {
-};
+function SearchCtrl($scope) {};
 
 function SignupCtrl($scope, $http, wembliRpc) {
 	//init login vars
@@ -946,22 +861,22 @@ function SignupCtrl($scope, $http, wembliRpc) {
 
 	$('#signup-form').submit(function(e) {
 		//don't allow submit unless all fields are supplied and passwords match
-		if(typeof $scope.firstName === "undefined") {
+		if (typeof $scope.firstName === "undefined") {
 			return false;
 		}
-		if(typeof $scope.lastName === "undefined") {
+		if (typeof $scope.lastName === "undefined") {
 			return false;
 		}
-		if(typeof $scope.email === "undefined") {
+		if (typeof $scope.email === "undefined") {
 			return false;
 		}
-		if(typeof $scope.password === "undefined") {
+		if (typeof $scope.password === "undefined") {
 			return false;
 		}
-		if(typeof $scope.password2 === "undefined") {
+		if (typeof $scope.password2 === "undefined") {
 			return false;
 		}
-		if($scope.password !== $scope.password2) {
+		if ($scope.password !== $scope.password2) {
 			return false;
 		}
 	});
@@ -999,7 +914,7 @@ function LoginCtrl($scope, $http, wembliRpc) {
 
 function SupplyPasswordCtrl($scope) {
 	$('#confirm-password-form').submit(function(e) {
-		if((typeof $scope.password == "undefined") || ($scope.password !== $scope.password2)) {
+		if ((typeof $scope.password == "undefined") || ($scope.password !== $scope.password2)) {
 			$('#error .error-text').show();
 			return false;
 		}
@@ -1022,27 +937,27 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 	$scope.facebook = facebook;
 
 	var updateTicketsLink = function() {
-		$scope.ticketsLink = plan.get() ? '/tickets/'+plan.get().event.eventId+'/'+plan.get().event.eventName : '/tickets';
+		$scope.ticketsLink = plan.get() ? '/tickets/' + plan.get().event.eventId + '/' + plan.get().event.eventName : '/tickets';
 	};
 
-	$scope.$on('plan-fetched',updateTicketsLink);
+	$scope.$on('plan-fetched', updateTicketsLink);
 	plan.get(function(plan) {
 		updateTicketsLink();
 	});
 };
 
-function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpLoginModal) {
+function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal) {
 	$scope.plan = plan.get();
 	console.log('rsvp login ctrl');
-	$scope.guid    = rsvpLoginModal.get('guid');
+	$scope.guid = rsvpLoginModal.get('guid');
 	$scope.service = rsvpLoginModal.get('service');
-	$scope.token   = rsvpLoginModal.get('token');
-	$scope.friend  = rsvpLoginModal.get('friend');
-	$scope.event   = JSON.parse(rsvpLoginModal.get('event'));
+	$scope.token = rsvpLoginModal.get('token');
+	$scope.friend = rsvpLoginModal.get('friend');
+	$scope.event = JSON.parse(rsvpLoginModal.get('event'));
 
 	console.log($scope.event);
 	$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
-	$scope.next    = '/rsvp/'+$scope.guid+'/'+$scope.token+'/'+$scope.service;
+	$scope.next = '/rsvp/' + $scope.guid + '/' + $scope.token + '/' + $scope.service;
 
 	$scope.confirm = function(social) {
 		if (typeof social === "undefined") {
@@ -1060,9 +975,9 @@ function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpL
 		return (social === $scope.service) ? true : false;
 	}
 
-	$scope.$on('rsvp-login-modal-init',function(e, args) {
+	$scope.$on('rsvp-login-modal-init', function(e, args) {
 		console.log('rsvp-login-modal-init happened');
-		$scope.guid    = rsvpLoginModal.get('guid');
+		$scope.guid = rsvpLoginModal.get('guid');
 		$scope.service = rsvpLoginModal.get('service');
 		$scope.token = rsvpLoginModal.get('token');
 		$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
@@ -1070,8 +985,13 @@ function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpL
 
 
 	$scope.authActions = {
-		signup : function() {
-			wembliRpc.fetch('customer.signup',{firstName:$scope.firstName,lastName:$scope.lastName,email:$scope.email,next:$scope.next}, function(err,result) {
+		signup: function() {
+			wembliRpc.fetch('customer.signup', {
+				firstName: $scope.firstName,
+				lastName: $scope.lastName,
+				email: $scope.email,
+				next: $scope.next
+			}, function(err, result) {
 				console.log(result);
 
 				if (result.customer) {
@@ -1085,25 +1005,25 @@ function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpL
 				}
 
 				if (result.exists) {
-					$scope.formError     = false;
-					$scope.signupError   = true;
+					$scope.formError = false;
+					$scope.signupError = true;
 					$scope.accountExists = result.exists;
 					return;
 				}
 
 				if (result.formError) {
-					$scope.signupError   = true;
-					$scope.formError     = true;
+					$scope.signupError = true;
+					$scope.formError = true;
 					$scope.accountExists = false;
 					return;
 				}
-				$scope.signupError   = false;
-				$scope.formError     = false;
+				$scope.signupError = false;
+				$scope.formError = false;
 				$scope.accountExists = false;
 
 				var confirmSocialMap = {
-					facebook:true,
-					twitter:true
+					facebook: true,
+					twitter: true
 				};
 				/* if the service is facebook or twitter they need to confirm social */
 				if ((typeof confirmSocialMap[$scope.service] !== "undefined") && confirmSocialMap[$scope.service]) {
@@ -1111,27 +1031,33 @@ function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpL
 				}
 
 			},
-      /* transformRequest */
-      function(data, headersGetter) {
-        $scope.continueSpinner = true;
-        return data;
-      },
+			/* transformRequest */
 
-      /* transformResponse */
-      function(data, headersGetter) {
-        $scope.continueSpinner = false;
-        return JSON.parse(data);
-      });
+			function(data, headersGetter) {
+				$scope.continueSpinner = true;
+				return data;
+			},
+
+			/* transformResponse */
+
+			function(data, headersGetter) {
+				$scope.continueSpinner = false;
+				return JSON.parse(data);
+			});
 		},
-		login : function() {
-			wembliRpc.fetch('customer.login',{email:$scope.email,password:$scope.password,next:$scope.next}, function(err,result) {
+		login: function() {
+			wembliRpc.fetch('customer.login', {
+				email: $scope.email,
+				password: $scope.password,
+				next: $scope.next
+			}, function(err, result) {
 				console.log(result);
 				if (result.error) {
 					$scope.loginError = result.error;
 
 					if (typeof result.noPassword !== "undefined") {
 						$scope.noPassword = result.noPassword;
-					} else if(result.invalidCredentials) {
+					} else if (result.invalidCredentials) {
 						$scope.invalidCredentials = result.invalidCredentials;
 					}
 				}
@@ -1152,40 +1078,43 @@ function RsvpLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc,rsvpL
 
 
 
+function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer) {
+	/* get the login modal */
+	fetchModals.fetch('/partials/tickets-login-modal');
 
-function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
-  /* get the login modal */
-  fetchModals.fetch('/partials/tickets-login-modal');
+	/* display a modal when they click to go off and buy tickets */
+	fetchModals.fetch('/partials/tickets-offsite', function(err) {
+		if (err) {
+			return console.log('no modal for buy tickets offsite');
+		}
+		plan.get(function(p) {
+			$scope.plan = p;
+			$scope.organizer = plan.getOrganizer();
 
-  /* display a modal when they click to go off and buy tickets */
-  fetchModals.fetch('/partials/tickets-offsite',function(err) {
-  	if (err) {
-      return console.log('no modal for buy tickets offsite');
-    }
-    plan.get(function(plan) {
-      $scope.plan = plan;
-      console.log('plan in butTicketsOffsite:'+plan.event.eventId);
-    });
-  });
+			/* todo find out if this person is a friend invited to the plan */
+			$scope.context = plan.getContext() || 'visitor';
+		});
+	});
 
 	$scope.handlePriceRange = function() {
 		/* post the updated preferences to the server */
-		wembliRpc.fetch('plan.setTicketsPriceRange',{
-			"low":$scope.priceRange.low,
-			"med":$scope.priceRange.med,
-			"high":$scope.priceRange.high,
+		wembliRpc.fetch('plan.setTicketsPriceRange', {
+			"low": $scope.priceRange.low,
+			"med": $scope.priceRange.med,
+			"high": $scope.priceRange.high,
 		},
-		function(err,res) {
+
+		function(err, res) {
 			console.log('back from setting price range');
 			console.log(res);
 		});
 
 
 		/* hide the tix they don't want to see */
-		angular.forEach($scope.tickets,function(t) {
+		angular.forEach($scope.tickets, function(t) {
 			/* if the price is <= 100 and priceRange.low filter is not checked then hide it*/
 			t.hide = false;
-			if( (parseInt(t.ActualPrice) <= 100) ) {
+			if ((parseInt(t.ActualPrice) <= 100)) {
 				return t.hide = !$scope.priceRange.low;
 			}
 			/* if the price is <= 300 and > 100 and priceRange.med filter is not checked then hide it*/
@@ -1200,12 +1129,12 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 	};
 
 	$scope.sortByPrice = function() {
-		if(typeof $scope.ticketSort === "undefined") {
+		if (typeof $scope.ticketSort === "undefined") {
 			$scope.ticketSort = 1;
 		}
 
 		$scope.tickets.sort(function(a, b) {
-			if($scope.ticketSort) {
+			if ($scope.ticketSort) {
 				return a.ActualPrice - b.ActualPrice;
 			} else {
 				return b.ActualPrice - a.ActualPrice;
@@ -1216,12 +1145,12 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 	}
 
 	$scope.sortBySection = function() {
-		if(typeof $scope.sectionSort === "undefined") {
+		if (typeof $scope.sectionSort === "undefined") {
 			$scope.sectionSort = 1;
 		}
 
 		$scope.tickets.sort(function(a, b) {
-			if($scope.sectionSort) {
+			if ($scope.sectionSort) {
 				return a.Section.localeCompare(b.Section);
 			} else {
 				return b.Section.localeCompare(a.Section);
@@ -1232,7 +1161,7 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 	}
 
 	$scope.sortByQty = function() {
-		if(typeof $scope.qtySort === "undefined") {
+		if (typeof $scope.qtySort === "undefined") {
 			$scope.qtySort = 1;
 		}
 
@@ -1240,7 +1169,7 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 			var cmpA = '';
 			var cmpB = '';
 
-			if(typeof a.ValidSplits.int === 'string') {
+			if (typeof a.ValidSplits.int === 'string') {
 				cmpA = a.ValidSplits.int;
 			} else {
 
@@ -1249,7 +1178,7 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 			}
 
 
-			if(typeof b.ValidSplits.int === 'string') {
+			if (typeof b.ValidSplits.int === 'string') {
 				cmpB = b.ValidSplits.int;
 			} else {
 
@@ -1257,7 +1186,7 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 				cmpB = b.ValidSplits.int[b.ValidSplits.int.length - 1];
 			}
 
-			if($scope.qtySort) {
+			if ($scope.qtySort) {
 				return parseInt(cmpA) - parseInt(cmpB);
 			} else {
 				return parseInt(cmpB) - parseInt(cmpA);
@@ -1269,16 +1198,20 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan) {
 
 };
 
-function TicketsLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc) {
+function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc) {
 	$scope.plan = plan.get();
-	$scope.$on('tickets-login-clicked',function(e,args){
-		$scope.redirectUrl = '/tickets/'+$scope.plan.event.eventId+'/'+$scope.plan.event.eventName+'/login/'+args.ticket.ID;
+	$scope.$on('tickets-login-clicked', function(e, args) {
+		$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
 		$scope.ticket = args.ticket;
 	});
 
 	$scope.authActions = {
-		signup : function() {
-			wembliRpc.fetch('customer.signup',{firstName:$scope.firstName,lastName:$scope.lastName,email:$scope.email}, function(err,result) {
+		signup: function() {
+			wembliRpc.fetch('customer.signup', {
+				firstName: $scope.firstName,
+				lastName: $scope.lastName,
+				email: $scope.email
+			}, function(err, result) {
 				console.log(result);
 
 				if (result.customer) {
@@ -1292,44 +1225,49 @@ function TicketsLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc) {
 				}
 
 				if (result.exists) {
-					$scope.formError     = false;
-					$scope.signupError   = true;
+					$scope.formError = false;
+					$scope.signupError = true;
 					$scope.accountExists = result.exists;
 					return;
 				}
 
 				if (result.formError) {
-					$scope.signupError   = true;
-					$scope.formError     = true;
+					$scope.signupError = true;
+					$scope.formError = true;
 					$scope.accountExists = false;
 					return;
 				}
-				$scope.signupError   = false;
-				$scope.formError     = false;
+				$scope.signupError = false;
+				$scope.formError = false;
 				$scope.accountExists = false;
 
 			},
-      /* transformRequest */
-      function(data, headersGetter) {
-        $scope.continueSpinner = true;
-        return data;
-      },
+			/* transformRequest */
 
-      /* transformResponse */
-      function(data, headersGetter) {
-        $scope.continueSpinner = false;
-        return JSON.parse(data);
-      });
+			function(data, headersGetter) {
+				$scope.continueSpinner = true;
+				return data;
+			},
+
+			/* transformResponse */
+
+			function(data, headersGetter) {
+				$scope.continueSpinner = false;
+				return JSON.parse(data);
+			});
 		},
-		login : function() {
-			wembliRpc.fetch('customer.login',{email:$scope.email,password:$scope.password}, function(err,result) {
+		login: function() {
+			wembliRpc.fetch('customer.login', {
+				email: $scope.email,
+				password: $scope.password
+			}, function(err, result) {
 				console.log(result);
 				if (result.error) {
 					$scope.loginError = result.error;
 
 					if (typeof result.noPassword !== "undefined") {
 						$scope.noPassword = result.noPassword;
-					} else if(result.invalidCredentials) {
+					} else if (result.invalidCredentials) {
 						$scope.invalidCredentials = result.invalidCredentials;
 					}
 				}
@@ -1348,75 +1286,79 @@ function TicketsLoginCtrl($rootScope,$scope,$location,plan,customer,wembliRpc) {
 	};
 };
 
-function TicketsOffsiteCtrl($scope,plan) {
+function TicketsOffsiteCtrl($scope, plan) {
 	$scope.plan = plan.get();
-	$scope.$on('tickets-offsite-clicked',function(e,args){
-		$scope.qty        = args.qty;
+	$scope.$on('tickets-offsite-clicked', function(e, args) {
+		$scope.qty = args.qty;
 		$scope.amountPaid = args.amountPaid;
-		$scope.eventId    = args.eventId,
-		$scope.sessionId  = args.sessionId,
-		$scope.ticketGroup   = args.ticketGroup;
+		$scope.eventId = args.eventId,
+		$scope.sessionId = args.sessionId,
+		$scope.ticketGroup = args.ticketGroup;
 	})
 
-  $scope.showButton = function() {
-    return ($scope.ticketsOffsite==='bought');
-  };
+	$scope.showButton = function() {
+		return ($scope.ticketsOffsite === 'bought');
+	};
 
-  $scope.submitForm = function() {
-    if ($scope.ticketGroup === null) {
-    	console.log('no ticket group :(');
-    	return;
-    }
+	$scope.submitForm = function() {
+		if ($scope.ticketGroup === null) {
+			console.log('no ticket group :(');
+			return;
+		}
 
-    plan.addTicketGroup({
- 	  	service:'tn',
-   		ticketGroup: $scope.ticketGroup,
-   		qty:$scope.qty,
-    	total:$scope.amountPaid,
- 	  	payment:JSON.stringify({
-   			transactionToken:$scope.sessionId,
-   			amount:$scope.amountPaid,
-   			qty: $scope.qty
-   		})
-   	},function(err,results){
-   		console.log(results);
-    });
-  };
+		plan.addTicketGroup({
+			service: 'tn',
+			ticketGroup: $scope.ticketGroup,
+			qty: $scope.qty,
+			total: $scope.amountPaid,
+			payment: JSON.stringify({
+				transactionToken: $scope.sessionId,
+				amount: $scope.amountPaid,
+				qty: $scope.qty
+			})
+		}, function(err, results) {
+			console.log(results);
+		});
+	};
 
-  $scope.cancelForm = function() {
-    $('#tickets-offsite-modal').modal('hide');
-  };
+	$scope.cancelForm = function() {
+		$('#tickets-offsite-modal').modal('hide');
+	};
 
 };
 
 function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer) {
 	plan.get(function(plan) {
-		$scope.priceRange       = {};
-		$scope.eventOptionsLink = '/event-options/'+plan.event.eventId+'/'+plan.event.eventName;
-		$scope.priceRange.low   = plan.preferences.tickets.priceRange.low  || true;
-		$scope.priceRange.med   = plan.preferences.tickets.priceRange.med  || true;
-		$scope.priceRange.high  = plan.preferences.tickets.priceRange.high || true;
+		$scope.priceRange = {};
+		$scope.eventOptionsLink = '/event-options/' + plan.event.eventId + '/' + plan.event.eventName;
+		$scope.priceRange.low = plan.preferences.tickets.priceRange.low || true;
+		$scope.priceRange.med = plan.preferences.tickets.priceRange.med || true;
+		$scope.priceRange.high = plan.preferences.tickets.priceRange.high || true;
 	});
 
 	$scope.determineRange = function(price) {
 		/* hard coded price range for now */
 		var i = parseInt(price);
-		if (i <= 100) { return '$'; }
-		if (i > 100 && i <= 300) { return '$$'; }
-		if (i > 300) { return '$$$'; }
+		if (i <= 100) {
+			return '$';
+		}
+		if (i > 100 && i <= 300) {
+			return '$$';
+		}
+		if (i > 300) {
+			return '$$$';
+		}
 	}
 
 	$scope.determineTixAvailable = function(tix) {
 		var highest = tix[0];
-		angular.forEach(tix,function(el) {
+		angular.forEach(tix, function(el) {
 			if (el > highest) {
 				highest = el;
 			}
 		});
-		var str = 'up to '+highest+' tix available';
+		var str = 'up to ' + highest + ' tix available';
 		return str;
 	}
 
 };
-
-

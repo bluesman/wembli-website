@@ -156,43 +156,51 @@ this.Model = function(mongoose) {
 		var c = this;
 		console.log('getting plans this customer was invited to: ' + c.id);
 		/* get the guids where this customer is a friend */
-		Friend.find().select('guid').where('customerId').equals(c.id).exec(function(err, guids) {
+		Friend.find().select({
+			'planGuid': 1
+		}).where('customerId').equals(c.id).exec(function(err, friends) {
 			console.log('plan guids this customer was invited to');
-			console.log(guids);
-			/* get all the plans for these guids */
-			Plan.find().where('guid'). in (guids).sort('event.eventDate').exec(function(err, plans) {
-				if (err) {
-					return callback(err);
-				};
-				var current = [];
-				var archive = [];
-				var now = new Date().getTime();
-				console.log('now' + now);
+			async.map(friends, function(item, callback) {
+				callback(null, item.planGuid);
+			},
 
-				async.forEachSeries(
-
-				plans,
-
-				function(plan, cb) {
-					var eventTime = new Date(plan.event.eventDate).getTime();
-					console.log('plan time: ' + eventTime);
-					if (eventTime > now) {
-						current.push(plan);
-					} else {
-						archive.push(plan);
-					}
-					cb(null);
-				},
-
-				function(err) {
+			function(err, guids) {
+				console.log(guids);
+				/* get all the plans for these guids */
+				Plan.find().where('guid'). in (guids).sort('event.eventDate').exec(function(err, plans) {
 					if (err) {
 						return callback(err);
 					};
-					console.log('current');
-					console.log(current);
-					console.log('archive');
-					console.log(archive);
-					callback(null, [current, archive]);
+					var current = [];
+					var archive = [];
+					var now = new Date().getTime();
+					console.log('now' + now);
+
+					async.forEachSeries(
+
+					plans,
+
+					function(plan, cb) {
+						var eventTime = new Date(plan.event.eventDate).getTime();
+						console.log('plan time: ' + eventTime);
+						if (eventTime > now) {
+							current.push(plan);
+						} else {
+							archive.push(plan);
+						}
+						cb(null);
+					},
+
+					function(err) {
+						if (err) {
+							return callback(err);
+						};
+						console.log('current');
+						console.log(current);
+						console.log('archive');
+						console.log(archive);
+						callback(null, [current, archive]);
+					});
 				});
 			});
 		});

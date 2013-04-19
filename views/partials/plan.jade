@@ -1,8 +1,10 @@
 if ((typeof plan === "undefined") || typeof plan.event.eventId === "undefined")
 	include ../includes/no-event
 else
-	//- have plan but no organizer? its my plan
-	if ( (visitor.context === 'organizer') || ((visitor.context === 'visitor') && (!plan.organizer)))
-		include ../includes/plan/organizer-view
-	else
-		include ../includes/plan/friend-view
+	#plan-frame(ng-controller="PlanCtrl")
+		#left
+			plan-nav
+		#middle
+			plan-dashboard
+		#right
+			plan-feed

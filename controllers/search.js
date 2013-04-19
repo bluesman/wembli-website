@@ -106,8 +106,6 @@ module.exports = function(app) {
 		};
 
 		eventRpc['search'].apply(function(err,results) {
-			console.log('results from search');
-			console.log(results);
 			res.render('search', {
 				search: query,
 				events: results.event,

@@ -23,6 +23,8 @@ angular.module('wembliApp.services', [])
 	$rootScope.genericLoadingModal = {};
 	$rootScope.genericLoadingModal.header = 'Patience Young Grasshopper...';
 
+	$rootScope.sequenceCompleted = true;
+
 
 	//templates can't make a date for some reason
 	$rootScope.getDate = function(d) {
@@ -32,7 +34,7 @@ angular.module('wembliApp.services', [])
 
 }])
 
-	.factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
+.factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
 	var self = this;
 	self.plan = null;
 	self.tickets = null;
@@ -42,27 +44,41 @@ angular.module('wembliApp.services', [])
 		get: function(callback) {
 			if (callback) {
 				if (self.plan) {
+					$rootScope.plan = self.plan;
 					callback(self.plan);
 				} else {
 					var dereg = $rootScope.$on('plan-fetched', function() {
 						dereg();
+						$rootScope.plan = self.plan;
 						callback(self.plan);
 					});
 					this.fetch();
 				}
 			} else {
+				$rootScope.plan = self.plan;
 				return self.plan;
 			}
 		},
 
-		set: function(plan, friends) {
+		set: function(plan, friends, organizer) {
 			self.plan = plan;
 			self.friends = friends;
+			self.organizer = organizer;
 			return self.plan;
 		},
 
 		getFriends: function() {
 			return self.friends;
+		},
+
+		getOrganizer: function() {
+			console.log('get organizer');
+			console.log(self.organizer);
+			return self.organizer;
+		},
+
+		getContext: function() {
+			return self.context;
 		},
 
 		addFriend: function(args, callback) {
@@ -95,7 +111,8 @@ angular.module('wembliApp.services', [])
 				if (typeof result.plan !== "undefined") {
 					self.plan = result.plan
 					self.friends = result.friends;
-
+					self.organizer = result.organizer;
+					self.context = result.context;
 				}
 
 				if (typeof result.loggedIn !== "undefined") {
@@ -118,7 +135,7 @@ angular.module('wembliApp.services', [])
 		save: function(callback) {
 			wembliRpc.fetch('plan.save', {}, function(err,result) {
 				if (err) {
-					console.log('error saving plan:'+err);
+					console.log('error saving plan:' + err);
 					return;
 				}
 				console.log('plan back from plan.save');
@@ -126,8 +143,40 @@ angular.module('wembliApp.services', [])
 				$rootScope.$broadcast('plan-saved', {});
 				self.plan = result.plan;
 				if (callback) {
-					callback(err,result);
+					callback(err, result);
 				}
+			});
+
+
+		},
+
+		submitRsvp: function(rsvpFor, args,callback) {
+			console.log('submit rsvp for:' + rsvpFor);
+			console.log(args);
+			args.rsvpFor = rsvpFor;
+			wembliRpc.fetch('plan.submitRsvp', args, function(err, result) {
+				console.log('submitRsvp');
+				console.log(result);
+				console.log('show generic modal');
+				$('#generic-loading-modal').modal("hide");
+				if (callback) {
+					return callback(err,result);
+				}
+			},
+
+			function(data, headersGetter) {
+
+				$rootScope.genericLoadingModal.header = 'Saving...';
+				$('#page-loading-modal').modal("hide");
+				console.log('show generic modal');
+				$('#generic-loading-modal').modal("show");
+				return data;
+			},
+
+			/* transformResponse */
+
+			function(data, headersGetter) {
+				return JSON.parse(data);
 			});
 
 
@@ -156,7 +205,7 @@ angular.module('wembliApp.services', [])
 	}
 }])
 
-.factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
+	.factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
 
 	/* put stuff in here to load a modal everytime for a given url - i'm not using this */
 	var modalPageMap = {
@@ -170,8 +219,10 @@ angular.module('wembliApp.services', [])
 		$rootScope.$broadcast($('body :first-child').attr('id') + '-fetched', {
 			modalId: $('body :first-child').attr('id')
 		});
-		console.log('broadcasted: '+$('body :first-child').attr('id') + '-fetched');
-		if (callback) {	callback();	};
+		console.log('broadcasted: ' + $('body :first-child').attr('id') + '-fetched');
+		if (callback) {
+			callback();
+		};
 	};
 
 	var fetchPartial = function(path, partialUrl, callback) {
@@ -208,7 +259,7 @@ angular.module('wembliApp.services', [])
 
 			/* its already fetched and cached and prepended to the body */
 			if (modalFetched[pathKey]) {
-				console.log('modal is already fetched:'+path);
+				console.log('modal is already fetched:' + path);
 				return success(callback);
 			}
 			/* this fetch is alredy in progress call the callback when the event is called */
@@ -240,21 +291,21 @@ angular.module('wembliApp.services', [])
 }])
 
 
-.factory('rsvpLoginModal', [function() {
+	.factory('rsvpLoginModal', [function() {
 	var self = this;
 	return {
-		set:function(key,val) {
-			console.log('setting '+key);
+		set: function(key, val) {
+			console.log('setting ' + key);
 			self[key] = val;
 		},
 		get: function(key) {
-			console.log('getting '+key);
+			console.log('getting ' + key);
 			return self[key];
 		}
 	};
 }])
 
-.factory('friendFilter', [function() {
+	.factory('friendFilter', [function() {
 	return {
 		filter: function(key, self) {
 			var r = new RegExp("^" + key, "i");
@@ -322,7 +373,7 @@ angular.module('wembliApp.services', [])
 		feedDialog: function(args, cb) {
 			FB.getLoginStatus(function(response) {
 				if (response.authResponse) {
-					var actionLink = 'http://tom.wembli.com/rsvp/' + args.guid + '/'+args.token+'/facebook';
+					var actionLink = 'http://tom.wembli.com/rsvp/' + args.guid + '/' + args.token + '/facebook';
 					var obj = {
 						method: 'feed',
 						display: 'iframe',
@@ -699,7 +750,6 @@ angular.module('wembliApp.services', [])
 
 //wrap the jquery sequence plugin
 .factory('sequence', ['initRootScope', '$rootScope', '$window', 'footer', function(initRootScope, $scope, $window, footer) {
-
 	var options = {
 		startingFrameID: 1,
 		preloader: false,
@@ -713,10 +763,11 @@ angular.module('wembliApp.services', [])
 
 	//make the page animate in
 	if ($scope.currentFrame == 2) {
+		console.log('page will animate in');
 		options.animateStartingFrameIn = true;
 		options.startingFrameID = 2;
 	}
-
+	console.log(options);
 	footer.slideNavArrow();
 
 	var sequence = angular.element("#content").sequence(options).data("sequence");
@@ -744,6 +795,10 @@ angular.module('wembliApp.services', [])
 		console.log('after next animatesin');
 		$scope.afterNextFrameAnimatesIn = true;
 		$scope.beforeNextFrameAnimatesIn = false;
+		console.log('setting sequence completed to true');
+		$scope.$apply(function() {
+			$scope.sequenceCompleted = true;
+		});
 		$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 	};
 

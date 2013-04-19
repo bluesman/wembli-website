@@ -7,15 +7,6 @@ module.exports = {
 		console.log('plan nav for: '+mode);
 		var nav = {
 			'organizer': [{
-				'icon': "icon-flag",
-				'text': "Event",
-			}, {
-				'icon': "icon-edit",
-				'text': "RSVP",
-			}, {
-				'icon': "icon-bar-chart",
-				'text': "Vote",
-			}, {
 				'icon': "icon-group",
 				'text': "Invitees",
 			}, {
@@ -29,9 +20,6 @@ module.exports = {
 				'text': "Chatter",
 			}],
 			'friend': [{
-				'icon': "icon-flag",
-				'text': "Event",
-			}, {
 				'icon': "icon-edit",
 				'text': "RSVP",
 			}, {

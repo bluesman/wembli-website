@@ -9,6 +9,12 @@ form { margin-bottom:0px; }
 
 .container { width: 1000px; margin-top:0px;}
 
+h1 {
+  font-family:"SegoePrint";
+  color:@blueDark;
+  margin:6px;
+}
+
 h2 {
   /* font-family: "architects_daughterregular"; */
   font-family:"SegoePrint";
@@ -22,13 +28,17 @@ h3 {
 }
 
 .btn-primary {
-  .buttonBackground(@blue,@blue);
+  .buttonBackground(@blue,@blueDark);
   font-size:16px;
 }
 
 .btn-primary:hover {
-  .buttonBackground(@orange,@orange);
+  .buttonBackground(@orange,@orangeDark);
 
+}
+
+.btn-orange {
+  .buttonBackground(@orange, @orangeDark);
 }
 
 .wembli-logo {
@@ -43,6 +53,10 @@ h3 {
 
 .modal {
   top:40%;
+}
+
+a, a:hover, a:focus {
+  text-decoration: none;
 }
 
 #page-loading-modal {
@@ -206,6 +220,7 @@ h3 {
 @import "index.less";
 @import "search.less";
 @import "tickets.less";
+@import "parking.less";
 @import "login.less";
 @import "signup.less";
 @import "confirm.less";

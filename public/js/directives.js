@@ -79,7 +79,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
 
 
-  .directive('dashboardModal', ['customer', 'wembliRpc', function(customer, wembliRpc) {
+.directive('dashboardModal', ['customer', 'wembliRpc', function(customer, wembliRpc) {
   return {
     restrict: 'C',
     replace: false,
@@ -116,30 +116,35 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
         var elId = '#' + element.attr('id').split('-')[1];
-        var multiplier = 0;
+
+        /* this had to wait for dashboard to load */
+        var sectionNumber = 1;
+
+        /* scroll down to the section denoted by hash */
         if ($location.hash()) {
           var h = $location.hash();
-          multiplier = parseInt(h.charAt(h.length - 1)) - 1;
-          if (isNaN(multiplier)) {
-            multiplier = 0;
-          }
+          sectionNumber = parseInt(h.charAt(h.length - 1));
+          console.log('scroll down to '+sectionNumber);
         }
-        console.log($location.hash());
-        console.log('multiplier: ' + multiplier);
-        var scrollTo = 602 * multiplier;
-        $('#content').animate({
-          scrollTop: scrollTo
-        });
 
-        console.log('in plan nav');
+        /* get the heights of all the sections */
+        var height = 0;
+        for (var i = 1; i < sectionNumber; i++) {
+          height += parseInt($('#section' + i).height()) + 20;
+          console.log('height after section' + i + ' ' + height);
+        };
+
+        $('#content').animate({
+          scrollTop: height
+        });
+        $('.plan-section-nav').removeClass('active');
+        $('#nav-section' + (sectionNumber)).addClass('active');
       };
     }
   }
 }])
 
-
-
-  .directive('scrollTo', ['$window', function($window) {
+.directive('scrollTo', ['$window', function($window) {
   return {
     restrict: 'EAC',
     cache: false,
@@ -147,12 +152,17 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       return function(scope, element, attr, controller) {
         element.click(function() {
           var elId = '#' + element.attr('id').split('-')[1];
-          var multiplier = parseInt(elId.charAt(elId.length - 1)) - 1;
+          var sectionNumber = parseInt(elId.charAt(elId.length - 1));
+          /* get the heights of all the sections */
+          var height = 20;
+          for (var i = 1; i < sectionNumber; i++) {
+            height += parseInt($('#section' + i).height());
+            console.log('height after section' + i + ' ' + height);
+          };
 
-          console.log('scroll to: ' + elId + ' - ' + multiplier);
-          var scrollTo = 602 * multiplier;
+          //console.log('scroll to: ' + elId + ' - ' + height);
           $('#content').animate({
-            scrollTop: scrollTo
+            scrollTop: height
           });
         });
       };
@@ -161,7 +171,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 }])
 
 
-  .directive('planDashboard', [function() {
+.directive('planDashboard', ['$window','plan','customer', function($window, plan, customer) {
   return {
     restrict: 'E',
     replace: true,
@@ -169,7 +179,114 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     templateUrl: "/partials/plan/dashboard",
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
-        console.log('in plan dashboard');
+        console.log('window height');
+        console.log(angular.element($window).height());
+        var height = angular.element($window).height();
+        $('#section6').css('min-height', height);
+
+        /* init some scope */
+        scope.ticketCount = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+        scope.rsvpTickets = 1;
+        scope.changeRsvpStatus = false;
+
+        scope.plan = plan.get();
+        if (typeof plan.getFriends() !== "undefined") {
+          scope.friends   = plan.getFriends();
+          /* get the friend that is this customer */
+          for (var i = 0; i < scope.friends.length; i++) {
+            if (scope.friends[i].customerId === customer.get().id) {
+              scope.me = scope.friends[i];
+              break;
+            }
+          };
+        }
+
+        if (typeof plan.getOrganizer() !== "undefined") {
+          scope.organizer = plan.getOrganizer();
+        }
+
+        /* handle the main plan rsvp */
+        scope.submitRsvp = function(rsvpFor,rsvp) {
+          var funcs = {
+            'tickets' : function(rsvp) {
+              /* get tickets rsvp data from the scope */
+              var a = {rsvp:rsvp};
+              if (rsvp === 'yes') {
+                a.headCount = scope.rsvpTickets;
+              }
+              plan.submitRsvp(rsvpFor,a,function(err,result) {
+                scope.changeRsvpStatus = false;
+                scope.me = result.friend;
+
+              });
+            }
+          };
+          funcs[rsvpFor](rsvp);
+        }
+      };
+    }
+  }
+}])
+
+.directive('inviteFriendsWizard', ['fetchModals', 'plan', '$location', function(fetchModals, plan, $location) {
+  return {
+    restrict: 'C',
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        fetchModals.fetch('/partials/invite-friends-wizard', function() {
+          console.log('fetched invite friends wizard in directive');
+          plan.get(function(plan) {
+
+            var startDate = new Date();
+            var endDate = new Date(plan.event.eventDate);
+            var defaultDate = endDate;
+            /* if there's an rsvp date, set it in the datepicker */
+            if (typeof plan.rsvpDate !== "undefined") {
+              /* init the date picker */
+              console.log('init datepicker with plan rsvpdate:');
+              console.log(plan.rsvpDate);
+              var defaultDate = new Date(plan.rsvpDate);
+            }
+
+            $('.datepicker').pikaday({
+              bound: false,
+              minDate: startDate,
+              maxDate: endDate,
+              defaultDate: defaultDate,
+              setDefaultDate: true,
+              onSelect: function() {
+                plan.rsvpDate = this.getDate();
+                wembliRpc.fetch('invite-friends.submit-step2', {
+                  rsvpDate: plan.rsvpDate
+                }, function(err, res) {
+                  console.log('changed rsvpdate');
+                  console.log(res);
+                });
+              }
+            });
+
+            console.log('location path is:');
+            console.log($location.path());
+
+            var options = {
+              'backdrop': 'static',
+              'keyboard': false,
+            };
+
+            if ($location.path() === '/invitation') {
+              $('#invitation-modal').modal(options);
+            }
+
+            /* click the button shows the modal */
+            element.click(function() {
+              options.backdrop = true;
+              options.keyboard = true;
+              console.log(options);
+              $('#invitation-modal').modal(options);
+            });
+
+          });
+        });
       };
     }
   }
@@ -184,12 +301,14 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     cache: false,
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
-        console.log('in plan dashboard');
+
 
         angular.element('#content').on('scroll', function() {
           scope.$apply(function() {
             if (element.offset().top <= 0 && element.offset().top > -element.height()) {
-              $('.plan-section-nav').removeClass('active');
+              if ($('.plan-section-nav').hasClass('active')) {
+                $('.plan-section-nav').removeClass('active');
+              }
               $('#nav-' + element.attr('id')).addClass('active');
             }
           });
@@ -208,7 +327,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     templateUrl: "/partials/plan/feed",
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
-        console.log('in plan feed');
+
       };
     }
   }
@@ -227,7 +346,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-  .directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
+.directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan) {
   return {
     restrict: 'E',
     replace: true,
@@ -452,6 +571,53 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 */
+
+.directive('leafletMap',['plan',function(plan) {
+  return {
+    restrict:'C',
+    cache:false,
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+        plan.get(function(p) {
+          var initLeaflet = function() {
+            console.log('init leaflet!');
+            var $el = element[0];
+            var map = new L.Map($el, {zoom:attr.zoom});
+            /* uncomment this to use openstreet map for map */
+              L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+            /* uncomment this to use google maps layer */
+            //var googleLayer = new L.Google('ROADMAP');
+            //map.addLayer(googleLayer);
+            var point = new L.LatLng(attr.lat, attr.lon);
+            map.setView(point, attr.zoom);
+            /* make a marker for the venue */
+            var venueIcon = new L.Icon.Default();
+            var marker = new L.marker([attr.lat,attr.lon],{icon:venueIcon});
+            marker.bindPopup(p.event.eventVenue);
+            console.log('adding marker to map');
+            console.log(marker);
+            marker.addTo(map);
+            marker.openPopup();
+
+          };
+
+          console.log(p.event);
+          if (scope.sequenceCompleted) {
+            console.log('sequence completed already');
+            initLeaflet();
+          } else {
+            console.log('wait for sequence to complete');
+            scope.$on('sequence-afterNextFrameAnimatesIn',function() {
+              initLeaflet();
+            })
+          }
+        });
+      };
+    }
+  };
+}])
+
 .directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence', function($rootScope, $filter, wembliRpc, plan, sequence) {
   return {
     restrict: 'C',
@@ -921,6 +1087,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
               /* not on the same page so we're gonna slide to the other frame */
               var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
+              console.log('NEXT FRAME: ' + nextFrameID);
 
               /*
                 split location path on '/' to get the right framesMap key
@@ -966,6 +1133,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
               scope.$emit('viewContentLoaded', {});
 
               /* do the animations */
+              console.log('GOTO FRAME');
               sequence.goTo(nextFrameID, direction);
 
               /* dismiss any modals once the page loads */

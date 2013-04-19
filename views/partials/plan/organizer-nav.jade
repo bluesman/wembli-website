@@ -1,0 +1,11 @@
+- var nav = planNav(req.session.visitor.context)
+#plan-nav.affix
+	.wembli-logo
+	.spacer
+	each navItem in nav
+		a(class="plan-section-nav scroll-to",ng-click="gotoSection('#{navItem.section}')",href="#{navItem.href}",id="#{navItem.id}")
+			i(class="#{navItem.icon}").icon-2x
+			div
+				span #{navItem.text}
+				i.icon-double-angle-right.pull-right
+
