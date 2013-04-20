@@ -976,7 +976,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
         element.click(function(e) {
           e.preventDefault();
-
+          $rootScope.sequenceCompleted = false;
           /* init some defaults */
           var path = ""; //defaulting to empty string for path will result in samePage on error
           var args = {
