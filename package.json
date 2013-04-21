@@ -23,7 +23,8 @@
 		"jasmine-node":"1.0.x",
 		"oauth":"0.9.x",
 		"ntwitter":"0.5.x",
-		"twitter-text":"1.6.x"
+		"twitter-text":"1.6.x",
+		"jake":"0.5.x"
 	},
 	"repository": {
 		"type": "git",

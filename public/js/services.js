@@ -796,9 +796,9 @@ angular.module('wembliApp.services', [])
 		$scope.afterNextFrameAnimatesIn = true;
 		$scope.beforeNextFrameAnimatesIn = false;
 		console.log('setting sequence completed to true');
-		$scope.$apply(function() {
+		//$scope.$apply(function() {
 			$scope.sequenceCompleted = true;
-		});
+		//});
 		$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 	};
 

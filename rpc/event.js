@@ -1,10 +1,11 @@
 var ticketNetwork = require('../lib/wembli/ticketnetwork');
+var pw = require('../lib/wembli/parkwhiz');
 var async = require('async');
 
 exports.event = {
 	init: function(args, req, res) {
 		var me = this;
-		me(null,data);
+		me(null, data);
 	},
 
 	search: function(args, req, res) {
@@ -12,20 +13,22 @@ exports.event = {
 		args.cnt = (args.cnt) ? args.cnt : 15;
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.SearchEvents(args, function(err, results) {
-			if (err) { return me(err);	}
+			if (err) {
+				return me(err);
+			}
 
 			//if lastEventId is passed in, determine which element has that Id and start the splice there
 			var beginIdx = 0;
 			if (args.lastEventId) {
 				for (var i = results.Event.length - 1; i >= 0; i--) {
 					if (results.Event[i].ID == args.lastEventId) {
-						beginIdx = i+1;
+						beginIdx = i + 1;
 					}
 				}
 			}
 
-			if (Object.prototype.toString.call( results.Event ) === '[object Array]') {
-				var events = results.Event.slice(beginIdx,args.cnt+beginIdx);
+			if (Object.prototype.toString.call(results.Event) === '[object Array]') {
+				var events = results.Event.slice(beginIdx, args.cnt + beginIdx);
 			} else {
 				//there's only 1 and its not an array
 				var events = [results.Event];
@@ -58,13 +61,13 @@ exports.event = {
 			if (args.lastEventId) {
 				for (var i = results.Event.length - 1; i >= 0; i--) {
 					if (results.Event[i].ID == args.lastEventId) {
-						beginIdx = i+1;
+						beginIdx = i + 1;
 					}
 				}
 			}
 
-			if (Object.prototype.toString.call( results.Event ) === '[object Array]') {
-				var events = results.Event.slice(beginIdx,args.cnt+beginIdx);
+			if (Object.prototype.toString.call(results.Event) === '[object Array]') {
+				var events = results.Event.slice(beginIdx, args.cnt + beginIdx);
 			} else {
 				//there's only 1 and its not an array
 				var events = [results.Event];
@@ -89,7 +92,7 @@ exports.event = {
 				success: 1,
 				ticketPricingInfo: results
 			};
-			return me(null,ret);
+			return me(null, ret);
 		});
 	},
 	getTickets: function(args, req, res) {
@@ -113,5 +116,34 @@ exports.event = {
 			});
 		});
 	},
+	getParking: function(args, req, res) {
+		var me = this;
+		console.log('event.getParking');
+		/*convert date into timestamp */
+		var date = req.session.plan.event.eventDate;
+		console.log('event date is ' + date);
+		var eDate = new Date(date);
+		eDate.clearTime();
+		eDate.addHours(9);
+		var start = eDate.getTime() / 1000;
+		eDate.addHours(5);
+		var end = eDate.getTime() / 1000;
+		/* get the parking for this lat/log */
+		//pw.search({lat:geocode[0].lat,lng:geocode[0].lon,start:start,end:end}, function(err, results) {
+		console.log(req.session.plan.venue);
+		pw.search({
+			lat: req.session.plan.venue.data.geocode.geometry.location.lat,
+			lng: req.session.plan.venue.data.geocode.geometry.location.lng,
+			start: start,
+			end: end
+		}, function(err, results) {
+			if (err) {
+				return me(err);
+			}
+			console.log('results for parkwhiz search');
+			console.log(results);
+			me(null,{success:1,parking:results});
+		});
+	}
 
 };

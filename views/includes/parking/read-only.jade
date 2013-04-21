@@ -1,0 +1,38 @@
+#parking-price-range
+	.popover-container.pull-left
+		i#help1.icon-question-sign.display-popover(placement="right",trigger="hover",animation="true",title="Pick A Price Range",content="Choose a price range to give your friends an idea of how much they can expect to pay for parking.  Mouse over the dollar signs to see each price range then use the checkboxes to pick your options.")
+	h3.pull-left PICK YOUR PRICE RANGE:
+	form#price-range-form.form-inline
+		fieldset.pull-left
+			label.checkbox(ng-click="handlePriceRange()",title="LOW: Under $20")
+				input#low(type="checkbox",ng-model="priceRange.low")
+				span.dollar-sign(ng-class="{true:'orange'}[priceRange.low]") $
+			label.checkbox(ng-click="handlePriceRange()",title="MEDIUM: From $20 to $50")
+				input#med(type="checkbox",ng-model="priceRange.med")
+				span.dollar-sign(ng-class="{true:'orange'}[priceRange.med]") $$
+			label.checkbox(ng-click="handlePriceRange()",title="Above $50")
+				input#high(type="checkbox",ng-model="priceRange.high")
+				span.dollar-sign(ng-class="{true:'orange'}[priceRange.high]") $$$
+		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-hide="{'friend':true}[context]",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
+		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-show="{'friend':true}[context]",href="/plan",direction="1") Back To The Plan
+#group-parking-list-header-container.parking-list-header-container
+	#group-parking-list-header
+		h4.pull-left Preview parking options in your price range
+		.popover-container.pull-left
+			i.icon-question-sign.display-popover(placement="bottom",trigger="hover",animation="true",title="Preview PArking",content="Get a sneak peak at the kind of parking your price range will get you. Once you know how many people are coming, you'll be able to reserve parking.")
+	a#range-header(href="#",ng-click="sortByPrice()") Range
+	a#section-header(href="#",ng-click="sortBySection()") Location
+	a#qty-header(href="#",ng-click="sortByQty()") Spots Available
+	a#price-header(href="#",ng-click="sortByPrice()") Price
+ul#group-parking-list-container.parking-list-container
+	li.parking-row.muted(ng-repeat="parking in parking.parking_listings",ng-hide="parking.hide")
+		.parking-range
+			.dollar-sign {{determineRange(parking.price)}}
+		.parking-info
+			.parking-location-name {{parking.location_name}}
+			.parking-address {{parking.address}}, {{parking.city}}, {{parking.state}} {{parking.zip}}
+		.parking-available {{parking.available_spots}} spots available
+		.parking-price
+			.actual-price ${{parking.price}}
+			.each (each)
+

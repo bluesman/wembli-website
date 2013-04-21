@@ -572,6 +572,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 }])
 */
 
+
 .directive('leafletMap',['plan',function(plan) {
   return {
     restrict:'C',
@@ -599,6 +600,12 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             console.log(marker);
             marker.addTo(map);
             marker.openPopup();
+            scope.$watch('markers',function(markers) {
+              if (typeof markers === "undefined") { return; };
+              console.log('adding markers');
+              console.log(markers);
+              map.addLayer(markers);
+            });
 
           };
 
