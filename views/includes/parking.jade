@@ -1,10 +1,11 @@
 #parking-frame(ng-controller="ParkingCtrl")
 	#map-background
-		#map-container.google-map(lat="#{lat}",lng="#{lon}",markers="markers",map="map",center="center",zoom="zoom",draggable="true",mark-click="false",fit="true")
+		//- #map-container.google-map(lat="#{lat}",lng="#{lon}",markers="markers",map="map",center="center",zoom="zoom",draggable="true",mark-click="false",fit="true")
+		#map-container.parking-map(lat="#{lat}",lng="#{lon}",zoom="14",draggable="true",map-type-id="ROADMAP")
 	#parking.pull-right
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
-		- console.log('plan prefs in interactive venuemap');
+		- console.log('plan prefs in parking list');
 		- console.log(req.session.plan.preferences);
 		- if (req.session.plan.preferences.payment === 'split-first')
 			include parking/read-only

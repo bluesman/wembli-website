@@ -133,7 +133,7 @@ angular.module('wembliApp.services', [])
 		},
 		/* tell the server to save the plan in the session */
 		save: function(callback) {
-			wembliRpc.fetch('plan.save', {}, function(err,result) {
+			wembliRpc.fetch('plan.save', {}, function(err, result) {
 				if (err) {
 					console.log('error saving plan:' + err);
 					return;
@@ -150,7 +150,7 @@ angular.module('wembliApp.services', [])
 
 		},
 
-		submitRsvp: function(rsvpFor, args,callback) {
+		submitRsvp: function(rsvpFor, args, callback) {
 			console.log('submit rsvp for:' + rsvpFor);
 			console.log(args);
 			args.rsvpFor = rsvpFor;
@@ -160,7 +160,7 @@ angular.module('wembliApp.services', [])
 				console.log('show generic modal');
 				$('#generic-loading-modal').modal("hide");
 				if (callback) {
-					return callback(err,result);
+					return callback(err, result);
 				}
 			},
 
@@ -290,36 +290,163 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-
-.factory('mapMarkers', [function() {
+.factory('googleMap', [function() {
 	var self = this;
-	var _markers = [];
 
-  function floatEqual (f1, f2) {
-    return (Math.abs(f1 - f2) < 0.000001);
-  }
+	self._markers = [];
+	self._infoWindows = [];
+	self._map = null;
+
+	/* state */
+	self.dragging = false;
+	self.zoom     = 14;
+	self.center   = new google.maps.LatLng(32.722439302963,-117.1645658798);
+
+	var mapDefaults = {
+		center: self.center,
+		zoom: self.zoom,
+		draggable: true,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
+	}
+
+	function floatEqual(f1, f2) {
+		return (Math.abs(f1 - f2) < 0.000001);
+	}
 
 	return {
-		get: function() {
-			console.log('getting markers');
-			return _markers;
-		},
-		find: function(lat,lng) {
-      for (var i = 0; i < _markers.length; i++) {
-        var pos = _markers[i].getPosition();
-        if (floatEqual(pos.lat(), lat) && floatEqual(pos.lng(), lng)) {
-          return _markers[i];
-        }
-      }
-      return null;
-		},
-		push: function(marker) {
-			_markers.push(marker)
-		},
-		remove: function(lat,lng) {
+		/* create a google map instance */
+		draw: function(element,options,handlers) {
 
+			if (self._map === null) {
+
+				/* instantiate a new google map */
+				self._map = new google.maps.Map(element[0], angular.extend(options, mapDefaults));
+				google.maps.event.addListener(self._map, "dragstart",	function() { self.dragging = true; });
+
+				google.maps.event.addListener(self._map, "idle", function() { self.dragging = false; });
+
+				google.maps.event.addListener(self._map, "drag", function() { self.dragging = true;	});
+
+				google.maps.event.addListener(self._map, "zoom_changed",function() {
+					self.zoom   = self._map.getZoom();
+					self.center = self._map.getCenter();
+				});
+
+				google.maps.event.addListener(self._map, "center_changed", function() { self.center = self._map.getCenter(); });
+
+        // Attach additional event listeners if needed
+        if (typeof handlers !== "undefined" && handlers.length) {
+          angular.forEach(handlers, function (h, i) {
+            google.maps.event.addListener(self._map, h.on, h.handler);
+          });
+        }
+			} else {
+        google.maps.event.trigger(self._map, "resize");
+
+        var instanceCenter = self._map.getCenter();
+
+        /* if the center has changed - reset it */
+        if (!floatEqual(instanceCenter.lat(), self.center.lat()) || !floatEqual(instanceCenter.lng(), self.center.lng())) {
+            self._map.setCenter(self.center);
+        }
+
+        /* if the zoom has changed - reset it */
+        if (self._map.getZoom() != self.zoom) {
+          self._map.setZoom(that.zoom);
+        }
+			}
+		},
+		getMap: function() {
+			return self._map;
+		},
+		/* add markers to the map */
+		addMarker: function(marker) {
+			self._markers.unshift(marker);
+			return marker;
+		},
+		findMarker: function(lat, lng) {
+			for (var i = 0; i < self._markers.length; i++) {
+				var pos = self._markers[i].getPosition();
+				if (floatEqual(pos.lat(), lat) && floatEqual(pos.lng(), lng)) {
+					return self._markers[i];
+				}
+			}
+			return null;
+		},
+		hasMarker: function (lat, lng) {
+      return this.findMarker(lat, lng) !== null;
+    },
+
+		removeMarker: function(lat, lng) {
+
+		},
+		addInfoWindow: function(infoWindow, marker) {
+			var win = {
+				infoWindow: infoWindow,
+				open: false
+			}
+			if (typeof marker !== "undefined") {
+				win.lat = marker.getPosition().lat();
+				win.lng = marker.getPosition().lng();
+			} else {
+				win.lat = infoWindow.getPosition().lat();
+				win.lng = infoWindow.getPosition().lng();
+			}
+			self._infoWindows.unshift(win);
+			return win;
+		},
+		_findInfoWindow: function(lat,lng) {
+			for (var i = 0; i < self._infoWindows.length; i++) {
+				var winLat = self._infoWindows[i].lat;
+				var winLng = self._infoWindows[i].lng;
+				if (floatEqual(winLat, lat) && floatEqual(winLng, lng)) {
+					return self._infoWindows[i];
+				}
+			}
+			return null;
+		},
+		findInfoWindow: function(lat,lng) {
+			var win = this._findInfoWindow(lat,lng);
+			return (win) ? win.infoWindow : null;
+		},
+		/* check if the infoWindow for a marker is open */
+		isInfoWindowOpen: function(marker) {
+			var lat = marker.getPosition().lat();
+			var lng = marker.getPosition().lng();
+			var win = this._findInfoWindow(lat,lng);
+			return (win) ? win.open : false;
+		},
+		closeInfoWindow: function(marker) {
+			var lat = marker.getPosition().lat();
+			var lng = marker.getPosition().lng();
+			var win = this._findInfoWindow(lat,lng);
+			win.open = false;
+			win.infoWindow.close();
+		},
+		openInfoWindow: function(marker) {
+			console.log(marker);
+			var lat = marker.getPosition().lat();
+			var lng = marker.getPosition().lng();
+			var win = this._findInfoWindow(lat,lng);
+			win.open = true;
+			win.infoWindow.open(self._map, marker);
+		}
+
+	};
+
+}])
+
+.factory('mapInfoWindowContent', [function() {
+	return {
+		create: function(args) {
+			var html = '<div class="info-window">';
+			html += '<h3 class="info-window-header">'+args.header+'</h3>';
+			html += '<div class="info-window-body">'+args.body+'</div>';
+			html += '</div>';
+			return html;
 		}
 	};
+
 }])
 
 .factory('rsvpLoginModal', [function() {
@@ -828,7 +955,7 @@ angular.module('wembliApp.services', [])
 		$scope.beforeNextFrameAnimatesIn = false;
 		console.log('setting sequence completed to true');
 		//$scope.$apply(function() {
-			$scope.sequenceCompleted = true;
+		$scope.sequenceCompleted = true;
 		//});
 		$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 	};

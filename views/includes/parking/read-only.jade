@@ -23,15 +23,19 @@
 	a#range-header(href="#",ng-click="sortByPrice()") Range
 	a#section-header(href="#",ng-click="sortBySection()") Location
 	a#qty-header(href="#",ng-click="sortByQty()") Spots Available
+	a#distance-header(href="#",ng-click="sortByDistance()") Distance
 	a#price-header(href="#",ng-click="sortByPrice()") Price
 ul#group-parking-list-container.parking-list-container
-	li.parking-row.bounce-map-marker.muted(lat="{{parking.lat}}",lng="{{parking.lng}}",ng-repeat="parking in parking.parking_listings",ng-hide="parking.hide")
+	li.parking-row.bounce-map-marker.muted(lat="{{parking.lat}}",lng="{{parking.lng}}",ng-repeat="parking in parkingReservations.parking_listings",ng-hide="parking.hide")
 		.parking-range
 			.dollar-sign {{determineRange(parking.price)}}
 		.parking-info
 			.parking-location-name {{parking.location_name}}
-			.parking-address {{parking.address}}, {{parking.city}}, {{parking.state}} {{parking.zip}}
-		.parking-available {{parking.available_spots}} spots available
+			.parking-address
+				div {{parking.address}}
+				div {{parking.city}}, {{parking.state}}
+		.parking-available {{parking.available_spots}} spots
+		.parking-distance {{determineDistance(parking.distance)}} mi.
 		.parking-price
 			.actual-price ${{parking.price}}
 			.each (each)

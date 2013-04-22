@@ -3192,10 +3192,13 @@ body {
 }
 #parking-frame #parking #group-parking-list-header-container a#section-header {
   text-align: left;
-  width: 180px;
+  width: 150px;
 }
 #parking-frame #parking #group-parking-list-header-container a#qty-header {
-  width: 100px;
+  width: 80px;
+}
+#parking-frame #parking #group-parking-list-header-container a#distance-header {
+  width: 65px;
 }
 #parking-frame #parking #group-parking-list-header-container a#price-header {
   width: 65px;
@@ -3209,7 +3212,7 @@ body {
   margin-left: 5px;
 }
 #parking-frame #parking #self-parking-list-header-container a#qty-header {
-  width: 100px;
+  width: 80px;
   text-align: left;
 }
 #parking-frame #parking #group-parking-list-container .parking-price {
@@ -3265,7 +3268,7 @@ body {
   text-align: left;
   font-weight: bold;
   font-size: 14px;
-  width: 180px;
+  width: 150px;
   margin-top: 10px;
   *zoom: 1;
 }
@@ -3282,7 +3285,16 @@ body {
   text-align: center;
   font-size: 12px;
   width: 80px;
-  padding: 10px 10px;
+  padding: 10px 0px;
+}
+#parking-frame #parking .parking-list-container .parking-row .parking-distance {
+  text-align: center;
+  font-size: 12px;
+  width: 65px;
+  padding: 10px 0px;
+}
+#parking-frame #parking .parking-list-container .parking-row .parking-price {
+  margin-left: 10px;
 }
 #parking-frame #parking .parking-list-container .parking-row > div {
   float: left;

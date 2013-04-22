@@ -572,23 +572,41 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 }])
 */
 
-.directive('bounceMapMarker',['plan','mapMarkers',function(plan,mapMarkers) {
+.directive('parkingMap',['googleMap',function(googleMap) {
+  return {
+    restrict:'EC',
+    cache:false,
+    replace:true,
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+        var mapTypeId = (attr.mapTypeId) ? google.maps.MapTypeId[attr.mapTypeId] : google.maps.MapTypeId.ROADMAP;
+
+        /* draw the map */
+        var mapOpts = {mapTypeId:mapTypeId};
+        mapOpts.center = new google.maps.LatLng(attr.lat,attr.lng);
+        googleMap.draw(element,mapOpts);
+      };
+    }
+  };
+}])
+
+.directive('bounceMapMarker',['plan','googleMap',function(plan,googleMap) {
 
   return {
     restrict:'C',
     cache:false,
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
-        console.log(attr.lat);
-        console.log(attr.lng);
         element.mouseleave(function() {
           console.log('stop bouncing marker');
-          var marker = mapMarkers.find(attr.lat,attr.lng);
+          var marker = googleMap.findMarker(attr.lat,attr.lng);
           marker.setAnimation(null);
         });
         element.mouseover(function() {
           console.log('bounce marker');
-          var marker = mapMarkers.find(attr.lat,attr.lng);
+          console.log(attr.lat);
+          console.log(attr.lng);
+          var marker = googleMap.findMarker(attr.lat,attr.lng);
           console.log('found marker');
           console.log(marker);
           marker.setAnimation(google.maps.Animation.BOUNCE);
