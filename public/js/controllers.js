@@ -820,7 +820,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 };
 
 
-function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc) {
+function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, mapMarkers) {
 	/* get the spots for this lat long and display them as markers */
 	/*
 	var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
@@ -855,7 +855,7 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc) {
 			lng: 0
 		},
 		//markers: [{latitude:lat,longitude:lng,infoWindow:'hello'}], // an array of markers,
-		zoom: 16, // the zoom level
+		zoom: 14, // the zoom level
 	});
 	plan.get(function(p) {
 
@@ -873,52 +873,21 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc) {
 			var lng = p.venue.data.geocode.geometry.location.lng;
 			var marker = map.addMarker(lat, lng);
 			marker.setIcon("/images/icons/map-icons/sports/stadium.png");
+			marker.setAnimation(google.maps.Animation.DROP);
 			var infoWindow = map.addInfoWindow(lat, lng, '<div>' + p.event.eventVenue + '</div>');
 			infoWindow.open(map.getInstance(), marker);
-
-			/* add markers for all the google parking nearby */
-			var request = {
-				location: new google.maps.LatLng(lat, lng),
-				radius: 1500,
-				types: ['parking']
-			};
-			var service = new google.maps.places.PlacesService(map.getInstance());
-			service.nearbySearch(request, callback);
-
-			function callback(results, status) {
-				if (status == google.maps.places.PlacesServiceStatus.OK) {
-					for (var i = 0; i < results.length; i++) {
-						createMarker(results[i]);
-					}
-				}
-			}
-
-			function createMarker(place) {
-				var placeLoc = place.geometry.location;
-				var marker = new google.maps.Marker({
-					map: map.getInstance(),
-					position: place.geometry.location,
-					icon:"/images/icons/map-icons/transportation/parkinggarage.png"
-				});
-
-
-				google.maps.event.addListener(marker, 'click', function() {
-					console.log('clicked infowindow')
-					infoWindow = map.addInfoWindow(null, null, place.name);
-					infoWindow.open(map.getInstance(), this);
-				});
-			}
 
 			/* add markers for the parkwhiz parking that gets fetched */
 			$scope.$watch('parking', function(p) {
 				if (!p) {
 					return;
 				};
-
 				$timeout(function() {
 					angular.forEach(p.parking_listings, function(v, i) {
 						if (!map.hasMarker(v.lat, v.lng)) {
 							var marker = map.addMarker(v.lat, v.lng);
+							marker.setAnimation(google.maps.Animation.DROP);
+							mapMarkers.push(marker);
 							marker.setIcon("/images/icons/map-icons/transportation/parkinggarage.png");
 							google.maps.event.addListener(marker, 'click', function() {
 								console.log('clicked infowindow')
@@ -930,90 +899,124 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc) {
 				});
 			});
 
-			/* get parking from parkwhiz and update scope */
-			//get the tix and make the ticket list
-			wembliRpc.fetch('event.getParking', {
-				lat: lat,
-				lng: lng,
-				//start: start, //optional
-				//end: end //optional
-			}, function(err, result) {
+			/* add markers for all the google parking nearby */
+			var request = {
+				location: new google.maps.LatLng(lat, lng),
+				radius: 1500,
+				types: ['parking']
+			};
+			var service = new google.maps.places.PlacesService(map.getInstance());
+			service.nearbySearch(request, callback);
 
-				if (err) {
-					//handle err
-					alert('error happened - contact help@wembli.com');
-					return;
+			function createMarker(place) {
+				var placeLoc = place.geometry.location;
+				var marker = new google.maps.Marker({
+					map: map.getInstance(),
+					position: place.geometry.location,
+					icon: "/images/icons/map-icons/transportation/parkinggarage.png"
+				});
+				marker.setAnimation('DROP');
+				mapMarkers.push(marker);
+				google.maps.event.addListener(marker, 'click', function() {
+					console.log('clicked infowindow')
+					infoWindow = map.addInfoWindow(null, null, place.name);
+					infoWindow.open(map.getInstance(), this);
+				});
+			}
+
+			function callback(results, status) {
+				if (status == google.maps.places.PlacesServiceStatus.OK) {
+					$scope.googleParking = results;
+					for (var i = 0; i < results.length; i++) {
+						console.log(results[i]);
+
+						createMarker(results[i]);
+					}
 				}
 
-				$('#generic-loading-modal').modal("hide");
+				/* get parking from parkwhiz and update scope */
+				//get the tix and make the ticket list
+				wembliRpc.fetch('event.getParking', {
+					lat: lat,
+					lng: lng,
+					//start: start, //optional
+					//end: end //optional
+				}, function(err, result) {
 
-				console.log('results from event.getParking');
-				$scope.parking = result.parking;
-
-				var minParkingPrice = result.parking.min_price;
-				var maxParkingPrice = result.parking.max_price;
-
-				var initSlider = function() {
-					/*Set Minimum and Maximum Price from your Dataset*/
-					$("#price-slider").slider("option", "min", minParkingPrice);
-					$("#price-slider").slider("option", "max", maxParkingPrice);
-					$("#price-slider").slider("option", "values", [minParkingPrice, maxParkingPrice]);
-					$("#amount").val("$" + minParkingPrice + " - $" + maxParkingPrice);
-				};
-
-				var filterParking = function() {
-					var PriceRange = $("#price-slider").slider("option", "values");
-
-					/* hide parking locations that are out of range */
-					console.log('filtering parking');
-				};
-
-				//set the height of the map-container to the window height
-				//$('#map-container').css("height", $($window).height() - 60);
-				//$('#parking').css("height", $($window).height() - 60);
-				//$('#map-container').css("width", $($window).width() - 480);
-
-				$('#price-slider').slider({
-					range: true,
-					min: minParkingPrice,
-					max: maxParkingPrice,
-					step: 5,
-					values: [minParkingPrice, maxParkingPrice],
-					slide: function(event, ui) {
-						$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-					},
-					stop: function(event, ui) {
-						filterParking();
+					if (err) {
+						//handle err
+						alert('error happened - contact help@wembli.com');
+						return;
 					}
 
+					$('#generic-loading-modal').modal("hide");
+
+					console.log('results from event.getParking');
+					$scope.parking = result.parking;
+
+					var minParkingPrice = result.parking.min_price;
+					var maxParkingPrice = result.parking.max_price;
+
+					var initSlider = function() {
+						/*Set Minimum and Maximum Price from your Dataset*/
+						$("#price-slider").slider("option", "min", minParkingPrice);
+						$("#price-slider").slider("option", "max", maxParkingPrice);
+						$("#price-slider").slider("option", "values", [minParkingPrice, maxParkingPrice]);
+						$("#amount").val("$" + minParkingPrice + " - $" + maxParkingPrice);
+					};
+
+					var filterParking = function() {
+						var PriceRange = $("#price-slider").slider("option", "values");
+
+						/* hide parking locations that are out of range */
+						console.log('filtering parking');
+					};
+
+					//set the height of the map-container to the window height
+					//$('#map-container').css("height", $($window).height() - 60);
+					//$('#parking').css("height", $($window).height() - 60);
+					//$('#map-container').css("width", $($window).width() - 480);
+
+					$('#price-slider').slider({
+						range: true,
+						min: minParkingPrice,
+						max: maxParkingPrice,
+						step: 5,
+						values: [minParkingPrice, maxParkingPrice],
+						slide: function(event, ui) {
+							$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+						},
+						stop: function(event, ui) {
+							filterParking();
+						}
+
+					});
+
+					var amtVal = "$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1);
+					$("#amount").val(amtVal);
+
+					/* filter tix when the drop down changes */
+					$("#quantity-filter").change(function() {
+						filterParking();
+					});
+				},
+				/* transformRequest */
+
+				function(data, headersGetter) {
+
+					$rootScope.genericLoadingModal.header = 'Finding Parking...';
+					$('#page-loading-modal').modal("hide");
+					console.log('show generic modal');
+					$('#generic-loading-modal').modal("show");
+					return data;
+				},
+
+				/* transformResponse */
+
+				function(data, headersGetter) {
+					return JSON.parse(data);
 				});
-
-				var amtVal = "$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1);
-				$("#amount").val(amtVal);
-
-				/* filter tix when the drop down changes */
-				$("#quantity-filter").change(function() {
-					filterParking();
-				});
-			},
-			/* transformRequest */
-
-			function(data, headersGetter) {
-
-				$rootScope.genericLoadingModal.header = 'Finding Parking...';
-				$('#page-loading-modal').modal("hide");
-				console.log('show generic modal');
-				$('#generic-loading-modal').modal("show");
-				return data;
-			},
-
-			/* transformResponse */
-
-			function(data, headersGetter) {
-				return JSON.parse(data);
-			});
-
-
+			}
 		});
 	});
 };

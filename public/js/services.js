@@ -291,7 +291,38 @@ angular.module('wembliApp.services', [])
 }])
 
 
-	.factory('rsvpLoginModal', [function() {
+.factory('mapMarkers', [function() {
+	var self = this;
+	var _markers = [];
+
+  function floatEqual (f1, f2) {
+    return (Math.abs(f1 - f2) < 0.000001);
+  }
+
+	return {
+		get: function() {
+			console.log('getting markers');
+			return _markers;
+		},
+		find: function(lat,lng) {
+      for (var i = 0; i < _markers.length; i++) {
+        var pos = _markers[i].getPosition();
+        if (floatEqual(pos.lat(), lat) && floatEqual(pos.lng(), lng)) {
+          return _markers[i];
+        }
+      }
+      return null;
+		},
+		push: function(marker) {
+			_markers.push(marker)
+		},
+		remove: function(lat,lng) {
+
+		}
+	};
+}])
+
+.factory('rsvpLoginModal', [function() {
 	var self = this;
 	return {
 		set: function(key, val) {

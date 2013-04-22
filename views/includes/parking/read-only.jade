@@ -25,7 +25,7 @@
 	a#qty-header(href="#",ng-click="sortByQty()") Spots Available
 	a#price-header(href="#",ng-click="sortByPrice()") Price
 ul#group-parking-list-container.parking-list-container
-	li.parking-row.muted(ng-repeat="parking in parking.parking_listings",ng-hide="parking.hide")
+	li.parking-row.bounce-map-marker.muted(lat="{{parking.lat}}",lng="{{parking.lng}}",ng-repeat="parking in parking.parking_listings",ng-hide="parking.hide")
 		.parking-range
 			.dollar-sign {{determineRange(parking.price)}}
 		.parking-info
@@ -35,4 +35,14 @@ ul#group-parking-list-container.parking-list-container
 		.parking-price
 			.actual-price ${{parking.price}}
 			.each (each)
+	li.parking-row.bounce-map-marker.muted(lat="{{parking.geometry.location.lat()}}",lng="{{parking.geometry.location.lng()}}",ng-repeat="parking in googleParking",ng-hide="parking.hide")
+		.parking-range
+			.dollar-sign N/A
+		.parking-info
+			.parking-location-name {{parking.name}}
+			.parking-address {{parking.vicinity}}
+		.parking-available no reservations
+		.parking-price
+			.actual-price N/A
+
 

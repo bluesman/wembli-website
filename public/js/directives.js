@@ -572,7 +572,31 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 }])
 */
 
+.directive('bounceMapMarker',['plan','mapMarkers',function(plan,mapMarkers) {
 
+  return {
+    restrict:'C',
+    cache:false,
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+        console.log(attr.lat);
+        console.log(attr.lng);
+        element.mouseleave(function() {
+          console.log('stop bouncing marker');
+          var marker = mapMarkers.find(attr.lat,attr.lng);
+          marker.setAnimation(null);
+        });
+        element.mouseover(function() {
+          console.log('bounce marker');
+          var marker = mapMarkers.find(attr.lat,attr.lng);
+          console.log('found marker');
+          console.log(marker);
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        });
+      }
+    }
+  }
+}])
 .directive('leafletMap',['plan',function(plan) {
   return {
     restrict:'C',
