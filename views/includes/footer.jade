@@ -12,15 +12,15 @@ footer#footer(ng-controller="FooterCtrl")
 		li#index.wembli-sequence-link
 			a(href="/") Home
 		li#tickets.wembli-sequence-link(loading-duration="1500")
-			a(ng-href="{{ticketsLink}}") Tickets
+			a(ng-href="/tickets{{eventLink}}") Tickets
 		li#invitation.wembli-sequence-link
-			a(href="/invitation") Invite
+			a(href="/invitation{{eventLink}}") Invite
 		li#parking.wembli-sequence-link
-			a(href="/parking") Parking
+			a(href="/parking{{eventLink}}") Parking
 		li#restaurants.wembli-sequence-link
-			a(href="/restaurants") Restaurants
+			a(href="/restaurants{{eventLink}}") Restaurants
 		li#hotels.wembli-sequence-link
-			a(href="/hotels") Hotels
+			a(href="/hotels{{eventLink}}") Hotels
 		//- if (session.loggedIn)
 		li#dashboard.wembli-sequence-link(ng-show="loggedIn")
 			a(href="/dashboard") Dashboard

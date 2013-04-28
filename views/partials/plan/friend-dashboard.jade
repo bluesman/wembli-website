@@ -2,51 +2,53 @@
 	//- .event-data(ng-cloak,event-id="req.session.plan.event.eventId")
 	section#section1.plan-section
 		.header
-			h1.pull-left RSVP (friend)
+			h1.pull-left Event
 		.body
 			h3 {{organizer.firstName}} {{organizer.lastName}} is planning an event and you're invited! Are you in or out?
-			.info
-				.left.pull-left
-					.row
-						h3.pull-left Event:
-						.data.pull-left {{plan.event.eventName}}
-					.row
-						h3.pull-left Venue:
-						.data.pull-left {{plan.event.eventVenue}}
-					.row
-						h3.pull-left Address:
-						.data.pull-left {{plan.event.eventAddress+', '+plan.event.eventCity+', '+plan.event.eventState}}
-				.right.pull-left
-					.row
-						h3.pull-left When:
-						.data.pull-left {{getDate(plan.event.eventDate)| date:'EEE, MMM d @ h:mm a'}}
-					.row
-						h3.pull-left Total # Of Tix Available:
-						.data.pull-left(ng-show="tickets") Show total number of tix here
-						.data.pull-left(ng-hide="tickets") {{organizer.firstName}} has not purchased tickets yet...
-					.row
-						h3.pull-left Age Limit:
-						.data.pull-left(ng-show="plan.preferences.inviteOptions.over21") 21 & Over - Love the littles but this is an old folk night
-						.data.pull-left(ng-hide="plan.preferences.inviteOptions.over21") All Ages
 			.payment-type-note.alert.alert-info
 				strong ** NOTE:&nbsp;
 				span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
 				span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has chosen to foot the bill for this plan - w00t!
 				span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, {{organizer.firstName}} will lock in the tickets then send a link for everyone to pay for their portion of the outing.
-			.collect-rsvp-container
-				h3 Are You In Or Out?
-				.collect-rsvp(ng-hide="me.rsvp.date",ng-show="changeRsvpStatus")
-					.tickets-count.pull-left
-						label How Many Tickets Will You Need?&nbsp;
-							select(ng-model="rsvpTickets",ng-options="t for t in ticketCount")
-					.buttons.pull-left
-						a#yes.btn.btn-orange.btn-large.pull-left(ng-click="submitRsvp('tickets','yes')") Yes! I'm In!
-						a#no.btn.btn-large.pull-left(ng-click="submitRsvp('tickets','no')") No, I'm Out.
-				.collect-rsvp(ng-show="me.rsvp.date",ng-hide="changeRsvpStatus")
-					.rsvp-yes.rsvp-sentence.pull-left(ng-show="me.rsvp.decision") Yes, you're in and need a total of {{me.rsvp.tickets.headCount}} tickets.
-					.rsvp-no.rsvp-sentence.pull-left(ng-hide="me.rsvp.decision") No, you're out this time.
-					.change-rsvp.pull-left
-						a(ng-click="changeRsvpStatus=true") Change your rsvp
+			.event-container
+				.collect-rsvp-container.pull-left
+					.collect-rsvp
+						a#yes(ng-click="setRsvp('decision',true)",ng-class="{true:'active'}[me.decision]") YES!
+						a#no(ng-click="setRsvp('decision',false)",ng-class="{false:'active'}[me.decision]") NO.
+					fieldset
+						label
+							.input-prepend.input-append.pull-left
+								span.add-on # in your party (including yourself):
+								input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="pluralize",on-keydown="guestCountKeyDown",name="guest_count",ng-model="guestCount",placeholder="1")
+								span.add-on(ng-show="plural") people
+								span.add-on(ng-hide="plural") person
+				.info-container.pull-right
+					.info
+						.row
+							h3.pull-left Date:
+							.data.pull-left {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d'}}
+						.row
+							h3.pull-left Event:
+							.data.pull-left {{plan.event.eventName}}
+						.row
+							h3.pull-left Time:
+							.data.pull-left {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+						.row
+							h3.pull-left Location:
+							.data.pull-left {{plan.event.eventVenue}} -&nbsp;
+							.data.pull-left {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+						.row
+							h3.pull-left Age Limit:
+							.data.pull-left(ng-show="plan.preferences.inviteOptions.over21") 21+
+							.data.pull-left(ng-hide="plan.preferences.inviteOptions.over21") All Ages
+			.total-coming
+				.header
+					span.rsvp-count {{friends.length}}&nbsp;
+					span Invited,&nbsp;
+					span.rsvp-count {{totalComing}}&nbsp
+					span(ng-show="peopleComingPlural") People are
+					span(ng-hide="peopleComingPlural") Person is
+					span &nbsp;coming
 	section#section2.plan-section.even
 		.header
 			h1.pull-left Vote

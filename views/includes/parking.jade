@@ -1,7 +1,6 @@
 #parking-frame(ng-controller="ParkingCtrl")
 	#map-background
-		//- #map-container.google-map(lat="#{lat}",lng="#{lon}",markers="markers",map="map",center="center",zoom="zoom",draggable="true",mark-click="false",fit="true")
-		#map-container.parking-map(lat="#{lat}",lng="#{lon}",zoom="14",draggable="true",map-type-id="ROADMAP")
+		#map-container.parking-map(lat="#{lat}",lng="#{lon}",zoom="15",draggable="true",map-type-id="ROADMAP")
 	#parking.pull-right
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
@@ -11,4 +10,12 @@
 			include parking/read-only
 		- else
 			//- include parking/buy-now
-
+		.no-results
+			.notify-email(ng-show="notFound",type="parking",ng-transclude)
+				.collect-email(ng-hide="emailCollected")
+					p Aww shucks! We haven't got any parking listings to show you.  Enter your email below if you'd like to be notified when parking becomes available.
+					fieldset
+						input#email
+					button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
+				.collected-email(ng-show="emailCollected")
+					p OK! We'll let you know if any parking spots become available!

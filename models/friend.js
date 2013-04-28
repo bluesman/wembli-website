@@ -48,6 +48,7 @@ this.Model = function(mongoose) {
 			viewed:{type:Number,default:0},
 			viewedLastDate:{type:Date, default: null},
 			decision:{type:Boolean, default:null},
+			guestCount:{type:Number, default:1},
 			date:{type:Date,default:Date.now()},
 			tickets: {
 				headCount:Number,

@@ -34,7 +34,7 @@ angular.module('wembliApp.services', [])
 
 }])
 
-.factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
+	.factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
 	var self = this;
 	self.plan = null;
 	self.tickets = null;
@@ -290,17 +290,24 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-.factory('googleMap', [function() {
+	.factory('googleMap', ['$rootScope', function($rootScope) {
 	var self = this;
+	var centerOffset = {
+		lat:-0.002,
+		lng:0.01
+	}
 
 	self._markers = [];
 	self._infoWindows = [];
 	self._map = null;
 
 	/* state */
+	self.drawn = false;
 	self.dragging = false;
-	self.zoom     = 14;
-	self.center   = new google.maps.LatLng(32.722439302963,-117.1645658798);
+	self.zoom = 14;
+	self.center = new google.maps.LatLng(32.722439302963, -117.1645658798);
+
+
 
 	var mapDefaults = {
 		center: self.center,
@@ -315,46 +322,45 @@ angular.module('wembliApp.services', [])
 
 	return {
 		/* create a google map instance */
-		draw: function(element,options,handlers) {
+		draw: function(element, options, handlers) {
+			var o = angular.extend(mapDefaults,options);
+			/* apply the center offset */
+			var lat = o.center.lat() + centerOffset.lat;
+			var lng = o.center.lng() + centerOffset.lng;
+			o.center = new google.maps.LatLng(lat,lng);
 
-			if (self._map === null) {
+			/* instantiate a new google map */
+			self._map = new google.maps.Map(element[0], o);
 
-				/* instantiate a new google map */
-				self._map = new google.maps.Map(element[0], angular.extend(options, mapDefaults));
-				google.maps.event.addListener(self._map, "dragstart",	function() { self.dragging = true; });
+			google.maps.event.addListener(self._map, "dragstart", function() {
+				self.dragging = true;
+			});
 
-				google.maps.event.addListener(self._map, "idle", function() { self.dragging = false; });
+			google.maps.event.addListener(self._map, "idle", function() {
+				self.dragging = false;
+			});
 
-				google.maps.event.addListener(self._map, "drag", function() { self.dragging = true;	});
+			google.maps.event.addListener(self._map, "drag", function() {
+				self.dragging = true;
+			});
 
-				google.maps.event.addListener(self._map, "zoom_changed",function() {
-					self.zoom   = self._map.getZoom();
-					self.center = self._map.getCenter();
+			google.maps.event.addListener(self._map, "zoom_changed", function() {
+				self.zoom = self._map.getZoom();
+				self.center = self._map.getCenter();
+			});
+
+			google.maps.event.addListener(self._map, "center_changed", function() {
+				self.center = self._map.getCenter();
+			});
+
+			// Attach additional event listeners if needed
+			if (typeof handlers !== "undefined" && handlers.length) {
+				angular.forEach(handlers, function(h, i) {
+					google.maps.event.addListener(self._map, h.on, h.handler);
 				});
-
-				google.maps.event.addListener(self._map, "center_changed", function() { self.center = self._map.getCenter(); });
-
-        // Attach additional event listeners if needed
-        if (typeof handlers !== "undefined" && handlers.length) {
-          angular.forEach(handlers, function (h, i) {
-            google.maps.event.addListener(self._map, h.on, h.handler);
-          });
-        }
-			} else {
-        google.maps.event.trigger(self._map, "resize");
-
-        var instanceCenter = self._map.getCenter();
-
-        /* if the center has changed - reset it */
-        if (!floatEqual(instanceCenter.lat(), self.center.lat()) || !floatEqual(instanceCenter.lng(), self.center.lng())) {
-            self._map.setCenter(self.center);
-        }
-
-        /* if the zoom has changed - reset it */
-        if (self._map.getZoom() != self.zoom) {
-          self._map.setZoom(that.zoom);
-        }
 			}
+			self.drawn = true;
+			$rootScope.$broadcast('google-map-drawn');
 		},
 		getMap: function() {
 			return self._map;
@@ -373,9 +379,9 @@ angular.module('wembliApp.services', [])
 			}
 			return null;
 		},
-		hasMarker: function (lat, lng) {
-      return this.findMarker(lat, lng) !== null;
-    },
+		hasMarker: function(lat, lng) {
+			return this.findMarker(lat, lng) !== null;
+		},
 
 		removeMarker: function(lat, lng) {
 
@@ -395,7 +401,7 @@ angular.module('wembliApp.services', [])
 			self._infoWindows.unshift(win);
 			return win;
 		},
-		_findInfoWindow: function(lat,lng) {
+		_findInfoWindow: function(lat, lng) {
 			for (var i = 0; i < self._infoWindows.length; i++) {
 				var winLat = self._infoWindows[i].lat;
 				var winLng = self._infoWindows[i].lng;
@@ -405,21 +411,21 @@ angular.module('wembliApp.services', [])
 			}
 			return null;
 		},
-		findInfoWindow: function(lat,lng) {
-			var win = this._findInfoWindow(lat,lng);
+		findInfoWindow: function(lat, lng) {
+			var win = this._findInfoWindow(lat, lng);
 			return (win) ? win.infoWindow : null;
 		},
 		/* check if the infoWindow for a marker is open */
 		isInfoWindowOpen: function(marker) {
 			var lat = marker.getPosition().lat();
 			var lng = marker.getPosition().lng();
-			var win = this._findInfoWindow(lat,lng);
+			var win = this._findInfoWindow(lat, lng);
 			return (win) ? win.open : false;
 		},
 		closeInfoWindow: function(marker) {
 			var lat = marker.getPosition().lat();
 			var lng = marker.getPosition().lng();
-			var win = this._findInfoWindow(lat,lng);
+			var win = this._findInfoWindow(lat, lng);
 			win.open = false;
 			win.infoWindow.close();
 		},
@@ -427,7 +433,7 @@ angular.module('wembliApp.services', [])
 			console.log(marker);
 			var lat = marker.getPosition().lat();
 			var lng = marker.getPosition().lng();
-			var win = this._findInfoWindow(lat,lng);
+			var win = this._findInfoWindow(lat, lng);
 			win.open = true;
 			win.infoWindow.open(self._map, marker);
 		}
@@ -436,12 +442,12 @@ angular.module('wembliApp.services', [])
 
 }])
 
-.factory('mapInfoWindowContent', [function() {
+	.factory('mapInfoWindowContent', [function() {
 	return {
 		create: function(args) {
 			var html = '<div class="info-window">';
-			html += '<h3 class="info-window-header">'+args.header+'</h3>';
-			html += '<div class="info-window-body">'+args.body+'</div>';
+			html += '<h3 class="info-window-header">' + args.header + '</h3>';
+			html += '<div class="info-window-body">' + args.body + '</div>';
 			html += '</div>';
 			return html;
 		}
@@ -449,7 +455,7 @@ angular.module('wembliApp.services', [])
 
 }])
 
-.factory('rsvpLoginModal', [function() {
+	.factory('rsvpLoginModal', [function() {
 	var self = this;
 	return {
 		set: function(key, val) {
@@ -954,9 +960,9 @@ angular.module('wembliApp.services', [])
 		$scope.afterNextFrameAnimatesIn = true;
 		$scope.beforeNextFrameAnimatesIn = false;
 		console.log('setting sequence completed to true');
-		//$scope.$apply(function() {
-		$scope.sequenceCompleted = true;
-		//});
+		$scope.$apply(function() {
+			$scope.sequenceCompleted = true;
+		});
 		$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 	};
 

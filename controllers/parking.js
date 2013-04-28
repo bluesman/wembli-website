@@ -8,10 +8,25 @@ var wembliModel = require('wembli-model'),
 
 
 module.exports = function(app) {
+	app.get('/parking', function(req, res) {
+		res.render('no-event', {
+			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+		});
+	});
+
+	app.get('/partials/parking', function(req, res) {
+		res.render('partials/no-event', {
+			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+		});
+	});
 
 	var viewParking = function(req,res,template,locals) {
 		if (typeof req.session.plan === "undefined") {
-			return res.render('no-event', {
+			var t = 'no-event';
+			if (/^partials/.test(template)) {
+				t = 'partials/'+t;
+			}
+			return res.render(t, {
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 			});
 		}
@@ -31,11 +46,12 @@ module.exports = function(app) {
 					locals.lat = geocode[0].geometry.location.lat;
 					locals.lon = geocode[0].geometry.location.lng;
 				}
+				console.log('rendering: '+template);
 				res.render(template, locals);
 			});
 		},[args,req,res]);
 	};
 
-	app.get('/parking', function(req, res) { viewParking(req,res,'parking',{}) });
-	app.get('/partials/parking', function(req, res) { viewParking(req,res,'partials/parking',{}) });
+	app.get('/parking/:eventId/:eventName', function(req, res) { viewParking(req,res,'parking',{}) });
+	app.get('/partials/parking/:eventId/:eventName', function(req, res) { viewParking(req,res,'partials/parking',{partial:true}) });
 }

@@ -10,8 +10,17 @@ module.exports = {
 				'icon': "icon-group",
 				'text': "Invitees",
 			}, {
+				'icon': "icon-flag",
+				'text': "Tickets",
+			}, {
 				'icon': "icon-money",
-				'text': "Pony Up!",
+				'text': "Parking",
+			}, {
+				'icon': "icon-food",
+				'text': "Restaurant",
+			}, {
+				'icon': "icon-money",
+				'text': "Hotel",
 			}, {
 				'icon': "icon-file-alt",
 				'text': "Itinerary",
@@ -20,8 +29,8 @@ module.exports = {
 				'text': "Chatter",
 			}],
 			'friend': [{
-				'icon': "icon-edit",
-				'text': "RSVP",
+				'icon': "icon-flag",
+				'text': "Event",
 			}, {
 				'icon': "icon-bar-chart",
 				'text': "Vote",

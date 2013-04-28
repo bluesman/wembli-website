@@ -1,3 +1,23 @@
+.no-results {
+	margin-bottom:60px;
+}
+.collected-email, .collect-email {
+	#translucent > .background(@grayLight,0.9);
+	padding:20px 40px 80px 40px;
+
+	p {
+		padding:20px;
+	}
+	#email {
+		height:25px;
+		width:300px;
+	}
+	button {
+		font-size:12px;
+		margin:10px 34px;
+	}
+}
+
 #parking-frame {
 	overflow:hidden;
 	.clearfix();
@@ -6,7 +26,18 @@
 		text-align:center;
 		position:absolute;
 		height:100%;
-		width:68%;
+		width:100%;
+
+		.info-window {
+			height:100%;
+			h3 {
+				padding:0;
+				margin:0;
+				line-height:14px;
+				font-size:12px;
+				font-weight: bold;
+			}
+		}
 
 		#map-container {
 			height:100%;
@@ -22,7 +53,7 @@
 		overflow-x:hidden;
 
 		.parking-list-container .parking-row, #parking-filter-container, .parking-list-header-container {
-				#translucent > .background(@grayLight,0.25);
+				#translucent > .background(@grayLight,0.9);
 		}
 
 		.dollar-sign {
@@ -56,7 +87,7 @@
 
 			#price-range-form {
 				.clearfix();
-				#translucent > .background(@grayLight,0.25);
+				#translucent > .background(@grayLight,0.9);
 
 				fieldset {
 
@@ -66,7 +97,7 @@
 						color:@grayDark;
 					}
 					label.checkbox:hover {
-						#translucent > .background(@blue,0.25);
+						#translucent > .background(@blue,0.9);
 						color:@orange;
 					}
 				}
@@ -212,14 +243,14 @@
 				}
 			}
 			.parking-row:hover {
-				#translucent > .background(@grayLight,0.25);
+				#translucent > .background(@grayLight,0.9);
 			}
 
 		}
 
 		.parking-list-container {
 			.parking-row:hover {
-				#translucent > .background(@blue,0.25);
+				#translucent > .background(@blue,0.9);
 			}
 			.parking-row {
 				.clearfix();
@@ -266,6 +297,13 @@
 					text-align:center;
 					font-size:12px;
 					width:80px;
+					padding:10px 0px;
+
+				}
+				.no-reservations-available {
+					text-align:center;
+					font-size:12px;
+					width:210px;
 					padding:10px 0px;
 
 				}

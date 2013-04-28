@@ -1983,7 +1983,7 @@ body {
 }
 .event-data {
   *zoom: 1;
-  background-color: rgba(66, 127, 184, 0.25);
+  background-color: #427fb8;
 }
 .event-data:before,
 .event-data:after {
@@ -1993,6 +1993,9 @@ body {
 }
 .event-data:after {
   clear: both;
+}
+.event-data a {
+  color: #ffffff;
 }
 .event-date-box {
   float: left;
@@ -2041,7 +2044,7 @@ body {
 .info .name,
 .info .venue,
 .info .location {
-  width: 340px;
+  width: 350px;
 }
 #payment-type-modal form {
   margin: 20px;
@@ -2170,9 +2173,9 @@ body {
 }
 #content #index-frame #feeds .feed .body {
   *zoom: 1;
-  height: 500px;
+  height: 550px;
   overflow: auto;
-  padding: 40px 0;
+  padding-top: 20px;
 }
 #content #index-frame #feeds .feed .body:before,
 #content #index-frame #feeds .feed .body:after {
@@ -2194,7 +2197,7 @@ body {
 }
 #content #index-frame #feeds #feed-left .body {
   background-color: #CCC;
-  margin: -30px 1px;
+  margin: -30px 1px 0;
 }
 #content #index-frame #feeds #feed-left .body .event-wrapper .event-date-box {
   background: #f0f0f0;
@@ -2255,7 +2258,7 @@ body {
   background-color: #333;
   margin: -40px 10px;
   padding: 40px 0px 0px;
-  height: 540px;
+  height: 541px;
 }
 #content #index-frame #feeds #feed-right .header {
   margin-top: 23px;
@@ -2267,9 +2270,9 @@ body {
 }
 #content #index-frame #feeds #feed-right .body {
   background-color: #808080;
-  margin: -30px 1px;
+  margin: -30px 1px 0;
   font-size: 18px;
-  height: 501px;
+  height: 551px;
 }
 #content #index-frame #feeds #feed-right .body .quote {
   width: 298px;
@@ -2995,6 +2998,28 @@ body {
 #tickets-frame #tickets #self-ticket-list-container .ticket-row .ticket-price {
   margin: 0 10px;
 }
+.no-results {
+  margin-bottom: 60px;
+}
+.collected-email,
+.collect-email {
+  background-color: rgba(215, 213, 214, 0.9);
+  padding: 20px 40px 80px 40px;
+}
+.collected-email p,
+.collect-email p {
+  padding: 20px;
+}
+.collected-email #email,
+.collect-email #email {
+  height: 25px;
+  width: 300px;
+}
+.collected-email button,
+.collect-email button {
+  font-size: 12px;
+  margin: 10px 34px;
+}
 #parking-frame {
   overflow: hidden;
   *zoom: 1;
@@ -3012,7 +3037,17 @@ body {
   text-align: center;
   position: absolute;
   height: 100%;
-  width: 68%;
+  width: 100%;
+}
+#parking-frame #map-background .info-window {
+  height: 100%;
+}
+#parking-frame #map-background .info-window h3 {
+  padding: 0;
+  margin: 0;
+  line-height: 14px;
+  font-size: 12px;
+  font-weight: bold;
 }
 #parking-frame #map-background #map-container {
   height: 100%;
@@ -3029,7 +3064,7 @@ body {
 #parking-frame #parking .parking-list-container .parking-row,
 #parking-frame #parking #parking-filter-container,
 #parking-frame #parking .parking-list-header-container {
-  background-color: rgba(215, 213, 214, 0.25);
+  background-color: rgba(215, 213, 214, 0.9);
 }
 #parking-frame #parking .dollar-sign {
   font-size: 20px;
@@ -3057,7 +3092,7 @@ body {
 }
 #parking-frame #parking #parking-price-range #price-range-form {
   *zoom: 1;
-  background-color: rgba(215, 213, 214, 0.25);
+  background-color: rgba(215, 213, 214, 0.9);
 }
 #parking-frame #parking #parking-price-range #price-range-form:before,
 #parking-frame #parking #parking-price-range #price-range-form:after {
@@ -3074,7 +3109,7 @@ body {
   color: #524f45;
 }
 #parking-frame #parking #parking-price-range #price-range-form fieldset label.checkbox:hover {
-  background-color: rgba(66, 127, 184, 0.25);
+  background-color: rgba(66, 127, 184, 0.9);
   color: #ff6700;
 }
 #parking-frame #parking #parking-price-range #price-range-form a {
@@ -3222,10 +3257,10 @@ body {
   margin-top: 6px;
 }
 #parking-frame #parking #group-parking-list-container .parking-row:hover {
-  background-color: rgba(215, 213, 214, 0.25);
+  background-color: rgba(215, 213, 214, 0.9);
 }
 #parking-frame #parking .parking-list-container .parking-row:hover {
-  background-color: rgba(66, 127, 184, 0.25);
+  background-color: rgba(66, 127, 184, 0.9);
 }
 #parking-frame #parking .parking-list-container .parking-row {
   *zoom: 1;
@@ -3285,6 +3320,12 @@ body {
   text-align: center;
   font-size: 12px;
   width: 80px;
+  padding: 10px 0px;
+}
+#parking-frame #parking .parking-list-container .parking-row .no-reservations-available {
+  text-align: center;
+  font-size: 12px;
+  width: 210px;
   padding: 10px 0px;
 }
 #parking-frame #parking .parking-list-container .parking-row .parking-distance {
@@ -3570,6 +3611,9 @@ a#facebook-login-button {
 #plan-frame {
   height: 100%;
 }
+#plan-frame input {
+  border: thin solid #d8d6d7;
+}
 #plan-frame #left {
   width: 18%;
   height: 100%;
@@ -3667,6 +3711,18 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .plan-section {
   padding: 0 20px;
 }
+#plan-frame #middle #plan-dashboard .plan-section .body {
+  *zoom: 1;
+}
+#plan-frame #middle #plan-dashboard .plan-section .body:before,
+#plan-frame #middle #plan-dashboard .plan-section .body:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .plan-section .body:after {
+  clear: both;
+}
 #plan-frame #middle #plan-dashboard #section1 .body > h3 {
   color: #214478;
 }
@@ -3676,81 +3732,142 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard #section1 .body h3 {
   font-weight: bold;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .info {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container {
   *zoom: 1;
-  margin: 10px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .info:before,
-#plan-frame #middle #plan-dashboard #section1 .body .info:after {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container:before,
+#plan-frame #middle #plan-dashboard #section1 .body .event-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .info:after {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .info .row {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container {
+  width: 50%;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info {
+  *zoom: 1;
+  background-color: #d8d6d7;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 0;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info:before,
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info .row {
   *zoom: 1;
   margin: 0;
-  padding: 0;
+  padding: 2px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .info .row:before,
-#plan-frame #middle #plan-dashboard #section1 .body .info .row:after {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info .row:before,
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .info .row:after {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info .row:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .info .row .data {
-  padding: 8px;
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info .row h3 {
+  line-height: 20px;
+  vertical-align: middle;
+  padding: 0px;
+  margin-right: 2px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container h3 {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .info-container .info .row .data {
+  line-height: 15px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container {
+  padding: 0px;
+  width: 45%;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container h3 {
   padding: 10px 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container .collect-rsvp {
   *zoom: 1;
-  border: 2px solid #524f45;
-  padding: 20px;
+  padding: 35px 0px;
+  /* change this to auto to center the rsvp */
+
+  margin: 0;
+  width: 230px;
+  text-align: center;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container .collect-rsvp:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container .collect-rsvp:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .rsvp-sentence {
-  padding: 45px;
-}
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .tickets-count {
-  padding: 45px 20px 45px 45px;
-}
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .tickets-count label {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container .collect-rsvp a {
+  margin: 10px;
   font-weight: bold;
+  color: #d8d6d7;
+  font-size: 54px;
+  display: block;
+  float: left;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .tickets-count label select {
-  margin: 2px 20px;
-  width: 60px;
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container .collect-rsvp a.active,
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container .collect-rsvp a:hover {
+  color: #ff6700;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .buttons {
-  margin: 20px 0;
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container fieldset {
+  width: 290px;
+  /* change this to auto to center the rsvp */
+
+  margin: 0;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container fieldset label {
   *zoom: 1;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .buttons:before,
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .buttons:after {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container fieldset label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .buttons:after {
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container fieldset label:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .collect-rsvp-container .collect-rsvp .buttons a {
-  margin: 20px;
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container fieldset label #including-yourself {
+  line-height: 30px;
+  vertical-align: middle;
+  padding-left: 10px;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .event-container .collect-rsvp-container fieldset label #guest-count {
+  width: 30px;
+  height: 26px;
+  text-align: center;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .total-coming {
+  margin-top: 30px;
+  color: #524f45;
+  width: 200px;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .total-coming .header {
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  background-color: #d8d6d7;
+  padding: 10px;
+}
+#plan-frame #middle #plan-dashboard #section1 .body .total-coming .header .rsvp-count {
+  font-size: 26px;
 }
 #plan-frame #right {
   width: 18%;

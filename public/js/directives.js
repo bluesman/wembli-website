@@ -184,21 +184,66 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         var height = angular.element($window).height();
         $('#section6').css('min-height', height);
 
-        /* init some scope */
-        scope.ticketCount = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
-        scope.rsvpTickets = 1;
-        scope.changeRsvpStatus = false;
+        console.log('pluralize');
+        scope.pluralize = function(scope2,elm,attr) {
+          if (scope.guestCount == 1) {
+            scope.plural = false;
+          } else {
+            scope.plural = true;
+          }
+        }
+
+        /* pluralize the people coming list header */
+        scope.$watch('peopleComing', function() {
+            if (scope.peopleComing == 1) {
+              scope.peopleComingPlural = false;
+            } else {
+              scope.peopleComingPlural = true;
+            }
+        });
+
+        /* toggle decision when guest cound goes above 0 */
+        scope.$watch('guestCount',function() {
+          if (typeof scope.guestCount === "undefined") {
+            return;
+          }
+
+          if (scope.guestCount > 0) {
+            scope.me.decision = true;
+          } else {
+            scope.me.decision = false;
+          }
+        })
+
+        /* set guestCount to 0 if decision is false */
+        scope.$watch('me.decision',function() {
+          if (scope.me.decision === false) {
+            scope.guestCount = 0;
+          }
+        })
+
+        /* key bindings for up and down arrows for guestCount */
+        scope.guestCountKeyDown = function(scope2, elm, attr, evt) {
+          console.log('keycode: '+evt.keyCode);
+        }
 
         scope.plan = plan.get();
+        console.log(scope.plan);
         if (typeof plan.getFriends() !== "undefined") {
           scope.friends   = plan.getFriends();
+          scope.totalComing = 0;
+
           /* get the friend that is this customer */
           for (var i = 0; i < scope.friends.length; i++) {
             if (scope.friends[i].customerId === customer.get().id) {
               scope.me = scope.friends[i];
-              break;
+            }
+            if (scope.friends[i].rsvp.decision) {
+              scope.totalComing += 1;
             }
           };
+          /* default guest count */
+          scope.guestCount = scope.me.rsvp.guestCount ? scope.me.rsvp.guestCount : 1;
         }
 
         if (typeof plan.getOrganizer() !== "undefined") {
@@ -206,8 +251,12 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
         }
 
         /* handle the main plan rsvp */
-        scope.submitRsvp = function(rsvpFor,rsvp) {
+        scope.setRsvp = function(rsvpFor,rsvp) {
           var funcs = {
+            'decision' : function(rsvp) {
+              console.log('setting decision to: '+rsvp);
+              scope.me.decision = rsvp;
+            },
             'tickets' : function(rsvp) {
               /* get tickets rsvp data from the scope */
               var a = {rsvp:rsvp};
@@ -572,19 +621,38 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 }])
 */
 
-.directive('parkingMap',['googleMap',function(googleMap) {
+.directive('parkingMap',['$rootScope','googleMap',function($rootScope,googleMap) {
   return {
     restrict:'EC',
     cache:false,
     replace:true,
     compile: function(element, attr, transclude) {
       return function(scope, element, attr) {
+        console.log('link parking map!');
+
         var mapTypeId = (attr.mapTypeId) ? google.maps.MapTypeId[attr.mapTypeId] : google.maps.MapTypeId.ROADMAP;
 
         /* draw the map */
         var mapOpts = {mapTypeId:mapTypeId};
         mapOpts.center = new google.maps.LatLng(attr.lat,attr.lng);
-        googleMap.draw(element,mapOpts);
+
+        if (attr.zoom) {
+          mapOpts.zoom = parseInt(attr.zoom);
+        }
+        if (attr.draggable) {
+          mapOpts.draggable = attr.draggable;
+        }
+        console.log('mapopts');
+        console.log(mapOpts);
+        if (scope.sequenceCompleted) {
+          googleMap.draw(element,mapOpts);
+        } else {
+          scope.$watch('sequenceCompleted',function(complete) {
+            if (complete) {
+              googleMap.draw(element,mapOpts);
+            }
+          })
+        }
       };
     }
   };
@@ -687,6 +755,23 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
           scope.event = plan.event;
         });
         //});
+      }
+    }
+  }
+}])
+
+.directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence', function($rootScope, $filter, wembliRpc, plan, sequence) {
+  return {
+    restrict: 'C',
+    cache: false,
+    transclude:true,
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr) {
+        scope.emailCollected = false;
+        scope.collectEmail = function() {
+          console.log('collecting email: '+angular.element('#email').val());
+          scope.emailCollected = true;
+        }
       }
     }
   }
@@ -1256,12 +1341,35 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     //Evaluate the variable that was passed
     //In this case we're just passing a variable that points
     //to a function we'll call each keyup
-    var keyupFn = scope.$eval(attrs.onKeyup);
     elm.bind('keyup', function(evt) {
+      console.log(attrs.onKeyup);
+      var keyupFn = scope.$eval(attrs.onKeyup);
+      console.log('keyup');
+      console.log(keyupFn);
       //$apply makes sure that angular knows
       //we're changing something
       scope.$apply(function() {
-        keyupFn.call(scope, elm, attrs);
+        keyupFn.call(scope, elm, attrs, evt);
+      });
+    });
+  };
+})
+
+  .directive('onKeydown', function() {
+  return function(scope, elm, attrs) {
+    //Evaluate the variable that was passed
+    //In this case we're just passing a variable that points
+    //to a function we'll call each keyup
+    elm.bind('keydown', function(evt) {
+      console.log(attrs.onKeydown);
+      var keydownFn = scope.$eval(attrs.onKeydown);
+      console.log('keydown');
+      console.log(keydownFn);
+      //$apply makes sure that angular knows
+      //we're changing something
+      scope.$apply(function() {
+        console.log('calling keydown func');
+        keydownFn.call(scope, elm, attrs, evt);
       });
     });
   };

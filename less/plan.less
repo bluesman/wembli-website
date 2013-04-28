@@ -7,6 +7,12 @@
 
 #plan-frame {
 	height:100%;
+
+	input {
+		border:thin solid @grayLight;
+	}
+
+
 	#left {
 		width:18%;
 		height:100%;
@@ -83,6 +89,9 @@
 
 			.plan-section {
 				padding:0 20px;
+				.body {
+					.clearfix();
+				}
 			}
 
 			/* event info and main plan rsvp */
@@ -95,55 +104,98 @@
 					h3 {
 						font-weight: bold;
 					}
-					.info {
+
+					.event-container {
 						.clearfix();
-						margin:10px;
 
-						.left {
+						.info-container {
+							width:50%;
 
-						}
-						.right {
-
-						}
-						.row {
-							.clearfix();
-							margin:0;
-							padding:0;
-							.data {
-								padding:8px;
-							}
-						}
-					}
-					.collect-rsvp-container {
-
-						h3 {
-							padding:10px 0;
-						}
-						.collect-rsvp {
-							.clearfix();
-							border: 2px solid @grayDark;
-							padding:20px;
-
-							.rsvp-sentence {
-								padding:45px;
-							}
-
-							.tickets-count {
-								padding: 45px 20px 45px 45px;
-								label {
-									font-weight:bold;
-									select {
-										margin:2px 20px;
-										width:60px;
+							.info {
+								.clearfix();
+								background-color:@grayLight;
+								.border-radius(6px);
+								padding:10px;
+								margin:0;
+								.row {
+									.clearfix();
+									margin:0;
+									padding:2px;
+									h3 {
+										line-height: 20px;
+										vertical-align: middle;
+										padding:0px;
+										margin-right:2px;
+									}
+									.data {
+										line-height: 15px;
+										vertical-align: middle;
 									}
 								}
 							}
-							.buttons {
-								margin:20px 0;
+						}
+						.collect-rsvp-container {
+							padding:0px;
+							width:45%;
+							h3 {
+								padding:10px 0;
+							}
+							.collect-rsvp {
 								.clearfix();
+								padding:35px 0px;
+
+								/* change this to auto to center the rsvp */
+								margin:0;
+
+								width:230px;
+								text-align:center;
+
 								a {
-									margin:20px;
+									margin:10px;
+									font-weight:bold;
+									color:@grayLight;
+									font-size: 54px;
+									display:block;
+									float:left;
 								}
+								a.active,a:hover {
+									color:@orange;
+								}
+							}
+							fieldset {
+								width:290px;
+
+								/* change this to auto to center the rsvp */
+								margin:0;
+
+								label {
+									.clearfix();
+									#including-yourself {
+										line-height:30px;
+										vertical-align: middle;
+										padding-left:10px;
+									}
+									#guest-count {
+										width:30px;
+										height:26px;
+										text-align:center;
+									}
+								}
+							}
+						}
+					}
+
+					.total-coming {
+						margin-top:30px;
+						color:@grayDark;
+						width:230px;
+						.header {
+							.border-radius(6px);
+							background-color: @grayLight;
+							padding:10px;
+
+							.rsvp-count {
+								font-size:26px;
 							}
 						}
 					}
