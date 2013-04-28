@@ -731,7 +731,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				/* display the tweet dialog box */
 				$('#modal-' + friend.screen_name).modal("show");
 				/* reset the tweet form data */
-				var rsvpUrl = 'http://tom.wembli.com/rsvp/' + $scope.plan.guid + '/' + friend.rsvp.token + '/twitter';
+				var rsvpUrl = 'http://www2.wembli.com/rsvp/' + $scope.plan.guid + '/' + friend.rsvp.token + '/twitter';
 				$scope.twitter.messageText = '@' + friend.screen_name + ' You are invited to an outing I am planning with @wembli | RSVP By ' + $filter('date')(result.friend.rsvp.date, 'M/d/yy') + ' | ' + rsvpUrl;
 				$scope.twitter.countChars();
 			});
