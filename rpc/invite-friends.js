@@ -178,7 +178,7 @@ exports["invite-friends"] = {
 			console.log(results);
 
 			/* now that we have added the friend to the plan and have a token, send the wembli email */
-			var rsvpLink = "http://tom.wembli.com/rsvp/" + req.session.plan.guid + "/"+results.friend.rsvp.token+"/wemblimail";
+			var rsvpLink = "http://www2.wembli.com/rsvp/" + req.session.plan.guid + "/"+results.friend.rsvp.token+"/wemblimail";
 			wembliEmail.sendRSVPEmail({
 				res: res,
 				req: req,
