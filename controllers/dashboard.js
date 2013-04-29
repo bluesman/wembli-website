@@ -48,6 +48,19 @@ module.exports = function(app) {
 	});
 
 
+	/* if they try to hit refresh on the prefs page - send to the dashboard */
+	app.get('/dashboard/preferences',function(req,res) {
+		res.redirect('/dashboard');
+	});
+
+	app.get('/partials/dashboard/preferences', function(req,res) {
+		res.render('partials/dashboard/preferences',{partial:true});
+	});
+
+
+
+
+
 	var foo = function( ) {
 
 		//clear the updateEvent session so searches start over

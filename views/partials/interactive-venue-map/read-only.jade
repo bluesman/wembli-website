@@ -13,8 +13,8 @@
 			label.checkbox(ng-click="handlePriceRange()",title="Above $300")
 				input#high(type="checkbox",ng-model="priceRange.high")
 				span.dollar-sign(ng-class="{true:'orange'}[priceRange.high]") $$$
-		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-hide="{'friend':true}[context]",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
-		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-show="{'friend':true}[context]",href="/plan",direction="1") Back To The Plan
+		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-hide="backToPlan",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
+		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-show="backToPlan",href="/plan",direction="1") Back To The Plan
 #group-ticket-list-header-container.ticket-list-header-container
 	#group-ticket-list-header
 		h4.pull-left Preview ticket options in your price range

@@ -365,7 +365,14 @@ angular.module('wembliApp.services', [])
 				});
 			}
 			self.drawn = true;
+			console.log('broadcast google map is drawn');
 			$rootScope.$broadcast('google-map-drawn');
+		},
+		isDrawn: function(val) {
+			if (typeof val !== "undefined") {
+				self.drawn = val;
+			}
+			return self.drawn;
 		},
 		getMap: function() {
 			return self._map;

@@ -4225,7 +4225,7 @@ a#facebook-login-button {
   min-width: 230px;
 }
 #dashboard-wrapper #left #dashboard-header .dropdown {
-  margin-top: 20px;
+  margin-top: 10px;
   line-height: 26px;
   vertical-align: middle;
   text-transform: capitalize;
@@ -4255,19 +4255,17 @@ a#facebook-login-button {
   background: #524f45;
   color: #ffffff;
 }
-#dashboard-wrapper #left #dashboard-header div {
+#dashboard-wrapper #left #dashboard-header .dropdown .welcome-message {
+  font-size: 12px;
+  padding: 0 10px;
   width: 230px;
-  margin: 20px;
-  padding: 4px 10px;
 }
-#dashboard-wrapper #left #dashboard-header div #start-now {
-  width: 200px;
-}
-#dashboard-wrapper #left #dashboard-header div .welcome-message {
-  padding: 10px;
-}
-#dashboard-wrapper #left #dashboard-header div .icon-cog {
+#dashboard-wrapper #left #dashboard-header .dropdown .icon-cog {
   float: left;
+}
+#dashboard-wrapper #left #dashboard-header #start-now {
+  margin-top: 10px;
+  width: 200px;
 }
 #dashboard-wrapper #left #dashboard-body {
   padding: 50px;

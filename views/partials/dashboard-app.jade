@@ -2,21 +2,24 @@
 	#dashboard-header
 		.dropdown.pull-left
 			a.toggle-selected.dropdown-toggle(data-toggle="dropdown", role="button",href="#")
-				i.icon-cog.icon-2x
-				span.welcome-message.helvetica {{welcomeMessage}}
-				i.icon-caret-down
+				.cog-wrapper.pull-left
+					i.icon-cog.icon-2x
+				.welcome-message.helvetica.pull-left {{welcomeMessage}}
+				.caret-wrapper.pull-left
+					i.icon-caret-down
 			ul.dropdown-menu(role="menu")
 				li
-					a(href="#") Profile Settings
-					a(href="#") Plan Preferences
-					a(href="#") Payment Information
+					a.dashboard-dropdown-link(href="#dashboard",ng-click="routeDashboard($element)") Dashboard
+					a.dashboard-dropdown-link(href="#settings",ng-click="routeDashboard(this)") Profile Settings
+					a.dashboard-dropdown-link(href="#preferences",ng-click="routeDashboard(this)") Plan Preferences
+					a.dashboard-dropdown-link(href="#payment-information",ng-click="routeDashboard(this)") Payment Information
 					a(href="/logout", ng-click="facebook.logout()") Log out
 
 		.pull-right
 			a#start-now.pull-left.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
 				span START A NEW PLAN&nbsp;
 				i.icon-double-angle-right
-	#dashboard-body
+	#dashboard-body(ng-show="showDashboard")
 		.alert.hide
 			span You must provide payment information if you want to be paid back.
 			a(href="#") Click here to provide payment information.
@@ -34,3 +37,6 @@
 			a#archive.btn.dashboard-button(href="#archive-modal",data-toggle="modal")
 				h3 Past Events
 				i.icon-list-alt.icon-3x
+	#settings.settings(ng-show="showSettings") settings
+	#preferences.preferences(ng-show="showPreferences") preferences
+	#payment-information.payment-information(ng-show="showPaymentInformation")	payment-information
