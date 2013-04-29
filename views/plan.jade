@@ -1,12 +1,9 @@
 extends layout
 block frame1
-	if ((typeof plan === "undefined") || typeof plan.event.eventId === "undefined")
-		include includes/no-event
-	else
-		#plan-frame(ng-controller="PlanCtrl")
-			#left
-				plan-nav
-			#middle
-				plan-dashboard
-			#right
-				plan-feed
+	#plan-frame(ng-controller="PlanCtrl")
+		#left
+			plan-nav
+		#middle
+			plan-dashboard
+		#right
+			plan-feed

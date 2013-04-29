@@ -1,17 +1,17 @@
 var ticketNetwork = require('../lib/wembli/ticketnetwork');
 var async = require('async');
 require('date-utils');
-var eventRpc      = require('../rpc/event').event;
+var eventRpc = require('../rpc/event').event;
 
 module.exports = function(app) {
 
 	/* use case: visitor.context = 'visitor' trying to view the event details */
-	app.get('/event/:eventId/:eventName',function(req,res) {
+	app.get('/event/:eventId/:eventName', function(req, res) {
 		console.log('render event detail');
 		res.render('event-detail');
 	});
 
-	app.get('/partials/event/:eventId/:eventName',function(req,res) {
+	app.get('/partials/event/:eventId/:eventName', function(req, res) {
 		res.render('partials/event-detail');
 	});
 
@@ -24,15 +24,15 @@ module.exports = function(app) {
 
 
 	/* event-options */
-	var viewOptionsForm = function(req,res,template,locals) {
+	var viewOptionsForm = function(req, res, template, locals) {
 		var showOptionsForm = function() {
-			req.session.plan.event.eventId   = req.param('eventId');
+			req.session.plan.event.eventId = req.param('eventId');
 			req.session.plan.event.eventName = req.param('eventName');
 
 			/* reset the eventOptionsForm */
 			locals.eventId = req.param('eventId');
 			locals.eventName = req.param('eventName');
-			return res.render(template,locals);
+			return res.render(template, locals);
 		};
 
 		/*
@@ -54,106 +54,126 @@ module.exports = function(app) {
 		}
 		console.log('redirect');
 		/* if its any other condition they should not be here so redirect them to the /event/ page for this event */
-		var redirect = '/event/'+req.param('eventId')+'/'+req.param('eventName');
+		var redirect = '/event/' + req.param('eventId') + '/' + req.param('eventName');
 		return res.redirect(redirect);
 	};
 
 	//use case 1a: its either a incoming link (bot) or the user hitting refresh
-	app.get('/event-options/:eventId/:eventName',function(req,res) { return viewOptionsForm(req,res,'event-options',{}); });
+	app.get('/event-options/:eventId/:eventName', function(req, res) {
+		return viewOptionsForm(req, res, 'event-options', {});
+	});
 
 	//use case 1b: load the partial that displays event options
-	app.get('/partials/event-options/:eventId/:eventName',function(req,res) { return viewOptionsForm(req, res, 'partials/event-options', {}) });
+	app.get('/partials/event-options/:eventId/:eventName', function(req, res) {
+		return viewOptionsForm(req, res, 'partials/event-options', {})
+	});
 
-	app.get('/partials/includes/event/hero',function(req,res) {
+	app.get('/partials/includes/event/hero', function(req, res) {
 		res.render('partials/includes/event/hero');
 	});
 
 	/*
 	  post the submit for the plan options
 	*/
-	app.post('/event-options/:eventId/:eventName',function(req,res) {
+	app.post('/event-options/:eventId/:eventName', function(req, res) {
 
-		//go through the options and add them to the current plan
-		var options = {};
+		/* if this visitor already has a req.session.plan
+			and they are the organizer
+			and it is the same eventId as req.session.eventId
+			then override only the preferences */
+		if ((req.session.visitor.context === "organizer") || ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer === "undefined"))) {
 
-		//set the form data in the session so the angular app can read any errors
-		req.session.eventOptionsForm = {
-			parking:      req.param('parking') ? true : false,
-			restaurant:   req.param('restaurant') ? true : false,
-			hotel:        req.param('hotel') ? true : false,
-			guestFriends: req.param('guest_friends') ? true : false,
-			over21:       req.param('over_21') ? true : false,
-			guestList:    req.param('guest_list'),
-			errors:       {}
-		};
+			//set the form data in the session so the angular app can read any errors
+			req.session.eventOptionsForm = {
+				parking: req.param('parking') ? true : false,
+				restaurant: req.param('restaurant') ? true : false,
+				hotel: req.param('hotel') ? true : false,
+				organizerNotAttending: req.param('organizer_not_attending') ? true : false,
+				guestFriends: req.param('guest_friends') ? true : false,
+				over21: req.param('over_21') ? true : false,
+				guestList: req.param('guest_list'),
+				errors: {}
+			};
 
-		//add-ons
-		//parking, restaurant or hotel
-		options.addOns = {
-			'parking':false,
-			'restaurant':false,
-			'hotel':false
-		}
+			//add-ons
+			//parking, restaurant or hotel
+			req.session.plan.preferences.addOns = {
+				'parking': false,
+				'restaurant': false,
+				'hotel': false
+			}
 
-		if (typeof req.param('parking') !== "undefined") {
-			options.addOns.parking = req.param('parking');
-		}
-		if (typeof req.param('restaurant') !== "undefined") {
-			options.addOns.restaurant = req.param('restaurant');
-		}
-		if (typeof req.param('hotel') !== "undefined") {
-			options.addOns.hotel = req.param('hotel');
-		}
+			if (typeof req.param('parking') !== "undefined") {
+				req.session.plan.preferences.addOns.parking = req.param('parking');
+			}
+			if (typeof req.param('restaurant') !== "undefined") {
+				req.session.plan.preferences.addOns.restaurant = req.param('restaurant');
+			}
+			if (typeof req.param('hotel') !== "undefined") {
+				req.session.plan.preferences.addOns.hotel = req.param('hotel');
+			}
+
+			//invite options: guest_friends, over_21
+			req.session.plan.preferences.inviteOptions = {
+				'organizerRsvp': true, //the organizer is attending
+				'guestFriends': true, //guests are allowed to invite friends
+				'over21': false //lets guests know kids are not invited
+			}
+
+			if (typeof req.param('organizer_not_attending') !== "undefined") {
+				req.session.plan.preferences.inviteOptions.organizerRsvp = req.param('organizer_not_attending') ? false : true;
+			}
+			if (typeof req.param('guest_friends') !== "undefined") {
+				req.session.plan.preferences.inviteOptions.guestFriends = req.param('guest_friends');
+			}
+			if (typeof req.param('over_21') !== "undefined") {
+				req.session.plan.preferences.inviteOptions.over21 = req.param('over_21');
+			}
 
 
-		//invite options: guest_friends, over_21
-		options.inviteOptions = {
-			'guestFriends':true, //guests are allowed to invite friends
-			'over21': false //lets guests know kids are not invited
-		}
+			//guest list privacy options: full, rsvp, private
+			if ((req.param('guest_list') === 'full') || (req.param('guest_list') === 'rsvp') || (req.param('guest_list') === 'private')) {
+				req.session.plan.preferences.guestList = req.param('guest_list');
+			} else {
+				req.session.eventOptionsForm.errors.guestList = true;
+			}
 
-		if (typeof req.param('guest_friends') !== "undefined") {
-			options.inviteOptions.guestFriends = req.param('guest_friends');
-		}
-		if (typeof req.param('over_21') !== "undefined") {
-			options.inviteOptions.over21 = req.param('over_21');
-		}
+			if (Object.keys(req.session.eventOptionsForm.errors).length > 0) {
+				//render the event options form again with errors
+				return res.render('partials/event-options', {
+					eventId: req.param('eventId'),
+					eventName: req.param('eventName')
+				});
+			}
 
+			req.session.plan.preferences.payment = req.session.plan.preferences.payment;
 
-		//guest list privacy options: full, rsvp, private
-		if ((req.param('guest_list') === 'full') ||
-			  (req.param('guest_list') === 'rsvp') ||
-			  (req.param('guest_list') === 'private')
-			  ) {
-			options.guestList = req.param('guest_list');
+			/* actually save this in the db if they are logged in */
+			if (req.session.loggedIn) {
+				req.session.plan.save(function(err, result) {
+
+					/* set a special header to tell angular to update the browser location */
+					res.setHeader('x-wembli-location', '/invitation');
+					return res.render('partials/plan', {
+						partial: true
+					});
+
+				});
+			} else {
+
+				/* set a special header to tell angular to update the browser location */
+				res.setHeader('x-wembli-location', '/invitation');
+				return res.render('partials/plan', {
+					partial: true
+				});
+
+			}
 		} else {
-			req.session.eventOptionsForm.errors.guestList = true;
+
+			/* else they are not allowed to change the options, redirect to event view */
+			var redirect = '/event/' + req.param('eventId') + '/' + req.param('eventName');
+			return res.redirect(redirect);
 		}
-
-		if (Object.keys(req.session.eventOptionsForm.errors).length > 0) {
-			//render the event options form again with errors
-			return res.render('partials/event-options',{
-				eventId:req.param('eventId'),
-				eventName:req.param('eventName')
-			});
-		}
-
-		options.payment = req.session.plan.preferences.payment;
-
-		/* if this visitor already has a req.session.plan and they are the organizer and it is the same eventId as req.session.eventId
-		then override only the preferences */
-		if ((req.session.visitor.context === "organizer") || ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer === "undefined"))	) {
-			/* let them save the options to their plan */
-			req.session.plan.preferences = options;
-
-			/* set a special header to tell angular to update the browser location */
-			res.setHeader('x-wembli-location','/invitation');
-			return res.render('partials/plan',{partial:true});
-		}
-
-		/* else they are not allowed to change the options, redirect to event view */
-		var redirect = '/event/'+req.param('eventId')+'/'+req.param('eventName');
-		return res.redirect(redirect);
 	});
 
 }

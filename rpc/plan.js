@@ -150,6 +150,13 @@ addFriend: function(args, req, res) {
 		return me(null, data);
 	}
 
+	if (args.service === 'wemblimail') {
+		if (req.session.customer.email === args.serviceId) {
+			data.isOrganizer = true;
+			return me(null,data);
+		}
+	}
+
 	console.log('add friend to plan:');
 	console.log(args);
 

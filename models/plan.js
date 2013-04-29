@@ -39,6 +39,8 @@ this.Model = function(mongoose) {
 				hotels : {type: Boolean, default:false},
 			},
 			inviteOptions: {
+				/* is the organizer attending? */
+				organizerRsvp : {type: Boolean, default:true},
 				/* can guests invite their friends? */
 				guestFriends : {type: Boolean, default:true},
 

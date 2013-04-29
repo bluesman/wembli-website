@@ -170,85 +170,31 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-
-.directive('planDashboard', ['$window','plan','customer', function($window, plan, customer) {
+.directive('friendPlanDashboard', ['$window','plan','customer', 'pluralize', function($window, plan, customer, pluralize) {
   return {
-    restrict: 'E',
-    replace: true,
+    restrict: 'C',
     cache: false,
-    templateUrl: "/partials/plan/dashboard",
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
-        console.log('window height');
-        console.log(angular.element($window).height());
-        var height = angular.element($window).height();
-        $('#section6').css('min-height', height);
-
-        console.log('pluralize');
-        scope.pluralize = function(scope2,elm,attr) {
-          if (scope.guestCount == 1) {
-            scope.plural = false;
-          } else {
-            scope.plural = true;
-          }
-        }
-
-        /* pluralize the people coming list header */
-        scope.$watch('peopleComing', function() {
-            if (scope.peopleComing == 1) {
-              scope.peopleComingPlural = false;
-            } else {
-              scope.peopleComingPlural = true;
-            }
-        });
 
         /* toggle decision when guest cound goes above 0 */
-        scope.$watch('guestCount',function() {
+        scope.$watch('guestCount',function(newVal) {
           if (typeof scope.guestCount === "undefined") {
             return;
           }
-
-          if (scope.guestCount > 0) {
-            scope.me.decision = true;
-          } else {
-            scope.me.decision = false;
+          scope.me.decision = (scope.guestCount > 0);
+          if (newVal < 0) {
+            scope.guestCount = 0;
           }
-        })
+        });
 
         /* set guestCount to 0 if decision is false */
         scope.$watch('me.decision',function() {
           if (scope.me.decision === false) {
             scope.guestCount = 0;
           }
-        })
-
-        /* key bindings for up and down arrows for guestCount */
-        scope.guestCountKeyDown = function(scope2, elm, attr, evt) {
-          console.log('keycode: '+evt.keyCode);
-        }
-
-        scope.plan = plan.get();
-        console.log(scope.plan);
-        if (typeof plan.getFriends() !== "undefined") {
-          scope.friends   = plan.getFriends();
-          scope.totalComing = 0;
-
-          /* get the friend that is this customer */
-          for (var i = 0; i < scope.friends.length; i++) {
-            if (scope.friends[i].customerId === customer.get().id) {
-              scope.me = scope.friends[i];
-            }
-            if (scope.friends[i].rsvp.decision) {
-              scope.totalComing += 1;
-            }
-          };
-          /* default guest count */
-          scope.guestCount = scope.me.rsvp.guestCount ? scope.me.rsvp.guestCount : 1;
-        }
-
-        if (typeof plan.getOrganizer() !== "undefined") {
-          scope.organizer = plan.getOrganizer();
-        }
+        });
+        scope.guestCount = scope.me.rsvp.guestCount ? scope.me.rsvp.guestCount : 1;
 
         /* handle the main plan rsvp */
         scope.setRsvp = function(rsvpFor,rsvp) {
@@ -271,6 +217,82 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
             }
           };
           funcs[rsvpFor](rsvp);
+        }
+      };
+    }
+  };
+}])
+
+.directive('organizerPlanDashboard', ['$window','plan','customer', 'pluralize', function($window, plan, customer, pluralize) {
+  return {
+    restrict: 'C',
+    cache: false,
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+          scope.guestCount = 1;
+      };
+    }
+  };
+}])
+
+
+.directive('planDashboard', ['$window','plan','customer', 'pluralize', function($window, plan, customer, pluralize) {
+  return {
+    restrict: 'E',
+    replace: true,
+    cache: false,
+    templateUrl: "/partials/plan/dashboard",
+    compile: function(element, attr, transclude) {
+      return function(scope, element, attr, controller) {
+        console.log('window height');
+        console.log(angular.element($window).height());
+        var height = angular.element($window).height();
+        $('#section6').css('min-height', height);
+
+
+        /* RSVP Section common functionality */
+        scope.guestCountKeyUp = function() {
+          scope.guestCountPlural = pluralize(scope.guestCount);
+        }
+
+        /* key bindings for up and down arrows for guestCount */
+        scope.guestCountKeyDown = function(scope, elm, attr, e) {
+          if (e.keyCode == 38) {
+            scope.guestCount++;
+          }
+          if (e.keyCode == 40) {
+            scope.guestCount--;
+          }
+        }
+
+        /* pluralize the people coming list header */
+        scope.$watch('peopleComing', function() {
+          scope.peopleComingPlural = pluralize(scope.peopleComing);
+        });
+
+        scope.plan = plan.get();
+        console.log(scope.plan);
+        if (typeof plan.getFriends() !== "undefined") {
+          scope.friends = plan.getFriends();
+          scope.totalComing = 0;
+
+          /* get the friend that is this customer */
+          for (var i = 0; i < scope.friends.length; i++) {
+            if (scope.friends[i].customerId === customer.get().id) {
+              scope.me = scope.friends[i];
+            }
+            if (scope.friends[i].rsvp.decision) {
+              scope.totalComing += 1;
+            }
+          };
+          /* default guest count */
+          if (typeof scope.me === "undefined") {
+            scope.me = customer.get();
+          }
+        }
+
+        if (typeof plan.getOrganizer() !== "undefined") {
+          scope.organizer = plan.getOrganizer();
         }
       };
     }
@@ -1082,6 +1104,8 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
 
       return function(scope, element, attr) {
         element.click(function() {
+          console.log('clicked event attr:');
+          console.log(attr);
           var nextLink = '';
           if (attr.href) {
             nextLink = attr.href;
@@ -1349,7 +1373,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
       //$apply makes sure that angular knows
       //we're changing something
       scope.$apply(function() {
-        keyupFn.call(scope, elm, attrs, evt);
+        keyupFn.call(keyupFn, scope, elm, attrs, evt);
       });
     });
   };
@@ -1361,15 +1385,18 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
     //In this case we're just passing a variable that points
     //to a function we'll call each keyup
     elm.bind('keydown', function(evt) {
-      console.log(attrs.onKeydown);
-      var keydownFn = scope.$eval(attrs.onKeydown);
+      var e = evt;
       console.log('keydown');
+      console.log(attrs.onKeydown);
+      console.log(e);
+      var keydownFn = scope.$eval(attrs.onKeydown);
+
       console.log(keydownFn);
       //$apply makes sure that angular knows
       //we're changing something
       scope.$apply(function() {
         console.log('calling keydown func');
-        keydownFn.call(scope, elm, attrs, evt);
+        keydownFn.call(keydownFn, scope, elm, attrs, e);
       });
     });
   };

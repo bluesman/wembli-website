@@ -1,4 +1,4 @@
-#plan-dashboard
+#plan-dashboard.friend-plan-dashboard
 	//- .event-data(ng-cloak,event-id="req.session.plan.event.eventId")
 	section#section1.plan-section
 		.header
@@ -19,9 +19,9 @@
 						label
 							.input-prepend.input-append.pull-left
 								span.add-on # in your party (including yourself):
-								input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="pluralize",on-keydown="guestCountKeyDown",name="guest_count",ng-model="guestCount",placeholder="1")
-								span.add-on(ng-show="plural") people
-								span.add-on(ng-hide="plural") person
+								input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="guestCount",placeholder="1")
+								span.add-on(ng-show="guestCountPlural") people
+								span.add-on(ng-hide="guestCountPlural") person
 				.info-container.pull-right
 					.info
 						.row

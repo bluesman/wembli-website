@@ -34,7 +34,12 @@ angular.module('wembliApp.services', [])
 
 }])
 
-	.factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
+
+.factory('pluralize', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
+	return function(num) {return (num !== 1);};
+}])
+
+.factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
 	var self = this;
 	self.plan = null;
 	self.tickets = null;

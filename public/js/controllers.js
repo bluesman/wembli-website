@@ -77,6 +77,7 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 		$scope.restaurant = result.restaurant;
 		$scope.hotel = result.hotel;
 		$scope.guest_friends = result.guestFriends;
+		$scope.organizer_not_attending = result.organizerNotAttending;
 		$scope.guest_list = result.guestList;
 		$scope.over_21 = result.over21;
 
@@ -368,6 +369,12 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				return $scope.gotoStep('step1');
 			}
 
+			/* edge case - organizer tries to invite themself! */
+			if (result.isOrganizer) {
+				$scope.step5.isOrganizer = true;
+				return;
+			}
+
 			var friend = result.friend;
 			friend.checked = friend.inviteStatus;
 			/* if this friend is not in the list of step5 selected friends, push it on the the wemblimail friends scope cause its a new one */
@@ -376,9 +383,10 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				/* in submit reponse, do the formStatus fade */
 				$scope.wemblimail.formStatus = true; /* this will make the element fade in */
 			}
-
+			$scope.step5.success = true;
 			/* tihs should make it fade out */
 			var Promise = $timeout(function() {
+				$scope.step5.success = false;
 				$scope.wemblimail.name = null;
 				$scope.wemblimail.email = null;
 				$scope.wemblimail.messageText = null;
@@ -1160,15 +1168,6 @@ function SignupCtrl($scope, $http, wembliRpc) {
 			return false;
 		}
 		if (typeof $scope.email === "undefined") {
-			return false;
-		}
-		if (typeof $scope.password === "undefined") {
-			return false;
-		}
-		if (typeof $scope.password2 === "undefined") {
-			return false;
-		}
-		if ($scope.password !== $scope.password2) {
 			return false;
 		}
 	});

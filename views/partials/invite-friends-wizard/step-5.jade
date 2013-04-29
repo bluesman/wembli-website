@@ -3,6 +3,10 @@ form#invite-wizard-step5-form(name="step5")
 		h2 Go old skool and send an eMail
 		#error.alert.alert-block.fade.in(ng-show="step5.error")
 			.error-text(ng-show="step5.formError") All fields are required.
+		#error.alert.alert-block.fade.in(ng-show="step5.isOrganizer")
+			.error-text You don't have to invite yourself :)
+		#error.alert.alert-info.alert-block.fade.in(ng-show="step5.success")
+			.error-text Email successfully sent to {{wemblimail.email}}!
 		p Email friends to let them know they're invited.  Supply a name, email address and a note and we'll send out an email for you.
 		.name-group.control-group.pull-left
 			input#step5-name.name(ng-model="wemblimail.name", placeholder="Full Name",type="text",name="name",required)

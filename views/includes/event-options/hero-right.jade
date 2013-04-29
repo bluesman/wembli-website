@@ -24,6 +24,9 @@ block hero-right
 					.control-group
 						input#over-21(type="checkbox",name="over_21",ng-checked="over_21")
 						label This outing is for people over 21 (sorry no kids this time)
+					.control-group
+						input#organizer-not-attending(type="checkbox", name="organizer_not_attending", ng-checked="organizer_not_attending")
+						label I am organizing this event but I will NOT be attending
 				#guest-list-options.options-group
 					h2 Guest List:
 					.error-text(ng-show="guestListOptionsError") Dude, you need to pick one of these...

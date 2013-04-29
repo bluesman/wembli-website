@@ -166,9 +166,17 @@ exports["invite-friends"] = {
 			inviteStatus: args.inviteStatus
 		};
 
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer..back to step 1 please');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+
 		planRpc['addFriend'].apply(function(err, results) {
 			/* must have a customer to create a plan in the db */
-			if (!req.session.customer) {
+			if (results.noCustomer) {
 				console.log('no customer..back to step 1 please');
 				data.noCustomer = true;
 				return me(null, data);
@@ -176,6 +184,11 @@ exports["invite-friends"] = {
 
 			console.log('added friend to plan');
 			console.log(results);
+
+			if (results.isOrganizer) {
+				data.isOrganizer = true;
+				return me(null, data);
+			}
 
 			/* now that we have added the friend to the plan and have a token, send the wembli email */
 			var rsvpLink = "http://www2.wembli.com/rsvp/" + req.session.plan.guid + "/"+results.friend.rsvp.token+"/wemblimail";

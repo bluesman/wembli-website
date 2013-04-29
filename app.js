@@ -122,6 +122,7 @@ if (process.env.NODE_ENV === 'development') {
 require('./controllers/index')(app);
 require('./controllers/search')(app);
 require('./controllers/events')(app);
+require('./controllers/invitation')(app);
 require('./controllers/plan')(app);
 require('./controllers/rsvp')(app);
 require('./controllers/tickets')(app);
