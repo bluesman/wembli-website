@@ -42,6 +42,9 @@ if (process.env.NODE_ENV == 'development') {
 	app.set('twitAppSecret', 'PUdQVzslAATiRCFhTXetmjbaFGoWIM092bSkuulFdk');
 	app.set('tnUrl', 'tn.wembli.com');
 	app.set('autoIndex', true);
+	app.set('balancedSecret','0b50f03cb15a11e28537026ba7d31e6f');
+	app.set('balancedMarketplace','Test-mplx4zjiaba85bets7q2omz');
+	app.set('balancedMarketplaceUri','/v1/marketplaces/TEST-MPlx4ZJIAbA85beTs7q2Omz');
 }
 
 if (process.env.NODE_ENV == 'secure-www2') {
@@ -49,6 +52,10 @@ if (process.env.NODE_ENV == 'secure-www2') {
 	app.set('secure', true);
 	app.set('host', 'www2');
 	app.set('tnUrl', 'tn.wembli.com');
+	app.set('balancedSecret','42e01b00b15e11e29523026ba7c1aba6');
+	app.set('balancedMarketplace','MP22BmXshSp7Q8DjgBYnKJmi');
+	app.set('balancedMarketplaceUri','/v1/marketplaces/MP22BmXshSp7Q8DjgBYnKJmi');
+
 }
 console.log(app.settings);
 //init the openauth thing

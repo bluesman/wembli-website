@@ -258,7 +258,7 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				'firstName': $scope.customer.firstName,
 				'lastName': $scope.customer.lastName,
 				'email': $scope.customer.email,
-				'next': '/invitation#step2'
+				'next': '/invitation/'+plan.get().event.eventId+'/'+plan.get().event.eventName+'#step2'
 			};
 			if ($scope.customer.id) {
 				rpcArgs.customerId = $scope.customer.id;
@@ -383,10 +383,17 @@ function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $l
 				/* in submit reponse, do the formStatus fade */
 				$scope.wemblimail.formStatus = true; /* this will make the element fade in */
 			}
-			$scope.step5.success = true;
+			$scope.wemblimail.lastSentEmail = $scope.wemblimail.email;
+
+			if (friend.rsvp.status === 'queued') {
+				$scope.step5.successUnconfirmed = true;
+			} else {
+				$scope.step5.successConfirmed = true;
+			}
+
 			/* tihs should make it fade out */
 			var Promise = $timeout(function() {
-				$scope.step5.success = false;
+
 				$scope.wemblimail.name = null;
 				$scope.wemblimail.email = null;
 				$scope.wemblimail.messageText = null;
@@ -1057,7 +1064,7 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, m
 			};
 
 			var filterParking = function() {
-				var PriceRange = $("#price-slider").slider("option", "values");
+				var priceRange = $("#price-slider").slider("option", "values");
 
 				/* hide parking locations that are out of range */
 				console.log('filtering parking');
@@ -1149,9 +1156,6 @@ function PaymentTypeModalCtrl($scope) {
 
 function PlanCtrl($rootScope, $scope, wembliRpc, plan, customer, fetchModals) {
 	/* fetch the invite friends wizard modal */
-	//fetchModals.fetch('/partials/invite-friends-wizard');
-
-
 
 };
 

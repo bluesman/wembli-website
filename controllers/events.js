@@ -153,7 +153,7 @@ module.exports = function(app) {
 				req.session.plan.save(function(err, result) {
 
 					/* set a special header to tell angular to update the browser location */
-					res.setHeader('x-wembli-location', '/invitation');
+					res.setHeader('x-wembli-location', '/invitation/'+req.param('eventId')+'/'+req.param('eventName'));
 					return res.render('partials/plan', {
 						partial: true
 					});
@@ -162,7 +162,7 @@ module.exports = function(app) {
 			} else {
 
 				/* set a special header to tell angular to update the browser location */
-				res.setHeader('x-wembli-location', '/invitation');
+				res.setHeader('x-wembli-location', '/invitation/'+req.param('eventId')+'/'+req.param('eventName'));
 				return res.render('partials/plan', {
 					partial: true
 				});

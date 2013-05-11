@@ -7,6 +7,7 @@ var async = require('async');
 module.exports = function(app) {
 
 	app.get('(/partials)?/modals/rsvp-login/?', function(req, res) {
+
 		res.render('partials/modals/rsvp-login', {
 			partial: true,
 			plan: req.session.plan
@@ -30,13 +31,6 @@ module.exports = function(app) {
 				res.redirect('/');
 			};
 
-			if (friend === null) {
-				/* this person is no friend of the plan */
-				req.session.visitor.context = 'visitor';
-				var eventView = /partials/.test(view) ? '/partials/event/' + p.event.eventId + '/' + p.event.eventName : '/event/' + p.event.eventId + '/' + p.event.eventName;
-				return res.redirect(eventView);
-			}
-
 			Plan.findOne({
 				guid: guid
 			}, function(err, p) {
@@ -45,6 +39,13 @@ module.exports = function(app) {
 				};
 				console.log('found plan in rsvp');
 				console.log(p);
+
+				if (friend === null) {
+					/* this person is no friend of the plan */
+					req.session.visitor.context = 'visitor';
+					var eventView = /partials/.test(view) ? '/partials/event/' + p.event.eventId + '/' + p.event.eventName : '/event/' + p.event.eventId + '/' + p.event.eventName;
+					return res.redirect(eventView);
+				}
 
 
 				var locals = {

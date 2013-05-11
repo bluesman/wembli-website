@@ -5,27 +5,21 @@
 			h1.pull-left Event
 		.body
 			h3 {{organizer.firstName}} {{organizer.lastName}} is planning an event and you're invited! Are you in or out?
-			.payment-type-note.alert.alert-info
-				strong ** NOTE:&nbsp;
-				span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
-				span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has chosen to foot the bill for this plan - w00t!
-				span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, {{organizer.firstName}} will lock in the tickets then send a link for everyone to pay for their portion of the outing.
-			.event-container
+			#event-container
 				.collect-rsvp-container.pull-left
 					.collect-rsvp
-						a#yes(ng-click="setRsvp('decision',true)",ng-class="{true:'active'}[me.decision]") YES!
-						a#no(ng-click="setRsvp('decision',false)",ng-class="{false:'active'}[me.decision]") NO.
+						a#yes(ng-click="setRsvp('decision',true)",ng-class="{true:'active'}[me.rsvp.decision]") YES!
+						a#no(ng-click="setRsvp('decision',false)",ng-class="{false:'active'}[me.rsvp.decision]") NO.
 					fieldset
 						label
-							.input-prepend.input-append.pull-left
-								span.add-on # in your party (including yourself):
-								input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="guestCount",placeholder="1")
-								span.add-on(ng-show="guestCountPlural") people
-								span.add-on(ng-hide="guestCountPlural") person
+							input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="me.rsvp.guestCount",placeholder="1")
+							span(ng-show="guestCountPlural") people&nbsp;
+							span(ng-hide="guestCountPlural") person&nbsp;
+							span (including yourself).
 				.info-container.pull-right
 					.info
-						.row
-							h3.pull-left Date:
+						.row.first-row
+							h3.pull-left Date:&nbsp;
 							.data.pull-left {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d'}}
 						.row
 							h3.pull-left Event:
@@ -41,18 +35,124 @@
 							h3.pull-left Age Limit:
 							.data.pull-left(ng-show="plan.preferences.inviteOptions.over21") 21+
 							.data.pull-left(ng-hide="plan.preferences.inviteOptions.over21") All Ages
-			.total-coming
-				.header
-					span.rsvp-count {{friends.length}}&nbsp;
-					span Invited,&nbsp;
-					span.rsvp-count {{totalComing}}&nbsp
-					span(ng-show="peopleComingPlural") People are
-					span(ng-hide="peopleComingPlural") Person is
-					span &nbsp;coming
+						.row
+							h3.pull-left RSVP Date:
+							.data.pull-left {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
+			.payment-type-note
+				strong ** NOTE:&nbsp;
+				span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
+				span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has chosen to foot the bill for this plan - w00t!
+				span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, {{organizer.firstName}} will lock in the tickets then send a link for everyone to pay for their portion of the outing.
+			.section-bottom
+				.total-coming.pull-left
+					.header
+						span.rsvp-count {{totalComing}}&nbsp
+						span(ng-show="totalComingPlural") People are
+						span(ng-hide="totalComingPlural") Person is
+						span &nbsp;coming
+					.friend-coming(ng-repeat="friend in friendsComing") {{friend.contactInfo.name}}&nbsp;({{friend.rsvp.guestCount}})
+				.next-wrapper.pull-right
+					.img
+						img(src="/images/cartoon-man-megaphone1.png")
+					button#next-section2.btn.btn-orange.btn-large.scroll-to NEXT
 	section#section2.plan-section.even
 		.header
 			h1.pull-left Vote
 		.body
+			h3 Help {{organizer.firstName}} plan the perfect outing by voting on your preferences
+			#vote-container
+				.block1
+					.left.pull-left
+						.row.firstRow
+							h3 Pick Your Maximum Price Per Ticket:
+							.price-slider-container.pull-left
+								#ticket-price-slider.price-slider(min="0",max="500",step="5",value="{{me.rsvp.tickets.price}}",range="min",slide="ticketsPriceSlide",stop="ticketsPriceStop")
+								.price-range-group-container
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.low]") $
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.med]") $$
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.high]") $$$
+							.price-input-container.pull-right
+								.orange.pull-left $
+								input#ticket-price-range.pull-left(ng-model="me.rsvp.tickets.price")
+								.plus-sign.pull-left(ng-show="me.rsvp.tickets.price==500") +
+						.row
+							label.checkbox
+								input(type="checkbox",name="parking_decision",ng-model="me.rsvp.parking.decision",ng-click="toggleInputs('parking',me.rsvp.parking.decision)")
+								.calibri Include me in the parking plans:
+							.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.parking.decision]")
+								#parking-price-slider.price-slider(min="0",max="100",disable="{{!me.rsvp.parking.decision}}",step="5",value="{{me.rsvp.parking.price}}",range="min",slide="parkingPriceSlide",stop="parkingPriceStop")
+								.price-range-group-container
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.low]") $
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.med]") $$
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.high]") $$$
+							.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.parking.decision]")
+								.orange.pull-left $
+								input#parking-price-range.pull-left(ng-model="me.rsvp.parking.price")
+								.plus-sign.pull-left(ng-show="me.rsvp.parking.price==100") +
+					.right.pull-right
+						img(src="/images/cartoon-man-checkboxes.png")
+				.block2
+					.row
+						label.checkbox
+							input.pull-left(type="checkbox",name="restaurant_decision",ng-model="me.rsvp.restaurant.decision",ng-click="toggleInputs('restaurant',me.rsvp.restaurant.decision)")
+							.calibri Include me in the restaurant plans:
+						.preference-dropdown
+							select#food-preference.multiselect(click="foodPreferenceClick",disable="{{!me.rsvp.restaurant.decision}}",append-to="#section2",header="false",min-width="300",none-selected-text="Food Preference",multiple="multiple",ng-model="me.rsvp.restaurant.preference")
+								option(value="American (traditional)") American (traditional)
+								option(value="Asian Fusion") Asian Fusion
+								option(value="Bars") Bars
+								option(value="Burgers") Burgers
+								option(value="Chinese") Chinese
+								option(value="Fast Food") Fast Food
+								option(value="Italian") Italian
+								option(value="Japanese") Japanese
+								option(value="Mediterranean") Mediterranean
+								option(value="Mexican") Mexican
+								option(value="Pizza") Pizza
+								option(value="Steakhouse") Steakhouse
+								option(value="Sushi") Sushi
+								option(value="Thai") Thai
+								option(value="Vegetarian") Vegetarian
+								option(value="Vietnamese") Vietnamese
+						.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.restaurant.decision]")
+							#restaurant-price-slider.price-slider(min="0",max="100",step="5",disable="{{!me.rsvp.restaurant.decision}}",value="{{me.rsvp.restaurant.price}}",range="min",slide="restaurantPriceSlide",stop="restaurantPriceStop")
+							.price-range-group-container
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.low]") $
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.med]") $$
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.high]") $$$
+						.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.restaurant.decision]")
+							.orange.pull-left $
+							input#restaurant-price-range.pull-left(ng-model="me.rsvp.restaurant.price")
+							.plus-sign.pull-left(ng-show="me.rsvp.restaurant.price==100") +
+					.row
+						label.checkbox
+							input.pull-left(type="checkbox",name="hotel_decision",ng-model="me.rsvp.hotel.decision",ng-click="toggleInputs('hotel',me.rsvp.hotel.decision)")
+							.calibri Include me in the hotel plans.
+						.preference-dropdown
+							select#hotel-preference.multiselect(click="hotelPreferenceClick",disable="{{!me.rsvp.hotel.decision}}",append-to="#section2",header="false",min-width="300",none-selected-text="Hotel Types",multiple="multiple",ng-model="me.rsvp.hotel.preference")
+								option(value="Bed & Breakfast") Bed & Breakfast
+								option(value="Boutique") Boutique
+								option(value="Budget") Budget
+								option(value="Chain") Chain (Marriott, Hyatt, etc.)
+								option(value="Luxury") Luxury
+						.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.hotel.decision]")
+							#hotel-price-slider.price-slider(min="0",max="500",step="5",disable="{{!me.rsvp.hotel.decision}}",value="{{me.rsvp.hotel.price}}",range="min",slide="hotelPriceSlide",stop="hotelPriceStop")
+							.price-range-group-container
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.low]") $
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.med]") $$
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.high]") $$$
+						.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.hotel.decision]")
+							.orange.pull-left $
+							input#hotel-price-range.pull-left(ng-model="me.rsvp.hotel.price")
+							.plus-sign.pull-left(ng-show="me.rsvp.hotel.price==500") +
+			.section-bottom
+				.row.pull-left
+					label.pull-right
+						h2.pull-left Total:
+						.orange.pull-left $
+						input.pull-right(ng-model="votePriceTotal")
+				.next-wrapper.pull-right
+					button#next-section3.btn.btn-orange.btn-large.scroll-to NEXT
 	section#section3.plan-section
 		.header
 			h1.pull-left Invitees

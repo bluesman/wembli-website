@@ -6,6 +6,9 @@ angular.module('wembliApp', ['wembliApp.filters', 'wembliApp.services', 'wembliA
   $locationProvider.html5Mode(true);
 }])
 .run(['initRootScope','$rootScope', '$location', '$route', '$window','fetchModals', 'facebook','twitter', 'plan', function(initRootScope, $scope, $location, $route, $window, fetchModals, facebook, twitter, plan) {
+  /* init the balanced js api for payments */
+  balanced.init($scope.balancedMarketplaceUri);
+
   $window.fbAsyncInit = function() {
     FB.init({
       appId      : fbAppId,

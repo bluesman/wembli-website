@@ -3,8 +3,12 @@ var fs = require('fs');
 var mailer = require("../lib/wembli/sendgrid");
 var wembliUtils = require('wembli/utils');
 var wembliModel = require('wembli-model');
+var wembliEmail = require('../lib/wembli/email')
 var Customer = wembliModel.load('customer');
+var Plan = wembliModel.load('plan');
+var Friend = wembliModel.load('friend');
 var Feed = wembliModel.load('feed');
+var async = require('async');
 
 module.exports = function(app) {
 
@@ -25,7 +29,7 @@ module.exports = function(app) {
 		//a) must not be expired (1 week)
 		//b) must be a token that belong to this customer
 		//if they're not logged in, make them provide a password before confirming
-		var handleCustomer = function(err,c) {
+		var handleCustomer = function(err, c) {
 			/* no customer to handle */
 			if (c === null) {
 				console.log('no customer');
@@ -41,10 +45,10 @@ module.exports = function(app) {
 			if (dbToken == req.param('token')) {
 				console.log('dbToken matches params token');
 				/* its valid, is it expired? */
-				var expired          = true;
-				var dbTimestamp      = c.confirmation[0].timestamp;
+				var expired = true;
+				var dbTimestamp = c.confirmation[0].timestamp;
 				var currentTimestamp = new Date().getTime();
-				var timePassed       = (currentTimestamp - dbTimestamp) / 1000;
+				var timePassed = (currentTimestamp - dbTimestamp) / 1000;
 
 				/* has it been more than 1 week? */
 				var expired = (timePassed > 604800) ? true : false;
@@ -62,73 +66,128 @@ module.exports = function(app) {
 				/* not expired! set customer to confirmed so they can access the dashboard */
 				req.session.customer = c;
 				req.session.customer.confirmed = true;
-				return req.session.customer.save(function(err) {
+				req.session.customer.save(function(err) {
 					console.log('saved customer');
-					var locals = {
-							email: req.param('email'),
-							token: req.param('token'),
-							title: 'wembli.com - supply your password!.'
-					};
 
-					locals.next = req.param('next') ? decodeURIComponent( req.param('next') ): '/dashboard';
+					/* find friends that have rsvp.status of queued for any plans this customer is organizing */
+					req.session.customer.getInvitedFriends(function(err, friends) {
+						console.log('got all invited friends - send rsvp for those that have rsvp.status === queued');
+						console.log(friends);
 
-					if (typeof c.password === "undefined") {
-						/* they need to give us a new password */
-						locals.noPassword = true;
+						async.forEach(friends,
 
-						/* make a forgot password token */
-						var noToken = true;
+						function(friend, callback) {
+							if (friend.rsvp.status === 'queued') {
+								/* send the rsvp email and updated the status */
 
-						/* have a c, make a forgot password token (or if there is already one in the db that is not expired, use it) */
-						if (typeof c.forgotPassword[0] != "undefined") {
-							/* check if this token is expired */
-							var dbTimestamp = c.forgotPassword[0].timestamp;
-							var currentTimestamp = new Date().getTime();
-							var timePassed = (currentTimestamp - dbTimestamp) / 1000;
-							//has it been more than 2 days?
-							var noToken = (timePassed < 172800) ? false : true;
-						}
+								/* now that we have added the friend to the plan and have a token, send the wembli email */
+								var rsvpLink = "http://" + app.settings.host + ".wembli.com/rsvp/" + friend.planGuid + "/" + friend.rsvp.token + "/wemblimail";
+								console.log('rsvpLink is: ' + rsvpLink);
+								wembliEmail.sendRSVPEmail({
+									res: res,
+									req: req,
+									rsvpDate: friend.rsvp.date,
+									rsvpLink: rsvpLink,
+									email: friend.contactInfo.serviceId,
+									message: friend.rsvp.message
+								});
 
-						if (noToken) {
-							//make a new token
-							var tokenTimestamp = new Date().getTime().toString();
-							var tokenHash = wembliUtils.digest(req.param('email') + tokenTimestamp);
-						} else {
-							//use the existing token
-							var tokenHash = c.forgotPassword[0].token;
-							var tokenTimestamp = c.forgotPassword[0].timestamp;
-						}
+								/* once the email is sent, we can update inviteStatus to true */
+								/* got a friend, set inviteStatus to true - means they have been invited (inviteStatus of false means they are uninvited) */
+								friend.inviteStatus = true;
+								/* clear out the token it is no longer valid - so nothing fishy can happen */
+								friend.inviteStatusConfirmation = {
+									token: '',
+									timestamp: Date.now()
+								};
 
-						var forgotPassword = [{
-							timestamp: tokenTimestamp,
-							token: tokenHash
-						}];
-
-						c.update({forgotPassword: forgotPassword}, function(err) {
-							if (err) {
-								console.log('error updating forgot password token');
-								res.redirect('/');
+								/* this is used on the event plan view */
+								/* TODO: make sure fb and twitter set this correctly */
+								friend.rsvp.status = 'requested';
+								friend.rsvp.requestedLastDate = Date.now();
+								friend.save(function(err) {
+									callback();
+								});
+							} else {
+								callback();
 							}
-							console.log('locals for supply password');
-							console.log(locals);
-							locals.token = tokenHash;
-							return res.render('supply-password', locals);
+
+						},
+
+						/* async finished function */
+						function(err) {
+
+
+							var locals = {
+								email: req.param('email'),
+								token: req.param('token'),
+								title: 'wembli.com - supply your password!.'
+							};
+
+							locals.next = req.param('next') ? decodeURIComponent(req.param('next')) : '/dashboard';
+
+							if (typeof c.password === "undefined") {
+								/* they need to give us a new password */
+								locals.noPassword = true;
+
+								/* make a forgot password token */
+								var noToken = true;
+
+								/* have a c, make a forgot password token (or if there is already one in the db that is not expired, use it) */
+								if (typeof c.forgotPassword[0] != "undefined") {
+									/* check if this token is expired */
+									var dbTimestamp = c.forgotPassword[0].timestamp;
+									var currentTimestamp = new Date().getTime();
+									var timePassed = (currentTimestamp - dbTimestamp) / 1000;
+									//has it been more than 2 days?
+									var noToken = (timePassed < 172800) ? false : true;
+								}
+
+								if (noToken) {
+									//make a new token
+									var tokenTimestamp = new Date().getTime().toString();
+									var tokenHash = wembliUtils.digest(req.param('email') + tokenTimestamp);
+								} else {
+									//use the existing token
+									var tokenHash = c.forgotPassword[0].token;
+									var tokenTimestamp = c.forgotPassword[0].timestamp;
+								}
+
+								var forgotPassword = [{
+									timestamp: tokenTimestamp,
+									token: tokenHash
+								}];
+
+								c.update({
+									forgotPassword: forgotPassword
+								}, function(err) {
+									if (err) {
+										console.log('error updating forgot password token');
+										res.redirect('/');
+									}
+									console.log('locals for supply password');
+									console.log(locals);
+									locals.token = tokenHash;
+									return res.render('supply-password', locals);
+								});
+							} else {
+								if (!req.session.loggedIn) {
+									/* render password page */
+									console.log('confirm need password');
+									console.log(locals);
+									return res.render('confirm-need-password', locals);
+								} else {
+									var r = req.param('next') ? decodeURIComponent(req.param('next')) : '/dashboard';
+									console.log('after successful confirm - redirecting to ' + r);
+									res.redirect(r);
+									return;
+								}
+								return res.render('confirm-need-password', locals);
+							}
 						});
-					} else {
-						if (!req.session.loggedIn) {
-							/* render password page */
-							console.log('confirm need password');
-							console.log(locals);
-							return res.render('confirm-need-password', locals);
-						} else {
-							var r = req.param('next') ? decodeURIComponent( req.param('next') ): '/dashboard';
-							console.log('after successful confirm - redirecting to '+ r);
-							res.redirect(r);
-							return;
-						}
-						return res.render('confirm-need-password', locals);
-					}
+					});
 				});
+
 			} else {
 				console.log('there is no confirmation token');
 				/* some sort of hackery is going down - gtfo */
@@ -144,9 +203,11 @@ module.exports = function(app) {
 		if (!req.session.customer) {
 
 			/* check the forgot password token for this email */
-			Customer.findOne({email: req.param('email')}, handleCustomer);
+			Customer.findOne({
+				email: req.param('email')
+			}, handleCustomer);
 		} else {
-			handleCustomer(null,req.session.customer);
+			handleCustomer(null, req.session.customer);
 		}
 
 	});
@@ -170,7 +231,7 @@ module.exports = function(app) {
 			if (typeof c.password === "undefined") {
 				c.password = digest;
 				c.confirmed = true;
-				return c.save(function(err,result) {
+				return c.save(function(err, result) {
 					req.session.loggedIn = true;
 					req.session.customer = c;
 					return res.redirect('/dashboard');
@@ -189,7 +250,9 @@ module.exports = function(app) {
 					render password page
 				*/
 				return res.render('dashboard/confirm-need-password', {
-					errors: {general: true},
+					errors: {
+						general: true
+					},
 					email: req.param('email'),
 					token: req.param('token'),
 					title: 'wembli.com - supply your password!.'

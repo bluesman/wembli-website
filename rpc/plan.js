@@ -100,36 +100,6 @@ setTicketsPriceRange: function(args, req, res) {
 
 },
 
-submitRsvp: function(args,req, res) {
-	var me = this;
-	var data = {
-		success: 1
-	};
-
-	/* TODO: make sure we have a customer and plan in session and validate args */
-
-	/* get the friend for this customer & plan */
-	Friend.findOne().where('planGuid').equals(req.session.plan.guid).where('customerId').equals(req.session.customer._id).exec(function(err,friend) {
-		console.log('found friend to submitRsvp for');
-		console.log(friend);
-		console.log(err);
-
-		var decision = (args.rsvp === 'yes') ? true : false;
-		friend.totalInParty  = args.headCount;
-		friend.rsvp.decision = decision;
-		friend.rsvp.date     = Date.now();
-		friend.rsvp[args.rsvpFor] = {date:Date.now(),headCount:args.headCount,decision:decision};
-		friend.save(function(err, result) {
-			data.friend = result;
-			console.log('submitRsvp');
-			console.log(data.friend);
-			console.log(result);
-			console.log(err);
-			me(null, data);
-		});
-	});
-},
-
 addFriend: function(args, req, res) {
 	var me = this;
 

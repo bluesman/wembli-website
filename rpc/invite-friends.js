@@ -190,33 +190,52 @@ exports["invite-friends"] = {
 				return me(null, data);
 			}
 
-			/* now that we have added the friend to the plan and have a token, send the wembli email */
-			var rsvpLink = "http://www2.wembli.com/rsvp/" + req.session.plan.guid + "/"+results.friend.rsvp.token+"/wemblimail";
-			wembliEmail.sendRSVPEmail({
-				res: res,
-				req: req,
-				rsvpDate: results.friend.rsvp.date,
-				rsvpLink: rsvpLink,
-				email: results.friend.contactInfo.serviceId,
-				message: args.message
-			});
+			/* we can't send the email until the organizer confirms their email address */
+			if (req.session.customer.confirmed) {
 
-			/* once the email is sent, we can update inviteStatus to true */
-			/* got a friend, set inviteStatus to true */
-			results.friend.inviteStatus = true;
-			/* clear out the token it is no longer valid - so nothing fishy can happen */
-			results.friend.inviteStatusConfirmation = {
-				token: '',
-				timestamp: Date.now()
-			};
+				/* now that we have added the friend to the plan and have a token, send the wembli email */
+				var rsvpLink = "http://"+app.settings.host+".wembli.com/rsvp/" + req.session.plan.guid + "/" + results.friend.rsvp.token + "/wemblimail";
+				wembliEmail.sendRSVPEmail({
+					res: res,
+					req: req,
+					rsvpDate: results.friend.rsvp.date,
+					rsvpLink: rsvpLink,
+					email: results.friend.contactInfo.serviceId,
+					message: args.message
+				});
 
-			/* this is used on the event plan view */
-			results.friend.rsvp.initiated = true;
-			results.friend.rsvp.initiatedLastDate = Date.now();
+				/* once the email is sent, we can update inviteStatus to true */
+				/* got a friend, set inviteStatus to true - means they have been invited (inviteStatus of false means they are uninvited) */
+				results.friend.inviteStatus = true;
+				/* clear out the token it is no longer valid - so nothing fishy can happen */
+				results.friend.inviteStatusConfirmation = {
+					token: '',
+					timestamp: Date.now()
+				};
 
-			results.friend.save(function(err) {
-				me(null, results);
-			});
+				/* this is used on the event plan view */
+				/* TODO: make sure fb and twitter set this correctly */
+				results.friend.rsvp.status = 'requested';
+				results.friend.rsvp.requestedLastDate = Date.now();
+
+				results.friend.save(function(err) {
+					me(null, results);
+				});
+
+			} else {
+				/* customer is not confirmed then we need to queue this email up and send it only once the customer confirms */
+				/* set friend.rsvp.status to 'queued' */
+				results.friend.rsvp.status = 'queued';
+				/* set inviteStatus to true - means this organizer wants this friend to come */
+				results.friend.inviteStatus = true;
+				/* save the message */
+				results.friend.rsvp.message = args.message;
+
+				/* save this */
+				results.friend.save(function(err) {
+					me(null, results);
+				});
+			}
 		}, [rpcArgs, req, res]);
 	},
 };

@@ -39,36 +39,83 @@ this.Model = function(mongoose) {
 			timestamp:Date,
 			token:String
 		},
-		totalInParty:Number,
 		rsvp:{
 			token:String,
 			tokenTimestamp:String,
-			initiated:{type:Boolean, default:false},
-			initiatedLastDate:{type:Date, default: null},
+			/* message to send when sending the rsvp */
+			message:String,
+			/* rsvp.status can be:
+					pending: the rsvp has not be sent to the friend yet
+					queued: the rsvp will be sent once the organizer account is confirmed
+					requested: the organizer has sent the rsvp request to the friend
+					responded: the friend has provided a response (which is found in rsvp.decision)
+			*/
+			status:{type:String, default:'pending'},
+			/* the last time the organizer requested the rsvp */
+			requestedLastDate:{type:Date, default: null},
+			/* has the friend viewed the rsvp? */
 			viewed:{type:Number,default:0},
+			/* date the friend last viewed the rsvp */
 			viewedLastDate:{type:Date, default: null},
+			/* decision can be one of the following:
+				null: no decision made
+				false: not going
+				true: going
+			*/
 			decision:{type:Boolean, default:null},
+			/* how many people will this friend bring (including self) */
 			guestCount:{type:Number, default:1},
-			date:{type:Date,default:Date.now()},
+			/* the most recent time they made a decision */
+			decidedLastDate:{type:Date,default:Date.now()},
+			/* rsvp specifically for tickets */
 			tickets: {
-				headCount:Number,
+				/* number of tickets including self */
+				number:Number,
 				decision:Boolean,
-				date:Date
+				decidedLastDate:Date,
+				price:{type:Number,default:50},
+				priceGroup:{
+					low:{type:Boolean,default:true},
+					med:{type:Boolean,default:false},
+					high:{type:Boolean,default:false},
+				},
+				preference: [],
 			},
 			restaurant: {
-				headCount:Number,
+				number:Number,
 				decision:Boolean,
-				date:Date
+				decidedLastDate:Date,
+				price:{type:Number,default:20},
+				priceGroup:{
+					low:{type:Boolean,default:true},
+					med:{type:Boolean,default:false},
+					high:{type:Boolean,default:false},
+				},
+				preference: [],
 			},
 			hotel: {
-				headCount:Number,
+				number:Number,
 				decision:Boolean,
-				date:Date
+				decidedLastDate:Date,
+				price:{type:Number,default:150},
+				priceGroup:{
+					low:{type:Boolean,default:true},
+					med:{type:Boolean,default:true},
+					high:{type:Boolean,default:false},
+				},
+				preference: [],
 			},
 			parking: {
-				headCount:Number,
+				number:Number,
 				decision:Boolean,
-				date:Date
+				decidedLastDate:Date,
+				price:{type:Number,default:10},
+				priceGroup:{
+					low:{type:Boolean,default:true},
+					med:{type:Boolean,default:false},
+					high:{type:Boolean,default:false},
+				},
+				preference: [],
 			},
 		},
 		payment: {type:{}},

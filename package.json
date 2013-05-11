@@ -24,7 +24,9 @@
 		"oauth":"0.9.x",
 		"ntwitter":"0.5.x",
 		"twitter-text":"1.6.x",
-		"jake":"0.5.x"
+		"jake":"0.5.x",
+		"nbalanced":"0.1.x",
+		"keen.io":"0.0.x"
 	},
 	"repository": {
 		"type": "git",

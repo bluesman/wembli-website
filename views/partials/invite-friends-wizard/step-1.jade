@@ -6,17 +6,17 @@
 form#invite-wizard-step1-form(name="step1", ng-init="step1.loginForm=false")
 	//- this is the signup form
 	fieldset(ng-hide="step1.loginForm")
-		h2 Enter Your Info
+		h2 Who Is The Invitation From?
 		#error.alert.alert-block.fade.in(ng-show="step1.error")
 			.error-text(ng-show="step1.formError") All fields are required.
 			.error-text(ng-show="step1.noCustomer")
-				p Please provide your info so we can save your plan and invite people.
-		p We'll use this info to let your guests know who the invitation is from.
+				p Please provide your name and email so we can save your plan and invite people.
+		.alert.alert-info Enter your name and email address so your friends know who this invitaiton is from.
 		//- if they are logged in, this will be prefilled and they will start on step-2
 		.name-group.control-group
-			input.first-name.pull-left(ng-model="customer.firstName", placeholder="FIRST NAME",type="text",name="firstName")
-			input.last-name.pull-left(ng-model="customer.lastName",placeholder="LAST NAME",type="text",name="lastName")
-			input.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="email")
+			input.first-name.pull-left(ng-model="customer.firstName", placeholder="YOUR FIRST NAME",type="text",name="firstName")
+			input.last-name.pull-left(ng-model="customer.lastName",placeholder="YOUR LAST NAME",type="text",name="lastName")
+			input.email(type="email",ng-model="customer.email",placeholder="YOUR EMAIL ADDRESS",name="email")
 		.switch-login
 			a(ng-click="step1.loginForm=true",href="#",ng-hide="customer.id") Already have an account? Click here to log in.
 

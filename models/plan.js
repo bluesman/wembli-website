@@ -82,6 +82,7 @@ this.Model = function(mongoose) {
 
 		},
 		rsvpDate: {type:Date, index:true},
+		/* organizer is a customer id */
 		organizer : {type: String, index : true},
 		friends: [String],
 		tickets: [String],

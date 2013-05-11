@@ -8,6 +8,56 @@ var Plan = wembliModel.load('plan');
 var Feed = wembliModel.load('feed');
 
 exports.customer = {
+	saveMerchantAccount: function(args, req, res) {
+		var me = this;
+		var data = {success:1};
+		console.log('customer.addMerchantAccount');
+		console.log(args);
+		req.session.customer.merchantAccount = args.data;
+		req.session.customer.save(function(err) {
+			if (err) {me(err);}
+			me(null,data);
+		});
+	},
+
+	changePassword: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1,
+			formError: false,
+			passwordMismatch: false,
+			passwordTooShort: false
+		};
+		/* get the customer from the session and change the pword */
+		if (typeof req.session.customer === "undefined") {
+			return me('no customer available to change password for');
+		}
+
+		/* passwords must be > 3 chars */
+		if (args.password.length < 3) {
+			data.formError = true;
+			data.passwordTooShort = true;
+			return me(null,data);
+		}
+
+		/* passwords must match */
+		if (args.password !== args.password2) {
+			data.formError = true;
+			data.passwordMismatch = true;
+			return me(null,data);
+		}
+
+		/* now update the password */
+		var digest = wembliUtils.digest(args.password);
+		req.session.customer.password = digest;
+		req.session.customer.save(function(err) {
+			if (err) {
+				return me(err);
+			}
+			return me(null,data);
+		});
+	},
+
 	signup: function(args, req, res) {
 		var me = this;
 		console.log('customer.signup args');

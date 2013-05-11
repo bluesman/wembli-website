@@ -3,7 +3,7 @@
 	.wembli-logo
 	.spacer
 	each navItem in nav
-		a(class="plan-section-nav scroll-to",ng-click="gotoSection('#{navItem.section}')",href="#{navItem.href}",id="#{navItem.id}")
+		a(class="plan-section-nav scroll-to",href="#{navItem.href}",id="#{navItem.id}")
 			i(class="#{navItem.icon}").icon-2x
 			div
 				span #{navItem.text}

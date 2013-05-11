@@ -7,7 +7,7 @@
 // In this case it is a simple value service.
 angular.module('wembliApp.services', [])
 
-	.factory('initRootScope', ['$window', '$rootScope', function($window, $rootScope) {
+	.factory('initRootScope', ['$window', '$rootScope', '$location', function($window, $rootScope, $location) {
 	$rootScope.tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid=5006&sitenumber=0';
 
 	$rootScope.partial = false; //partial starts as false, indicating the the full page was loaded from server without any ajax partials
@@ -25,6 +25,10 @@ angular.module('wembliApp.services', [])
 
 	$rootScope.sequenceCompleted = true;
 
+	console.log('initrootscope host is: ');
+	console.log($location.host());
+	$rootScope.balancedMarketplace = (/tom/.test($location.host()) ) ? 'TEST-MPlx4ZJIAbA85beTs7q2Omz' : 'MP22BmXshSp7Q8DjgBYnKJmi';
+	$rootScope.balancedMarketplaceUri = '/v1/marketplaces/'+$rootScope.balancedMarketplace;
 
 	//templates can't make a date for some reason
 	$rootScope.getDate = function(d) {
@@ -36,7 +40,7 @@ angular.module('wembliApp.services', [])
 
 
 .factory('pluralize', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
-	return function(num) {return (num !== 1);};
+	return function(num) {return (num != 1);};
 }])
 
 .factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {

@@ -31,7 +31,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-  .directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$location',
+.directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$location',
 
 function(customer, fetchModals, $rootScope, wembliRpc, $location) {
   return {
@@ -47,65 +47,138 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
       return function(scope, element, attr, controller) {
 
         console.log('dashboard linking');
+        /* show the generic loading modal */
+        $rootScope.genericLoadingModal.header = 'Fetching Your Plans...';
+        $('#page-loading-modal').modal("hide");
+        console.log('show generic modal');
+        $('#generic-loading-modal').modal("show");
 
-        /* different dashboard submenu functions */
-        scope.$watch('showDashboard', function(newVal) {
-          if (!newVal) { return; };
+        fetchModals.fetch('/partials/modals/dashboard', function() {
+          console.log('fetched dashboard modals');
 
-          /* show the generic loading modal */
-          $rootScope.genericLoadingModal.header = 'Fetching Your Plans...';
-          $('#page-loading-modal').modal("hide");
-          console.log('show generic modal');
-          $('#generic-loading-modal').modal("show");
+          var args = {
 
-          fetchModals.fetch('/partials/modals/dashboard', function() {
-            console.log('fetched dashboard modals');
+          };
 
-            var args = {
+          wembliRpc.fetch('dashboard.init', args,
 
-            };
+          function(err, result) {
+            if (err) {
+              alert('error happened - contact help@wembli.com');
+              return;
+            }
 
-            wembliRpc.fetch('dashboard.init', args,
+            scope.customer = result.customer;
+            console.log(scope.customer.merchantAccount);
+            scope.welcomeMessage = "Welcome, " + scope.customer.firstName + '!';
 
-            function(err, result) {
-              if (err) {
-                alert('error happened - contact help@wembli.com');
-                return;
-              }
-
-              var c = result.customer;
-              scope.welcomeMessage = "Welcome, " + c.firstName + '!';
-
-              console.log(result);
-              $rootScope.$broadcast('dashboard-fetched', result);
-            });
+            console.log(result);
+            $rootScope.$broadcast('dashboard-fetched', result);
           });
         });
 
-        scope.$watch('showPreferences',function(newVal) {
-          if (!newVal) { return; };
+        /* different dashboard submenu functions */
+        scope.$watch('showDashboard', function(newVal) {
+          if (!newVal) {
+            return;
+          };
 
         });
 
-        scope.$watch('showSettings',function(newVal) {
-          if (!newVal) { return; };
+        scope.$watch('showPreferences', function(newVal) {
+          if (!newVal) {
+            return;
+          };
+
         });
 
-        scope.$watch('showPaymentInformation',function(newVal) {
-          if (!newVal) { return; };
+        scope.$watch('showSettings', function(newVal) {
+          if (!newVal) {
+            return;
+          };
+          scope.changePassword = function() {
+            /* form must be valid */
+            if (scope.changePasswordForm.$valid) {
+
+              var args = {
+                password: scope.changePassword.password,
+                password2: scope.changePassword.password2
+              };
+
+              wembliRpc.fetch('customer.changePassword', args,
+
+              function(err, result) {
+                console.log(result);
+                scope.changePasswordForm.error = result.formError;
+                scope.changePasswordForm.mismatch = result.passwordMismatch;
+                scope.changePasswordForm.tooShort = result.passwordTooShort;
+                if (!scope.changePasswordForm.error) {
+                  scope.changePasswordForm.success = true;
+                }
+              });
+            }
+          };
+        });
+
+        scope.$watch('showPaymentInformation', function(newVal) {
+          if (!newVal) {
+            return;
+          };
+
+          var handleCreateMerchant = function(response) {
+            console.log('created merchant account in marketplace');
+            console.log(response);
+            switch (response.status) {
+              case 400:
+                // missing or invalid field - check response.error for details
+                console.log(response.error);
+                scope.createMerchantAccount.error = response.error
+                break;
+              case 404:
+                // your marketplace URI is incorrect
+                console.log(response.error);
+                break;
+              case 201:
+                // WOO HOO! MONEY!
+                // response.data.uri == URI of the bank account resource you
+                // should store this bank account URI to later credit it
+                console.log(response.data);
+                wembliRpc.fetch('customer.saveMerchantAccount', response,
+
+                function(err, result) {
+                  console.log('back from adding merchant account to wembli customer');
+                  console.log(result);
+                });
+            }
+          };
+
+          scope.createMerchantAccount = function() {
+            //TODO: wembliRpc for creating a merchant account in balanaced
+
+            var bankAccountData = {
+              name: scope.createMerchantAccount.accountHolderName,
+              account_number: scope.createMerchantAccount.accountNumber,
+              routing_number: scope.createMerchantAccount.routingNumber,
+              type: scope.createMerchantAccount.accountType,
+            }
+            console.log('BA Data for balanced');
+            console.log(bankAccountData);
+            balanced.bankAccount.create(bankAccountData, handleCreateMerchant);
+          };
+
         });
 
         /* getto routing for dashboard submenus */
         scope.routeDashboard = function(h) {
           console.log(h);
-          console.log('hash is: '+h);
-          scope.showDashboard = (h === '');
-          scope.showDashboard = /dashboard/.test(h);
+          console.log('hash is: ' + h);
+          scope.showDashboard = (h === '' || /dashboard/.test(h));
           scope.showPreferences = /preferences/.test(h);
           scope.showSettings = /settings/.test(h);
           scope.showPaymentInformation = /payment-information/.test(h);
         };
-        scope.showDashboard = true;
+
+        scope.routeDashboard($location.hash());
       };
     },
   }
@@ -217,56 +290,360 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
   }
 }])
 
-  .directive('friendPlanDashboard', ['$window', 'plan', 'customer', 'pluralize', function($window, plan, customer, pluralize) {
+  .directive('friendPlanDashboard', ['$window', 'wembliRpc', 'plan', 'customer', 'pluralize', function($window, wembliRpc, plan, customer, pluralize) {
   return {
     restrict: 'C',
     cache: false,
     compile: function(element, attr, transclude) {
+
       return function(scope, element, attr, controller) {
 
-        /* toggle decision when guest cound goes above 0 */
-        scope.$watch('guestCount', function(newVal) {
-          if (typeof scope.guestCount === "undefined") {
+        var submitVote = function() {
+          wembliRpc.fetch('friend.submitVote', {
+            tickets: {
+              number: scope.me.rsvp.guestCount,
+              decision: scope.me.rsvp.decision,
+              price: scope.me.rsvp.tickets.price,
+              priceGroup: scope.me.rsvp.tickets.priceGroup,
+            },
+            parking: {
+              number: scope.me.rsvp.guestCount,
+              decision: scope.me.rsvp.parking.decision,
+              price: scope.me.rsvp.parking.price,
+              priceGroup: scope.me.rsvp.parking.priceGroup
+            },
+            restaurant: {
+              number: scope.me.rsvp.guestCount,
+              decision: scope.me.rsvp.restaurant.decision,
+              price: scope.me.rsvp.restaurant.price,
+              priceGroup: scope.me.rsvp.restaurant.priceGroup,
+              preference: scope.me.rsvp.restaurant.preference
+            },
+            hotel: {
+              number: scope.me.rsvp.guestCount,
+              decision: scope.me.rsvp.hotel.decision,
+              price: scope.me.rsvp.hotel.price,
+              priceGroup: scope.me.rsvp.hotel.priceGroup,
+              preference: scope.me.rsvp.hotel.preference
+            },
+          }, function(err, result) {
+            console.log(result);
+            scope.me = result.friend;
+          });
+
+        };
+
+        var calcVotePriceTotal = function() {
+          console.log('calc vote price total');
+          var total = 0;
+          if (parseInt(scope.me.rsvp.tickets.price) > 0) {
+            total += parseInt(scope.me.rsvp.tickets.price);
+          }
+          if (parseInt(scope.me.rsvp.hotel.price) > 0) {
+            total += parseInt(scope.me.rsvp.hotel.price);
+          }
+          if (parseInt(scope.me.rsvp.restaurant.price) > 0) {
+            total += parseInt(scope.me.rsvp.restaurant.price);
+          }
+          if (parseInt(scope.me.rsvp.hotel.price) > 0) {
+            total += parseInt(scope.me.rsvp.hotel.price);
+          }
+          scope.votePriceTotal = total;
+        }
+
+        /* RSVP Section common functionality */
+        scope.guestCountKeyUp = function() {
+          if (scope.me.rsvp.guestCount === "") {
             return;
           }
-          scope.me.decision = (scope.guestCount > 0);
-          if (newVal < 0) {
-            scope.guestCount = 0;
+          console.log('guestcount in keyup');
+          console.log(scope.me.rsvp.guestCount);
+          scope.me.rsvp.decision = (scope.me.rsvp.guestCount > 0);
+
+          scope.guestCountPlural = pluralize(scope.me.rsvp.guestCount);
+          scope.calcTotalComing();
+
+          wembliRpc.fetch('friend.submitRsvp', {
+            decision: scope.me.rsvp.decision,
+            guestCount: scope.me.rsvp.guestCount
+          }, function(err, result) {
+            console.log(result);
+            scope.me = result.friend;
+          });
+        }
+
+        /* toggle decision when guest cound goes above 0 */
+        scope.$watch('me.rsvp.guestCount', function(newVal, oldVal) {
+          console.log('guest count is: ');
+          console.log(newVal);
+          console.log(scope.me.rsvp.guestCount);
+
+          if (typeof scope.me.rsvp.guestCount === "undefined") {
+            return;
           }
+
         });
 
-        /* set guestCount to 0 if decision is false */
-        scope.$watch('me.decision', function() {
-          if (scope.me.decision === false) {
-            scope.guestCount = 0;
+        /* watch the price values to update the total */
+        scope.$watch('me.rsvp.tickets.price', function() {
+          calcVotePriceTotal();
+        });
+        scope.$watch('me.rsvp.parking.price', function() {
+          calcVotePriceTotal();
+        });
+        scope.$watch('me.rsvp.restaurant.price', function() {
+          calcVotePriceTotal();
+        });
+        scope.$watch('me.rsvp.hotel.price', function() {
+          calcVotePriceTotal();
+        });
+
+        /* watch the checkboxes and toggle muted class */
+        /*
+        scope.$watch('me.rsvp.parking.decision',function(value) {
+          console.log('parking-slider-containers muted: '+value);
+          if (value) {
+            $('.parking-slider-container').removeClass('muted');
+          } else {
+            $('.parking-slider-container').addClass('muted');
           }
         });
-        scope.guestCount = scope.me.rsvp.guestCount ? scope.me.rsvp.guestCount : 1;
+        */
+
+        var toggleSlider = function(id,val) {
+          console.log('toggle '+id+' val '+val);
+          if (val) {
+            $(id).slider("enable");
+          } else {
+            $(id).slider("disable");
+          }
+        }
+
+        var toggleMultiselect = function(id,val) {
+          console.log('toggle '+id+' val '+val);
+          if (val) {
+            $(id).multiselect("enable");
+          } else {
+            $(id).multiselect("disable");
+          }
+        }
+
+        scope.toggleInputs = function(category,val) {
+          var categories = {
+            'restaurant': function(val) {
+              toggleSlider('#restaurant-price-slider',val);
+              toggleMultiselect('#food-preference',val)
+            },
+            'parking': function(val) {
+                toggleSlider('#parking-price-slider',val);
+            },
+            'hotel': function(val) {
+                toggleSlider('#hotel-price-slider',val);
+                toggleMultiselect('#hotel-preference',val)
+            },
+          };
+          categories[category](val);
+
+        };
+
+        /*multiselect events */
+        scope.foodPreferenceClick = function(event, ui) {
+          console.log('clicked on a food pref option:'+ui.value);
+          if (typeof scope.me.rsvp.restaurant.preference === "undefined") {
+            scope.me.rsvp.restaurant.preference = [];
+          }
+          if (ui.checked) {
+            scope.me.rsvp.restaurant.preference.push(ui.value);
+          } else {
+            /* find the value in the model and remove it */
+            var n = [];
+            for (var i = 0; i < scope.me.rsvp.restaurant.preference.length; i++) {
+              var p = scope.me.rsvp.restaurant.preference[i];
+              if (p !== ui.value) {
+                n.push(p);
+              }
+            }
+            scope.me.rsvp.restaurant.preference = n;
+          }
+
+          submitVote();
+        }
+        scope.hotelPreferenceClick = function(event, ui) {
+          console.log('clicked on a hotel pref option:'+ui.value);
+          if (typeof scope.me.rsvp.hotel.preference === "undefined") {
+            scope.me.rsvp.hotel.preference = [];
+          }
+          if (ui.checked) {
+            scope.me.rsvp.hotel.preference.push(ui.value);
+          } else {
+            /* find the value in the model and remove it */
+            var n = [];
+            for (var i = 0; i < scope.me.rsvp.hotel.preference.length; i++) {
+              var p = scope.me.rsvp.hotel.preference[i];
+              if (p !== ui.value) {
+                n.push(p);
+              }
+            }
+            scope.me.rsvp.hotel.preference = n;
+          }
+
+          submitVote();
+        }
+
+        /* vote sliders */
+        scope.ticketsPriceSlide = function(event, ui) {
+          console.log('ticket price is sliding');
+          console.log(ui.value);
+          scope.me.rsvp.tickets.price = ui.value;
+
+          if (ui.value > 0) {
+            scope.me.rsvp.tickets.priceGroup.low = true;
+          }
+          if (ui.value > 100) {
+            scope.me.rsvp.tickets.priceGroup.med = true;
+          }
+          if (ui.value > 300) {
+            scope.me.rsvp.tickets.priceGroup.high = true;
+          }
+          if (ui.value <= 100) {
+            scope.me.rsvp.tickets.priceGroup.med = false;
+          }
+          if (ui.value <= 300) {
+            scope.me.rsvp.tickets.priceGroup.high = false;
+          }
+        }
+        scope.ticketsPriceStop = function(event, ui) {
+          console.log('price slider is stopped');
+          /* when they stop we save it */
+          submitVote();
+        }
+
+        scope.parkingPriceSlide = function(event, ui) {
+          console.log('parking price is sliding');
+          scope.me.rsvp.parking.price = ui.value;
+
+          if (ui.value > 0) {
+            scope.me.rsvp.parking.priceGroup.low = true;
+          }
+          if (ui.value > 25) {
+            scope.me.rsvp.parking.priceGroup.med = true;
+          }
+          if (ui.value > 50) {
+            scope.me.rsvp.parking.priceGroup.high = true;
+          }
+          if (ui.value <= 25) {
+            scope.me.rsvp.parking.priceGroup.med = false;
+          }
+          if (ui.value <= 50) {
+            scope.me.rsvp.parking.priceGroup.high = false;
+          }
+
+
+        }
+        scope.parkingPriceStop = function(event, ui) {
+          console.log('parking price is sliding');
+          submitVote();
+        }
+
+        scope.restaurantPriceSlide = function(event, ui) {
+          console.log('restaurant price is sliding');
+          console.log(ui.value);
+          scope.me.rsvp.restaurant.price = ui.value;
+
+          if (ui.value > 0) {
+            scope.me.rsvp.restaurant.priceGroup.low = true;
+          }
+          if (ui.value > 25) {
+            scope.me.rsvp.restaurant.priceGroup.med = true;
+          }
+          if (ui.value > 50) {
+            scope.me.rsvp.restaurant.priceGroup.high = true;
+          }
+          if (ui.value <= 25) {
+            scope.me.rsvp.restaurant.priceGroup.med = false;
+          }
+          if (ui.value <= 50) {
+            scope.me.rsvp.restaurant.priceGroup.high = false;
+          }
+        }
+        scope.restaurantPriceStop = function(event, ui) {
+          console.log('price slider is stopped');
+          submitVote();
+        }
+
+        scope.hotelPriceSlide = function(event, ui) {
+          console.log('hotel price is sliding');
+          console.log(ui.value);
+          scope.me.rsvp.hotel.price = ui.value;
+
+          if (ui.value > 0) {
+            scope.me.rsvp.hotel.priceGroup.low = true;
+          }
+          if (ui.value > 100) {
+            scope.me.rsvp.hotel.priceGroup.med = true;
+          }
+          if (ui.value > 300) {
+            scope.me.rsvp.hotel.priceGroup.high = true;
+          }
+          if (ui.value <= 100) {
+            scope.me.rsvp.hotel.priceGroup.med = false;
+          }
+          if (ui.value <= 300) {
+            scope.me.rsvp.hotel.priceGroup.high = false;
+          }
+        }
+
+        scope.hotelPriceStop = function(event, ui) {
+          console.log('price slider is stopped');
+          submitVote();
+        }
 
         /* handle the main plan rsvp */
         scope.setRsvp = function(rsvpFor, rsvp) {
           var funcs = {
             'decision': function(rsvp) {
               console.log('setting decision to: ' + rsvp);
-              scope.me.decision = rsvp;
-            },
-            'tickets': function(rsvp) {
-              /* get tickets rsvp data from the scope */
-              var a = {
-                rsvp: rsvp
-              };
-              if (rsvp === 'yes') {
-                a.headCount = scope.rsvpTickets;
+              scope.me.rsvp.decision = rsvp;
+              if (scope.me.rsvp.decision === false) {
+                scope.me.rsvp.guestCount = 0;
               }
-              plan.submitRsvp(rsvpFor, a, function(err, result) {
-                scope.changeRsvpStatus = false;
-                scope.me = result.friend;
+              if (scope.me.rsvp.decision === true) {
+                if (scope.me.rsvp.guestCount == 0) {
+                  scope.me.rsvp.guestCount = 1;
+                }
+              }
 
+              scope.calcTotalComing();
+
+              wembliRpc.fetch('friend.submitRsvp', {
+                decision: scope.me.rsvp.decision,
+                guestCount: scope.me.rsvp.guestCount
+              }, function(err, result) {
+                console.log(result);
+                scope.me = result.friend;
               });
-            }
+
+            },
           };
           funcs[rsvpFor](rsvp);
         }
+
+        if (scope.me.rsvp.decision === null) {
+          /* if they have not set the rsvp default to yes */
+          scope.setRsvp('decision',true);
+        }
+        console.log('parking rsvp: '+scope.me.rsvp.parking.decision);
+        if (typeof scope.me.rsvp.parking.decision === "undefined") {
+          scope.me.rsvp.parking.decision = true;
+        }
+        if (typeof scope.me.rsvp.restaurant.decision === "undefined") {
+          scope.me.rsvp.restaurant.decision = true;
+        }
+        if (typeof scope.me.rsvp.hotel.decision === "undefined") {
+          scope.me.rsvp.hotel.decision = false;
+        }
+
+
       };
     }
   };
@@ -278,7 +655,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
     cache: false,
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
-        scope.guestCount = 1;
+        scope.me.rsvp.guestCount = 1;
       };
     }
   };
@@ -298,40 +675,60 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         var height = angular.element($window).height();
         $('#section6').css('min-height', height);
 
+        scope.calcTotalComing = function() {
+          scope.totalComing = 0;
+          scope.friendsComing = [];
 
-        /* RSVP Section common functionality */
-        scope.guestCountKeyUp = function() {
-          scope.guestCountPlural = pluralize(scope.guestCount);
-        }
+          /* get the friend that is this customer */
+          for (var i = 0; i < scope.friends.length; i++) {
+            if (scope.friends[i].customerId === customer.get().id) {
+              if (scope.me.rsvp.decision) {
+                scope.totalComing = parseInt(scope.totalComing) + parseInt(scope.me.rsvp.guestCount);
+                scope.friendsComing.push(scope.me);
+                scope.friends[i] = scope.me;
+              }
+              break;
+            }
+
+            if (scope.friends[i].rsvp.decision) {
+              scope.totalComing = parseInt(scope.totalComing) + parseInt(scope.friends[i].rsvp.guestCount);
+              scope.friendsComing.push(scope.friends[i]);
+            }
+          };
+
+        };
 
         /* key bindings for up and down arrows for guestCount */
         scope.guestCountKeyDown = function(scope, elm, attr, e) {
           if (e.keyCode == 38) {
-            scope.guestCount++;
+            scope.me.rsvp.guestCount++;
           }
           if (e.keyCode == 40) {
-            scope.guestCount--;
+            scope.me.rsvp.guestCount--;
+            if (scope.me.rsvp.guestCount < 0) {
+              scope.me.rsvp.guestCount = 0;
+            }
           }
         }
 
         /* pluralize the people coming list header */
-        scope.$watch('peopleComing', function() {
-          scope.peopleComingPlural = pluralize(scope.peopleComing);
+        scope.$watch('totalComing', function() {
+          scope.totalComingPlural = pluralize(scope.totalComing);
         });
 
         scope.plan = plan.get();
         console.log(scope.plan);
         if (typeof plan.getFriends() !== "undefined") {
           scope.friends = plan.getFriends();
-          scope.totalComing = 0;
 
           /* get the friend that is this customer */
           for (var i = 0; i < scope.friends.length; i++) {
             if (scope.friends[i].customerId === customer.get().id) {
               scope.me = scope.friends[i];
-            }
-            if (scope.friends[i].rsvp.decision) {
-              scope.totalComing += 1;
+              scope.guestCountPlural = pluralize(scope.me.rsvp.guestCount);
+
+              console.log('got a friend!!');
+              console.log(scope.me);
             }
           };
           /* default guest count */
@@ -343,9 +740,120 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         if (typeof plan.getOrganizer() !== "undefined") {
           scope.organizer = plan.getOrganizer();
         }
+
+        scope.calcTotalComing();
+
       };
     }
   }
+}])
+
+  .directive('multiselect', [function() {
+  return {
+    restrict: 'C',
+    compile: function(element, attr, transculde) {
+      return function(scope, element, attr, controller) {
+        var header = attr.header === "false" ? false : true;
+        console.log('noneselectedtext');
+        console.log(attr.noneSelectedText)
+
+        var ms = element.multiselect({
+          appendTo:attr.appendTo,
+          position:{my:"left top",at:"left bottom"},
+          header:header,
+          noneSelectedText:attr.noneSelectedText,
+          minWidth:attr.minWidth
+        });
+
+        attr.$observe('ngModel',function(m) {
+          var opts = scope.$eval(m);
+          if (typeof opts !== "undefined") {
+            console.log(opts);
+            for (var i = 0; i < opts.length; i++) {
+              element.multiselect("widget").find(":checkbox[value='"+opts[i]+"']").attr("checked","checked");
+              $("#"+attr.id+" option[value='" + opts[i] + "']").attr("selected", 1);
+              console.log('setting option:'+opts[i]);
+            };
+            element.multiselect("refresh");
+          }
+        });
+
+        attr.$observe('disable',function(disable) {
+          console.log('disable is: '+attr.disable);
+          if (attr.disable === "true") {
+            ms.multiselect("disable");
+          }
+        });
+
+        attr.$observe('click',function() {
+          var clickFn = scope.$eval(attr.click);
+          console.log('clickFn:');
+          console.log(clickFn);
+          if (typeof clickFn !== "undefined") {
+            console.log('setting up click event for multiselect');
+            element.on('multiselectclick',function(event, ui ) {
+              scope.$apply(function() {
+                clickFn.call(clickFn,event, ui, scope, element, attr);
+              });
+            });
+          }
+        });
+
+      };
+    }
+  };
+}])
+
+  .directive('priceSlider', [function() {
+  return {
+    restrict: 'C',
+    compile: function(element, attr, transculde) {
+      return function(scope, element, attr, controller) {
+        attr.$observe('value', function(val) {
+
+          /* figure out the slide function to call */
+          var slideFn = scope.$eval(attr.slide);
+          var stopFn = scope.$eval(attr.stop);
+
+          var range = attr.range;
+
+          if (attr.range === "true") {
+            range = true;
+          }
+          if (attr.range === "false") {
+            range = false;
+          }
+
+          element.slider({
+            range: range,
+            min: parseInt(attr.min),
+            max: parseInt(attr.max),
+            step: parseFloat(attr.step),
+            value: parseInt(val),
+            slide: function(event, ui) {
+              scope.$apply(function() {
+                slideFn.call(slideFn, event, ui, scope, element, attr)
+              });
+            },
+            stop: function(event, ui) {
+              scope.$apply(function() {
+                stopFn.call(stopFn, event, ui, scope, element, attr)
+              });
+            }
+          });
+
+          attr.$observe('disable',function(disable) {
+            console.log('disable is: '+attr.disable);
+            if (attr.disable === "true") {
+              element.slider("disable");
+            }
+          });
+
+        });
+
+      };
+    }
+  };
 }])
 
   .directive('inviteFriendsWizard', ['fetchModals', 'plan', '$location', function(fetchModals, plan, $location) {
@@ -393,7 +901,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
               'keyboard': false,
             };
 
-            if ($location.path() === '/invitation') {
+            if (/^\/invitation/.test($location.path())) {
               $('#invitation-modal').modal(options);
             }
 
@@ -532,12 +1040,12 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
             };
 
             var filterTickets = function() {
-              var PriceRange = $("#price-slider").slider("option", "values");
+              var priceRange = $("#price-slider").slider("option", "values");
 
               $("#map-container").tuMap("SetOptions", {
                 TicketsFilter: {
-                  MinPrice: PriceRange[0],
-                  MaxPrice: PriceRange[1],
+                  MinPrice: priceRange[0],
+                  MaxPrice: priceRange[1],
                   Quantity: $("#quantity-filter").val(),
                   eTicket: $("#e-ticket-filter").is(":checked")
                 }

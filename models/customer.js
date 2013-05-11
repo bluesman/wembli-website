@@ -49,11 +49,15 @@ this.Model = function(mongoose) {
 		confirmation: [Confirmations],
 		forgotPassword: [ForgotPassword],
 		plans: [String],
+		balancedAPI: {
+			account_uri:String
+		},
 		created: {
 			type: Date,
 			default: Date.now
 		},
 		updated: Date,
+
 	}, schemaOptions);
 
 

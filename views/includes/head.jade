@@ -11,6 +11,8 @@ link(rel = 'stylesheet', href = '/css/bootstrap-modal.css')
 link(rel = 'stylesheet', href = '/css/plugins/pikaday.css')
 link(rel = 'stylesheet', href = '/css/style.css')
 link(rel = 'stylesheet', href = 'http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css')
+link(rel='stylesheet', href='/css/plugins/jquery.multiselect.css')
+link(rel='stylesheet', href='/css/plugins/jquery.multiselect.filter.css')
 
 //- jquery
 script(type = "text/javascript", src = "http://code.jquery.com/jquery-1.8.3.js")
@@ -31,11 +33,13 @@ script(type = "text/javascript", src = "http://code.jquery.com/ui/1.9.2/jquery-u
 //- script(type="text/javascript", src="https://maps.google.com/maps/api/js?v=3.2&sensor=false&libraries=places")
 //- google places api
 script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places")
-
+script(type="text/javascript",src="https://js.balancedpayments.com/v1/balanced.js")
 
 - if ("development" === environment())
   script(type="text/javascript",src="/js/plugins/excanvas.js")
   script(type="text/javascript",src="/js/plugins/jquery.tuMap.js")
+  script(type="text/javascript",src="/js/plugins/jquery.multiselect.js")
+  script(type="text/javascript",src="/js/plugins/jquery.multiselect.filter.js")
   script(type = "text/javascript", src = "/js/plugins/sequence.jquery-min.js")
   script(type = "text/javascript", src = "/js/lib/angular/angular.min.js")
   script(type = "text/javascript", src = "/js/app.js")
