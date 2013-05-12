@@ -62,13 +62,15 @@
 			margin:15px auto;
 
 			.circle {
+				.clearfix();
 				background:transparent url('/images/home-circle.png') no-repeat center center;
 				height:109px;
 				width:140px;
 				float:left;
 
 				i {
-					margin-top:32px;
+					position:relative;
+					top:35px;
 				}
 			}
 
@@ -79,7 +81,8 @@
 			.circle-text {
 				font-size:16px;
 				color:@blueDarker;
-				margin-top:35px;
+				position:relative;
+				top:70px;
 			}
 
 			#circle-left {
@@ -216,6 +219,9 @@
 						width:298px;
 						margin:0px 30px 65px;
 						text-align:left;
+						i {
+							margin:10px;
+						}
 					}
 
 					.name {

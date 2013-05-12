@@ -7,3 +7,4 @@ angular.module('wembliApp.filters', []).
       return String(text).replace(/\%VERSION\%/mg, version);
     }
   }]);
+

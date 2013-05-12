@@ -1,8 +1,21 @@
-@import url('/css/plugins/jquery-ui-1.8.16.custom.css');
+/* GET FONT-AWESOME:
+  cd /wembli/Font-Awesome/
+  git pull;
+  cp /wembli/Font-Awesome/build/assets/font-awesome/less/* /wembli/website/public/less/font-awesome/
 
-@import "tb-variables.less";
+  GET TWITTER BOOTSTRAP:
+  cd /wembli/bootstrap/
+  git pull
+  cp -R /wembli/bootstrap/less/* /wembli/website/less/bootstrap/
+*/
+/* @import url('/css/plugins/jquery-ui-1.8.16.custom.css'); */
+@import url('/css/bootstrap-modal.css');
+@import url('/css/plugins/pikaday.css');
+@import url('/css/plugins/jquery.multiselect.css');
+@import url('/css/plugins/jquery.multiselect.filter.css');
+
+@import "bootstrap/bootstrap.less";
 @import "wembli-variables.less"; // Modify this for custom colors, font-sizes, etc
-@import "mixins.less";
 @import "wembli-mixins.less"; // Modify this for custom colors, font-sizes, etc
 
 form { margin-bottom:0px; }
@@ -88,6 +101,7 @@ a, a:hover, a:focus {
   background:none repeat scroll 0 0 @blue !important;
 };
 
+.green {color:#64C832;}
 .red { color:red !important; }
 .orange {color:@orange;}
 .arrow {
@@ -219,7 +233,7 @@ a, a:hover, a:focus {
   img { max-width : none }
 }
 
-@import "font-awesome.less";
+@import "/font-awesome/font-awesome.less";
 @import "fonts.less";
 @import "type.less";
 @import "layout.less";

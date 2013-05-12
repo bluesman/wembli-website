@@ -520,7 +520,7 @@ angular.module('wembliApp.services', [])
 	};
 }])
 
-	.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window', '$filter', 'customer', function($rootScope, $q, friendFilter, wembliRpc, $window, $filter, customer) {
+	.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window', '$filter', 'customer','$location', function($rootScope, $q, friendFilter, wembliRpc, $window, $filter, customer,$location) {
 
 	var self = this;
 	this.auth = null;
@@ -553,7 +553,7 @@ angular.module('wembliApp.services', [])
 		feedDialog: function(args, cb) {
 			FB.getLoginStatus(function(response) {
 				if (response.authResponse) {
-					var actionLink = 'http://www2.wembli.com/rsvp/' + args.guid + '/' + args.token + '/facebook';
+					var actionLink = 'http://'+$location.host()+'/rsvp/' + args.guid + '/' + args.token + '/facebook';
 					var obj = {
 						method: 'feed',
 						display: 'iframe',

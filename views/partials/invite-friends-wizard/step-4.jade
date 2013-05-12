@@ -4,7 +4,7 @@ form#invite-wizard-step3-form.twitter-widget(name="step3",ng-cloak,ng-show="twit
 		h2 Search For Twitter Friends To Invite
 		#twitter-need-login(ng-hide="twitter.service.getAuth()")
 			p Connect with twitter to view your friends.
-			a#twitter-login.btn.btn-primary(href="/auth/twitter?redirectUrl=/invitation#step4",target="_self")
+			a#twitter-login.btn.btn-primary(ng-href="/auth/twitter?redirectUrl=/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#step4",target="_self")
 				i.icon-twitter
 				span &nbsp;Connect With twitter
 		#twitter-friends-list.friends-list-container(ng-show="twitter.service.getAuth()")

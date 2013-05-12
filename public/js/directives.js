@@ -329,6 +329,16 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
           }, function(err, result) {
             console.log(result);
             scope.me = result.friend;
+            /* update scope friends too */
+            var f = [];
+            angular.forEach(scope.friends,function(friend) {
+              if (friend._id === result.friend._id) {
+                f.push(result.friend);
+              } else {
+                f.push(friend);
+              }
+            },f);
+            scope.friends = f;
           });
 
         };
@@ -348,7 +358,8 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
           if (parseInt(scope.me.rsvp.hotel.price) > 0) {
             total += parseInt(scope.me.rsvp.hotel.price);
           }
-          scope.votePriceTotal = total;
+          scope.votePriceTotalPerPerson = total;
+          scope.votePriceTotal = total * scope.me.rsvp.tickets.number;
         }
 
         /* RSVP Section common functionality */
@@ -382,6 +393,17 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
             return;
           }
 
+        });
+
+        /* watch the rsvp checkboxes */
+        scope.$watch('me.rsvp.parking.decision',function() {
+          submitVote();
+        });
+        scope.$watch('me.rsvp.restaurant.decision',function() {
+          submitVote();
+        });
+        scope.$watch('me.rsvp.hotel.decision',function() {
+          submitVote();
         });
 
         /* watch the price values to update the total */
@@ -621,9 +643,21 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
               }, function(err, result) {
                 console.log(result);
                 scope.me = result.friend;
+                /* update scope friends too */
+                var f = [];
+                angular.forEach(scope.friends,function(friend) {
+                  if (friend._id === result.friend._id) {
+                    f.push(result.friend);
+                  } else {
+                    f.push(friend);
+                  }
+                },f);
+                scope.friends = f;
+
               });
 
             },
+
           };
           funcs[rsvpFor](rsvp);
         }
@@ -642,6 +676,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         if (typeof scope.me.rsvp.hotel.decision === "undefined") {
           scope.me.rsvp.hotel.decision = false;
         }
+
 
 
       };
@@ -674,6 +709,10 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         console.log(angular.element($window).height());
         var height = angular.element($window).height();
         $('#section6').css('min-height', height);
+
+        scope.showEllipses = function(ary,len) {
+          return (ary.join(', ').length > len);
+        }
 
         scope.calcTotalComing = function() {
           scope.totalComing = 0;
@@ -856,7 +895,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
   };
 }])
 
-  .directive('inviteFriendsWizard', ['fetchModals', 'plan', '$location', function(fetchModals, plan, $location) {
+  .directive('inviteFriendsWizard', ['fetchModals', 'plan', '$location', 'wembliRpc', function(fetchModals, plan, $location, wembliRpc) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -1907,12 +1946,14 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
     compile: function(element, attr, transclude) {
 
       return function(scope, element, attr) {
+        attr.$observe('content',function() {
         element.popover({
           placement: attr.placement,
           trigger: attr.trigger,
           animation: (attr.animation === 'true') ? true : false,
           title: attr.title,
           content: attr.content
+        });
         });
       }
     }
