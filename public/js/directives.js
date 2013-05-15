@@ -396,27 +396,35 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         });
 
         /* watch the rsvp checkboxes */
-        scope.$watch('me.rsvp.parking.decision',function() {
+        scope.$watch('me.rsvp.parking.decision',function(val) {
+          if (typeof val === "undefined") { return; }
           submitVote();
         });
-        scope.$watch('me.rsvp.restaurant.decision',function() {
+        scope.$watch('me.rsvp.restaurant.decision',function(val) {
+          if (typeof val === "undefined") { return; }
           submitVote();
         });
-        scope.$watch('me.rsvp.hotel.decision',function() {
+        scope.$watch('me.rsvp.hotel.decision',function(val) {
+          if (typeof val === "undefined") { return; }
           submitVote();
         });
 
         /* watch the price values to update the total */
-        scope.$watch('me.rsvp.tickets.price', function() {
+        scope.$watch('me.rsvp.tickets.price', function(val) {
+          if (typeof val === "undefined") { return; }
+
           calcVotePriceTotal();
         });
-        scope.$watch('me.rsvp.parking.price', function() {
+        scope.$watch('me.rsvp.parking.price', function(val) {
+          if (typeof val === "undefined") { return; }
           calcVotePriceTotal();
         });
-        scope.$watch('me.rsvp.restaurant.price', function() {
+        scope.$watch('me.rsvp.restaurant.price', function(val) {
+          if (typeof val === "undefined") { return; }
           calcVotePriceTotal();
         });
-        scope.$watch('me.rsvp.hotel.price', function() {
+        scope.$watch('me.rsvp.hotel.price', function(val) {
+          if (typeof val === "undefined") { return; }
           calcVotePriceTotal();
         });
 
@@ -690,7 +698,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
     cache: false,
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
-        scope.me.rsvp.guestCount = 1;
+        //scope.me.rsvp.guestCount = 1;
       };
     }
   };
@@ -986,7 +994,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
 }])
 
 
-  .directive('planFeed', [function() {
+  .directive('planFeed', ['plan','$timeout', 'wembliRpc',function(plan, $timeout, wembliRpc) {
   return {
     restrict: 'E',
     replace: true,
@@ -994,6 +1002,18 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
     templateUrl: "/partials/plan/feed",
     compile: function(element, attr, transclude) {
       return function(scope, element, attr, controller) {
+        plan.get(function(p) {
+          scope.feed = plan.getFeed();
+        });
+
+        //poll for feed updates every 2 seconds
+        (function tick() {
+          wembliRpc.fetch('feed.get',{}, function(err,result) {
+            scope.feed = result.feed;
+            console.log('polled for feed');
+            $timeout(tick, 5000);
+          });
+        })();
 
       };
     }
@@ -1009,6 +1029,22 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
     templateUrl: "/partials/activity-feed",
     compile: function(element, attr, transclude) {
       console.log('in dashboard');
+    }
+  }
+}])
+
+  .directive('logActivity', ['wembliRpc',function(wembliRpc) {
+  return {
+    restrict: 'C',
+    compile: function(element, attr, transclude) {
+      element.click(function() {
+        //get the tix and make the ticket list
+        wembliRpc.fetch('feed.logActivity', {
+          action: attr.action,
+          meta: attr.meta || {}
+        }, function(err, result) {
+      });
+    });
     }
   }
 }])

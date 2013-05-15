@@ -2,7 +2,9 @@ var wembliUtils = require('wembli/utils');
 var wembliModel = require('../lib/wembli-model');
 var Customer = wembliModel.load('customer');
 var Friend = wembliModel.load('friend');
+var Feed = wembliModel.load('feed');
 var Ticket = wembliModel.load('ticket');
+var feedRpc = require('./feed').feed;
 var async = require('async');
 
 exports.plan = {
@@ -19,6 +21,15 @@ exports.plan = {
 
 		if (req.session.plan) {
 			async.parallel([
+
+			function(callback) {
+				Feed.findOne().where('planGuid').equals(req.session.plan.guid).exec(function(err,feed) {
+					if (feed !== null) {
+						data.feed = feed;
+					}
+					callback();
+				});
+			},
 
 			function(callback) {
 				/* get friends for this plan */
@@ -201,8 +212,11 @@ addFriend: function(args, req, res) {
 				}
 				console.log('added friend to plan: ' + req.session.plan.guid);
 				data.friend = friend;
+				feedRpc['logActivity'].apply(function(err,feedResult) {
+					return me(null, data);
+				},[{action:'addFriend',meta:{friendName: friend.name}}, req, res]);
 
-				return me(null, data);
+
 			});
 		});
 	});

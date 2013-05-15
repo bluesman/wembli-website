@@ -1,1 +1,5 @@
 #plan-feed.affix Plan Feed
+	.feed(ng-repeat="f in feed.activity")
+		span {{f.actor.name}} - {{f.action.name}}
+	div
+		a.log-activity(href="#",action="clickedLink") click here

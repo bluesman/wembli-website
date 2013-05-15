@@ -37,6 +37,7 @@ module.exports = function(app) {
 
 	app.get(/^\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
+		console.log('creating new plan in search partial controller');
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
 		/* must be the organizer if we're creating a new plan - this won't stick if they're not logged in */
 		req.session.visitor.context = 'organizer';
@@ -51,6 +52,7 @@ module.exports = function(app) {
 	app.get(/^\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
+		console.log('creating new plan in search controller');
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
 		if(req.param('next')) {
 			res.setHeader('x-wembli-location',req.param('next'));

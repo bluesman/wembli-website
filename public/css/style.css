@@ -9757,6 +9757,33 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-name .guests {
   font-weight: bold;
 }
+#plan-frame #middle #plan-dashboard #section4 #pony-up {
+  font-size: 20px;
+}
+#plan-frame #middle #plan-dashboard #section4 #pony-up .content {
+  margin-left: 30px;
+  width: 60%;
+}
+#plan-frame #middle #plan-dashboard #section4 #pony-up .content p {
+  padding: 20px 0;
+}
+#plan-frame #middle #plan-dashboard #section4 #pony-up .content .icon-circle {
+  display: block;
+  font-size: 10px;
+}
+#plan-frame #middle #plan-dashboard #section4 #pony-up .content span {
+  margin-left: 10px;
+  font-size: 20px;
+}
+#plan-frame #middle #plan-dashboard #section4 #pony-up .content .note {
+  font-style: italic;
+}
+#plan-frame #middle #plan-dashboard #section4 #pony-up .img {
+  width: 30%;
+}
+#plan-frame #middle #plan-dashboard #section4 #pony-up .img img {
+  margin-right: 30px;
+}
 #plan-frame #right {
   width: 18%;
   float: left;

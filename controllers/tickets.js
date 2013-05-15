@@ -70,7 +70,7 @@ module.exports = function(app) {
 				console.log('plan in tickets controller');
 				console.log(req.session.plan);
 
-				/* if they don't have a plan or this event is different
+				/* if they do have a plan but this event is different
 				than the current plan then over write the plan
 				save prefs only if the customer is logged in */
 				if (typeof req.session.plan !== "undefined" && typeof req.session.plan.event !== "undefined" && (req.session.plan.event.eventId !== req.param("eventId"))) {
@@ -80,31 +80,54 @@ module.exports = function(app) {
 						var savePrefs = req.session.plan.preferences;
 					}
 
-					/* overwrite the existing plan keeping the prefs but nothing else */
-					req.session.plan = new Plan({
-						guid: Plan.makeGuid()
-					});
+					var newPlan = function() {
+						/* overwrite the existing plan keeping the prefs but nothing else */
+						console.log('creating new plan in tickets controller');
+						req.session.plan = new Plan({
+							guid: Plan.makeGuid()
+						});
 
-					if (savePrefs) {
-						req.session.plan.preferences = {
-							payment: savePrefs.payment
-						};
-						req.session.plan.preferences.tickets = savePrefs.tickets;
+						if (savePrefs) {
+							req.session.plan.preferences = {
+								payment: savePrefs.payment
+							};
+							req.session.plan.preferences.tickets = savePrefs.tickets;
+						}
+						req.session.plan.event.eventId = req.param("eventId");
+						req.session.plan.event.eventName = req.param("eventName");
+						req.session.plan.event.eventDate = results.event[0].Date;
+						req.session.plan.event.eventVenue = results.event[0].Venue;
+						req.session.plan.event.eventCity = results.event[0].City;
+						req.session.plan.event.eventState = results.event[0].StateProvince;
+						req.session.plan.event.data = results.event[0];
+						req.session.plan.venue.venueId = results.event[0].VenueID;
+						req.session.plan.venue.data = venueResults.venue[0];
+						/* you are now the organizer */
+						req.session.visitor.context = 'organizer';
+						return res.render(template, locals);
+					};
+
+					/* if there is a customer check for an existing plan for this event and use that */
+					if (req.session.customer) {
+						Plan.findOne()
+						.where('organizer').equals(req.session.customer._id)
+						.where('event.eventId').equals(req.param("eventId")).exec(function(err,p) {
+							if (p === null) {
+								return newPlan();
+							}
+							console.log('this customer has a plan for this event already');
+							console.log(err);
+							console.log(p);
+							req.session.plan = p;
+							return res.render(template, locals);
+						});
+					}	else {
+						newPlan();
 					}
-					req.session.plan.event.eventId = req.param("eventId");
-					req.session.plan.event.eventName = req.param("eventName");
-					req.session.plan.event.eventDate = results.event[0].Date;
-					req.session.plan.event.eventVenue = results.event[0].Venue;
-					req.session.plan.event.eventCity = results.event[0].City;
-					req.session.plan.event.eventState = results.event[0].StateProvince;
-					req.session.plan.event.data = results.event[0];
-					req.session.plan.venue.venueId = results.event[0].VenueID;
-					req.session.plan.venue.data = venueResults.venue[0];
-					/* you are now the organizer */
-					req.session.visitor.context = 'organizer';
+				} else {
 
+					return res.render(template, locals);
 				}
-				res.render(template, locals);
 			}, [{VenueID:results.event[0].VenueID}, req, res]);
 		}, [args, req, res]);
 

@@ -80,6 +80,10 @@ angular.module('wembliApp.services', [])
 			return self.friends;
 		},
 
+		getFeed: function() {
+			return self.feed;
+		},
+
 		getOrganizer: function() {
 			console.log('get organizer');
 			console.log(self.organizer);
@@ -122,6 +126,7 @@ angular.module('wembliApp.services', [])
 					self.friends = result.friends;
 					self.organizer = result.organizer;
 					self.context = result.context;
+					self.feed = result.feed;
 				}
 
 				if (typeof result.loggedIn !== "undefined") {
