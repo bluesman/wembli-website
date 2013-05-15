@@ -8348,7 +8348,7 @@ body {
 #tickets-frame #tickets #tickets-price-range > h3 {
   margin-left: 0.5em;
   margin-top: 2px;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: bold;
 }
 #tickets-frame #tickets #tickets-price-range {
@@ -9782,7 +9782,7 @@ a#facebook-login-button {
   width: 30%;
 }
 #plan-frame #middle #plan-dashboard #section4 #pony-up .img img {
-  margin-right: 30px;
+  margin: 30px;
 }
 #plan-frame #right {
   width: 18%;
