@@ -1,5 +1,6 @@
 #plan-feed.affix Plan Feed
 	.feed(ng-repeat="f in feed.activity | feedString | orderBy:'created':true " )
+		i.icon-user
 		span {{f.string}}
 	div
 		a.log-activity(href="#",action="clickedLink") click here

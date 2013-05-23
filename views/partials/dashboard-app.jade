@@ -9,20 +9,20 @@
 					i.icon-caret-down
 			ul.dropdown-menu(role="menu")
 				li
-					a.dashboard-dropdown-link(href="#dashboard",ng-click="routeDashboard($element)") Dashboard
-					a.dashboard-dropdown-link(href="#settings",ng-click="routeDashboard(this)") Account Settings
-					//- a.dashboard-dropdown-link(href="#preferences",ng-click="routeDashboard(this)") Plan Preferences
-					a.dashboard-dropdown-link(href="#payment-information",ng-click="routeDashboard(this)") Payment Information
+					a.dashboard-link(href="#dashboard") Dashboard
+					a.dashboard-link(href="#settings") Account Settings
+					//- a.dashboard-link(href="#preferences") Plan Preferences
+					a.dashboard-link(href="#payment-information") Payment Information
 					a(href="/logout", ng-click="facebook.logout()") Log out
 
-		.pull-right
+		.start-now.pull-right
 			a#start-now.pull-left.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
 				span START A NEW PLAN&nbsp;
 				i.icon-double-angle-right
 	#dashboard-body(ng-show="showDashboard")
-		.alert
+		.alert(ng-show="needPaymentInfo")
 			div You must provide payment information if you want to be paid back.
-			a(href="#") Click here to provide payment information.
+			a.dashboard-link(href="#payment-information") Click here to provide payment information.
 		.dashboard-row
 			a#planning.btn.dashboard-button(href="#planning-modal",data-toggle="modal")
 				h3 Events You're Planning
@@ -56,19 +56,19 @@
 	#preferences.preferences(ng-show="showPreferences") preferences
 	#payment-information.payment-information(ng-show="showPaymentInformation")
 		#payment-information-wrapper
-			#merchant-account(ng-show="customer.merchantAccount")
-				.merchant-account
+			#merchant-account(ng-show="customer.balancedAPI.bankAccounts")
+				.merchant-account(ng-repeat="ba in customer.balancedAPI.bankAccounts.items")
 					.row
-						.name.span3.pull-left {{customer.merchantAccount.name}}
-						.account-number.span3.pull-right {{customer.merchantAccount.account_number}}
-					.bank {{customer.merchantAccount.bank_name}}
-					.account-type Type: {{customer.merchantAccount.type}}
-					.status
-						span Status:&nbsp;
-						span {{{true:"Valid",false:"Invalid"}[customer.merchantAccount.is_valid]}}
+						.name.span3.pull-left {{ba.name}} - {{ba.type}} ({{ba.bank_name}})
+						.account-number.span3.pull-right {{ba.account_number}}
+						.status.pull-right
+							span Status:&nbsp;
+							span {{{true:"Valid",false:"Invalid"}[customer.balancedAPI.merchantAccount.is_valid]}}
 
-			#create-merchant-account(ng-hide="customer.merchantAccount")
-				p In order for you to collect payments from your friends, you need to provide details about the bank account they will pay in to.
+			#create-merchant-account(ng-hide="customer.balancedAPI.merchantAccount")
+				.alert.alert-info
+					div Wembli is 100% safe and secure. In order to collect money from your friends, you will need to provide your bank account information.
+					a(href="#pony-up-info",data-toggle="modal") Click here to read more about how Pony Up! works.
 				form#create-merchant-account-form.form-horizontal(novalidate, name="createMerchantAccountForm")
 					fieldset
 						#error
@@ -78,6 +78,10 @@
 							label.control-label Full Name
 							.controls
 								input(ng-model="createMerchantAccount.accountHolderName",value="",placeholder="Account Holder Name",name="accountHolderName",required)
+						.control-group
+							label.control-label Date Of Birth
+							.controls
+								input(ng-model="createMerchantAccount.dob",value="",placeholder="MM-DD-YYYY",name="dob",required)
 						.control-group
 							label.control-label Phone Number
 							.controls

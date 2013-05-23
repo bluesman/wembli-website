@@ -30,6 +30,7 @@ this.Model = function(mongoose) {
 		birthday: String,
 		zipCode: Number,
 		gender: String,
+		imageUrl: String,
 		email: {
 			type: String,
 			required: true,
@@ -50,7 +51,8 @@ this.Model = function(mongoose) {
 		forgotPassword: [ForgotPassword],
 		plans: [String],
 		balancedAPI: {
-			account_uri:String
+			merchantAccount:{},
+			customerAccount:{},
 		},
 		created: {
 			type: Date,

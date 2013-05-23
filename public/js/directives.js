@@ -31,7 +31,7 @@ directive('triggerPartial', ['$rootScope', function($rootScope) {
   }
 }])
 
-.directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$location',
+  .directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$location',
 
 function(customer, fetchModals, $rootScope, wembliRpc, $location) {
   return {
@@ -68,14 +68,40 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
               return;
             }
 
+            /* set the scope */
+            console.log(result);
             scope.customer = result.customer;
-            console.log(scope.customer.merchantAccount);
+            console.log(scope.customer.balancedAPI);
+            console.log(result.organizer);
+
+            /* if they do not have bank info and they have at least 1 plan they are organizing, then we need to alert them for the payment info */
+
+            if (result.organizer.length && !scope.customer.balancedAPI.merchantAccount) {
+              scope.needPaymentInfo = true; //show an alert telling them to enter bank info
+            }
+
+            if (scope.customer.balancedAPI.merchantAccount) {
+
+              wembliRpc.fetch('customer.listBankAccounts', {limit:100,offset:0}, function(err, baResult) {
+                if (err) {
+                  console.log(err);
+                  scope.customer.balancedAPI.bankAccounts = {};
+                } else {
+                  console.log('bankaccounts');
+                  console.log(baResult);
+                  scope.customer.balancedAPI.bankAccounts = baResult.bankAccounts;
+                }
+
+              });
+
+            }
+
             scope.welcomeMessage = "Welcome, " + scope.customer.firstName + '!';
 
-            console.log(result);
             $rootScope.$broadcast('dashboard-fetched', result);
           });
         });
+
 
         /* different dashboard submenu functions */
         scope.$watch('showDashboard', function(newVal) {
@@ -96,79 +122,81 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
           if (!newVal) {
             return;
           };
-          scope.changePassword = function() {
-            /* form must be valid */
-            if (scope.changePasswordForm.$valid) {
-
-              var args = {
-                password: scope.changePassword.password,
-                password2: scope.changePassword.password2
-              };
-
-              wembliRpc.fetch('customer.changePassword', args,
-
-              function(err, result) {
-                console.log(result);
-                scope.changePasswordForm.error = result.formError;
-                scope.changePasswordForm.mismatch = result.passwordMismatch;
-                scope.changePasswordForm.tooShort = result.passwordTooShort;
-                if (!scope.changePasswordForm.error) {
-                  scope.changePasswordForm.success = true;
-                }
-              });
-            }
-          };
         });
 
         scope.$watch('showPaymentInformation', function(newVal) {
           if (!newVal) {
             return;
           };
-
-          var handleCreateMerchant = function(response) {
-            console.log('created merchant account in marketplace');
-            console.log(response);
-            switch (response.status) {
-              case 400:
-                // missing or invalid field - check response.error for details
-                console.log(response.error);
-                scope.createMerchantAccount.error = response.error
-                break;
-              case 404:
-                // your marketplace URI is incorrect
-                console.log(response.error);
-                break;
-              case 201:
-                // WOO HOO! MONEY!
-                // response.data.uri == URI of the bank account resource you
-                // should store this bank account URI to later credit it
-                console.log(response.data);
-                wembliRpc.fetch('customer.saveMerchantAccount', response,
-
-                function(err, result) {
-                  console.log('back from adding merchant account to wembli customer');
-                  console.log(result);
-                });
-            }
-          };
-
-          scope.createMerchantAccount = function() {
-            //TODO: wembliRpc for creating a merchant account in balanaced
-
-            var bankAccountData = {
-              name: scope.createMerchantAccount.accountHolderName,
-              account_number: scope.createMerchantAccount.accountNumber,
-              routing_number: scope.createMerchantAccount.routingNumber,
-              type: scope.createMerchantAccount.accountType,
-            }
-            console.log('BA Data for balanced');
-            console.log(bankAccountData);
-            balanced.bankAccount.create(bankAccountData, handleCreateMerchant);
-          };
-
         });
 
-        /* getto routing for dashboard submenus */
+
+        scope.changePassword = function() {
+          /* form must be valid */
+          if (scope.changePasswordForm.$valid) {
+
+            var args = {
+              password: scope.changePassword.password,
+              password2: scope.changePassword.password2
+            };
+
+            wembliRpc.fetch('customer.changePassword', args,
+
+            function(err, result) {
+              console.log(result);
+              scope.changePasswordForm.error = result.formError;
+              scope.changePasswordForm.mismatch = result.passwordMismatch;
+              scope.changePasswordForm.tooShort = result.passwordTooShort;
+              if (!scope.changePasswordForm.error) {
+                scope.changePasswordForm.success = true;
+              }
+            });
+          }
+        };
+
+        scope.createMerchantAccount = function() {
+          /* reformat dob form MM-DD-YYYY to YYYY-MM-DD */
+          var dobAry = scope.createMerchantAccount.dob.split('-');
+          var dob = dobAry[2] + '-' + dobAry[0] + '-' + dobAry[1];
+
+          var accountInfo = {
+            name: scope.createMerchantAccount.accountHolderName,
+            dob: dob,
+            phoneNumber: scope.createMerchantAccount.phoneNumber,
+            streetAddress: scope.createMerchantAccount.streetAddress,
+            postalCode: scope.createMerchantAccount.postalCode,
+            bankAccount: {
+              name: scope.createMerchantAccount.accountName,
+              accountNumber: scope.createMerchantAccount.accountNumber,
+              routingNumber: scope.createMerchantAccount.routingNumber,
+              type: scope.createMerchantAccount.accountType
+            }
+          }
+          console.log('accountinfo for createMerchantAccount');
+          console.log(accountInfo);
+          /*
+              this is the balanced js client lib - it doesn't let you do much..we don't want to just create a bank account
+              we want to create a merchant account..for that we have to do it server side
+              balanced.bankAccount.create(bankAccountData, handleCreateMerchant);
+            */
+
+          wembliRpc.fetch('customer.createMerchantAccount', accountInfo, function(err, result) {
+            if (err) {
+              alert('something bad happened contact help@wembli.com');
+            }
+            /* back from creating merchant account */
+            console.log('created merchant account');
+            console.log(result);
+            scope.customer = result.customer;
+            /* TODO: handle the merchant underwrite flow
+                  - if there was not enough info to underwrite (300 code), ask for more info
+              */
+          });
+
+        };
+
+
+        /* ghetto routing for dashboard submenus */
         scope.routeDashboard = function(h) {
           console.log(h);
           console.log('hash is: ' + h);
@@ -176,6 +204,10 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
           scope.showPreferences = /preferences/.test(h);
           scope.showSettings = /settings/.test(h);
           scope.showPaymentInformation = /payment-information/.test(h);
+          if (/pony-up-info/.test(h)) {
+            scope.showPaymentInformation = true;
+            $('#pony-up-info').modal("show");
+          }
         };
 
         scope.routeDashboard($location.hash());
@@ -184,7 +216,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
   }
 }])
 
-  .directive('dashboardDropdownLink', [function() {
+  .directive('dashboardLink', [function() {
   return {
     restrict: 'C',
     replace: false,
@@ -331,13 +363,13 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
             scope.me = result.friend;
             /* update scope friends too */
             var f = [];
-            angular.forEach(scope.friends,function(friend) {
+            angular.forEach(scope.friends, function(friend) {
               if (friend._id === result.friend._id) {
                 f.push(result.friend);
               } else {
                 f.push(friend);
               }
-            },f);
+            }, f);
             scope.friends = f;
           });
 
@@ -396,35 +428,49 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         });
 
         /* watch the rsvp checkboxes */
-        scope.$watch('me.rsvp.parking.decision',function(val) {
-          if (typeof val === "undefined") { return; }
+        scope.$watch('me.rsvp.parking.decision', function(val) {
+          if (typeof val === "undefined") {
+            return;
+          }
           submitVote();
         });
-        scope.$watch('me.rsvp.restaurant.decision',function(val) {
-          if (typeof val === "undefined") { return; }
+        scope.$watch('me.rsvp.restaurant.decision', function(val) {
+          if (typeof val === "undefined") {
+            return;
+          }
           submitVote();
         });
-        scope.$watch('me.rsvp.hotel.decision',function(val) {
-          if (typeof val === "undefined") { return; }
+        scope.$watch('me.rsvp.hotel.decision', function(val) {
+          if (typeof val === "undefined") {
+            return;
+          }
           submitVote();
         });
 
         /* watch the price values to update the total */
         scope.$watch('me.rsvp.tickets.price', function(val) {
-          if (typeof val === "undefined") { return; }
+          if (typeof val === "undefined") {
+            return;
+          }
 
           calcVotePriceTotal();
         });
         scope.$watch('me.rsvp.parking.price', function(val) {
-          if (typeof val === "undefined") { return; }
+          if (typeof val === "undefined") {
+            return;
+          }
           calcVotePriceTotal();
         });
         scope.$watch('me.rsvp.restaurant.price', function(val) {
-          if (typeof val === "undefined") { return; }
+          if (typeof val === "undefined") {
+            return;
+          }
           calcVotePriceTotal();
         });
         scope.$watch('me.rsvp.hotel.price', function(val) {
-          if (typeof val === "undefined") { return; }
+          if (typeof val === "undefined") {
+            return;
+          }
           calcVotePriceTotal();
         });
 
@@ -440,8 +486,8 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         });
         */
 
-        var toggleSlider = function(id,val) {
-          console.log('toggle '+id+' val '+val);
+        var toggleSlider = function(id, val) {
+          console.log('toggle ' + id + ' val ' + val);
           if (val) {
             $(id).slider("enable");
           } else {
@@ -449,8 +495,8 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
           }
         }
 
-        var toggleMultiselect = function(id,val) {
-          console.log('toggle '+id+' val '+val);
+        var toggleMultiselect = function(id, val) {
+          console.log('toggle ' + id + ' val ' + val);
           if (val) {
             $(id).multiselect("enable");
           } else {
@@ -458,18 +504,18 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
           }
         }
 
-        scope.toggleInputs = function(category,val) {
+        scope.toggleInputs = function(category, val) {
           var categories = {
             'restaurant': function(val) {
-              toggleSlider('#restaurant-price-slider',val);
-              toggleMultiselect('#food-preference',val)
+              toggleSlider('#restaurant-price-slider', val);
+              toggleMultiselect('#food-preference', val)
             },
             'parking': function(val) {
-                toggleSlider('#parking-price-slider',val);
+              toggleSlider('#parking-price-slider', val);
             },
             'hotel': function(val) {
-                toggleSlider('#hotel-price-slider',val);
-                toggleMultiselect('#hotel-preference',val)
+              toggleSlider('#hotel-price-slider', val);
+              toggleMultiselect('#hotel-preference', val)
             },
           };
           categories[category](val);
@@ -478,7 +524,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
 
         /*multiselect events */
         scope.foodPreferenceClick = function(event, ui) {
-          console.log('clicked on a food pref option:'+ui.value);
+          console.log('clicked on a food pref option:' + ui.value);
           if (typeof scope.me.rsvp.restaurant.preference === "undefined") {
             scope.me.rsvp.restaurant.preference = [];
           }
@@ -499,7 +545,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
           submitVote();
         }
         scope.hotelPreferenceClick = function(event, ui) {
-          console.log('clicked on a hotel pref option:'+ui.value);
+          console.log('clicked on a hotel pref option:' + ui.value);
           if (typeof scope.me.rsvp.hotel.preference === "undefined") {
             scope.me.rsvp.hotel.preference = [];
           }
@@ -653,13 +699,13 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
                 scope.me = result.friend;
                 /* update scope friends too */
                 var f = [];
-                angular.forEach(scope.friends,function(friend) {
+                angular.forEach(scope.friends, function(friend) {
                   if (friend._id === result.friend._id) {
                     f.push(result.friend);
                   } else {
                     f.push(friend);
                   }
-                },f);
+                }, f);
                 scope.friends = f;
 
               });
@@ -672,9 +718,9 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
 
         if (scope.me.rsvp.decision === null) {
           /* if they have not set the rsvp default to yes */
-          scope.setRsvp('decision',true);
+          scope.setRsvp('decision', true);
         }
-        console.log('parking rsvp: '+scope.me.rsvp.parking.decision);
+        console.log('parking rsvp: ' + scope.me.rsvp.parking.decision);
         if (typeof scope.me.rsvp.parking.decision === "undefined") {
           scope.me.rsvp.parking.decision = true;
         }
@@ -718,7 +764,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         var height = angular.element($window).height();
         $('#section6').css('min-height', height);
 
-        scope.showEllipses = function(ary,len) {
+        scope.showEllipses = function(ary, len) {
           return (ary.join(', ').length > len);
         }
 
@@ -805,42 +851,45 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         console.log(attr.noneSelectedText)
 
         var ms = element.multiselect({
-          appendTo:attr.appendTo,
-          position:{my:"left top",at:"left bottom"},
-          header:header,
-          noneSelectedText:attr.noneSelectedText,
-          minWidth:attr.minWidth
+          appendTo: attr.appendTo,
+          position: {
+            my: "left top",
+            at: "left bottom"
+          },
+          header: header,
+          noneSelectedText: attr.noneSelectedText,
+          minWidth: attr.minWidth
         });
 
-        attr.$observe('ngModel',function(m) {
+        attr.$observe('ngModel', function(m) {
           var opts = scope.$eval(m);
           if (typeof opts !== "undefined") {
             console.log(opts);
             for (var i = 0; i < opts.length; i++) {
-              element.multiselect("widget").find(":checkbox[value='"+opts[i]+"']").attr("checked","checked");
-              $("#"+attr.id+" option[value='" + opts[i] + "']").attr("selected", 1);
-              console.log('setting option:'+opts[i]);
+              element.multiselect("widget").find(":checkbox[value='" + opts[i] + "']").attr("checked", "checked");
+              $("#" + attr.id + " option[value='" + opts[i] + "']").attr("selected", 1);
+              console.log('setting option:' + opts[i]);
             };
             element.multiselect("refresh");
           }
         });
 
-        attr.$observe('disable',function(disable) {
-          console.log('disable is: '+attr.disable);
+        attr.$observe('disable', function(disable) {
+          console.log('disable is: ' + attr.disable);
           if (attr.disable === "true") {
             ms.multiselect("disable");
           }
         });
 
-        attr.$observe('click',function() {
+        attr.$observe('click', function() {
           var clickFn = scope.$eval(attr.click);
           console.log('clickFn:');
           console.log(clickFn);
           if (typeof clickFn !== "undefined") {
             console.log('setting up click event for multiselect');
-            element.on('multiselectclick',function(event, ui ) {
+            element.on('multiselectclick', function(event, ui) {
               scope.$apply(function() {
-                clickFn.call(clickFn,event, ui, scope, element, attr);
+                clickFn.call(clickFn, event, ui, scope, element, attr);
               });
             });
           }
@@ -889,8 +938,8 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
             }
           });
 
-          attr.$observe('disable',function(disable) {
-            console.log('disable is: '+attr.disable);
+          attr.$observe('disable', function(disable) {
+            console.log('disable is: ' + attr.disable);
             if (attr.disable === "true") {
               element.slider("disable");
             }
@@ -994,7 +1043,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
 }])
 
 
-  .directive('planFeed', ['plan','$timeout', 'wembliRpc',function(plan, $timeout, wembliRpc) {
+  .directive('planFeed', ['plan', '$timeout', 'wembliRpc', function(plan, $timeout, wembliRpc) {
   return {
     restrict: 'E',
     replace: true,
@@ -1008,7 +1057,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
 
         //poll for feed updates every 2 seconds
         (function tick() {
-          wembliRpc.fetch('feed.get',{}, function(err,result) {
+          wembliRpc.fetch('feed.get', {}, function(err, result) {
             scope.feed = result.feed;
             console.log('polled for feed');
             $timeout(tick, 5000);
@@ -1033,7 +1082,7 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
   }
 }])
 
-  .directive('logActivity', ['wembliRpc',function(wembliRpc) {
+  .directive('logActivity', ['wembliRpc', function(wembliRpc) {
   return {
     restrict: 'C',
     compile: function(element, attr, transclude) {
@@ -1042,9 +1091,8 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
         wembliRpc.fetch('feed.logActivity', {
           action: attr.action,
           meta: attr.meta || {}
-        }, function(err, result) {
+        }, function(err, result) {});
       });
-    });
     }
   }
 }])
@@ -1982,14 +2030,14 @@ function(customer, fetchModals, $rootScope, wembliRpc, $location) {
     compile: function(element, attr, transclude) {
 
       return function(scope, element, attr) {
-        attr.$observe('content',function() {
-        element.popover({
-          placement: attr.placement,
-          trigger: attr.trigger,
-          animation: (attr.animation === 'true') ? true : false,
-          title: attr.title,
-          content: attr.content
-        });
+        attr.$observe('content', function() {
+          element.popover({
+            placement: attr.placement,
+            trigger: attr.trigger,
+            animation: (attr.animation === 'true') ? true : false,
+            title: attr.title,
+            content: attr.content
+          });
         });
       }
     }

@@ -39,25 +39,31 @@
 	height:100%;
 
 	#left {
-		width:80%;
+		width:100%;
 
-		#dashboard-header {
-			.clearfix();
-			width:600px;
-			margin:auto;
-			padding:20px 50px;
+		.alert {text-align:center;}
 
-			.dropdown-menu {
-				left:8px;
-				min-width:230px;
-			}
-			.dropdown {
-				margin-top:10px;
+		#dashboard {
+			margin-bottom:60px;
+			#dashboard-header {
+				.clearfix();
+				width:600px;
+				margin:auto;
+				padding:20px 50px;
+
+				.dropdown-menu {
+					left:8px;
+					min-width:230px;
+				}
+				.dropdown {
+				margin:10px 20px 0;
 				line-height:26px;
 				vertical-align: middle;
 				text-transform: capitalize;
 				text-align:left;
 				color:@grayDark;
+				width:256px;
+
 				a {
 					.clearfix();
 					color:@grayDark;
@@ -73,7 +79,7 @@
 				.welcome-message {
 					font-size:12px;
 					padding:0 10px;
-					width:230px;
+					width:186px;
 				}
 				.icon-cog {
 					float:left;
@@ -81,12 +87,16 @@
 				.icon-caret-down {
 
 				}
-			}
-			#start-now {
-				margin-top:10px;
-				width:200px;
-			}
+				}
 
+				.start-now {
+
+					#start-now {
+						margin:10px 30px 0 0;
+						width:212px;
+					}
+				}
+			}
 		}
 
 		#payment-information-wrapper, #settings-wrapper, #dashboard-body {

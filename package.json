@@ -25,7 +25,7 @@
 		"ntwitter":"0.5.x",
 		"twitter-text":"1.6.x",
 		"jake":"0.5.x",
-		"nbalanced":"0.1.x",
+		"nbalanced":"0.2.x",
 		"keen.io":"0.0.x"
 	},
 	"repository": {

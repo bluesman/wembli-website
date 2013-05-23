@@ -12,6 +12,7 @@ this.Model = function(mongoose) {
 		},
 		actor: {
 			name: String,
+			imageUrl: String,
 			customerId: String,
 		},
 		action: {

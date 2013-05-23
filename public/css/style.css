@@ -9797,6 +9797,15 @@ a#facebook-login-button {
   height: 100%;
   width: 18%;
 }
+#plan-frame #right #plan-feed .feed {
+  padding: 5px 15px;
+  text-align: left;
+  line-height: 20px;
+  border-bottom: thin solid #d8d6d7;
+}
+#plan-frame #right #plan-feed .feed i {
+  margin: 5px;
+}
 .modal textarea {
   width: 520px;
   height: 80px;
@@ -10118,36 +10127,43 @@ a#facebook-login-button {
   clear: both;
 }
 #dashboard-wrapper #left {
-  width: 80%;
+  width: 100%;
 }
-#dashboard-wrapper #left #dashboard-header {
+#dashboard-wrapper #left .alert {
+  text-align: center;
+}
+#dashboard-wrapper #left #dashboard {
+  margin-bottom: 60px;
+}
+#dashboard-wrapper #left #dashboard #dashboard-header {
   *zoom: 1;
   width: 600px;
   margin: auto;
   padding: 20px 50px;
 }
-#dashboard-wrapper #left #dashboard-header:before,
-#dashboard-wrapper #left #dashboard-header:after {
+#dashboard-wrapper #left #dashboard #dashboard-header:before,
+#dashboard-wrapper #left #dashboard #dashboard-header:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#dashboard-wrapper #left #dashboard-header:after {
+#dashboard-wrapper #left #dashboard #dashboard-header:after {
   clear: both;
 }
-#dashboard-wrapper #left #dashboard-header .dropdown-menu {
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown-menu {
   left: 8px;
   min-width: 230px;
 }
-#dashboard-wrapper #left #dashboard-header .dropdown {
-  margin-top: 10px;
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown {
+  margin: 10px 20px 0;
   line-height: 26px;
   vertical-align: middle;
   text-transform: capitalize;
   text-align: left;
   color: #524f45;
+  width: 256px;
 }
-#dashboard-wrapper #left #dashboard-header .dropdown a {
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown a {
   *zoom: 1;
   color: #524f45;
   -webkit-border-radius: 4px;
@@ -10156,31 +10172,31 @@ a#facebook-login-button {
   display: block;
   padding: 9px;
 }
-#dashboard-wrapper #left #dashboard-header .dropdown a:before,
-#dashboard-wrapper #left #dashboard-header .dropdown a:after {
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown a:before,
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown a:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#dashboard-wrapper #left #dashboard-header .dropdown a:after {
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown a:after {
   clear: both;
 }
-#dashboard-wrapper #left #dashboard-header .dropdown a.selected,
-#dashboard-wrapper #left #dashboard-header .dropdown a:hover {
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown a.selected,
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown a:hover {
   background: #524f45;
   color: #ffffff;
 }
-#dashboard-wrapper #left #dashboard-header .dropdown .welcome-message {
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown .welcome-message {
   font-size: 12px;
   padding: 0 10px;
-  width: 230px;
+  width: 186px;
 }
-#dashboard-wrapper #left #dashboard-header .dropdown .icon-cog {
+#dashboard-wrapper #left #dashboard #dashboard-header .dropdown .icon-cog {
   float: left;
 }
-#dashboard-wrapper #left #dashboard-header #start-now {
-  margin-top: 10px;
-  width: 200px;
+#dashboard-wrapper #left #dashboard #dashboard-header .start-now #start-now {
+  margin: 10px 30px 0 0;
+  width: 212px;
 }
 #dashboard-wrapper #left #payment-information-wrapper,
 #dashboard-wrapper #left #settings-wrapper,

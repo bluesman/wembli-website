@@ -1,5 +1,14 @@
 - var dashboardPlanCategory = 'organizer';
 .dashboard-modal
+#pony-up-info.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 How Does Pony Up! Work?
+	.modal-body(ng-hide="dashboard.organizer")
+		.no-plans
+			p	This is some info about how pony up works
+	.modal-footer
+		a.btn(href="#",data-dismiss="modal") Close
 #planning-modal.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")

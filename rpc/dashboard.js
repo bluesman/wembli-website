@@ -5,7 +5,7 @@ exports.dashboard = {
 
 		var me = this;
 		var data = {
-			success: 1
+			success: 1,
 		};
 
 		if (typeof req.session.customer === "undefined") {
@@ -54,7 +54,9 @@ exports.dashboard = {
 			});
 		}];
 
-		async.parallel(tasks, function(err, results) {
+
+
+		var finished = function(err, results) {
 			if (err) {
 				return me(err);
 			};
@@ -65,10 +67,15 @@ exports.dashboard = {
 			/* add old events where this cust was the friend */
 			data.archived.concat(results[1][1]);
 			data.friends = results[2];
+
+
+
 			console.log('get All Plans:');
 			console.log(data);
 			me(null, data);
-		});
+		};
+
+		async.parallel(tasks, finished);
 	},
 
 	getFeed: function(args, req, res) {

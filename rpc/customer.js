@@ -6,17 +6,139 @@ var wembliModel = require('wembli-model');
 var Customer = wembliModel.load('customer');
 var Plan = wembliModel.load('plan');
 var Feed = wembliModel.load('feed');
+var nbalanced = require('../../bluesman-nbalanced/lib/nbalanced');
 
 exports.customer = {
-	saveMerchantAccount: function(args, req, res) {
+	listBankAccounts: function(args, req, res) {
 		var me = this;
-		var data = {success:1};
-		console.log('customer.addMerchantAccount');
+		var data = {
+			success: 1
+		};
+		console.log('customer.listBankAccounts');
 		console.log(args);
-		req.session.customer.merchantAccount = args.data;
-		req.session.customer.save(function(err) {
-			if (err) {me(err);}
-			me(null,data);
+
+		/* make sure there is a customer */
+		if (!req.session.customer) {
+			data.success = 0;
+			data.error = true;
+			data.errorMessage = 'customer must be logged in';
+			return me(null,data);
+		}
+
+		if (typeof req.session.customer.balancedAPI.merchantAccount === "undefined") {
+			//there are not bank accounts
+			data.bankAccounts = [];
+			return me(null, data);
+		}
+
+		/* call the balancedAPI to get bank accounts for this customer */
+		var api = new nbalanced({
+			marketplace_uri: app.settings.balancedMarketplaceUri,
+			secret: app.settings.balancedSecret
+		});
+
+		api.Customers.get(req.session.customer.balancedAPI.merchantAccount.customer_uri, function(err, customer) {
+			console.log('get customer for merchant account');
+			console.log(customer);
+			var custApi = api.Customers.nbalanced(customer);
+			custApi.BankAccounts.list(args,function(err, ba) {
+				console.log('list of bank accounts for customer');
+				console.log(ba);
+				data.bankAccounts = ba;
+				return me(null,data);
+			});
+		});
+	},
+	createMerchantAccount: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+		console.log('customer.createMerchantAccount');
+		console.log(args);
+
+
+		/* save the customer and respond when all is done */
+		var saveCustomer = function() {
+			req.session.customer.save(function(err) {
+				if (err) {
+					me(err);
+				}
+				me(null, data);
+			});
+		};
+
+
+		/* call the balancedAPI to underwrite this merchant account */
+		var api = new nbalanced({
+			marketplace_uri: app.settings.balancedMarketplaceUri,
+			secret: app.settings.balancedSecret
+		});
+
+		/* create a new merchant account */
+		var person = {
+			type: "person",
+			name: args.name,
+			phone_number: "+1" + args.phoneNumber,
+			email_address: req.session.customer.email,
+			dob: args.dob,
+			street_address: args.streetAddress,
+			postal_code: args.postalCode,
+			country_code: "US",
+			meta: {},
+		};
+
+		/* extra info incase underwriting fails the first time */
+		if (typeof args.tax_id !== "undefined") {
+			person.tax_id = args.tax_id;
+		}
+		if (typeof args.city !== "undefined") {
+			person.city = args.city;
+		}
+		if (typeof args.state !== "undefined") {
+			person.state = args.state;
+		}
+
+
+		var bankAccount = {
+			name: args.bankAccount.name,
+			routing_number: args.bankAccount.accountNumber,
+			account_number: args.bankAccount.routingNumber,
+			type: args.bankAccount.type,
+			meta: {},
+		}
+
+		person.bank_account = bankAccount;
+		console.log(person);
+		api.Accounts.underwrite(person, function(err, result) {
+			if (err) {
+				console.log(err);
+				switch (err.status_code) {
+					case 300:
+						break;
+					case 400:
+						break;
+					case 409:
+						console.log('account exists...getting it');
+						/* get account data by account_uri */
+						//api.Accounts.get(err.extras.account_uri, function(err, accountData) {
+						//console.log(accountData);
+						/* update account data */
+						api.Accounts.update(err.extras.account_uri, person, function(err, updateResponse) {
+							console.log('update to merchant account');
+							console.log(updateResponse);
+							req.session.customer.balancedAPI.merchantAccount = updateResponse;
+							return saveCustomer();
+						});
+						//});
+						break;
+				}
+			} else {
+				console.log('created merchant account');
+				console.log(result);
+				req.session.customer.balancedAPI.merchantAccount = result;
+				return saveCustomer();
+			}
 		});
 	},
 
@@ -37,14 +159,14 @@ exports.customer = {
 		if (args.password.length < 3) {
 			data.formError = true;
 			data.passwordTooShort = true;
-			return me(null,data);
+			return me(null, data);
 		}
 
 		/* passwords must match */
 		if (args.password !== args.password2) {
 			data.formError = true;
 			data.passwordMismatch = true;
-			return me(null,data);
+			return me(null, data);
 		}
 
 		/* now update the password */
@@ -54,7 +176,7 @@ exports.customer = {
 			if (err) {
 				return me(err);
 			}
-			return me(null,data);
+			return me(null, data);
 		});
 	},
 

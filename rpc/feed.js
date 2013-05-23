@@ -41,6 +41,7 @@ exports.feed = {
 
 		var actor = {
 			name: req.session.customer.firstName + ' ' + req.session.customer.lastName,
+			imageUrl: req.session.customer.imageUrl,
 			customerId: req.session.customer._id
 		};
 
