@@ -1,12 +1,149 @@
 - var dashboardPlanCategory = 'organizer';
 .dashboard-modal
+#add-bank-account.add-bank-account.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Add Bank account
+	.modal-body
+		form#create-bank-account-form.form-horizontal(novalidate, name="addBankAccountForm")
+			fieldset
+				.control-group
+					label.control-label Account Name
+					.controls
+						input(ng-model="addBankAccount.accountName", name="accountName", placeholder="Account Name",required)
+				.control-group
+					label.control-label Routing Number
+					.controls
+						input(ng-model="addBankAccount.routingNumber", name="routingNumber", placeholder="Routing Number",required)
+				.control-group
+					label.control-label Account Number
+					.controls
+						input(ng-model="addBankAccount.accountNumber", name="accountNumber", placeholder="Account Number",required)
+				.control-group
+					label.control-label Account Type
+					.controls
+						span.nullable
+							select(ng-model="addBankAccount.accountType",name="accountType",required)
+								option(value="") Select Account Type
+								option(value="checking") CHECKING
+								option(value="savings") SAVINGS
+				.control-group
+					.controls
+						button.btn.btn-primary(ng-click="addBankAccount()") Add Account
+	.modal-footer
+		a.btn(href="#",data-dismiss="modal") Cancel
+#edit-customer-account.update-customer-info.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Update Account Holder Information
+	.modal-body
+		form#edit-account-info-form.form-horizontal(novalidate, name="editAccountInfoForm")
+			fieldset
+				.control-group
+					label.control-label Account Holder
+					.controls
+						input(ng-model="customer.balancedAPI.customerAccount.name", name="accountHolderName", placeholder="Account Holder Name",required)
+				.control-group
+					label.control-label Phone Number
+					.controls
+						input(ng-model="customer.balancedAPI.customerAccount.phone", name="accountPhone", placeholder="",required)
+				.control-group
+					label.control-label Birth Year/Month
+					.controls
+						input(ng-model="customer.balancedAPI.customerAccount.dob", name="accountDob", placeholder="YYYY-MM",required)
+				.control-group
+					label.control-label Street Address Line 1
+					.controls
+						input(ng-model="customer.balancedAPI.customerAccount.address.line1", name="addressLine1", placeholder="Street Address Line 1",required)
+				.control-group
+					label.control-label Street Address Line 2
+					.controls
+						input(ng-model="customer.balancedAPI.customerAccount.address.line2", name="addressLine2", placeholder="Street Address Line 2",required)
+				.control-group
+					label.control-label City
+					.controls
+						input(ng-model="customer.balancedAPI.customerAccount.address.city", name="addressCity", placeholder="City",required)
+				.control-group
+					label.control-label Account Type
+					.controls
+						span.nullable
+							select(ng-model="customer.balancedAPI.customerAccount.address.state",name="addressState",required)
+								option(value="") Select State
+								option(value="AL") Alabama
+								option(value="AK") Alaska
+								option(value="AZ") Arizona
+								option(value="AR") Arkansas
+								option(value="CA") California
+								option(value="CO") Colorado
+								option(value="CT") Connecticut
+								option(value="DE") Delaware
+								option(value="DC") District of Columbia
+								option(value="FL") Florida
+								option(value="GA") Georgia
+								option(value="HI") Hawaii
+								option(value="ID") Idaho
+								option(value="IL") Illinois
+								option(value="IN") Indiana
+								option(value="IA") Iowa
+								option(value="KS") Kansas
+								option(value="KY") Kentucky
+								option(value="LA") Louisiana
+								option(value="ME") Maine
+								option(value="MD") Maryland
+								option(value="MA") Massachusetts
+								option(value="MI") Michigan
+								option(value="MN") Minnesota
+								option(value="MS") Mississippi
+								option(value="MO") Missouri
+								option(value="MT") Montana
+								option(value="NE") Nebraska
+								option(value="NV") Nevada
+								option(value="NH") New Hampshire
+								option(value="NJ") New Jersey
+								option(value="NM") New Mexico
+								option(value="NY") New York
+								option(value="NC") North Carolina
+								option(value="ND") North Dakota
+								option(value="OH") Ohio
+								option(value="OK") Oklahoma
+								option(value="OR") Oregon
+								option(value="PA") Pennsylvania
+								option(value="RI") Rhode Island
+								option(value="SC") South Carolina
+								option(value="SD") South Dakota
+								option(value="TN") Tennessee
+								option(value="TX") Texas
+								option(value="UT") Utah
+								option(value="VT") Vermont
+								option(value="VA") Virginia
+								option(value="WA") Washington
+								option(value="WV") West Virginia
+								option(value="WI") Wisconsin
+								option(value="WY") Wyoming
+				.control-group
+					label.control-label Postal Code
+					.controls
+						input(ng-model="customer.balancedAPI.customerAccount.address.postal_code", name="addressPostalCode", placeholder="Postal Code",required)
+				.control-group
+					.controls
+						button.btn.btn-primary(ng-click="updateCustomerInfo()") Update Info
+	.modal-footer
+		a.btn(href="#",data-dismiss="modal") Close
+#delete-bank-account.delete-bank-account.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Delete Bank Account
+	.modal-body
+		p	Are you sure you want to delete this bank account?
+	.modal-footer
+		a.btn(href="#",data-dismiss="modal") No
+		a.btn.btn-primary(ng-click="deleteBankAccount()") Yes
 #pony-up-info.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")
 		h2 How Does Pony Up! Work?
-	.modal-body(ng-hide="dashboard.organizer")
-		.no-plans
-			p	This is some info about how pony up works
+	.modal-body
+		p	This is some info about how pony up works
 	.modal-footer
 		a.btn(href="#",data-dismiss="modal") Close
 #planning-modal.modal.hide

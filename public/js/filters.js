@@ -2,6 +2,7 @@
 
 /* Filters */
 angular.module('wembliApp.filters', []).
+
 filter('feedString', ['$filter', function($filter) {
 	return function(feed) {
 		angular.forEach(feed, function(f) {
@@ -56,8 +57,9 @@ filter('feedString', ['$filter', function($filter) {
 		});
 		return feed;
 	};
-}])
-	.filter('interpolate', ['version', function(version) {
+}]).
+
+filter('interpolate', ['version', function(version) {
 	return function(text) {
 		return String(text).replace(/\%VERSION\%/mg, version);
 	}

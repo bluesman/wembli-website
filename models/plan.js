@@ -39,8 +39,6 @@ this.Model = function(mongoose) {
 				hotels : {type: Boolean, default:false},
 			},
 			inviteOptions: {
-				/* is the organizer attending? */
-				organizerRsvp : {type: Boolean, default:true},
 				/* can guests invite their friends? */
 				guestFriends : {type: Boolean, default:true},
 
@@ -83,7 +81,22 @@ this.Model = function(mongoose) {
 		},
 		rsvpDate: {type:Date, index:true},
 		/* organizer is a customer id */
-		organizer : {type: String, index : true},
+		organizer : {
+			customerId: {type: String, index : true},
+			rsvp: {
+				/* decision can be one of the following:
+					null: no decision made
+					false: not going
+					true: going
+				*/
+				decision:{type:Boolean, default:null},
+				/* how many people will this friend bring (including self) */
+				guestCount:{type:Number, default:1},
+				/* the most recent time they made a decision */
+				decidedLastDate:{type:Date,default:Date.now()},
+				/* rsvp specifically for tickets */
+			}
+		},
 		friends: [String],
 		tickets: [String],
 		hotels: [String],

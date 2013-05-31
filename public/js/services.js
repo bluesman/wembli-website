@@ -5,9 +5,9 @@
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
-angular.module('wembliApp.services', [])
+angular.module('wembliApp.services', []).
 
-	.factory('initRootScope', ['$window', '$rootScope', '$location', function($window, $rootScope, $location) {
+factory('initRootScope', ['$window', '$rootScope', '$location', function($window, $rootScope, $location) {
 	$rootScope.tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid=5006&sitenumber=0';
 
 	$rootScope.partial = false; //partial starts as false, indicating the the full page was loaded from server without any ajax partials
@@ -27,8 +27,8 @@ angular.module('wembliApp.services', [])
 
 	console.log('initrootscope host is: ');
 	console.log($location.host());
-	$rootScope.balancedMarketplace = (/tom/.test($location.host()) ) ? 'TEST-MPlx4ZJIAbA85beTs7q2Omz' : 'MP22BmXshSp7Q8DjgBYnKJmi';
-	$rootScope.balancedMarketplaceUri = '/v1/marketplaces/'+$rootScope.balancedMarketplace;
+	$rootScope.balancedMarketplace = (/tom/.test($location.host())) ? 'TEST-MPlx4ZJIAbA85beTs7q2Omz' : 'MP22BmXshSp7Q8DjgBYnKJmi';
+	$rootScope.balancedMarketplaceUri = '/v1/marketplaces/' + $rootScope.balancedMarketplace;
 
 	//templates can't make a date for some reason
 	$rootScope.getDate = function(d) {
@@ -36,14 +36,15 @@ angular.module('wembliApp.services', [])
 		//return $filter('date')(d, "MM-dd-yy");
 	}
 
-}])
+}]).
 
+factory('pluralize', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
+	return function(num) {
+		return (num != 1);
+	};
+}]).
 
-.factory('pluralize', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
-	return function(num) {return (num != 1);};
-}])
-
-.factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
+factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wembliRpc, customer) {
 	var self = this;
 	self.plan = null;
 	self.tickets = null;
@@ -100,6 +101,10 @@ angular.module('wembliApp.services', [])
 
 		addTicketGroup: function(args, callback) {
 			wembliRpc.fetch('plan.addTicketGroup', args, callback);
+		},
+
+		savePreferences: function(args, callback) {
+			wembliRpc.fetch('plan.savePreferences', args, callback);
 		},
 
 		//get plan from server and return it
@@ -201,9 +206,9 @@ angular.module('wembliApp.services', [])
 
 		}
 	}
-}])
+}]).
 
-	.factory('customer', ['$rootScope', '$q', function($rootScope) {
+factory('customer', ['$rootScope', '$q', function($rootScope) {
 	var self = this;
 	self.customer = null;
 
@@ -214,12 +219,14 @@ angular.module('wembliApp.services', [])
 
 		set: function(customer) {
 			self.customer = customer;
+			/* broadcast that customer was updated */
+			$rootScope.$broadcast('customer-changed',self.customer);
 			return self.customer;
 		},
 	}
-}])
+}]).
 
-	.factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
+factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function($rootScope, $location, $http, $compile) {
 
 	/* put stuff in here to load a modal everytime for a given url - i'm not using this */
 	var modalPageMap = {
@@ -302,13 +309,13 @@ angular.module('wembliApp.services', [])
 			}
 		}
 	};
-}])
+}]).
 
-	.factory('googleMap', ['$rootScope', function($rootScope) {
+factory('googleMap', ['$rootScope', function($rootScope) {
 	var self = this;
 	var centerOffset = {
-		lat:-0.002,
-		lng:0.01
+		lat: -0.002,
+		lng: 0.01
 	}
 
 	self._markers = [];
@@ -330,18 +337,18 @@ angular.module('wembliApp.services', [])
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
 
-	function floatEqual(f1, f2) {
-		return (Math.abs(f1 - f2) < 0.000001);
-	}
+		function floatEqual(f1, f2) {
+			return (Math.abs(f1 - f2) < 0.000001);
+		}
 
 	return {
 		/* create a google map instance */
 		draw: function(element, options, handlers) {
-			var o = angular.extend(mapDefaults,options);
+			var o = angular.extend(mapDefaults, options);
 			/* apply the center offset */
 			var lat = o.center.lat() + centerOffset.lat;
 			var lng = o.center.lng() + centerOffset.lng;
-			o.center = new google.maps.LatLng(lat,lng);
+			o.center = new google.maps.LatLng(lat, lng);
 
 			/* instantiate a new google map */
 			self._map = new google.maps.Map(element[0], o);
@@ -461,9 +468,9 @@ angular.module('wembliApp.services', [])
 
 	};
 
-}])
+}]).
 
-	.factory('mapInfoWindowContent', [function() {
+factory('mapInfoWindowContent', [function() {
 	return {
 		create: function(args) {
 			var html = '<div class="info-window">';
@@ -474,9 +481,9 @@ angular.module('wembliApp.services', [])
 		}
 	};
 
-}])
+}]).
 
-	.factory('rsvpLoginModal', [function() {
+factory('rsvpLoginModal', [function() {
 	var self = this;
 	return {
 		set: function(key, val) {
@@ -488,9 +495,9 @@ angular.module('wembliApp.services', [])
 			return self[key];
 		}
 	};
-}])
+}]).
 
-	.factory('friendFilter', [function() {
+factory('friendFilter', [function() {
 	return {
 		filter: function(key, self) {
 			var r = new RegExp("^" + key, "i");
@@ -523,9 +530,9 @@ angular.module('wembliApp.services', [])
 
 		}
 	};
-}])
+}]).
 
-	.factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window', '$filter', 'customer','$location', function($rootScope, $q, friendFilter, wembliRpc, $window, $filter, customer,$location) {
+factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window', '$filter', 'customer', '$location', function($rootScope, $q, friendFilter, wembliRpc, $window, $filter, customer, $location) {
 
 	var self = this;
 	this.auth = null;
@@ -558,7 +565,7 @@ angular.module('wembliApp.services', [])
 		feedDialog: function(args, cb) {
 			FB.getLoginStatus(function(response) {
 				if (response.authResponse) {
-					var actionLink = 'http://'+$location.host()+'/rsvp/' + args.guid + '/' + args.token + '/facebook';
+					var actionLink = 'http://' + $location.host() + '/rsvp/' + args.guid + '/' + args.token + '/facebook';
 					var obj = {
 						method: 'feed',
 						display: 'iframe',
@@ -669,9 +676,9 @@ angular.module('wembliApp.services', [])
 			});
 		}
 	}
-}])
+}]).
 
-	.factory('twitter', ['$rootScope', '$filter', 'friendFilter', 'wembliRpc', function($rootScope, $filter, friendFilter, wembliRpc) {
+factory('twitter', ['$rootScope', '$filter', 'friendFilter', 'wembliRpc', function($rootScope, $filter, friendFilter, wembliRpc) {
 
 	var self = this;
 	this.auth = null;
@@ -759,9 +766,9 @@ angular.module('wembliApp.services', [])
 		login: function() { /* wembliRpc call? */
 		},
 	};
-}])
+}]).
 
-	.factory('interactiveMapDefaults', [function() {
+factory('interactiveMapDefaults', [function() {
 	return {
 		ServiceUrl: "https://imap.ticketutils.com",
 		MapSet: "tn",
@@ -778,9 +785,9 @@ angular.module('wembliApp.services', [])
 		eTicketSelector: ".e-ticket",
 		ResetButtonText: "Reset Map"
 	};
-}])
+}]).
 
-	.factory('wembliRpc', ['$rootScope', '$http', 'customer', function($rootScope, $http, customer) {
+factory('wembliRpc', ['$rootScope', '$http', 'customer', function($rootScope, $http, customer) {
 	var wembliRpc = {
 		_cache: {}
 	};
@@ -877,10 +884,10 @@ angular.module('wembliApp.services', [])
 	};
 
 	return wembliRpc;
-}])
+}]).
 
 //this is the order of the frames so sequence knows which direction to slide the frame
-.factory('footer', ['initRootScope', '$rootScope', '$location', function(initRootScope, $scope, $location) {
+factory('footer', ['initRootScope', '$rootScope', '$location', function(initRootScope, $scope, $location) {
 	var footer = {};
 	//get the class names of the li elements in the #nav
 	footer.framesMap = {};
@@ -931,10 +938,10 @@ angular.module('wembliApp.services', [])
 		}
 	}
 	return footer;
-}])
+}]).
 
 //wrap the jquery sequence plugin
-.factory('sequence', ['initRootScope', '$rootScope', '$window', 'footer', function(initRootScope, $scope, $window, footer) {
+factory('sequence', ['initRootScope', '$rootScope', '$window', 'footer', function(initRootScope, $scope, $window, footer) {
 	var options = {
 		startingFrameID: 1,
 		preloader: false,
@@ -952,7 +959,7 @@ angular.module('wembliApp.services', [])
 		options.animateStartingFrameIn = true;
 		options.startingFrameID = 2;
 	}
-	console.log(options);
+
 	footer.slideNavArrow();
 
 	var sequence = angular.element("#content").sequence(options).data("sequence");

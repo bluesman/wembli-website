@@ -6,9 +6,169 @@ var wembliModel = require('wembli-model');
 var Customer = wembliModel.load('customer');
 var Plan = wembliModel.load('plan');
 var Feed = wembliModel.load('feed');
-var nbalanced = require('../../bluesman-nbalanced/lib/nbalanced');
+var balanced = require('wembli/balanced-api')({
+	secret: app.settings.balancedSecret,
+	marketplace_uri: app.settings.balancedMarketplaceUri
+});
 
 exports.customer = {
+	updateAccountHolderInfo: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		console.log('update account holder info');
+		console.log(args);
+
+		/* make sure there is a customer */
+		if (!req.session.customer) {
+			data.success = 0;
+			data.error = true;
+			data.errorMessage = 'customer must be logged in';
+			return me(null, data);
+		}
+		console.log(args);
+
+		var customer = new balanced.customers();
+		customer.update(req.session.customer.balancedAPI.customerAccount.uri, args ,function(err, bRes, customer) {
+			/* get a list of bank accounts for this merchant */
+			var bAccount = new balanced.accounts();
+			bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {
+				limit: 100,
+				offset: 0
+			}, function(err, bRes, bankAccounts) {
+				customer.bank_accounts = bankAccounts;
+				data.accountHolderInfo = customer;
+				req.session.customer.balancedAPI.customerAccount = customer;
+				req.session.customer.markModified('balancedAPI.customerAccount');
+				req.session.customer.save(function(err) {
+					console.log('saved customer after update customer info');
+					console.log(err);
+					return me(null, data);
+				});
+			});
+		});
+
+	},
+
+	addBankAccount: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		console.log('addBankAccount');
+		console.log(args);
+
+		/* make sure there is a customer */
+		if (!req.session.customer) {
+			data.success = 0;
+			data.error = true;
+			data.errorMessage = 'customer must be logged in';
+			return me(null, data);
+		}
+
+		if (typeof req.session.customer.balancedAPI.merchantAccount === "undefined") {
+			//there are not bank accounts
+			data.bankAccounts = [];
+			return me(null, data);
+		}
+
+		var accountInfo = {
+			bank_account: {
+				name: args.name,
+				routing_number: args.routingNumber,
+				account_number: args.accountNumber,
+				type: args.type
+			}
+		};
+
+		var bAccount = new balanced.accounts();
+		bAccount.update(req.session.customer.balancedAPI.merchantAccount.uri, accountInfo, function(err, bRes, result) {
+			console.log('added bank account');
+			console.log(result);
+			if (bRes.statusCode !== 200) {
+				data.success = 0;
+				data.error = result;
+				return me(null, data);
+			}
+
+			/* get a list of bank accounts for this merchant */
+			var bAccount = new balanced.accounts();
+			bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {
+				limit: 100,
+				offset: 0
+			}, function(err, bRes, bankAccounts) {
+				console.log(bankAccounts);
+				data.bankAccount = result;
+				data.bankAccounts = bankAccounts;
+				req.session.customer.balancedAPI.customerAccount.bank_accounts = bankAccounts;
+				req.session.customer.markModified('balancedAPI.customerAccount');
+				req.session.customer.save(function(err) {
+					console.log('saved customer after bank account added');
+					console.log(err);
+					return me(null, data);
+				});
+			});
+		});
+	},
+
+	deleteBankAccount: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+		/* make sure there is a customer */
+		if (!req.session.customer) {
+			data.success = 0;
+			data.error = true;
+			data.errorMessage = 'customer must be logged in';
+			return me(null, data);
+		}
+
+		if (typeof req.session.customer.balancedAPI.merchantAccount === "undefined") {
+			//there are not bank accounts
+			data.bankAccounts = [];
+			return me(null, data);
+		}
+
+		console.log(args);
+
+		/* get a list of bank accounts for this merchant */
+		var bAccount = new balanced.accounts();
+		bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {}, function(err, bRes, bankAccounts) {
+			/* find the matching bank account uri and delete it */
+			var items = [];
+			var deleted = false;
+			bankAccounts.items.forEach(function(bank) {
+				console.log(bank.uri);
+				if (bank.uri == args.uri) {
+					deleted = true;
+					/* safe to delete this bank account */
+					var bBank = new balanced.bank_accounts();
+					bBank.delete(bank.uri, function(err, bRes, result) {
+						//TODO check err
+						bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {}, function(err, bRes, bankAccounts) {
+							req.session.customer.balancedAPI.customerAccount.bank_accounts = bankAccounts;
+							req.session.customer.markModified('balancedAPI.customerAccount');
+							req.session.customer.save(function(err) {
+								console.log('saved customer after bank account added');
+								console.log(err);
+								return me(null, data);
+							});
+						});
+					});
+				}
+			});
+			if (!deleted) {
+				data.success = 0;
+				data.error('did not find bank account to delete');
+				return me(null, data);
+			}
+		});
+
+	},
 	listBankAccounts: function(args, req, res) {
 		var me = this;
 		var data = {
@@ -22,7 +182,7 @@ exports.customer = {
 			data.success = 0;
 			data.error = true;
 			data.errorMessage = 'customer must be logged in';
-			return me(null,data);
+			return me(null, data);
 		}
 
 		if (typeof req.session.customer.balancedAPI.merchantAccount === "undefined") {
@@ -41,14 +201,15 @@ exports.customer = {
 			console.log('get customer for merchant account');
 			console.log(customer);
 			var custApi = api.Customers.nbalanced(customer);
-			custApi.BankAccounts.list(args,function(err, ba) {
+			custApi.BankAccounts.list(args, function(err, ba) {
 				console.log('list of bank accounts for customer');
 				console.log(ba);
 				data.bankAccounts = ba;
-				return me(null,data);
+				return me(null, data);
 			});
 		});
 	},
+
 	createMerchantAccount: function(args, req, res) {
 		var me = this;
 		var data = {
@@ -57,63 +218,85 @@ exports.customer = {
 		console.log('customer.createMerchantAccount');
 		console.log(args);
 
-
 		/* save the customer and respond when all is done */
-		var saveCustomer = function() {
-			req.session.customer.save(function(err) {
-				if (err) {
-					me(err);
-				}
-				me(null, data);
+		var saveCustomer = function(person) {
+			var customer = new balanced.customers();
+			customer.get(req.session.customer.balancedAPI.merchantAccount.customer_uri, function(err, bRes, customerInfo) {
+				console.log('get customer for merchant account');
+				console.log(customerInfo);
+				customer.setContext(customerInfo);
+				var ary = person.merchant.dob.split('-');
+				var dob = ary[0] + '-' + ary[1];
+				var customerUpdate = {
+					name: person.name,
+					email: person.email_address,
+					address: {
+						line1: person.merchant.street_address,
+						city: person.merchant.city,
+						postal_code: person.merchant.postal_code,
+						country_code: person.merchant.country_code
+					},
+					phone: person.merchant.phone_number,
+					dob: dob,
+					tax_id: person.merchant.tax_id
+				};
+
+				customer.update(customerUpdate, function(err, bRes, result) {
+					/* get a list of bank accounts for this merchant */
+					var bAccount = new balanced.accounts();
+					bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {}, function(err, bRes, bankAccounts) {
+						req.session.customer.balancedAPI.customerAccount = result;
+						req.session.customer.balancedAPI.customerAccount.bank_accounts = bankAccounts;
+						req.session.customer.markModified('balancedAPI.customerAccount');
+						req.session.customer.save(function(err) {
+							console.log('saved customer after bank account added');
+							console.log(err);
+							return me(null, data);
+						});
+					});
+				});
 			});
 		};
 
-
-		/* call the balancedAPI to underwrite this merchant account */
-		var api = new nbalanced({
-			marketplace_uri: app.settings.balancedMarketplaceUri,
-			secret: app.settings.balancedSecret
-		});
-
 		/* create a new merchant account */
 		var person = {
-			type: "person",
 			name: args.name,
-			phone_number: "+1" + args.phoneNumber,
 			email_address: req.session.customer.email,
-			dob: args.dob,
-			street_address: args.streetAddress,
-			postal_code: args.postalCode,
-			country_code: "US",
-			meta: {},
+			merchant: {
+				type: "person",
+				phone_number: "+1" + args.phoneNumber,
+				email_address: req.session.customer.email,
+				dob: args.dob,
+				name: args.name,
+				street_address: args.streetAddress,
+				postal_code: args.postalCode,
+			},
+			bank_account: {
+				name: args.bankAccount.name,
+				routing_number: args.bankAccount.routingNumber,
+				account_number: args.bankAccount.accountNumber,
+				type: args.bankAccount.type,
+			}
 		};
 
 		/* extra info incase underwriting fails the first time */
 		if (typeof args.tax_id !== "undefined") {
-			person.tax_id = args.tax_id;
+			person.merchant.tax_id = args.tax_id;
 		}
 		if (typeof args.city !== "undefined") {
-			person.city = args.city;
+			person.merchant.city = args.city;
 		}
-		if (typeof args.state !== "undefined") {
-			person.state = args.state;
-		}
-
-
-		var bankAccount = {
-			name: args.bankAccount.name,
-			routing_number: args.bankAccount.accountNumber,
-			account_number: args.bankAccount.routingNumber,
-			type: args.bankAccount.type,
-			meta: {},
+		if (typeof args.country_code !== "undefined") {
+			person.merchant.country_code = args.country_code;
 		}
 
-		person.bank_account = bankAccount;
 		console.log(person);
-		api.Accounts.underwrite(person, function(err, result) {
-			if (err) {
-				console.log(err);
-				switch (err.status_code) {
+
+		var account = new balanced.accounts();
+		account.create(person, function(err, bRes, merchantAccount) {
+			if (bRes.statusCode != 201) {
+				console.log(merchantAccount);
+				switch (merchantAccount.status_code) {
 					case 300:
 						break;
 					case 400:
@@ -121,23 +304,23 @@ exports.customer = {
 					case 409:
 						console.log('account exists...getting it');
 						/* get account data by account_uri */
-						//api.Accounts.get(err.extras.account_uri, function(err, accountData) {
-						//console.log(accountData);
 						/* update account data */
-						api.Accounts.update(err.extras.account_uri, person, function(err, updateResponse) {
+						account.update(merchantAccount.extras.account_uri, person, function(err, bRes, updateResponse) {
 							console.log('update to merchant account');
 							console.log(updateResponse);
 							req.session.customer.balancedAPI.merchantAccount = updateResponse;
-							return saveCustomer();
+							return saveCustomer(person);
 						});
-						//});
 						break;
 				}
 			} else {
 				console.log('created merchant account');
-				console.log(result);
-				req.session.customer.balancedAPI.merchantAccount = result;
-				return saveCustomer();
+				console.log(merchantAccount);
+				req.session.customer.balancedAPI.merchantAccount = merchantAccount;
+				/* get the customer for this merchant account */
+
+				/* call the balancedAPI to get bank accounts for this customer */
+				return saveCustomer(person);
 			}
 		});
 	},
@@ -338,12 +521,12 @@ exports.customer = {
 
 				if (typeof req.session.plan !== "undefined") {
 					/* sanity check - make sure this plan does not have an organizer */
-					if (req.session.plan.organizer) {
+					if (req.session.plan.organizer.customerId) {
 						return respond(data);
 					}
 
 					/* this plan does not yet have an organizer whew! */
-					req.session.plan.organizer = customer.id;
+					req.session.plan.organizer.customerId = customer.id;
 					req.session.visitor.context = 'organizer';
 
 					console.log('plan.organizer: ');

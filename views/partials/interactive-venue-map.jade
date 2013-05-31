@@ -6,7 +6,13 @@
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
 		- if (plan.preferences.payment === 'split-first')
-			include interactive-venue-map/read-only
+			- if (visitor.context === "organizer")
+				include interactive-venue-map/organizer-read-only
+			- if (visitor.context === "friend")
+				include interactive-venue-map/friend-read-only
 		- else
-			include interactive-venue-map/buy-now
+			- if (visitor.context === "organizer")
+				include interactive-venue-map/organizer-buy-now
+			- if (visitor.context === "friend")
+				include interactive-venue-map/friend-read-only
 

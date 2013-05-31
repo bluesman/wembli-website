@@ -7,20 +7,26 @@ module.exports = {
 		console.log('plan nav for: '+mode);
 		var nav = {
 			'organizer': [{
-				'icon': "icon-group",
-				'text': "Invitees",
-			}, {
 				'icon': "icon-flag",
+				'text': "Event",
+			}, {
+				'icon': "icon-envelope",
+				'text': "RSVP's",
+			}, {
+				'icon': "icon-ticket",
 				'text': "Tickets",
 			}, {
-				'icon': "icon-money",
+				'icon': "icon-truck",
 				'text': "Parking",
 			}, {
 				'icon': "icon-food",
 				'text': "Restaurant",
 			}, {
-				'icon': "icon-money",
+				'icon': "icon-home",
 				'text': "Hotel",
+			}, {
+				'icon': "icon-money",
+				'text': "Money",
 			}, {
 				'icon': "icon-file-alt",
 				'text': "Itinerary",

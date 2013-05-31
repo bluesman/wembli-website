@@ -1,5 +1,6 @@
 var async = require('async');
-var Customer = require
+var nbalanced = require('../../bluesman-nbalanced/lib/nbalanced');
+
 exports.dashboard = {
 	init: function(args, req, res) {
 
@@ -17,12 +18,10 @@ exports.dashboard = {
 		}
 
 		var c = req.session.customer;
-		console.log('c in dashboard init');
-		console.log(c);
+
 		var tasks = [
 
 		/* get plans this customer is organizing */
-
 		function(cb) {
 			c.getPlans(function(err, plans) {
 				if (err) {
@@ -33,7 +32,6 @@ exports.dashboard = {
 		},
 
 		/* get plans this customer is invited to */
-
 		function(cb) {
 			c.getInvitedPlans(function(err, plans) {
 				if (err) {
@@ -44,7 +42,6 @@ exports.dashboard = {
 		},
 
 		/* get a list of people this customer has ever invited */
-
 		function(cb) {
 			c.getInvitedFriends(function(err, friends) {
 				if (err) {
@@ -52,9 +49,8 @@ exports.dashboard = {
 				};
 				cb(null, friends);
 			});
-		}];
-
-
+		},
+		];
 
 		var finished = function(err, results) {
 			if (err) {
@@ -67,8 +63,6 @@ exports.dashboard = {
 			/* add old events where this cust was the friend */
 			data.archived.concat(results[1][1]);
 			data.friends = results[2];
-
-
 
 			console.log('get All Plans:');
 			console.log(data);

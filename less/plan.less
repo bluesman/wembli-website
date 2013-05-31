@@ -259,14 +259,12 @@
 								/* change this to auto to center the rsvp */
 								margin:0;
 
-								width:230px;
 								text-align:center;
 
 								a {
 									margin:10px;
 									font-weight:bold;
 									color:@grayLight;
-									font-size: 54px;
 									display:block;
 									float:left;
 								}
@@ -471,6 +469,61 @@
 				}
 			}
 		}
+
+		/* organizer specific css */
+		.organizer-plan-dashboard {
+			#section1 {
+				.body {
+					.collect-rsvp {
+						width:375px;
+						a {
+							font-size:40px;
+						}
+					}
+					.section-bottom {
+						.event-options {
+
+							fieldset {
+								border:none;
+								background:transparent;
+
+								.options-group {
+									margin-top:20px;
+								}
+
+								.control-group {
+									.clearfix();
+									margin:5px;
+
+									input {
+										float:left;
+									}
+									label {
+										margin-left:20px;
+									}
+								}
+							}
+						}
+						.next-wrapper {
+							margin-top:167px;
+						}
+					}
+				}
+			}
+		}
+
+		/* friend specific css */
+		.friend-plan-dashboard {
+			.collect-rsvp {
+				width:230px;
+				a {
+					font-size: 54px;
+				}
+			}
+
+
+		}
+
 	}
 
 	#right {

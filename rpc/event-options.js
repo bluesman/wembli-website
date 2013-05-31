@@ -8,6 +8,7 @@ exports['event-options'] = {
 			restaurant   : req.session.plan.preferences.addOns.restaurant          || false,
 			parking      : req.session.plan.preferences.addOns.parking             || false,
 			hotel        : req.session.plan.preferences.addOns.hotel               || false,
+			organizerNotAttending: !req.session.plan.organizer.rsvp.decision       || false,
 			over21       : req.session.plan.preferences.inviteOptions.over21       || false,
 			guestFriends : req.session.plan.preferences.inviteOptions.guestFriends || false,
 			guestList    : req.session.plan.preferences.guestList                  || 'rsvp',

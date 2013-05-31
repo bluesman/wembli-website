@@ -1,29 +1,121 @@
 #plan-dashboard.organizer-plan-dashboard
-	//- .event-data(ng-cloak,event-id="req.session.plan.event.eventId")
 	section#section1.plan-section
 		.header
-			h1.pull-left RSVP (organizer)
+			h1.pull-left Event
 		.body
+			h3 Hey {{organizer.firstName}}! You're on your way to planning the perfect outing!
+			#event-container
+				h4 Are you going or just planning for others?
+				.collect-rsvp-container.pull-left
+					.collect-rsvp
+						a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[plan.organizer.rsvp.decision]") GOING!
+						a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[plan.organizer.rsvp.decision]") NOT GOING.
+					fieldset(ng-show="plan.preferences.inviteOptions.guestFriends")
+						label
+							input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="plan.organizer.rsvp.guestCount",placeholder="1")
+							span(ng-show="guestCountPlural") people&nbsp;
+							span(ng-hide="guestCountPlural") person&nbsp;
+							span (including yourself).
+				.info-container.pull-right
+					.info
+						.row.first-row
+							h3.pull-left Date:&nbsp;
+							.data.pull-left {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d'}}
+						.row
+							h3.pull-left Event:
+							.data.pull-left {{plan.event.eventName}}
+						.row
+							h3.pull-left Time:
+							.data.pull-left {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+						.row
+							h3.pull-left Location:
+							.data.pull-left {{plan.event.eventVenue}} -&nbsp;
+							.data.pull-left {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+						.row
+							h3.pull-left Age Limit:
+							.data.pull-left(ng-show="plan.preferences.inviteOptions.over21") 21+
+							.data.pull-left(ng-hide="plan.preferences.inviteOptions.over21") All Ages
+						.row
+							h3.pull-left RSVP Date:
+							.data.pull-left {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
+			.payment-type-note
+				strong ** NOTE:&nbsp;
+				span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After invitees vote on preferences you'll favor a ticket group, then we'll prompt you to send a link for everyone to pony up for their part of the outing before you shell out the cash.&nbsp;
+					strong Please be aware that tickets are NOT locked in until they are paid for.
+				span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;You have chosen to foot the bill for this plan - w00t!
+				span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, you will lock in the tickets then send a link for everyone to pay for their portion of the outing.
+			.section-bottom.clearfix
+				.event-options.pull-left
+					fieldset
+						#add-ons.options-group
+							h2 Add-Ons:
+							.error-text(ng-show="addOnsError") Error with add-ons...
+							.control-group
+								input#parking(ng-model="plan.preferences.addOns.parking",type="checkbox",name="parking")
+								label I want to lock in parking spot(s) ahead of time
+							.control-group
+								input#restaurant(ng-model="plan.preferences.addOns.restaurants", type="checkbox",name="restaurants")
+								label I want to add restaurant reservations to my outing
+							.control-group
+								input#hotel(ng-model="plan.preferences.addOns.hotels",type="checkbox",name="hotels")
+								label I need to book a hotel room(s)
+						#invite-options.options-group
+							h2 Invite Preferences:
+							.error-text(ng-show="inviteOptionsError") Error with invite preferences...
+							.control-group
+								input#guest-friends(type="checkbox",name="guest_friends",ng-model="plan.preferences.inviteOptions.guestFriends")
+								label My guests can invite their friends/family
+							.control-group
+								input#over-21(type="checkbox",name="over_21",ng-model="plan.preferences.inviteOptions.over21")
+								label This outing is for people over 21 (sorry no kids this time)
+						#guest-list-options.options-group
+							h2 Guest List:
+							.error-text(ng-show="guestListOptionsError") Dude, you need to pick one of these...
+							.control-group
+								input(type="radio",name="guest_list",value="full",ng-model="plan.preferences.guestList")
+								label My guests can see the full invite list
+							.control-group
+								input(type="radio",name="guest_list",value="rsvp",ng-model="plan.preferences.guestList")
+								label My guests can only see who's RSVP'd 'yes'
+							.control-group
+								input(type="radio",name="guest_list",value="private",ng-model="plan.preferences.guestList")
+								label My guests can not see who else is invited
+				.next-wrapper.pull-right
+					.img
+						img(src="/images/cartoon-man-megaphone1.png")
+					button#next-section2.btn.btn-orange.btn-large.scroll-to NEXT
 	section#section2.plan-section.even
 		.header
-			h1.pull-left Vote
-		.body
-	section#section3.plan-section
-		.header
-			h1.pull-left Invitees
+			h1.pull-left RSVP's
 			button.btn.btn-primary.btn-large.invite-friends-wizard.pull-right
 				span Manage Invitees&nbsp;
 				i.icon-double-angle-right
 		.body
+	section#section3.plan-section
+		.header
+			h1.pull-left Tickets
+		.body
 	section#section4.plan-section.even
 		.header
-			h1.pull-left Pony Up!
+			h1.pull-left Parking
 		.body
 	section#section5.plan-section
 		.header
-			h1.pull-left Itinerary
+			h1.pull-left Restaurant
 		.body
 	section#section6.plan-section.even
+		.header
+			h1.pull-left Hotel
+		.body
+	section#section7.plan-section.even
+		.header
+			h1.pull-left Money
+		.body
+	section#section8.plan-section.even
+		.header
+			h1.pull-left Itinerary
+		.body
+	section#section9.plan-section.even
 		.header
 			h1.pull-left Chatter
 		.body

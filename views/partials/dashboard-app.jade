@@ -54,21 +54,41 @@
 							input(ng-model="changePassword.password2",placeholder="CONFIRM NEW PASSWORD", type="password",value="",name="password2",required)
 					button.btn.btn-primary(ng-click="changePassword()") Change Password
 	#preferences.preferences(ng-show="showPreferences") preferences
-	#payment-information.payment-information(ng-show="showPaymentInformation")
-		#payment-information-wrapper
-			#merchant-account(ng-show="customer.balancedAPI.bankAccounts")
-				.merchant-account(ng-repeat="ba in customer.balancedAPI.bankAccounts.items")
-					.row
-						.name.span3.pull-left {{ba.name}} - {{ba.type}} ({{ba.bank_name}})
-						.account-number.span3.pull-right {{ba.account_number}}
-						.status.pull-right
-							span Status:&nbsp;
-							span {{{true:"Valid",false:"Invalid"}[customer.balancedAPI.merchantAccount.is_valid]}}
 
-			#create-merchant-account(ng-hide="customer.balancedAPI.merchantAccount")
-				.alert.alert-info
-					div Wembli is 100% safe and secure. In order to collect money from your friends, you will need to provide your bank account information.
-					a(href="#pony-up-info",data-toggle="modal") Click here to read more about how Pony Up! works.
+	#payment-information.payment-information(ng-show="showPaymentInformation")
+		.payment-information-wrapper(ng-show="customer.balancedAPI.customerAccount")
+			#view-customer-account
+				.header.clearfix
+					//- might want this to be the customer.name
+					h3.pull-left Account Holder: {{customer.balancedAPI.customerAccount.name}}
+					a.btn.btn-mini.pull-right.update-customer-info-button(href="#edit-customer-account",data-toggle="modal") Edit
+				.body
+					p Address: {{customer.balancedAPI.customerAccount.address.line1}}, {{customer.balancedAPI.customerAccount.address.city}}, {{customer.balancedAPI.customerAccount.address.state}} {{customer.balancedAPI.customerAccount.address.postal_code}}
+					p Phone: {{customer.balancedAPI.customerAccount.phone}}
+					p Birth Month: {{customer.balancedAPI.customerAccount.dob}}
+					.bank-accounts(ng-show="customer.balancedAPI.customerAccount.bank_accounts")
+						.body-header.clearfix
+							h4.pull-left Bank Accounts:
+						.no-bank-account(ng-show="noValidBankAccounts")
+							.alert.alert-info.clearfix
+								p You do not currently have a bank account associated with your wembli account.
+								p If you want to be able to collect money from friends, please provide your bank account information.
+								a.btn.btn-primary.btn-small.pull-right(href="#add-bank-account",data-toggle="modal") Add Account
+						.bank-account(ng-show="ba.is_valid",ng-repeat="ba in customer.balancedAPI.customerAccount.bank_accounts.items")
+							.row
+								.name.pull-left {{customer.balancedAPI.customerAccount.bank_accounts.items[0].name}} - {{ba.type}} ({{ba.bank_name}})
+								.account-number.pull-right {{ba.account_number}}
+							.row
+								.status-valid.green.pull-left(ng-show="ba.is_valid")
+									i.icon-ok-sign
+										span APPROVED
+							.row
+								a.btn.btn-mini.btn-danger.pull-right.delete-bank-account-button(uri="{{ba.uri}}",href="#delete-bank-account",data-toggle="modal") Delete
+		.payment-information-wrapper(ng-hide="customer.balancedAPI.customerAccount")
+			#new-merchant-account
+				.alert.alert-info.clearfix
+					.pull-left Wembli is 100% safe and secure. In order to collect money from your friends, you will need to provide your bank account information.
+					a.btn.btn-info.btn-small.pull-right(href="#pony-up-info",data-toggle="modal") Learn More
 				form#create-merchant-account-form.form-horizontal(novalidate, name="createMerchantAccountForm")
 					fieldset
 						#error

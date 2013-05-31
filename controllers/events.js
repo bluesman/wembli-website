@@ -47,7 +47,7 @@ module.exports = function(app) {
 		}
 
 		/* if its visitor context but plan.organizer is undefined this is a new customer planning right now */
-		if ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer === "undefined")) {
+		if ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer.customerId === "undefined")) {
 			console.log('showing options form');
 			/* show them the options page too */
 			return showOptionsForm();
@@ -81,7 +81,7 @@ module.exports = function(app) {
 			and they are the organizer
 			and it is the same eventId as req.session.eventId
 			then override only the preferences */
-		if ((req.session.visitor.context === "organizer") || ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer === "undefined"))) {
+		if ((req.session.visitor.context === "organizer") || ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer.customerId === "undefined"))) {
 
 			//set the form data in the session so the angular app can read any errors
 			req.session.eventOptionsForm = {
@@ -115,13 +115,12 @@ module.exports = function(app) {
 
 			//invite options: guest_friends, over_21
 			req.session.plan.preferences.inviteOptions = {
-				'organizerRsvp': true, //the organizer is attending
 				'guestFriends': true, //guests are allowed to invite friends
 				'over21': false //lets guests know kids are not invited
 			}
 
 			if (typeof req.param('organizer_not_attending') !== "undefined") {
-				req.session.plan.preferences.inviteOptions.organizerRsvp = req.param('organizer_not_attending') ? false : true;
+				req.session.plan.organizer.rsvp.decision = req.param('organizer_not_attending') ? false : true;
 			}
 			if (typeof req.param('guest_friends') !== "undefined") {
 				req.session.plan.preferences.inviteOptions.guestFriends = req.param('guest_friends');

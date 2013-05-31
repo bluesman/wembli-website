@@ -4,13 +4,14 @@
 		.header
 			h1.pull-left Event
 		.body
-			h3 {{organizer.firstName}} {{organizer.lastName}} is planning an event and you're invited! Are you in or out?
+			h3 {{organizer.firstName}} {{organizer.lastName}} is planning an event and you're invited!
 			#event-container
+				h4 Are you in or out?
 				.collect-rsvp-container.pull-left
 					.collect-rsvp
 						a#yes(ng-click="setRsvp('decision',true)",ng-class="{true:'active'}[me.rsvp.decision]") YES!
 						a#no(ng-click="setRsvp('decision',false)",ng-class="{false:'active'}[me.rsvp.decision]") NO.
-					fieldset
+					fieldset(ng-show="plan.preferences.inviteOptions.guestFriends")
 						label
 							input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="me.rsvp.guestCount",placeholder="1")
 							span(ng-show="guestCountPlural") people&nbsp;
@@ -50,7 +51,8 @@
 						span(ng-show="totalComingPlural") People are
 						span(ng-hide="totalComingPlural") Person is
 						span &nbsp;coming
-					.friend-coming(ng-repeat="friend in friendsComing") {{friend.contactInfo.name}}&nbsp;({{friend.rsvp.guestCount}})
+					.friend-coming {{organizer.firstName}} {{organizer.lastName}}
+					.friend-coming(ng-repeat="friend in friendsComing") {{friend.contactInfo.name}}&nbsp;(+{{friend.rsvp.guestCount-1}})
 				.next-wrapper.pull-right
 					.img
 						img(src="/images/cartoon-man-megaphone1.png")
@@ -75,7 +77,7 @@
 								.orange.pull-left $
 								input#ticket-price-range.pull-left(ng-model="me.rsvp.tickets.price")
 								.plus-sign.pull-left(ng-show="me.rsvp.tickets.price==500") +
-						.row
+						.row(ng-show="plan.preferences.addOns.parking")
 							label.checkbox
 								input(type="checkbox",name="parking_decision",ng-model="me.rsvp.parking.decision",ng-click="toggleInputs('parking',me.rsvp.parking.decision)")
 								.calibri Include me in the parking plans:
@@ -92,7 +94,7 @@
 					.right.pull-right
 						img(src="/images/cartoon-man-checkboxes.png")
 				.block2
-					.row
+					.row(ng-show="plan.preferences.addOns.restaurants")
 						label.checkbox
 							input.pull-left(type="checkbox",name="restaurant_decision",ng-model="me.rsvp.restaurant.decision",ng-click="toggleInputs('restaurant',me.rsvp.restaurant.decision)")
 							.calibri Include me in the restaurant plans:
@@ -124,7 +126,7 @@
 							.orange.pull-left $
 							input#restaurant-price-range.pull-left(ng-model="me.rsvp.restaurant.price")
 							.plus-sign.pull-left(ng-show="me.rsvp.restaurant.price==100") +
-					.row
+					.row(ng-show="plan.preferences.addOns.hotels")
 						label.checkbox
 							input.pull-left(type="checkbox",name="hotel_decision",ng-model="me.rsvp.hotel.decision",ng-click="toggleInputs('hotel',me.rsvp.hotel.decision)")
 							.calibri Include me in the hotel plans.
@@ -190,7 +192,7 @@
 										span(ng-show="friend.rsvp.tickets.priceGroup.low") $
 										span(ng-show="friend.rsvp.tickets.priceGroup.med") $
 										span(ng-show="friend.rsvp.tickets.priceGroup.high") $
-							.invitee-pref.pull-left
+							.invitee-pref.pull-left(ng-show="plan.preferences.addOns.parking")
 								.invitee-pref-header Parking Vote
 								.invitee-pref-value(ng-show="friend.rsvp.decision")
 									.icon(ng-hide="friend.rsvp.parking.decision")
@@ -199,7 +201,7 @@
 										span(ng-show="friend.rsvp.parking.priceGroup.low") $
 										span(ng-show="friend.rsvp.parking.priceGroup.med") $
 										span(ng-show="friend.rsvp.parking.priceGroup.high") $
-							.invitee-pref.pull-left
+							.invitee-pref.pull-left(ng-show="plan.preferences.addOns.restaurants")
 								.invitee-pref-header Restaurant Votes
 								.invitee-pref-value(ng-show="friend.rsvp.decision")
 									.icon(ng-hide="friend.rsvp.restaurant.decision")
@@ -213,7 +215,7 @@
 											strong cuisine:&nbsp;
 											span {{friend.rsvp.restaurant.preference.join(', ').substring(0,30)}}
 											span(ng-show="showEllipses(friend.rsvp.restaurant.preference,30)") ...
-							.invitee-pref.pull-left
+							.invitee-pref.pull-left(ng-show="plan.preferences.addOns.hotels")
 								.invitee-pref-header Hotel Votes
 								.invitee-pref-value(ng-show="friend.rsvp.decision")
 									.icon(ng-hide="friend.rsvp.hotel.decision")
