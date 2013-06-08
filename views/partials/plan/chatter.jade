@@ -1,0 +1,56 @@
+#plan-chatter
+	.icon-spinner.icon-spin.icon-large(ng-show="chatterLoading")
+	#chatter(ng-hide="chatterLoading")
+		form#new-chatter(name="chatter").clearfix
+			.actor-image-container.img-container.pull-left
+				img.img-polaroid(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
+				img.img-polaroid(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
+			.new-chatter-container
+				.controls
+					textarea(placeholder="Start some chatter!", name="newChatter",ng-model="chatter.body",required)
+				.controls
+					.icon-spinner.icon-spin.pull-right(ng-show="createChatterInProgress")
+					button.btn.btn-primary.pull-right(href="#",ng-click="createChatter()",ng-hide="createChatterInProgress")
+						i.icon-comment
+						span &nbsp;Comment
+		#chatters(ng-show="chatters.length")
+			.chatter.clearfix(ng-repeat="chatter in chatters")
+				.actor-image-container.pull-left
+					img.img-polaroid(ng-hide="chatter.actor.imageUrl",src="/images/cartoon-man-head.png")
+					img.img-polaroid(ng-show="chatter.actor.imageUrl",ng-src="{{chatter.actor.imageUrl}}")
+				.chatter-container
+					.actor-name-container.clearfix
+						.actor-name.pull-left
+							span {{chatter.actor.name}}&nbsp;
+							//- i.icon-asterisk.icon-small
+							//- label.upvote
+								//- span &nbsp;{{chatter.upVotes.length}}&nbsp;
+								//- i.icon-arrow-up
+								//- a(href="#",ng-click="upVoteChatter()") &nbsp;upVote
+						.chatter-date.pull-right {{chatter.created | chatterDateString}}
+					.chatter-body {{chatter.body}}
+					.controls
+						a.chatter-reply(href="#",ng-click="toggleNewChatterComment()") Reply
+					form.new-chatter-comment.hide.clearfix(name="comment")
+						.actor-image-container.img-container.pull-left
+							img.img-polaroid(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
+							img.img-polaroid(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
+						.new-chatter-comment-container
+							.controls
+								textarea(placeholder="Care to comment?",name="newComment",ng-model="comment.body",required)
+							.controls
+								.icon-spinner.icon-spin.pull-right(ng-show="createChatterCommentInProgress")
+								button.btn.btn-orange.btn-small.pull-right(href="#",ng-click="createChatterComment()",ng-hide="createChatterCommentInProgress")
+									i.icon-reply
+									span &nbsp;Reply
+					.chatter-comments(ng-show="chatter.comments.length")
+						.chatter-comment.clearfix(ng-repeat="comment in chatter.comments")
+							.actor-image-container.pull-left
+								img.img-polaroid(ng-hide="chatter.actor.imageUrl",src="/images/cartoon-man-head.png")
+								img.img-polaroid(ng-show="chatter.actor.imageUrl",ng-src="{{chatter.actor.imageUrl}}")
+							.comment-container
+								.actor-name-container.clearfix
+									.actor-name.pull-left
+										span {{comment.actor.name}}&nbsp;
+									.comment-date.pull-right {{comment.created | chatterDateString}}
+								.chatter-body {{comment.body}}

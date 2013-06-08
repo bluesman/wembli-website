@@ -1,6 +1,6 @@
 #plan-dashboard.friend-plan-dashboard
 	//- .event-data(ng-cloak,event-id="req.session.plan.event.eventId")
-	section#section1.plan-section
+	section#section1.friend-event-section.event-section.plan-section
 		.header
 			h1.pull-left Event
 		.body
@@ -51,13 +51,17 @@
 						span(ng-show="totalComingPlural") People are
 						span(ng-hide="totalComingPlural") Person is
 						span &nbsp;coming
-					.friend-coming {{organizer.firstName}} {{organizer.lastName}}
-					.friend-coming(ng-repeat="friend in friendsComing") {{friend.contactInfo.name}}&nbsp;(+{{friend.rsvp.guestCount-1}})
+					.friend-coming(ng-show="plan.organizer.rsvp.decision")
+						span {{organizer.firstName}} {{organizer.lastName}}&nbsp;
+						span(ng-show="plan.organizer.rsvp.guestCount > 1") (+{{plan.organizer.rsvp.guestCount-1}})
+					.friend-coming(ng-repeat="friend in friendsComing")
+						span {{friend.contactInfo.name}}&nbsp;
+						span(ng-show="friend.rsvp.guestCount > 1") (+{{friend.rsvp.guestCount-1}})
 				.next-wrapper.pull-right
 					.img
 						img(src="/images/cartoon-man-megaphone1.png")
 					button#next-section2.btn.btn-orange.btn-large.scroll-to NEXT
-	section#section2.plan-section.even
+	section#section2.friend-vote-section.vote-section.plan-section.even
 		.header
 			h1.pull-left Vote
 		.body
@@ -162,7 +166,7 @@
 								input.pull-right(ng-model="votePriceTotal")
 				.next-wrapper.pull-right
 					button#next-section3.btn.btn-orange.btn-large.scroll-to NEXT
-	section#section3.plan-section
+	section#section3.friend-invitees-section.invitees-section.plan-section
 		.header
 			h1.pull-left Invitees
 		.body
@@ -172,7 +176,7 @@
 					.img-container.pull-left
 						img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 						img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
-					.invitee-info.pull-left
+					.invitee-info
 						.invitee-name
 							span.name.orange {{friend.contactInfo.name}}&nbsp;
 							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
@@ -229,7 +233,7 @@
 											strong hotel type:&nbsp;
 											span {{friend.rsvp.hotel.preference.join(', ').substring(0,30)}}
 											span(ng-show="showEllipses(friend.rsvp.hotel.preference,30)") ...
-	section#section4.plan-section.even
+	section#section4.friend-pony-up-section.pony-up-section.plan-section.even
 		.header
 			h1.pull-left Pony Up!
 		.body
@@ -246,11 +250,13 @@
 					p.note.calibri NOTE:  You'll have 24 hrs from the time you get your pony up email to deposit your share because tickets can't be put on hold.
 				.img.pull-right
 					img(src="/images/cartoon-man-money-left.png")
-	section#section5.plan-section
+	section#section5.friend-itinerary-section.itinerary-section.plan-section
 		.header
 			h1.pull-left Itinerary
 		.body
-	section#section6.plan-section.even
+	section#section6.friend-chatter-section.chatter-section.plan-section.even
 		.header
 			h1.pull-left Chatter
 		.body
+			h3 Use this space to comment and share conversations about your upcoming event!
+			plan-chatter

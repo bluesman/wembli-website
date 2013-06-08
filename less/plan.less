@@ -95,6 +95,7 @@
 
 			.plan-section {
 				padding:0 20px;
+				min-height:768px;
 				.clearfix();
 
 				.body > h3 {
@@ -193,8 +194,69 @@
 
 			}
 
+
+			#invitees-container {
+				.invitee {
+					.clearfix();
+					margin:20px 30px;
+
+					.img-container {
+						width:75px;
+					}
+
+					.invitee-info {
+						margin-left:100px;
+						.invitee-prefs-container {
+							.clearfix();
+							.invitee-pref {
+								width:20%;
+								text-align:center;
+								.invitee-pref-header {
+									text-transform:uppercase;
+									color:@gray;
+									font-style: italic;
+									margin:10px 5px;
+									font-size:14px;
+								}
+								.invitee-pref-value {
+									.icon {
+										height:45px;
+										line-height:45px;
+										vertical-align:middle;
+									}
+									.dollar-sign {
+										font-size: 30px;
+										height:45px;
+										line-height:45px;
+										vertical-align:middle;
+									}
+									.prefs-list {
+										text-align:left;
+									}
+								}
+							}
+							.first {
+								text-align:left;
+								i {
+									margin-left:25px;
+								}
+							}
+						}
+						.invitee-name {
+							.name {
+								font-size:24px;
+							}
+							.guests {
+								font-weight:bold;
+							}
+						}
+					}
+				}
+			}
+
+
 			/* event info and main plan rsvp */
-			#section1 {
+			.event-section {
 				.body {
 					margin:10px;
 
@@ -226,6 +288,12 @@
 										padding:0px;
 										margin-right:2px;
 										font-size:15px;
+									}
+									span {
+										display:inline;
+									}
+									label {
+										margin-left:20px;
 									}
 									.data {
 										line-height: 15px;
@@ -272,6 +340,10 @@
 									color:@orange;
 								}
 							}
+							.payment-type-note {
+								margin-top:30px;
+							}
+
 							fieldset {
 								width:290px;
 
@@ -306,7 +378,7 @@
 				}
 			}
 
-			#section2 {
+			.vote-section {
 				.row {
 					width:450px;
 					margin:20px 30px;
@@ -376,69 +448,11 @@
 				}
 			}
 
-			#section3 {
-				#invitees-container {
-					.invitee {
-						.clearfix();
-						margin:20px 30px;
+			.invitees-section {
 
-						.img-container {
-							width:10%;
-						}
-
-						.invitee-info {
-							width:90%;
-							.invitee-prefs-container {
-								.clearfix();
-								.invitee-pref {
-									width:20%;
-									text-align:center;
-									.invitee-pref-header {
-										text-transform:uppercase;
-										color:@gray;
-										font-style: italic;
-										margin:10px 5px;
-										font-size:14px;
-
-									}
-									.invitee-pref-value {
-										.icon {
-											height:45px;
-											line-height:45px;
-											vertical-align:middle;
-										}
-										.dollar-sign {
-											font-size: 30px;
-											height:45px;
-											line-height:45px;
-											vertical-align:middle;
-										}
-										.prefs-list {
-											text-align:left;
-										}
-									}
-								}
-								.first {
-									text-align:left;
-									i {
-										margin-left:25px;
-									}
-								}
-							}
-							.invitee-name {
-								.name {
-									font-size:24px;
-								}
-								.guests {
-									font-weight:bold;
-								}
-							}
-						}
-					}
-				}
 			}
 
-			#section4 {
+			.pony-up-section {
 				#pony-up {
 					font-size:20px;
 					.content {
@@ -468,11 +482,105 @@
 					}
 				}
 			}
+
+			.chatter-section {
+				.body {
+					margin-bottom:60px;
+				}
+				#plan-chatter {
+					margin:20px 30px;
+					#chatter {
+						#new-chatter {
+							width:760px;
+							textarea {
+								margin:0 0 0 20px;
+								height:75px;
+								width:650px;
+							}
+							button {
+								margin:10px 0;
+							}
+						}
+					}
+					#chatters {
+						width:760px;
+						margin-top:20px;
+						border-top:thin solid @grayLight;
+
+						.upvote {
+							display:inline;
+							padding:2px;
+							text-align:center;
+						}
+
+						.chatter {
+							margin-top:20px;
+							.actor-image-container {
+
+							}
+							.chatter-container {
+								margin-left:95px;
+								.actor-name-container {
+									height:20px;
+									.actor-name {
+										font-weight:bold;
+										.icon-asterisk {
+											font-weight:normal;
+											font-size:.6em;
+											line-height:20px;
+											vertical-align:middle;
+											margin:0 6px;
+											color:@grayLight;
+										}
+									}
+								}
+								.chatter-body {
+									min-height: 45px;
+								}
+								.controls {
+									.chatter-reply {
+									}
+								}
+								.new-chatter-comment {
+									margin-top:20px;
+									width:665px;
+									.actor-image-container {
+										img {
+											width:60%;
+										}
+									}
+									textarea {
+										height:50px;
+										width:575px;
+									}
+									button {
+										margin:10px 0;
+									}
+								}
+								.chatter-comments {
+									margin-top:20px 0 20px 95px;
+									.chatter-comment {
+										margin-top:20px;
+										.actor-image-container {
+											img {
+												max-width:60%;
+											}
+										}
+										.comment-container {
+
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 
 		/* organizer specific css */
 		.organizer-plan-dashboard {
-			#section1 {
+			.organizer-event-section {
 				.body {
 					.collect-rsvp {
 						width:375px;
@@ -481,32 +589,21 @@
 						}
 					}
 					.section-bottom {
-						.event-options {
-
-							fieldset {
-								border:none;
-								background:transparent;
-
-								.options-group {
-									margin-top:20px;
-								}
-
-								.control-group {
-									.clearfix();
-									margin:5px;
-
-									input {
-										float:left;
-									}
-									label {
-										margin-left:20px;
-									}
-								}
-							}
-						}
 						.next-wrapper {
-							margin-top:167px;
+
 						}
+					}
+				}
+			}
+			.organizer-invitees-section {
+				#no-invitees {
+					background-color: @grayLight;
+					padding:50px;
+					button {
+						margin:auto;
+						display: block;
+						width: 200px;
+						height: 60px;
 					}
 				}
 			}

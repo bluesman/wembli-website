@@ -1,20 +1,20 @@
-form#invite-wizard-step5-form(name="step5")
+form#invite-wizard-step5-form(name="wemblimailForm")
 	fieldset()
 		h2 Go old skool and send an eMail
-		#error.alert.alert-block.fade.in(ng-show="step5.error")
-			.error-text(ng-show="step5.formError") All fields are required.
-		#error.alert.alert-block.fade.in(ng-show="step5.isOrganizer")
+		#error.alert.alert-block.fade.in(ng-show="error")
+			.error-text(ng-show="formError") All fields are required.
+		#error.alert.alert-block.fade.in(ng-show="isOrganizer")
 			.error-text You don't have to invite yourself :)
-		#error.alert.alert-info.alert-block.fade.in(ng-show="step5.successConfirmed")
+		#error.alert.alert-info.alert-block.fade.in(ng-show="successConfirmed")
 			.error-text Invitation email successfully sent to {{wemblimail.lastSentEmail}}!
-		#error.alert.alert-info.alert-block.fade.in(ng-show="step5.successUnconfirmed")
+		#error.alert.alert-info.alert-block.fade.in(ng-show="successUnconfirmed")
 			.error-text Invitation email to {{wemblimail.lastSentEmail}} will be sent as soon as you confirm your email address (hint: check your email!).
 		p Email friends to let them know they're invited.  Supply a name, email address and a note and we'll send out an email for you.
 		.name-group.control-group.pull-left
 			input#step5-name.name(ng-model="wemblimail.name", placeholder="GUEST'S FULL NAME",type="text",name="name",required)
 			input#step5-email(ng-model="wemblimail.email",placeholder="GUEST'S EMAIL ADDRESS",type="email",name="email",required)
 			textarea#step5-message-text(placeholder="Include a personalized message...",ng-model="wemblimail.messageText", name="step5_message_text", required)
-			button.btn.btn-primary.pull-right(ng-click="submitForm('step5')") Send WembliMail Now
+			button.btn.btn-primary.pull-right(ng-click="sendWemblimail()") Send WembliMail Now
 		#step5-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
 			.friends-list(ng-show="wemblimail.friends[0]")
 				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends")

@@ -9893,6 +9893,7 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard .plan-section {
   padding: 0 20px;
+  min-height: 768px;
   *zoom: 1;
 }
 #plan-frame #middle #plan-dashboard .plan-section:before,
@@ -10099,35 +10100,121 @@ a#facebook-login-button {
   font-weight: bold;
   width: 200px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body {
+#plan-frame #middle #plan-dashboard #invitees-container .invitee {
+  *zoom: 1;
+  margin: 20px 30px;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee:before,
+#plan-frame #middle #plan-dashboard #invitees-container .invitee:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee:before,
+#plan-frame #middle #plan-dashboard #invitees-container .invitee:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .img-container {
+  width: 75px;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info {
+  margin-left: 100px;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container {
+  *zoom: 1;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container:before,
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container:before,
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref {
+  width: 20%;
+  text-align: center;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-header {
+  text-transform: uppercase;
+  color: #767676;
+  font-style: italic;
+  margin: 10px 5px;
+  font-size: 14px;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .icon {
+  height: 45px;
+  line-height: 45px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .dollar-sign {
+  font-size: 30px;
+  height: 45px;
+  line-height: 45px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list {
+  text-align: left;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .first {
+  text-align: left;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .first i {
+  margin-left: 25px;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-name .name {
+  font-size: 24px;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-name .guests {
+  font-weight: bold;
+}
+#plan-frame #middle #plan-dashboard .event-section .body {
   margin: 10px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container {
   *zoom: 1;
   margin: 30px 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container {
   width: 50%;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info {
   *zoom: 1;
   background-color: #d8d6d7;
   -webkit-border-radius: 6px;
@@ -10137,48 +10224,48 @@ a#facebook-login-button {
   margin: 0;
   font-family: "Calibri";
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row {
   *zoom: 1;
   margin: 0;
   padding: 2px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row h3 {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row h3 {
   font-family: "Calibri";
   line-height: 15px;
   vertical-align: middle;
@@ -10186,25 +10273,31 @@ a#facebook-login-button {
   margin-right: 2px;
   font-size: 15px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .row .data {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row span {
+  display: inline;
+}
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row label {
+  margin-left: 20px;
+}
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row .data {
   line-height: 15px;
   vertical-align: middle;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .first-row .data {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .first-row .data {
   font-size: 1.5em;
   line-height: 16px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .info-container .info .first-row h3 {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .first-row h3 {
   font-size: 1.5em;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container {
   padding: 0px;
   width: 45%;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container h3 {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container h3 {
   padding: 10px 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp {
   *zoom: 1;
   padding: 25px 0px;
   /* change this to auto to center the rsvp */
@@ -10212,128 +10305,131 @@ a#facebook-login-button {
   margin: 0;
   text-align: center;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp a {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp a {
   margin: 10px;
   font-weight: bold;
   color: #d8d6d7;
   display: block;
   float: left;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp a.active,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container .collect-rsvp a:hover {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp a.active,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp a:hover {
   color: #ff6700;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .payment-type-note {
+  margin-top: 30px;
+}
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset {
   width: 290px;
   /* change this to auto to center the rsvp */
 
   margin: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label {
   *zoom: 1;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label:after {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label #including-yourself {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label #including-yourself {
   line-height: 30px;
   vertical-align: middle;
   padding-left: 10px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body #event-container .collect-rsvp-container fieldset label #guest-count {
+#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label #guest-count {
   width: 30px;
   height: 26px;
   text-align: center;
   margin: 0 10px;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .section-bottom .next-wrapper {
+#plan-frame #middle #plan-dashboard .event-section .body .section-bottom .next-wrapper {
   text-align: right;
 }
-#plan-frame #middle #plan-dashboard #section1 .body .section-bottom .next-wrapper button {
+#plan-frame #middle #plan-dashboard .event-section .body .section-bottom .next-wrapper button {
   margin-top: -65px;
 }
-#plan-frame #middle #plan-dashboard #section2 .row {
+#plan-frame #middle #plan-dashboard .vote-section .row {
   width: 450px;
   margin: 20px 30px;
 }
-#plan-frame #middle #plan-dashboard #section2 .row .preference-dropdown {
+#plan-frame #middle #plan-dashboard .vote-section .row .preference-dropdown {
   margin: 0 0 20px 0;
 }
-#plan-frame #middle #plan-dashboard #section2 .row .checkbox {
+#plan-frame #middle #plan-dashboard .vote-section .row .checkbox {
   font-size: 1.4em;
   font-weight: bold;
   margin: 20px 0;
 }
-#plan-frame #middle #plan-dashboard #section2 .right {
+#plan-frame #middle #plan-dashboard .vote-section .right {
   margin: 100px 30px 0;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label {
   display: block;
   *zoom: 1;
   margin-right: 10px;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label:before,
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label:after {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label:before,
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label:after {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label:before,
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label:after {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label:before,
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label:after {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label h2,
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label h3,
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label .orange,
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label input {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label h2,
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label h3,
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label .orange,
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label input {
   line-height: 45px;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label h2,
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label h3 {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label h2,
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label h3 {
   margin-right: 30px;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom label input {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom label input {
   width: 90px;
   border: none;
   margin: auto;
@@ -10342,180 +10438,139 @@ a#facebook-login-button {
   line-height: 40px;
   vertical-align: middle;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom #per-person .orange {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom #per-person .orange {
   font-size: 25px;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom #per-person input {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom #per-person input {
   font-size: 25px;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom #total h2 {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom #total h2 {
   font-size: 20px;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom #total .orange {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom #total .orange {
   font-size: 40px;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom #total input {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom #total input {
   font-size: 40px;
 }
-#plan-frame #middle #plan-dashboard #section2 .section-bottom button {
+#plan-frame #middle #plan-dashboard .vote-section .section-bottom button {
   margin-top: 70px;
 }
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee {
-  *zoom: 1;
-  margin: 20px 30px;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee:before,
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee:before,
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .img-container {
-  width: 10%;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info {
-  width: 90%;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container {
-  *zoom: 1;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container:before,
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container:before,
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref {
-  width: 20%;
-  text-align: center;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-header {
-  text-transform: uppercase;
-  color: #767676;
-  font-style: italic;
-  margin: 10px 5px;
-  font-size: 14px;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .icon {
-  height: 45px;
-  line-height: 45px;
-  vertical-align: middle;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .dollar-sign {
-  font-size: 30px;
-  height: 45px;
-  line-height: 45px;
-  vertical-align: middle;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list {
-  text-align: left;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container .first {
-  text-align: left;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-prefs-container .first i {
-  margin-left: 25px;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-name .name {
-  font-size: 24px;
-}
-#plan-frame #middle #plan-dashboard #section3 #invitees-container .invitee .invitee-info .invitee-name .guests {
-  font-weight: bold;
-}
-#plan-frame #middle #plan-dashboard #section4 #pony-up {
+#plan-frame #middle #plan-dashboard .pony-up-section #pony-up {
   font-size: 20px;
 }
-#plan-frame #middle #plan-dashboard #section4 #pony-up .content {
+#plan-frame #middle #plan-dashboard .pony-up-section #pony-up .content {
   margin-left: 30px;
   width: 60%;
 }
-#plan-frame #middle #plan-dashboard #section4 #pony-up .content p {
+#plan-frame #middle #plan-dashboard .pony-up-section #pony-up .content p {
   padding: 20px 0;
 }
-#plan-frame #middle #plan-dashboard #section4 #pony-up .content .icon-circle {
+#plan-frame #middle #plan-dashboard .pony-up-section #pony-up .content .icon-circle {
   display: block;
   font-size: 10px;
 }
-#plan-frame #middle #plan-dashboard #section4 #pony-up .content span {
+#plan-frame #middle #plan-dashboard .pony-up-section #pony-up .content span {
   margin-left: 10px;
   font-size: 20px;
 }
-#plan-frame #middle #plan-dashboard #section4 #pony-up .content .note {
+#plan-frame #middle #plan-dashboard .pony-up-section #pony-up .content .note {
   font-style: italic;
 }
-#plan-frame #middle #plan-dashboard #section4 #pony-up .img {
+#plan-frame #middle #plan-dashboard .pony-up-section #pony-up .img {
   width: 30%;
 }
-#plan-frame #middle #plan-dashboard #section4 #pony-up .img img {
+#plan-frame #middle #plan-dashboard .pony-up-section #pony-up .img img {
   margin: 30px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .collect-rsvp {
-  width: 375px;
+#plan-frame #middle #plan-dashboard .chatter-section .body {
+  margin-bottom: 60px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .collect-rsvp a {
-  font-size: 40px;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter {
+  margin: 20px 30px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset {
-  border: none;
-  background: transparent;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatter #new-chatter {
+  width: 760px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .options-group {
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatter #new-chatter textarea {
+  margin: 0 0 0 20px;
+  height: 75px;
+  width: 650px;
+}
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatter #new-chatter button {
+  margin: 10px 0;
+}
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters {
+  width: 760px;
+  margin-top: 20px;
+  border-top: thin solid #d8d6d7;
+}
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .upvote {
+  display: inline;
+  padding: 2px;
+  text-align: center;
+}
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter {
   margin-top: 20px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group {
-  *zoom: 1;
-  margin: 5px;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container {
+  margin-left: 95px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group:before,
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group:after {
-  display: table;
-  content: "";
-  line-height: 0;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container {
+  height: 20px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group:after {
-  clear: both;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container .actor-name {
+  font-weight: bold;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group:before,
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group:after {
-  display: table;
-  content: "";
-  line-height: 0;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container .actor-name .icon-asterisk {
+  font-weight: normal;
+  font-size: .6em;
+  line-height: 20px;
+  vertical-align: middle;
+  margin: 0 6px;
+  color: #d8d6d7;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group:after {
-  clear: both;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-body {
+  min-height: 45px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group input {
-  float: left;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment {
+  margin-top: 20px;
+  width: 665px;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .event-options fieldset .control-group label {
-  margin-left: 20px;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment .actor-image-container img {
+  width: 60%;
 }
-#plan-frame #middle .organizer-plan-dashboard #section1 .body .section-bottom .next-wrapper {
-  margin-top: 167px;
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment textarea {
+  height: 50px;
+  width: 575px;
+}
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment button {
+  margin: 10px 0;
+}
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments {
+  margin-top: 20px 0 20px 95px;
+}
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment {
+  margin-top: 20px;
+}
+#plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment .actor-image-container img {
+  max-width: 60%;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-event-section .body .collect-rsvp {
+  width: 375px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-event-section .body .collect-rsvp a {
+  font-size: 40px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-invitees-section #no-invitees {
+  background-color: #d8d6d7;
+  padding: 50px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-invitees-section #no-invitees button {
+  margin: auto;
+  display: block;
+  width: 200px;
+  height: 60px;
 }
 #plan-frame #middle .friend-plan-dashboard .collect-rsvp {
   width: 230px;
@@ -10623,9 +10678,9 @@ a#facebook-login-button {
   overflow-y: auto;
   padding: 5px 20px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step1-form .switch-login,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step1-form .or,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step1-form .facebook-login {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .invite-wizard-step1-form .switch-login,
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .invite-wizard-step1-form .or,
+#invitation-modal.modal #invite-friends-wizard .modal-body #right .invite-wizard-step1-form .facebook-login {
   width: 100%;
   text-align: center;
   margin-top: 30px;
@@ -10633,7 +10688,7 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #right #facebook-login-button {
   margin: 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step2-form .datepicker-container {
+#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-rsvp-form .datepicker-container {
   position: relative;
   margin: 40px auto;
   width: 260px;

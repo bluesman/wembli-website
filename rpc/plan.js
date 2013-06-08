@@ -81,7 +81,6 @@ exports.plan = {
 			data.plan = req.session.plan;
 			me(null, data);
 		});
-
 	},
 
 	update: function(args, req, res) {
@@ -129,7 +128,6 @@ exports.plan = {
 			data.plan = req.session.plan;
 			me(null, data);
 		});
-
 	},
 
 	addFriend: function(args, req, res) {
@@ -233,18 +231,27 @@ exports.plan = {
 					}
 					console.log('added friend to plan: ' + req.session.plan.guid);
 					data.friend = friend;
-					feedRpc['logActivity'].apply(function(err, feedResult) {
-						return me(null, data);
-					}, [{
-							action: 'addFriend',
-							meta: {
-								friendName: friend.name
-							}
-						},
-						req, res
-					]);
 
+					/* get list of friends for this plan */
+					Friend.find({
+						planId: req.session.plan.id
+					}, function(err, friends) {
 
+						data.friends = friends;
+						console.log('all friends in the plan');
+						console.log(friends);
+
+						feedRpc['logActivity'].apply(function(err, feedResult) {
+							return me(null, data);
+						}, [{
+								action: 'addFriend',
+								meta: {
+									friendName: friend.name
+								}
+							},
+							req, res
+						]);
+					})
 				});
 			});
 		});
@@ -368,7 +375,7 @@ exports.plan = {
 
 			console.log('plan.save');
 			console.log(args);
-			req.session.plan.markModified('preferences');
+			//req.session.plan.markModified('preferences');
 			req.session.plan.save(function(err, res) {
 				data.plan = req.session.plan;
 				me(null, data);

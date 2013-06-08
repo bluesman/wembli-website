@@ -27,11 +27,19 @@ module.exports = function(app) {
 			"eventID": req.param("eventId")
 		};
 		eventRpc['get'].apply(function(err, results) {
+			var venueId = '';
 			/* its possible that this event is no longer available - if that is the case, send them to the no-event page */
 			if (err || !results.event[0]) {
-				console.log('no event from tn: ' + err);
-				var noEventUrl = locals.partial ? '/partials/tickets' : '/tickets';
-				return res.redirect(noEventUrl);
+				if (req.session.plan.venue.venueId) {
+					/* if we have the event in the session use that instead */
+					venueId = req.session.plan.venue.venueId;
+				} else {
+					console.log('no event from tn: ' + err);
+					var noEventUrl = locals.partial ? '/partials/tickets' : '/tickets';
+					return res.redirect(noEventUrl);
+				}
+			} else {
+				venueId = results.event[0].VenueID;
 			}
 
 			/* get the venue data for this event */
@@ -42,10 +50,14 @@ module.exports = function(app) {
 				res.setHeader('x-wembli-overflow', 'hidden');
 				res.setHeader('x-wembli-location', '/tickets/' + req.param("eventId") + '/' + req.param("eventName"));
 
-				locals.tnMapUrl = results.event[0].MapURL;
+				locals.tnMapUrl = results.event[0] ? results.event[0].MapURL : req.session.plan.event.data.MapURL;
 
 				/* friends just get to view */
 				if (req.session.visitor.context === 'friend') {
+					return res.render(template, locals);
+				}
+
+				if (!results.event[0]) {
 					return res.render(template, locals);
 				}
 
@@ -128,7 +140,7 @@ module.exports = function(app) {
 
 					return res.render(template, locals);
 				}
-			}, [{VenueID:results.event[0].VenueID}, req, res]);
+			}, [{VenueID:venueId}, req, res]);
 		}, [args, req, res]);
 
 	};

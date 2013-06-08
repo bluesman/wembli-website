@@ -50,6 +50,10 @@ module.exports = function(app) {
 		});
 	});
 
+	app.get(/^\/partials\/plan\/chatter$/, function(req,res) {
+		return res.render('partials/plan/chatter',{partial:true});
+	});
+
 	app.get(/^\/partials\/plan\/(nav|dashboard|feed)$/, function(req,res) {
 		return res.render('partials/plan/'+req.session.visitor.context+'-'+req.url.split('/')[3],{partial:true});
 	});

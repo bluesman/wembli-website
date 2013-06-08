@@ -101,6 +101,8 @@ exports.event = {
 			eventID: args.eventID
 		}, function(err, results) {
 			if (err) {
+				console.log('ERROR');
+				console.log(err);
 				return me(err);
 			}
 			var ret = {
@@ -108,10 +110,16 @@ exports.event = {
 				event: results.Event
 			};
 			ticketNetwork.GetTickets(args, function(err, results) {
+				console.log(results);
 				if (err) {
+					console.log('ERROR GETTING TIX');
+					console.log(err);
 					return me(err);
 				}
-				ret.tickets = (typeof results.TicketGroup.length == "undefined") ? [results.TicketGroup] : results.TicketGroup;
+				ret.tickets = [];
+				if (typeof results !== "undefined") {
+					ret.tickets = (typeof results.TicketGroup.length == "undefined") ? [results.TicketGroup] : results.TicketGroup;
+				}
 				me(null, ret);
 			});
 		});

@@ -14,108 +14,106 @@ var facebook_client = new Facebook(app.settings.fbAppId, app.settings.fbAppSecre
 exports["invite-friends"] = {
 
 	/* signup */
-	"submit-step1": function(args, req, res) {
+	"submit-signup": function(args, req, res) {
 		var me = this;
+		/* new customer.  That means req.session.customer does not exist and there is no args.customerId */
+		customerRpc['signup'].apply(function(err, results) {
+			/* set the login redirect url if the cust already exists */
+			if (results.exists) {
+				req.session.loginRedirect = true;
+				req.session.redirectUrl = '/invitation';
+			}
+			console.log('signup results');
+			console.log(results);
+
+			me(null, results);
+		}, [args, req, res]);
+	},
+
+
+	"submit-loginUnconfirmed": function(args, req, res) {
 		console.log(args);
 		/* make sure we have email */
-		if (!args.email) {
+		if (!args.customerId) {
 			return me(null, {
 				success: 1,
 				formError: true
 			});
 		}
 
-		/* few different cases here... */
-		if (args.password) {
-			customerRpc['login'].apply(function(err, results) {
-				/* set the login redirect url if the cust already exists */
-				console.log('login results');
-				console.log(results);
-				if (results.error) {
-					results.formError = true;
-					results.exists = true;
-				}
+		/* fetch it from the db and potentially update firstName, lastName and/or email */
+		console.log('updating customer:');
+		console.log(args);
 
-				return me(null, results);
-			}, [args, req, res]);
-		} else {
+		Customer.findById(args.customerId, function(err, c) {
+			if (err) {
+				return me(err);
+			}
 
-			if (args.customerId) {
-				/* fetch it from the db and potentially update firstName, lastName and/or email */
-				console.log('updating customer:');
-				console.log(args);
+			/* this should never happen unless there's some sort of funny biz */
+			if (c === null) {
+				return me('no crystal');
+			}
 
-				Customer.findById(args.customerId, function(err, c) {
-					if (err) {
-						return me(err);
-					}
+			/* ok got our cust from the db check if email is changing, if so - they need to reconfirm */
+			if (c.email !== args.email) {
+				var confirmationTimestamp = new Date().getTime().toString();
+				var digestKey = args.email + confirmationTimestamp;
+				var confirmationToken = wembliUtils.digest(digestKey);
 
-					/* this should never happen unless there's some sort of funny biz */
-					if (c === null) {
-						return me('no crystal');
-					}
-
-					/* ok got our cust from the db check if email is changing, if so - they need to reconfirm */
-					if (c.email !== args.email) {
-						var confirmationTimestamp = new Date().getTime().toString();
-						var digestKey = args.email + confirmationTimestamp;
-						var confirmationToken = wembliUtils.digest(digestKey);
-
-						c.confirmation.pop();
-						c.confirmation.unshift({
-							timestamp: confirmationTimestamp,
-							token: confirmationToken
-						});
-
-						c.confirmed = false;
-					}
-
-					c.firstName = args.firstName;
-					c.lastName = args.lastName;
-					c.email = args.email;
-					console.log('customer');
-					console.log(c);
-					c.save(function(err) {
-						if (err) {
-							return me(err);
-						}
-
-						if (confirmationToken) {
-							/* send signup email async */
-							wembliEmail.sendSignupEmail({
-								res: res,
-								confirmationToken: confirmationToken,
-								customer: c
-							});
-						}
-
-						req.session.customer = c;
-						me(null, {
-							success: 1
-						});
-
-					});
+				c.confirmation.pop();
+				c.confirmation.unshift({
+					timestamp: confirmationTimestamp,
+					token: confirmationToken
 				});
 
-			} else {
-				/* new customer.  That means req.session.customer does not exist and there is no args.customerId*/
-				customerRpc['signup'].apply(function(err, results) {
-					/* set the login redirect url if the cust already exists */
-					if (results.exists) {
-						req.session.loginRedirect = true;
-						req.session.redirectUrl = '/invitation';
-					}
-					console.log('signup results');
-					console.log(results);
-
-					me(null, results);
-				}, [args, req, res]);
+				c.confirmed = false;
 			}
-		}
+
+			c.firstName = args.firstName;
+			c.lastName = args.lastName;
+			c.email = args.email;
+			console.log('customer');
+			console.log(c);
+			c.save(function(err) {
+				if (err) {
+					return me(err);
+				}
+
+				if (confirmationToken) {
+					/* send signup email async */
+					wembliEmail.sendSignupEmail({
+						res: res,
+						confirmationToken: confirmationToken,
+						customer: c
+					});
+				}
+
+				req.session.customer = c;
+				me(null, {
+					success: 1
+				});
+
+			});
+		});
+	},
+
+	"submit-login": function(args, req, res) {
+		var me = this;
+		customerRpc['login'].apply(function(err, results) {
+			/* set the login redirect url if the cust already exists */
+			console.log('login results');
+			console.log(results);
+			if (results.error) {
+				results.formError = true;
+				results.exists = true;
+			}
+			return me(null, results);
+		}, [args, req, res]);
 	},
 
 	/* save rsvp date */
-	"submit-step2": function(args, req, res) {
+	"submit-rsvp": function(args, req, res) {
 		var me = this;
 		var data = {
 			success: 1,
@@ -149,7 +147,7 @@ exports["invite-friends"] = {
 	},
 
 	/* send wemblimail */
-	"submit-step5": function(args, req, res) {
+	"sendWemblimail": function(args, req, res) {
 		var me = this;
 		var data = {
 			success: 1
@@ -194,7 +192,7 @@ exports["invite-friends"] = {
 			if (req.session.customer.confirmed) {
 
 				/* now that we have added the friend to the plan and have a token, send the wembli email */
-				var rsvpLink = "http://"+app.settings.host+".wembli.com/rsvp/" + req.session.plan.guid + "/" + results.friend.rsvp.token + "/wemblimail";
+				var rsvpLink = "http://" + app.settings.host + ".wembli.com/rsvp/" + req.session.plan.guid + "/" + results.friend.rsvp.token + "/wemblimail";
 				wembliEmail.sendRSVPEmail({
 					res: res,
 					req: req,

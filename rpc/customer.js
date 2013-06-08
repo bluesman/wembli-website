@@ -382,14 +382,15 @@ exports.customer = {
 		};
 
 		var respond = function(data) {
-			req.session.signupForm.firstName = data.firstName ? data.firstName : req.session.signupForm.firstName;
-			req.session.signupForm.lastName = data.lastName ? data.lastName : req.session.signupForm.lastName;
-			req.session.signupForm.email = data.email ? data.email : req.session.signupForm.email;
+			req.session.signupForm.firstName = data.firstName || req.session.signupForm.firstName || args.firstName;
+			req.session.signupForm.lastName  = data.lastName  || req.session.signupForm.lastName  || args.lastName;
+			req.session.signupForm.email     = data.email     || req.session.signupForm.email     || args.email;
 			req.session.signupForm.formError = data.formError;
-			req.session.signupForm.exists = data.exists;
-			req.session.signupForm.loginRedirect = data.loginRedirect ? data.loginRedirect : req.session.loginRedirect;
-			req.session.signupForm.redirectUrl = data.redirectUrl ? data.loginRedirect : req.session.redirectUrl;
-			req.session.signupForm.noPassword = data.noPassword;
+			req.session.signupForm.exists    = data.exists;
+			req.session.signupForm.loginRedirect = data.loginRedirect || req.session.loginRedirect;
+			req.session.signupForm.redirectUrl   = data.redirectUrl   || req.session.redirectUrl;
+			req.session.signupForm.noPassword    = data.noPassword;
+
 			console.log('responding customer.signup');
 			console.log(req.session.signupForm);
 			me(null, req.session.signupForm);
@@ -545,6 +546,7 @@ exports.customer = {
 			});
 		});
 	},
+
 	login: function(args, req, res) {
 		var me = this;
 		console.log('customer.login args');
@@ -643,8 +645,6 @@ exports.customer = {
 				});
 			}
 		}, false);
-
-
 	},
 
 	sendForgotPasswordEmail: function(args, req, res) {

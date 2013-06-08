@@ -29,7 +29,9 @@ form#invite-wizard-step3-form.twitter-widget(name="step3",ng-cloak,ng-show="twit
 						.modal-footer
 							input.char-count(ng-model="twitter.charCount",id="char-count-{{friend.screen_name}}",disabled,ng-class="{true:'red'}[twitter.charCount < 10]")
 							a.btn(href="#",data-dismiss="modal") Close
-							a.btn.btn-primary(href="#",ng-click="twitter.tweet(friend,$event)") Tweet
+							a.btn.btn-primary(href="#",ng-click="twitter.tweet(friend,$event)")
+								i.icon-twitter
+								span &nbsp;Tweet
 					.friend-img.pull-left
 						img.picture(ng-src="{{friend.profile_image_url_https}}")
 					.friend-name.pull-left
@@ -41,7 +43,7 @@ form#invite-wizard-step3-form.twitter-widget(name="step3",ng-cloak,ng-show="twit
 					.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
 						span.label.label-important declined&nbsp;
 					.friend-controls.pull-right
-						a.btn.btn-mini(ng-click="twitter.handleFriendClick(friend,$event)")
+						a.btn.btn-mini(ng-click="addTwitterFriend(friend,$event)")
 							i.icon-twitter(style="color:#0092BF")
 							strong &nbsp;Tweet to @{{friend.screen_name}}
 	.form-controls

@@ -96,7 +96,13 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wem
 		},
 
 		addFriend: function(args, callback) {
-			wembliRpc.fetch('plan.addFriend', args, callback);
+			wembliRpc.fetch('plan.addFriend', args, function(err, result) {
+				if (result.friends) {
+					self.friends = result.friends;
+					$rootScope.$broadcast('plan-friends-changed',result.friends);
+				}
+				callback(err, result);
+			});
 		},
 
 		addTicketGroup: function(args, callback) {
@@ -120,7 +126,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wem
 			}
 
 			self.fetchInProgress = true;
-
+			console.log('fetching plan');
 			wembliRpc.fetch('plan.init', {},
 			//response
 
@@ -311,6 +317,7 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function
 	};
 }]).
 
+
 factory('googleMap', ['$rootScope', function($rootScope) {
 	var self = this;
 	var centerOffset = {
@@ -497,42 +504,20 @@ factory('rsvpLoginModal', [function() {
 	};
 }]).
 
-factory('friendFilter', [function() {
+factory('loggedIn', [function() {
+	var self = this;
+	this.loggedIn = false;
 	return {
-		filter: function(key, self) {
-			var r = new RegExp("^" + key, "i");
-
-			if (key.length <= 1) {
-				self.friends = self.allFriends;
-				return;
-			}
-			var filtered = [];
-			angular.forEach(self.friends, function(val) {
-				var me = this;
-				var f = val;
-
-				//fullname
-				if (r.test(f.name)) {
-					me.push(f);
-					return;
-				}
-
-				var ary = f.name.split(' ');
-
-				angular.forEach(ary, function(name) {
-					if (r.test(name)) {
-						me.push(f);
-						return;
-					}
-				});
-			}, filtered);
-			self.friends = filtered;
-
+		set: function(val) {
+			self.loggedIn = val;
+		},
+		check: function() {
+			return self.loggedIn;
 		}
 	};
 }]).
 
-factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window', '$filter', 'customer', '$location', function($rootScope, $q, friendFilter, wembliRpc, $window, $filter, customer, $location) {
+factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'customer', '$location', function($rootScope, $q, wembliRpc, $window, $filter, customer, $location) {
 
 	var self = this;
 	this.auth = null;
@@ -557,11 +542,6 @@ factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window',
 	}
 
 	return {
-		//TODO make a filterFriend service to be used by the different social network api services
-		filterFriends: function(filterKey) {
-			friendFilter.filter(filterKey, self);
-		},
-
 		feedDialog: function(args, cb) {
 			FB.getLoginStatus(function(response) {
 				if (response.authResponse) {
@@ -678,7 +658,7 @@ factory('facebook', ['$rootScope', '$q', 'friendFilter', 'wembliRpc', '$window',
 	}
 }]).
 
-factory('twitter', ['$rootScope', '$filter', 'friendFilter', 'wembliRpc', function($rootScope, $filter, friendFilter, wembliRpc) {
+factory('twitter', ['$rootScope', '$filter', 'wembliRpc', function($rootScope, $filter, wembliRpc) {
 
 	var self = this;
 	this.auth = null;
@@ -687,11 +667,6 @@ factory('twitter', ['$rootScope', '$filter', 'friendFilter', 'wembliRpc', functi
 	this.allFriends = null;
 
 	return {
-		//TODO make a filterFriend service to be used by the different social network api services
-		filterFriends: function(filterKey) {
-			friendFilter.filter(filterKey, self);
-		},
-
 		tweet: function(args, cb) {
 			wembliRpc.fetch('twitter.tweet', args,
 
@@ -787,7 +762,7 @@ factory('interactiveMapDefaults', [function() {
 	};
 }]).
 
-factory('wembliRpc', ['$rootScope', '$http', 'customer', function($rootScope, $http, customer) {
+factory('wembliRpc', ['$rootScope', '$http', 'customer', 'loggedIn', function($rootScope, $http, customer, loggedIn) {
 	var wembliRpc = {
 		_cache: {}
 	};
@@ -837,6 +812,12 @@ factory('wembliRpc', ['$rootScope', '$http', 'customer', function($rootScope, $h
 					customer: customer
 				});
 			}
+
+			if (typeof result.loggedIn !== "undefined") {
+				loggedIn.set(result.loggedIn);
+			}
+
+
 			var ret = callback(err, result);
 			$rootScope.$broadcast(eventName + 'callbackComplete', {
 				'method': method

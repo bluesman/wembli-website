@@ -122,7 +122,7 @@ this.Model = function(mongoose) {
 	Customer.methods.getPlans = function(callback) {
 		var c = this;
 		console.log('getting customer plans where customer id: ' + c.id);
-		Plan.find().where('organizer').equals(c.id).sort('event.eventDate').exec(function(err, plans) {
+		Plan.find().where('organizer.customerId').equals(c.id).sort('event.eventDate').exec(function(err, plans) {
 			if (err) {
 				return callback(err);
 			};
