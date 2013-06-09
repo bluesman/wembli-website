@@ -27,6 +27,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
+              console.log('refreshing map');
               $('#map-container').tuMap("Refresh", "Reset");
             }
           });
@@ -36,7 +37,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
             wembliRpc.fetch('event.getTickets', {
               eventID: plan.event.eventId
             }, function(err, result) {
-
               if (err) {
                 console.log('error getting tix');
                 console.log(err);
@@ -97,9 +97,17 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               };
 
               options.OnError = function(e, Error) {
+                console.log('error loading tuMap');
+                console.log(Error);
+
                 if (Error.Code === 1) {
+                  console.log('no map from tu - using map:' + scope.event.MapUrl);
+                  if (typeof scope.event.MapUrl === "undefined") {
+                    scope.event.MapUrl = "/images/no-seating-chart.jpg";
+                  }
                   /* chart not found - display the tn chart */
-                  $('#map-container').css("background", 'url(' + scope.event.MapURL + ') no-repeat center center');
+                  console.log('setting seating chart');
+                  $('#map-container').css("background", 'url(' + scope.event.MapUrl + ') no-repeat center center');
                   console.log('hide generic modal');
                   $('#generic-loading-modal').modal("hide");
 
@@ -142,8 +150,8 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               $('#map-container').css("height", $($window).height() - 60);
               $('#tickets').css("height", $($window).height() - 60);
               $('#map-container').css("width", $($window).width() - 480);
+              console.log("creating tuMap");
               $('#map-container').tuMap(options);
-              $('#map-container').tuMap("Refresh", "Reset");
 
               $('#price-slider').slider({
                 range: true,
@@ -162,25 +170,20 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
               var amtVal = "$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1);
               $("#amount").val(amtVal);
-
               /* filter tix when the drop down changes */
               $("#quantity-filter").change(function() {
                 filterTickets();
               });
             },
             /* transformRequest */
-
             function(data, headersGetter) {
-
               $rootScope.genericLoadingModal.header = 'Finding Tickets...';
               $('#page-loading-modal').modal("hide");
-              console.log('show generic modal');
               $('#generic-loading-modal').modal("show");
               return data;
             },
 
             /* transformResponse */
-
             function(data, headersGetter) {
               return JSON.parse(data);
             });
