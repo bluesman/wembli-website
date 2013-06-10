@@ -617,6 +617,13 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 	$scope.friend = rsvpLoginModal.get('friend');
 	$scope.event = JSON.parse(rsvpLoginModal.get('event'));
 
+		console.log('service is: '+$scope.service);
+	if ($scope.service === 'wemblimail') {
+		$scope.email = rsvpLoginModal.get('serviceId');
+		console.log('serviceId = '+$scope.email);
+	}
+
+
 	console.log($scope.event);
 	$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
 	$scope.next = '/rsvp/' + $scope.guid + '/' + $scope.token + '/' + $scope.service;
