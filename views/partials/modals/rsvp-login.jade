@@ -42,6 +42,7 @@
 					input#radio-signup(ng-model="authAction",type="radio",name="auth_action",value="signup",ng-init="authAction='signup'")
 					.option-content
 						h3 1. Create an account:
+						p(ng-show="{'wemblimail':true}[service]") *To view the RSVP, please signup using the email address where you received the invitation.
 						fieldset()
 							#signup-error.alert.alert-block.fade.in(ng-show="signupError")
 								.error-text.icon-spinner.icon-spin.icon-2x(ng-show="signupSpinner")

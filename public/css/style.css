@@ -8486,6 +8486,10 @@ body {
 #content #search-frame #right #search-wrapper #search #search-results a#more-events i {
   margin: 1px 0px 0px 8px;
 }
+#rsvp-login-modal .not-friend,
+#tickets-login-modal .not-friend {
+  text-align: center;
+}
 #rsvp-login-modal form,
 #tickets-login-modal form {
   margin: 20px;
@@ -8496,7 +8500,7 @@ body {
 }
 #rsvp-login-modal form label.radio input[type=radio],
 #tickets-login-modal form label.radio input[type=radio] {
-  margin: 45px 25px 0 0;
+  margin: 45px 25px 45px 0;
 }
 #rsvp-login-modal form label.radio .option-content,
 #tickets-login-modal form label.radio .option-content {
@@ -10124,6 +10128,11 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard #invitees-container .invitee .img-container {
   width: 75px;
+  text-align: center;
+  line-height: 12px;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .img-container .rsvp-for {
+  font-size: .8em;
 }
 #plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info {
   margin-left: 100px;
@@ -10173,6 +10182,15 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list {
   text-align: left;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-header {
+  color: #d8d6d7;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .icon {
+  color: #d8d6d7;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .dollar-sign {
+  color: #d8d6d7;
 }
 #plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .first {
   text-align: left;

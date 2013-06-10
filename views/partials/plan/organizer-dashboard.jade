@@ -19,7 +19,9 @@
 					.payment-type-note
 						strong ** NOTE:&nbsp;
 						span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After invitees vote on preferences you'll favor a ticket group, then we'll prompt you to send a link for everyone to pony up for their part of the outing before you shell out the cash.&nbsp;
-							strong Please be aware that tickets are NOT locked in until they are paid for.
+							p &nbsp;
+							p
+								strong Please be aware that tickets are NOT locked in until they are paid for.
 						span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;You have chosen to foot the bill for this plan - w00t!
 						span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, you will lock in the tickets then send a link for everyone to pay for their portion of the outing.
 				form.info-container.pull-right
@@ -87,6 +89,7 @@
 					.img-container.pull-left
 						img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 						img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
+						a.rsvp-for(href="#",friend="{{friend}}") rsvp on behalf of {{friend.contactInfo.name}}
 					.invitee-info
 						.invitee-name
 							span.name.orange {{friend.contactInfo.name}}&nbsp;
@@ -95,7 +98,7 @@
 							.invitee-pref.first.pull-left
 								.invitee-pref-header RSVP STATUS
 								.invitee-pref-value
-									i.icon-ok.icon-3x.green.invitee-rsvp-decision(ng-show="{true:true}[friend.rsvp.decision]")
+									i.icon-check.icon-3x.green.invitee-rsvp-decision(ng-show="{true:true}[friend.rsvp.decision]")
 									i.icon-remove.icon-3x.invitee-rsvp-decision(ng-show="{false:true}[friend.rsvp.decision]")
 									i.icon-question.icon-3x.invitee-rsvp-decision(ng-show="{null:true}[friend.rsvp.decision]")
 							.invitee-pref.pull-left
@@ -107,7 +110,7 @@
 										span(ng-show="friend.rsvp.tickets.priceGroup.low") $
 										span(ng-show="friend.rsvp.tickets.priceGroup.med") $
 										span(ng-show="friend.rsvp.tickets.priceGroup.high") $
-							.invitee-pref.pull-left(ng-show="plan.preferences.addOns.parking")
+							.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.parking]")
 								.invitee-pref-header Parking Vote
 								.invitee-pref-value(ng-show="friend.rsvp.decision")
 									.icon(ng-hide="friend.rsvp.parking.decision")
@@ -116,7 +119,7 @@
 										span(ng-show="friend.rsvp.parking.priceGroup.low") $
 										span(ng-show="friend.rsvp.parking.priceGroup.med") $
 										span(ng-show="friend.rsvp.parking.priceGroup.high") $
-							.invitee-pref.pull-left(ng-show="plan.preferences.addOns.restaurants")
+							.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.restaurants]")
 								.invitee-pref-header Restaurant Votes
 								.invitee-pref-value(ng-show="friend.rsvp.decision")
 									.icon(ng-hide="friend.rsvp.restaurant.decision")
@@ -130,7 +133,7 @@
 											strong cuisine:&nbsp;
 											span {{friend.rsvp.restaurant.preference.join(', ').substring(0,30)}}
 											span(ng-show="showEllipses(friend.rsvp.restaurant.preference,30)") ...
-							.invitee-pref.pull-left(ng-show="plan.preferences.addOns.hotels")
+							.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.hotels]")
 								.invitee-pref-header Hotel Votes
 								.invitee-pref-value(ng-show="friend.rsvp.decision")
 									.icon(ng-hide="friend.rsvp.hotel.decision")

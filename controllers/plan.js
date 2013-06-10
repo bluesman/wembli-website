@@ -50,6 +50,10 @@ module.exports = function(app) {
 		});
 	});
 
+	app.get(/^\/partials\/modals\/organizer-dashboard$/, function(req,res) {
+		return res.render('partials/modals/organizer-dashboard',{partial:true});
+	});
+
 	app.get(/^\/partials\/plan\/chatter$/, function(req,res) {
 		return res.render('partials/plan/chatter',{partial:true});
 	});

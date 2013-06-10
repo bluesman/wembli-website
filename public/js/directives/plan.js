@@ -3,46 +3,21 @@
 /* Directives */
 angular.module('wembliApp.directives.plan', []).
 
-directive('planNav', ['$location',
-  function($location) {
+directive('planNav', ['$location', 'planNav',
+  function($location, planNav) {
     return {
       restrict: 'E',
       replace: true,
       templateUrl: "/partials/plan/nav",
       compile: function(element, attr, transclude) {
-        return function(scope, element, attr, controller) {
-          var elId = '#' + element.attr('id').split('-')[1];
-
-          /* this had to wait for dashboard to load */
-          var sectionNumber = 1;
-
-          /* scroll down to the section denoted by hash */
-          if ($location.hash()) {
-            var h = $location.hash();
-            sectionNumber = parseInt(h.charAt(h.length - 1));
-            console.log('scroll down to ' + sectionNumber);
-          }
-
-          /* get the heights of all the sections */
-          var height = 0;
-          for (var i = 1; i < sectionNumber; i++) {
-            height += parseInt($('#section' + i).height()) + 20;
-            console.log('height after section' + i + ' ' + height);
-          };
-
-          $('#content').animate({
-            scrollTop: height
-          });
-          $('.plan-section-nav').removeClass('active');
-          $('#nav-section' + (sectionNumber)).addClass('active');
-        };
+        return function(scope, element, attr, controller) {};
       }
     }
   }
 ]).
 
-directive('scrollTo', ['$window',
-  function($window) {
+directive('scrollTo', ['$window', 'planNav',
+  function($window, planNav) {
     return {
       restrict: 'EAC',
       cache: false,
@@ -51,17 +26,130 @@ directive('scrollTo', ['$window',
           element.click(function() {
             var elId = '#' + element.attr('id').split('-')[1];
             var sectionNumber = parseInt(elId.charAt(elId.length - 1));
-            /* get the heights of all the sections */
-            var height = 20;
-            for (var i = 1; i < sectionNumber; i++) {
-              height += parseInt($('#section' + i).height());
-              console.log('height after section' + i + ' ' + height);
-            };
+            planNav.scrollTo(sectionNumber);
+          });
+        };
+      }
+    }
+  }
+]).
 
-            //console.log('scroll to: ' + elId + ' - ' + height);
-            $('#content').animate({
-              scrollTop: height
+directive('rsvpFor', ['$rootScope',
+  function($rootScope) {
+    return {
+      restrict: 'C',
+      cache: false,
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+          element.click(function() {
+            $rootScope.$broadcast('rsvp-for-clicked', attr.friend);
+            $('#rsvp-for-modal').modal('show');
+          });
+        };
+      }
+    }
+  }
+]).
+
+directive('rsvpForModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
+  function($rootScope, pluralize, wembliRpc, plan) {
+    return {
+      restrict: 'C',
+      cache: false,
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+          $rootScope.$on('rsvp-for-clicked', function(e, f) {
+            var friend = JSON.parse(f);
+            console.log(friend);
+            scope.friend = friend;
+
+            /* toggle decision when guest cound goes above 0 */
+            scope.$watch('friend.rsvp.guestCount', function(newVal, oldVal) {
+              console.log('guest count is: ');
+              console.log(newVal);
+              console.log(scope.friend.rsvp.guestCount);
+
+              if (typeof scope.friend.rsvp.guestCount === "undefined") {
+                return;
+              }
+
             });
+
+            /* handle the main plan rsvp */
+            scope.setRsvp = function(rsvp) {
+              console.log('setting decision to: ' + rsvp);
+              scope.friend.rsvp.decision = rsvp;
+              if (scope.friend.rsvp.decision === false) {
+                scope.friend.rsvp.guestCount = 0;
+              }
+              if (scope.friend.rsvp.decision === true) {
+                if (scope.friend.rsvp.guestCount == 0) {
+                  scope.friend.rsvp.guestCount = 1;
+                }
+              }
+
+              var args = {
+                friendId: scope.friend._id,
+                decision: scope.friend.rsvp.decision,
+                guestCount: scope.friend.rsvp.guestCount,
+                tickets: scope.friend.rsvp.decision
+              };
+
+              if (typeof scope.friend.rsvp.parking.decision !== "undefined") {
+                args.parking = scope.friend.rsvp.parking.decision;
+              }
+
+              if (typeof scope.friend.rsvp.restaurant.decision !== "undefined") {
+                args.restaurant = scope.friend.rsvp.restaurant.decision;
+              }
+
+              if (typeof scope.friend.rsvp.hotel.decision !== "undefined") {
+                args.hotel = scope.friend.rsvp.hotel.decision;
+              }
+              console.log(args);
+              wembliRpc.fetch('plan.submitRsvpFor', args, function(err, result) {
+                console.log(result);
+                scope.friend = result.friend;
+                plan.fetch(function() {
+                  console.log('force friends change');
+                  $rootScope.$broadcast('plan-friends-changed', plan.getFriends());
+                });
+
+              });
+            }
+
+            /* key bindings for up and down arrows for guestCount */
+            scope.guestCountKeyUp = function() {
+              if (scope.friend.rsvp.guestCount === "") {
+                return;
+              }
+              console.log('guestcount in keyup');
+              console.log(scope.friend.rsvp.guestCount);
+              scope.friend.rsvp.decision = (scope.friend.rsvp.guestCount > 0);
+
+              scope.guestCountPlural = pluralize(scope.friend.rsvp.guestCount);
+
+              wembliRpc.fetch('friend.submitRsvp', {
+                decision: scope.friend.rsvp.decision,
+                guestCount: scope.friend.rsvp.guestCount
+              }, function(err, result) {
+                console.log(result);
+                scope.friend = result.friend;
+              });
+            }
+
+
+            scope.guestCountKeyDown = function(scope, elm, attr, e) {
+              if (e.keyCode == 38) {
+                scope.friend.rsvp.guestCount++;
+              }
+              if (e.keyCode == 40) {
+                scope.friend.rsvp.guestCount--;
+                if (scope.friend.rsvp.guestCount < 0) {
+                  scope.friend.rsvp.guestCount = 0;
+                }
+              }
+            }
           });
         };
       }
@@ -162,7 +250,6 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
             if (typeof scope.me.rsvp.guestCount === "undefined") {
               return;
             }
-
           });
 
           /* watch the rsvp checkboxes */
@@ -257,7 +344,6 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
               },
             };
             categories[category](val);
-
           };
 
           /*multiselect events */
@@ -331,7 +417,6 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
             /* when they stop we save it */
             submitVote();
           }
-
           scope.parkingPriceSlide = function(event, ui) {
             console.log('parking price is sliding');
             scope.me.rsvp.parking.price = ui.value;
@@ -351,14 +436,11 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
             if (ui.value <= 50) {
               scope.me.rsvp.parking.priceGroup.high = false;
             }
-
-
           }
           scope.parkingPriceStop = function(event, ui) {
             console.log('parking price is sliding');
             submitVote();
           }
-
           scope.restaurantPriceSlide = function(event, ui) {
             console.log('restaurant price is sliding');
             console.log(ui.value);
@@ -555,6 +637,9 @@ directive('organizerPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan'
             }
           });
 
+          /* fetch the organizer plan modals */
+          fetchModals.fetch('/partials/modals/organizer-dashboard');
+
           scope.savePrefs = function() {
             console.log('save prefs');
             console.log(scope.plan.preferences);
@@ -655,8 +740,8 @@ directive('organizerPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan'
   }
 ]).
 
-directive('planDashboard', ['$window', 'plan', 'customer', 'pluralize',
-  function($window, plan, customer, pluralize) {
+directive('planDashboard', ['$window', 'plan', 'customer', 'pluralize', '$location', 'planNav',
+  function($window, plan, customer, pluralize, $location, planNav) {
     return {
       restrict: 'E',
       replace: true,
@@ -705,6 +790,21 @@ directive('planDashboard', ['$window', 'plan', 'customer', 'pluralize',
           scope.$watch('totalComing', function() {
             scope.totalComingPlural = pluralize(scope.totalComing);
           });
+
+          /* this had to wait for dashboard to load */
+          var sectionNumber = 1;
+
+          /* scroll down to the section denoted by hash */
+          if ($location.hash()) {
+            var h = $location.hash();
+            sectionNumber = parseInt(h.charAt(h.length - 1));
+            console.log('scroll down to ' + sectionNumber);
+          }
+
+          planNav.scrollTo(sectionNumber);
+          $('.plan-section-nav').removeClass('active');
+          $('#nav-section' + (sectionNumber)).addClass('active');
+
         };
       }
     }
@@ -842,7 +942,9 @@ directive('planChatter', ['wembliRpc',
         $scope.createChatter = function() {
           if ($scope.chatter.$valid) {
             $scope.createChatterInProgress = true;
-            wembliRpc.fetch('chatter.create', {body: $scope.chatter.body}, function(err, results) {
+            wembliRpc.fetch('chatter.create', {
+              body: $scope.chatter.body
+            }, function(err, results) {
               console.log('chatter.create');
               console.log(err);
               console.log(results);
@@ -873,8 +975,7 @@ directive('chatter', ['wembliRpc',
     return {
       restrict: 'C',
       controller: function($scope, $element, $attrs, $transclude) {
-        $scope.upVoteChatter = function() {
-        };
+        $scope.upVoteChatter = function() {};
 
         $scope.toggleNewChatterComment = function() {
           $scope.newChatterComment = $scope.newChatterComment ? false : true;
@@ -909,8 +1010,8 @@ directive('chatter', ['wembliRpc',
   }
 ]).
 
-directive('newChatterComment', ['wembliRpc','$timeout',
-  function(wembliRpc,$timeout) {
+directive('newChatterComment', ['wembliRpc', '$timeout',
+  function(wembliRpc, $timeout) {
     return {
       restrict: 'C',
       controller: function($scope, $element, $attrs, $transclude) {
@@ -938,7 +1039,7 @@ directive('newChatterComment', ['wembliRpc','$timeout',
       },
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          scope.$watch('newChatterComment',function(val,old) {
+          scope.$watch('newChatterComment', function(val, old) {
             if (val) {
               element.slideDown(500);
             }
@@ -951,4 +1052,3 @@ directive('newChatterComment', ['wembliRpc','$timeout',
     }
   }
 ]);
-

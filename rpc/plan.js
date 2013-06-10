@@ -96,6 +96,74 @@ exports.plan = {
 		});
 
 	},
+	/* organizer submit rsvp on behalf of friend */
+	submitRsvpFor: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		/* you must be logged in as the organizer to do this */
+		if (req.session.customer._id != req.session.plan.organizer.customerId) {
+			console.log(req.session.customer._id);
+			console.log(req.session.plan.organizer.customerId);
+			data.success = 0;
+			data.errror = 'Not Authorized';
+			return me(null, data);
+		}
+
+		/* get the friend for this customer & plan */
+		Friend.findOne()
+		.where('planGuid').equals(req.session.plan.guid)
+		.where('_id').equals(args.friendId)
+		.exec(function(err, friend) {
+
+			/* this function is a mess */
+			/* args.decision is the overall plan decision and also means they are in for tickets */
+			if (typeof args.decision !== "undefined") {
+				friend.rsvp.decision = args.decision;
+				friend.rsvp.decidedLastDate = Date.now();
+				friend.rsvp.status = "responded";
+				friend.rsvp.guestCount = parseInt(args.guestCount);
+				friend.rsvp.tickets.number = friend.rsvp.guestCount;
+				friend.rsvp.tickets.decision = friend.rsvp.decision;
+				friend.rsvp.tickets.decidedLastDate = friend.rsvp.decidedLastDate;
+			}
+
+			if (typeof args.tickets !== "undefined") {
+				friend.rsvp.tickets.number = parseInt(args.guestCount);
+				friend.rsvp.tickets.decision = args.tickets;
+				friend.rsvp.tickets.decidedLastDate = Date.now();
+			}
+
+			if (typeof args.restaurant !== "undefined") {
+				friend.rsvp.restaurant.number = parseInt(args.guestCount);
+				friend.rsvp.restaurant.decision = args.restaurant;
+				friend.rsvp.restaurant.decidedLastDate = Date.now();
+			}
+
+			if (typeof args.hotel !== "undefined") {
+				friend.rsvp.hotel.number = parseInt(args.guestCount);
+				friend.rsvp.hotel.decision = args.hotel;
+				friend.rsvp.hotel.decidedLastDate = Date.now();
+			}
+
+			if (typeof args.parking !== "undefined") {
+				friend.rsvp.parking.number = parseInt(args.guestCount);
+				friend.rsvp.parking.decision = args.parking;
+				friend.rsvp.parking.decidedLastDate = Date.now();
+			}
+
+			friend.save(function(err, result) {
+				data.friend = result;
+				console.log('submitRsvp');
+				console.log(data.friend);
+				console.log(result);
+				console.log(err);
+				me(null, data);
+			});
+		});
+	},
 
 	submitOrganizerRsvp: function(args, req, res) {
 		var me = this;
@@ -112,8 +180,16 @@ exports.plan = {
 		console.log('plan.save');
 		console.log(args);
 		req.session.plan.save(function(err, res) {
-			data.plan = req.session.plan;
-			me(null, data);
+
+			feedRpc['logActivity'].apply(function(err, feedResult) {
+				data.plan = req.session.plan;
+				return me(null, data);
+			}, [{
+				action: 'rsvp',
+					meta: {decision: args.decision}
+				}, req, res
+			]);
+
 		});
 	},
 
