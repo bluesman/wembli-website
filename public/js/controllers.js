@@ -195,16 +195,6 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 function EventCtrl($scope) {};
 
 
-
-/*
- * Invite Friends Wizard Controller
- * this should be done as a directive
- */
-
-function InviteFriendsWizardCtrl($rootScope, $http, $scope, $filter, $window, $location, $timeout, fetchModals, sequence, wembliRpc, customer, plan, facebook, twitter) {
-
-};
-
 function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, mapInfoWindowContent) {
 	/* get the spots for this lat long and display them as markers */
 	/*
@@ -519,15 +509,6 @@ function PaymentTypeModalCtrl($scope) {
 			$scope.nextLink = args.nextLink;
 		});
 	});
-};
-
-/*
- * Plan Controller
- */
-
-function PlanCtrl($rootScope, $scope, wembliRpc, plan, customer, fetchModals) {
-	/* fetch the invite friends wizard modal */
-
 };
 
 function SearchCtrl($scope) {};

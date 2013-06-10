@@ -46,7 +46,7 @@ form#invite-wizard-login-form.invite-wizard-step1-form(name="login",ng-show="sho
 		h2 Login To Invite Friends
 		.alert(ng-show="forgotPasswordEmailSent") Successfully resent password email. Follow the instructions in the email to set your password.
 		.alert(ng-show="login.invalidCredentials") Shoot! We were not able to log you in using this email and password.
-		.alert(ng-show="login.accountExists") Provide your password to login.
+		.alert(ng-show="login.accountExists") An account already exists for {{customer.email}}. Please, provide your password to login.
 		.name-group.control-group
 			input.focus-on-click.email(type="email",ng-model="customer.email",placeholder="EMAIL ADDRESS",name="login_email",required)
 			input.focus-on-click.password(type="password",ng-model="customer.password",placeholder="PASSWORD",name="password", required)

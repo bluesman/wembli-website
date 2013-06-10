@@ -217,6 +217,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
               console.log(result);
 
               if (result.exists && !result.noPassword) {
+                $scope.login.accountExists = true;
                 return $scope.showForm('showLoginForm', 'showSignupForm');
               }
 

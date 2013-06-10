@@ -22,7 +22,7 @@ module.exports = function(app) {
 		console.log(guid);
 		console.log(service);
 
-
+		/* get the friend for this token */
 		Friend.findOne().where('rsvp.token').equals(token).where('planGuid').equals(guid).exec(function(err, friend) {
 			console.log(err);
 			console.log(friend);
@@ -31,6 +31,7 @@ module.exports = function(app) {
 				res.redirect('/');
 			};
 
+			/* get the plan for this guid */
 			Plan.findOne({
 				guid: guid
 			}, function(err, p) {
@@ -65,13 +66,12 @@ module.exports = function(app) {
 				}
 
 				/* is this customer the plan organizer? */
-				if (p.organizer === req.session.customer.id) {
+				if (p.organizer.customerId === req.session.customer.id) {
 					req.session.plan = p;
 					req.session.visitor.context = 'organizer';
 					console.log('this person is the organizer');
 					return res.redirect(view);
 				}
-
 
 				/* keys to the various service ids in the customer obj */
 				var getServiceIdFromCustomer = {
@@ -122,7 +122,19 @@ module.exports = function(app) {
 					return friend.save(function(err, result) {
 						req.session.plan = p;
 						req.session.visitor.context = 'friend';
-						return res.redirect(view);
+
+						/*
+							and if this customer is not confirmed we can confirm them because we know they signed up
+							with the email address that the organizer specified
+						*/
+						if (req.session.customer.confirmed) {
+							return res.redirect(view);
+						} else {
+							req.session.customer.confirmed = true;
+							req.session.customer.save(function(err) {
+								return res.redirect(view);
+							});
+						}
 					});
 				}
 

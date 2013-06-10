@@ -11,7 +11,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
       cache: false,
       templateUrl: "/partials/interactive-venue-map",
       compile: function(element, attr, transclude) {
-
+        console.log('COMPILING interactive-venue-map');
         var generateTnSessionId = function() {
           var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
           var sid_length = 5;
@@ -27,7 +27,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
-              console.log('refreshing map');
               $('#map-container').tuMap("Refresh", "Reset");
             }
           });
@@ -38,8 +37,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               eventID: plan.event.eventId
             }, function(err, result) {
               if (err) {
-                console.log('error getting tix');
-                console.log(err);
                 //handle err
                 alert('error happened - contact help@wembli.com');
                 return;
@@ -92,23 +89,16 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                 $(".ZoomIn").html('+');
                 $(".ZoomOut").html('-');
                 $(".tuMapControl").parent("div").attr('style', "position:absolute;left:5px;top:5px;font-size:12px");
-                console.log('hide generic modal');
                 $('#generic-loading-modal').modal("hide");
               };
 
               options.OnError = function(e, Error) {
-                console.log('error loading tuMap');
-                console.log(Error);
-
                 if (Error.Code === 1) {
-                  console.log('no map from tu - using map:' + scope.event.MapUrl);
                   if (typeof scope.event.MapUrl === "undefined") {
                     scope.event.MapUrl = "/images/no-seating-chart.jpg";
                   }
                   /* chart not found - display the tn chart */
-                  console.log('setting seating chart');
                   $('#map-container').css("background", 'url(' + scope.event.MapUrl + ') no-repeat center center');
-                  console.log('hide generic modal');
                   $('#generic-loading-modal').modal("hide");
 
                 }
@@ -150,7 +140,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               $('#map-container').css("height", $($window).height() - 60);
               $('#tickets').css("height", $($window).height() - 60);
               $('#map-container').css("width", $($window).width() - 480);
-              console.log("creating tuMap");
               $('#map-container').tuMap(options);
 
               $('#price-slider').slider({

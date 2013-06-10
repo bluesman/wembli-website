@@ -39,13 +39,13 @@
 							.data.pull-left {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
 						.row.clearfix(ng-show="plan.rsvpDate")
 							h3.pull-left RSVP Date:
-							.data.pull-left
+							.data.pull-left(ng-show="plan.rsvpDate")
 								span {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
 								a.invite-friends-wizard-button(ng-click="gotoStep('step2')",href="#") &nbsp;(Change Date)
 						.row.clearfix(ng-hide="plan.rsvpDate")
 							h3.pull-left RSVP Date:
 							.data.pull-left
-								a.invite-friends-wizard-button(step="step2",href="#") &nbsp;Choose Date
+								a.invite-friends-wizard-button(ng-click="gotoStep('step2')",href="#") &nbsp;Choose Date
 						.row.clearfix
 							h3 Age Limit:
 							.control-group

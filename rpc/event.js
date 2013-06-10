@@ -110,7 +110,6 @@ exports.event = {
 				event: results.Event
 			};
 			ticketNetwork.GetTickets(args, function(err, results) {
-				console.log(results);
 				if (err) {
 					console.log('ERROR GETTING TIX');
 					console.log(err);
@@ -126,10 +125,8 @@ exports.event = {
 	},
 	getParking: function(args, req, res) {
 		var me = this;
-		console.log('event.getParking');
 		/*convert date into timestamp */
 		var date = req.session.plan.event.eventDate;
-		console.log('event date is ' + date);
 		var eDate = new Date(date);
 		eDate.clearTime();
 		eDate.addHours(9);
@@ -138,7 +135,6 @@ exports.event = {
 		var end = eDate.getTime() / 1000;
 		/* get the parking for this lat/log */
 		//pw.search({lat:geocode[0].lat,lng:geocode[0].lon,start:start,end:end}, function(err, results) {
-		console.log(req.session.plan.venue);
 		pw.search({
 			lat: req.session.plan.venue.data.geocode.geometry.location.lat,
 			lng: req.session.plan.venue.data.geocode.geometry.location.lng,
@@ -148,8 +144,6 @@ exports.event = {
 			if (err) {
 				return me(err);
 			}
-			console.log('results for parkwhiz search');
-			console.log(results);
 			me(null,{success:1,parking:results});
 		});
 	}

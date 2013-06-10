@@ -25,8 +25,6 @@ factory('initRootScope', ['$window', '$rootScope', '$location', function($window
 
 	$rootScope.sequenceCompleted = true;
 
-	console.log('initrootscope host is: ');
-	console.log($location.host());
 	$rootScope.balancedMarketplace = (/tom/.test($location.host())) ? 'TEST-MPlx4ZJIAbA85beTs7q2Omz' : 'MP22BmXshSp7Q8DjgBYnKJmi';
 	$rootScope.balancedMarketplaceUri = '/v1/marketplaces/' + $rootScope.balancedMarketplace;
 
@@ -86,8 +84,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wem
 		},
 
 		getOrganizer: function() {
-			console.log('get organizer');
-			console.log(self.organizer);
 			return self.organizer;
 		},
 
@@ -126,7 +122,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wem
 			}
 
 			self.fetchInProgress = true;
-			console.log('fetching plan');
 			wembliRpc.fetch('plan.init', {},
 			//response
 
@@ -160,11 +155,8 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wem
 		save: function(callback) {
 			wembliRpc.fetch('plan.save', {}, function(err, result) {
 				if (err) {
-					console.log('error saving plan:' + err);
 					return;
 				}
-				console.log('plan back from plan.save');
-				console.log(result.plan)
 				$rootScope.$broadcast('plan-saved', {});
 				self.plan = result.plan;
 				if (callback) {
@@ -176,13 +168,8 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wem
 		},
 
 		submitRsvp: function(rsvpFor, args, callback) {
-			console.log('submit rsvp for:' + rsvpFor);
-			console.log(args);
 			args.rsvpFor = rsvpFor;
 			wembliRpc.fetch('plan.submitRsvp', args, function(err, result) {
-				console.log('submitRsvp');
-				console.log(result);
-				console.log('show generic modal');
 				$('#generic-loading-modal').modal("hide");
 				if (callback) {
 					return callback(err, result);
@@ -193,7 +180,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', function($rootScope, wem
 
 				$rootScope.genericLoadingModal.header = 'Saving...';
 				$('#page-loading-modal').modal("hide");
-				console.log('show generic modal');
 				$('#generic-loading-modal').modal("show");
 				return data;
 			},
@@ -246,7 +232,6 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function
 		$rootScope.$broadcast($('body :first-child').attr('id') + '-fetched', {
 			modalId: $('body :first-child').attr('id')
 		});
-		console.log('broadcasted: ' + $('body :first-child').attr('id') + '-fetched');
 		if (callback) {
 			callback();
 		};
@@ -274,7 +259,6 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function
 			if (callback) {
 				callback(err);
 			};
-			console.log('error getting: ' + partialUrl);
 		});
 	};
 
@@ -286,7 +270,6 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile', function
 
 			/* its already fetched and cached and prepended to the body */
 			if (modalFetched[pathKey]) {
-				console.log('modal is already fetched:' + path);
 				return success(callback);
 			}
 			/* this fetch is alredy in progress call the callback when the event is called */
@@ -388,7 +371,6 @@ factory('googleMap', ['$rootScope', function($rootScope) {
 				});
 			}
 			self.drawn = true;
-			console.log('broadcast google map is drawn');
 			$rootScope.$broadcast('google-map-drawn');
 		},
 		isDrawn: function(val) {
@@ -465,7 +447,6 @@ factory('googleMap', ['$rootScope', function($rootScope) {
 			win.infoWindow.close();
 		},
 		openInfoWindow: function(marker) {
-			console.log(marker);
 			var lat = marker.getPosition().lat();
 			var lng = marker.getPosition().lng();
 			var win = this._findInfoWindow(lat, lng);
@@ -494,11 +475,9 @@ factory('rsvpLoginModal', [function() {
 	var self = this;
 	return {
 		set: function(key, val) {
-			console.log('setting ' + key);
 			self[key] = val;
 		},
 		get: function(key) {
-			console.log('getting ' + key);
 			return self[key];
 		}
 	};
@@ -585,7 +564,6 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 
 					function(err, result) {
 						if (err) {
-							console.log(err);
 							return false;
 						}
 					});
@@ -614,7 +592,6 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 						auth: self.auth
 					});
 				} else {
-					console.log('Facebook login failed', response);
 				}
 			});
 
@@ -629,7 +606,6 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 							auth: self.auth
 						});
 					} else {
-						console.log('Facebook logout failed.', response);
 					}
 					$window.location = '/logout';
 				});
@@ -672,7 +648,6 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc', function($rootScope, $
 
 			function(err, result) {
 				if (err) {
-					console.log(err);
 					return cb(err);
 				}
 				$rootScope.$broadcast('twitter-tweet', {});
@@ -690,7 +665,6 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc', function($rootScope, $
 
 			function(err, result) {
 				if (err) {
-					console.log(err);
 					return false;
 				}
 				self.auth = result.loginStatus;
@@ -708,7 +682,6 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc', function($rootScope, $
 
 			function(err, result) {
 				if (err) {
-					console.log(err);
 					callback(false);
 				}
 				self.friends = $filter('orderBy')(result.friends, '+name');
@@ -726,7 +699,6 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc', function($rootScope, $
 
 			function(err, result) {
 				if (err) {
-					console.log(err);
 					callback(false);
 				}
 				self.friends = result.friends.users;
@@ -789,7 +761,6 @@ factory('wembliRpc', ['$rootScope', '$http', 'customer', 'loggedIn', function($r
 			var eventName = 'wembliRpc:';
 
 			if (err) {
-				console.log(err);
 				$rootScope.$broadcast(eventName + 'error', {
 					'method': method
 				});
@@ -936,7 +907,6 @@ factory('sequence', ['initRootScope', '$rootScope', '$window', 'footer', functio
 
 	//make the page animate in
 	if ($scope.currentFrame == 2) {
-		console.log('page will animate in');
 		options.animateStartingFrameIn = true;
 		options.startingFrameID = 2;
 	}
@@ -946,29 +916,24 @@ factory('sequence', ['initRootScope', '$rootScope', '$window', 'footer', functio
 	var sequence = angular.element("#content").sequence(options).data("sequence");
 
 	sequence.beforeCurrentFrameAnimatesIn = function() {
-		console.log('beforecurrentanimatesin');
 		$scope.afterNextFrameAnimatesIn = false;
 		$scope.beforeCurrentFrameAnimatesIn = true;
 		$scope.$broadcast('sequence-beforeCurrentFrameAnimatesIn');
 	};
 	sequence.afterCurrentFrameAnimatesIn = function() {
-		console.log('after currentanimatesin');
 		$scope.beforeCurrentFrameAnimatesIn = false;
 		$scope.afterCurrentFrameAnimatesIn = true;
 		$scope.$broadcast('sequence-afterCurrentFrameAnimatesIn');
 	};
 
 	sequence.beforeNextFrameAnimatesIn = function() {
-		console.log('before next animatesin');
 		$scope.afterCurrentFrameAnimatesIn = false;
 		$scope.beforeNextFrameAnimatesIn = true;
 		$scope.$broadcast('sequence-beforeNextFrameAnimatesIn');
 	};
 	sequence.afterNextFrameAnimatesIn = function() {
-		console.log('after next animatesin');
 		$scope.afterNextFrameAnimatesIn = true;
 		$scope.beforeNextFrameAnimatesIn = false;
-		console.log('setting sequence completed to true');
 		$scope.$apply(function() {
 			$scope.sequenceCompleted = true;
 		});
@@ -977,10 +942,8 @@ factory('sequence', ['initRootScope', '$rootScope', '$window', 'footer', functio
 
 	sequence.ready = function(callback) {
 		if ($scope.afterNextFrameAnimatesIn) {
-			console.log('next frame has already animated in');
 			callback();
 		} else {
-			console.log('waiting for frame to animate in before calling sequence ready function')
 			var dereg = $scope.$on('sequence-afterNextFrameAnimatesIn', function() {
 				callback();
 				dereg();

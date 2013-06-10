@@ -5,6 +5,7 @@
 	#tickets.pull-right
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
+		- console.log('context is '+visitor.context+' and preferences is '+plan.preferences.payment)
 		- if (plan.preferences.payment === 'split-first')
 			- if (visitor.context === "organizer")
 				include interactive-venue-map/organizer-read-only

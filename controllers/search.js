@@ -52,8 +52,8 @@ module.exports = function(app) {
 	app.get(/^\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		console.log('creating new plan in search controller');
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
+		console.log('creating new plan in search controller as: '+req.session.plan.preferences.payment);
 		if(req.param('next')) {
 			res.setHeader('x-wembli-location',req.param('next'));
 			res.redirect(req.param('next'));

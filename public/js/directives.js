@@ -792,9 +792,12 @@ directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$ti
       restrict: 'EAC',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-
           element.click(function(e) {
             e.preventDefault();
+
+            /* interactive-venue-map seems to disrespect template no-cache */
+            $templateCache.removeAll();
+
             $rootScope.sequenceCompleted = false;
             /* init some defaults */
             var path = ""; //defaulting to empty string for path will result in samePage on error

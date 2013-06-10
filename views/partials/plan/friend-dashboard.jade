@@ -38,7 +38,8 @@
 							.data.pull-left(ng-hide="plan.preferences.inviteOptions.over21") All Ages
 						.row
 							h3.pull-left RSVP Date:
-							.data.pull-left {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
+							.data.pull-left(ng-show="plan.rsvpDate") {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
+							.data.pull-left(ng-hide="plan.rsvpDate") TBD
 			.payment-type-note
 				strong ** NOTE:&nbsp;
 				span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
