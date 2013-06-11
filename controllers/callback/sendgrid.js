@@ -1,29 +1,34 @@
 var wembliModel = require('wembli-model');
 var Customer = wembliModel.load('customer');
 var Plan = wembliModel.load('plan');
+var Friend = wembliModel.load('friend');
 var keen = require('../../lib/wembli/keenio');
 
 module.exports = function(app) {
 	app.all("/callback/sendgrid/email", function(req, res) {
+		console.log('sendgrid callback body:');
 		console.log(req.body);
-		if (typeof req.body.organizer == "undefined") {
-			return res.send(200);
-		}
-
 		function updateFriend(cb) {
-			/* if its rsvp or pony up - put it in the corresponding friend obj */
+		        console.log('updating friend');
+		        /* if its rsvp or pony up - put it in the corresponding friend obj */
 			/* find the friend for this friendId and increment a counter for this category[event] */
 			if (typeof req.body.friendId !== "undefined") {
 				Friend.findById(req.body.friendId, function(err, f) {
+					console.log('find friend for friendId:'+req.body.friendId);
+					console.log(err);
+					console.log(f);
 					/* no plan in the db */
 					if (!f) {
-						return res.send(200);
+					        console.log('no friend!');
+					        return cb();
 					}
-
+					console.log('here');
 					if (typeof f.email[req.body.category] == "undefined") {
+					console.log('here');
 						f.email[req.body.category] = {};
 						f.email[req.body.category][req.body.event] = 1;
 					} else {
+					console.log('hereelse');
 						if (typeof f.email[req.body.category][req.body.event] == "undefined") {
 							f.email[req.body.category][req.body.event] = 1;
 						} else {
@@ -31,7 +36,9 @@ module.exports = function(app) {
 						}
 					}
 					var eventDate = req.body.event + 'LastDate';
-					f.email[req.body.category][eventDate] = new Date(req.body.timestamp * 1000).format("m/d/yy h:MM TT Z");
+					console.log('here after if');
+
+					f.email[req.body.category][eventDate] = new Date(req.body.timestamp);
 					console.log(f);
 					f.markModified('email');
 					f.save(function(err) {
@@ -49,6 +56,7 @@ module.exports = function(app) {
 					});
 				});
 			} else {
+			    console.log('no friend id - im outa here');
 				cb();
 			}
 		};
@@ -91,6 +99,7 @@ module.exports = function(app) {
 			 * url: url clicked
 			 */
 			'click': function(cb) {
+			    console.log('click happened');
 				/* log in keenio */
 				cb();
 			},
@@ -134,6 +143,7 @@ module.exports = function(app) {
 			 *	N/A
 			 */
 			'open': function(cb) {
+			    console.log('open happened');
 				updateFriend(cb);
 			},
 			/*
@@ -153,11 +163,15 @@ module.exports = function(app) {
 				cb();
 			}
 		};
-
+		console.log('add event in keen');
 		keen.addEvent(collection, d, req, res, function(err, result) {
+			console.log('keenio addevent:');
+			console.log(err);
+			console.log(result);
 			eventHandlers[req.body.event](function() {
+				console.log('returning 200');
 				return res.send(200);
-			})
+			});
 		});
 	});
 }
