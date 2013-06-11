@@ -39,6 +39,10 @@ this.Model = function(mongoose) {
 			timestamp:Date,
 			token:String
 		},
+		email: {
+			rsvp: {},
+			ponyUp: {}
+		},
 		rsvp:{
 			token:String,
 			tokenTimestamp:String,

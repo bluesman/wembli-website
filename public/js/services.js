@@ -191,8 +191,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 						callback(err, result);
 					}
 				});
-
-
 			},
 
 			submitRsvp: function(rsvpFor, args, callback) {
@@ -217,13 +215,39 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 				function(data, headersGetter) {
 					return JSON.parse(data);
 				});
-
-
 			},
 
+			/* is rsvp complete:
+				everyone has responded or date is passed
+			*/
+			rsvpComplete: function() {
+				var complete = true;
+				/* check if rsvpDate exists */
+				if (typeof self.plan.rsvpDate === "undefined") {
+					console.log('rsvpDate is not defined');
+					return !complete;
+				}
+
+				/* check if rsvpDate < now */
+				var now = new Date();
+				var expires = Date.parse(self.plan.rsvpDate) + 86400000;
+				if (Date.parse(now.toDateString()) > expires) {
+					console.log('rsvpDate is expired');
+					return complete;
+				}
+
+				/* check if every friend has responded */
+				for (var i = 0; i < self.friends.length; i++) {
+					if (self.friends[i].rsvp.decision === null) {
+						console.log('friend has not responded so rsvp is not complete');
+						return !complete;
+					}
+				};
+				console.log('rsvp is complete');
+				return complete;
+			},
 			//push $rootScope.plan to server and save
 			push: function() {
-
 			}
 		}
 	}

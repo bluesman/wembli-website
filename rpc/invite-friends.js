@@ -199,7 +199,9 @@ exports["invite-friends"] = {
 					rsvpDate: results.friend.rsvp.date,
 					rsvpLink: rsvpLink,
 					email: results.friend.contactInfo.serviceId,
-					message: args.message
+					message: args.message,
+					friendId: results.friend._id,
+					planGuid: req.session.plan.guid
 				});
 
 				/* once the email is sent, we can update inviteStatus to true */

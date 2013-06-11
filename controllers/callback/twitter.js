@@ -1,5 +1,6 @@
 var wembliModel = require('../../lib/wembli-model');
 var Friend = wembliModel.load('friend');
+var keen = require('../../lib/wembli/keenio');
 
 module.exports = function(app) {
 	app.all("/callback/twitter/rsvp/:guid/:token", function(req, res) {
@@ -7,7 +8,9 @@ module.exports = function(app) {
 		/* find the friend with this inviteStatusConfirmation token and guid */
 		Friend.findOne({planGuid: req.param('guid'),"inviteStatusConfirmation.token":req.param('token')}, function(err, f) {
 			/* no plan in the db */
-			if (!f) { return;	}
+			if (!f) {
+				return res.send(200);
+			}
 			console.log('found friend - updating invite status to true');
 			console.log(f);
 			/* got a friend, set inviteStatus to true */
@@ -19,8 +22,17 @@ module.exports = function(app) {
 			f.rsvp.initiated = true;
 			f.rsvp.initiatedLastDate = Date.now();
 
-			f.save();
+			f.save(function(err) {
+				/* tell keenio that a facebook friend was invited */
+				var d = {
+					event: 'invited',
+					service: friend.contactInfo.service,
+					friendId: friend._id
+				};
+				keen.addEvent('rsvp', d, req, res, function(err, result) {
+					return res.send(200);
+				});
+			});
 		});
-		return res.send(200);
 	});
 }
