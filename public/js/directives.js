@@ -124,6 +124,29 @@ directive('logActivity', ['wembliRpc',
   }
 ]).
 
+/* Log keen.io event:
+ * Class directive
+ * foo.log-event(collection="",event="click")
+ */
+directive('addEvent', ['wembliRpc',
+  function(wembliRpc) {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        var events = {
+          'click': function() {
+            element.click(function() {
+              //get the tix and make the ticket list
+              wembliRpc.fetch('analytics.addEvent', attr, function(err, result) {});
+            });
+          },
+        };
+        events[attr.event]();
+      }
+    }
+  }
+]).
+
 /*
  * Display a twitter bootstrap popover
  * Class Directive
@@ -473,7 +496,7 @@ directive('eventWrapper', ['wembliRpc', '$window',
   function(wembliRpc, $window) {
     return {
       restrict: 'C',
-      controller: function($scope, $element, $attrs, $transclude) { },
+      controller: function($scope, $element, $attrs, $transclude) {},
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           element.mouseleave(function() {
@@ -735,15 +758,13 @@ directive('sendForgotPasswordEmail', ['wembliRpc',
                 scope.forgotPasswordEmailSent = true;
                 scope.$broadcast('forgot-password-email-sent');
               },
-              /* transformRequest */
-              function(data, headersGetter) {
+              /* transformRequest */function(data, headersGetter) {
                 scope.accountExists = false; //will this work?
                 scope.signupSpinner = true;
                 return data;
               },
 
-              /* transformResponse */
-              function(data, headersGetter) {
+              /* transformResponse */function(data, headersGetter) {
                 scope.signupSpinner = false;
                 return JSON.parse(data);
               });
@@ -786,8 +807,8 @@ directive('startPlan', ['$rootScope', 'fetchModals',
 ]).
 
 //directive to cause link click to go to next frame rather than fetch a new page
-directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan',
-  function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan) {
+directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
+  function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc) {
 
     return {
       restrict: 'EAC',
@@ -958,6 +979,9 @@ directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$ti
                 /* do the animations */
                 console.log('GOTO FRAME');
                 sequence.goTo(nextFrameID, direction);
+
+                /* log this click in keen.io */
+                wembliRpc.fetch('analytics.addEvent', {collection: 'view', url: $location.absUrl(), direction: direction, frame: nextFrameID}, function(err, result) {});
 
                 /* dismiss any modals once the page loads */
                 var loadingDuration = (attr.loadingDuration) ? parseInt(attr.loadingDuration) : 500;

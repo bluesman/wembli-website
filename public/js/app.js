@@ -16,7 +16,7 @@ angular.module('wembliApp', [
 ]).config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
 }])
-.run(['initRootScope','$rootScope', '$location', '$route', '$window','fetchModals', 'facebook','twitter', 'plan', function(initRootScope, $scope, $location, $route, $window, fetchModals, facebook, twitter, plan) {
+.run(['initRootScope','$rootScope', '$location', '$route', '$window','fetchModals', 'facebook','twitter', 'plan', 'wembliRpc',function(initRootScope, $scope, $location, $route, $window, fetchModals, facebook, twitter, plan, wembliRpc) {
   /* init the balanced js api for payments */
   balanced.init($scope.balancedMarketplaceUri);
 
@@ -39,5 +39,9 @@ angular.module('wembliApp', [
   plan.fetch(function(planObj) {
     fetchModals.fetch('/'+$location.path().split('/')[1].split('?')[0]);
   });
+
+  /* log this click in keen.io */
+  wembliRpc.fetch('analytics.addEvent', {collection: 'view', url: $location.absUrl(), direction: 0, frame: 1}, function(err, result) {});
+
 
 }]);
