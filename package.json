@@ -27,7 +27,8 @@
     "jake": "0.5.x",
     "nbalanced": "0.2.x",
     "keen.io": "0.0.x",
-    "yamlparser": "0.0.2"
+    "yamlparser": "0.0.2",
+    "geoip-lite": "~1.0.10"
   },
   "repository": {
     "type": "git",
