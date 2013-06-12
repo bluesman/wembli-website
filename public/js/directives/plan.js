@@ -60,15 +60,10 @@ directive('rsvpForModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
         return function(scope, element, attr, controller) {
           $rootScope.$on('rsvp-for-clicked', function(e, f) {
             var friend = JSON.parse(f);
-            console.log(friend);
             scope.friend = friend;
 
             /* toggle decision when guest cound goes above 0 */
             scope.$watch('friend.rsvp.guestCount', function(newVal, oldVal) {
-              console.log('guest count is: ');
-              console.log(newVal);
-              console.log(scope.friend.rsvp.guestCount);
-
               if (typeof scope.friend.rsvp.guestCount === "undefined") {
                 return;
               }
@@ -77,8 +72,10 @@ directive('rsvpForModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
 
             /* handle the main plan rsvp */
             scope.setRsvp = function(rsvp) {
-              console.log('setting decision to: ' + rsvp);
               scope.friend.rsvp.decision = rsvp;
+            };
+
+            scope.saveRsvp = function() {
               if (scope.friend.rsvp.decision === false) {
                 scope.friend.rsvp.guestCount = 0;
               }
@@ -106,12 +103,10 @@ directive('rsvpForModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
               if (typeof scope.friend.rsvp.hotel.decision !== "undefined") {
                 args.hotel = scope.friend.rsvp.hotel.decision;
               }
-              console.log(args);
+
               wembliRpc.fetch('plan.submitRsvpFor', args, function(err, result) {
-                console.log(result);
                 scope.friend = result.friend;
                 plan.fetch(function() {
-                  console.log('force friends change');
                   $rootScope.$broadcast('plan-friends-changed', plan.getFriends());
                 });
 
@@ -123,21 +118,10 @@ directive('rsvpForModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
               if (scope.friend.rsvp.guestCount === "") {
                 return;
               }
-              console.log('guestcount in keyup');
-              console.log(scope.friend.rsvp.guestCount);
               scope.friend.rsvp.decision = (scope.friend.rsvp.guestCount > 0);
 
               scope.guestCountPlural = pluralize(scope.friend.rsvp.guestCount);
-
-              wembliRpc.fetch('friend.submitRsvp', {
-                decision: scope.friend.rsvp.decision,
-                guestCount: scope.friend.rsvp.guestCount
-              }, function(err, result) {
-                console.log(result);
-                scope.friend = result.friend;
-              });
             }
-
 
             scope.guestCountKeyDown = function(scope, elm, attr, e) {
               if (e.keyCode == 38) {
@@ -197,7 +181,6 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
                 preference: scope.me.rsvp.hotel.preference
               },
             }, function(err, result) {
-              console.log(result);
               scope.me = result.friend;
               /* update scope friends too */
               var f = [];
@@ -213,7 +196,6 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
           };
 
           var calcVotePriceTotal = function() {
-            console.log('calc vote price total');
             var total = 0;
             if (parseInt(scope.me.rsvp.tickets.price) > 0) {
               total += parseInt(scope.me.rsvp.tickets.price);

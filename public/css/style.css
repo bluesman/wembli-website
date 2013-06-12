@@ -9885,6 +9885,10 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .header:after {
   clear: both;
 }
+#plan-frame #middle #plan-dashboard .header label i {
+  width: 40px;
+  line-height: 60px;
+}
 #plan-frame #middle #plan-dashboard .header h1 {
   padding: 10px 0 4px;
   border-bottom: 6px solid #426799;
@@ -10197,6 +10201,9 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-prefs-container .first i {
   margin-left: 25px;
+}
+#plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-name {
+  height: 24px;
 }
 #plan-frame #middle #plan-dashboard #invitees-container .invitee .invitee-info .invitee-name .name {
   font-size: 24px;

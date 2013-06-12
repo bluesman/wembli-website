@@ -89,11 +89,19 @@
 					.img-container.pull-left
 						img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 						img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
-						a.rsvp-for(href="#",friend="{{friend}}") rsvp on behalf of {{friend.contactInfo.name}}
+						a.rsvp-for(href="#",friend="{{friend}}") change rsvp on behalf of {{friend.contactInfo.name}}
 					.invitee-info
-						.invitee-name
-							span.name.orange {{friend.contactInfo.name}}&nbsp;
-							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
+						.invitee-name.clearfix
+							.invitee-name-container.pull-left
+								span.name.orange {{friend.contactInfo.name}}&nbsp;
+								span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
+							.message-status-container.pull-right
+								.message-status
+									.rsvp-email(ng-hide="rsvpComplete")
+										label.rsvp-email-label
+											span RSVP Email:
+											span(ng-show="{'sent':true}[friend.email.rsvp.status]")
+									.ponyup-email(ng-show="rsvpComplete")
 						.invitee-prefs-container
 							.invitee-pref.first.pull-left
 								.invitee-pref-header RSVP STATUS
@@ -156,16 +164,34 @@
 		.body
 	section#section4.organizer-parking-section.parking-section.plan-section.even
 		.header
-			h1.pull-left Parking
+			label#include-parking
+				i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.parking")
+				i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.parking")
+				input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()")
+				h1 Parking
 		.body
+			.add-on-not-included(ng-hide="plan.preferences.addOns.parking")
+				h3 Parking is not needed for this plan.
 	section#section5.organizer-restaurant-section.restaurant-section.plan-section
 		.header
-			h1.pull-left Restaurant
+			label#include-restaurant
+				i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.restaurants")
+				i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.restaurants")
+				input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.restaurants", ng-click="savePrefs()")
+				h1 Restaurant
 		.body
+			.add-on-not-included(ng-hide="plan.preferences.addOns.restaurants")
+				h3 Restaurant reservations are not needed for this plan.
 	section#section6.organizer-hotel-section.hotel-section.plan-section.even
 		.header
-			h1.pull-left Hotel
+			label#include-parking
+				i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.hotels")
+				i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.hotels")
+				input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.hotels", ng-click="savePrefs()")
+				h1 Hotel
 		.body
+			.add-on-not-included(ng-hide="plan.preferences.addOns.hotels")
+				h3 Hotel accomodations are not needed for this plan.
 	section#section7.organizer-money-section.money-section.plan-section.even
 		.header
 			h1.pull-left Money
