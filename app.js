@@ -88,10 +88,12 @@ app.use(express.logger({
 }));
 app.use(express.cookieParser());
 app.use(express.static(__dirname + '/public'));
+/* session expires in 7 days */
 app.use(express.session({
 	key: 'wembli.sid',
 	secret: '@$!#SCDFdsa',
-	store: new redis
+	store: new redis,
+	cookie: { expires: new Date(Date.now() + 86400000 * 7) }
 }));
 app.use(express.bodyParser());
 app.use(require('./lib/wembli/ipinfodb'));
