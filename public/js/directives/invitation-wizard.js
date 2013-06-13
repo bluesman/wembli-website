@@ -694,6 +694,12 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
               return $scope.gotoStep('step1');
             }
 
+            /* If There's A No Cust Error Send Them Back To Step-1 With An Error */
+            if (result.noCustomer) {
+              $scope.signup.noContinue = true;
+              return $scope.gotoStep('step1');
+            }
+
             /* edge case - organizer tries to invite themself! */
             if (result.isOrganizer) {
               $scope.isOrganizer = true;

@@ -28,7 +28,7 @@ this.Model = function(mongoose) {
 		firstName: String,
 		lastName: String,
 		birthday: String,
-		zipCode: Number,
+		postalCode: Number,
 		gender: String,
 		imageUrl: String,
 		email: {

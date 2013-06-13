@@ -96,7 +96,6 @@ app.use(express.session({
 	cookie: { expires: new Date(Date.now() + 86400000 * 7) }
 }));
 app.use(express.bodyParser());
-app.use(require('./lib/wembli/ipinfodb'));
 app.use(require('./lib/wembli/visitor'));
 app.use(require('./lib/wembli/customer'));
 app.use(require('./lib/wembli/plan'));

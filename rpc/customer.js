@@ -485,8 +485,8 @@ exports.customer = {
 			};
 
 			//if there's ipinfo in the session grab the zip
-			if (/\d+/.test(req.session.ipinfo.zipCode)) {
-				newC.zip_code = req.session.ipinfo.zipCode;
+			if (/\d+/.test(req.session.visitor.tracking.postalCode)) {
+				newC.postalCode = req.session.visitor.tracking.postalCode;
 			}
 
 			var customer = new Customer(newC);

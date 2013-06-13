@@ -22,8 +22,8 @@ module.exports = function(app) {
 		args.beginDate     = getBeginDate();
 		args.orderByClause = 'Date'; //order by date
 
-		if (typeof req.session.ipinfo != "undefined") {
-			args.nearZip = req.session.ipinfo.postal_code;
+		if (typeof req.session.visitor.tracking.postalCode != "undefined") {
+			args.nearZip = req.session.visitor.tracking.postalCode;
 		}
 
 		//get nearby events:
