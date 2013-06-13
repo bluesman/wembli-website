@@ -49,21 +49,31 @@ factory('pluralize', ['$rootScope', 'wembliRpc', 'customer',
 factory('planNav', [
 	function() {
 		var self = this;
+		self.sectionsCount = 0;
+
 		return {
+			setSectionsCount: function(cnt) {
+				self.sectionsCount = cnt;
+				return cnt;
+			},
+
+			getSectionsCount: function() {
+				return self.sectionsCount;
+			},
+
 			scrollTo: function(sectionNumber) {
 
 				/* get the heights of all the sections */
 				var height = 20;
 				for (var i = 1; i < sectionNumber; i++) {
 					var h = $('#section' + i).height();
-					console.log('HEIGHT:' + h);
 					height += parseInt($('#section' + i).height());
-					console.log('height after section' + i + ' ' + height);
 				};
 
 				$('#content').animate({
-					scrollTop: height
-				});
+					scrollTop: (height-10)
+				},1000,'easeOutBack');
+
 			}
 		};
 	}
@@ -101,6 +111,52 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 				self.friends = friends;
 				self.organizer = organizer;
 				return self.plan;
+			},
+
+			/*
+			 * checks to see if all friends have rsvpd or if the date is past
+			 * don't use this use the other one
+			 */
+			rsvpComplete2: function() {
+				if (!self.plan.rsvpDate) {
+					return false;
+				}
+				/* lastnight at midnight */
+				var now = new Date();
+				now.setHours(0,0,0,0);
+				var t1 = now.getTime();
+
+				/* rsvpDate's next midnight */
+				var rsvpDate = new Date(self.plan.rsvpDate);
+				rsvpDate.setHours(24,0,0,0);
+				var t2 = rsvpDate.getTime();
+
+				/* give them until the next day
+				 * so if they have to rsvp by 6/10/2013
+				 * then give them until 6/11/2013
+				 */
+				return (t1 >= t2);
+			},
+
+			ponyUpComplete: function() {
+				if (!self.plan.ponyUpDate) {
+					return false;
+				}
+				/* lastnight at midnight */
+				var now = new Date();
+				now.setHours(0,0,0,0);
+				var t1 = now.getTime();
+
+				/* rsvpDate's next midnight */
+				var rsvpDate = new Date(self.plan.ponyUpDate);
+				ponyUpDate.setHours(24,0,0,0);
+				var t2 = ponyUpDate.getTime();
+
+				/* give them until the next day
+				 * so if they have to rsvp by 6/10/2013
+				 * then give them until 6/11/2013
+				 */
+				return (t1 >= t2);
 			},
 
 			getFriends: function() {
@@ -243,7 +299,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 						return !complete;
 					}
 				};
-				console.log('rsvp is complete');
+				console.log('rsvp is complete');v
 				return complete;
 			},
 			//push $rootScope.plan to server and save

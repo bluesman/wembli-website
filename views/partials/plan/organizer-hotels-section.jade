@@ -1,0 +1,9 @@
+section#section6.organizer-hotels-section.hotel-section.plan-section.even
+	.header
+		label#include-parking
+			i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.hotels")
+			i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.hotels")
+			input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.hotels", ng-click="savePrefs()")
+			h1 Hotel
+	.body.add-on-not-included(ng-hide="plan.preferences.addOns.hotels")
+			h3 Hotel accomodations are not needed for this plan.

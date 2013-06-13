@@ -448,6 +448,7 @@ exports.plan = {
 			req.session.plan.preferences.addOns = args.preferences.addOns;
 			req.session.plan.preferences.inviteOptions = args.preferences.inviteOptions;
 			req.session.plan.preferences.guestList = args.preferences.guestList;
+			req.session.plan.preferences.payment = args.preferences.payment;
 
 			console.log('plan.save');
 			console.log(args);

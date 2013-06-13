@@ -1,0 +1,9 @@
+section#section5.organizer-restaurants-section.restaurant-section.plan-section
+	.header
+		label#include-restaurant
+			i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.restaurants")
+			i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.restaurants")
+			input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.restaurants", ng-click="savePrefs()")
+			h1 Restaurant
+	.body.add-on-not-included(ng-hide="plan.preferences.addOns.restaurants")
+			h3 Restaurant reservations are not needed for this plan.

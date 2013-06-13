@@ -1,0 +1,21 @@
+section#section3.organizer-tickets-section.tickets-section.plan-section
+	.header
+		h1.pull-left Tickets
+	.body
+		h3 Keep all of your ticketing info here.
+		#ticket-info-container.clearfix
+			.left.pull-left
+				image(src="/images/wembliman-tickets.png")
+			.right
+				p Hit the breaks there, sonic. Once your friends all RSVP and you get a final head-count you'll be able to buy your tickets.
+				p In the meantime why not take a peak at what's available?
+				.tickets-button(ng-show="{'split-first':true}[plan.preferences.payment]")
+					label
+						span I changed my mind - want to buy now - they can pony up later.
+						input.hide(ng-click="savePrefs()", type="radio", name="payment",value="split-after", ng-model="plan.preferences.payment", value="split-after")
+					a.btn.btn-orange.btn-large.wembli-sequence-link(,href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Tickets Now
+				.tickets-button(ng-show="{'split-after':true}[plan.preferences.payment]")
+					label
+						span I changed my mind - they can pony up first - I'll buy after.
+						input.hide(ng-click="savePrefs()", type="radio", name="payment",value="split-first", ng-model="plan.preferences.payment", value="split-first")
+					a.btn.btn-orange.btn-large.wembli-sequence-link(,href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Purchase Tickets Now

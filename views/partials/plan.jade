@@ -1,6 +1,7 @@
 #plan-frame
+	- var nav = planNav(req.session.visitor.context)
 	#left
-		plan-nav
+		plan-nav(sections="#{nav.length}")
 	#middle
 		plan-dashboard
 	#right

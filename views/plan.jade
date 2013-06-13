@@ -1,8 +1,9 @@
 extends layout
 block frame1
+	- var nav = planNav(req.session.visitor.context)
 	#plan-frame
 		#left
-			plan-nav
+			plan-nav(sections="#{nav.length}")
 		#middle
 			plan-dashboard
 		#right

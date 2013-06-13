@@ -17,10 +17,10 @@
 				label(ng-show="plan.preferences.addOns.parking")
 					input#parking-rsvp(type="checkbox",ng-model="friend.rsvp.parking.decision")
 					span Include {{friend.contactInfo.name}} in parking plans?
-				label(ng-show="plan.preferences.addOns.restaurant")
+				label(ng-show="plan.preferences.addOns.restaurants")
 					input#restaurant-rsvp(type="checkbox",ng-model="friend.rsvp.restaurant.decision")
 					span Include {{friend.contactInfo.name}} in restaurant plans?
-				label(ng-show="plan.preferences.addOns.hotel")
+				label(ng-show="plan.preferences.addOns.hotels")
 					input#hotel-rsvp(type="checkbox",ng-model="friend.rsvp.hotel.decision")
 					span Include {{friend.contactInfo.name}} in hotel plans?
-			a.btn.btn-primary.btn-large(href="#",ng-click="saveRsvp()") Save RSVP
+			a.btn.btn-primary.btn-large(href="#",ng-click="saveRsvp()",data-dismiss="modal") Save RSVP

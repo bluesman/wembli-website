@@ -9890,6 +9890,7 @@ a#facebook-login-button {
   line-height: 60px;
 }
 #plan-frame #middle #plan-dashboard .header h1 {
+  width: 100%;
   padding: 10px 0 4px;
   border-bottom: 6px solid #426799;
   text-transform: uppercase;
@@ -10582,7 +10583,7 @@ a#facebook-login-button {
   max-width: 60%;
 }
 #plan-frame #middle .organizer-plan-dashboard .organizer-event-section .body .collect-rsvp {
-  width: 375px;
+  width: 100%;
 }
 #plan-frame #middle .organizer-plan-dashboard .organizer-event-section .body .collect-rsvp a {
   font-size: 40px;
@@ -10598,7 +10599,7 @@ a#facebook-login-button {
   height: 60px;
 }
 #plan-frame #middle .friend-plan-dashboard .collect-rsvp {
-  width: 230px;
+  width: 100%;
 }
 #plan-frame #middle .friend-plan-dashboard .collect-rsvp a {
   font-size: 54px;

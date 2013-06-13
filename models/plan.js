@@ -77,9 +77,9 @@ this.Model = function(mongoose) {
 					high:{type:Boolean,default:true},
 				}
 			},
-
 		},
 		rsvpDate: {type:Date, index:true},
+		ponyUpDate: {type:Date, index:true},
 		/* organizer is a customer id */
 		organizer : {
 			customerId: {type: String, index : true},

@@ -1,0 +1,20 @@
+section#section4.organizer-parking-section.parking-section.plan-section.even
+	.header
+		label#include-parking
+			i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.parking")
+			i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.parking")
+			input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()")
+			h1 Parking
+	.body.add-on-not-included(ng-hide="plan.preferences.addOns.parking")
+			h3 You chose not to add parking to your plan - but it's not too late to change your mind!
+			label
+				.btn.btn-primary.btn-large(href="#") Add Parking
+				input.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()")
+	.body(ng-show="plan.preferences.addOns.parking")
+			h3 YOU'LL BE ABLE TO PICK PARKING ONCE YOUR FRIENDS VOTE ON THEIR PREFERENCES
+			#parking-info-container.clearfix
+				.left.pull-left
+					image(src="/images/wembliman-car.png")
+				.right.pull-right
+					.button-container
+						a.btn.btn-orange.btn-large.wembli-sequence-link(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Parking Now

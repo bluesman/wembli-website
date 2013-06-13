@@ -132,8 +132,8 @@ directive('inviteFriendsWizardButton', [
   }
 ]).
 
-directive('pikaday', [
-  function() {
+directive('pikaday', ['wembliRpc',
+  function(wembliRpc) {
     return {
       restrict: 'EAC',
       replace: true,
@@ -448,8 +448,6 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
               });
             }
           });
-
-
         }
 
         $scope.facebook = {
@@ -649,8 +647,8 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
   }
 ]).
 
-directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout',
-  function(wembliRpc, $window, plan, $timeout) {
+directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', '$rootScope',
+  function(wembliRpc, $window, plan, $timeout, $rootScope) {
     return {
       restrict: 'E',
       controller: function($scope, $element, $attrs, $transclude) {
@@ -731,6 +729,12 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout',
             /* add this friend to the selected friends hash */
             $scope.selectedFriends[friend.contactInfo.serviceId] = friend.checked;
             /* add this friend to the list of invited friends */
+
+            plan.fetch(function() {
+              console.log('force friends change');
+              $rootScope.$broadcast('plan-friends-changed', plan.getFriends());
+            });
+
           });
         };
       },
