@@ -1,5 +1,4 @@
 var async = require('async');
-var nbalanced = require('../../bluesman-nbalanced/lib/nbalanced');
 
 exports.dashboard = {
 	init: function(args, req, res) {

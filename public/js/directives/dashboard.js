@@ -138,15 +138,30 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
           /* ghetto routing for dashboard submenus */
           scope.routeDashboard = function(h) {
             console.log(h);
-            console.log('hash is: ' + h);
-            scope.showDashboard = (h === '' || /dashboard/.test(h));
-            scope.showPreferences = /preferences/.test(h);
-            scope.showSettings = /settings/.test(h);
-            scope.showPaymentInformation = /payment-information/.test(h);
-            if (/pony-up-info/.test(h)) {
-              scope.showPaymentInformation = true;
-              $('#pony-up-info').modal("show");
-            }
+            console.log('hash is: ' + h)
+	    if (/^#/.test(h)) {
+		h = h.split('#')[1];
+	    }
+	    var routes = {
+		'preferences': 'showPreferences',
+		'settings':'showSettings',
+		'payment-information':'showPaymentInformation',
+	    };
+	    angular.forEach(routes,function(value, key) {
+		    /*default to dashboard*/
+		    if (typeof routes[h] === "undefined") {
+			scope[value] = false;
+			scope.showDashboard = true;
+		    } else {
+			scope.showDashboard = false;
+			scope[value] = (key === h);
+		    }
+	    });
+	    if (h === 'pony-up-info') {
+		scope.showDashboard = false;
+		scope.showPaymentInformation = true;
+	    }
+	    
           };
 
           scope.routeDashboard($location.hash());

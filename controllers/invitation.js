@@ -24,13 +24,20 @@ module.exports = function(app) {
 			plan: req.session.plan
 		}
 		if (req.session.loggedIn) {
+		    console.log('they are logged in');
+		    /* if they are logged in but have no plan, send them to dashboard */
+		    if (typeof req.session.plan === "undefined") {
+			return res.redirect('/dashboard');
+		    } else {
+			console.log('they have a plan');
+			console.log(req.session.plan);
+			/* let them load the invitation page */
 			delete req.session.redirectUrl;
 			req.session.loginRedirect = false;
+		    }
 		} else {
-			console.log('setting redirect url:');
-			//they're going to get a login overlay if they aren't logged in - set the redirectUrl here
-			req.session.redirectUrl = '/invitation';
-			req.session.loginRedirect = true;
+		    /* not logged in - load the invitation page as a visitor */
+		    return res.redirect('/event/'+req.param('eventId')+'/'+req.param('eventName'));
 		}
 		console.log(req.session.redirectUrl);
 		console.log('render view: '+view);

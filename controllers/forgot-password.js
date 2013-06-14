@@ -111,6 +111,7 @@ module.exports = function(app) {
 			var confirmed = true;
 			c.update({forgotPassword: [], password:password, confirmed: confirmed}, function(err) {
 				//log em in
+				console.log('logging you in cause you just updated your password');
 				req.session.loggedIn = true;
 				req.session.customer = c;
 				var next = req.param('next') ? decodeURIComponent(req.param('next')) : '/dashboard';

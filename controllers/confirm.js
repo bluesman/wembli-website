@@ -125,6 +125,8 @@ module.exports = function(app) {
 							};
 
 							locals.next = req.param('next') ? decodeURIComponent(req.param('next')) : '/dashboard';
+							console.log('locals are:');
+							console.log(locals);
 
 							if (typeof c.password === "undefined") {
 								/* they need to give us a new password */
@@ -218,12 +220,18 @@ module.exports = function(app) {
 		//set the input params into a session form variable
 		//validate password and log them in then redirect to GET confirm
 		var digest = wembliUtils.digest(req.param('password'));
+		console.log('validate password for email');
+		console.log(req.param('email'));
 
 		//validate email/password against the db
 		Customer.findOne({
 			email: req.param('email')
 		}, function(err, c) {
-			if ((err == null) || (c != null)) {
+			console.log('err');
+			console.log(err);
+			console.log('c:');
+			console.log(c);
+			if (c === null) {
 				return res.redirect('/logout');
 			}
 
@@ -238,7 +246,7 @@ module.exports = function(app) {
 				});
 			}
 
-			if (c.password == digest) {
+			if (c.password === digest) {
 				req.session.loggedIn = true;
 				req.session.customer = c;
 				return res.redirect('/confirm/' + encodeURIComponent(req.param('email')) + '/' + encodeURIComponent(req.param('token')));
