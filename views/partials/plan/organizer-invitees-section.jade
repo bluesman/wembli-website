@@ -23,8 +23,12 @@ section#section2.organizer-invitees-section.invitees-section.plan-section.even
 							.message-status
 								.rsvp-email(ng-hide="rsvpComplete")
 									label.rsvp-email-label
-										span RSVP Email:
-										span(ng-show="{'sent':true}[friend.email.rsvp.status]")
+										span RSVP Email:&nbsp;
+										span.label.label-info(title="Delivered on {{friend.email.rsvp.deliveredLastDate | date:'short'}}",ng-show="friend.email.rsvp.delivered") &nbsp;delivered({{friend.email.rsvp.delivered}})
+										span &nbsp;
+										span.label.label-info(title="Opened on {{friend.email.rsvp.openLastDate | date:'short'}}", ng-show="friend.email.rsvp.open") &nbsp;opened ({{friend.email.rsvp.open}})
+										span &nbsp;
+										a.resend-rsvp-email(href="#",friendId="{{friend._id}}") Resend
 								.ponyup-email(ng-show="rsvpComplete")
 					.invitee-prefs-container
 						.invitee-pref.first.pull-left

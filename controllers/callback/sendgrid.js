@@ -38,7 +38,7 @@ module.exports = function(app) {
 					var eventDate = req.body.event + 'LastDate';
 					console.log('here after if');
 
-					f.email[req.body.category][eventDate] = new Date(req.body.timestamp);
+					f.email[req.body.category][eventDate] = new Date(req.body.timestamp * 1000);
 					console.log(f);
 					f.markModified('email');
 					f.save(function(err) {
