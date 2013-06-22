@@ -100,14 +100,23 @@
     li#dashboard { a { width:100px;} }
     li#plan { a { width:120px;} }
     li#logout { a {width:80px;} }
+    li#help {
+      display:inline;
 
-    li#handle {
-      margin:20px;
-      a {
-        display:block;
-        height:19px;
-        width:37px;
-        background:transparent url('/images/handle.png') no-repeat 0 center;
+      .popover-content {
+        line-height: 15px;
+        width:200px;
+      }
+      position:relative;
+      margin:0 50px 0 0;
+      i {
+        line-height: 8px;
+        background-color: transparent;
+        border:none;
+        color:@white;
+      }
+      i:hover {
+        color:@orange;
       }
     }
   }
@@ -115,6 +124,7 @@
   #info {
     position:relative;
   	height:300px;
+    width:100%;
     overflow:hidden;
   	background-color: @white;
   }

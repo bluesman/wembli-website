@@ -62,7 +62,6 @@ factory('planNav', [
 			},
 
 			scrollTo: function(sectionNumber) {
-
 				/* get the heights of all the sections */
 				var height = 20;
 				for (var i = 1; i < sectionNumber; i++) {
@@ -71,16 +70,17 @@ factory('planNav', [
 				};
 
 				$('#content').animate({
-					scrollTop: (height-10)
-				},1000,'easeOutBack');
+					scrollTop: (height - 10)
+				}, 1000, 'easeOutBack');
 
+				$('#content').scrollTop(height-10);
 			}
 		};
 	}
 ]).
 
-factory('plan', ['$rootScope', 'wembliRpc', 'customer',
-	function($rootScope, wembliRpc, customer) {
+factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
+	function($rootScope, wembliRpc, customer, $timeout) {
 		var self = this;
 		self.plan = null;
 		self.tickets = null;
@@ -113,54 +113,17 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 				return self.plan;
 			},
 
-			/*
-			 * checks to see if all friends have rsvpd or if the date is past
-			 * don't use this use the other one
-			 */
-			rsvpComplete2: function() {
-				if (!self.plan.rsvpDate) {
-					return false;
-				}
-				/* lastnight at midnight */
-				var now = new Date();
-				now.setHours(0,0,0,0);
-				var t1 = now.getTime();
-
-				/* rsvpDate's next midnight */
-				var rsvpDate = new Date(self.plan.rsvpDate);
-				rsvpDate.setHours(24,0,0,0);
-				var t2 = rsvpDate.getTime();
-
-				/* give them until the next day
-				 * so if they have to rsvp by 6/10/2013
-				 * then give them until 6/11/2013
-				 */
-				return (t1 >= t2);
-			},
-
-			ponyUpComplete: function() {
-				if (!self.plan.ponyUpDate) {
-					return false;
-				}
-				/* lastnight at midnight */
-				var now = new Date();
-				now.setHours(0,0,0,0);
-				var t1 = now.getTime();
-
-				/* rsvpDate's next midnight */
-				var rsvpDate = new Date(self.plan.ponyUpDate);
-				ponyUpDate.setHours(24,0,0,0);
-				var t2 = ponyUpDate.getTime();
-
-				/* give them until the next day
-				 * so if they have to rsvp by 6/10/2013
-				 * then give them until 6/11/2013
-				 */
-				return (t1 >= t2);
-			},
-
 			getFriends: function() {
 				return self.friends;
+			},
+
+			getTickets: function() {
+				return self.tickets;
+			},
+
+			setTickets: function(tickets) {
+				self.tickets = tickets;
+				return self.tickets;
 			},
 
 			getFeed: function() {
@@ -194,7 +157,12 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 			},
 
 			//get plan from server and return it
-			fetch: function(callback) {
+			fetch: function(args, callback) {
+				if (typeof callback === "undefined") {
+					callback = args;
+					args = {};
+				}
+
 				if (self.fetchInProgress) {
 					if (callback) {
 						var dereg = $rootScope.$on('plan-fetched', function() {
@@ -204,16 +172,15 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 					}
 					return;
 				}
-
 				self.fetchInProgress = true;
-				wembliRpc.fetch('plan.init', {},
+				wembliRpc.fetch('plan.init', args,
 				//response
 
 				function(err, result) {
-
 					if (typeof result.plan !== "undefined") {
 						self.plan = result.plan
 						self.friends = result.friends;
+						self.tickets = result.tickets;
 						self.organizer = result.organizer;
 						self.context = result.context;
 						self.feed = result.feed;
@@ -225,7 +192,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 
 					if (typeof result.customer !== "undefined" && result.customer) {
 						customer.set(result.customer);
-						$rootScope.customer = customer;
+						$rootScope.customer = result.customer;
 					}
 					self.fetchInProgress = false;
 					$rootScope.$broadcast('plan-fetched', {});
@@ -234,6 +201,18 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 					}
 
 				});
+			},
+
+			poll: function(callback) {
+				var p = this;
+				(function tick() {
+					p.fetch({
+						refresh: true
+					}, function() {
+						callback(p);
+						$timeout(tick, 30000);
+					});
+				})();
 			},
 			/* tell the server to save the plan in the session */
 			save: function(callback) {
@@ -278,33 +257,69 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer',
 			*/
 			rsvpComplete: function() {
 				var complete = true;
+
 				/* check if rsvpDate exists */
 				if (typeof self.plan.rsvpDate === "undefined") {
-					console.log('rsvpDate is not defined');
 					return !complete;
 				}
-
 				/* check if rsvpDate < now */
+				/* lastnight at midnight */
 				var now = new Date();
-				var expires = Date.parse(self.plan.rsvpDate) + 86400000;
-				if (Date.parse(now.toDateString()) > expires) {
-					console.log('rsvpDate is expired');
+				now.setHours(0, 0, 0, 0);
+				var t1 = now.getTime();
+
+				/* rsvpDate's next midnight */
+				var rsvpDate = new Date(self.plan.rsvpDate);
+				rsvpDate.setHours(24, 0, 0, 0);
+				var t2 = rsvpDate.getTime();
+
+				/* give them until the next day
+				 * so if they have to rsvp by 6/10/2013
+				 * then give them until 6/11/2013
+				 */
+				if (t1 >= t2) {
 					return complete;
+				} else {
+				}
+
+				if (self.friends.length == 0) {
+					return !complete;
 				}
 
 				/* check if every friend has responded */
 				for (var i = 0; i < self.friends.length; i++) {
 					if (self.friends[i].rsvp.decision === null) {
-						console.log('friend has not responded so rsvp is not complete');
 						return !complete;
 					}
 				};
-				console.log('rsvp is complete');v
 				return complete;
 			},
+
+			/* this may require some tweaking */
+			ponyUpSent: function() {
+				if (!self.plan.ponyUpDate) {
+					return false;
+				}
+				/* lastnight at midnight */
+				var now = new Date();
+				now.setHours(0, 0, 0, 0);
+				var t1 = now.getTime();
+
+				/* rsvpDate's next midnight */
+				var ponyUpDate = new Date(self.plan.ponyUpDate);
+				ponyUpDate.setHours(24, 0, 0, 0);
+				var t2 = ponyUpDate.getTime();
+
+				/* give them until the next day
+				 * so if they have to rsvp by 6/10/2013
+				 * then give them until 6/11/2013
+				 */
+				return (t1 >= t2);
+			},
+
+
 			//push $rootScope.plan to server and save
-			push: function() {
-			}
+			push: function() {}
 		}
 	}
 ]).

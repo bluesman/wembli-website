@@ -79,7 +79,11 @@ this.Model = function(mongoose) {
 			},
 		},
 		rsvpDate: {type:Date, index:true},
+		rsvpComplete: {type: Boolean, default:false},
+		rsvpCompleteDate: {type:Date, index:true},
 		ponyUpDate: {type:Date, index:true},
+		ponyUpSent: {type:Boolean, default:false},
+		ponyUpSentDate: {type:Date, index:true},
 		/* organizer is a customer id */
 		organizer : {
 			customerId: {type: String, index : true},

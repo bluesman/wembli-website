@@ -79,7 +79,6 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
 
         //display the modal if there's a plan
         if ($scope.plan && typeof $scope.plan.event.eventId === "undefined") {
-          console.log('log this - it should never happen');
           return;
         }
 
@@ -99,7 +98,6 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
           $scope.customer = {};
           customer.set($scope.customer);
         }
-        console.log('go to step: ' + initialStep);
         $scope.gotoStep(initialStep);
 
       },
@@ -149,7 +147,6 @@ directive('pikaday', ['wembliRpc',
             var defaultDate = new Date(scope.plan.rsvpDate);
           }
 
-          console.log('trying pikaday');
           element.pikaday({
             bound: false,
             minDate: startDate,
@@ -161,8 +158,7 @@ directive('pikaday', ['wembliRpc',
               wembliRpc.fetch('invite-friends.submit-rsvp', {
                 rsvpDate: scope.plan.rsvpDate
               }, function(err, res) {
-                console.log('changed rsvpdate');
-                console.log(res);
+
               });
             }
           });
@@ -179,7 +175,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
       controller: function($scope, $element, $attrs, $transclude) {
 
         $scope.$on('forgot-password-email-sent', function() {
-          console.log('forgot password email sent');
           $scope.forgotPasswordEmailSent = true;
         });
 
@@ -214,8 +209,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
               /* toggle loading */
               $('#invitation-modal').modal('loading');
 
-              console.log(result);
-
               if (result.exists && !result.noPassword) {
                 $scope.login.accountExists = true;
                 return $scope.showForm('showLoginForm', 'showSignupForm');
@@ -229,14 +222,13 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
                 $scope.signup.formError = true;
                 return;
               }
-
+              $scope.customer = customer.get();
               $scope.signup.success = true;
               $scope.showForm('showSignupView', 'showSignupForm');
               return $scope.gotoStep('step2');
 
             });
           } else {
-            console.log('form not valid');
           }
         };
 
@@ -252,8 +244,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
             wembliRpc.fetch('invite-friends.submit-login', rpcArgs, function(err, result) {
               /* toggle loading */
               $('#invitation-modal').modal('loading');
-
-              console.log(result);
 
               if (result.noPassword) {
                 return $scope.showForm('showLoginUnconfirmedForm', 'showLoginForm');
@@ -306,8 +296,6 @@ directive('invitationWizardStep2', ['wembliRpc', '$window',
           wembliRpc.fetch('invite-friends.submit-rsvp', rpcArgs, function(err, result) {
             /* toggle loading */
             $('#invitation-modal').modal('loading');
-
-            console.log(result);
 
             /* If There's A No Cust Error Send Them Back To Step-1 With An Error */
             if (result.noCustomer) {
@@ -392,8 +380,6 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
         };
 
         $scope.addFacebookFriend = function(friend, $event) {
-          console.log('checked:');
-          console.log($event.target.localName);
           if ($event.target.localName !== 'input') {
             return;
           }
@@ -416,8 +402,6 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
               $scope.signup.noContinue = true;
               return $scope.gotoStep('step1');
             }
-            console.log('result from add friend');
-            console.log(result);
 
 
             if ($event.currentTarget.control.checked) {
@@ -438,7 +422,6 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
                   $http.get('/callback/facebook/rsvp/' + $scope.plan.guid + '/' + result.friend.inviteStatusConfirmation.token)
                     .success(function(data, status, headers, config) {
                     plan.fetch(function() {
-                      console.log('force friends change');
                       $rootScope.$broadcast('plan-friends-changed', plan.getFriends());
                     });
 
@@ -539,7 +522,6 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
           };
 
           $('#invitation-modal').modal('loading');
-          console.log('clicked invite twitter friend ');
           /*
             initially add the friend to the plan with an inviteStatus of false
             once the post callback indicates a successful post, then we'll set invite status to true
@@ -553,8 +535,6 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
               $('#invitation-modal').modal('loading');
               return $scope.gotoStep('step1');
             }
-            console.log('result from add friend');
-            console.log(result);
 
             $scope.twitter.token = result.friend.inviteStatusConfirmation.token;
 
@@ -590,7 +570,6 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
           },
 
           tweet: function(friend, $event) {
-            console.log('token is: ' + $scope.twitter.token);
             twitter.tweet({
               tweet: $scope.twitter.messageText
             }, function(err, res) {
@@ -706,7 +685,6 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
               return;
             }
 
-            console.log(result);
             var friend = result.friend;
             friend.checked = friend.inviteStatus;
 
@@ -737,7 +715,6 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
             /* add this friend to the list of invited friends */
 
             plan.fetch(function() {
-              console.log('force friends change');
               $rootScope.$broadcast('plan-friends-changed', plan.getFriends());
             });
 

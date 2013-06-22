@@ -1,0 +1,38 @@
+#add-to-plan-filters.filter-container
+	.popover-container.pull-left
+		i#help1.icon-question-sign.display-popover(placement="right",trigger="hover",animation="true",title="Choose Tickets",content="Add the tickets you want to purchase to your plan so you can let your friends know how much they'll need to pony up.")
+	h3.pull-left Choose Tickets To Add To Your Plan:
+	.qty-filter
+		strong Qty:
+		select.quantity-filter
+			option --
+			option(value="1") 1
+			option(value="2") 2
+			option(value="3") 3
+			option(value="4") 4
+			option(value="5") 5+
+	.price-filter
+		p
+			label(for="amount") Price range:
+			input.amount(type="text")
+		#add-to-plan-price-slider.price-slider
+#add-to-plan-header-container.ticket-list-header-container
+	a#price-header(href="#",ng-click="sortByPrice()") Price
+	a#section-header(href="#",ng-click="sortBySection()") Section
+	a#qty-header(href="#",ng-click="sortByQty()") Qty
+ul#add-to-plan-container.ticket-list-container
+	li.ticket-row(ng-repeat="ticket in tickets")
+		.ticket-section.hide {{ticket.Section}}
+		.seat-row.hide {{ticket.Row}}
+		.ticket-price
+			.actual-price ${{ticket.ActualPrice}}
+			.each (each)
+		.ticket-info
+			.ticket-section-name Section: {{ticket.Section}}
+			.seat-row-name Row: {{ticket.Row}}
+		.qty-container
+			strong Qty:
+			select(id="qty-{{ticket.ID}}",ng-model="ticket.selectedQty",name="qty-{{ticket.ID}}",ng-options="q for q in ticket.ValidSplits.int")
+			.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+		a.btn.btn-primary.btn-large.add-tickets-to-plan.wembli-sequence-link(ticket="{{ticket}}",quantity="{{ticket.selectedQty}}",ng-href="/plan",ng-hide="ticket.ticketsInPlan") Add
+		a.btn.btn-orange.btn-large.wembli-sequence-link(ng-click="removeTicketGroup(ticket._id)",ng-href="/plan",ng-show="ticket.ticketsInPlan") Remove

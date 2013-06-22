@@ -1,0 +1,9 @@
+#plan-frame
+	- var nav = planNav(req.session.visitor.context)
+	#left
+		plan-nav(sections="#{nav.length}")
+	#middle
+		- if (req.session.visitor.context === 'organizer')
+			organizer-plan-dashboard
+		- if (req.session.visitor.context === 'friend')
+			friend-plan-dashboard

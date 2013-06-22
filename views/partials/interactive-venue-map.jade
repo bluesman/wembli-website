@@ -6,14 +6,18 @@
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
 		- console.log('context is '+visitor.context+' and preferences is '+plan.preferences.payment)
-		- if (plan.preferences.payment === 'split-first')
-			- if (visitor.context === "organizer")
-				include interactive-venue-map/organizer-read-only
-			- if (visitor.context === "friend")
-				include interactive-venue-map/friend-read-only
-		- else
-			- if (visitor.context === "organizer")
-				include interactive-venue-map/organizer-buy-now
-			- if (visitor.context === "friend")
-				include interactive-venue-map/friend-read-only
+		- if (visitor.context === "organizer")
+			#organizer-event-tickets
+				.buy-now(ng-show="{'no-split':true,'split-after':true}[plan.preferences.payment]")
+					include interactive-venue-map/tickets/buy-now
+				.split-first(ng-show="{'split-first':true}[plan.preferences.payment]")
+					.read-only(ng-hide="plan.rsvpComplete")
+						include interactive-venue-map/tickets/read-only
+					.rsvp-complete(ng-show="plan.rsvpComplete")
+						.add-to-plan(ng-hide="plan.ponyUpSent")
+							include interactive-venue-map/tickets/add-to-plan
+						.buy-now(ng-show="plan.ponyUpSent")
+							include interactive-venue-map/tickets/buy-now
+		- if (visitor.context === "friend")
+			include interactive-venue-map/tickets/read-only
 

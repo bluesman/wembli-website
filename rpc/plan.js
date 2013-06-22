@@ -2,6 +2,7 @@ var wembliUtils = require('wembli/utils');
 var wembliModel = require('../lib/wembli-model');
 var Customer = wembliModel.load('customer');
 var Friend = wembliModel.load('friend');
+var Plan = wembliModel.load('plan');
 var Feed = wembliModel.load('feed');
 var Ticket = wembliModel.load('ticket');
 var feedRpc = require('./feed').feed;
@@ -10,60 +11,83 @@ var async = require('async');
 exports.plan = {
 	init: function(args, req, res) {
 		var me = this;
-
+		console.log('plan.init args');
+		console.log(args);
 		/* return different data depending on the visit context? */
-
 		var data = {
 			success: 1,
 			plan: req.session.plan,
 			context: req.session.visitor.context
 		};
 
-		if (req.session.plan) {
-			async.parallel([
-
-				function(callback) {
-					Feed.findOne().where('planGuid').equals(req.session.plan.guid).exec(function(err, feed) {
-						if (feed !== null) {
-							data.feed = feed;
-						}
-						callback();
-					});
-				},
-
-				function(callback) {
-					/* get friends for this plan */
-					Friend.find({
-						planId: req.session.plan.id
-					}, function(err, results) {
-						data.friends = results;
-						callback();
-					});
-				},
-
-				function(callback) {
-
-					if (req.session.plan.organizer.customerId) {
-						Customer.findOne().where('_id').equals(req.session.plan.organizer.customerId).exec(function(err, organizer) {
-							console.log('organizer: ' + req.session.plan.organizer.customerId);
-							console.log(organizer);
-							data.organizer = organizer;
-							callback();
-						});
-					} else {
-						callback();
-					}
-				}
-			],
-
-			function(err, results) {
-				if (err) {
-					me(err);
-				}
-				me(null, data);
+		/* refresh the plan from the db if asked to */
+		if (args.refresh) {
+			Plan.findOne().where('_id').equals(req.session.plan._id).exec(function(err, plan) {
+				req.session.plan = plan;
+				getRelated(plan);
 			});
 		} else {
-			me(null, data);
+			getRelated(req.session.plan);
+		}
+
+		function getRelated(plan) {
+			if (plan) {
+				async.parallel([
+
+					function(callback) {
+						/* get feed for the plan */
+						Feed.findOne().where('planGuid').equals(req.session.plan.guid).exec(function(err, feed) {
+							if (feed !== null) {
+								data.feed = feed;
+							}
+							callback();
+						});
+					},
+
+					function(callback) {
+						/* get friends for this plan */
+						Friend.find({
+							planId: req.session.plan.id
+						}, function(err, results) {
+							data.friends = results;
+							callback();
+						});
+					},
+
+					function(callback) {
+						/* get friends for this plan */
+						Ticket.find({
+							planId: req.session.plan.id
+						}, function(err, results) {
+							data.tickets = results;
+							callback();
+						});
+					},
+
+					function(callback) {
+						/* get customer who is the organizer */
+						if (req.session.plan.organizer.customerId) {
+							Customer.findOne().where('_id').equals(req.session.plan.organizer.customerId).exec(function(err, organizer) {
+								console.log('organizer: ' + req.session.plan.organizer.customerId);
+								console.log(organizer);
+								data.organizer = organizer;
+								callback();
+							});
+						} else {
+							callback();
+						}
+					}
+				],
+
+				function(err, results) {
+					if (err) {
+						me(err);
+					}
+					me(null, data);
+				});
+			} else {
+				me(null, data);
+			}
 		}
 	},
 
@@ -114,9 +138,9 @@ exports.plan = {
 
 		/* get the friend for this customer & plan */
 		Friend.findOne()
-		.where('planGuid').equals(req.session.plan.guid)
-		.where('_id').equals(args.friendId)
-		.exec(function(err, friend) {
+			.where('planGuid').equals(req.session.plan.guid)
+			.where('_id').equals(args.friendId)
+			.exec(function(err, friend) {
 
 			/* this function is a mess */
 			/* args.decision is the overall plan decision and also means they are in for tickets */
@@ -165,6 +189,39 @@ exports.plan = {
 		});
 	},
 
+	submitRsvpComplete: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+		console.log('args in submitRsvpcomplete');
+		console.log(args);
+		if (typeof args.rsvpComplete !== "undefined") {
+			req.session.plan.rsvpComplete = args.rsvpComplete;
+			req.session.plan.rsvpCompleteDate = Date.now();
+		}
+
+		console.log('plan.save');
+		console.log(args);
+		req.session.plan.save(function(err, res) {
+			data.rsvpComplete = req.session.plan.rsvpComplete;
+			data.rsvpCompleteDate = req.session.plan.rsvpCompleteDate;
+			feedRpc['logActivity'].apply(function(err, feedResult) {
+				data.plan = req.session.plan;
+				return me(null, data);
+			}, [{
+					action: 'rsvpComplete',
+					meta: {
+						decision: args.rsvpComplete
+					}
+				},
+				req, res
+			]);
+
+		});
+	},
+
+
 	submitOrganizerRsvp: function(args, req, res) {
 		var me = this;
 		var data = {
@@ -185,9 +242,12 @@ exports.plan = {
 				data.plan = req.session.plan;
 				return me(null, data);
 			}, [{
-				action: 'rsvp',
-					meta: {decision: args.decision}
-				}, req, res
+					action: 'rsvp',
+					meta: {
+						decision: args.decision
+					}
+				},
+				req, res
 			]);
 
 		});
@@ -421,7 +481,7 @@ exports.plan = {
 				console.log('saved ticket: ' + ticket.id);
 				console.log(ticket);
 
-				/* now add the friend to the plan */
+				/* now add the ticket to the plan */
 				req.session.plan.addTicket(ticket, function(err) {
 					if (err) {
 						console.log(err);
@@ -433,6 +493,52 @@ exports.plan = {
 					data.ticketGroup = ticket;
 
 					return me(null, data);
+				});
+			});
+		});
+	},
+
+	removeTicketGroup: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add tickets to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		Ticket.remove({
+			"_id": args.ticketId
+		}, function(err) {
+			console.log('remove ticket err is: '+ err);
+			/* delete the ticket id from the plan and save it */
+			var newTickets = [];
+			for (var i = 0; i < req.session.plan.tickets.length; i++) {
+				if (req.session.plan.tickets[i] != args.ticketId) {
+					newTickets.push(req.session.plan.tickets[i]);
+				}
+			};
+			console.log('removing ticket from plan');
+			req.session.plan.tickets = newTickets;
+			req.session.plan.save(function(err, results) {
+				console.log('saved plan after removing ticket - err is:'+err);
+				/* get tickets to return */
+				Ticket.find({
+					planId: req.session.plan.id
+				}, function(err, results) {
+					data.tickets = results;
+					me(null, data);
 				});
 			});
 		});
@@ -462,7 +568,7 @@ exports.plan = {
 		} else {
 			data.success = 0;
 			data.error = true;
-			me(null,data);
+			me(null, data);
 		}
 	},
 }

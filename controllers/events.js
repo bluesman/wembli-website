@@ -82,6 +82,7 @@ module.exports = function(app) {
 			and it is the same eventId as req.session.eventId
 			then override only the preferences */
 		if ((req.session.visitor.context === "organizer") || ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer.customerId === "undefined"))) {
+			console.log('params in event options submit')
 
 			//set the form data in the session so the angular app can read any errors
 			req.session.eventOptionsForm = {
@@ -94,7 +95,7 @@ module.exports = function(app) {
 				guestList: req.param('guest_list'),
 				errors: {}
 			};
-
+			console.log(req.session.eventOptionsForm);
 			//add-ons
 			//parking, restaurant or hotel
 			req.session.plan.preferences.addOns = {
@@ -104,13 +105,15 @@ module.exports = function(app) {
 			}
 
 			if (typeof req.param('parking') !== "undefined") {
-				req.session.plan.preferences.addOns.parking = req.param('parking');
+				req.session.plan.preferences.addOns.parking = req.session.eventOptionsForm.parking;
 			}
 			if (typeof req.param('restaurant') !== "undefined") {
-				req.session.plan.preferences.addOns.restaurant = req.param('restaurant');
+				req.session.plan.preferences.addOns.restaurants = req.session.eventOptionsForm.restaurant;
 			}
+			console.log('hotel param');
+			console.log(req.param('hotel'));
 			if (typeof req.param('hotel') !== "undefined") {
-				req.session.plan.preferences.addOns.hotel = req.param('hotel');
+				req.session.plan.preferences.addOns.hotels = req.session.eventOptionsForm.hotel;
 			}
 
 			//invite options: guest_friends, over_21
@@ -123,10 +126,10 @@ module.exports = function(app) {
 				req.session.plan.organizer.rsvp.decision = req.param('organizer_not_attending') ? false : true;
 			}
 			if (typeof req.param('guest_friends') !== "undefined") {
-				req.session.plan.preferences.inviteOptions.guestFriends = req.param('guest_friends');
+				req.session.plan.preferences.inviteOptions.guestFriends = req.session.eventOptionsForm.guestFriends;
 			}
 			if (typeof req.param('over_21') !== "undefined") {
-				req.session.plan.preferences.inviteOptions.over21 = req.param('over_21');
+				req.session.plan.preferences.inviteOptions.over21 = req.session.eventOptionsForm.over21;
 			}
 
 
@@ -149,6 +152,8 @@ module.exports = function(app) {
 
 			/* actually save this in the db if they are logged in */
 			if (req.session.loggedIn) {
+				console.log('saving plan in event optiosn');
+				console.log(req.session.plan);
 				req.session.plan.save(function(err, result) {
 
 					/* set a special header to tell angular to update the browser location */

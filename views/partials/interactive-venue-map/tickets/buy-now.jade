@@ -1,8 +1,7 @@
-#ticket-filter-container
-	h3 Filter:
+#buy-now-filters.filter-container
 	.qty-filter
 		strong Qty:
-		select#quantity-filter
+		select.quantity-filter
 			option --
 			option(value="1") 1
 			option(value="2") 2
@@ -12,13 +11,13 @@
 	.price-filter
 		p
 			label(for="amount") Price range:
-			input#amount(type="text")
-		#price-slider
-#self-ticket-list-header-container.ticket-list-header-container
+			input.amount(type="text")
+		#buy-now-price-slider.price-slider
+#buy-now-header-container.ticket-list-header-container
 	a#price-header(href="#",ng-click="sortByPrice()") Price
 	a#section-header(href="#",ng-click="sortBySection()") Section
 	a#qty-header(href="#",ng-click="sortByQty()") Qty
-ul#self-ticket-list-container.ticket-list-container
+ul#buy-now-container.ticket-list-container
 	li.ticket-row(ng-repeat="ticket in tickets")
 		.ticket-section.hide {{ticket.Section}}
 		.seat-row.hide {{ticket.Row}}

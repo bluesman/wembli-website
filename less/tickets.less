@@ -1,4 +1,12 @@
-
+#no-tickets {
+	.modal-body {
+		.btn {
+			margin:30px auto;
+			width:130px;
+			display:block;
+		}
+	}
+}
 #rsvp-login-modal, #tickets-login-modal {
 
 	.not-friend {
@@ -159,21 +167,22 @@
 		overflow-y:auto;
 		overflow-x:hidden;
 
-		.ticket-list-container .ticket-row, #ticket-filter-container, .ticket-list-header-container {
+		.filter-container, .ticket-list-container .ticket-row, .ticket-list-header-container {
 				#translucent > .background(@grayLight,0.25);
 		}
 
-		#tickets-price-range > h3 {
-				margin-left:0.5em;
-				margin-top:2px;
-				font-size:14px;
-				font-weight:bold;
-			}
+		.filter-container > h3 {
+			margin-left:0.5em;
+			margin-top:2px;
+			font-size:14px;
+			font-weight:bold;
+		}
 
-		#tickets-price-range {
+		.filter-container {
+			.clearfix();
+			position:relative;
 			margin-top:20px;
 			text-align:left;
-			position:relative;
 
 			.popover-container {
 				margin:10px 0 0 10px;
@@ -184,39 +193,6 @@
 				font-size:18px;
 				padding:0;
 				top:3px;
-			}
-
-
-			#price-range-form {
-				.clearfix();
-				#translucent > .background(@grayLight,0.25);
-
-				fieldset {
-
-					label.checkbox {
-						margin:6px;
-						padding:10px;
-						color:@grayDark;
-					}
-					label.checkbox:hover {
-						#translucent > .background(@blue,0.25);
-						color:@orange;
-					}
-				}
-
-				a {
-					margin: 6px;
-				}
-			}
-
-		}
-
-		#ticket-filter-container {
-			margin-top:20px;
-			.clearfix();
-			h3 {
-				margin:15px 10px 10px 10px;
-				float:left;
 			}
 
 			.qty-filter {
@@ -230,7 +206,6 @@
 					width:50px;
 				}
 			}
-
 			.price-filter {
 				margin:5px;
 				float:right;
@@ -253,7 +228,7 @@
 					}
 				}
 
-				#price-slider {
+				.price-slider {
 					width:200px;
 					height:6px;
 
@@ -262,7 +237,6 @@
 						width:12px;
 					}
 				}
-
 			}
 		}
 
@@ -289,62 +263,6 @@
 			a:hover {
 				color:@black;
 			}
-		}
-
-		#group-ticket-list-header-container {
-			#group-ticket-list-header {
-				.clearfix();
-			}
-			.popover {
-				font-weight:normal;
-			}
-			.popover-container {
-				margin:10px 0 0 10px;
-			}
-
-			a#range-header {
-				width:65px;
-			}
-			a#section-header {
-				text-align:left;
-				width:180px;
-			}
-			a#qty-header {
-				width:100px;
-			}
-			a#price-header {
-				width:65px;
-			}
-		}
-
-		#self-ticket-list-header-container {
-			a#price-header {
-				width:65px;
-			}
-			a#section-header {
-				width:195px;
-				text-align:left;
-				margin-left:5px;
-			}
-			a#qty-header {
-				width:100px;
-				text-align:left;
-			}
-
-		}
-
-		#group-ticket-list-container {
-			.ticket-price {
-				margin-top:6px;
-
-				.actual-price {
-					margin-top:6px;
-				}
-			}
-			.ticket-row:hover {
-				#translucent > .background(@grayLight,0.25);
-			}
-
 		}
 
 		.ticket-list-container {
@@ -417,7 +335,101 @@
 			}
 		}
 
-		#self-ticket-list-container {
+		#read-only-filters {
+
+			#price-range-form {
+				.clearfix();
+
+				fieldset {
+
+					label.checkbox {
+						margin:6px;
+						padding:10px;
+						color:@grayDark;
+					}
+					label.checkbox:hover {
+						#translucent > .background(@blue,0.25);
+						color:@orange;
+					}
+				}
+
+				a {
+					margin: 6px;
+				}
+			}
+		}
+
+		#buy-now-filters {
+			.h3 {
+				margin:15px 10px 10px 10px;
+				float:left;
+			}
+		}
+
+		#add-to-plan-filters {
+
+		}
+
+		#read-only-header-container {
+			#read-only-header {
+				.clearfix();
+			}
+			.popover {
+				font-weight:normal;
+			}
+			.popover-container {
+				margin:10px 0 0 10px;
+			}
+
+			a#range-header {
+				width:65px;
+			}
+			a#section-header {
+				text-align:left;
+				width:180px;
+			}
+			a#qty-header {
+				width:100px;
+			}
+			a#price-header {
+				width:65px;
+			}
+		}
+
+		#add-to-plan-header-container, #buy-now-header-container {
+			a#price-header {
+				width:65px;
+			}
+			a#section-header {
+				width:195px;
+				text-align:left;
+				margin-left:5px;
+			}
+			a#qty-header {
+				width:100px;
+				text-align:left;
+			}
+
+		}
+
+		#add-to-plan-header-container {
+
+		}
+
+		#read-only-container {
+			.ticket-price {
+				margin-top:6px;
+
+				.actual-price {
+					margin-top:6px;
+				}
+			}
+			.ticket-row:hover {
+				#translucent > .background(@grayLight,0.25);
+			}
+		}
+
+		#add-to-plan-container, #buy-now-container {
 			.ticket-info {
 				margin-top:0;
 			}
@@ -428,6 +440,10 @@
 				}
 
 			}
+		}
+
+		#add-to-plan-container {
+
 		}
 
 	}

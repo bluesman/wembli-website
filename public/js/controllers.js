@@ -72,6 +72,7 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 	wembliRpc.fetch('event-options.init', {},
 
 	function(err, result) {
+
 		//$scope.payment = result.payment;
 		$scope.parking = result.parking;
 		$scope.restaurant = result.restaurant;
@@ -294,35 +295,35 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, m
 
 
 				//if (!googleMap.hasMarker(place.geometry.location.lat(), place.geometry.location.lng())) {
-					console.log(place);
-					var marker = new google.maps.Marker({
-						map: googleMap.getMap(),
-						position: place.geometry.location,
-					});
-					marker.setIcon("/images/icons/map-icons/transportation/parkinggarage.png");
-					marker.setAnimation(google.maps.Animation.DROP);
+				console.log(place);
+				var marker = new google.maps.Marker({
+					map: googleMap.getMap(),
+					position: place.geometry.location,
+				});
+				marker.setIcon("/images/icons/map-icons/transportation/parkinggarage.png");
+				marker.setAnimation(google.maps.Animation.DROP);
 
-					var win = new google.maps.InfoWindow({
-						content: mapInfoWindowContent.create({
-							header: place.name,
-							body: place.vicinity
-						}),
-						pixelOffset: new google.maps.Size(10, 0),
-					});
+				var win = new google.maps.InfoWindow({
+					content: mapInfoWindowContent.create({
+						header: place.name,
+						body: place.vicinity
+					}),
+					pixelOffset: new google.maps.Size(10, 0),
+				});
 
-					google.maps.event.addListener(marker, 'click', function() {
-						console.log('clicked infowindow')
-						if (googleMap.isInfoWindowOpen(marker)) {
-							googleMap.closeInfoWindow(marker);
-						} else {
-							googleMap.openInfoWindow(marker);
-						}
-					});
+				google.maps.event.addListener(marker, 'click', function() {
+					console.log('clicked infowindow')
+					if (googleMap.isInfoWindowOpen(marker)) {
+						googleMap.closeInfoWindow(marker);
+					} else {
+						googleMap.openInfoWindow(marker);
+					}
+				});
 
-					/* put the marker on the map */
-					googleMap.addMarker(marker);
-					/* put the infoWindow on the map */
-					googleMap.addInfoWindow(win, marker);
+				/* put the marker on the map */
+				googleMap.addMarker(marker);
+				/* put the infoWindow on the map */
+				googleMap.addInfoWindow(win, marker);
 				//}
 			});
 			deregGP();
@@ -593,8 +594,20 @@ function FooterCtrl($scope, $location, $window, facebook, plan) {
 		cursor: "move",
 		axis: "y",
 		containment: [0, y, 0, $("#footer").offset().top],
-		handle: "#handle"
+		handle: "#help"
 	});
+
+	$scope.slide = function() {
+		if ($('#footer').css('bottom') === '-300px') {
+			$('#footer').animate({
+				bottom: '0px'
+			});
+		} else {
+			$('#footer').animate({
+				bottom: '-300px'
+			});
+		}
+	}
 
 	$scope.facebook = facebook;
 
@@ -617,10 +630,10 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 	$scope.friend = rsvpLoginModal.get('friend');
 	$scope.event = JSON.parse(rsvpLoginModal.get('event'));
 
-		console.log('service is: '+$scope.service);
+	console.log('service is: ' + $scope.service);
 	if ($scope.service === 'wemblimail') {
 		$scope.email = rsvpLoginModal.get('serviceId');
-		console.log('serviceId = '+$scope.email);
+		console.log('serviceId = ' + $scope.email);
 	}
 
 
@@ -1003,13 +1016,14 @@ function TicketsOffsiteCtrl($scope, plan) {
 
 };
 
-function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer) {
-	plan.get(function(plan) {
+function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer, wembliRpc) {
+	plan.get(function(p) {
 		$scope.priceRange = {};
-		$scope.eventOptionsLink = '/event-options/' + plan.event.eventId + '/' + plan.event.eventName;
-		$scope.priceRange.low = plan.preferences.tickets.priceRange.low || true;
-		$scope.priceRange.med = plan.preferences.tickets.priceRange.med || true;
-		$scope.priceRange.high = plan.preferences.tickets.priceRange.high || true;
+		$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;
+		$scope.priceRange.low = p.preferences.tickets.priceRange.low || true;
+		$scope.priceRange.med = p.preferences.tickets.priceRange.med || true;
+		$scope.priceRange.high = p.preferences.tickets.priceRange.high || true;
+		//$scope.rsvpComplete = plan.rsvpComplete();
 	});
 
 	$scope.determineRange = function(price) {
@@ -1026,7 +1040,21 @@ function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer) {
 		}
 	}
 
+	$scope.removeTicketGroup = function(ticketId) {
+		wembliRpc.fetch('plan.removeTicketGroup', {
+			ticketId: ticketId
+		}, function(err, result) {
+			console.log(result);
+			plan.setTickets(result.tickets);
+		});
+
+	};
+
+
 	$scope.determineTixAvailable = function(tix) {
+		if (typeof tix[0] === "undefined") {
+			tix = [tix];
+		}
 		var highest = tix[0];
 		angular.forEach(tix, function(el) {
 			if (el > highest) {

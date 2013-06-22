@@ -1,6 +1,6 @@
-#tickets-price-range
+#read-only-filters.filter-container
 	.popover-container.pull-left
-		i#help1.icon-question-sign.display-popover(placement="right",trigger="hover",animation="true",title="Pick A Price Range",content="Choose a price range to give your organizer an idea of how much you're willing to pay for tickets.  Mouse over the dollar signs to see each price range then use the checkboxes to pick your options.")
+		i#help1.icon-question-sign.display-popover(placement="right",trigger="hover",animation="true",title="Pick A Price Range",content="Choose a price range to give your friends an idea of how much they can expect to pay for tickets.  Mouse over the dollar signs to see each price range then use the checkboxes to pick your options.")
 	h3.pull-left Preview Ticket Options Now - Buy Later:
 	form#price-range-form.form-inline
 		fieldset.pull-left
@@ -13,18 +13,19 @@
 			label.checkbox(ng-click="handlePriceRange()",title="Above $300")
 				input#high(type="checkbox",ng-model="priceRange.high")
 				span.dollar-sign(ng-class="{true:'orange'}[priceRange.high]") $$$
+		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-hide="backToPlan",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
 		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-show="backToPlan",href="/plan",direction="1") Back To The Plan
-#group-ticket-list-header-container.ticket-list-header-container
-	#group-ticket-list-header
+#read-only-header-container.ticket-list-header-container
+	#read-only-header
 		h4.pull-left Preview ticket options in your price range
 		.popover-container.pull-left
-			i.icon-question-sign.display-popover(placement="bottom",trigger="hover",animation="true",title="Preview Tickets",content="Get a sneak peak at the kind of tickets your price range will get you. Once everyone responds to the RSVP, your organizer will be able to choose tickets for the group.")
+			i.icon-question-sign.display-popover(placement="bottom",trigger="hover",animation="true",title="Preview Tickets",content="Get a sneak peak at the kind of tickets your price range will get you. Once you know how many people are coming, you'll be able to purchase tikets.")
 	a#range-header(href="#",ng-click="sortByPrice()") Range
 	a#section-header(href="#",ng-click="sortBySection()") Section
 	a#qty-header(href="#",ng-click="sortByQty()") Available Tix
 	a#price-header(href="#",ng-click="sortByPrice()") Price
-ul#group-ticket-list-container.ticket-list-container
-	li.ticket-row.muted(ng-repeat="ticket in tickets",ng-hide="ticket.hide")
+ul#read-only-container.ticket-list-container
+	li.ticket-row(ng-repeat="ticket in tickets",ng-hide="ticket.hide")
 		.ticket-section.hide {{ticket.Section}}
 		.seat-row.hide {{ticket.Row}}
 		.ticket-range
@@ -38,4 +39,3 @@ ul#group-ticket-list-container.ticket-list-container
 		.ticket-price
 			.actual-price ${{ticket.ActualPrice}}
 			.each (each)
-

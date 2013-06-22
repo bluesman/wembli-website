@@ -1,14 +1,33 @@
 section#section3.organizer-tickets-section.tickets-section.plan-section
 	.header
 		h1.pull-left Tickets
-	.body
+	.body(ng-show="plan.tickets.length")
+		h3 These are your tickets:
+		.alert.alert-warning(ng-show="ticketCountMismatch") The number of available tickets in this ticket group do not match the number of confirmed guests!
+		ul.ticket-list-container
+			li.ticket-row(ng-repeat="ticket in tickets")
+				.ticket-price
+					.actual-price Price: ${{ticket.ticketGroup.ActualPrice}} (each)
+				.ticket-info
+					.ticket-section-name Section: {{ticket.ticketGroup.Section}}
+					.seat-row-name Row: {{ticket.ticketGroup.Row}}
+				.qty-container
+					strong Qty: {{ticket.ticketGroup.selectedQty}}
+				.remove
+					button.btn.btn-orange(ng-click="removeTicketGroup(ticket._id)") Remove From Plan
+		a.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add More Tickets
+	.body(ng-hide="plan.tickets.length")
 		h3 Keep all of your ticketing info here.
-		#ticket-info-container.clearfix
+		.ticket-info-container.clearfix(ng-show="plan.rsvpComplete")
+			p Now that you have an accurate head head-count, you can select your tickets.
+			p Once you find tickets you like, you can ask your friends to Pony Up before you buy!
+			a.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Select Tickets
+		.ticket-info-container.clearfix(ng-hide="plan.rsvpComplete")
 			.left.pull-left
 				image(src="/images/wembliman-tickets.png")
 			.right
-				p Hit the breaks there, sonic. Once your friends all RSVP and you get a final head-count you'll be able to buy your tickets.
-				p In the meantime why not take a peak at what's available?
+				p Hit the breaks there, sonic. Once your friends all RSVP and you get a final head-count you'll be able to choose tickets and get your friends to pony up.
+				p In the meantime why not take a peek at what's available?
 				.tickets-button(ng-show="{'split-first':true}[plan.preferences.payment]")
 					label
 						span I changed my mind - want to buy now - they can pony up later.
@@ -18,4 +37,4 @@ section#section3.organizer-tickets-section.tickets-section.plan-section
 					label
 						span I changed my mind - they can pony up first - I'll buy after.
 						input.hide(ng-click="savePrefs()", type="radio", name="payment",value="split-first", ng-model="plan.preferences.payment", value="split-first")
-					a.btn.btn-orange.btn-large.wembli-sequence-link(,href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Purchase Tickets Now
+					a.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Purchase Tickets Now

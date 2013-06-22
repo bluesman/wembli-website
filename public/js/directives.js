@@ -49,8 +49,6 @@ directive('multiselect', [
       compile: function(element, attr, transculde) {
         return function(scope, element, attr, controller) {
           var header = attr.header === "false" ? false : true;
-          console.log('noneselectedtext');
-          console.log(attr.noneSelectedText)
 
           var ms = element.multiselect({
             appendTo: attr.appendTo,
@@ -66,18 +64,15 @@ directive('multiselect', [
           attr.$observe('ngModel', function(m) {
             var opts = scope.$eval(m);
             if (typeof opts !== "undefined") {
-              console.log(opts);
               for (var i = 0; i < opts.length; i++) {
                 element.multiselect("widget").find(":checkbox[value='" + opts[i] + "']").attr("checked", "checked");
                 $("#" + attr.id + " option[value='" + opts[i] + "']").attr("selected", 1);
-                console.log('setting option:' + opts[i]);
               };
               element.multiselect("refresh");
             }
           });
 
           attr.$observe('disable', function(disable) {
-            console.log('disable is: ' + attr.disable);
             if (attr.disable === "true") {
               ms.multiselect("disable");
             }
@@ -85,10 +80,7 @@ directive('multiselect', [
 
           attr.$observe('click', function() {
             var clickFn = scope.$eval(attr.click);
-            console.log('clickFn:');
-            console.log(clickFn);
             if (typeof clickFn !== "undefined") {
-              console.log('setting up click event for multiselect');
               element.on('multiselectclick', function(event, ui) {
                 scope.$apply(function() {
                   clickFn.call(clickFn, event, ui, scope, element, attr);
@@ -162,7 +154,12 @@ directive('displayPopover', [
       cache: false,
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          attr.$observe('content', function() {
+          var content = '';
+          attr.$observe('content', function(c) {
+            if (content === c) {
+              return;
+            }
+            content = c;
             element.popover({
               placement: attr.placement,
               trigger: attr.trigger,
@@ -214,10 +211,7 @@ directive('onKeyup', function() {
     //In this case we're just passing a variable that points
     //to a function we'll call each keyup
     elm.bind('keyup', function(evt) {
-      console.log(attrs.onKeyup);
       var keyupFn = scope.$eval(attrs.onKeyup);
-      console.log('keyup');
-      console.log(keyupFn);
       //$apply makes sure that angular knows
       //we're changing something
       scope.$apply(function() {
@@ -238,16 +232,11 @@ directive('onKeydown', function() {
     //to a function we'll call each keyup
     elm.bind('keydown', function(evt) {
       var e = evt;
-      console.log('keydown');
-      console.log(attrs.onKeydown);
-      console.log(e);
       var keydownFn = scope.$eval(attrs.onKeydown);
 
-      console.log(keydownFn);
       //$apply makes sure that angular knows
       //we're changing something
       scope.$apply(function() {
-        console.log('calling keydown func');
         keydownFn.call(keydownFn, scope, elm, attrs, e);
       });
     });
@@ -355,17 +344,11 @@ directive('bounceMapMarker', ['plan', 'googleMap',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           element.mouseleave(function() {
-            console.log('stop bouncing marker');
             var marker = googleMap.findMarker(attr.lat, attr.lng);
             marker.setAnimation(null);
           });
           element.mouseover(function() {
-            console.log('bounce marker');
-            console.log(attr.lat);
-            console.log(attr.lng);
             var marker = googleMap.findMarker(attr.lat, attr.lng);
-            console.log('found marker');
-            console.log(marker);
             marker.setAnimation(google.maps.Animation.BOUNCE);
           });
         }
@@ -457,11 +440,8 @@ directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence'
           /* do i need to wait for sequence.ready? */
           //sequence.ready(function() {
           plan.get(function(plan) {
-            console.log("PLAN");
-            console.log(plan);
             scope.event = plan.event;
             scope.venue = plan.venue["data"];
-            console.log(scope.venue.Street1);
           });
           //});
         }
@@ -480,7 +460,6 @@ directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequenc
         return function(scope, element, attr) {
           scope.emailCollected = false;
           scope.collectEmail = function() {
-            console.log('collecting email: ' + angular.element('#email').val());
             scope.emailCollected = true;
           }
         }
@@ -507,7 +486,6 @@ directive('eventWrapper', ['wembliRpc', '$window',
           element.mouseover(function() {
             var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
 
-            //console.log('mouseover happened');
             if (attr.noPopover) {
               return;
             }
@@ -650,89 +628,10 @@ directive('rsvpLoginModal', ['fetchModals', 'rsvpLoginModal',
           rsvpLoginModal.set('friend', attr.friend);
           rsvpLoginModal.set('event', attr.event);
           rsvpLoginModal.set('confirmSocial', attr.confirmSocial);
-          console.log(rsvpLoginModal.get('event'));
           fetchModals.fetch('/partials/modals/rsvp-login', function() {
             $('#rsvp-login-modal').modal("show");
           });
         };
-      }
-    };
-  }
-]).
-
-directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
-  function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
-    return {
-      restrict: 'EAC',
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr) {
-          attr.$observe('ticket', function(val) {
-            var ticket = JSON.parse(val);
-
-            var displayTicketsLoginModal = function(e) {
-              $rootScope.$broadcast('tickets-login-clicked', {
-                ticket: ticket
-              });
-              if ($('#tickets-login-modal').length > 0) {
-                $('#tickets-login-modal').modal('show');
-              } else {
-                $rootScope.$on('tickets-login-modal-fetched', function() {
-                  $('#tickets-login-modal').modal('show');
-                });
-              }
-            };
-
-            if (/tickets-login-modal/.test($location.hash())) {
-              /* if this button is the right one */
-              var h = $location.hash();
-              if (ticket.ID === h.split('-')[3]) {
-                displayTicketsLoginModal();
-              }
-            }
-
-            element.click(displayTicketsLoginModal);
-
-          });
-        }
-      }
-    };
-  }
-]).
-
-directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
-  function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
-
-    return {
-      restrict: 'EAC',
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr) {
-
-          attr.$observe('ticket', function(val) {
-            if (typeof val === "undefined" || val === "") {
-              return;
-            }
-            var ticket = JSON.parse(val);
-            element.click(function(e) {
-              var shipping = 15;
-              var serviceCharge = (parseFloat(ticket.ActualPrice) * .15) * parseInt(ticket.selectedQty);
-              var actualPrice = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
-              var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
-
-              $rootScope.$broadcast('tickets-offsite-clicked', {
-                qty: ticket.selectedQty,
-                amountPaid: amountPaid,
-                ticketGroup: ticket,
-                eventId: ticket.RventId,
-                sessionId: ticket.sessionId
-              });
-
-              var Promise = $timeout(function() {
-                $('#tickets-login-modal').modal('hide');
-                $('#tickets-offsite-modal').modal('show');
-              }, 1500);
-            });
-          });
-        }
       }
     };
   }
@@ -753,7 +652,6 @@ directive('sendForgotPasswordEmail', ['wembliRpc',
               }
 
               wembliRpc.fetch('customer.sendForgotPasswordEmail', rpcArgs, function(err, result) {
-                console.log(result);
                 /* display an email sent message */
                 scope.forgotPasswordEmailSent = true;
                 scope.$broadcast('forgot-password-email-sent');
@@ -785,8 +683,6 @@ directive('startPlan', ['$rootScope', 'fetchModals',
 
         return function(scope, element, attr) {
           element.click(function() {
-            console.log('clicked event attr:');
-            console.log(attr);
             var nextLink = '';
             if (attr.href) {
               nextLink = attr.href;
@@ -817,10 +713,18 @@ directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$ti
           element.click(function(e) {
             e.preventDefault();
 
+            /* destroy the scope and start over */
+            var currentPath = $rootScope.currentPath;
+            var currentFrame = $rootScope.currentFrame;
+
+            $rootScope.$destroy();
+            $rootScope.sequenceCompleted = false;
+            $rootScope.currentPath = currentPath;
+            $rootScope.currentFrame = currentFrame;
+
             /* interactive-venue-map seems to disrespect template no-cache */
             $templateCache.removeAll();
 
-            $rootScope.sequenceCompleted = false;
             /* init some defaults */
             var path = ""; //defaulting to empty string for path will result in samePage on error
             var args = {
@@ -931,7 +835,6 @@ directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$ti
 
                 /* not on the same page so we're gonna slide to the other frame */
                 var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
-                console.log('NEXT FRAME: ' + nextFrameID);
 
                 /*
                 split location path on '/' to get the right framesMap key
@@ -977,7 +880,6 @@ directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$ti
                 scope.$emit('viewContentLoaded', {});
 
                 /* do the animations */
-                console.log('GOTO FRAME');
                 sequence.goTo(nextFrameID, direction);
 
                 /* log this click in keen.io */

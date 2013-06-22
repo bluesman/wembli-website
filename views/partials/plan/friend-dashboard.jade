@@ -73,7 +73,7 @@
 						.row.firstRow
 							h3 Pick Your Maximum Price Per Ticket:
 							.price-slider-container.pull-left
-								#ticket-price-slider.price-slider(min="0",max="500",step="5",value="{{me.rsvp.tickets.price}}",range="min",slide="ticketsPriceSlide",stop="ticketsPriceStop")
+								#ticket-price-slider.price-slider.jquery-slider(min="0",max="500",step="5",value="{{me.rsvp.tickets.price}}",range="min",slide="ticketsPriceSlide",stop="ticketsPriceStop")
 								.price-range-group-container
 									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.low]") $
 									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.med]") $$
@@ -87,7 +87,7 @@
 								input(type="checkbox",name="parking_decision",ng-model="me.rsvp.parking.decision",ng-click="toggleInputs('parking',me.rsvp.parking.decision)")
 								.calibri Include me in the parking plans:
 							.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.parking.decision]")
-								#parking-price-slider.price-slider(min="0",max="100",disable="{{!me.rsvp.parking.decision}}",step="5",value="{{me.rsvp.parking.price}}",range="min",slide="parkingPriceSlide",stop="parkingPriceStop")
+								#parking-price-slider.price-slider.jquery-slider(min="0",max="100",disable="{{!me.rsvp.parking.decision}}",step="5",value="{{me.rsvp.parking.price}}",range="min",slide="parkingPriceSlide",stop="parkingPriceStop")
 								.price-range-group-container
 									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.low]") $
 									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.med]") $$
@@ -122,7 +122,7 @@
 								option(value="Vegetarian") Vegetarian
 								option(value="Vietnamese") Vietnamese
 						.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.restaurant.decision]")
-							#restaurant-price-slider.price-slider(min="0",max="100",step="5",disable="{{!me.rsvp.restaurant.decision}}",value="{{me.rsvp.restaurant.price}}",range="min",slide="restaurantPriceSlide",stop="restaurantPriceStop")
+							#restaurant-price-slider.price-slider.jquery-slider(min="0",max="100",step="5",disable="{{!me.rsvp.restaurant.decision}}",value="{{me.rsvp.restaurant.price}}",range="min",slide="restaurantPriceSlide",stop="restaurantPriceStop")
 							.price-range-group-container
 								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.low]") $
 								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.med]") $$
@@ -143,7 +143,7 @@
 								option(value="Chain") Chain (Marriott, Hyatt, etc.)
 								option(value="Luxury") Luxury
 						.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.hotel.decision]")
-							#hotel-price-slider.price-slider(min="0",max="500",step="5",disable="{{!me.rsvp.hotel.decision}}",value="{{me.rsvp.hotel.price}}",range="min",slide="hotelPriceSlide",stop="hotelPriceStop")
+							#hotel-price-slider.price-slider.jquery-slider(min="0",max="500",step="5",disable="{{!me.rsvp.hotel.decision}}",value="{{me.rsvp.hotel.price}}",range="min",slide="hotelPriceSlide",stop="hotelPriceStop")
 							.price-range-group-container
 								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.low]") $
 								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.med]") $$

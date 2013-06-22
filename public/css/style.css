@@ -7682,18 +7682,28 @@ body {
 #footer ul#nav li#logout a {
   width: 80px;
 }
-#footer ul#nav li#handle {
-  margin: 20px;
+#footer ul#nav li#help {
+  display: inline;
+  position: relative;
+  margin: 0 50px 0 0;
 }
-#footer ul#nav li#handle a {
-  display: block;
-  height: 19px;
-  width: 37px;
-  background: transparent url('/images/handle.png') no-repeat 0 center;
+#footer ul#nav li#help .popover-content {
+  line-height: 15px;
+  width: 200px;
+}
+#footer ul#nav li#help i {
+  line-height: 8px;
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+}
+#footer ul#nav li#help i:hover {
+  color: #ff6700;
 }
 #footer #info {
   position: relative;
   height: 300px;
+  width: 100%;
   overflow: hidden;
   background-color: #ffffff;
 }
@@ -7816,6 +7826,9 @@ body {
 .event-data {
   *zoom: 1;
   background-color: #427fb8;
+}
+.event-data .info {
+  color: #f0f0f0;
 }
 .event-data:before,
 .event-data:after {
@@ -8486,6 +8499,11 @@ body {
 #content #search-frame #right #search-wrapper #search #search-results a#more-events i {
   margin: 1px 0px 0px 8px;
 }
+#no-tickets .modal-body .btn {
+  margin: 30px auto;
+  width: 130px;
+  display: block;
+}
 #rsvp-login-modal .not-friend,
 #tickets-login-modal .not-friend {
   text-align: center;
@@ -8698,113 +8716,72 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
 }
+#tickets-frame #tickets .filter-container,
 #tickets-frame #tickets .ticket-list-container .ticket-row,
-#tickets-frame #tickets #ticket-filter-container,
 #tickets-frame #tickets .ticket-list-header-container {
   background-color: rgba(215, 213, 214, 0.25);
 }
-#tickets-frame #tickets #tickets-price-range > h3 {
+#tickets-frame #tickets .filter-container > h3 {
   margin-left: 0.5em;
   margin-top: 2px;
   font-size: 14px;
   font-weight: bold;
 }
-#tickets-frame #tickets #tickets-price-range {
+#tickets-frame #tickets .filter-container {
+  *zoom: 1;
+  position: relative;
   margin-top: 20px;
   text-align: left;
-  position: relative;
 }
-#tickets-frame #tickets #tickets-price-range .popover-container {
+#tickets-frame #tickets .filter-container:before,
+#tickets-frame #tickets .filter-container:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#tickets-frame #tickets .filter-container:after {
+  clear: both;
+}
+#tickets-frame #tickets .filter-container:before,
+#tickets-frame #tickets .filter-container:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#tickets-frame #tickets .filter-container:after {
+  clear: both;
+}
+#tickets-frame #tickets .filter-container .popover-container {
   margin: 10px 0 0 10px;
 }
-#tickets-frame #tickets #tickets-price-range .display-popover {
+#tickets-frame #tickets .filter-container .display-popover {
   margin-left: 2px;
   font-size: 18px;
   padding: 0;
   top: 3px;
 }
-#tickets-frame #tickets #tickets-price-range #price-range-form {
-  *zoom: 1;
-  background-color: rgba(215, 213, 214, 0.25);
-}
-#tickets-frame #tickets #tickets-price-range #price-range-form:before,
-#tickets-frame #tickets #tickets-price-range #price-range-form:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#tickets-frame #tickets #tickets-price-range #price-range-form:after {
-  clear: both;
-}
-#tickets-frame #tickets #tickets-price-range #price-range-form:before,
-#tickets-frame #tickets #tickets-price-range #price-range-form:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#tickets-frame #tickets #tickets-price-range #price-range-form:after {
-  clear: both;
-}
-#tickets-frame #tickets #tickets-price-range #price-range-form fieldset label.checkbox {
-  margin: 6px;
-  padding: 10px;
-  color: #524f45;
-}
-#tickets-frame #tickets #tickets-price-range #price-range-form fieldset label.checkbox:hover {
-  background-color: rgba(66, 127, 184, 0.25);
-  color: #ff6700;
-}
-#tickets-frame #tickets #tickets-price-range #price-range-form a {
-  margin: 6px;
-}
-#tickets-frame #tickets #ticket-filter-container {
-  margin-top: 20px;
-  *zoom: 1;
-}
-#tickets-frame #tickets #ticket-filter-container:before,
-#tickets-frame #tickets #ticket-filter-container:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#tickets-frame #tickets #ticket-filter-container:after {
-  clear: both;
-}
-#tickets-frame #tickets #ticket-filter-container:before,
-#tickets-frame #tickets #ticket-filter-container:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#tickets-frame #tickets #ticket-filter-container:after {
-  clear: both;
-}
-#tickets-frame #tickets #ticket-filter-container h3 {
-  margin: 15px 10px 10px 10px;
-  float: left;
-}
-#tickets-frame #tickets #ticket-filter-container .qty-filter {
+#tickets-frame #tickets .filter-container .qty-filter {
   float: left;
   margin: 10px 10px 5px 25px;
 }
-#tickets-frame #tickets #ticket-filter-container .qty-filter strong {
+#tickets-frame #tickets .filter-container .qty-filter strong {
   margin-right: 4px;
 }
-#tickets-frame #tickets #ticket-filter-container .qty-filter select {
+#tickets-frame #tickets .filter-container .qty-filter select {
   margin-top: 6px;
   width: 50px;
 }
-#tickets-frame #tickets #ticket-filter-container .price-filter {
+#tickets-frame #tickets .filter-container .price-filter {
   margin: 5px;
   float: right;
   width: 220px;
 }
-#tickets-frame #tickets #ticket-filter-container .price-filter p label {
+#tickets-frame #tickets .filter-container .price-filter p label {
   float: left;
   font-size: 11px;
   margin: 4px 0 0 15px;
 }
-#tickets-frame #tickets #ticket-filter-container .price-filter p input {
+#tickets-frame #tickets .filter-container .price-filter p input {
   border: 0;
   color: #4380b8;
   font-weight: bold;
@@ -8817,11 +8794,11 @@ body {
   -moz-border-radius: 0;
   border-radius: 0;
 }
-#tickets-frame #tickets #ticket-filter-container .price-filter #price-slider {
+#tickets-frame #tickets .filter-container .price-filter .price-slider {
   width: 200px;
   height: 6px;
 }
-#tickets-frame #tickets #ticket-filter-container .price-filter #price-slider .ui-slider-handle {
+#tickets-frame #tickets .filter-container .price-filter .price-slider .ui-slider-handle {
   height: 12px;
   width: 12px;
 }
@@ -8863,67 +8840,6 @@ body {
 }
 #tickets-frame #tickets .ticket-list-header-container a:hover {
   color: #000000;
-}
-#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header {
-  *zoom: 1;
-}
-#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:before,
-#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:after {
-  clear: both;
-}
-#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:before,
-#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#tickets-frame #tickets #group-ticket-list-header-container #group-ticket-list-header:after {
-  clear: both;
-}
-#tickets-frame #tickets #group-ticket-list-header-container .popover {
-  font-weight: normal;
-}
-#tickets-frame #tickets #group-ticket-list-header-container .popover-container {
-  margin: 10px 0 0 10px;
-}
-#tickets-frame #tickets #group-ticket-list-header-container a#range-header {
-  width: 65px;
-}
-#tickets-frame #tickets #group-ticket-list-header-container a#section-header {
-  text-align: left;
-  width: 180px;
-}
-#tickets-frame #tickets #group-ticket-list-header-container a#qty-header {
-  width: 100px;
-}
-#tickets-frame #tickets #group-ticket-list-header-container a#price-header {
-  width: 65px;
-}
-#tickets-frame #tickets #self-ticket-list-header-container a#price-header {
-  width: 65px;
-}
-#tickets-frame #tickets #self-ticket-list-header-container a#section-header {
-  width: 195px;
-  text-align: left;
-  margin-left: 5px;
-}
-#tickets-frame #tickets #self-ticket-list-header-container a#qty-header {
-  width: 100px;
-  text-align: left;
-}
-#tickets-frame #tickets #group-ticket-list-container .ticket-price {
-  margin-top: 6px;
-}
-#tickets-frame #tickets #group-ticket-list-container .ticket-price .actual-price {
-  margin-top: 6px;
-}
-#tickets-frame #tickets #group-ticket-list-container .ticket-row:hover {
-  background-color: rgba(215, 213, 214, 0.25);
 }
 #tickets-frame #tickets .ticket-list-container .ticket-row:hover {
   background-color: rgba(66, 127, 184, 0.25);
@@ -9019,10 +8935,113 @@ body {
 #tickets-frame #tickets .ticket-list-container .ticket-row > div {
   float: left;
 }
-#tickets-frame #tickets #self-ticket-list-container .ticket-info {
+#tickets-frame #tickets #read-only-filters #price-range-form {
+  *zoom: 1;
+}
+#tickets-frame #tickets #read-only-filters #price-range-form:before,
+#tickets-frame #tickets #read-only-filters #price-range-form:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#tickets-frame #tickets #read-only-filters #price-range-form:after {
+  clear: both;
+}
+#tickets-frame #tickets #read-only-filters #price-range-form:before,
+#tickets-frame #tickets #read-only-filters #price-range-form:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#tickets-frame #tickets #read-only-filters #price-range-form:after {
+  clear: both;
+}
+#tickets-frame #tickets #read-only-filters #price-range-form fieldset label.checkbox {
+  margin: 6px;
+  padding: 10px;
+  color: #524f45;
+}
+#tickets-frame #tickets #read-only-filters #price-range-form fieldset label.checkbox:hover {
+  background-color: rgba(66, 127, 184, 0.25);
+  color: #ff6700;
+}
+#tickets-frame #tickets #read-only-filters #price-range-form a {
+  margin: 6px;
+}
+#tickets-frame #tickets #buy-now-filters .h3 {
+  margin: 15px 10px 10px 10px;
+  float: left;
+}
+#tickets-frame #tickets #read-only-header-container #read-only-header {
+  *zoom: 1;
+}
+#tickets-frame #tickets #read-only-header-container #read-only-header:before,
+#tickets-frame #tickets #read-only-header-container #read-only-header:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#tickets-frame #tickets #read-only-header-container #read-only-header:after {
+  clear: both;
+}
+#tickets-frame #tickets #read-only-header-container #read-only-header:before,
+#tickets-frame #tickets #read-only-header-container #read-only-header:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#tickets-frame #tickets #read-only-header-container #read-only-header:after {
+  clear: both;
+}
+#tickets-frame #tickets #read-only-header-container .popover {
+  font-weight: normal;
+}
+#tickets-frame #tickets #read-only-header-container .popover-container {
+  margin: 10px 0 0 10px;
+}
+#tickets-frame #tickets #read-only-header-container a#range-header {
+  width: 65px;
+}
+#tickets-frame #tickets #read-only-header-container a#section-header {
+  text-align: left;
+  width: 180px;
+}
+#tickets-frame #tickets #read-only-header-container a#qty-header {
+  width: 100px;
+}
+#tickets-frame #tickets #read-only-header-container a#price-header {
+  width: 65px;
+}
+#tickets-frame #tickets #add-to-plan-header-container a#price-header,
+#tickets-frame #tickets #buy-now-header-container a#price-header {
+  width: 65px;
+}
+#tickets-frame #tickets #add-to-plan-header-container a#section-header,
+#tickets-frame #tickets #buy-now-header-container a#section-header {
+  width: 195px;
+  text-align: left;
+  margin-left: 5px;
+}
+#tickets-frame #tickets #add-to-plan-header-container a#qty-header,
+#tickets-frame #tickets #buy-now-header-container a#qty-header {
+  width: 100px;
+  text-align: left;
+}
+#tickets-frame #tickets #read-only-container .ticket-price {
+  margin-top: 6px;
+}
+#tickets-frame #tickets #read-only-container .ticket-price .actual-price {
+  margin-top: 6px;
+}
+#tickets-frame #tickets #read-only-container .ticket-row:hover {
+  background-color: rgba(215, 213, 214, 0.25);
+}
+#tickets-frame #tickets #add-to-plan-container .ticket-info,
+#tickets-frame #tickets #buy-now-container .ticket-info {
   margin-top: 0;
 }
-#tickets-frame #tickets #self-ticket-list-container .ticket-row .ticket-price {
+#tickets-frame #tickets #add-to-plan-container .ticket-row .ticket-price,
+#tickets-frame #tickets #buy-now-container .ticket-row .ticket-price {
   margin: 0 10px;
 }
 .no-results {
@@ -9802,8 +9821,15 @@ a#facebook-login-button {
   width: 18%;
   background-color: #f0f0f0;
 }
+#plan-frame #left #plan-nav .container {
+  width: 100%;
+}
 #plan-frame #left #plan-nav .spacer {
   height: 90px;
+  border-bottom: thin solid #bdbdbd;
+}
+#plan-frame #left #plan-nav .line {
+  border-top: thin solid #ffffff;
 }
 #plan-frame #left #plan-nav a.plan-section-nav {
   display: block;
@@ -9849,7 +9875,7 @@ a#facebook-login-button {
   background-color: #6da1b7;
 }
 #plan-frame #middle {
-  width: 64%;
+  width: 82%;
   float: left;
   height: 100%;
   margin-left: 18%;
@@ -10597,6 +10623,9 @@ a#facebook-login-button {
   display: block;
   width: 200px;
   height: 60px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-tickets-section .tickets-button label {
+  color: #4380b8;
 }
 #plan-frame #middle .friend-plan-dashboard .collect-rsvp {
   width: 100%;

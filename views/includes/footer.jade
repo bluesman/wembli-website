@@ -31,6 +31,7 @@ footer#footer(ng-controller="FooterCtrl")
 			a(href="/login") Log in
 		li#signup.wembli-sequence-link(ng-hide="loggedIn")
 			a(href="/signup") Sign up
-		li#handle.pull-right
-			a(href="#")
+		li#help
+			i.icon-question-sign.icon-2x.display-popover(trigger="hover",placement="top", title="Click For Help & Feedback", content="Wembli is ALWAYS trying to improve! Click the question mark to get help and provide feedback.", href="#",ng-click="slide()")
+				//- .wembli-logo.pull-right
 	#info

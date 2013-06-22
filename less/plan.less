@@ -33,8 +33,16 @@
 			width:18%;
 			background-color: @grayLighter;
 
+			.container {
+				width:100%;
+			}
+
 			.spacer {
 				height:90px;
+				border-bottom:thin solid darken(@grayLighter,20%);
+			}
+			.line {
+				border-top:thin solid lighten(@grayLighter, 60%);
 			}
 
 			a.plan-section-nav {
@@ -70,7 +78,7 @@
 	}
 
 	#middle {
-		width:64%;
+		width:82%;
 		float:left;
 		height:100%;
 		margin-left:18%;
@@ -633,6 +641,13 @@
 						display: block;
 						width: 200px;
 						height: 60px;
+					}
+				}
+			}
+			.organizer-tickets-section {
+				.tickets-button {
+					label {
+						color:@blue;
 					}
 				}
 			}

@@ -116,8 +116,12 @@ exports.event = {
 					return me(err);
 				}
 				ret.tickets = [];
-				if (typeof results !== "undefined") {
+				if (typeof results.TicketGroup !== "undefined") {
+					console.log(results);
 					ret.tickets = (typeof results.TicketGroup.length == "undefined") ? [results.TicketGroup] : results.TicketGroup;
+				} else {
+					ret.success = 0;
+					ret.error = 'no tickets';
 				}
 				me(null, ret);
 			});
