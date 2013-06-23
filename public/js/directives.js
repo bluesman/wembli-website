@@ -713,14 +713,7 @@ directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$ti
           element.click(function(e) {
             e.preventDefault();
 
-            /* destroy the scope and start over */
-            var currentPath = $rootScope.currentPath;
-            var currentFrame = $rootScope.currentFrame;
-
-            $rootScope.$destroy();
             $rootScope.sequenceCompleted = false;
-            $rootScope.currentPath = currentPath;
-            $rootScope.currentFrame = currentFrame;
 
             /* interactive-venue-map seems to disrespect template no-cache */
             $templateCache.removeAll();

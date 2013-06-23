@@ -7,6 +7,11 @@ function MainCtrl($scope, $location, $window, footer, plan) {
 };
 
 
+function InviteFriendsWizardCtrl($scope) {
+
+};
+
+
 
 /*
  * Index Controller

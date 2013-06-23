@@ -7,7 +7,7 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
   function($rootScope, $http, $filter, $window, $timeout, sequence, fetchModals, plan, $location, wembliRpc, customer, facebook, twitter) {
     return {
       restrict: 'C',
-      controller: function($scope, $element, $attrs, $transclude) {
+      controller: ['$scope','$element','$attrs','$transclude',function($scope, $element, $attrs, $transclude) {
         $scope.planFriends = [];
 
         $scope.selectedFriends = {
@@ -100,7 +100,7 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
         }
         $scope.gotoStep(initialStep);
 
-      },
+      }],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {};
       }
@@ -172,8 +172,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
   function(wembliRpc, $window, customer) {
     return {
       restrict: 'E',
-      controller: function($scope, $element, $attrs, $transclude) {
-
+      controller: ['$scope','$element','$attrs','$transclude',function($scope, $element, $attrs, $transclude) {
         $scope.$on('forgot-password-email-sent', function() {
           $scope.forgotPasswordEmailSent = true;
         });
@@ -265,7 +264,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
         };
 
         $scope.customer = customer.get();
-      },
+      }],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
 
@@ -279,8 +278,7 @@ directive('invitationWizardStep2', ['wembliRpc', '$window',
   function(wembliRpc, $window) {
     return {
       restrict: 'E',
-      controller: function($scope, $element, $attrs, $transclude) {
-
+      controller: ['$scope','$element','$attrs','$transclude',function($scope, $element, $attrs, $transclude) {
         $scope.submitRsvp = function() {
           if (!$scope.customer.email) {
             $scope.signup.noContinue = true;
@@ -309,7 +307,7 @@ directive('invitationWizardStep2', ['wembliRpc', '$window',
         };
 
 
-      },
+      }],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
 
@@ -323,7 +321,7 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
   function(wembliRpc, $window, facebook, plan, $http, $rootScope) {
     return {
       restrict: 'E',
-      controller: function($scope, $element, $attrs, $transclude) {
+      controller: ['$scope','$element','$attrs','$transclude',function($scope, $element, $attrs, $transclude) {
 
         $scope.handleFriendsFetch = function(response) {
 
@@ -472,7 +470,7 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
             facebook.api('/me/friends', $scope.handleFriendsFetch);
           }
         });
-      },
+      }],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
 
@@ -486,7 +484,7 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
   function(wembliRpc, $window, twitter, plan, $http, $rootScope, $location, $filter) {
     return {
       restrict: 'E',
-      controller: function($scope, $element, $attrs, $transclude) {
+      controller: ['$scope','$element','$attrs','$transclude',function($scope, $element, $attrs, $transclude) {
 
         $scope.handleSearchUsers = function() {
 
@@ -616,7 +614,7 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
         });
 
 
-      },
+      }],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
 
@@ -630,7 +628,7 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
   function(wembliRpc, $window, plan, $timeout, $rootScope) {
     return {
       restrict: 'E',
-      controller: function($scope, $element, $attrs, $transclude) {
+      controller: ['$scope','$element','$attrs','$transclude',function($scope, $element, $attrs, $transclude) {
 
         $scope.selectedFriends = [];
         $scope.wemblimail = {
@@ -720,7 +718,7 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
 
           });
         };
-      },
+      }],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
 

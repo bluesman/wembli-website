@@ -1,7 +1,7 @@
 //- see dynamic-view-helpers helpers for wizardNav var
 - var wizardNav = initInviteFriendsWizard();
 - wizardNav[0]['active'] = 'active';
-#invitation-modal.invite-friends-wizard.modal.hide
+#invitation-modal.invite-friends-wizard.modal.hide(ng-controller="InviteFriendsWizardCtrl")
 	#invite-friends-wizard
 		.modal-header
 			h2 Invite Friends To {{plan.event.eventName}}

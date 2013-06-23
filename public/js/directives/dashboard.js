@@ -12,6 +12,7 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
       templateUrl: "/partials/dashboard-app",
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
+
           /* watch for the customer updated event and update scope.customer */
           scope.$on('customer-changed', function(e, args) {
             scope.customer = customer.get();
@@ -161,7 +162,7 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
 		scope.showDashboard = false;
 		scope.showPaymentInformation = true;
 	    }
-	    
+
           };
 
           scope.routeDashboard($location.hash());
