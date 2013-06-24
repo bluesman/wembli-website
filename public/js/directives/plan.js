@@ -217,6 +217,11 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
           $scope.tickets = plan.getTickets();
           $scope.friends = plan.getFriends();
 
+          console.log($scope.tickets);
+          $scope.serviceFee = function(price) {
+            return price * 0.15;
+          }
+
           // TODO - make this a filter?
           $scope.showEllipses = function(ary, len) {
             if (typeof ary !== "undefined") {

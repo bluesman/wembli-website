@@ -8,7 +8,7 @@ section#section2.organizer-invitees-section.invitees-section.plan-section.even
 				span Invite People&nbsp;
 				i.icon-double-angle-right
 		h3(ng-show="friends.length") See who's coming and what they voted on
-		#invitees-container(ng-show="friends.length")
+		.invitees-container(ng-show="friends.length")
 			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true}")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")

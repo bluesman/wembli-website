@@ -74,6 +74,37 @@ filter('feedString', ['$filter',
 	}
 ]).
 
+filter('ticketTotals', ['$filter',
+	function($filter) {
+		var fee = 0.15;
+		return function(tickets) {
+			var groupTotal = 0;
+			var groupCount = 0;
+			var groups = [];
+			var groupTotalEach = {};
+			for (var i = 0; i < tickets.length; i++) {
+				var t = tickets[i]
+				var groupNumber = i + 1;
+				t.ticketGroup.serviceFee = parseFloat(t.ticketGroup.ActualPrice) * fee;
+				t.ticketGroup.deliveryFee = 15.00;
+				t.ticketGroup.totalEach = t.ticketGroup.serviceFee + parseFloat(t.ticketGroup.ActualPrice);
+				t.ticketGroup.subTotal = t.ticketGroup.totalEach * parseInt(t.ticketGroup.selectedQty);
+				t.ticketGroup.total = t.ticketGroup.subTotal + t.ticketGroup.deliveryFee;
+				groupTotal += t.ticketGroup.total;
+				groupCount += parseInt(t.ticketGroup.selectedQty);
+				groups.push({value:i,label:'Ticket Group '+groupNumber});
+				groupTotalEach[i] = t.ticketGroup.totalEach;
+			};
+
+			tickets.total = groupTotal;
+			tickets.totalQty = groupCount;
+			tickets.groups = groups;
+			tickets.groupTotalEach = groupTotalEach;
+			return tickets;
+		};
+	}
+]).
+
 filter('interpolate', ['version',
 	function(version) {
 		return function(text) {

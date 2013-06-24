@@ -1,11 +1,176 @@
 section#section7.organizer-money-section.money-section.plan-section.even
 	.header
 		h1.pull-left Money
-	.body
-		h3 Have friends pony up for their part of the bill and payments and pay the bills
+	//- have chosen tix and they are splitting first
+	.body(ng-show="plan.tickets[0] && {'split-first':true}[plan.preferences.payment]")
+		h3 Have your friends pony up before you purchase
+		.tickets-breakdown-container
+			h4 Cost For The Tickets You Have Selected:
+			ul.ticket-breakdown-container
+				li.ticket-row(ng-repeat="ticket in tickets | ticketTotals")
+					.ticket-quantity Group of {{ticket.ticketGroup.selectedQty}} Tickets(s)
+					.ticket-info
+						span Located in:&nbsp;
+						strong Section:&nbsp;
+						span {{ticket.ticketGroup.Section}}&nbsp;
+						strong Row:&nbsp;
+						span {{ticket.ticketGroup.Row}}&nbsp;
+						strong Seats:&nbsp;
+						span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
+						span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
+					.cost-breakdown-container
+						.cost-breakdown-header Cost Breakdown Per Ticket:
+						.cost-breakdown-row.clearfix
+							.pull-left Price:
+							.pull-right {{ticket.ticketGroup.ActualPrice | currency}}
+						.cost-breakdown-row.clearfix
+							.pull-left TicketNetwork Service Fee:
+							.pull-right {{ticket.ticketGroup.serviceFee | currency}}
+						.cost-breakdown-row.clearfix
+							.pull-left Total Price Per Ticket:
+							.pull-right {{ticket.ticketGroup.totalEach | currency}}
+						.cost-breakdown-row.clearfix
+							.pull-left Sub Total:
+							.pull-right {{ticket.ticketGroup.subTotal | currency}}
+						.cost-breakdown-row.clearfix
+							.pull-left Delivery Fee:
+							.pull-right {{ticket.ticketGroup.deliveryFee | currency}}
+						.cost-breakdown-row.clearfix
+							.pull-left Total For {{ticket.ticketGroup.selectedQty}} Ticket(s):
+							.pull-right {{ticket.ticketGroup.total | currency}}
+				.all-tickets-total.clearfix(ng-show="tickets[1]")
+					.pull-left Total Cost Of All Ticket Groups ({{tickets.totalQty}} Tickets):
+					.pull-right {{tickets.total | currency}}
+		h3 Confirm Pony Up Amount and Send Email
+		.invitees-container(ng-show="friends[0]")
+			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{rsvp.decision:true}")
+				.img-container.pull-left
+					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
+					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
+				.invitee-info
+					.invitee-name.clearfix
+						.invitee-name-container.pull-left
+							span.name.orange {{friend.contactInfo.name}}&nbsp;
+							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
+						.message-status-container.pull-right
+							.message-status
+								.pony-up-email(ng-show="{'split-after':true}[plan.preferences.payment]",ng-hide="ponyUpSent")
+									label.pony-up-email-label
+										span Pony Up Email:&nbsp;
+										span.label.label-info(title="Delivered on {{friend.email.ponyUp.deliveredLastDate | date:'short'}}",ng-show="friend.email.ponyUp.delivered") &nbsp;delivered({{friend.email.ponyUp.delivered}})
+										span &nbsp;
+										span.label.label-info(title="Opened on {{friend.email.ponyUp.openLastDate | date:'short'}}", ng-show="friend.email.ponyUp.open") &nbsp;opened ({{friend.email.ponyUp.open}})
+										span &nbsp;
+										a.resend-pony-up-email(href="#",friendId="{{friend._id}}") Resend
+					.invitee-pony-up.clearfix
+						.pull-left
+							span How much should {{friend.contactInfo.name}} Pony Up?&nbsp;
+							select(ng-show="tickets[1]",ng-init="friend.ticketGroup=0",ng-model="friend.ticketGroup",ng-options="tg.value as tg.label for tg in tickets.groups")
+						.pull-right.input-prepend
+							span.add-on $
+							input(id="{{friend._id}}-pony-up-amount",name="{{friend._id}}-pony-up-amount",ng-model="friend.ponyUpAmount",type="text",placeholder="{{tickets.groupTotalEach[friend.ticketGroup] | number:2}}")
+	//- have chosen tix and they are splitting after
+	.body(ng-show="plan.tickets[0] && {'split-after':true}[plan.preferences.payment]")
+		h3 Tell your friends to pony up!
+		.invitees-container(ng-show="friends[0]")
+			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{rsvp.decision:true}")
+				.img-container.pull-left
+					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
+					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
+				.invitee-info
+					.invitee-name.clearfix
+						.invitee-name-container.pull-left
+							span.name.orange {{friend.contactInfo.name}}&nbsp;
+							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
+						.message-status-container.pull-right
+							.message-status
+								.pony-up-email(ng-show="{'split-after':true}[plan.preferences.payment]",ng-hide="ponyUpSent")
+									label.pony-up-email-label
+										span Pony Up Email:&nbsp;
+										span.label.label-info(title="Delivered on {{friend.email.ponyUp.deliveredLastDate | date:'short'}}",ng-show="friend.email.ponyUp.delivered") &nbsp;delivered({{friend.email.ponyUp.delivered}})
+										span &nbsp;
+										span.label.label-info(title="Opened on {{friend.email.ponyUp.openLastDate | date:'short'}}", ng-show="friend.email.ponyUp.open") &nbsp;opened ({{friend.email.ponyUp.open}})
+										span &nbsp;
+										a.resend-pony-up-email(href="#",friendId="{{friend._id}}") Resend
+					.invitee-prefs-container
+						.invitee-pref.first.pull-left
+							.invitee-pref-header RSVP STATUS
+							.invitee-pref-value
+								i.icon-check.icon-3x.green.invitee-rsvp-decision(ng-show="{true:true}[friend.rsvp.decision]")
+								i.icon-remove.icon-3x.invitee-rsvp-decision(ng-show="{false:true}[friend.rsvp.decision]")
+								i.icon-question.icon-3x.invitee-rsvp-decision(ng-show="{null:true}[friend.rsvp.decision]")
+						.invitee-pref.pull-left
+							.invitee-pref-header Ticket Vote
+							.invitee-pref-value(ng-show="friend.rsvp.decision")
+								.icon(ng-hide="friend.rsvp.tickets.decision")
+									i.icon-minus.icon-2x
+								.dollar-sign.orange(ng-show="friend.rsvp.tickets.decision")
+									span(ng-show="friend.rsvp.tickets.priceGroup.low") $
+									span(ng-show="friend.rsvp.tickets.priceGroup.med") $
+									span(ng-show="friend.rsvp.tickets.priceGroup.high") $
+						.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.parking]")
+							.invitee-pref-header Parking Vote
+							.invitee-pref-value(ng-show="friend.rsvp.decision")
+								.icon(ng-hide="friend.rsvp.parking.decision")
+									i.icon-minus.icon-2x
+								.dollar-sign.orange(ng-show="friend.rsvp.parking.decision")
+									span(ng-show="friend.rsvp.parking.priceGroup.low") $
+									span(ng-show="friend.rsvp.parking.priceGroup.med") $
+									span(ng-show="friend.rsvp.parking.priceGroup.high") $
+						.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.restaurants]")
+							.invitee-pref-header Restaurant Votes
+							.invitee-pref-value(ng-show="friend.rsvp.decision")
+								.icon(ng-hide="friend.rsvp.restaurant.decision")
+									i.icon-minus.icon-2x
+								.dollar-sign.orange(ng-show="friend.rsvp.restaurant.decision")
+									span(ng-show="friend.rsvp.restaurant.priceGroup.low") $
+									span(ng-show="friend.rsvp.restaurant.priceGroup.med") $
+									span(ng-show="friend.rsvp.restaurant.priceGroup.high") $
+								#invitee-food-preferences(ng-show="friend.rsvp.restaurant.preference.length")
+									.prefs-list.display-popover(placement="bottom",trigger="hover",title="Food Preferences",content="{{friend.rsvp.restaurant.preference.join(', ')}}")
+										strong cuisine:&nbsp;
+										span {{friend.rsvp.restaurant.preference.join(', ').substring(0,30)}}
+										span(ng-show="showEllipses(friend.rsvp.restaurant.preference,30)") ...
+						.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.hotels]")
+							.invitee-pref-header Hotel Votes
+							.invitee-pref-value(ng-show="friend.rsvp.decision")
+								.icon(ng-hide="friend.rsvp.hotel.decision")
+									i.icon-minus.icon-2x
+								.dollar-sign.orange(ng-show="friend.rsvp.hotel.decision")
+									span(ng-show="friend.rsvp.hotel.priceGroup.low") $
+									span(ng-show="friend.rsvp.hotel.priceGroup.med") $
+									span(ng-show="friend.rsvp.hotel.priceGroup.high") $
+								#invitee-hotel-preferences(ng-show="friend.rsvp.hotel.preference.length")
+									.prefs-list.display-popover(placement="bottom",trigger="hover",title="Hotel Preferences",content="{{friend.rsvp.hotel.preference.join(', ')}}")
+										strong hotel type:&nbsp;
+										span {{friend.rsvp.hotel.preference.join(', ').substring(0,30)}}
+										span(ng-show="showEllipses(friend.rsvp.hotel.preference,30)") ...
+			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
+				span Invite More People&nbsp;
+				i.icon-double-angle-right
+	//- have chosen tix and they are not splitting
+	.body(ng-show="plan.tickets[0] && {'no-split':true}[plan.preferences.payment]")
+		h3 Got your tickets? Buy em!
+	//- have not yet chosen tix and they are splitting first
+	.body(ng-show="!plan.tickets[0] && {'split-first':true}[plan.preferences.payment]")
+		h3 Have friends pony up for their part of the bill before you purchase.
 		.left.pull-left
-			p Once you choose your tix you'll be able to pony up for their part
-			p If you have add-ons, you might want to wait
-			p rewrite this
+			p You have chosen to have your friends pony up before you purchase.  Find the tickets you want then you can ask your friends to pay you up front.  Once you've got the dough, you can purchase the tickets you've selected.
+			p Remeber: your tickets are NOT reserved until you buy them so tell your friends to:
+				iframe(width="420",height="315",src="http://www.youtube.com/embed/tqlaRZOUwn4",frameborder="0",allowfullscreen)
+		.right
+			image(src="/images/cartoon-man-money-left.png")
+	//- have not yet chosen tix and they are splitting after
+	.body(ng-hide="plan.tickets.length", ng-show="{'split-after':true}[plan.preferences.payment]")
+		h3 Secure your tickets now and have your friends pay you back
+		.left.pull-left
+			p purchase now so you can lock in your tickets then you can have your friends pony up.
+		.right
+			image(src="/images/cartoon-man-money-left.png")
+	//- have not yet chosen tix and they are not splitting
+	.body(ng-hide="!plan.tickets[0]", ng-show="{'no-split':true}[plan.preferences.payment]")
+		h3 You're footing the bill? Nice...
+		.left.pull-left
+			p Hey Big spendah - pay now and then send your guests the itinerary.
 		.right
 			image(src="/images/cartoon-man-money-left.png")
