@@ -8,9 +8,9 @@
 		- console.log('context is '+visitor.context+' and preferences is '+plan.preferences.payment)
 		- if (visitor.context === "organizer")
 			#organizer-event-tickets
-				.buy-now(ng-show="{'no-split':true,'split-after':true}[plan.preferences.payment]")
+				.buy-now(ng-show="{'no-split':true,'split-after':true}[plan.preferences.tickets.payment]")
 					include interactive-venue-map/tickets/buy-now
-				.split-first(ng-show="{'split-first':true}[plan.preferences.payment]")
+				.split-first(ng-show="{'split-first':true,null:true}[plan.preferences.tickets.payment]")
 					.read-only(ng-hide="plan.rsvpComplete")
 						include interactive-venue-map/tickets/read-only
 					.rsvp-complete(ng-show="plan.rsvpComplete")

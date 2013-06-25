@@ -30,7 +30,7 @@ section#section7.organizer-money-section.money-section.plan-section.even
 							.pull-left Total Price Per Ticket:
 							.pull-right {{ticket.ticketGroup.totalEach | currency}}
 						.cost-breakdown-row.clearfix
-							.pull-left Sub Total:
+							.pull-left Total Cost :
 							.pull-right {{ticket.ticketGroup.subTotal | currency}}
 						.cost-breakdown-row.clearfix
 							.pull-left Delivery Fee:
@@ -69,6 +69,7 @@ section#section7.organizer-money-section.money-section.plan-section.even
 						.pull-right.input-prepend
 							span.add-on $
 							input(id="{{friend._id}}-pony-up-amount",name="{{friend._id}}-pony-up-amount",ng-model="friend.ponyUpAmount",type="text",placeholder="{{tickets.groupTotalEach[friend.ticketGroup] | number:2}}")
+		a.btn.btn-large.btn-orange(data-toggle="modal",href="#pony-up-modal")
 	//- have chosen tix and they are splitting after
 	.body(ng-show="plan.tickets[0] && {'split-after':true}[plan.preferences.payment]")
 		h3 Tell your friends to pony up!

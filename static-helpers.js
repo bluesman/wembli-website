@@ -13,20 +13,8 @@ module.exports = {
 				'icon': "icon-envelope",
 				'text': "RSVP's",
 			}, {
-				'icon': "icon-ticket",
-				'text': "Tickets",
-			}, {
-				'icon': "icon-truck",
-				'text': "Parking",
-			}, {
-				'icon': "icon-food",
-				'text': "Restaurant",
-			}, {
-				'icon': "icon-home",
-				'text': "Hotel",
-			}, {
-				'icon': "icon-money",
-				'text': "Money",
+				'icon': "icon-shopping-cart",
+				'text': "Cart",
 			}, {
 				'icon': "icon-file-alt",
 				'text': "Itinerary",

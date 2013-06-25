@@ -299,7 +299,10 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                   $(".amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
                 },
                 stop: function(event, ui) {
-                  filterTickets();
+                  var q = $(this).val();
+                  filterTickets({
+                    quantity: q
+                  });
                 }
 
               });

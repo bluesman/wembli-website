@@ -2,13 +2,13 @@ section#section2.organizer-invitees-section.invitees-section.plan-section.even
 	.header
 		h1.pull-left RSVP's
 	.body
-		h3(ng-hide="friends.length") You're going solo until you invite someone!
-		#no-invitees(ng-hide="friends.length")
+		h3(ng-hide="friends[0]") You're going solo until you invite someone!
+		#no-invitees(ng-hide="friends[0]")
 			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
 				span Invite People&nbsp;
 				i.icon-double-angle-right
-		h3(ng-show="friends.length") See who's coming and what they voted on
-		.invitees-container(ng-show="friends.length")
+		h3(ng-show="friends[0]") See who's coming and what they voted on
+		.invitees-container(ng-show="friends[0]")
 			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true}")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")

@@ -50,6 +50,7 @@ this.Model = function(mongoose) {
 
 			/* individual plan component preferences */
 			tickets : {
+				payment: {type:String,default:'split-first'},
 				priceRange: {
 					low:{type:Boolean,default:true},
 					med:{type:Boolean,default:true},
@@ -57,6 +58,7 @@ this.Model = function(mongoose) {
 				}
 			},
 			parking : {
+				payment: {type:String,default:'split-first'},
 				priceRange: {
 					low:{type:Boolean,default:true},
 					med:{type:Boolean,default:true},
@@ -64,6 +66,7 @@ this.Model = function(mongoose) {
 				}
 			},
 			hotels : {
+				payment: {type:String,default:'split-first'},
 				priceRange: {
 					low:{type:Boolean,default:true},
 					med:{type:Boolean,default:true},
@@ -71,6 +74,7 @@ this.Model = function(mongoose) {
 				}
 			},
 			restaurants : {
+				payment: {type:String,default:'split-first'},
 				priceRange: {
 					low:{type:Boolean,default:true},
 					med:{type:Boolean,default:true},

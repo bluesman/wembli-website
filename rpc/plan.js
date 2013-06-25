@@ -554,7 +554,11 @@ exports.plan = {
 			req.session.plan.preferences.addOns = args.preferences.addOns;
 			req.session.plan.preferences.inviteOptions = args.preferences.inviteOptions;
 			req.session.plan.preferences.guestList = args.preferences.guestList;
-			req.session.plan.preferences.payment = args.preferences.payment;
+			//req.session.plan.preferences.payment = args.preferences.payment;
+			req.session.plan.preferences.tickets.payment = args.preferences.tickets.payment;
+			req.session.plan.preferences.parking.payment = args.preferences.parking.payment;
+			req.session.plan.preferences.hotels.payment = args.preferences.hotels.payment;
+			req.session.plan.preferences.restaurants.payment = args.preferences.restaurants.payment;
 
 			console.log('plan.save');
 			console.log(args);

@@ -262,7 +262,8 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
               var t = $scope.tickets[i];
               sum += parseInt(t.ticketGroup.selectedQty);
             };
-
+            console.log('tickets qty:'+sum);
+            console.log('total coming: '+$scope.totalComing);
             /* if they have more than 0 tickets, check to see if they have more than the number of people coming */
             if (sum > 0) {
               $scope.ticketCountMismatch = true;
@@ -279,10 +280,19 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
 
 
           $scope.savePrefs = function() {
+            console.log('savePrefs');
+            console.log($scope.plan.preferences);
             plan.savePreferences({
               preferences: $scope.plan.preferences
-            }, function(err, result) {});
+            }, function(err, result) {
+              $scope.plan = result.plan;
+            });
           };
+
+          $scope.setPayment = function(addOn,value) {
+            $scope.plan.preferences[addOn].payment = value;
+            $scope.savePrefs();
+          }
 
           /* key bindings for up and down arrows for guestCount */
           $scope.guestCountKeyUp = function() {
@@ -341,6 +351,7 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
               ticketId: ticketId
             }, function(err, result) {
               $scope.tickets = plan.setTickets(result.tickets);
+              $scope.plan = result.plan;
             });
           };
 
@@ -466,6 +477,24 @@ directive('organizerInviteesSection', ['$rootScope',
   }
 ]).
 
+directive('organizerCartSection', ['$rootScope',
+  function($rootScope) {
+    return {
+      restrict: 'E',
+      cache: false,
+      replace: true,
+      scope: true,
+      templateUrl: '/partials/plan/cart-section',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+          $rootScope.$broadcast('section-loaded');
+        };
+      }
+    };
+  }
+]).
+
+/* deprecated in leiu of organizerCartSection:
 directive('organizerTicketsSection', ['$rootScope',
   function($rootScope) {
     return {
@@ -550,6 +579,7 @@ directive('organizerMoneySection', ['$rootScope',
     };
   }
 ]).
+*/
 
 directive('organizerItinerarySection', ['$rootScope',
   function($rootScope) {
