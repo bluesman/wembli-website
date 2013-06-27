@@ -110,6 +110,7 @@ exports.event = {
 				event: results.Event
 			};
 			ticketNetwork.GetTickets(args, function(err, results) {
+				console.log(results);
 				if (err) {
 					console.log('ERROR GETTING TIX');
 					console.log(err);

@@ -8,7 +8,7 @@ module.exports = {
 		var nav = {
 			'organizer': [{
 				'icon': "icon-flag",
-				'text': "Event",
+				'text': "Itinerary",
 			}, {
 				'icon': "icon-envelope",
 				'text': "RSVP's",
@@ -16,8 +16,8 @@ module.exports = {
 				'icon': "icon-shopping-cart",
 				'text': "Cart",
 			}, {
-				'icon': "icon-file-alt",
-				'text': "Itinerary",
+				'icon': "icon-money",
+				'text': "Pony Up",
 			}, {
 				'icon': "icon-comments-alt",
 				'text': "Chatter",

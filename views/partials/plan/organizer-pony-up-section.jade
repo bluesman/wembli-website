@@ -1,0 +1,33 @@
+section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
+	.header
+		h1.pull-left Pony Up!
+	.body
+		label.selectAll-label.clearfix
+			i.icon-check.icon-2x.pull-left.green(ng-show="ponyUp.selectAll")
+			i.icon-check-empty.icon-2x.pull-left(ng-hide="ponyUp.selectAll")
+			input.pull-left.hide(type="checkbox",ng-model="ponyUp.selectAll")
+			h3 Send pony up request for all friends
+		#no-invitees(ng-hide="friends[0]")
+			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
+				span Invite People&nbsp;
+				i.icon-double-angle-right
+		.invitees-container(ng-show="friends[0]")
+			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{'rsvp.decision':true} | friendPonyUp")
+				.img-container.pull-left
+					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
+					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
+					a.rsvp-for(href="#",friend="{{friend}}") change rsvp on behalf of {{friend.contactInfo.name}}
+				.invitee-info(id="{{friend._id}}")
+					.invitee-name
+						.invitee-name-container
+							span.name.orange {{friend.contactInfo.name}}&nbsp;
+							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
+					.suggested-amount-container.clearfix
+						label.suggested-amount-label.info-slide-down-label.pull-left.clearfix(friend-id="{{friend._id}}")
+							i.icon-caret-right.icon-2x.pull-left
+							.header.pull-left WEMbli Suggested Pony Up Amount:
+							.value.pull-right {{friend.tickets.suggestedPonyUpAmount | currency}}
+						.suggested-amounts.hide suggested amounts
+
+
+

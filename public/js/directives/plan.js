@@ -22,19 +22,44 @@ directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout',
             scope.sectionsLoaded++;
             if (scope.sectionsLoaded == attr.sections) {
               scope.sectionsLoaded = 0;
-              var sectionNumber = 1;
-
 
               if ($location.hash()) {
                 var h = $location.hash();
-                sectionNumber = parseInt(h.charAt(h.length - 1));
+                var sectionNumber = parseInt(h.charAt(h.length - 1));
+                planNav.scrollTo(sectionNumber);
+              } else {
+                /* automatically go to the right section depending on what phase of the plan they are in */
+                if (scope.plan.rsvpComplete) {
+                  var scrollToSection = 4; //cart
+
+                  /* if tickets are chosen */
+                  if (!scope.plan.tickets[0]) {
+                    scrollToSection = 3;
+                  }
+
+                  /* parking is in plan but parking not chosen */
+                  if (scope.plan.preferences.addOns.parking && !scope.plan.parking[0]) {
+                    scrollToSection = 3;
+                  }
+
+                  /* restaurants in plan but not chosen */
+                  if (scope.plan.preferences.addOns.restaurants && !scope.plan.restaurants[0]) {
+                    scrollToSection = 3;
+                  }
+                  /* hotels are in the plan but not chosen */
+                  if (scope.plan.preferences.addOns.hotels && !scope.plan.hotels[0]) {
+                    scrollToSection = 3;
+                  }
+                  planNav.scrollTo(scrollToSection);
+                }
+
               }
 
-              planNav.scrollTo(sectionNumber);
               $('.plan-section-nav').removeClass('active');
               $('#nav-section' + (sectionNumber)).addClass('active');
 
               $timeout(function() {
+                console.log('hide page loading modal');
                 $('#page-loading-modal').modal("hide");
               }, 1000);
 
@@ -262,8 +287,8 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
               var t = $scope.tickets[i];
               sum += parseInt(t.ticketGroup.selectedQty);
             };
-            console.log('tickets qty:'+sum);
-            console.log('total coming: '+$scope.totalComing);
+            console.log('tickets qty:' + sum);
+            console.log('total coming: ' + $scope.totalComing);
             /* if they have more than 0 tickets, check to see if they have more than the number of people coming */
             if (sum > 0) {
               $scope.ticketCountMismatch = true;
@@ -289,7 +314,7 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
             });
           };
 
-          $scope.setPayment = function(addOn,value) {
+          $scope.setPayment = function(addOn, value) {
             $scope.plan.preferences[addOn].payment = value;
             $scope.savePrefs();
           }
@@ -372,6 +397,7 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
           $scope.calcTotalComing();
 
           /* start polling for changes */
+          /*
           plan.poll(function(plan) {
             $scope.plan = plan.get();
             $scope.friends = plan.getFriends();
@@ -380,6 +406,7 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
             $scope.context = plan.getContext();
             $scope.organizer = plan.getOrganizer();
           });
+          */
         }
       ],
       compile: function(element, attr, transclude) {
@@ -460,20 +487,94 @@ directive('organizerEventSection', ['$rootScope',
   }
 ]).
 
-directive('organizerInviteesSection', ['$rootScope',
+directive('organizerRsvpSection', ['$rootScope','planNav',
+  function($rootScope, planNav) {
+    return {
+      restrict: 'E',
+      cache: false,
+      replace: true,
+      scope: true,
+      templateUrl: '/partials/plan/rsvp-section',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+          $rootScope.$broadcast('section-loaded');
+          console.log('rsvpDAte' + scope.plan.rsvpDate);
+          var makeRsvpDays = function() {
+            var rsvpTime = new Date(scope.plan.rsvpDate).getTime();
+            var now = new Date().getTime();
+            var difference = rsvpTime - now;
+            var hour = 3600 * 1000;
+            var day = hour * 24;
+            if (difference > 0) {
+              if (difference < day) {
+                scope.rsvpDays = "That's today!";
+              } else {
+                var days = difference / day;
+                if (days < 14) {
+                  var d = (parseInt(days) == 1) ? 'day' : 'days';
+                  scope.rsvpDays = "That's in " + parseInt(days) + " "+d+"!";
+                }
+              }
+            } else {
+              if (scope.plan.rsvpComplete) {
+                scope.rsvpDays = "RSVP Date has passed.";
+              }
+            }
+          }
+          makeRsvpDays();
+          scope.$watch("plan.rsvpDate", function(newVal,oldVal) {
+            if (newVal && (newVal !== oldVal)) {
+              makeRsvpDays();
+            }
+          });
+        };
+      }
+    };
+  }
+]).
+
+directive('organizerPonyUpSection', ['$rootScope',
   function($rootScope) {
     return {
       restrict: 'E',
       cache: false,
       replace: true,
       scope: true,
-      templateUrl: '/partials/plan/invitees-section',
+      templateUrl: '/partials/plan/pony-up-section',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           $rootScope.$broadcast('section-loaded');
         };
       }
     };
+  }
+]).
+
+directive('infoSlideDownLabel', [function() {
+    return {
+      restrict: 'C',
+      controller: ['$scope','$element','$attrs','$transclude',function($scope, $element, $attrs, $transclude) {
+      }],
+      scope:true,
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+
+          scope.toggle = false;
+          attr.$observe('friendId',function(friendId) {
+            element.click(function() {
+              scope.toggle = !scope.toggle;
+              if (scope.toggle) {
+                $('#'+friendId+' .suggested-amounts').slideDown();
+                $('#'+friendId+' i').addClass('icon-caret-down').removeClass('icon-caret-right');
+              } else {
+                $('#'+friendId+' .suggested-amounts').slideUp();
+                $('#'+friendId+' i').addClass('icon-caret-right').removeClass('icon-caret-down');
+              }
+            });
+          });
+        };
+      }
+    }
   }
 ]).
 

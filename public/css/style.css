@@ -9767,6 +9767,8 @@ a#facebook-login-button {
 }
 #plan-frame {
   *zoom: 1;
+  /* this was removed */
+
 }
 #plan-frame:before,
 #plan-frame:after {
@@ -9887,7 +9889,9 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard {
   height: 100%;
-  /* event info and main plan rsvp */
+  /* global invitees lists */
+
+  /* section specific global css */
 
 }
 #plan-frame #middle #plan-dashboard .header {
@@ -10234,199 +10238,13 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .guests {
   font-weight: bold;
 }
-#plan-frame #middle #plan-dashboard .event-section .body {
+#plan-frame #middle #plan-dashboard .rsvp-section .body {
   margin: 10px;
 }
-#plan-frame #middle #plan-dashboard .event-section .body #event-container {
-  *zoom: 1;
-  margin: 30px 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container {
-  width: 50%;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info {
-  *zoom: 1;
-  background-color: #d8d6d7;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
-  padding: 10px;
-  margin: 0;
-  font-family: "Calibri";
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row {
-  *zoom: 1;
-  margin: 0;
-  padding: 2px;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row h3 {
-  font-family: "Calibri";
-  line-height: 15px;
-  vertical-align: middle;
-  padding: 0px;
-  margin-right: 2px;
-  font-size: 15px;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row span {
-  display: inline;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row label {
-  margin-left: 20px;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .row .data {
-  line-height: 15px;
-  vertical-align: middle;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .first-row .data {
-  font-size: 1.5em;
-  line-height: 16px;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .info-container .info .first-row h3 {
-  font-size: 1.5em;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container {
-  padding: 0px;
-  width: 45%;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container h3 {
-  padding: 10px 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp {
-  *zoom: 1;
-  padding: 25px 0px;
-  /* change this to auto to center the rsvp */
-
-  margin: 0;
-  text-align: center;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp a {
-  margin: 10px;
-  font-weight: bold;
-  color: #d8d6d7;
-  display: block;
-  float: left;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp a.active,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .collect-rsvp a:hover {
-  color: #ff6700;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container .payment-type-note {
-  margin-top: 30px;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset {
-  width: 290px;
-  /* change this to auto to center the rsvp */
-
-  margin: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label {
-  *zoom: 1;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label #including-yourself {
-  line-height: 30px;
-  vertical-align: middle;
-  padding-left: 10px;
-}
-#plan-frame #middle #plan-dashboard .event-section .body #event-container .collect-rsvp-container fieldset label #guest-count {
-  width: 30px;
-  height: 26px;
-  text-align: center;
-  margin: 0 10px;
-}
-#plan-frame #middle #plan-dashboard .event-section .body .section-bottom .next-wrapper {
+#plan-frame #middle #plan-dashboard .rsvp-section .body .section-bottom .next-wrapper {
   text-align: right;
 }
-#plan-frame #middle #plan-dashboard .event-section .body .section-bottom .next-wrapper button {
+#plan-frame #middle #plan-dashboard .rsvp-section .body .section-bottom .next-wrapper button {
   margin-top: -65px;
 }
 #plan-frame #middle #plan-dashboard .vote-section .row {
@@ -10604,17 +10422,189 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment .actor-image-container img {
   max-width: 60%;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-event-section .body .collect-rsvp {
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container {
+  margin: 30px 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container {
+  width: 35%;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info {
+  *zoom: 1;
+  background-color: #d8d6d7;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 0;
+  font-family: "Calibri";
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:before,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
+  clear: both;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:before,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
+  clear: both;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row {
+  *zoom: 1;
+  margin: 0;
+  padding: 2px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:before,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
+  clear: both;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:before,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
+  clear: both;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row h3 {
+  color: #767676;
+  font-family: "Calibri";
+  line-height: 15px;
+  vertical-align: middle;
+  padding: 0px;
+  margin-right: 2px;
+  font-size: 2em;
+  padding: 20px 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row span {
+  display: inline;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row label {
+  margin-left: 20px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row .data {
+  line-height: 15px;
+  vertical-align: middle;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row .rsvp-days {
+  margin-bottom: 10px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .first-row .data {
+  font-size: 1.5em;
+  line-height: 16px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .first-row h3 {
+  font-size: 1.5em;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container {
+  padding: 0px;
+  width: 50%;
+  margin-left: 30px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container button {
+  margin: 20px 0 40px 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container h3 {
+  padding: 10px 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp {
+  *zoom: 1;
   width: 100%;
+  padding: 25px 0px;
+  /* change this to auto to center the rsvp */
+
+  margin: 0;
+  text-align: center;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-event-section .body .collect-rsvp a {
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
+  clear: both;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
+  clear: both;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a {
   font-size: 40px;
+  margin: 10px;
+  font-weight: bold;
+  color: #d8d6d7;
+  display: block;
+  float: left;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-invitees-section #no-invitees {
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a.active,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a:hover {
+  color: #ff6700;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .payment-type-note {
+  margin-top: 30px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset {
+  width: 290px;
+  /* change this to auto to center the rsvp */
+
+  margin: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label {
+  *zoom: 1;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
+  clear: both;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
+  clear: both;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label #including-yourself {
+  line-height: 30px;
+  vertical-align: middle;
+  padding-left: 10px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label #guest-count {
+  width: 30px;
+  height: 26px;
+  text-align: center;
+  margin: 0 10px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section #no-invitees {
   background-color: #d8d6d7;
   padding: 50px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-invitees-section #no-invitees button {
+#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section #no-invitees button {
   margin: auto;
   display: block;
   width: 200px;
@@ -10644,8 +10634,30 @@ a#facebook-login-button {
   display: block;
   color: #4380b8;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-tickets-section .tickets-button label {
-  color: #4380b8;
+#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info {
+  width: 45%;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container label.suggested-amount-label:hover {
+  background-color: #d3e3ea;
+  cursor: pointer;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container .suggested-amount-label {
+  width: 100%;
+  padding: 4px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container .suggested-amount-label i {
+  width: 15px;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container .suggested-amount-label .header {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 24px;
+  vertical-align: middle;
+}
+#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container .suggested-amount-label .value {
+  font-size: 1.5em;
+  line-height: 24px;
+  vertical-align: middle;
 }
 #plan-frame #middle .friend-plan-dashboard .collect-rsvp {
   width: 100%;

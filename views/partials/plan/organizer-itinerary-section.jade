@@ -1,4 +1,18 @@
-section#section4.organizer-itinerary-section.itinerary-section.plan-section.even
+section#section1.organizer-itinerary-section.itinerary-section.plan-section.even
 	.header
 		h1.pull-left Itinerary
 	.body
+		.row.first-row.clearfix
+			h3.pull-left DATE:&nbsp;
+			.data.pull-left {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d'}}
+		.row.clearfix
+			h3.pull-left Event:
+			.data.pull-left {{plan.event.eventName}}
+		.row.clearfix
+			h3.pull-left Time:
+			.data.pull-left {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+		.row.clearfix
+			h3.pull-left Location:
+			.data.pull-left {{plan.event.eventVenue}} -&nbsp;
+			.data.pull-left {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+

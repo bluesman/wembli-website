@@ -74,6 +74,7 @@ filter('feedString', ['$filter',
 	}
 ]).
 
+/* this is not used but is a good example of calculating totals for when we support an array of tickets */
 filter('ticketTotals', ['$filter',
 	function($filter) {
 		var fee = 0.15;
@@ -101,6 +102,56 @@ filter('ticketTotals', ['$filter',
 			tickets.groups = groups;
 			tickets.groupTotalEach = groupTotalEach;
 			return tickets;
+		};
+	}
+]).
+
+/* yikes! this gets called for every digest */
+filter('friendPonyUp', ['$filter','plan',
+	function($filter,plan) {
+		var fee = 0.15;
+		var deliveryFee = 15;
+		return function(friends) {
+			/* this should probably be in its own function */
+			var groupTotal = 0;
+			var groupCount = 0;
+			var groups = [];
+			var groupTotalEach = {};
+			var tickets = plan.getTickets();
+			for (var i = 0; i < tickets.length; i++) {
+				var t = tickets[i]
+				var groupNumber = i + 1;
+				var cb = {};
+				cb.serviceFee = parseFloat(t.ticketGroup.ActualPrice) * fee;
+				cb.deliveryFee = deliveryFee;
+				cb.totalEach = cb.serviceFee + parseFloat(t.ticketGroup.ActualPrice) + parseFloat(cb.deliveryFee/t.ticketGroup.selectedQty);
+				cb.subTotal = cb.totalEach * parseInt(t.ticketGroup.selectedQty);
+				cb.total = cb.subTotal + cb.deliveryFee;
+				groupTotal += cb.total;
+				groupCount += parseInt(t.ticketGroup.selectedQty);
+				groups.push({value:i,label:'Ticket Group '+groupNumber});
+				groupTotalEach[i] = cb.totalEach;
+				t.ticketGroup.costBreakdown = cb;
+			};
+
+			tickets.total = groupTotal;
+			tickets.totalQty = groupCount;
+			tickets.groups = groups;
+			tickets.groupTotalEach = groupTotalEach;
+
+			/* assuming there's only 1 ticketGroup for now */
+			for (var i = 0; i < friends.length; i++) {
+				if (typeof tickets[0] !== "undefined") {
+					if (typeof friends[i].tickets == "undefined") {
+						friends[i].tickets = {};
+					}
+					friends[i].tickets.group = tickets[0].ticketGroup;
+					friends[i].tickets.suggestedPonyUpAmount = tickets[0].ticketGroup.costBreakdown.totalEach * friends[i].rsvp.guestCount;
+				} else {
+					friends[i].tickets = [];
+				}
+			};
+			return friends;
 		};
 	}
 ]).

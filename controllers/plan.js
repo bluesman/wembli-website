@@ -58,7 +58,7 @@ module.exports = function(app) {
 		return res.render('partials/plan/chatter',{partial:true});
 	});
 
-	app.get(/^\/partials\/plan\/(nav|dashboard|feed|event-section|invitees-section|cart-section|tickets-section|parking-section|restaurants-section|hotels-section|money-section|itinerary-section)$/, function(req,res) {
+	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|pony-up-section|rsvp-section|cart-section)$/, function(req,res) {
 		return res.render('partials/plan/'+req.session.visitor.context+'-'+req.url.split('/')[3],{partial:true});
 	});
 

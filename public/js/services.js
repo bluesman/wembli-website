@@ -68,12 +68,10 @@ factory('planNav', [
 					var h = $('#section' + i).height();
 					height += parseInt($('#section' + i).height());
 				};
-
+				console.log('animating');
 				$('#content').animate({
 					scrollTop: (height - 10)
 				}, 1000, 'easeOutBack');
-
-				$('#content').scrollTop(height-10);
 			}
 		};
 	}

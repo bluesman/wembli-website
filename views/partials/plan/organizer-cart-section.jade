@@ -23,7 +23,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				.body.add-on-included(ng-show="!plan.tickets[0] && !plan.rsvpComplete && {'split-after':true}[plan.preferences.tickets.payment]")
 					p Ok! Add tickets to your cart and then you can check out right away.  Don't worry, you can still have your friends pony up after you've bought the tickets.
 					.button-container.clearfix(ng-show="{'split-after':true}[plan.preferences.tickets.payment]")
-						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Add Tickets To Cart
+						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
 						a.buy-now(ng-click="setPayment('tickets','split-first')",href="#") I changed my mind, I want to know who's coming first
 
 				//- no tickets, rsvp is complete and split-first
@@ -31,7 +31,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 					p Time to choose tickets and add them to your cart, then we'll prompt you to send a pony up email to your friends.  You don't check out until everyone pays up first.
 					p Note:  Adding tickets in your cart does NOT place them on hold.   You don't get dibs on tickets until you buy them.
 					.button-container.clearfix
-						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Add Tickets To Cart
+						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
 						a.buy-now.wembli-sequence-link(ng-click="setPayment('tickets','split-after')",href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I don't want to wait, I want to buy now
 
 				//- no tickets, rsvp is complete and split-after
@@ -39,7 +39,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 					p Time to choose tickets and add them to your cart, then we'll prompt you to send a pony up email to your friends.  You don't check out until everyone pays up first.
 					p Note:  Adding tickets in your cart does NOT place them on hold.   You don't get dibs on tickets until you buy them.
 					.button-container.clearfix
-						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Buy Tickets Now
+						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Buy Tickets Now
 						a.buy-now(ng-click="setPayment('tickets','split-first')",href="#") I changed my mind, I want my friends to pony up
 
 				//- have tickets rsvp is not complete, split first
@@ -68,7 +68,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				image(src="/images/wembliman/car/100.png")
 			.pull-left
 				.header
-					label.parking-label
+					label.parking-label.clearfix
 						i.icon-check.icon-3x.green.pull-left(ng-show="plan.preferences.addOns.parking")
 						i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.parking")
 						input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()")
@@ -139,7 +139,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				image(src="/images/wembliman/restaurant/100.png")
 			.pull-left
 				.header
-					label.restaurant-label
+					label.restaurant-label.clearfix
 						i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.restaurants")
 						i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.restaurants")
 						input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.restaurants", ng-click="savePrefs()")
@@ -189,7 +189,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				image(src="/images/wembliman/hotel/100.png")
 			.pull-left
 				.header
-					label.hotel-label
+					label.hotel-label.clearfix
 						i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.hotels")
 						i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.hotels")
 						input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.hotels", ng-click="savePrefs()")
@@ -212,14 +212,14 @@ section#section3.organizer-cart-section.cart-section.plan-section
 
 				//- hotels part of the plan, none chosen, rsvp not complete, split after
 				.body.add-on-included(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0] && !plan.rsvpComplete && {'split-after':true}[plan.preferences.hotels.payment]")
-					p
+					p Your home away from home awaits.  In just a few short steps you'll be choosing the lodging of your dreams.  Happy Travels!
 					.button-container.clearfix
 						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
 						a.buy-now(ng-click="setPayment('hotels','split-first')",href="#") I changed my mind, I want to know who's coming first
 
 				//- hotels part of the plan, none chosen, rsvp is complete, split first
 				.body.add-on-included(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0] && plan.rsvpComplete")
-					p
+					p Your home away from home awaits.  In just a few short steps you'll be choosing the lodging of your dreams.  Happy Travels!
 					.button-container.clearfix
 						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
 
@@ -231,7 +231,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 
 				//- hotels part of the plan, hotel chosen, rsvp not complete, split after - buy now and collect pony up after rsvps
 				.body.add-on-included(ng-show="plan.preferences.addOns.hotels && plan.hotels[0] && !plan.rsvpComplete && {'split-after':true}[plan.preferences.hotels.payment]")
-					p Nice choice in hotel, go ahead and book it now then you can get friends to pony up later
+					p Your home away from home awaits.  In just a few short steps you'll be choosing the lodging of your dreams.  Happy Travels!
 					.button-container.clearfix
 						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Change Hotel
 						a.pull-left.btn.btn-orange.btn-large(href="#book-hotel-modal") Book Hotel

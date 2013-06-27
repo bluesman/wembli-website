@@ -202,7 +202,7 @@
 
 			}
 
-
+			/* global invitees lists */
 			.invitees-container {
 				.invitee {
 					.clearfix();
@@ -285,118 +285,15 @@
 			}
 
 
-			/* event info and main plan rsvp */
-			.event-section {
+			/* section specific global css */
+			.itinerary-section {
+
+			}
+
+			.rsvp-section {
 				.body {
 					margin:10px;
 
-					#event-container {
-						.clearfix();
-
-						margin:30px 0;
-
-						.info-container {
-							width:50%;
-
-							.info {
-								.clearfix();
-								background-color:@grayLight;
-								.border-radius(6px);
-								padding:10px;
-								margin:0;
-								font-family: "Calibri";
-
-
-								.row {
-									.clearfix();
-									margin:0;
-									padding:2px;
-									h3 {
-										font-family: "Calibri";
-										line-height: 15px;
-										vertical-align: middle;
-										padding:0px;
-										margin-right:2px;
-										font-size:15px;
-									}
-									span {
-										display:inline;
-									}
-									label {
-										margin-left:20px;
-									}
-									.data {
-										line-height: 15px;
-										vertical-align: middle;
-									}
-								}
-								.first-row {
-									.data {
-										font-size:1.5em;
-										line-height:16px;
-									}
-
-									h3 {
-										font-size:1.5em;
-									}
-								}
-
-
-							}
-						}
-						.collect-rsvp-container {
-							padding:0px;
-							width:45%;
-							h3 {
-								padding:10px 0;
-							}
-							.collect-rsvp {
-								.clearfix();
-								padding:25px 0px;
-
-								/* change this to auto to center the rsvp */
-								margin:0;
-
-								text-align:center;
-
-								a {
-									margin:10px;
-									font-weight:bold;
-									color:@grayLight;
-									display:block;
-									float:left;
-								}
-								a.active,a:hover {
-									color:@orange;
-								}
-							}
-							.payment-type-note {
-								margin-top:30px;
-							}
-
-							fieldset {
-								width:290px;
-
-								/* change this to auto to center the rsvp */
-								margin:0;
-
-								label {
-									.clearfix();
-									#including-yourself {
-										line-height:30px;
-										vertical-align: middle;
-										padding-left:10px;
-									}
-									#guest-count {
-										width:30px;
-										height:26px;
-										text-align:center;
-										margin:0 10px;
-									}
-								}
-							}
-						}
-					}
 					.section-bottom {
 						.next-wrapper {
 							text-align:right;
@@ -476,10 +373,6 @@
 						margin-top:70px;
 					}
 				}
-			}
-
-			.invitees-section {
-
 			}
 
 			.pony-up-section {
@@ -610,22 +503,126 @@
 
 		/* organizer specific css */
 		.organizer-plan-dashboard {
-			.organizer-event-section {
-				.body {
-					.collect-rsvp {
-						width:100%;
-						a {
-							font-size:40px;
+
+			.organizer-rsvp-section {
+
+				.organizer-rsvp-container {
+					margin:30px 0;
+
+					.info-container {
+						width:35%;
+
+						.info {
+							.clearfix();
+							background-color:@grayLight;
+							.border-radius(6px);
+							padding:10px;
+							margin:0;
+							font-family: "Calibri";
+
+							.row {
+								.clearfix();
+								margin:0;
+								padding:2px;
+								h3 {
+									color:@gray;
+									font-family: "Calibri";
+									line-height: 15px;
+									vertical-align: middle;
+									padding:0px;
+									margin-right:2px;
+									font-size:2em;
+									padding:20px 0;
+								}
+								span {
+									display:inline;
+								}
+								label {
+									margin-left:20px;
+								}
+								.data {
+									line-height: 15px;
+									vertical-align: middle;
+								}
+								.rsvp-days {
+									margin-bottom:10px;
+								}
+							}
+							.first-row {
+								.data {
+									font-size:1.5em;
+									line-height:16px;
+								}
+
+								h3 {
+									font-size:1.5em;
+								}
+							}
 						}
 					}
-					.section-bottom {
-						.next-wrapper {
+					.collect-rsvp-container {
+						padding:0px;
+						width:50%;
+						margin-left:30px;
 
+						button {
+							margin:20px 0 40px 0;
+						}
+
+						h3 {
+							padding:10px 0;
+						}
+
+						.collect-rsvp {
+							.clearfix();
+							width:100%;
+							padding:25px 0px;
+
+							/* change this to auto to center the rsvp */
+							margin:0;
+
+							text-align:center;
+
+							a {
+								font-size:40px;
+								margin:10px;
+								font-weight:bold;
+								color:@grayLight;
+								display:block;
+								float:left;
+							}
+							a.active,a:hover {
+								color:@orange;
+							}
+						}
+						.payment-type-note {
+							margin-top:30px;
+						}
+
+						fieldset {
+							width:290px;
+
+							/* change this to auto to center the rsvp */
+							margin:0;
+
+							label {
+								.clearfix();
+								#including-yourself {
+									line-height:30px;
+									vertical-align: middle;
+									padding-left:10px;
+								}
+								#guest-count {
+									width:30px;
+									height:26px;
+									text-align:center;
+									margin:0 10px;
+								}
+							}
 						}
 					}
 				}
-			}
-			.organizer-invitees-section {
+
 				#no-invitees {
 					background-color: @grayLight;
 					padding:50px;
@@ -636,6 +633,12 @@
 						height: 60px;
 					}
 				}
+
+					.section-bottom {
+						.next-wrapper {
+
+						}
+					}
 			}
 
 			.organizer-cart-section {
@@ -699,13 +702,40 @@
 				}
 			}
 
-			.organizer-tickets-section {
-				.tickets-button {
-					label {
-						color:@blue;
+			.organizer-pony-up-section {
+				.invitees-container {
+					.invitee {
+						.invitee-info {
+							width:45%;
+
+							.suggested-amount-container {
+								label.suggested-amount-label:hover {
+									background-color:lighten(@blueLight,30%);
+									cursor:pointer;
+								}
+								.suggested-amount-label {
+									width:100%;
+									padding:4px;
+
+									i {width:15px;}
+									.header {
+										font-size: 1.5em;
+										font-weight: bold;
+										line-height: 24px;
+										vertical-align: middle;
+									}
+									.value {
+										font-size: 1.5em;
+										line-height: 24px;
+										vertical-align: middle;
+									}
+								}
+							}
+						}
 					}
 				}
 			}
+
 		}
 
 		/* friend specific css */
@@ -722,6 +752,7 @@
 
 	}
 
+	/* this was removed */
 	#right {
 		width:18%;
 		float:left;

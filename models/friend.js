@@ -39,6 +39,7 @@ this.Model = function(mongoose) {
 			timestamp:Date,
 			token:String
 		},
+		/* this should move under rsvp and payment */
 		email: {
 			rsvp: {},
 			ponyUp: {}
@@ -122,6 +123,18 @@ this.Model = function(mongoose) {
 				preference: [],
 			},
 		},
+		/*
+		 * need to nail this schema down
+		 * {
+		 *	request: {
+		 *		requestor:<customerId>,
+		 *		amount: <amount>
+		 *	}
+		 *	response: {
+		 *
+		 *	}
+		 * }
+		 */
 		payment: {type:{}},
 		created: {type: Date,	default: Date.now()	},
 		updated: Date,

@@ -1,13 +1,69 @@
-section#section2.organizer-invitees-section.invitees-section.plan-section.even
+section#section2.organizer-rsvp-section.rsvp-section.plan-section.even
 	.header
 		h1.pull-left RSVP's
 	.body
-		h3(ng-hide="friends[0]") You're going solo until you invite someone!
+		.organizer-rsvp-container.clearfix
+			.img-container.pull-left
+				img.img-polaroid(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
+				img.img-polaroid(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
+			.collect-rsvp-container.pull-left
+				h4 {{customer.firstName}}, are you going or just planning for others?
+				.collect-rsvp
+					a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[plan.organizer.rsvp.decision]") I'M GOING!
+					a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[plan.organizer.rsvp.decision]") NOT GOING.
+				fieldset(ng-show="plan.preferences.inviteOptions.guestFriends")
+					label
+						input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="plan.organizer.rsvp.guestCount",placeholder="1")
+						span(ng-show="guestCountPlural") people&nbsp;
+						span(ng-hide="guestCountPlural") person&nbsp;
+						span (including yourself).
+				.payment-type-note
+					strong ** NOTE:&nbsp;
+					span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After invitees vote on preferences you'll favor a ticket group, then we'll prompt you to send a link for everyone to pony up for their part of the outing before you shell out the cash.&nbsp;
+						p &nbsp;
+						p
+							strong Please be aware that tickets are NOT locked in until they are paid for.
+					span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;You have chosen to foot the bill for this plan - w00t!
+					span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, you will lock in the tickets then send a link for everyone to pay for their portion of the outing.
+				button.btn.btn-orange.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
+					span Invite More People&nbsp;
+					i.icon-double-angle-right
+
+			form.info-container.pull-right
+				fieldset.info
+					.row(ng-show="plan.rsvpComplete")
+						h3 RSVP IS COMPLETE
+					.row(ng-hide="plan.rsvpComplete")
+						h3(ng-show="plan.rsvpDate") RSVP BY: {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
+						.rsvp-days.orange(ng-show="rsvpDays") {{rsvpDays}}
+					.row.clearfix
+						h3.pull-left(ng-hide="plan.rsvpDate")
+							span RSVP Date:
+							a.invite-friends-wizard-button(ng-click="gotoStep('step2')",href="#") &nbsp;Choose Date
+					.row.clearfix
+						.control-group
+							input#over-21.pull-left(ng-click="savePrefs()", type="checkbox",name="over_21",ng-model="plan.preferences.inviteOptions.over21")
+							label This outing is for people over 21 (sorry no kids this time)
+					.row.clearfix
+						.control-group
+							input#guest-friends.pull-left(ng-click="savePrefs()", type="checkbox",name="guest_friends",ng-model="plan.preferences.inviteOptions.guestFriends")
+							label My guests can invite their friends/family
+					.row.clearfix
+						.control-group
+							input.pull-left(ng-click="savePrefs()", type="radio",name="guest_list",value="full",ng-model="plan.preferences.guestList")
+							label My guests can see the full invite list
+						.control-group
+							input.pull-left(ng-click="savePrefs()", type="radio",name="guest_list",value="rsvp",ng-model="plan.preferences.guestList")
+							label My guests can only see who's RSVP'd 'yes'
+						.control-group
+							input.pull-left(ng-click="savePrefs()", type="radio",name="guest_list",value="private",ng-model="plan.preferences.guestList")
+							label My guests can not see who else is invited
+					.row.pull-right
+						a.invite-friends-wizard-button(ng-show="plan.rsvpDate",ng-click="gotoStep('step2')",href="#") &nbsp;Change RSVP Date
 		#no-invitees(ng-hide="friends[0]")
 			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
 				span Invite People&nbsp;
 				i.icon-double-angle-right
-		h3(ng-show="friends[0]") See who's coming and what they voted on
 		.invitees-container(ng-show="friends[0]")
 			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true}")
 				.img-container.pull-left
@@ -83,6 +139,3 @@ section#section2.organizer-invitees-section.invitees-section.plan-section.even
 										strong hotel type:&nbsp;
 										span {{friend.rsvp.hotel.preference.join(', ').substring(0,30)}}
 										span(ng-show="showEllipses(friend.rsvp.hotel.preference,30)") ...
-			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
-				span Invite More People&nbsp;
-				i.icon-double-angle-right

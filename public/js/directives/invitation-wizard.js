@@ -75,7 +75,8 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
 
 
         /* put the plan in the scope for the view */
-        $scope.plan = plan.get();
+        // i think this will be inherited from the plan directive
+        //$scope.plan = plan.get();
 
         //display the modal if there's a plan
         if ($scope.plan && typeof $scope.plan.event.eventId === "undefined") {
