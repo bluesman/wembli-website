@@ -8,27 +8,28 @@ module.exports = function(app) {
 	app.all("/callback/sendgrid/email", function(req, res) {
 		console.log('sendgrid callback body:');
 		console.log(req.body);
+
 		function updateFriend(cb) {
-		        console.log('updating friend');
-		        /* if its rsvp or pony up - put it in the corresponding friend obj */
+			console.log('updating friend');
+			/* if its rsvp or pony up - put it in the corresponding friend obj */
 			/* find the friend for this friendId and increment a counter for this category[event] */
 			if (typeof req.body.friendId !== "undefined") {
 				Friend.findById(req.body.friendId, function(err, f) {
-					console.log('find friend for friendId:'+req.body.friendId);
+					console.log('find friend for friendId:' + req.body.friendId);
 					console.log(err);
 					console.log(f);
 					/* no plan in the db */
 					if (!f) {
-					        console.log('no friend!');
-					        return cb();
+						console.log('no friend!');
+						return cb();
 					}
 					console.log('here');
 					if (typeof f.email[req.body.category] == "undefined") {
-					console.log('here');
+						console.log('here');
 						f.email[req.body.category] = {};
 						f.email[req.body.category][req.body.event] = 1;
 					} else {
-					console.log('hereelse');
+						console.log('hereelse');
 						if (typeof f.email[req.body.category][req.body.event] == "undefined") {
 							f.email[req.body.category][req.body.event] = 1;
 						} else {
@@ -41,22 +42,34 @@ module.exports = function(app) {
 					f.email[req.body.category][eventDate] = new Date(req.body.timestamp * 1000);
 					console.log(f);
 					f.markModified('email');
-					f.save(function(err) {
-						if (err) {
-							return cb(err);
-						}
-						var d = {
-							event: req.body.event,
-							service: 'wemblimail',
-							friendId: req.body.friendId
-						}
-						keen.addEvent(req.body.category, d, req, res, function(err, result) {
-							cb();
+
+					var save = function(f) {
+						f.save(function(err) {
+							if (err) {
+								return cb(err);
+							}
+							var d = {
+								event: req.body.event,
+								service: 'wemblimail',
+								friendId: req.body.friendId
+							}
+							keen.addEvent(req.body.category, d, req, res, function(err, result) {
+								cb();
+							});
 						});
-					});
+					};
+
+					/* any special instructions for this friend */
+					if ((typeof updateFriendHooks[req.body.category] !== "undefined") && (typeof hooks[req.body.category][req.body.event] !== "undefined")) {
+						hooks[req.body.category][req.body.event](f, save);
+					} else {
+						save(f);
+					}
+
+
 				});
 			} else {
-			    console.log('no friend id - im outa here');
+				console.log('no friend id - im outa here');
 				cb();
 			}
 		};
@@ -99,7 +112,7 @@ module.exports = function(app) {
 			 * url: url clicked
 			 */
 			'click': function(cb) {
-			    console.log('click happened');
+				console.log('click happened');
 				/* log in keenio */
 				cb();
 			},
@@ -143,7 +156,7 @@ module.exports = function(app) {
 			 *	N/A
 			 */
 			'open': function(cb) {
-			    console.log('open happened');
+				console.log('open happened');
 				updateFriend(cb);
 			},
 			/*
@@ -163,6 +176,37 @@ module.exports = function(app) {
 				cb();
 			}
 		};
+
+		var updateFriendHooks = {
+			'pony-up-request': {
+				'delivered': function(f, save) {
+					if (req.body.paymentId) {
+						var p = f.payment.id(req.body.paymentId);
+						p.email['delivered'] = req.body;
+						p.status = 'delivered';
+						console.log('payment: ');
+						console.log(p);
+						//p.save(function(err) {
+						save(f);
+						//});
+					}
+				},
+				'open': function(f, save) {
+					if (req.body.paymentId) {
+						var p = f.payment.id(req.body.paymentId);
+						p.email['opened'] = req.body;
+						p.status = 'opened';
+						console.log('payment: ');
+						console.log(p);
+						//p.save(function(err) {
+						save(f);
+						//});
+					}
+				}
+			}
+		};
+
+
 		console.log('add event in keen');
 		keen.addEvent(collection, d, req, res, function(err, result) {
 			console.log('keenio addevent:');

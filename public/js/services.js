@@ -46,6 +46,22 @@ factory('pluralize', ['$rootScope', 'wembliRpc', 'customer',
 	}
 ]).
 
+factory('pluralizeWords', [function() {
+		return {
+			'person': function(number) {
+				return (number == 1) ? 'person':'people';
+
+			},
+			'ticket': function(number) {
+				return (number == 1) ? 'ticket' : 'tickets';
+			},
+			'guest' : function(number) {
+				return (number == 1) ? 'guest' : 'guests';
+			}
+		};
+	}
+]).
+
 factory('planNav', [
 	function() {
 		var self = this;
@@ -83,6 +99,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 		self.plan = null;
 		self.tickets = null;
 		self.fetchInProgress = false;
+		self.getStack = 0;
 
 		return {
 			get: function(callback) {
@@ -91,8 +108,12 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 						$rootScope.plan = self.plan;
 						callback(self.plan);
 					} else {
+						self.getStack++;
 						var dereg = $rootScope.$on('plan-fetched', function() {
-							dereg();
+							self.getStack--;
+							if (self.getStack == 0){
+								dereg();
+							}
 							$rootScope.plan = self.plan;
 							callback(self.plan);
 						});
@@ -110,7 +131,9 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 				self.organizer = organizer;
 				return self.plan;
 			},
-
+			setFriends: function(friends) {
+				self.friends = friends;
+			},
 			getFriends: function() {
 				return self.friends;
 			},

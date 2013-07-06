@@ -49,6 +49,25 @@ filter('chatterDateString', ['$filter',
 	}
 ]).
 
+filter('historyStatus', [
+	function() {
+		return function(historyStatus) {
+			if (typeof historyStatus === "undefined") {
+				return 'logged';
+			}
+			var historyStatusFilter = {
+				'queued' : 'Sending Email',
+				'delivered' : 'Email Sent',
+				'opened' : 'Email Opened',
+				'responded' : 'Payment Posted',
+				'received' : 'Payment Received',
+			}
+
+			return (typeof historyStatusFilter[historyStatus] !== "undefined") ? historyStatusFilter[historyStatus] : historyStatus;
+		}
+	}
+]).
+
 filter('feedString', ['$filter',
 	function($filter) {
 		return function(feed) {
@@ -74,27 +93,62 @@ filter('feedString', ['$filter',
 	}
 ]).
 
-/* this is not used but is a good example of calculating totals for when we support an array of tickets */
-filter('ticketTotals', ['$filter',
-	function($filter) {
+filter('pluralize', ['$filter', 'pluralizeWords',
+	function($filter, pluralizeWords) {
+		return function(number, word) {
+			return pluralizeWords[word](number);
+		};
+	}
+]).
+
+filter('ticketTotals', ['$filter','plan',
+	function($filter,plan) {
 		var fee = 0.15;
 		return function(tickets) {
 			var groupTotal = 0;
 			var groupCount = 0;
 			var groups = [];
 			var groupTotalEach = {};
+			var fee = 0.15;
+			var deliveryFee = 15;
+			var deliverySplitBy = 0;
+			var p = plan.get();
+			if (!p) {
+				return;
+			}
+			if (p.organizer.rsvp.decision) {
+				deliverySplitBy++;
+			}
+			var friends = plan.getFriends();
+			for (var i = 0; i < friends.length; i++) {
+				var f = friends[i];
+				/* add 1 for each friend who is invited and going but don't count their guests */
+				if (f.inviteStatus && f.rsvp.decision) {
+					deliverySplitBy++;
+				}
+			};
+
 			for (var i = 0; i < tickets.length; i++) {
-				var t = tickets[i]
+				var t = tickets[i];
 				var groupNumber = i + 1;
-				t.ticketGroup.serviceFee = parseFloat(t.ticketGroup.ActualPrice) * fee;
-				t.ticketGroup.deliveryFee = 15.00;
-				t.ticketGroup.totalEach = t.ticketGroup.serviceFee + parseFloat(t.ticketGroup.ActualPrice);
-				t.ticketGroup.subTotal = t.ticketGroup.totalEach * parseInt(t.ticketGroup.selectedQty);
-				t.ticketGroup.total = t.ticketGroup.subTotal + t.ticketGroup.deliveryFee;
-				groupTotal += t.ticketGroup.total;
+				var cb = {};
+				cb.ticketPrice = parseFloat(t.ticketGroup.ActualPrice);
+				cb.serviceFee = parseFloat(t.ticketGroup.ActualPrice) * fee;
+				cb.deliveryFee = deliveryFee;
+
+				cb.deliveryFeeEach = cb.deliveryFee / deliverySplitBy;
+
+				cb.totalEach = cb.ticketPrice + cb.serviceFee;
+				cb.total = cb.totalEach * parseInt(t.ticketGroup.selectedQty) + cb.deliveryFee;
+
+				groupTotal += cb.total;
 				groupCount += parseInt(t.ticketGroup.selectedQty);
-				groups.push({value:i,label:'Ticket Group '+groupNumber});
-				groupTotalEach[i] = t.ticketGroup.totalEach;
+				groups.push({
+					value: i,
+					label: 'Ticket Group ' + groupNumber
+				});
+				groupTotalEach[i] = cb.totalEach;
+				t.ticketGroup.costBreakdown = cb;
 			};
 
 			tickets.total = groupTotal;
@@ -107,29 +161,45 @@ filter('ticketTotals', ['$filter',
 ]).
 
 /* yikes! this gets called for every digest */
-filter('friendPonyUp', ['$filter','plan',
-	function($filter,plan) {
-		var fee = 0.15;
-		var deliveryFee = 15;
+filter('friendPonyUp', ['$filter', 'plan',
+	function($filter, plan) {
 		return function(friends) {
+			if (typeof friends === "undefined") {
+				return;
+			}
+			var fee = 0.15;
+			var deliveryFee = 15;
+			var deliverySplitBy = 0;
+			if (plan.get().organizer.rsvp.decision) {
+				deliverySplitBy++;
+			}
+			deliverySplitBy += friends.length;
 			/* this should probably be in its own function */
 			var groupTotal = 0;
 			var groupCount = 0;
 			var groups = [];
 			var groupTotalEach = {};
 			var tickets = plan.getTickets();
+
 			for (var i = 0; i < tickets.length; i++) {
 				var t = tickets[i]
 				var groupNumber = i + 1;
 				var cb = {};
+				cb.ticketPrice = parseFloat(t.ticketGroup.ActualPrice);
 				cb.serviceFee = parseFloat(t.ticketGroup.ActualPrice) * fee;
 				cb.deliveryFee = deliveryFee;
-				cb.totalEach = cb.serviceFee + parseFloat(t.ticketGroup.ActualPrice) + parseFloat(cb.deliveryFee/t.ticketGroup.selectedQty);
-				cb.subTotal = cb.totalEach * parseInt(t.ticketGroup.selectedQty);
-				cb.total = cb.subTotal + cb.deliveryFee;
+
+				cb.deliveryFeeEach = cb.deliveryFee / deliverySplitBy;
+
+				cb.totalEach = cb.ticketPrice + cb.serviceFee;
+				cb.total = cb.totalEach * parseInt(t.ticketGroup.selectedQty) + cb.deliveryFeeEach;
+
 				groupTotal += cb.total;
 				groupCount += parseInt(t.ticketGroup.selectedQty);
-				groups.push({value:i,label:'Ticket Group '+groupNumber});
+				groups.push({
+					value: i,
+					label: 'Ticket Group ' + groupNumber
+				});
 				groupTotalEach[i] = cb.totalEach;
 				t.ticketGroup.costBreakdown = cb;
 			};
@@ -140,18 +210,21 @@ filter('friendPonyUp', ['$filter','plan',
 			tickets.groupTotalEach = groupTotalEach;
 
 			/* assuming there's only 1 ticketGroup for now */
+			/* kim and ash say guests don't count for a delivery fee */
+			var totalPoniedUp = 0;
 			for (var i = 0; i < friends.length; i++) {
 				if (typeof tickets[0] !== "undefined") {
 					if (typeof friends[i].tickets == "undefined") {
 						friends[i].tickets = {};
 					}
 					friends[i].tickets.group = tickets[0].ticketGroup;
-					friends[i].tickets.suggestedPonyUpAmount = tickets[0].ticketGroup.costBreakdown.totalEach * friends[i].rsvp.guestCount;
+					var suggested = friends[i].tickets.group.costBreakdown.totalEach * friends[i].rsvp.guestCount + friends[i].tickets.group.costBreakdown.deliveryFeeEach;
+					friends[i].tickets.suggestedPonyUpAmount = suggested.toFixed(2);
 				} else {
 					friends[i].tickets = [];
 				}
 			};
-			return friends;
+ 			return friends;
 		};
 	}
 ]).

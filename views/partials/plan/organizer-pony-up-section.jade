@@ -2,32 +2,191 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 	.header
 		h1.pull-left Pony Up!
 	.body
-		label.selectAll-label.clearfix
-			i.icon-check.icon-2x.pull-left.green(ng-show="ponyUp.selectAll")
-			i.icon-check-empty.icon-2x.pull-left(ng-hide="ponyUp.selectAll")
-			input.pull-left.hide(type="checkbox",ng-model="ponyUp.selectAll")
-			h3 Send pony up request for all friends
+		//-
+			label.selectAll-label.clearfix
+				i.icon-check.icon-2x.pull-left.green(ng-show="ponyUp.selectAll")
+				i.icon-check-empty.icon-2x.pull-left(ng-hide="ponyUp.selectAll")
+				input.pull-left.hide(type="checkbox",ng-model="ponyUp.selectAll")
+				h3 Send pony up request for all friends
 		#no-invitees(ng-hide="friends[0]")
 			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
 				span Invite People&nbsp;
 				i.icon-double-angle-right
-		.invitees-container(ng-show="friends[0]")
-			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{'rsvp.decision':true} | friendPonyUp")
+		.invitees-container(ng-show="friends[0] && !(plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])") no tickets or add-ons chosen yet
+
+		form.invitees-container(ng-submit="sendPonyUpEmail()",ng-show="friends[0] && (plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])")
+			h3 Make sure the checkbox is green next to the people you want to pony up then click the pony up button to send
+			.row.invitee.clearfix(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{'rsvp.decision':true} | friendPonyUp")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
-					a.rsvp-for(href="#",friend="{{friend}}") change rsvp on behalf of {{friend.contactInfo.name}}
-				.invitee-info(id="{{friend._id}}")
+				.invitee-info.pull-left
 					.invitee-name
 						.invitee-name-container
 							span.name.orange {{friend.contactInfo.name}}&nbsp;
-							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
-					.suggested-amount-container.clearfix
-						label.suggested-amount-label.info-slide-down-label.pull-left.clearfix(friend-id="{{friend._id}}")
-							i.icon-caret-right.icon-2x.pull-left
-							.header.pull-left WEMbli Suggested Pony Up Amount:
+							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} {{friend.rsvp.guestCount-1 | pluralize:'guest'}}
+					.suggested-amounts-container
+						label.suggested-amounts-label.info-slide-down-label.clearfix(friend-id="{{friend._id}}",key="suggested-amounts")
+							i.icon-caret-right.suggested-amounts-caret.icon-2x.pull-left
+							.suggested-amount-header.pull-left WEMbli Suggested Pony Up Amount:
 							.value.pull-right {{friend.tickets.suggestedPonyUpAmount | currency}}
-						.suggested-amounts.hide suggested amounts
+						.suggested-amounts.hide
+							.suggested-amount.suggested-ticket-amount.display-popover.clearfix(ng-show="plan.tickets[0]",title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{friend._id}}-tickets-popover-content",trigger="hover")
+								.header.pull-left TICKETS
+								.suggested-amount-body.pull-left.clearfix
+									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
+									.value.pull-right {{friend.tickets.suggestedPonyUpAmount | currency}}
+								div(id="{{friend._id}}-tickets-popover-content").hide
+									.row
+										strong.pull-left  Ticket Price
+										.pull-right {{friend.tickets.group.costBreakdown.ticketPrice | currency}}
+									.row.border-bottom
+										strong.pull-left  Ticketnetwork Service Fee&nbsp;
+										.pull-right {{friend.tickets.group.costBreakdown.serviceFee | currency}}
+									.row
+										strong.pull-left Cost Per Person&nbsp;
+										.pull-right {{friend.tickets.group.costBreakdown.totalEach | currency}}
+									.row
+										strong.pull-left Est. Delivery Fee*&nbsp;
+										.pull-right {{friend.tickets.group.costBreakdown.deliveryFeeEach | currency}}
+									.row
+										strong.pull-left Total (x{{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'ticket'}}):&nbsp;
+										strong.pull-right {{friend.tickets.suggestedPonyUpAmount | currency}}
+									.row.disclaimer
+										small
+											strong *
+											span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
 
+							.suggested-amount.suggested-ticket-amount.clearfix(ng-hide="plan.tickets[0]")
+								.header.pull-left TICKETS
+								.suggested-amount-body.pull-left.clearfix
+									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
+									.value.pull-right
+										a.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Tickets Not Chosen
 
+							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",content="content<br/>more content",trigger="hover")
+								.header.pull-left PARKING
+								.suggested-amount-body.pull-left.clearfix
+									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
+									.value.pull-right {{friend.parking.suggestedPonyUpAmount | currency}}
+							.suggested-amount.suggested-parking-amount.clearfix(ng-show="plan.preferences.addOns.parking && !plan.parking[0]")
+								.header.pull-left PARKING
+								.suggested-amount-body.pull-left.clearfix
+									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
+									.value.pull-right
+										a.wembli-sequence-link(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Parking
 
+							.suggested-amount.suggested-restaurant-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.restaurants && plan.restaurants[0]",title="Restaurant Cost Breakdown",placement="right",content="content",trigger="hover")
+								.header.pull-left RESTAURANT
+								.suggested-amount-body.pull-left.clearfix
+									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
+									.value.pull-right {{friend.restaurant.suggestedPonyUpAmount | currency}}
+							.suggested-amount.suggested-restaurant-amount.clearfix(ng-show="plan.preferences.addOns.restaurants && !plan.restaurants[0]")
+								.header.pull-left RESTAURANT
+								.suggested-amount-body.pull-left.clearfix
+									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
+									.value.pull-right
+										a.wembli-sequence-link(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
+
+							.suggested-amount.suggested-hotel-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.hotels && plan.hotels[0]",title="Hotel Cost Breakdown",placement="right",content="content",trigger="hover")
+								.header.pull-left HOTEL
+								.suggested-amount-body.pull-left.clearfix
+									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
+									.value.pull-right {{friend.hotel.suggestedPonyUpAmount | currency}}
+							.suggested-amount.suggested-hotel-amount.clearfix(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0]")
+								.header.pull-left HOTEL
+								.suggested-amount-body.pull-left.clearfix
+									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
+									.value.pull-right
+										a.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
+					.send-pony-up-control.clearfix
+						label.send-pony-up-label.pull-left.clearfix(ng-click="friend.ponyUp.amount={false:'0.00',true:friend.tickets.suggestedPonyUpAmount}[friend.ponyUp.request]")
+							input.friend-pony-up-checkbox.pull-left.hide(ng-init="friend.ponyUp.request=true",type="checkbox",ng-model="friend.ponyUp.request")
+							i.icon-check.icon-2x.pull-left.green(ng-show="friend.ponyUp.request")
+							i.icon-check-empty.icon-2x.pull-left(ng-hide="friend.ponyUp.request")
+							.header.pull-left SEND PONY UP REQUEST FOR:
+						.pull-right.input-prepend
+							span.add-on $
+							input.friend-pony-up-amount(type="text",ng-init="friend.ponyUp.amount=friend.tickets.suggestedPonyUpAmount",ng-model="friend.ponyUp.amount")
+				.history-container.pull-left
+					label.history-label.info-slide-down-label.clearfix(friend-id="{{friend._id}}",key="history")
+						i.icon.icon-caret-right.history-caret.icon-2x.pull-left
+						.header.pull-left HISTORY
+					.history.hide
+						.outside-payment-form.form-inline.clearfix
+							label LOG A PAYMENT MADE THROUGH OUTSIDE SOURCE
+							select(ng-init="friend.ponyUp.outsideSourcePaymentMethod='cash'",name="outside_source_payment_method",ng-model="friend.ponyUp.outsideSourcePaymentMethod")
+								option(value="check") Check
+								option(value="cash") Cash
+								option(value="other") Other
+							.input-prepend
+								span.add-on $
+								input(type="text",ng-model="friend.ponyUp.outsideSourceAmount",name="{{friend._id}}-outside_source_amount",placeholder="0.00")
+							a.btn.btn-primary.btn-small(href="#section4",ng-click="submitOutsidePayment(friend._id)", ng-hide="friend.ponyUp.submitInProgress")
+								.icon.icon-share-alt.pull-left
+								span POST PAYMENT
+							a.btn.btn-primary.btn-small(disabled, href="#section4",ng-show="friend.ponyUp.submitInProgress")
+								.icon.icon-cog.icon-spin.pull-left
+								span POST PAYMENT
+						table
+							tr.history-item(ng-repeat="history in friend.payment | orderBy:'-date'")
+								td.type(ng-show="{'outside':true}[history.type]") Outside payment ({{history.method}}):
+								td.type(ng-show="{'request':true}[history.type]") Pony Up Request:
+								td.type(ng-show="{'response':true}[history.type]") Pony Up Payment:
+								td.date {{history.date | date:'short'}}
+								td.history-header Status:
+								td.status {{history.status | historyStatus}}
+								td.history-header(ng-show="{'outside':true}[history.type]") Amt Received:
+								td.history-header(ng-show="{'request':true}[history.type]") Amt Requested:
+								td.history-header(ng-show="{'response':true}[history.type]") Amt Received:
+								td.amount {{history.amount | currency}}
+								td.actions(ng-show="{'request':true}[history.type]")
+									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-hide="history.error || history.resent || history.resendPonyUpInProgress", ng-click="resendPonyUp(friend._id, history._id)")
+										i.icon.icon-envelope.pull-left
+										.text.pull-left Resend
+									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-show="!history.error && !history.resent && history.resendPonyUpInProgress", disabled)
+										i.icon.icon-cog.icon-spin.pull-left
+										.text.pull-left Resend
+									a.btn.btn-tiny.btn-orange.clearfix(href="#",ng-show="history.resent", disabled)
+										i.icon.icon-envelope.pull-left
+										.text.pull-left Sent
+									a.btn.btn-tiny.btn-orange.clearfix(href="#",ng-show="history.error", disabled)
+										i.icon.icon-envelope.pull-left
+										.text.pull-left Error
+								td.actions(ng-show="{'outside':true}[history.type]")
+									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-hide="history.error || history.removeOutsidePaymentInProgress", ng-click="removeOutsidePayment(friend._id, history._id)")
+										i.icon.icon-remove-sign.pull-left
+										.text.pull-left Remove
+									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-show="!history.error && history.removeOutsidePaymentInProgress", disabled)
+										i.icon.icon-cog.icon-spin.pull-left
+										.text.pull-left Remove
+									a.btn.btn-tiny.btn-orange.clearfix(href="#",ng-show="history.error", disabled)
+										i.icon.icon-envelope.pull-left
+										.text.pull-left Error
+							tr.border-bottom
+								td(colspan="7")
+							tr.total-requested
+								td.history-header(colspan="5") Total Requested:
+								td.amount {{friend.payment.requested | currency}}
+							tr.total-requested
+								td.history-header(colspan="5") Total Paid:
+								td.amount {{friend.payment.received | currency}}
+							tr.balance
+								td.history-header.orange(colspan="5") Balance:
+								td.amount.orange {{friend.payment.balance | currency}}
+			.send-pony-up-button-container.clearfix
+				button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(href="#section4",type="submit",ng-hide="sendPonyUpInProgress")
+					.icon.icon-envelope-alt.pull-left
+					span &nbsp;Send Pony Up!
+				button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(href="#section4",ng-show="sendPonyUpInProgress", disabled)
+					.icon.icon-cog.icon-spin.pull-left
+					span &nbsp;Send Pony Up!
+				.pony-up-alert.alert.alert-warning.pull-left(ng-show="error")
+					.icon-warning-sign.icon-2x.pull-left
+					.text.pull-left Shoot! We did something wrong. Try again and if the problem persists, contact us!
+				.pony-up-alert.alert.alert-warning.pull-left(ng-show="formError")
+					.icon-warning-sign.icon-2x.pull-left
+					.text.pull-left Please make sure you've supplied a valid amount for the friends you are requesting to pony up.
+				.pony-up-alert.alert.alert-success.pull-left(ng-show="success")
+					.icon-ok-sign.icon-2x.pull-left
+					.text.pull-left.one-line Giddyup! We successfully sent yer pony up requests.

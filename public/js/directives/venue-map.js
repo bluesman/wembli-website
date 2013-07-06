@@ -43,45 +43,6 @@ directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '
   }
 ]).
 
-directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
-  function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
-
-    return {
-      restrict: 'EAC',
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr) {
-
-          attr.$observe('ticket', function(val) {
-            if (typeof val === "undefined" || val === "") {
-              return;
-            }
-            var ticket = JSON.parse(val);
-            element.click(function(e) {
-              var shipping = 15;
-              var serviceCharge = (parseFloat(ticket.ActualPrice) * .15) * parseInt(ticket.selectedQty);
-              var actualPrice = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
-              var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
-
-              $rootScope.$broadcast('tickets-offsite-clicked', {
-                qty: ticket.selectedQty,
-                amountPaid: amountPaid,
-                ticketGroup: ticket,
-                eventId: ticket.RventId,
-                sessionId: ticket.sessionId
-              });
-
-              var Promise = $timeout(function() {
-                $('#tickets-login-modal').modal('hide');
-                $('#tickets-offsite-modal').modal('show');
-              }, 1500);
-            });
-          });
-        }
-      }
-    };
-  }
-]).
-
 directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', 'wembliRpc',
   function($rootScope, $window, $location, $http, $timeout, fetchModals, plan, wembliRpc) {
 

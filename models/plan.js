@@ -177,6 +177,49 @@ this.Model = function(mongoose) {
 		});
 	};
 
+	Plan.methods.removeHotel = function(hotel,callback) {
+		return this.removeItem('hotels',hotel,callback);
+	}
+
+	Plan.methods.removeRestaurant = function(restaurant,callback) {
+		return this.removeItem('restaurants',restaurant,callback);
+	}
+
+	Plan.methods.removeTicket = function(ticket,callback) {
+		return this.removeItem('tickets',ticket,callback);
+	}
+
+	Plan.methods.removeParking = function(parking,callback) {
+		return this.removeItem('parking',parking,callback);
+	}
+
+	Plan.methods.removeFriend = function(friend,callback) {
+		return this.removeItem('friends',friend,callback);
+	}
+
+	Plan.methods.removeItem = function(key,item,callback) {
+		console.log('remove '+item+ 'from plan['+key+'] '+ this.guid);
+		var id = (typeof item === "string") ? item : item.id;
+		if (!id) {
+			return callback('no id to remove from plan '+key);
+		}
+
+		var p = this;
+		var newItems = [];
+		//check if this plan is in the list yet
+		async.forEach(p[key],function(el,cb) {
+			if (id !== el) {
+			 	newItems.push(el);
+			}
+			cb();
+		}, function() {
+			/* save the new items */
+			p[key] = newItems;
+			p.markModified(key);
+			p.save(callback);
+		});
+	};
+
 
 	/* statics */
 	Plan.statics.makeGuid = function() {

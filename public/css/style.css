@@ -5552,6 +5552,9 @@ h3 {
   font-family: "Helveticaneueltstd-ex";
   font-size: 14px;
 }
+.icon-check-empty {
+  width: 24px !important;
+}
 .btn-primary {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -5860,6 +5863,20 @@ a:focus {
 }
 #map-container img {
   max-width: none;
+}
+a .icon,
+button .icon {
+  width: 20px;
+}
+.alert {
+  color: #524f45;
+}
+.alert .text.one-line {
+  line-height: 38px;
+  vertical-align: middle;
+}
+.alert-warning {
+  background-color: #ffff62;
 }
 /*!
  *  Font Awesome 3.1.0
@@ -9720,9 +9737,6 @@ a#facebook-login-button {
   width: 525px;
   min-height: 400px;
 }
-.hero #event-options-hero-right fieldset .options-group {
-  margin-top: 20px;
-}
 .hero #event-options-hero-right fieldset .control-group {
   *zoom: 1;
   margin: 5px;
@@ -9750,6 +9764,11 @@ a#facebook-login-button {
 }
 .hero #event-options-hero-right fieldset .control-group label {
   margin-left: 20px;
+}
+.hero #event-options-hero-right fieldset .control-group label span {
+  font-size: 1.25em;
+  line-height: 25px;
+  vertical-align: middle;
 }
 .hero #event-options-hero-right fieldset button {
   margin: 20px;
@@ -9894,6 +9913,9 @@ a#facebook-login-button {
   /* section specific global css */
 
 }
+#plan-frame #middle #plan-dashboard .border-bottom {
+  border-bottom: thin solid #524f45;
+}
 #plan-frame #middle #plan-dashboard .header {
   *zoom: 1;
 }
@@ -9948,6 +9970,12 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard .plan-section:after {
   clear: both;
+}
+#plan-frame #middle #plan-dashboard .plan-section .alert .icon-2x {
+  margin: 4px 10px 0 0;
+}
+#plan-frame #middle #plan-dashboard .plan-section .alert .text {
+  width: 90%;
 }
 #plan-frame #middle #plan-dashboard .plan-section .body > h3 {
   color: #214478;
@@ -10135,107 +10163,89 @@ a#facebook-login-button {
   font-weight: bold;
   width: 200px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee {
-  *zoom: 1;
-  margin: 20px 30px;
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee {
+  margin: 0 30px 40px 0;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee:before,
-#plan-frame #middle #plan-dashboard .invitees-container .invitee:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .invitees-container .invitee:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .invitees-container .invitee:before,
-#plan-frame #middle #plan-dashboard .invitees-container .invitee:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard .invitees-container .invitee:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .img-container {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .img-container {
   width: 75px;
   text-align: center;
   line-height: 12px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .img-container .rsvp-for {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .img-container .rsvp-for {
   font-size: .8em;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info {
-  margin-left: 100px;
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info {
+  margin-left: 10px;
+  width: 80%;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container {
   *zoom: 1;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:before,
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:before,
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref {
   width: 20%;
   text-align: center;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-header {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-header {
   text-transform: uppercase;
   color: #767676;
   font-style: italic;
   margin: 10px 5px;
   font-size: 14px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .icon {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .icon {
   height: 45px;
   line-height: 45px;
   vertical-align: middle;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .dollar-sign {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .dollar-sign {
   font-size: 30px;
   height: 45px;
   line-height: 45px;
   vertical-align: middle;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list {
   text-align: left;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-header {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-header {
   color: #d8d6d7;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .icon {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .icon {
   color: #d8d6d7;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .dollar-sign {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .dollar-sign {
   color: #d8d6d7;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .first {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .first {
   text-align: left;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .first i {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .first i {
   margin-left: 25px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-name {
   height: 24px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .name {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-name .name {
   font-size: 24px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .guests {
+#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-name .guests {
   font-weight: bold;
 }
 #plan-frame #middle #plan-dashboard .rsvp-section .body {
@@ -10422,13 +10432,13 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment .actor-image-container img {
   max-width: 60%;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container {
   margin: 30px 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container {
   width: 35%;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info {
   *zoom: 1;
   background-color: #d8d6d7;
   -webkit-border-radius: 6px;
@@ -10438,48 +10448,48 @@ a#facebook-login-button {
   margin: 0;
   font-family: "Calibri";
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:before,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:before,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
   clear: both;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:before,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:before,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
   clear: both;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row {
   *zoom: 1;
   margin: 0;
   padding: 2px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:before,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:before,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
   clear: both;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:before,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:before,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
   clear: both;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row h3 {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row h3 {
   color: #767676;
   font-family: "Calibri";
   line-height: 15px;
@@ -10489,38 +10499,38 @@ a#facebook-login-button {
   font-size: 2em;
   padding: 20px 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row span {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row span {
   display: inline;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row label {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row label {
   margin-left: 20px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row .data {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row .data {
   line-height: 15px;
   vertical-align: middle;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row .rsvp-days {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row .rsvp-days {
   margin-bottom: 10px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .first-row .data {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .first-row .data {
   font-size: 1.5em;
   line-height: 16px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .first-row h3 {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .first-row h3 {
   font-size: 1.5em;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container {
   padding: 0px;
   width: 50%;
   margin-left: 30px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container button {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container button {
   margin: 20px 0 40px 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container h3 {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container h3 {
   padding: 10px 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp {
   *zoom: 1;
   width: 100%;
   padding: 25px 0px;
@@ -10529,25 +10539,25 @@ a#facebook-login-button {
   margin: 0;
   text-align: center;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
   clear: both;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
   clear: both;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a {
   font-size: 40px;
   margin: 10px;
   font-weight: bold;
@@ -10555,109 +10565,296 @@ a#facebook-login-button {
   display: block;
   float: left;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a.active,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a:hover {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a.active,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a:hover {
   color: #ff6700;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .payment-type-note {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .payment-type-note {
   margin-top: 30px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset {
   width: 290px;
   /* change this to auto to center the rsvp */
 
   margin: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label {
   *zoom: 1;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
   clear: both;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
   clear: both;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label #including-yourself {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label #including-yourself {
   line-height: 30px;
   vertical-align: middle;
   padding-left: 10px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label #guest-count {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label #guest-count {
   width: 30px;
   height: 26px;
   text-align: center;
   margin: 0 10px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section #no-invitees {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section #no-invitees {
   background-color: #d8d6d7;
   padding: 50px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-rsvp-section #no-invitees button {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section #no-invitees button {
   margin: auto;
   display: block;
   width: 200px;
   height: 60px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-cart-section .body .container {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container.border-bottom {
+  border-bottom: 4px solid #524f45;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container {
   width: 100%;
   margin: 20px 0 0 0;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-cart-section .body .container .cartoon-man {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .cartoon-man {
   width: 100px;
   margin: 0 20px;
   text-align: center;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-cart-section .body .container .header label i {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .header label i {
   width: 40px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-cart-section .body .container .header label h3 {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .header label h3 {
   color: #426799;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-cart-section .body .container .body p {
-  padding: 10px 0;
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .body {
   width: 450px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-cart-section .body .container .body .button-container .buy-now {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .body p {
+  padding: 10px 0;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .body .button-container .buy-now {
   margin: 10px 10px 10px 200px;
   display: block;
   color: #4380b8;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info {
-  width: 45%;
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-info,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-payment {
+  font-size: 1.5em;
+  margin: 10px 0;
+  line-height: 24px;
+  vertical-align: middle;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container label.suggested-amount-label:hover {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-section,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-row,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-seat {
+  margin-right: 10px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-section span,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-row span,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-seat span {
+  margin-left: 5px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-payment .qty-container select {
+  margin: 0 10px;
+  font-size: 0.6em;
+  width: 50px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-payment .ticket-total {
+  margin: 0 10px;
+  color: #46a546;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .controls {
+  margin: 20px 0;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .controls .change-tickets-link {
+  margin: 10px 50px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .totals {
+  font-size: 3em;
+  width: 550px;
+  text-align: right;
+  margin-left: 150px;
+  font-weight: bold;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .totals > div {
+  line-height: normal;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee {
+  margin: 40px 0 0 0;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info {
+  width: 80%;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container label.suggested-amounts-label:hover {
   background-color: #d3e3ea;
   cursor: pointer;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container .suggested-amount-label {
-  width: 100%;
-  padding: 4px;
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label {
+  width: 444px;
+  padding: 6px;
+  height: 24px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container .suggested-amount-label i {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label i {
   width: 15px;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container .suggested-amount-label .header {
-  font-size: 1.5em;
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .suggested-amount-header {
+  font-size: 1em;
+  line-height: 24px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .header {
+  font-size: 1.25em;
   font-weight: bold;
   line-height: 24px;
   vertical-align: middle;
 }
-#plan-frame #middle .organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amount-container .suggested-amount-label .value {
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .value {
+  font-size: 1em;
+  line-height: 24px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content {
+  width: 250px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content .disclaimer small {
+  padding: 10px 0;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content h4 {
+  font-size: 0.75em;
+  display: block;
+  width: 100%;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount {
+  width: 426px;
+  height: 18px;
+  margin: 0 10px 10px 30px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .header {
+  font-weight: bold;
+  width: 100px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body {
+  margin: 0 0 0 30px;
+  width: 290px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body .key {
+  color: #d8d6d7;
+  font-style: italic;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .send-pony-up-control {
+  width: 450px;
+  margin: 6px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .send-pony-up-control label {
+  height: 30px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .send-pony-up-control label .header {
+  font-weight: bold;
+  font-style: italic;
   font-size: 1.5em;
   line-height: 24px;
   vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .send-pony-up-control label i {
+  width: 26px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .send-pony-up-control input[type=text] {
+  width: 75px;
+  font-size: 18px;
+  text-align: right;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container {
+  width: 75%;
+  margin-left: 85px;
+  padding: 6px;
+  background-color: #d3e3ea;
+  border: 2px dashed #524f45;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history-label {
+  cursor: pointer;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history-label .header {
+  font-weight: bold;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 26px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history-label .icon {
+  width: 20px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history {
+  margin-left: 24px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history .outside-payment-form {
+  padding: 20px 6px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history .outside-payment-form label {
+  font-weight: bold;
+  font-style: italic;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history .outside-payment-form select {
+  width: 75px;
+  margin: 0 40px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history .outside-payment-form input[type=text] {
+  width: 50px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history .outside-payment-form a {
+  margin-left: 40px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table {
+  width: 100%;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table td {
+  color: #524f45;
+  text-transform: uppercase;
+  font-style: italic;
+  font-weight: bold;
+  text-align: center;
+  padding: 6px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table td.type {
+  width: 175px;
+  text-align: left;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table td.history-header {
+  color: #767676;
+  text-align: right;
+  font-size: .8em;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table td.date,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table td.status,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table td.amount {
+  text-align: left;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table td.actions a {
+  line-height: 14px;
+  vertical-align: middle;
+  width: 72px;
+  padding: 4px 6px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table tr.balance > td {
+  color: #ff6700;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .pony-up-alert {
+  margin: 34px;
+  width: 450px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .send-pony-up-button {
+  margin: 40px 0 0 86px;
 }
 #plan-frame #middle .friend-plan-dashboard .collect-rsvp {
   width: 100%;

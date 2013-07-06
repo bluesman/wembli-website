@@ -155,19 +155,43 @@ directive('displayPopover', [
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           var content = '';
-          attr.$observe('content', function(c) {
-            if (content === c) {
-              return;
-            }
-            content = c;
-            element.popover({
-              placement: attr.placement,
-              trigger: attr.trigger,
-              animation: (attr.animation === 'true') ? true : false,
-              title: attr.title,
-              content: attr.content
+          var contentId = '';
+          if (("contentId" in attr)) {
+            attr.$observe('contentId', function(c) {
+              if (typeof c === "undefined") {
+                return;
+              }
+              if (contentId === c) {
+                return;
+              }
+              contentId = c;
+              element.popover({
+                placement: attr.placement,
+                trigger: attr.trigger,
+                animation: (attr.animation === 'true') ? true : false,
+                title: attr.title,
+                content: function() { return $('#'+contentId).html() },
+                html: (attr.html === 'true') ? true : false
+              });
             });
-          });
+
+          } else {
+            attr.$observe('content', function(c) {
+              if (content === c) {
+                return;
+              }
+              content = c;
+              element.popover({
+                placement: attr.placement,
+                trigger: attr.trigger,
+                animation: (attr.animation === 'true') ? true : false,
+                title: attr.title,
+                content: attr.content,
+                html: (attr.html === 'true') ? true : false
+              });
+            });
+
+          }
         }
       }
     }
@@ -468,6 +492,46 @@ directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequenc
   }
 ]).
 
+directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
+  function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+
+    return {
+      restrict: 'EAC',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+
+          attr.$observe('ticket', function(val) {
+            if (typeof val === "undefined" || val === "") {
+              return;
+            }
+            var ticket = JSON.parse(val);
+            element.click(function(e) {
+              var shipping = 15;
+              var serviceCharge = (parseFloat(ticket.ActualPrice) * .15) * parseInt(ticket.selectedQty);
+              var actualPrice = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
+              var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
+
+              $rootScope.$broadcast('tickets-offsite-clicked', {
+                qty: ticket.selectedQty,
+                amountPaid: amountPaid,
+                ticketGroup: ticket,
+                eventId: ticket.RventId,
+                sessionId: ticket.sessionId
+              });
+
+              var Promise = $timeout(function() {
+                $('#tickets-login-modal').modal('hide');
+                $('#tickets-offsite-modal').modal('show');
+              }, 1500);
+            });
+          });
+        }
+      }
+    };
+  }
+]).
+
+
 /*
  * show the tickets summary info popover for search results
  */
@@ -656,13 +720,19 @@ directive('sendForgotPasswordEmail', ['wembliRpc',
                 scope.forgotPasswordEmailSent = true;
                 scope.$broadcast('forgot-password-email-sent');
               },
-              /* transformRequest */function(data, headersGetter) {
+              /* transformRequest */
+
+
+              function(data, headersGetter) {
                 scope.accountExists = false; //will this work?
                 scope.signupSpinner = true;
                 return data;
               },
 
-              /* transformResponse */function(data, headersGetter) {
+              /* transformResponse */
+
+
+              function(data, headersGetter) {
                 scope.signupSpinner = false;
                 return JSON.parse(data);
               });
@@ -876,7 +946,12 @@ directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$ti
                 sequence.goTo(nextFrameID, direction);
 
                 /* log this click in keen.io */
-                wembliRpc.fetch('analytics.addEvent', {collection: 'view', url: $location.absUrl(), direction: direction, frame: nextFrameID}, function(err, result) {});
+                wembliRpc.fetch('analytics.addEvent', {
+                  collection: 'view',
+                  url: $location.absUrl(),
+                  direction: direction,
+                  frame: nextFrameID
+                }, function(err, result) {});
 
                 /* dismiss any modals once the page loads */
                 var loadingDuration = (attr.loadingDuration) ? parseInt(attr.loadingDuration) : 500;

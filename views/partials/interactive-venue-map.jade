@@ -14,10 +14,7 @@
 					.read-only(ng-hide="plan.rsvpComplete")
 						include interactive-venue-map/tickets/read-only
 					.rsvp-complete(ng-show="plan.rsvpComplete")
-						.add-to-plan(ng-hide="plan.ponyUpSent")
-							include interactive-venue-map/tickets/add-to-plan
-						.buy-now(ng-show="plan.ponyUpSent")
-							include interactive-venue-map/tickets/buy-now
+						include interactive-venue-map/tickets/add-to-plan
 		- if (visitor.context === "friend")
 			include interactive-venue-map/tickets/read-only
 

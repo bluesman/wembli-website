@@ -6,6 +6,15 @@ this.Model = function(mongoose) {
 	var Schema = mongoose.Schema;
 	var ObjectId = Schema.ObjectId;
 
+	var Payment = new Schema({
+		amount:Number,
+		date:{type:Date,default:Date.now()},
+		method:String,
+		type:String,
+		transaction:{},
+		status:String,
+		email:{}
+	});
 
 	var Friend = new Schema({
 		customerId: {type: String, index: true},
@@ -126,16 +135,23 @@ this.Model = function(mongoose) {
 		/*
 		 * need to nail this schema down
 		 * {
-		 *	request: {
-		 *		requestor:<customerId>,
-		 *		amount: <amount>
-		 *	}
-		 *	response: {
-		 *
-		 *	}
+		 *		request: [{
+		 *			amount:<amt>,
+		 *			date:<requested date>
+		 *			status: queued|delivered|opened|responded|canceled?,
+		 *			email: {}
+		 *		}],
+		 *  	payment: [{
+		 *			amount: <>,
+		 *			method:<check|cash|creditcard|paypal|other,
+		 *			transaction: {},
+		 *			date:,
+		 *			status:,
+		 *			email:{}
+		 *		}]
 		 * }
 		 */
-		payment: {type:{}},
+		payment: [Payment],
 		created: {type: Date,	default: Date.now()	},
 		updated: Date,
 	},{

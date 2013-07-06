@@ -24,6 +24,7 @@ this.Model = function(mongoose) {
 		payment: [Payment],
 		qty:Number,
 		total:Number,
+		gone: {type:Boolean,default:false},
 		created: {type: Date,	default: Date.now	},
 		updated: Date,
 	},{

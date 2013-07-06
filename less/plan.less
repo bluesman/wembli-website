@@ -87,6 +87,10 @@
 		#plan-dashboard {
 			height:100%;
 
+			.border-bottom {
+				border-bottom: thin solid @grayDark;
+			}
+
 			.header {
 				.clearfix();
 				h1 {
@@ -106,6 +110,18 @@
 				padding:0 20px;
 				min-height:768px;
 				.clearfix();
+
+
+				.alert {
+
+					.icon-2x {
+						margin:4px 10px 0 0;
+					}
+					.text {
+						width:90%;
+					}
+				}
+
 
 				.body > h3 {
 					color:@blueDarker;
@@ -204,9 +220,8 @@
 
 			/* global invitees lists */
 			.invitees-container {
-				.invitee {
-					.clearfix();
-					margin:20px 30px;
+				.row.invitee {
+					margin:0 30px 40px 0;
 
 					.img-container {
 						width:75px;
@@ -218,7 +233,8 @@
 					}
 
 					.invitee-info {
-						margin-left:100px;
+						margin-left:10px;
+						width:80%;
 						.invitee-prefs-container {
 							.clearfix();
 							.invitee-pref {
@@ -502,7 +518,7 @@
 		}
 
 		/* organizer specific css */
-		.organizer-plan-dashboard {
+		#plan-dashboard.organizer-plan-dashboard {
 
 			.organizer-rsvp-section {
 
@@ -634,15 +650,18 @@
 					}
 				}
 
-					.section-bottom {
-						.next-wrapper {
-
-						}
+				.section-bottom {
+					.next-wrapper {
 					}
+				}
 			}
 
 			.organizer-cart-section {
 				.body {
+					.container.border-bottom {
+						border-bottom:4px solid @grayDark;
+					}
+
 					.container {
 						width:100%;
 						margin:20px 0 0 0;
@@ -666,9 +685,9 @@
 						}
 
 						.body {
+							width:450px;
 							p {
 								padding:10px 0;
-								width:450px;
 							}
 							.button-container {
 								.buy-now {
@@ -681,10 +700,46 @@
 
 					}
 
-					.tickets-container {
+					.ticket-row {
 
+						.ticket-container {
+							.ticket-info, .ticket-payment {
+								font-size:1.5em;
+								margin:10px 0;
+								line-height: 24px;
+								vertical-align: middle;
+
+							}
+
+							.ticket-section, .ticket-row, .ticket-seat {
+								margin-right:10px;
+								span {
+									margin-left:5px;
+								}
+							}
+
+							.ticket-payment {
+
+								.qty-container {
+									select {
+										margin:0 10px;
+										font-size:0.6em;
+										width:50px;
+									}
+								}
+								.ticket-total {
+									margin:0 10px;
+									color:@green;
+								}
+							}
+						}
+						.controls {
+							margin:20px 0;
+							.change-tickets-link {
+								margin:10px 50px
+							}
+						}
 					}
-
 					.parking-container {
 
 						.body {
@@ -692,12 +747,22 @@
 						}
 
 						.add-on-included {
-
 						}
 
 						.add-on-not-included {
 
 						}
+					}
+
+					.totals {
+						font-size:3em;
+						width:550px;
+						text-align:right;
+						margin-left:150px;
+						font-weight: bold;
+					}
+					.totals > div {
+						line-height:normal;
 					}
 				}
 			}
@@ -705,33 +770,185 @@
 			.organizer-pony-up-section {
 				.invitees-container {
 					.invitee {
+						margin:40px 0 0 0;
 						.invitee-info {
-							width:45%;
+							width:80%;
 
-							.suggested-amount-container {
-								label.suggested-amount-label:hover {
+							.suggested-amounts-container {
+								label.suggested-amounts-label:hover {
 									background-color:lighten(@blueLight,30%);
 									cursor:pointer;
 								}
-								.suggested-amount-label {
-									width:100%;
-									padding:4px;
+								.suggested-amounts-label {
+									width:444px;
+									padding:6px;
+									height:24px;
 
 									i {width:15px;}
+									.suggested-amount-header {
+										font-size: 1em;
+										line-height: 24px;
+										vertical-align: middle;
+
+									}
 									.header {
-										font-size: 1.5em;
+										font-size: 1.25em;
 										font-weight: bold;
 										line-height: 24px;
 										vertical-align: middle;
 									}
 									.value {
-										font-size: 1.5em;
+										font-size: 1em;
 										line-height: 24px;
 										vertical-align: middle;
 									}
 								}
+								.suggested-amounts {
+									.popover-content {
+										width:250px;
+
+										.disclaimer {
+											small {
+												padding:10px 0;
+											}
+										}
+										h4 {
+											font-size: 0.75em;
+											display:block;
+											width:100%;
+										}
+									}
+									.suggested-amount {
+										width: 426px;
+										height:18px;
+										margin:0 10px 10px 30px;
+
+										.header {
+											font-weight: bold;
+											width:100px;
+										}
+										.suggested-amount-body {
+											margin:0 0 0 30px;
+											width:290px;
+											.key {
+												color:@grayLight;
+												font-style: italic;
+											}
+
+										}
+									}
+								}
+							}
+							.send-pony-up-control {
+								width: 450px;
+								margin:6px;
+
+								label {
+									height:30px;
+
+									.header {
+										font-weight: bold;
+										font-style: italic;
+										font-size:1.5em;
+										line-height: 24px;
+										vertical-align: middle;
+									}
+
+									i {
+										width:26px;
+									}
+								}
+								input[type=text] {
+									width:75px;
+									font-size:18px;
+									text-align: right;
+								}
 							}
 						}
+						.history-container {
+							width:75%;
+							margin-left:85px;
+							padding:6px;
+							background-color:lighten(@blueLight,30%);
+							border:2px dashed @grayDark;
+							.history-label {
+								cursor: pointer;
+								.header {
+									font-weight: bold;
+									font-size:16px;
+									font-style: italic;
+									line-height:26px;
+									vertical-align: middle;
+								}
+								.icon {
+									width:20px;
+								}
+							}
+							.history {
+								margin-left:24px;
+								.outside-payment-form {
+									padding: 20px 6px;
+									label {
+										font-weight: bold;
+										font-style: italic;
+									}
+
+									select {
+										width:75px;
+										margin:0 40px;
+									}
+
+									input[type=text] {
+										width:50px;
+									}
+
+									a {margin-left:40px;}
+								}
+								table {
+									width:100%;
+									td {
+										color: @grayDark;
+										text-transform: uppercase;
+										font-style: italic;
+										font-weight: bold;
+										text-align: center;
+										padding:6px;
+									}
+									td.type {
+										width:175px;
+										text-align: left;
+									}
+									td.history-header {
+										color:@gray;
+										text-align: right;
+										font-size:.8em;
+									}
+
+									td.date, td.status, td.amount {
+										text-align:left;
+									}
+									td.actions {
+										a {
+											line-height: 14px;
+											vertical-align: middle;
+											width:72px;
+											padding:4px 6px;
+										}
+									}
+									tr.balance > td {
+										color:@orange;
+									}
+								}
+							}
+						}
+					}
+					.pony-up-alert {
+						margin:34px;
+						width:450px;
+					}
+
+					.send-pony-up-button {
+						margin:40px 0 0 86px;
 					}
 				}
 			}

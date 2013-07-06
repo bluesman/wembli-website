@@ -64,17 +64,17 @@ section#section2.organizer-rsvp-section.rsvp-section.plan-section.even
 			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
 				span Invite People&nbsp;
 				i.icon-double-angle-right
-		.invitees-container(ng-show="friends[0]")
+		.invitees-container.clearfix(ng-show="friends[0]")
 			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true}")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
-					a.rsvp-for(href="#",friend="{{friend}}") change rsvp on behalf of {{friend.contactInfo.name}}
-				.invitee-info
+					a.rsvp-for(href="#",friend="{{friend}}") change rsvp for {{friend.contactInfo.name}}
+				.invitee-info.pull-left
 					.invitee-name.clearfix
 						.invitee-name-container.pull-left
 							span.name.orange {{friend.contactInfo.name}}&nbsp;
-							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
+							span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} {{friend.rsvp.guestCount | pluralize:'guest'}}
 						.message-status-container.pull-right
 							.message-status
 								.rsvp-email(ng-hide="rsvpComplete")

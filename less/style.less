@@ -40,6 +40,10 @@ h3 {
   font-size:14px;
 }
 
+.icon-check-empty {
+  width:24px !important;
+}
+
 .btn-primary {
   .buttonBackground(@blue,@blueDark);
   font-size:16px;
@@ -236,6 +240,30 @@ a, a:hover, a:focus {
   /* twitter bootstrap screws up google map */
   img { max-width : none }
 }
+
+a, button {
+  .icon {
+    width:20px;
+  }
+}
+
+
+.alert {
+  color:@grayDark;
+
+
+  .text.one-line {
+    line-height:38px;
+    vertical-align: middle;
+  }
+
+}
+
+.alert-warning {
+  background-color:rgb(255,255,98);
+}
+
+
 
 @import "/font-awesome/font-awesome.less";
 @import "fonts.less";

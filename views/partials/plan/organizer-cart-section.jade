@@ -32,7 +32,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 					p Note:  Adding tickets in your cart does NOT place them on hold.   You don't get dibs on tickets until you buy them.
 					.button-container.clearfix
 						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
-						a.buy-now.wembli-sequence-link(ng-click="setPayment('tickets','split-after')",href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I don't want to wait, I want to buy now
+						//- a.buy-now.wembli-sequence-link(ng-click="setPayment('tickets','split-after')",href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I don't want to wait, I want to buy now
 
 				//- no tickets, rsvp is complete and split-after
 				.body.add-on-included(ng-show="!plan.tickets[0] && plan.rsvpComplete && {'split-after':true}[plan.preferences.tickets.payment]")
@@ -48,21 +48,60 @@ section#section3.organizer-cart-section.cart-section.plan-section
 
 				//- have tickets rsvp complete
 				.body.add-on-included(ng-show="plan.tickets[0] && plan.rsvpComplete")
-					.alert.alert-warning(ng-show="ticketCountMismatch") The number of available tickets in this ticket group do not match the number of confirmed guests!
+					.alert.alert-warning.clearfix(ng-show="ticketCountMismatch")
+						.icon-warning-sign.icon-2x.pull-left
+						.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
 					ul.ticket-list-container
-						li.ticket-row(ng-repeat="ticket in tickets")
-							.ticket-info.pull-left
-								.ticket-price
-									.actual-price Price: ${{ticket.ticketGroup.ActualPrice}} (each)
-								.ticket-info
-									.ticket-section-name Section: {{ticket.ticketGroup.Section}}
-									.seat-row-name Row: {{ticket.ticketGroup.Row}}
-								.qty-container
-									strong Qty: {{ticket.ticketGroup.selectedQty}}
-							.remove.pull-right
+						li.ticket-row(ng-repeat="ticket in tickets | ticketTotals")
+							.ticket-container.display-popover(title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{ticket._id}}-tickets-popover-content",trigger="hover")
+								div(id="{{ticket._id}}-tickets-popover-content").hide
+									.row.clearfix
+										strong.pull-left  Ticket Price
+										.pull-right {{ticket.ticketGroup.costBreakdown.ticketPrice | currency}}
+									.row.clearfix.border-bottom
+										strong.pull-left  Ticketnetwork Service Fee&nbsp;
+										.pull-right {{ticket.ticketGroup.costBreakdown.serviceFee | currency}}
+									.row.clearfix
+										strong.pull-left  Cost Per Person&nbsp;
+										.pull-right {{ticket.ticketGroup.costBreakdown.totalEach | currency}}
+									.row.clearfix
+										strong.pull-left  Est. Delivery Fee* Per Invitee&nbsp;
+										.pull-right {{ticket.ticketGroup.costBreakdown.deliveryFeeEach | currency}}
+									.row.clearfix
+										strong.pull-left  Total (x{{ticket.ticketGroup.selectedQty}} {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}):&nbsp;
+										strong.pull-right {{ticket.ticketGroup.costBreakdown.total | currency}}
+									.row.disclaimer
+										small
+											strong *
+											span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
+								.ticket-info.clearfix
+									.ticket-section.pull-left
+										strong SECTION/AISLE:
+										span {{ticket.ticketGroup.Section}}&nbsp;
+									.ticket-row.pull-left
+										strong ROW/BOX:
+										span {{ticket.ticketGroup.Row}}
+									.ticket-seat.pull-left
+										strong SEATS:
+										span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
+										span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
+								.ticket-notes
+									span NOTES:&nbsp;
+									span {{ticket.ticketGroup.Notes}}
+								.ticket-payment.clearfix
+									.per-person.pull-left
+										strong Total cost for
+									.qty-container.pull-left
+										select(id="qty-{{ticket.ticketGroup.ID}}",ng-model="ticket.ticketGroup.selectedQty",name="qty-{{ticket.ticketGroup.ID}}",ng-options="q for q in ticket.ticketGroup.ValidSplits.int")
+									.pull-left
+										strong {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}:
+									.ticket-total.pull-left
+										{{ticket.ticketGroup.costBreakdown.total | currency}}
+							//- .remove
 								button.btn.btn-orange(ng-click="removeTicketGroup(ticket._id)") Remove From Plan
-					a.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add More Tickets
-
+							.controls.clearfix
+								a.btn.btn-orange.btn-large.buy-tickets-offsite.pull-left(ng-hide="{'split-after':true}[plan.preferences.tickets.payment]",ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy Tickets Now
+								a.change-tickets-link.wembli-sequence-link.pull-left(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Change Tickets
 		.container.parking-container.clearfix
 			.cartoon-man.pull-left
 				image(src="/images/wembliman/car/100.png")
@@ -184,7 +223,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && plan.restaurants[0] && plan.rsvpComplete")
 					p Restaurant details and pony up checkbox
 
-		.container.hotel-container.clearfix
+		.container.hotel-container.clearfix.border-bottom
 			.cartoon-man.pull-left
 				image(src="/images/wembliman/hotel/100.png")
 			.pull-left
@@ -244,6 +283,10 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				.body.add-on-included(ng-show="plan.preferences.addOns.hotels && plan.hotels[0] && plan.rsvpComplete && {'split-after':true}[plan.preferences.hotels.payment]")
 					p Hotel details and Buy now button - include pony up checkbox too though
 
+		.totals.pull-left
+			.total-bill Total Bill = {{tickets.total + parking.total + restaurants.total + hotels.total | currency}}
+			.total-ponied-up Total Ponied Up = {{totalPoniedUp | currency}}
+			.balance.orange Balance = {{tickets.total + parking.total + restaurants.total + hotels.total - totalPoniedUp | currency}}
 	//- TODO: this can be in a different view partial
 	//- if they are splitting after, they have already bought tix by the time they get here so just need some add ons
 	.body(ng-show="{'split-after':true}[plan.preferences.payment]")
