@@ -301,7 +301,9 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
                 $scope.friends[i].totalPoniedUp = 0;
                 for (var j = 0; j < $scope.friends[i].payment.length; j++) {
                   var p = $scope.friends[i].payment[j];
-                  $scope.friends[i].totalPoniedUp += parseFloat(p.amount);
+		  if (p.type !== 'request') {
+		      $scope.friends[i].totalPoniedUp += parseFloat(p.amount);
+		  }
                 };
                 $scope.totalPoniedUp += $scope.friends[i].totalPoniedUp;
               }

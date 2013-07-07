@@ -44,6 +44,7 @@ module.exports = function(app) {
 					f.markModified('email');
 
 					var save = function(f) {
+					    console.log('calling save friend');
 						f.save(function(err) {
 							if (err) {
 								return cb(err);
@@ -60,9 +61,11 @@ module.exports = function(app) {
 					};
 
 					/* any special instructions for this friend */
-					if ((typeof updateFriendHooks[req.body.category] !== "undefined") && (typeof hooks[req.body.category][req.body.event] !== "undefined")) {
-						hooks[req.body.category][req.body.event](f, save);
+					if ((typeof updateFriendHooks[req.body.category] !== "undefined") && (typeof updateFriendHooks[req.body.category][req.body.event] !== "undefined")) {
+					    console.log('calling hook');
+						updateFriendHooks[req.body.category][req.body.event](f, save);
 					} else {
+					    console.log('calling save');
 						save(f);
 					}
 
@@ -180,8 +183,14 @@ module.exports = function(app) {
 		var updateFriendHooks = {
 			'pony-up-request': {
 				'delivered': function(f, save) {
+				    console.log('calling pony-up-request delivered hook');
 					if (req.body.paymentId) {
 						var p = f.payment.id(req.body.paymentId);
+						console.log('payment object:');
+						console.log(p);
+						if (typeof p.email === "undefined") {
+						    p.email = {};
+						}
 						p.email['delivered'] = req.body;
 						p.status = 'delivered';
 						console.log('payment: ');
@@ -194,6 +203,9 @@ module.exports = function(app) {
 				'open': function(f, save) {
 					if (req.body.paymentId) {
 						var p = f.payment.id(req.body.paymentId);
+						if (typeof p.email === "undefined") {
+						    p.email = {};
+						}
 						p.email['opened'] = req.body;
 						p.status = 'opened';
 						console.log('payment: ');

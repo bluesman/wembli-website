@@ -50,8 +50,8 @@ this.Model = function(mongoose) {
 		},
 		/* this should move under rsvp and payment */
 		email: {
-			rsvp: {},
-			ponyUp: {}
+			'rsvp': {},
+			'pony-up-request': {}
 		},
 		rsvp:{
 			token:String,

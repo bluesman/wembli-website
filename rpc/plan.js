@@ -62,7 +62,6 @@ exports.plan = {
 							planId: req.session.plan.id
 						}, function(err, results) {
 							data.tickets = results;
-
 							/* check if these tickets are still available */
 							async.forEach(data.tickets, function(item, callback2) {
 								console.log('tickets in plan');
