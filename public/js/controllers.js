@@ -495,7 +495,7 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, m
 		}
 
 		if (googleMap.isDrawn()) {
-			console.log('google map is draen');
+			console.log('google map is drawn');
 			getParking(p);
 		} else {
 			console.log('google map is not drawn');

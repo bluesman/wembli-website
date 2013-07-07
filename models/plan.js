@@ -110,6 +110,7 @@ this.Model = function(mongoose) {
 		hotels: [String],
 		parking: [String],
 		restaurants: [String],
+		notes: String,
 		created: {type: Date,default: Date.now},
 		updated: Date,
 	},{

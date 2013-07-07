@@ -959,8 +959,8 @@ directive('organizerMoneySection', ['$rootScope',
 ]).
 */
 
-directive('organizerItinerarySection', ['$rootScope',
-  function($rootScope) {
+directive('organizerItinerarySection', ['$rootScope', 'wembliRpc',
+  function($rootScope, wembliRpc) {
     return {
       restrict: 'E',
       cache: false,
@@ -970,12 +970,123 @@ directive('organizerItinerarySection', ['$rootScope',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           $rootScope.$broadcast('section-loaded');
+          var timer;
+          scope.submitNotes = function() {
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+              console.log('saving notes');
+              wembliRpc.fetch('plan.submitNotes', {notes: scope.plan.notes}, function(err, result) {
+                /* handle error */
+              });
+            }, 2000);
+
+          };
         };
       }
     };
   }
 ]).
 
+directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowContent',
+  function($rootScope, googleMap, plan, mapInfoWindowContent) {
+    return {
+      restrict: 'EC',
+      cache: false,
+      replace: true,
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          console.log('link itinerary map!');
+
+          var mapTypeId = (attr.mapTypeId) ? google.maps.MapTypeId[attr.mapTypeId] : google.maps.MapTypeId.ROADMAP;
+
+          /* draw the map */
+          var mapOpts = {
+            mapTypeId: mapTypeId
+          };
+          mapOpts.center = new google.maps.LatLng(attr.lat, attr.lng);
+
+          if (attr.zoom) {
+            mapOpts.zoom = parseInt(attr.zoom);
+          }
+          if (attr.draggable) {
+            if (attr.draggable === 'true') {
+              mapOpts.draggable = true;
+            } else {
+              mapOpts.draggable = false;
+            }
+          }
+
+          mapOpts.scrollwheel = true;
+          if (attr.scrollwheel) {
+            if (attr.scrollwheel === 'true') {
+              mapOpts.scrollwheel = true;
+            } else {
+              mapOpts.scrollwheel = false;
+            }
+          }
+          console.log('mapopts');
+          console.log(mapOpts);
+
+          googleMap.draw(element, mapOpts);
+
+
+          plan.get(function(p) {
+            /* reset the map */
+            googleMap.isDrawn(false);
+
+            var lat = p.venue.data.geocode.geometry.location.lat;
+            var lng = p.venue.data.geocode.geometry.location.lng;
+            console.log('lat/lng for venue: ' + lat + '' + lng);
+            /* make a marker for the venue */
+            var marker = new google.maps.Marker({
+              map: googleMap.getMap(),
+              position: new google.maps.LatLng(lat, lng),
+            });
+            marker.setIcon("/images/icons/map-icons/sports/stadium.png");
+            marker.setAnimation(google.maps.Animation.DROP);
+
+            /* infoWindow for the venue marker */
+            var win = new google.maps.InfoWindow({
+              content: mapInfoWindowContent.create({
+                header: p.event.eventVenue,
+                body: p.venue.data.Street1 + ', ' + p.event.eventCity + ', ' + p.event.eventState
+              }),
+              pixelOffset: new google.maps.Size(10, 0),
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+              console.log('clicked infowindow')
+              if (googleMap.isInfoWindowOpen(marker)) {
+                googleMap.closeInfoWindow(marker);
+              } else {
+                googleMap.openInfoWindow(marker);
+              }
+            });
+            console.log('marker');
+            console.log(marker);
+            /* put the marker on the map */
+            googleMap.addMarker(marker);
+            /* put the infoWindow on the map */
+            googleMap.addInfoWindow(win, marker);
+            /* open the infowindow for the venue by default */
+            googleMap.openInfoWindow(marker);
+
+            if (scope.sequenceCompleted) {
+              //googleMap.draw(element, mapOpts);
+            } else {
+              var dereg = scope.$watch('sequenceCompleted', function(complete) {
+                if (complete) {
+                  //googleMap.draw(element, mapOpts);
+                  dereg();
+                }
+              })
+            }
+          });
+        };
+      }
+    };
+  }
+]).
 
 directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize',
   function($window, $location, wembliRpc, plan, customer, pluralize) {
