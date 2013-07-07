@@ -1,6 +1,6 @@
 #parking-frame(ng-controller="ParkingCtrl")
 	#map-background
-		#map-container.parking-map(lat="#{lat}",lng="#{lon}",zoom="15",draggable="true",map-type-id="ROADMAP")
+		#parking-map-container.parking-map.map-container(lat="#{lat}",lng="#{lon}",zoom="15",draggable="true",map-type-id="ROADMAP")
 	#parking.pull-right
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links

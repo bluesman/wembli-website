@@ -110,7 +110,7 @@ exports.event = {
 				event: results.Event
 			};
 			ticketNetwork.GetTickets(args, function(err, results) {
-				console.log(results);
+
 				if (err) {
 					console.log('ERROR GETTING TIX');
 					console.log(err);
@@ -118,7 +118,7 @@ exports.event = {
 				}
 				ret.tickets = [];
 				if (typeof results.TicketGroup !== "undefined") {
-					console.log(results);
+
 					ret.tickets = (typeof results.TicketGroup.length == "undefined") ? [results.TicketGroup] : results.TicketGroup;
 				} else {
 					ret.success = 0;

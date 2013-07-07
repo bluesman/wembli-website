@@ -2,17 +2,77 @@ section#section1.organizer-itinerary-section.itinerary-section.plan-section.even
 	.header
 		h1.pull-left Itinerary
 	.body
-		.row.first-row.clearfix
-			h3.pull-left DATE:&nbsp;
-			.data.pull-left {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d'}}
-		.row.clearfix
-			h3.pull-left Event:
-			.data.pull-left {{plan.event.eventName}}
-		.row.clearfix
-			h3.pull-left Time:
-			.data.pull-left {{getDate(plan.event.eventDate)| date:'h:mm a'}}
-		.row.clearfix
-			h3.pull-left Location:
-			.data.pull-left {{plan.event.eventVenue}} -&nbsp;
-			.data.pull-left {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
-
+		.background.clearfix
+			- var images = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
+			- each id in images
+				img.pull-left(src="/images/itinerary/itinerary-background_#{id}.png")
+		.itinerary-data.clearfix
+			.event-container.clearfix
+				.event-name.clearfix.text
+					i.icon-quote-left.orange
+					span.orange &nbsp;{{plan.event.eventName}}
+					span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+					span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+					i.icon-quote-right
+			//- have tickets rsvp complete
+			.tickets-container
+					h2 Tickets
+					.alert.alert-warning.clearfix(ng-show="ticketCountMismatch")
+						.icon-warning-sign.icon-2x.pull-left
+						.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
+					.row
+						.info.clearfix
+							.event-name
+								strong EVENT:&nbsp;
+								span {{plan.event.eventName}}
+							.venue-name
+								strong VENUE:&nbsp;
+								span {{plan.event.eventVenue}}
+							.venue-address
+								strong ADDRESS:&nbsp;
+								span {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+							.ticket-section
+								strong SECTION/AISLE:&nbsp;
+								span(ng-show="ticket.ticketGroup.Section") {{ticket.ticketGroup.Section}}&nbsp;
+								span(ng-hide="ticket.ticketGroup.Section") TBD&nbsp;
+							.ticket-row
+								strong ROW/BOX:&nbsp;
+								span(ng-show="ticket.ticketGroup.Row") {{ticket.ticketGroup.Row}}
+								span(ng-hide="ticket.ticketGroup.Row") TBD
+							.ticket-seat(ng-show="ticket.ticketGroup.LowSeat")
+								strong SEATS:&nbsp;
+								span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
+								span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
+							.ticket-seat(ng-hide="ticket.ticketGroup.LowSeat")
+								strong SEATS:&nbsp;
+								span TBD
+							.ticket-notes(ng-show="ticket.ticketGroup.Notes")
+								strong NOTES:&nbsp;
+								span {{ticket.ticketGroup.Notes}}
+							.ticket-payment.clearfix(ng-show="ticket.ticketGroup.costBreakdown.total")
+								.per-person.pull-left
+									strong Total cost for&nbsp;
+								.qty-container.pull-left
+									{{ticket.ticketGroup.selectedQty}}&nbsp;
+								.pull-left
+									strong {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}:&nbsp;
+								.ticket-total.pull-left
+									{{ticket.ticketGroup.costBreakdown.total | currency}}
+			.parking-container
+				h2 Parking
+				.row
+					.info.clearfix
+			.hotel-container
+				h2 Hotel
+				.row
+					.info.clearfix
+			.restaurant-container
+				h2 Restaurant
+				.row
+					.info.clearfix
+			.google-map-container
+				h2 Map
+				#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="15",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
+			.notes-container
+				h2 Notes
+				textarea.notes(ng-model="plan.notes",on-keyup="submitNotes")

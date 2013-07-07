@@ -60,10 +60,6 @@ section#section2.organizer-rsvp-section.rsvp-section.plan-section.even
 							label My guests can not see who else is invited
 					.row.pull-right
 						a.invite-friends-wizard-button(ng-show="plan.rsvpDate",ng-click="gotoStep('step2')",href="#") &nbsp;Change RSVP Date
-		#no-invitees(ng-hide="friends[0]")
-			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
-				span Invite People&nbsp;
-				i.icon-double-angle-right
 		.invitees-container.clearfix(ng-show="friends[0]")
 			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true}")
 				.img-container.pull-left

@@ -5857,10 +5857,12 @@ a:focus {
   top: 68px;
   transform: rotate(6deg);
 }
+.map-container,
 #map-container {
   /* twitter bootstrap screws up google map */
 
 }
+.map-container img,
 #map-container img {
   max-width: none;
 }
@@ -8717,7 +8719,7 @@ body {
   width: 25px;
   float: left;
 }
-#tickets-frame #map-background #map-container {
+#tickets-frame #map-background #venue-map-container {
   width: 68%;
   height: 100%;
 }
@@ -9121,7 +9123,7 @@ body {
   font-size: 12px;
   font-weight: bold;
 }
-#parking-frame #map-background #map-container {
+#parking-frame #map-background #parking-map-container {
   height: 100%;
   width: 100%;
 }
@@ -10431,6 +10433,128 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment .actor-image-container img {
   max-width: 60%;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body {
+  position: relative;
+  min-height: 2620px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .background {
+  margin-top: 80px;
+  position: absolute;
+  min-width: 1160px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data {
+  position: absolute;
+  width: 100%;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .event-container {
+  margin: 20px 30px 0 300px;
+  font-size: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .event-container .event-info {
+  margin-left: 50px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .event-container .event-info .text {
+  padding-right: 10px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container {
+  position: absolute;
+  width: 350px;
+  min-height: 280px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container h2,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container h2,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container h2,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container h2 {
+  font-size: 24px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container .row,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container .row,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container .row,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container .row {
+  padding: 6px;
+  font-size: 16px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container .row .info,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container .row .info,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container .row .info,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container .row .info {
+  margin-left: 0;
+  margin-top: 0;
+  margin: 0;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container .row .info span,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container .row .info span,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container .row .info span,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container .row .info span {
+  display: inline;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container .row .info > div,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container .row .info > div,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container .row .info > div,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container .row .info > div {
+  padding: 2px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container {
+  width: 400px;
+  top: 450px;
+  left: 150px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container {
+  top: 375px;
+  left: 610px;
+  min-height: 300px;
+  background-color: #ffffff;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container {
+  top: 985px;
+  left: 160px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container {
+  top: 820px;
+  left: 740px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .google-map-container {
+  background-color: #ffffff;
+  width: 100%;
+  position: absolute;
+  top: 1275px;
+  height: 700px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .google-map-container h2 {
+  font-size: 24px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .google-map-container .itinerary-map {
+  width: 100%;
+  height: 600px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .notes-container {
+  position: absolute;
+  top: 2000px;
+  left: 50px;
+  width: 500px;
+  height: 500px;
+  background-color: #ffff62;
+  border: thin solid #e1e200;
+  -webkit-box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .notes-container textarea {
+  width: 100%;
+  height: 465px;
+  background: transparent;
+  padding: 0px;
+  border: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container {
   margin: 30px 0;

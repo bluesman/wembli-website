@@ -87,7 +87,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
-              $('#map-container').tuMap("Refresh", "Reset");
+              $('#venue-map-container').tuMap("Refresh", "Reset");
             }
           });
 
@@ -162,7 +162,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
               var filterTickets = function(args) {
                 var priceRange = $(".price-slider").slider("option", "values");
-                $("#map-container").tuMap("SetOptions", {
+                $("#venue-map-container").tuMap("SetOptions", {
                   TicketsFilter: {
                     MinPrice: priceRange[0],
                     MaxPrice: priceRange[1],
@@ -207,7 +207,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                     scope.event.MapUrl = "/images/no-seating-chart.jpg";
                   }
                   /* chart not found - display the tn chart */
-                  $('#map-container').css("background", 'url(' + scope.event.MapUrl + ') no-repeat center center');
+                  $('#venue-map-container').css("background", 'url(' + scope.event.MapUrl + ') no-repeat center center');
                   $('#generic-loading-modal').modal("hide");
 
                 }
@@ -246,10 +246,10 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               };
 
               //set the height of the map-container to the window height
-              $('#map-container').css("height", $($window).height() - 60);
+              $('#venue-map-container').css("height", $($window).height() - 60);
               $('#tickets').css("height", $($window).height() - 60);
-              $('#map-container').css("width", $($window).width() - 480);
-              $('#map-container').tuMap(options);
+              $('#venue-map-container').css("width", $($window).width() - 480);
+              $('#venue-map-container').tuMap(options);
               $('.price-slider').slider({
                 range: true,
                 min: scope.minTixPrice,

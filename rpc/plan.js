@@ -251,6 +251,30 @@ exports.plan = {
 		});
 	},
 
+submitNotes: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		/* you must be logged in as the organizer to do this */
+		if (req.session.customer._id != req.session.plan.organizer.customerId) {
+			console.log(req.session.customer._id);
+			console.log(req.session.plan.organizer.customerId);
+			data.success = 0;
+			data.error = 'Not Authorized';
+			return me(null, data);
+		}
+
+		req.session.plan.notes = args.notes;
+		req.session.plan.save(function(err) {
+			if (err) {
+				return me(err);
+			}
+			return me(null,data);
+		});
+	},
+
 	/*
 	 * args:
 	 *  friendId
