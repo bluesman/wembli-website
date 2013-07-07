@@ -64,6 +64,7 @@ directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$
     };
   }
 ]).
+
 directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', '$location',
   function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan, $location) {
     return {
@@ -162,6 +163,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
               var filterTickets = function(args) {
                 var priceRange = $(".price-slider").slider("option", "values");
+                console.log('filtering tix');
                 $("#venue-map-container").tuMap("SetOptions", {
                   TicketsFilter: {
                     MinPrice: priceRange[0],
@@ -249,7 +251,9 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               $('#venue-map-container').css("height", $($window).height() - 60);
               $('#tickets').css("height", $($window).height() - 60);
               $('#venue-map-container').css("width", $($window).width() - 480);
+              console.log('here');
               $('#venue-map-container').tuMap(options);
+              console.log('here2');
               $('.price-slider').slider({
                 range: true,
                 min: scope.minTixPrice,

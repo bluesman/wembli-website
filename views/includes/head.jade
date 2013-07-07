@@ -39,8 +39,10 @@ script(type="text/javascript", src="https://maps.googleapis.com/maps/api/js?v=3.
 script(type="text/javascript",src="https://js.balancedpayments.com/v1/balanced.js")
 
 - if ("development" === environment())
-  script(type="text/javascript",src="/js/plugins/excanvas.js")
+  //if lt IE 9
+    script(type="text/javascript",src="/js/plugins/excanvas.js")
   script(type="text/javascript",src="/js/plugins/jquery.tuMap.js")
+  script(type="text/javascript",src="/js/plugins/jquery.hammer.min.js")
   script(type="text/javascript",src="/js/plugins/jquery.multiselect.js")
   script(type="text/javascript",src="/js/plugins/jquery.multiselect.filter.js")
   script(type = "text/javascript", src = "/js/plugins/sequence.jquery-min.js")

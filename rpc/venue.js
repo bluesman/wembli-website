@@ -9,8 +9,6 @@ exports.venue = {
 
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.GetVenue(args, function(err, results) {
-			console.log('venue.get');
-			console.log(results);
 			if (err) {
 				return me(err);
 			}
@@ -43,8 +41,6 @@ exports.venue = {
 		args.cnt = (args.cnt) ? args.cnt : 15;
 
 		ticketNetwork.GetVenueConfigurations(args, function(err, results) {
-			console.log('venue.getConfigurations');
-			console.log(results);
 			if (err) {
 				return me(err);
 			}

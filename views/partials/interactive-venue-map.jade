@@ -1,20 +1,50 @@
+- plan = req.session.plan
 #interactive-venue-map(ng-controller="VenueMapCtrl")
-	#map-background
-		#venue-map-container
-		//- #groups-container
-	#tickets.pull-right
-		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
-		.event-social-links
-		- console.log('context is '+visitor.context+' and preferences is '+plan.preferences.payment)
-		- if (visitor.context === "organizer")
-			#organizer-event-tickets
-				.buy-now(ng-show="{'no-split':true,'split-after':true}[plan.preferences.tickets.payment]")
-					include interactive-venue-map/tickets/buy-now
-				.split-first(ng-show="{'split-first':true,null:true}[plan.preferences.tickets.payment]")
-					.read-only(ng-hide="plan.rsvpComplete")
-						include interactive-venue-map/tickets/read-only
-					.rsvp-complete(ng-show="plan.rsvpComplete")
-						include interactive-venue-map/tickets/add-to-plan
-		- if (visitor.context === "friend")
-			include interactive-venue-map/tickets/read-only
+	//- they can only preview tix if the following are true: plan payment is split-first && rsvpComplete() false
+	- if (visitor.context === 'organizer')
+		- if (plan.preferences.payment === 'split-first')
+			- if (!plan.rsvpComplete)
+				//- preview
+				section.clearfix
+					.header
+						h1.pull-left See What's Available Then Invite Friends
+					.sub-header
+						span.orange &nbsp;{{plan.event.eventName}}
+						span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+						span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+				#map-background.preview-tickets
+					#venue-map-container
+					//- #groups-container
+				#tickets.pull-right
+					include interactive-venue-map/tickets/invite-friends
+			- else
+				//- add tickets to plan
+				#map-background
+					#venue-map-container
+					//- #groups-container
+				#tickets.pull-right
+					.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
+					.event-social-links
+					include interactive-venue-map/tickets/add-to-plan
+		- else
+			//- see tickets
+			#map-background
+				#venue-map-container
+				//- #groups-container
+			#tickets.pull-right
+				.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
+				.event-social-links
+				include interactive-venue-map/tickets/buy-now
+	- else
+		//- preview
+		section.clearfix
+			.header
+				h1.pull-left See What Tickets Are Available
+		#map-background.preview-tickets
+			#venue-map-container
+			//- #groups-container
+		#tickets.pull-right
+			include interactive-venue-map/tickets/invite-friends
+
+
 
