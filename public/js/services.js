@@ -46,16 +46,17 @@ factory('pluralize', ['$rootScope', 'wembliRpc', 'customer',
 	}
 ]).
 
-factory('pluralizeWords', [function() {
+factory('pluralizeWords', [
+	function() {
 		return {
 			'person': function(number) {
-				return (number == 1) ? 'person':'people';
+				return (number == 1) ? 'person' : 'people';
 
 			},
 			'ticket': function(number) {
 				return (number == 1) ? 'ticket' : 'tickets';
 			},
-			'guest' : function(number) {
+			'guest': function(number) {
 				return (number == 1) ? 'guest' : 'guests';
 			}
 		};
@@ -111,7 +112,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 						self.getStack++;
 						var dereg = $rootScope.$on('plan-fetched', function() {
 							self.getStack--;
-							if (self.getStack == 0){
+							if (self.getStack == 0) {
 								dereg();
 							}
 							$rootScope.plan = self.plan;
@@ -199,7 +200,8 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 
 				function(err, result) {
 					if (typeof result.plan !== "undefined") {
-						self.plan = result.plan
+						$rootScope.plan = result.plan;
+						self.plan = result.plan;
 						self.friends = result.friends;
 						self.tickets = result.tickets;
 						self.organizer = result.organizer;
@@ -300,8 +302,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 				 */
 				if (t1 >= t2) {
 					return complete;
-				} else {
-				}
+				} else {}
 
 				if (self.friends.length == 0) {
 					return !complete;
@@ -959,6 +960,11 @@ factory('wembliRpc', ['$rootScope', '$http', 'customer', 'loggedIn',
 				return cb(null, wembliRpc._cache[data]);
 			}
 
+			if (typeof callback === "undefined") {
+				callback = function() {
+					return true;
+				};
+			}
 
 			if (typeof transformRequest === "undefined") {
 				transformRequest = function(data) {
@@ -1052,6 +1058,188 @@ factory('footer', ['initRootScope', '$rootScope', '$location',
 			}
 		}
 		return footer;
+	}
+]).
+
+factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
+	function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc) {
+		var slidePage = {
+			direction: 1,
+			frame: 1,
+			loadingDuration: 500,
+			getDirection: function() {
+				console.log('getting direction from slidePage');
+				console.log('direction is ' + this.direction);
+				return this.direction;
+			},
+			setDirection: function(direction) {
+				this.direction = direction;
+			},
+			getFrame: function() {
+				return this.frame;
+			},
+			setFrame: function(frame) {
+				this.frame = frame;
+			},
+			setLoadingDuration: function(d) {
+				this.loadingDuration = d;
+			},
+			getLoadingDuration: function() {
+				return this.loadingDuration;
+			},
+			slide: function(e, newUrl, oldUrl, callback) {
+				console.log('newUrl: '+newUrl);
+				console.log('oldUrl: '+oldUrl);
+				console.log('location hash: '+ $location.hash());
+				/* if either new or old has a hash tag and the urls are otherwise the same the gtfo */
+				if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
+					if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
+						return;
+					}
+				}
+
+				var me = this;
+				var path = $location.path();
+				/* clear out the search args from the path */
+				$rootScope.sequenceCompleted = false;
+
+				/* interactive-venue-map seems to disrespect template no-cache */
+				$templateCache.removeAll();
+
+				/* hide any modals right now */
+				$(".modal").modal("hide");
+
+				/* show the page loading modal */
+				$('#page-loading-modal').modal("show");
+
+				/* init some defaults */
+				var args = {
+					method: 'get',
+					cache: false
+				}; //args for the http request
+
+				args.url = '/partials' + $location.url();
+				if (args.url === "/partials/") {
+					args.url = args.url + "index";
+				}
+
+				/* if newUrl === oldUrl then its the same page */
+				var samePage = (newUrl === oldUrl);
+
+				/* fetchModals for this new path */
+				fetchModals.fetch(path);
+				console.log('http args: ');
+				console.log(args);
+				/* fetch the partial */
+				$http(args).success(function(data, status, headers, config) {
+					var headerFunc = headers;
+					/* fetch the plan once we have the html */
+					plan.fetch(function(planObj) {
+						var headers = headerFunc();
+
+						/* if the server tells us explicitly what the location should be, set it here: */
+						if (typeof headers['x-wembli-location'] !== "undefined") {
+							console.log('server said to update location to '+ headers['x-wembli-location']);
+							//have to comment this out right now because this causes the page to reload :(
+							$location.path(headers['x-wembli-location']);
+							/* if x-location comes back and its the same as $location.path() - don't slide */
+							samePage = ($rootScope.currentPath === headers['x-wembli-location']);
+						}
+
+						if (samePage) {
+							console.log('staying on the same page - dont slide');
+							$(".modal").modal("hide");
+							angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
+							$rootScope.$emit('viewContentLoaded', {});
+							return callback();
+						}
+
+						/* not on the same page so we're gonna slide to the other frame */
+						var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
+						me.setFrame(nextFrameID);
+
+						/*
+                split location path on '/' to get the right framesMap key
+                this is so we know where to slide the footer arrow to
+              */
+						var nextPath = '/' + $location.path().split('/')[1];
+						var currentPath = '/' + $rootScope.currentPath.split('/')[1];
+
+						/*
+                if footer.framesMap[$location.path()] (where they are going) is undefined
+                then don't move the arrow and slide to the right
+                if footer.framesMap[$rootScope.currentPath] (where they are coming from) is undefined
+                then move the arrow, but still slide to the right
+              */
+
+						/* if where they are coming from doesn't have an arrow location */
+						if (typeof footer.framesMap[currentPath] === "undefined") {
+							currentPath = nextPath;
+							/* slide the arrow only if where they are coming from is undefined */
+							footer.slideNavArrow();
+						}
+
+						/*
+                if both are defined
+                then move the arrow and figure out which way to slide
+              */
+						var direction = me.getDirection();
+						if ((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[currentPath] !== "undefined")) {
+							var currNavIndex = footer.framesMap[currentPath];
+							var nextNavIndex = footer.framesMap[nextPath];
+							direction = (currNavIndex < nextNavIndex) ? 1 : -1;
+							me.setDirection(direction);
+							/* slide the nav arrow - this should be async with using sequence to transition to the next frame */
+							footer.slideNavArrow();
+						}
+
+						/* find out what direction to go to we sliding in this element */
+						direction = parseInt($rootScope.direction) || direction;
+						me.setDirection(direction);
+
+						/* compile the page we just fetched and link the scope */
+						angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
+
+						/* should this go before the compile? or after? */
+						$rootScope.$emit('viewContentLoaded', {});
+
+						/* do the animations */
+						sequence.goTo(nextFrameID, direction);
+
+						/* dismiss any modals once the page loads */
+						sequence.ready(function() {
+							$timeout(function() {
+								console.log('hide the page loading modal');
+								angular.element('#page-loading-modal').modal("hide");
+							}, me.getLoadingDuration());
+						});
+
+						$('#content').scrollTop(0);
+						$('#content').css('overflow', 'visible');
+						$('#content').css('overflow-x', 'hidden');
+
+						/* server can tell us to overflow hidden or not - this is for the venue map pages */
+						if (typeof headers['x-wembli-overflow'] !== "undefined") {
+							if (headers['x-wembli-overflow'] === 'hidden') {
+								$('#content').css('overflow', 'hidden');
+							}
+						}
+
+						//update the currentPath and the currentFrame
+						$rootScope.currentPath = $location.path();
+						$rootScope.currentFrame = nextFrameID;
+						return callback();
+					});
+
+				}).error(function() {
+					console.log('error getting: ' + args.url);
+					//send to a 404 page
+					$location.path('/');
+				});
+
+			}
+		}
+		return slidePage;
 	}
 ]).
 

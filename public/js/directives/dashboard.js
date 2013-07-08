@@ -181,7 +181,7 @@ directive('dashboardLink', [
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           element.click(function() {
-            scope.routeDashboard(attr.href);
+            scope.routeDashboard(attr.modal);
           });
         };
       }

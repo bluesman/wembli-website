@@ -66,7 +66,7 @@ function ConfirmCtrl($scope, wembliRpc) {
  * Event Options Controller
  */
 
-function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
+function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchModals) {
 	//init login vars
 	var args = {};
 	//$scope.paymentOptionsError = false;
@@ -99,7 +99,11 @@ function EventOptionsCtrl($scope, $http, $compile, wembliRpc, fetchModals) {
 
 	//put fetchModals in the scope so we can call fetch from the view when they hit continue
 	$scope.fetchModals = fetchModals;
-
+	$scope.continue = function() {
+		//fetchModals.fetch('/invitation');
+		console.log('next: '+$scope.next);
+		$location.path($scope.next);
+	}
 };
 
 

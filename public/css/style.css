@@ -11549,6 +11549,11 @@ a#facebook-login-button {
   border: 3px solid #524f45;
   width: 600px;
 }
+#dashboard-wrapper #left .payment-information-wrapper .alert .text,
+#dashboard-wrapper #left #settings-wrapper .alert .text,
+#dashboard-wrapper #left #dashboard-body .alert .text {
+  width: 500px;
+}
 #dashboard-wrapper #left .payment-information-wrapper .dashboard-row,
 #dashboard-wrapper #left #settings-wrapper .dashboard-row,
 #dashboard-wrapper #left #dashboard-body .dashboard-row {

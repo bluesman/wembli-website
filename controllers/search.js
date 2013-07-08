@@ -41,10 +41,13 @@ module.exports = function(app) {
 		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
 		/* must be the organizer if we're creating a new plan - this won't stick if they're not logged in */
 		req.session.visitor.context = 'organizer';
+		console.log(req);
 		if(req.param('next')) {
+			console.log('redirect to next:'+req.param('next'));
 			/* tell app to update the location using this header */
 			res.redirect('partials'+req.param('next'));
 		} else {
+			console.log('render partials/start-plan');
 			res.render('partials/start-plan',{partial:true});
 		}
 	});

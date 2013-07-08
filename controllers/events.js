@@ -155,25 +155,12 @@ module.exports = function(app) {
 				console.log('saving plan in event optiosn');
 				console.log(req.session.plan);
 				req.session.plan.save(function(err, result) {
-
-					/* set a special header to tell angular to update the browser location */
-					res.setHeader('x-wembli-location', '/invitation/'+req.param('eventId')+'/'+req.param('eventName'));
-					return res.render('partials/plan', {
-						partial: true
-					});
-
+					return res.redirect('/invitation/'+req.param('eventId')+'/'+req.param('eventName'));
 				});
 			} else {
-
-				/* set a special header to tell angular to update the browser location */
-				res.setHeader('x-wembli-location', '/invitation/'+req.param('eventId')+'/'+req.param('eventName'));
-				return res.render('partials/plan', {
-					partial: true
-				});
-
+				return res.redirect('/invitation/'+req.param('eventId')+'/'+req.param('eventName'));
 			}
 		} else {
-
 			/* else they are not allowed to change the options, redirect to event view */
 			var redirect = '/event/' + req.param('eventId') + '/' + req.param('eventName');
 			return res.redirect(redirect);

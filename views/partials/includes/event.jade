@@ -20,11 +20,11 @@
 		.cta
 			case payment
 				when "split-first"
-					a.btn.btn-primary.choose-event.next-link(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 				when "split-after"
-					a.btn.btn-primary.choose-event.next-link(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
 				when "no-split"
-					a.btn.btn-primary.choose-event.next-link(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
 				default
-					a.btn.btn-primary.choose-event.next-link(id="{{event.ID}}",name="{{event.Name}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(id="{{event.ID}}",name="{{event.Name}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
 

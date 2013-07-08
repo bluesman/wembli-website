@@ -9,10 +9,10 @@
 					i.icon-caret-down
 			ul.dropdown-menu(role="menu")
 				li
-					a.dashboard-link(href="#dashboard") Dashboard
-					a.dashboard-link(href="#settings") Account Settings
+					a.dashboard-link(modal="#dashboard") Dashboard
+					a.dashboard-link(modal="#settings") Account Settings
 					//- a.dashboard-link(href="#preferences") Plan Preferences
-					a.dashboard-link(href="#payment-information") Payment Information
+					a.dashboard-link(modal="#payment-information") Payment Information
 					a(href="/logout", ng-click="facebook.logout()") Log out
 
 		.start-now.pull-right
@@ -20,9 +20,11 @@
 				span START A NEW PLAN&nbsp;
 				i.icon-double-angle-right
 	#dashboard-body(ng-show="showDashboard")
-		.alert(ng-show="needPaymentInfo")
-			div You must provide payment information if you want to be paid back.
-			a.dashboard-link(href="#payment-information") Click here to provide payment information.
+		.alert.alert-warning.clearfix(ng-show="needPaymentInfo")
+			.icon-warning-sign.icon-2x.pull-left
+			.text.pull-left
+				p You must provide payment information if you want to be paid back.
+				a.dashboard-link(href="#payment-information") Click here to provide payment information.
 		.dashboard-row
 			a#planning.btn.dashboard-button(href="#planning-modal",data-toggle="modal")
 				h3 Events You're Planning

@@ -1,13 +1,11 @@
 //- event list
 #event-list-wrapper
-	- var wslClass = ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined") && (plan.preferences.payment)) ? 'wembli-sequence-link' : 'start-plan';
-	//- added this here for now so that you are always asked to provide payment type when choosing an event
-	- wslClass = 'start-plan'
 	- if (typeof heading !== "undefined")
 		h3= heading
 	ul
 		each event in events
-			li.event-wrapper(class="#{wslClass}",loading-duration="1500",name="#{event.Name}",id="#{event.ID}-wrapper")
+			li.event-wrapper.start-plan(name="#{event.Name}",id="#{event.ID}-wrapper")
 				include event
+	//- i don't think this is needed here because partials/event-list handles it
 		li.event-wrapper(loading-duration="1500",class="#{wslClass}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
 			include ../partials/includes/event

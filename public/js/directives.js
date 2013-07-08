@@ -704,6 +704,22 @@ directive('sendForgotPasswordEmail', ['wembliRpc',
   }
 ]).
 
+directive('preventDefault', [function() {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          element.click(function(event) {
+            console.log('prevent default & stop propagation')
+            event.preventDefault();
+            event.stopPropagation();
+          });
+        }
+      }
+    }
+  }
+]).
+
 directive('startPlan', ['$rootScope', 'fetchModals',
   function($rootScope, fetchModals) {
     return {
@@ -733,7 +749,7 @@ directive('startPlan', ['$rootScope', 'fetchModals',
 ]).
 
 //directive to cause link click to go to next frame rather than fetch a new page
-directive('wembliSequenceLink', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
+directive('wembliSequenceLinkOff', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
   function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc) {
 
     return {
