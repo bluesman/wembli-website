@@ -99,9 +99,10 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchMo
 
 	//put fetchModals in the scope so we can call fetch from the view when they hit continue
 	$scope.fetchModals = fetchModals;
-	$scope.continue = function() {
+	$scope.
+	continue = function() {
 		//fetchModals.fetch('/invitation');
-		console.log('next: '+$scope.next);
+		console.log('next: ' + $scope.next);
 		$location.path($scope.next);
 	}
 };
@@ -159,6 +160,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 				$scope.events = [];
 			}
 			$scope.events = $scope.events.concat(result['event']);
+			console.log($scope.events);
 			var d = new Date($scope.events[$scope.events.length - 1].Date);
 			$scope.lastEventDate = $filter('date')(d, "MM-dd-yy");
 			$scope.lastEventId = $scope.events[$scope.events.length - 1].ID;
@@ -897,10 +899,13 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer) {
 };
 
 function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc) {
-	$scope.plan = plan.get();
-	$scope.$on('tickets-login-clicked', function(e, args) {
-		$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
-		$scope.ticket = args.ticket;
+	plan.get(function(p) {
+		$scope.$on('tickets-login-clicked', function(e, args) {
+			console.log('ticketslogin clicked');
+			console.log(args);
+			$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
+			$scope.ticket = args.ticket;
+		});
 	});
 
 	$scope.authActions = {
@@ -985,7 +990,10 @@ function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 };
 
 function TicketsOffsiteCtrl($scope, plan) {
-	$scope.plan = plan.get();
+	plan.get(function(p) {
+		$scope.plan = p;
+	});
+
 	$scope.$on('tickets-offsite-clicked', function(e, args) {
 		$scope.qty = args.qty;
 		$scope.amountPaid = args.amountPaid;

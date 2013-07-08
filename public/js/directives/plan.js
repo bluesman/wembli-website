@@ -301,9 +301,9 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
                 $scope.friends[i].totalPoniedUp = 0;
                 for (var j = 0; j < $scope.friends[i].payment.length; j++) {
                   var p = $scope.friends[i].payment[j];
-		  if (p.type !== 'request') {
-		      $scope.friends[i].totalPoniedUp += parseFloat(p.amount);
-		  }
+		              if (p.type !== 'request') {
+          		      $scope.friends[i].totalPoniedUp += parseFloat(p.amount);
+            		  }
                 };
                 $scope.totalPoniedUp += $scope.friends[i].totalPoniedUp;
               }
@@ -401,14 +401,12 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
             });
           };
 
-
-
           plan.get(function(p) {
             console.log('GOT PLAN!!!!!');
             console.log(p);
             $scope.plan = p;
             $scope.organizer = plan.getOrganizer();
-            $scope.tickets = plan.getTickets();
+        $scope.tickets = plan.getTickets();
             $scope.friends = plan.getFriends();
             console.log($scope.tickets);
 

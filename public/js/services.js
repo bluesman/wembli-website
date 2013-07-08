@@ -1064,7 +1064,7 @@ factory('footer', ['initRootScope', '$rootScope', '$location',
 factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
 	function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc) {
 		var slidePage = {
-			direction: 1,
+			direction: -1,
 			frame: 1,
 			loadingDuration: 500,
 			getDirection: function() {

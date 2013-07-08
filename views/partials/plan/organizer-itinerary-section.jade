@@ -33,31 +33,31 @@ section#section1.organizer-itinerary-section.itinerary-section.plan-section.even
 								span {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
 							.ticket-section
 								strong SECTION/AISLE:&nbsp;
-								span(ng-show="ticket.ticketGroup.Section") {{ticket.ticketGroup.Section}}&nbsp;
-								span(ng-hide="ticket.ticketGroup.Section") TBD&nbsp;
+								span(ng-show="tickets[0].ticketGroup.Section") {{tickets[0].ticketGroup.Section}}&nbsp;
+								span(ng-hide="tickets[0].ticketGroup.Section") TBD&nbsp;
 							.ticket-row
 								strong ROW/BOX:&nbsp;
-								span(ng-show="ticket.ticketGroup.Row") {{ticket.ticketGroup.Row}}
-								span(ng-hide="ticket.ticketGroup.Row") TBD
-							.ticket-seat(ng-show="ticket.ticketGroup.LowSeat")
+								span(ng-show="tickets[0].ticketGroup.Row") {{tickets[0].ticketGroup.Row}}
+								span(ng-hide="tickets[0].ticketGroup.Row") TBD
+							.ticket-seat(ng-show="tickets[0].ticketGroup.LowSeat")
 								strong SEATS:&nbsp;
-								span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
-								span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
-							.ticket-seat(ng-hide="ticket.ticketGroup.LowSeat")
+								span(ng-show="{'*':true}[tickets[0].ticketGroup.LowSeat]") {{tickets[0].ticketGroup.LowSeat}}
+								span(ng-hide="{'*':true}[tickets[0].ticketGroup.LowSeat]") {{tickets[0].ticketGroup.LowSeat}} - {{tickets[0].ticketGroup.HighSeat}}
+							.ticket-seat(ng-hide="tickets[0].ticketGroup.LowSeat")
 								strong SEATS:&nbsp;
 								span TBD
-							.ticket-notes(ng-show="ticket.ticketGroup.Notes")
+							.ticket-notes(ng-show="tickets[0].ticketGroup.Notes")
 								strong NOTES:&nbsp;
-								span {{ticket.ticketGroup.Notes}}
-							.ticket-payment.clearfix(ng-show="ticket.ticketGroup.costBreakdown.total")
+								span {{tickets[0].ticketGroup.Notes}}
+							.ticket-payment.clearfix(ng-show="tickets[0].ticketGroup.costBreakdown.total")
 								.per-person.pull-left
 									strong Total cost for&nbsp;
 								.qty-container.pull-left
-									{{ticket.ticketGroup.selectedQty}}&nbsp;
+									{{tickets[0].ticketGroup.selectedQty}}&nbsp;
 								.pull-left
-									strong {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}:&nbsp;
+									strong {{tickets[0].ticketGroup.selectedQty | pluralize:'ticket'}}:&nbsp;
 								.ticket-total.pull-left
-									{{ticket.ticketGroup.costBreakdown.total | currency}}
+									{{tickets[0].ticketGroup.costBreakdown.total | currency}}
 			.parking-container
 				h2 Parking
 				.row

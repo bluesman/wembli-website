@@ -47,7 +47,7 @@ input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'",
 								.no-results Aww man! We didn't find any matching events...
 						else
 							include event-list
-					a#more-events(href="#{url}" ,ng-click="moreEvents()")
+					a#more-events(ng-click="moreEvents()")
 						span= seeMore
 						i.icon-chevron-down
 				#arrow

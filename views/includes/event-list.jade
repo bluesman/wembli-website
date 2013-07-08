@@ -6,6 +6,6 @@
 		each event in events
 			li.event-wrapper.start-plan(name="#{event.Name}",id="#{event.ID}-wrapper")
 				include event
-	//- i don't think this is needed here because partials/event-list handles it
-		li.event-wrapper(loading-duration="1500",class="#{wslClass}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
+		//- this is needed for the more events client side functionality
+		li.event-wrapper.start-plan(name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
 			include ../partials/includes/event
