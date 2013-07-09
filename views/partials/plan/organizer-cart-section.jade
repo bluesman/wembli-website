@@ -2,7 +2,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 	.header
 		h1.pull-left Shopping Cart
 	//- have not yet chosen tix and they are splitting first
-	.body(ng-show="{'split-first':true}[plan.preferences.payment]")
+	.body(ng-show="{'split-first':true,null:true}[plan.preferences.payment]")
 		h3 HERE'S WHERE YOU'LL MAKE FUN CHOICES AND GET MONEY FROM YOUR FRIENDS
 		.container.tickets-container.clearfix
 			.cartoon-man.pull-left
@@ -12,42 +12,27 @@ section#section3.organizer-cart-section.cart-section.plan-section
 					label.tickets-label
 						h3 Tickets
 				//- no tickets, rsvp not complete and split-first
-				.body.add-on-included(ng-show="!plan.tickets[0] && !plan.rsvpComplete && {'split-first':true,null:true}[plan.preferences.tickets.payment]")
+				.body.add-on-included(ng-show="!tickets[0] && !plan.rsvpComplete")
 					p Now that you made short work of inviting friends you can relax while they RSVP.  Once everyone is accounted for we'll shoot you an email.
 					p It's tough to pick tickets until you know how many people are going but feel free to preview what's available during the voting process so you have an idea of what you'll want when it's time to add them to your shopping cart.
 					.button-container.clearfix
 						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Tickets
 						a.buy-now.wembli-sequence-link(ng-click="setPayment('tickets','split-after')",href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I don't want to wait, I want to buy now
 
-				//- no tickets, rsvp not complete and split-after
-				.body.add-on-included(ng-show="!plan.tickets[0] && !plan.rsvpComplete && {'split-after':true}[plan.preferences.tickets.payment]")
-					p Ok! Add tickets to your cart and then you can check out right away.  Don't worry, you can still have your friends pony up after you've bought the tickets.
-					.button-container.clearfix(ng-show="{'split-after':true}[plan.preferences.tickets.payment]")
-						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
-						a.buy-now(ng-click="setPayment('tickets','split-first')",href="#") I changed my mind, I want to know who's coming first
-
 				//- no tickets, rsvp is complete and split-first
-				.body.add-on-included(ng-show="!plan.tickets[0] && plan.rsvpComplete && {'split-first':true,null:true}[plan.preferences.tickets.payment]")
+				.body.add-on-included(ng-show="!tickets[0] && plan.rsvpComplete")
 					p Time to choose tickets and add them to your cart, then we'll prompt you to send a pony up email to your friends.  You don't check out until everyone pays up first.
 					p Note:  Adding tickets in your cart does NOT place them on hold.   You don't get dibs on tickets until you buy them.
 					.button-container.clearfix
 						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
 						//- a.buy-now.wembli-sequence-link(ng-click="setPayment('tickets','split-after')",href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I don't want to wait, I want to buy now
 
-				//- no tickets, rsvp is complete and split-after
-				.body.add-on-included(ng-show="!plan.tickets[0] && plan.rsvpComplete && {'split-after':true}[plan.preferences.tickets.payment]")
-					p Time to choose tickets and add them to your cart, then we'll prompt you to send a pony up email to your friends.  You don't check out until everyone pays up first.
-					p Note:  Adding tickets in your cart does NOT place them on hold.   You don't get dibs on tickets until you buy them.
-					.button-container.clearfix
-						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Buy Tickets Now
-						a.buy-now(ng-click="setPayment('tickets','split-first')",href="#") I changed my mind, I want my friends to pony up
-
 				//- have tickets rsvp is not complete, split first
-				.body.add-on-included(ng-show="plan.tickets[0] && !plan.rsvpComplete")
+				.body.add-on-included(ng-show="tickets[0] && !plan.rsvpComplete")
 					p show ticket details but can't pony up until rsvp is complete..let them buy now which should change tickets.payment to split-after
 
 				//- have tickets rsvp complete
-				.body.add-on-included(ng-show="plan.tickets[0] && plan.rsvpComplete")
+				.body.add-on-included(ng-show="tickets[0] && plan.rsvpComplete")
 					.alert.alert-warning.clearfix(ng-show="ticketCountMismatch")
 						.icon-warning-sign.icon-2x.pull-left
 						.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
@@ -121,7 +106,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 						input.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()")
 
 				//- parking is part of the plan, parking not chosen, rsvp is not complete and they want to split first
-				.body.add-on-included(ng-show="plan.preferences.addOns.parking && !plan.parking[0] && !plan.rsvpComplete && {'split-first':true,null:true}[plan.preferences.parking.payment]")
+				.body.add-on-included(ng-show="plan.preferences.addOns.parking && !plan.parking[0] && !plan.rsvpComplete")
 					p Hit the breaks there, sonic. Once your frineds all RSVP and you have a final headcount, WEMbli will prompt you to choose parking.
 					p If you don't want to wait for those slow-pokes go ahead and pick now.
 					.button-container.clearfix
@@ -172,7 +157,6 @@ section#section3.organizer-cart-section.cart-section.plan-section
 
 					//- parking is part of the plan, parking is chosen and its google parking
 					//- and split doesn't matter cause there's no pay up front but we can still request pony up?? not sure about that..
-
 		.container.restaurant-container.clearfix
 			.cartoon-man.pull-left
 				image(src="/images/wembliman/restaurant/100.png")
@@ -222,7 +206,6 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				//- restaurants part of the plan, restaurant chosen, rsvp is complete, split doesn't matter cause there's nothing to buy yet
 				.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && plan.restaurants[0] && plan.rsvpComplete")
 					p Restaurant details and pony up checkbox
-
 		.container.hotel-container.clearfix.border-bottom
 			.cartoon-man.pull-left
 				image(src="/images/wembliman/hotel/100.png")
@@ -282,7 +265,6 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				//- hotels part of the plan, restaurant chosen, rsvp is complete, split after
 				.body.add-on-included(ng-show="plan.preferences.addOns.hotels && plan.hotels[0] && plan.rsvpComplete && {'split-after':true}[plan.preferences.hotels.payment]")
 					p Hotel details and Buy now button - include pony up checkbox too though
-
 		.totals.pull-left
 			.total-bill Total Bill = {{tickets.total + parking.total + restaurants.total + hotels.total | currency}}
 			.total-ponied-up Total Ponied Up = {{totalPoniedUp | currency}}
@@ -298,21 +280,65 @@ section#section3.organizer-cart-section.cart-section.plan-section
 				.header
 					label.tickets-label
 						h3 Tickets
-				//- already bought tickets
-				.body.add-on-included
+				//- no tickets, rsvp doesn't matter and split-after
+				.body.add-on-included(ng-hide="tickets[0]")
+					p Ok! Add tickets to your cart and then you can check out right away.  Don't worry, you can still have your friends pony up after you've bought the tickets.
+					.button-container.clearfix(ng-show="{'split-after':true}[plan.preferences.tickets.payment]")
+						a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
+						a.buy-now(ng-click="setPayment('tickets','split-first')",href="#") I changed my mind, I want to know who's coming first
+
+				//- have tickets rsvp complete
+				.body.add-on-included(ng-show="tickets[0]")
+					.alert.alert-warning.clearfix(ng-show="ticketCountMismatch")
+						.icon-warning-sign.icon-2x.pull-left
+						.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
 					ul.ticket-list-container
-						li.ticket-row(ng-repeat="ticket in tickets")
-							.ticket-info.pull-left
-								.ticket-price
-									.actual-price Price: ${{ticket.ticketGroup.ActualPrice}} (each)
-								.ticket-info
-									.ticket-section-name Section: {{ticket.ticketGroup.Section}}
-									.seat-row-name Row: {{ticket.ticketGroup.Row}}
-								.qty-container
-									strong Qty: {{ticket.ticketGroup.selectedQty}}
-							.remove.pull-right
-								button.btn.btn-orange(ng-click="removeTicketGroup(ticket._id)") Remove From Plan
-					a.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add More Tickets
+						li.ticket-row(ng-repeat="ticket in tickets | ticketTotals")
+							.ticket-container.display-popover(title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{ticket._id}}-tickets-popover-content",trigger="hover")
+								div(id="{{ticket._id}}-tickets-popover-content").hide
+									.row.clearfix
+										strong.pull-left  Ticket Price
+										.pull-right {{ticket.ticketGroup.costBreakdown.ticketPrice | currency}}
+									.row.clearfix.border-bottom
+										strong.pull-left  Ticketnetwork Service Fee&nbsp;
+										.pull-right {{ticket.ticketGroup.costBreakdown.serviceFee | currency}}
+									.row.clearfix
+										strong.pull-left  Cost Per Person&nbsp;
+										.pull-right {{ticket.ticketGroup.costBreakdown.totalEach | currency}}
+									.row.clearfix
+										strong.pull-left  Est. Delivery Fee* Per Invitee&nbsp;
+										.pull-right {{ticket.ticketGroup.costBreakdown.deliveryFeeEach | currency}}
+									.row.clearfix
+										strong.pull-left  Total (x{{ticket.ticketGroup.selectedQty}} {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}):&nbsp;
+										strong.pull-right {{ticket.ticketGroup.costBreakdown.total | currency}}
+									.row.disclaimer
+										small
+											strong *
+											span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
+								.ticket-info.clearfix
+									.ticket-section.pull-left
+										strong SECTION/AISLE:
+										span {{ticket.ticketGroup.Section}}&nbsp;
+									.ticket-row.pull-left
+										strong ROW/BOX:
+										span {{ticket.ticketGroup.Row}}
+									.ticket-seat.pull-left
+										strong SEATS:
+										span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
+										span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
+								.ticket-notes
+									span NOTES:&nbsp;
+									span {{ticket.ticketGroup.Notes}}
+								.ticket-payment.clearfix
+									.per-person.pull-left
+										strong Total cost for
+									.qty-container.pull-left
+										select(id="qty-{{ticket.ticketGroup.ID}}",ng-model="ticket.ticketGroup.selectedQty",name="qty-{{ticket.ticketGroup.ID}}",ng-options="q for q in ticket.ticketGroup.ValidSplits.int")
+									.pull-left
+										strong {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}:
+									.ticket-total.pull-left
+										{{ticket.ticketGroup.costBreakdown.total | currency}}
+								//- buy more tix??
 
 		.container.parking-container.clearfix
 			.cartoon-man.pull-left

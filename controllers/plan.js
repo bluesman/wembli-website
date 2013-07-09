@@ -63,7 +63,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|pony-up-section|rsvp-section|cart-section)$/, function(req, res) {
+	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|vote-section|invitees-section|pony-up-section|rsvp-section|cart-section)$/, function(req, res) {
 		console.log(req.session.plan.venue);
 
 		/* last minute check for geometry */

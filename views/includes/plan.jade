@@ -2,8 +2,29 @@
 	- var nav = planNav(req.session.visitor.context)
 	#left
 		plan-nav(sections="#{nav.length}")
-	#middle
+	#middle.plan-dashboard
 		- if (req.session.visitor.context === 'organizer')
-			organizer-plan-dashboard
+			#plan-dashboard.organizer-plan-dashboard
+				organizer-itinerary-section
+				organizer-rsvp-section
+				organizer-cart-section
+				organizer-pony-up-section
+				section#section5.organizer-chatter-section.chatter-section.plan-section
+					.header
+						h1.pull-left Chatter
+					.body
+						h3 Use this space to comment and share conversations about your upcoming event!
+						plan-chatter
 		- if (req.session.visitor.context === 'friend')
-			friend-plan-dashboard
+			#plan-dashboard.friend-plan-dashboard
+				friend-itinerary-section
+				friend-rsvp-section
+				friend-vote-section
+				friend-invitees-section
+				friend-pony-up-section
+				section#section6.friend-chatter-section.chatter-section.plan-section.even
+					.header
+						h1.pull-left Chatter
+					.body
+						h3 Use this space to comment and share conversations about your upcoming event!
+						plan-chatter

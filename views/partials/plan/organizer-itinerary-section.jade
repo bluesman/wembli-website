@@ -1,4 +1,5 @@
-section#section1.organizer-itinerary-section.itinerary-section.plan-section.even
+- var sectionClass = (visitor.context === 'organizer') ? 'organizer-itinerary-section' : 'friend-itinerary-section';
+section#section1(class="#{sectionClass} itinerary-section plan-section")
 	.header
 		h1.pull-left Itinerary
 	.body
@@ -75,4 +76,7 @@ section#section1.organizer-itinerary-section.itinerary-section.plan-section.even
 				#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="15",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
 			.notes-container
 				h2 Notes
-				textarea.notes(ng-model="plan.notes",on-keyup="submitNotes")
+				- if (visitor.context === 'organizer')
+					textarea.notes(ng-model="plan.notes",on-keyup="submitNotes")
+				- else
+					textarea.notes(ng-model="plan.notes",disabled="disabled")

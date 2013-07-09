@@ -76,30 +76,32 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
 
         /* put the plan in the scope for the view */
         // i think this will be inherited from the plan directive
-        //$scope.plan = plan.get();
+        plan.get(function(p) {
+          $scope.plan = p;
 
-        //display the modal if there's a plan
-        if ($scope.plan && typeof $scope.plan.event.eventId === "undefined") {
-          return;
-        }
-
-        /* figure out which step to go to */
-        var initialStep = 'step1';
-        $scope.step1 = {};
-        if (customer.get() && Object.keys(customer.get()).length > 0) {
-          var hash = $location.hash();
-          initialStep = /^step/.test(hash) ? hash : 'step2';
-          /* hack to deal with everyauth weirdness */
-          if (initialStep === "_=_") {
-            /* it means they logged in */
-            initialStep = 'step2';
+          //display the modal if there's a plan
+          if ($scope.plan && typeof $scope.plan.event.eventId === "undefined") {
+            return;
           }
-          $scope.customer = customer.get();
-        } else {
-          $scope.customer = {};
-          customer.set($scope.customer);
-        }
-        $scope.gotoStep(initialStep);
+
+          /* figure out which step to go to */
+          var initialStep = 'step1';
+          $scope.step1 = {};
+          if (customer.get() && Object.keys(customer.get()).length > 0) {
+            var hash = $location.hash();
+            initialStep = /^step/.test(hash) ? hash : 'step2';
+            /* hack to deal with everyauth weirdness */
+            if (initialStep === "_=_") {
+              /* it means they logged in */
+              initialStep = 'step2';
+            }
+            $scope.customer = customer.get();
+          } else {
+            $scope.customer = {};
+            customer.set($scope.customer);
+          }
+          $scope.gotoStep(initialStep);
+        });
 
       }],
       compile: function(element, attr, transclude) {
@@ -169,8 +171,8 @@ directive('pikaday', ['wembliRpc',
   }
 ]).
 
-directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
-  function(wembliRpc, $window, customer) {
+directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan',
+  function(wembliRpc, $window, customer, plan) {
     return {
       restrict: 'E',
       controller: ['$scope','$element','$attrs','$transclude',function($scope, $element, $attrs, $transclude) {
@@ -179,7 +181,9 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
         });
 
         $scope.initSignupForm = function() {
-          $scope.next = '/invitation/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '#step2'
+          plan.get(function(p) {
+            $scope.next = '/invitation/' + p.event.eventId + '/' + p.event.eventName + '#step2';
+          });
 
           /* check if there's a customer already - if so just display the customer info */
           if ($scope.customer.email) {
@@ -264,7 +268,8 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer',
           }
         };
 
-        $scope.customer = customer.get();
+        // i htink this is already done in plan.fetch()
+        //$scope.customer = customer.get();
       }],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {

@@ -215,7 +215,6 @@
 						}
 					}
 				}
-
 			}
 
 			/* global invitees lists */
@@ -303,12 +302,249 @@
 
 			/* section specific global css */
 			.itinerary-section {
+				.body {
+					position:relative;
+					min-height:2620px;
+					.background {
+						margin-top: 80px;
+						position:absolute;
+						min-width: 1160px;
+					}
+					.itinerary-data {
+						position:absolute;
+						width:100%;
 
+						.event-container {
+							margin:20px 30px 0 300px;
+							font-size: 40px;
+							line-height: 40px;
+							vertical-align: middle;
+
+							.event-info {
+								margin-left:50px;
+								.text {
+									padding-right:10px;
+								}
+							}
+						}
+						.hotel-container, .restaurant-container, .parking-container, .tickets-container {
+							position:absolute;
+							width:350px;
+							min-height:280px;
+							h2 {
+								font-size:24px;
+							}
+							.row {
+								padding:6px;
+								font-size:16px;
+								.info {
+									margin-left:0;
+									margin-top:0;
+									margin:0;
+									span {
+										display:inline;
+									}
+								}
+
+								.info > div {
+									padding:2px;
+								}
+							}
+						}
+
+						.tickets-container {
+							width:400px;
+							top: 450px;
+							left:150px;
+						}
+
+						.parking-container {
+							top:375px;
+							left:610px;
+							min-height:300px;
+							background-color:@white;
+						}
+
+						.hotel-container {
+							top:985px;
+							left:160px;
+						}
+
+						.restaurant-container {
+							top:820px;
+							left:740px;
+						}
+
+						.google-map-container {
+							background-color: @white;
+							width:100%;
+							position:absolute;
+							top:1275px;
+							height:700px;
+							h2 {
+								font-size:24px;
+							}
+							.itinerary-map {
+								width:100%;
+								height:600px;
+							}
+						}
+
+						.notes-container {
+							position:absolute;
+							top:2000px;
+							left:50px;
+							width:500px;
+							height:500px;
+							background-color: @yellow;
+							border:thin solid @yellowDark;
+							.box-shadow(2px 4px 4px rgba(0,0,0,.3));
+							padding:10px;
+							textarea {
+								width:100%;
+								height:465px;
+								background: transparent;
+								padding:0px;
+								border:none;
+								.box-shadow(none);
+							}
+						}
+					}
+				}
 			}
+
 
 			.rsvp-section {
 				.body {
 					margin:10px;
+
+					.rsvp-container {
+						margin:30px 0;
+
+						.info-container {
+							width:35%;
+
+							.info {
+								.clearfix();
+								background-color:@grayLight;
+								.border-radius(6px);
+								padding:10px;
+								margin:0;
+								font-family: "Calibri";
+
+								.row {
+									.clearfix();
+									margin:0;
+									padding:2px;
+									h3 {
+										color:@gray;
+										font-family: "Calibri";
+										line-height: 15px;
+										vertical-align: middle;
+										padding:0px;
+										margin-right:2px;
+										font-size:2em;
+										padding:20px 0;
+									}
+									span {
+										display:inline;
+									}
+									label {
+										margin-left:20px;
+									}
+									.data {
+										line-height: 15px;
+										vertical-align: middle;
+									}
+									.rsvp-days {
+										margin-bottom:10px;
+									}
+								}
+								.first-row {
+									.data {
+										font-size:1.5em;
+										line-height:16px;
+									}
+
+									h3 {
+										font-size:1.5em;
+									}
+								}
+							}
+						}
+						.collect-rsvp-container {
+							padding:0px;
+							width:50%;
+							margin-left:30px;
+
+							button {
+								margin:20px 0 40px 0;
+							}
+
+							h3 {
+								padding:10px 0;
+							}
+
+							.collect-rsvp {
+								.clearfix();
+								width:100%;
+								padding:25px 0px;
+
+								/* change this to auto to center the rsvp */
+								margin:0;
+
+								text-align:center;
+
+								a {
+									font-size:40px;
+									margin:10px;
+									font-weight:bold;
+									color:@grayLight;
+									display:block;
+									float:left;
+								}
+								a.active,a:hover {
+									color:@orange;
+								}
+							}
+							.payment-type-note {
+								margin-top:30px;
+							}
+
+							fieldset {
+								width:290px;
+
+								/* change this to auto to center the rsvp */
+								margin:0;
+
+								label {
+									.clearfix();
+									#including-yourself {
+										line-height:30px;
+										vertical-align: middle;
+										padding-left:10px;
+									}
+									#guest-count {
+										width:30px;
+										height:26px;
+										text-align:center;
+										margin:0 10px;
+									}
+								}
+							}
+						}
+					}
+
+					#no-invitees {
+						background-color: @grayLight;
+						padding:50px;
+						button {
+							margin:auto;
+							display: block;
+							width: 200px;
+							height: 60px;
+						}
+					}
 
 					.section-bottom {
 						.next-wrapper {
@@ -520,255 +756,8 @@
 		/* organizer specific css */
 		#plan-dashboard.organizer-plan-dashboard {
 
-			.organizer-itinerary-section {
-				.body {
-					position:relative;
-					min-height:2620px;
-					.background {
-						margin-top: 80px;
-						position:absolute;
-						min-width: 1160px;
-					}
-					.itinerary-data {
-						position:absolute;
-						width:100%;
-
-						.event-container {
-							margin:20px 30px 0 300px;
-							font-size: 40px;
-							line-height: 40px;
-							vertical-align: middle;
-
-							.event-info {
-								margin-left:50px;
-								.text {
-									padding-right:10px;
-								}
-							}
-						}
-						.hotel-container, .restaurant-container, .parking-container, .tickets-container {
-							position:absolute;
-							width:350px;
-							min-height:280px;
-							h2 {
-								font-size:24px;
-							}
-							.row {
-								padding:6px;
-								font-size:16px;
-								.info {
-									margin-left:0;
-									margin-top:0;
-									margin:0;
-
-									span {
-										display:inline;
-									}
-								}
-
-								.info > div {
-									padding:2px;
-								}
-							}
-						}
-
-						.tickets-container {
-							width:400px;
-							top: 450px;
-							left:150px;
-						}
-
-						.parking-container {
-							top:375px;
-							left:610px;
-							min-height:300px;
-							background-color:@white;
-						}
-
-						.hotel-container {
-							top:985px;
-							left:160px;
-						}
-
-						.restaurant-container {
-							top:820px;
-							left:740px;
-						}
-
-						.google-map-container {
-							background-color: @white;
-							width:100%;
-							position:absolute;
-							top:1275px;
-							height:700px;
-							h2 {
-								font-size:24px;
-							}
-							.itinerary-map {
-								width:100%;
-								height:600px;
-							}
-						}
-
-						.notes-container {
-							position:absolute;
-							top:2000px;
-							left:50px;
-							width:500px;
-							height:500px;
-							background-color: @yellow;
-							border:thin solid @yellowDark;
-							.box-shadow(2px 4px 4px rgba(0,0,0,.3));
-							padding:10px;
-							textarea {
-								width:100%;
-								height:465px;
-								background: transparent;
-								padding:0px;
-								border:none;
-								.box-shadow(none);
-							}
-						}
-
-					}
-
-				}
-			}
-
 			.organizer-rsvp-section {
 
-				.organizer-rsvp-container {
-					margin:30px 0;
-
-					.info-container {
-						width:35%;
-
-						.info {
-							.clearfix();
-							background-color:@grayLight;
-							.border-radius(6px);
-							padding:10px;
-							margin:0;
-							font-family: "Calibri";
-
-							.row {
-								.clearfix();
-								margin:0;
-								padding:2px;
-								h3 {
-									color:@gray;
-									font-family: "Calibri";
-									line-height: 15px;
-									vertical-align: middle;
-									padding:0px;
-									margin-right:2px;
-									font-size:2em;
-									padding:20px 0;
-								}
-								span {
-									display:inline;
-								}
-								label {
-									margin-left:20px;
-								}
-								.data {
-									line-height: 15px;
-									vertical-align: middle;
-								}
-								.rsvp-days {
-									margin-bottom:10px;
-								}
-							}
-							.first-row {
-								.data {
-									font-size:1.5em;
-									line-height:16px;
-								}
-
-								h3 {
-									font-size:1.5em;
-								}
-							}
-						}
-					}
-					.collect-rsvp-container {
-						padding:0px;
-						width:50%;
-						margin-left:30px;
-
-						button {
-							margin:20px 0 40px 0;
-						}
-
-						h3 {
-							padding:10px 0;
-						}
-
-						.collect-rsvp {
-							.clearfix();
-							width:100%;
-							padding:25px 0px;
-
-							/* change this to auto to center the rsvp */
-							margin:0;
-
-							text-align:center;
-
-							a {
-								font-size:40px;
-								margin:10px;
-								font-weight:bold;
-								color:@grayLight;
-								display:block;
-								float:left;
-							}
-							a.active,a:hover {
-								color:@orange;
-							}
-						}
-						.payment-type-note {
-							margin-top:30px;
-						}
-
-						fieldset {
-							width:290px;
-
-							/* change this to auto to center the rsvp */
-							margin:0;
-
-							label {
-								.clearfix();
-								#including-yourself {
-									line-height:30px;
-									vertical-align: middle;
-									padding-left:10px;
-								}
-								#guest-count {
-									width:30px;
-									height:26px;
-									text-align:center;
-									margin:0 10px;
-								}
-							}
-						}
-					}
-				}
-
-				#no-invitees {
-					background-color: @grayLight;
-					padding:50px;
-					button {
-						margin:auto;
-						display: block;
-						width: 200px;
-						height: 60px;
-					}
-				}
-
-				.section-bottom {
-					.next-wrapper {
-					}
-				}
 			}
 
 			.organizer-cart-section {
@@ -1071,17 +1060,34 @@
 		}
 
 		/* friend specific css */
-		.friend-plan-dashboard {
-			.collect-rsvp {
-				width:100%;
-				a {
-					font-size: 54px;
+		#plan-dashboard.friend-plan-dashboard {
+			.friend-rsvp-section {
+				.body {
+					.friend-rsvp-container {
+
+						.info-container {
+							.info {
+								.row {
+									h3 {
+										font-size:1em;
+										padding:4px 0;
+									}
+								}
+							}
+						}
+
+						.collect-rsvp-container {
+							.collect-rsvp {
+								width:100%;
+								a {
+									font-size: 54px;
+								}
+							}
+						}
+					}
 				}
 			}
-
-
 		}
-
 	}
 
 	/* this was removed */

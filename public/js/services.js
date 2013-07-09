@@ -1094,7 +1094,9 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 				/* if either new or old has a hash tag and the urls are otherwise the same the gtfo */
 				if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
 					if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
-						return;
+						return plan.fetch(function() {
+
+						});
 					}
 				}
 

@@ -1,0 +1,67 @@
+section#section4.friend-invitees-section.invitees-section.plan-section
+	.header
+		h1.pull-left Invitees
+	.body
+		h3 Find out who else is invited
+		.invitees-container
+			.row.invitee(ng-repeat="friend in friends | filter:!{_id:me._id}")
+				.img-container.pull-left
+					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
+					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
+				.invitee-info
+					.invitee-name
+						span.name.orange {{friend.contactInfo.name}}&nbsp;
+						span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
+					.invitee-prefs-container
+						.invitee-pref.first.pull-left
+							.invitee-pref-header RSVP STATUS
+							.invitee-pref-value
+								i.icon-ok.icon-3x.green.invitee-rsvp-decision(ng-show="{true:true}[friend.rsvp.decision]")
+								i.icon-remove.icon-3x.invitee-rsvp-decision(ng-show="{false:true}[friend.rsvp.decision]")
+								i.icon-question.icon-3x.invitee-rsvp-decision(ng-show="{null:true}[friend.rsvp.decision]")
+						.invitee-pref.pull-left
+							.invitee-pref-header Ticket Vote
+							.invitee-pref-value(ng-show="friend.rsvp.decision")
+								.icon(ng-hide="friend.rsvp.tickets.decision")
+									i.icon-minus.icon-2x
+								.dollar-sign.orange(ng-show="friend.rsvp.tickets.decision")
+									span(ng-show="friend.rsvp.tickets.priceGroup.low") $
+									span(ng-show="friend.rsvp.tickets.priceGroup.med") $
+									span(ng-show="friend.rsvp.tickets.priceGroup.high") $
+						.invitee-pref.pull-left(ng-show="plan.preferences.addOns.parking")
+							.invitee-pref-header Parking Vote
+							.invitee-pref-value(ng-show="friend.rsvp.decision")
+								.icon(ng-hide="friend.rsvp.parking.decision")
+									i.icon-minus.icon-2x
+								.dollar-sign.orange(ng-show="friend.rsvp.parking.decision")
+									span(ng-show="friend.rsvp.parking.priceGroup.low") $
+									span(ng-show="friend.rsvp.parking.priceGroup.med") $
+									span(ng-show="friend.rsvp.parking.priceGroup.high") $
+						.invitee-pref.pull-left(ng-show="plan.preferences.addOns.restaurants")
+							.invitee-pref-header Restaurant Votes
+							.invitee-pref-value(ng-show="friend.rsvp.decision")
+								.icon(ng-hide="friend.rsvp.restaurant.decision")
+									i.icon-minus.icon-2x
+								.dollar-sign.orange(ng-show="friend.rsvp.restaurant.decision")
+									span(ng-show="friend.rsvp.restaurant.priceGroup.low") $
+									span(ng-show="friend.rsvp.restaurant.priceGroup.med") $
+									span(ng-show="friend.rsvp.restaurant.priceGroup.high") $
+								#invitee-food-preferences(ng-show="friend.rsvp.restaurant.preference.length")
+									.prefs-list.display-popover(placement="bottom",trigger="hover",title="Food Preferences",content="{{friend.rsvp.restaurant.preference.join(', ')}}")
+										strong cuisine:&nbsp;
+										span {{friend.rsvp.restaurant.preference.join(', ').substring(0,30)}}
+										span(ng-show="showEllipses(friend.rsvp.restaurant.preference,30)") ...
+						.invitee-pref.pull-left(ng-show="plan.preferences.addOns.hotels")
+							.invitee-pref-header Hotel Votes
+							.invitee-pref-value(ng-show="friend.rsvp.decision")
+								.icon(ng-hide="friend.rsvp.hotel.decision")
+									i.icon-minus.icon-2x
+								.dollar-sign.orange(ng-show="friend.rsvp.hotel.decision")
+									span(ng-show="friend.rsvp.hotel.priceGroup.low") $
+									span(ng-show="friend.rsvp.hotel.priceGroup.med") $
+									span(ng-show="friend.rsvp.hotel.priceGroup.high") $
+								#invitee-hotel-preferences(ng-show="friend.rsvp.hotel.preference.length")
+									.prefs-list.display-popover(placement="bottom",trigger="hover",title="Hotel Preferences",content="{{friend.rsvp.hotel.preference.join(', ')}}")
+										strong hotel type:&nbsp;
+										span {{friend.rsvp.hotel.preference.join(', ').substring(0,30)}}
+										span(ng-show="showEllipses(friend.rsvp.hotel.preference,30)") ...

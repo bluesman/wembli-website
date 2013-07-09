@@ -1,50 +1,37 @@
 - plan = req.session.plan
 #interactive-venue-map(ng-controller="VenueMapCtrl")
-	//- they can only preview tix if the following are true: plan payment is split-first && rsvpComplete() false
+	- var include = 'buy-now';
 	- if (visitor.context === 'organizer')
 		- if (plan.preferences.payment === 'split-first')
 			- if (!plan.rsvpComplete)
-				//- preview
-				section.clearfix
-					.header
-						h1.pull-left See What's Available Then Invite Friends
-					.sub-header
-						span.orange &nbsp;{{plan.event.eventName}}
-						span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-						span &nbsp;at {{plan.event.eventVenue}}&nbsp;
-				#map-background.preview-tickets
-					#venue-map-container
-					//- #groups-container
-				#tickets.pull-right
-					include interactive-venue-map/tickets/invite-friends
+				- include = 'invite-friends'
+				- header = "See What's Available Then Invite Friends";
 			- else
-				//- add tickets to plan
-				#map-background
-					#venue-map-container
-					//- #groups-container
-				#tickets.pull-right
-					.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
-					.event-social-links
-					include interactive-venue-map/tickets/add-to-plan
+				- include = 'add-to-plan'
+				- header = "Add Tickets To Your Cart"
 		- else
-			//- see tickets
-			#map-background
-				#venue-map-container
-				//- #groups-container
-			#tickets.pull-right
-				.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
-				.event-social-links
-				include interactive-venue-map/tickets/buy-now
+			- include = 'buy-now'
+			- header = "Choose Tickets To Buy"
 	- else
-		//- preview
-		section.clearfix
-			.header
-				h1.pull-left See What Tickets Are Available
-		#map-background.preview-tickets
-			#venue-map-container
-			//- #groups-container
-		#tickets.pull-right
+		- include = 'invite-friends'
+		- header = "See What Tickets Are Available";
+	section.clearfix
+		.header
+			h1.pull-left #{header}
+		.sub-header
+			span.orange &nbsp;{{plan.event.eventName}}
+			span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+			span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+	#map-background
+		#venue-map-container
+		#groups-container
+	#tickets.pull-right
+		- if (include == 'invite-friends')
 			include interactive-venue-map/tickets/invite-friends
+		- if (include == 'add-to-plan')
+			include interactive-venue-map/tickets/add-to-plan
+		- if (include == 'buy-now')
+			include interactive-venue-map/tickets/buy-now
 
 
 

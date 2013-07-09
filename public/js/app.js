@@ -17,10 +17,13 @@ angular.module('wembliApp', [
 ])
   .run(['initRootScope', '$rootScope', '$location', '$route', '$window', 'fetchModals', 'slidePage', 'facebook', 'twitter', 'plan', 'wembliRpc',
   function(initRootScope, $scope, $location, $route, $window, fetchModals, slidePage, facebook, twitter, plan, wembliRpc) {
+    /* just fetch the plan right away */
+    plan.fetch(function() {});
 
     /* slide pages using sequence when location changes */
     $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
       if (newUrl === oldUrl) {
+        console.log('location changed but its the same');
         return;
       }
       console.log('LOCATION CHANGED! '+newUrl);

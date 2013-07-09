@@ -7,7 +7,7 @@ module.exports = {
 		console.log('plan nav for: '+mode);
 		var nav = {
 			'organizer': [{
-				'icon': "icon-flag",
+				'icon': "icon-file-alt",
 				'text': "Itinerary",
 			}, {
 				'icon': "icon-envelope",
@@ -23,8 +23,11 @@ module.exports = {
 				'text': "Chatter",
 			}],
 			'friend': [{
-				'icon': "icon-flag",
-				'text': "Event",
+				'icon': "icon-file-alt",
+				'text': "Itinerary",
+			}, {
+				'icon': "icon-envelope",
+				'text': "RSVP",
 			}, {
 				'icon': "icon-bar-chart",
 				'text': "Vote",
@@ -34,9 +37,6 @@ module.exports = {
 			}, {
 				'icon': "icon-money",
 				'text': "Pony Up!",
-			}, {
-				'icon': "icon-file-alt",
-				'text': "Itinerary",
 			}, {
 				'icon': "icon-comments-alt",
 				'text': "Chatter",

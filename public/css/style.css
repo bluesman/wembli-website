@@ -8646,10 +8646,8 @@ body {
 #tickets-frame section .sub-header {
   font-size: 1.25em;
 }
-#tickets-frame #map-background.preview-tickets {
-  overflow: hidden;
-}
 #tickets-frame #map-background {
+  overflow: hidden;
   text-align: center;
   position: absolute;
   width: 68%;
@@ -8761,11 +8759,11 @@ body {
   display: block;
 }
 #tickets-frame #tickets-invite-friends .controls a.invite-friends-button {
-  width: 110px;
+  width: 30%;
   margin: auto;
 }
 #tickets-frame #tickets-invite-friends .controls a.change-payment-preference {
-  width: 270px;
+  width: 50%;
   margin: 0 20px;
   text-align: center;
 }
@@ -10291,8 +10289,318 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-name .guests {
   font-weight: bold;
 }
+#plan-frame #middle #plan-dashboard .itinerary-section .body {
+  position: relative;
+  min-height: 2620px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .background {
+  margin-top: 80px;
+  position: absolute;
+  min-width: 1160px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data {
+  position: absolute;
+  width: 100%;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .event-container {
+  margin: 20px 30px 0 300px;
+  font-size: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .event-container .event-info {
+  margin-left: 50px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .event-container .event-info .text {
+  padding-right: 10px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container {
+  position: absolute;
+  width: 350px;
+  min-height: 280px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container h2,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container h2,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container h2,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container h2 {
+  font-size: 24px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container .row,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container .row,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container .row,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container .row {
+  padding: 6px;
+  font-size: 16px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container .row .info,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container .row .info,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container .row .info,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container .row .info {
+  margin-left: 0;
+  margin-top: 0;
+  margin: 0;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container .row .info span,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container .row .info span,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container .row .info span,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container .row .info span {
+  display: inline;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container .row .info > div,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container .row .info > div,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container .row .info > div,
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container .row .info > div {
+  padding: 2px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container {
+  width: 400px;
+  top: 450px;
+  left: 150px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container {
+  top: 375px;
+  left: 610px;
+  min-height: 300px;
+  background-color: #ffffff;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container {
+  top: 985px;
+  left: 160px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container {
+  top: 820px;
+  left: 740px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .google-map-container {
+  background-color: #ffffff;
+  width: 100%;
+  position: absolute;
+  top: 1275px;
+  height: 700px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .google-map-container h2 {
+  font-size: 24px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .google-map-container .itinerary-map {
+  width: 100%;
+  height: 600px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .notes-container {
+  position: absolute;
+  top: 2000px;
+  left: 50px;
+  width: 500px;
+  height: 500px;
+  background-color: #ffff62;
+  border: thin solid #e1e200;
+  -webkit-box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+}
+#plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .notes-container textarea {
+  width: 100%;
+  height: 465px;
+  background: transparent;
+  padding: 0px;
+  border: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
 #plan-frame #middle #plan-dashboard .rsvp-section .body {
   margin: 10px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container {
+  margin: 30px 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container {
+  width: 35%;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info {
+  *zoom: 1;
+  background-color: #d8d6d7;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 0;
+  font-family: "Calibri";
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:before,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:before,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row {
+  *zoom: 1;
+  margin: 0;
+  padding: 2px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:before,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:before,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row h3 {
+  color: #767676;
+  font-family: "Calibri";
+  line-height: 15px;
+  vertical-align: middle;
+  padding: 0px;
+  margin-right: 2px;
+  font-size: 2em;
+  padding: 20px 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row span {
+  display: inline;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row label {
+  margin-left: 20px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row .data {
+  line-height: 15px;
+  vertical-align: middle;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row .rsvp-days {
+  margin-bottom: 10px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .first-row .data {
+  font-size: 1.5em;
+  line-height: 16px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .first-row h3 {
+  font-size: 1.5em;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container {
+  padding: 0px;
+  width: 50%;
+  margin-left: 30px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container button {
+  margin: 20px 0 40px 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container h3 {
+  padding: 10px 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp {
+  *zoom: 1;
+  width: 100%;
+  padding: 25px 0px;
+  /* change this to auto to center the rsvp */
+
+  margin: 0;
+  text-align: center;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:before,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a {
+  font-size: 40px;
+  margin: 10px;
+  font-weight: bold;
+  color: #d8d6d7;
+  display: block;
+  float: left;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a.active,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a:hover {
+  color: #ff6700;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .payment-type-note {
+  margin-top: 30px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset {
+  width: 290px;
+  /* change this to auto to center the rsvp */
+
+  margin: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label {
+  *zoom: 1;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:before,
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after {
+  clear: both;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label #including-yourself {
+  line-height: 30px;
+  vertical-align: middle;
+  padding-left: 10px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label #guest-count {
+  width: 30px;
+  height: 26px;
+  text-align: center;
+  margin: 0 10px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body #no-invitees {
+  background-color: #d8d6d7;
+  padding: 50px;
+}
+#plan-frame #middle #plan-dashboard .rsvp-section .body #no-invitees button {
+  margin: auto;
+  display: block;
+  width: 200px;
+  height: 60px;
 }
 #plan-frame #middle #plan-dashboard .rsvp-section .body .section-bottom .next-wrapper {
   text-align: right;
@@ -10474,316 +10782,6 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment .actor-image-container img {
   max-width: 60%;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body {
-  position: relative;
-  min-height: 2620px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .background {
-  margin-top: 80px;
-  position: absolute;
-  min-width: 1160px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data {
-  position: absolute;
-  width: 100%;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .event-container {
-  margin: 20px 30px 0 300px;
-  font-size: 40px;
-  line-height: 40px;
-  vertical-align: middle;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .event-container .event-info {
-  margin-left: 50px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .event-container .event-info .text {
-  padding-right: 10px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container {
-  position: absolute;
-  width: 350px;
-  min-height: 280px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container h2,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container h2,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container h2,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container h2 {
-  font-size: 24px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container .row,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container .row,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container .row,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container .row {
-  padding: 6px;
-  font-size: 16px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container .row .info,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container .row .info,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container .row .info,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container .row .info {
-  margin-left: 0;
-  margin-top: 0;
-  margin: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container .row .info span,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container .row .info span,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container .row .info span,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container .row .info span {
-  display: inline;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container .row .info > div,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container .row .info > div,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container .row .info > div,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container .row .info > div {
-  padding: 2px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .tickets-container {
-  width: 400px;
-  top: 450px;
-  left: 150px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .parking-container {
-  top: 375px;
-  left: 610px;
-  min-height: 300px;
-  background-color: #ffffff;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .hotel-container {
-  top: 985px;
-  left: 160px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .restaurant-container {
-  top: 820px;
-  left: 740px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .google-map-container {
-  background-color: #ffffff;
-  width: 100%;
-  position: absolute;
-  top: 1275px;
-  height: 700px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .google-map-container h2 {
-  font-size: 24px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .google-map-container .itinerary-map {
-  width: 100%;
-  height: 600px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .notes-container {
-  position: absolute;
-  top: 2000px;
-  left: 50px;
-  width: 500px;
-  height: 500px;
-  background-color: #ffff62;
-  border: thin solid #e1e200;
-  -webkit-box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
-  padding: 10px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-itinerary-section .body .itinerary-data .notes-container textarea {
-  width: 100%;
-  height: 465px;
-  background: transparent;
-  padding: 0px;
-  border: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container {
-  margin: 30px 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container {
-  width: 35%;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info {
-  *zoom: 1;
-  background-color: #d8d6d7;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
-  padding: 10px;
-  margin: 0;
-  font-family: "Calibri";
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:before,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:before,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row {
-  *zoom: 1;
-  margin: 0;
-  padding: 2px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:before,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:before,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row h3 {
-  color: #767676;
-  font-family: "Calibri";
-  line-height: 15px;
-  vertical-align: middle;
-  padding: 0px;
-  margin-right: 2px;
-  font-size: 2em;
-  padding: 20px 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row span {
-  display: inline;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row label {
-  margin-left: 20px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row .data {
-  line-height: 15px;
-  vertical-align: middle;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .row .rsvp-days {
-  margin-bottom: 10px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .first-row .data {
-  font-size: 1.5em;
-  line-height: 16px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .info-container .info .first-row h3 {
-  font-size: 1.5em;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container {
-  padding: 0px;
-  width: 50%;
-  margin-left: 30px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container button {
-  margin: 20px 0 40px 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container h3 {
-  padding: 10px 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp {
-  *zoom: 1;
-  width: 100%;
-  padding: 25px 0px;
-  /* change this to auto to center the rsvp */
-
-  margin: 0;
-  text-align: center;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a {
-  font-size: 40px;
-  margin: 10px;
-  font-weight: bold;
-  color: #d8d6d7;
-  display: block;
-  float: left;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a.active,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .collect-rsvp a:hover {
-  color: #ff6700;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container .payment-type-note {
-  margin-top: 30px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset {
-  width: 290px;
-  /* change this to auto to center the rsvp */
-
-  margin: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label {
-  *zoom: 1;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label:after {
-  clear: both;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label #including-yourself {
-  line-height: 30px;
-  vertical-align: middle;
-  padding-left: 10px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .organizer-rsvp-container .collect-rsvp-container fieldset label #guest-count {
-  width: 30px;
-  height: 26px;
-  text-align: center;
-  margin: 0 10px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section #no-invitees {
-  background-color: #d8d6d7;
-  padding: 50px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section #no-invitees button {
-  margin: auto;
-  display: block;
-  width: 200px;
-  height: 60px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container.border-bottom {
   border-bottom: 4px solid #524f45;
@@ -11021,10 +11019,14 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .send-pony-up-button {
   margin: 40px 0 0 86px;
 }
-#plan-frame #middle .friend-plan-dashboard .collect-rsvp {
+#plan-frame #middle #plan-dashboard.friend-plan-dashboard .friend-rsvp-section .body .friend-rsvp-container .info-container .info .row h3 {
+  font-size: 1em;
+  padding: 4px 0;
+}
+#plan-frame #middle #plan-dashboard.friend-plan-dashboard .friend-rsvp-section .body .friend-rsvp-container .collect-rsvp-container .collect-rsvp {
   width: 100%;
 }
-#plan-frame #middle .friend-plan-dashboard .collect-rsvp a {
+#plan-frame #middle #plan-dashboard.friend-plan-dashboard .friend-rsvp-section .body .friend-rsvp-container .collect-rsvp-container .collect-rsvp a {
   font-size: 54px;
 }
 #plan-frame #right {
