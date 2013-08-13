@@ -83,7 +83,6 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
 ]).
 
 
-
 directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', 'wembliRpc',
   function($rootScope, $window, $location, $http, $timeout, fetchModals, plan, wembliRpc) {
 
@@ -106,13 +105,17 @@ directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$
   }
 ]).
 
-directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', '$location',
-  function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan, $location) {
+directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', '$location', 'loadingModal',
+  function($rootScope, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan, $location, loadingModal) {
     return {
       restrict: 'E',
       replace: true,
       cache: false,
       templateUrl: "/partials/interactive-venue-map",
+      controller: ['$scope', '$element', '$attrs', '$transclude',
+        function($scope, $element, $attrs, $transclude, $timeout) {
+
+      }],
       compile: function(element, attr, transclude) {
         var generateTnSessionId = function() {
           var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
@@ -126,14 +129,16 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
         };
 
         return function(scope, element, attr) {
+            /* don't cache this partial - cache:false doesn't do it */
+          $templateCache.remove("/partials/interactive-venue-map");
 
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
               $('#venue-map-container').tuMap("Refresh", "Reset");
             }
           });
-
-          plan.get(function(p) {
+          plan.fetch(function(result) {
+            var p = result.plan;
             //get the tix and make the ticket list
             wembliRpc.fetch('event.getTickets', {
               eventID: p.event.eventId
@@ -145,7 +150,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               }
 
               if (typeof result.tickets[0] === "undefined") {
-                $('#generic-loading-modal').modal("hide");
+                loadingModal.hide();
                 $('#no-tickets').modal("show");
                 scope.noTickets = true;
                 return;
@@ -204,7 +209,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
               var filterTickets = function(args) {
                 var priceRange = $(".price-slider").slider("option", "values");
-                console.log('filtering tix');
                 $("#venue-map-container").tuMap("SetOptions", {
                   TicketsFilter: {
                     MinPrice: priceRange[0],
@@ -240,8 +244,8 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               options.OnInit = function(e, MapType) {
                 $(".ZoomIn").html('+');
                 $(".ZoomOut").html('-');
-                $(".tuMapControl").parent("div").attr('style', "position:absolute;left:5px;top:5px;font-size:12px");
-                $('#generic-loading-modal').modal("hide");
+                $(".tuMapControl").parent("div").attr('style', "position:absolute;left:5px;top:120px;font-size:12px");
+                loadingModal.hide()
               };
 
               options.OnError = function(e, Error) {
@@ -251,8 +255,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                   }
                   /* chart not found - display the tn chart */
                   $('#venue-map-container').css("background", 'url(' + scope.event.MapUrl + ') no-repeat center center');
-                  $('#generic-loading-modal').modal("hide");
-
+                  loadingModal.hide()
                 }
               };
 
@@ -292,9 +295,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               $('#venue-map-container').css("height", $($window).height() - 60);
               $('#tickets').css("height", $($window).height() - 60);
               $('#venue-map-container').css("width", $($window).width() - 480);
-              console.log('here');
               $('#venue-map-container').tuMap(options);
-              console.log('here2');
               $('.price-slider').slider({
                 range: true,
                 min: scope.minTixPrice,
@@ -337,8 +338,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
             function(data, headersGetter) {
               $rootScope.genericLoadingModal.header = 'Finding Tickets...';
-              $('#page-loading-modal').modal("hide");
-              $('#generic-loading-modal').modal("show");
+              loadingModal.show('Finding Tickets...', 'We\'re scouring the internet for '+ p.event.eventName + ' tickets!');
               return data;
             },
 

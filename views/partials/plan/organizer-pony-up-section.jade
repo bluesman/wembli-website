@@ -14,6 +14,7 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 				i.icon-double-angle-right
 		.invitees-container(ng-show="friends[0] && !(plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])") no tickets or add-ons chosen yet
 
+		//- show the pony up form if they have invited friends and have chosen at least one of tickets, parking, restaurants or hotel
 		form.invitees-container(ng-submit="sendPonyUpEmail()",ng-show="friends[0] && (plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])")
 			h3 Make sure the checkbox is green next to the people you want to pony up then click the pony up button to send
 			.row.invitee.clearfix(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{'rsvp.decision':true} | friendPonyUp")
@@ -100,12 +101,17 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 									.value.pull-right
 										a.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
 					.send-pony-up-control.clearfix
-						label.send-pony-up-label.pull-left.clearfix(ng-click="friend.ponyUp.amount={false:'0.00',true:friend.tickets.suggestedPonyUpAmount}[friend.ponyUp.request]")
-							input.friend-pony-up-checkbox.pull-left.hide(ng-init="friend.ponyUp.request=true",type="checkbox",ng-model="friend.ponyUp.request")
+						label.send-pony-up-label.pull-left.clearfix(ng-hide="friend.ponyUp.open", ng-click="friend.ponyUp.amount={false:'0.00',true:friend.tickets.suggestedPonyUpAmount}[friend.ponyUp.request]")
+							input.friend-pony-up-checkbox.pull-left.hide(ng-class="{true:'muted'}[friend.ponyUp.open]", type="checkbox",ng-model="friend.ponyUp.request")
 							i.icon-check.icon-2x.pull-left.green(ng-show="friend.ponyUp.request")
 							i.icon-check-empty.icon-2x.pull-left(ng-hide="friend.ponyUp.request")
 							.header.pull-left SEND PONY UP REQUEST FOR:
-						.pull-right.input-prepend
+						label.send-pony-up-label.pull-left.clearfix(ng-show="friend.ponyUp.open", ng-class="{true:'muted'}[friend.ponyUp.open]")
+							input.friend-pony-up-checkbox.pull-left.hide(ng-disabled="friend.ponyUp.open", type="checkbox",ng-model="friend.ponyUp.request")
+							i.icon-check.icon-2x.pull-left.green(ng-show="friend.ponyUp.request")
+							i.icon-check-empty.icon-2x.pull-left(ng-hide="friend.ponyUp.request")
+							.header.pull-left SEND PONY UP REQUEST FOR:
+						.pull-right.input-prepend(ng-class="{true:'muted'}[friend.ponyUp.open]")
 							span.add-on $
 							input.friend-pony-up-amount(type="text",ng-init="friend.ponyUp.amount=friend.tickets.suggestedPonyUpAmount",ng-model="friend.ponyUp.amount")
 				.history-container.pull-left
@@ -135,12 +141,12 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 								td.type(ng-show="{'response':true}[history.type]") Pony Up Payment:
 								td.date {{history.date | date:'short'}}
 								td.history-header Status:
-								td.status {{history.status | historyStatus}}
+								td.status() {{history.status | historyStatus}}
 								td.history-header(ng-show="{'outside':true}[history.type]") Amt Received:
 								td.history-header(ng-show="{'request':true}[history.type]") Amt Requested:
 								td.history-header(ng-show="{'response':true}[history.type]") Amt Received:
 								td.amount {{history.amount | currency}}
-								td.actions(ng-show="{'request':true}[history.type]")
+								td.actions(ng-show="{'request':true}[history.type] && history.open")
 									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-hide="history.error || history.resent || history.resendPonyUpInProgress", ng-click="resendPonyUp(friend._id, history._id)")
 										i.icon.icon-envelope.pull-left
 										.text.pull-left Resend
@@ -153,6 +159,12 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 									a.btn.btn-tiny.btn-orange.clearfix(href="#",ng-show="history.error", disabled)
 										i.icon.icon-envelope.pull-left
 										.text.pull-left Error
+									a.btn.btn-tiny.btn-danger.clearfix(href="#section4", ,ng-hide="history.error || history.cancelPonyUpRequestInProgress", ng-click="cancelPonyUpRequest(friend._id, history._id)")
+										i.icon.icon-remove-sign.pull-left
+										.text.pull-left Cancel
+									a.btn.btn-tiny.btn-danger.clearfix(href="#section4",ng-show="!history.error && history.cancelPonyUpRequestInProgress", disabled)
+										i.icon.icon-cog.icon-spin.pull-left
+										.text.pull-left Cancel
 								td.actions(ng-show="{'outside':true}[history.type]")
 									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-hide="history.error || history.removeOutsidePaymentInProgress", ng-click="removeOutsidePayment(friend._id, history._id)")
 										i.icon.icon-remove-sign.pull-left

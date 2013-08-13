@@ -6,13 +6,24 @@ this.Model = function(mongoose) {
 	var Schema = mongoose.Schema;
 	var ObjectId = Schema.ObjectId;
 
+	/*
+	 * possible payment types: request|outside|response
+	 * possible payment status: queued|delivered|opened|responded|completed|canceled
+	 * possible payment methods: check|cash|creditcard|paypal|other
+	 * payment.open means the transaction has not been completed.
+	 *  for a type: request, it means there is no response yet or the request is not canceled
+	 *  for a type: response, it means the response has not cleared yet
+	 *
+	 */
 	var Payment = new Schema({
 		amount:Number,
 		date:{type:Date,default:Date.now()},
 		method:String,
 		type:String,
-		transaction:{},
 		status:String,
+		open: {type: Boolean, default: true},
+		requestId: String,
+		transaction:{},
 		email:{}
 	});
 
@@ -132,25 +143,6 @@ this.Model = function(mongoose) {
 				preference: [],
 			},
 		},
-		/*
-		 * need to nail this schema down
-		 * {
-		 *		request: [{
-		 *			amount:<amt>,
-		 *			date:<requested date>
-		 *			status: queued|delivered|opened|responded|canceled?,
-		 *			email: {}
-		 *		}],
-		 *  	payment: [{
-		 *			amount: <>,
-		 *			method:<check|cash|creditcard|paypal|other,
-		 *			transaction: {},
-		 *			date:,
-		 *			status:,
-		 *			email:{}
-		 *		}]
-		 * }
-		 */
 		payment: [Payment],
 		created: {type: Date,	default: Date.now()	},
 		updated: Date,

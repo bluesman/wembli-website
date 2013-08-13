@@ -94,8 +94,11 @@
 
 	section {
 		text-align: left;
-		width:98%;
+		padding:0 20px 20px;
+		position:relative;
+		z-index:1;
 		margin:auto;
+		background-color: @white;
 		.header {
 
 			h1 {
@@ -113,9 +116,11 @@
 	}
 
 	#map-background {
+		position:absolute;
+		bottom:0px;
 		overflow:hidden;
 		text-align:center;
-		position:absolute;
+		float:left;
 		width:68%;
 		height:100%;
 
@@ -146,9 +151,8 @@
 		.ZoomControls {
 			position:absolute;
 			left:75px;
-			top:6px;
+			top:120px;
 			width:35px;
-			z-index:10;
 			color:@white;
 			font-weight:bold;
 		}
@@ -176,7 +180,7 @@
 
 		#groups-container {
 			position:absolute;
-			bottom:20px;
+			bottom:120px;
 			left:20px;
 		}
 	}

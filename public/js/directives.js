@@ -116,6 +116,79 @@ directive('logActivity', ['wembliRpc',
   }
 ]).
 
+directive('formatPhoneNumber', [
+  function() {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+          element.bind('keydown', function(evt) {
+            if (document.activeElement.name === 'phoneNumber') {
+              if (evt.keyCode != 8 &&
+                  evt.keyCode != 9 &&
+                  (evt.keyCode < 48 ||
+                  evt.keyCode > 57)) {
+                /* cancel the event */
+                evt.preventDefault();
+              }
+            }
+          });
+        };
+      }
+    }
+  }
+]).
+
+directive('formatPostalCode', [
+  function() {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+          element.bind('keydown', function(evt) {
+            if (document.activeElement.name === 'postalCode') {
+              if (evt.keyCode != 8 &&
+                  evt.keyCode != 9 &&
+                  evt.keyCode != 173 &&
+                  (evt.keyCode < 48 ||
+                  evt.keyCode > 57)) {
+                /* cancel the event */
+                evt.preventDefault();
+              }
+            }
+          });
+        };
+      }
+    }
+  }
+]).
+
+directive('loadingModal', [
+  function() {
+    return {
+      restrict: 'E',
+      controller: ['$scope', '$element', '$attrs', '$transclude', 'loadingModal',
+        function($scope, $element, $attrs, $transclude, loadingModal) {
+          $scope.loadingModal = {};
+          $scope.$on('loading-modal-show', function() {
+            $scope.loadingModal.title = loadingModal.title;
+            $scope.loadingModal.body = loadingModal.body;
+          });
+        }
+      ],
+      compile: function(element, attr, transclude) {
+        element.click(function() {
+          //get the tix and make the ticket list
+          wembliRpc.fetch('feed.logActivity', {
+            action: attr.action,
+            meta: attr.meta || {}
+          }, function(err, result) {});
+        });
+      }
+    }
+  }
+]).
+
 /* Log keen.io event:
  * Class directive
  * foo.log-event(collection="",event="click")
@@ -170,7 +243,9 @@ directive('displayPopover', [
                 trigger: attr.trigger,
                 animation: (attr.animation === 'true') ? true : false,
                 title: attr.title,
-                content: function() { return $('#'+contentId).html() },
+                content: function() {
+                  return $('#' + contentId).html()
+                },
                 html: (attr.html === 'true') ? true : false
               });
             });
@@ -499,7 +574,9 @@ directive('eventWrapper', ['wembliRpc', '$window',
   function(wembliRpc, $window) {
     return {
       restrict: 'C',
-      controller: function($scope, $element, $attrs, $transclude) {},
+      controller: ['$scope', '$element', '$attrs', '$transclude',
+        function($scope, $element, $attrs, $transclude) {}
+      ],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           element.mouseleave(function() {
@@ -548,57 +625,57 @@ directive('eventWrapper', ['wembliRpc', '$window',
 
             wembliRpc.fetch('event.getPricingInfo', args,
 
-            function(err, result) {
-              if (err) {
-                alert('error happened - contact help@wembli.com');
-                return;
-              }
-
-              /* we cached the result..lets unlock */
-              scope.ticketSummaryData.locked = false;
-              /* init the popover */
-              var summaryContent = "";
-
-              if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
-                if (result.ticketPricingInfo.ticketsAvailable === '0') {
-                  summaryContent = "Click for ticket information";
-                } else {
-                  summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketPricingInfo.ticketsAvailable + " ticket choice" : result.ticketPricingInfo.ticketsAvailable + " ticket choices";
-                  if (parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
-                    summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
-                  } else {
-                    summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " to $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
-                  }
+              function(err, result) {
+                if (err) {
+                  alert('error happened - contact help@wembli.com');
+                  return;
                 }
-              } else {
-                summaryContent = "Click for ticket information";
-              }
-              scope.ticketSummaryData[elId.split('-')[0]] = summaryContent;
 
-              $('#' + elId).popover({
-                placement: "left",
-                trigger: 'manual',
-                animation: false,
-                title: 'Tickets Summary',
-                content: summaryContent,
+                /* we cached the result..lets unlock */
+                scope.ticketSummaryData.locked = false;
+                /* init the popover */
+                var summaryContent = "";
+
+                if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
+                  if (result.ticketPricingInfo.ticketsAvailable === '0') {
+                    summaryContent = "Click for ticket information";
+                  } else {
+                    summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketPricingInfo.ticketsAvailable + " ticket choice" : result.ticketPricingInfo.ticketsAvailable + " ticket choices";
+                    if (parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
+                      summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
+                    } else {
+                      summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " to $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
+                    }
+                  }
+                } else {
+                  summaryContent = "Click for ticket information";
+                }
+                scope.ticketSummaryData[elId.split('-')[0]] = summaryContent;
+
+                $('#' + elId).popover({
+                  placement: "left",
+                  trigger: 'manual',
+                  animation: false,
+                  title: 'Tickets Summary',
+                  content: summaryContent,
+                });
+                $('#' + elId).popover("show");
+
+              },
+
+              /* transformRequest */
+
+              function(data, headersGetter) {
+                //$('#more-events .spinner').show();
+                return data;
+              },
+
+              /* transformResponse */
+
+              function(data, headersGetter) {
+                //$('#more-events .spinner').hide();
+                return JSON.parse(data);
               });
-              $('#' + elId).popover("show");
-
-            },
-
-            /* transformRequest */
-
-            function(data, headersGetter) {
-              //$('#more-events .spinner').show();
-              return data;
-            },
-
-            /* transformResponse */
-
-            function(data, headersGetter) {
-              //$('#more-events .spinner').hide();
-              return JSON.parse(data);
-            });
           });
 
         };
@@ -676,26 +753,26 @@ directive('sendForgotPasswordEmail', ['wembliRpc',
               }
 
               wembliRpc.fetch('customer.sendForgotPasswordEmail', rpcArgs, function(err, result) {
-                /* display an email sent message */
-                scope.forgotPasswordEmailSent = true;
-                scope.$broadcast('forgot-password-email-sent');
-              },
-              /* transformRequest */
+                  /* display an email sent message */
+                  scope.forgotPasswordEmailSent = true;
+                  scope.$broadcast('forgot-password-email-sent');
+                },
+                /* transformRequest */
 
 
-              function(data, headersGetter) {
-                scope.accountExists = false; //will this work?
-                scope.signupSpinner = true;
-                return data;
-              },
+                function(data, headersGetter) {
+                  scope.accountExists = false; //will this work?
+                  scope.signupSpinner = true;
+                  return data;
+                },
 
-              /* transformResponse */
+                /* transformResponse */
 
 
-              function(data, headersGetter) {
-                scope.signupSpinner = false;
-                return JSON.parse(data);
-              });
+                function(data, headersGetter) {
+                  scope.signupSpinner = false;
+                  return JSON.parse(data);
+                });
             });
           });
         };
@@ -704,7 +781,8 @@ directive('sendForgotPasswordEmail', ['wembliRpc',
   }
 ]).
 
-directive('preventDefault', [function() {
+directive('preventDefault', [
+  function() {
     return {
       restrict: 'C',
       compile: function(element, attr, transclude) {

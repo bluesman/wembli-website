@@ -379,7 +379,7 @@ section#section3.organizer-cart-section.cart-section.plan-section
 		.container.hotel-container.clearfix
 			p hotels split after
 	//- have not yet chosen tix and they are not splitting
-	.body(ng-hide="!plan.tickets[0]", ng-show="{'no-split':true}[plan.preferences.payment]")
+	.body(ng-show="{'no-split':true}[plan.preferences.payment] && tickets[0]")
 		h3 Footing the bill eh? nice...
 		.container.tickets-container.clearfix
 			.cartoon-man.pull-left

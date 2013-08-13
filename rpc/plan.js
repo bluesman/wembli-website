@@ -9,6 +9,10 @@ var Ticket = wembliModel.load('ticket');
 var feedRpc = require('./feed').feed;
 var async = require('async');
 var ticketNetwork = require('../lib/wembli/ticketnetwork');
+var balanced = require('wembli/balanced-api')({
+	secret: app.settings.balancedSecret,
+	marketplace_uri: app.settings.balancedMarketplaceUri
+});
 
 exports.plan = {
 	init: function(args, req, res) {
@@ -36,89 +40,103 @@ exports.plan = {
 			if (plan) {
 				async.parallel([
 
-					function(callback) {
-						/* get feed for the plan */
-						Feed.findOne().where('planGuid').equals(req.session.plan.guid).exec(function(err, feed) {
-							if (feed !== null) {
-								data.feed = feed;
-							}
-							callback();
-						});
-					},
+						function(callback) {
+							/* get feed for the plan */
+							Feed.findOne().where('planGuid').equals(req.session.plan.guid).exec(function(err, feed) {
+								if (feed !== null) {
+									data.feed = feed;
+								}
+								callback();
+							});
+						},
 
-					function(callback) {
-						/* get friends for this plan */
-						Friend.find({
-							planId: req.session.plan.id
-						}, function(err, results) {
-							data.friends = results;
-							callback();
-						});
-					},
+						function(callback) {
+							/* get friends for this plan */
+							Friend.find({
+								planId: req.session.plan.id
+							}, function(err, results) {
+								data.friends = results;
+								callback();
+							});
+						},
 
-					function(callback) {
-						/* get tickets for this plan */
-						Ticket.find({
-							planId: req.session.plan.id
-						}, function(err, results) {
-							data.tickets = results;
-							/* check if these tickets are still available */
-							async.forEach(data.tickets, function(item, callback2) {
-								console.log('tickets in plan');
-								console.log(item.ticketGroup.ID);
+						function(callback) {
+							/* get tickets for this plan */
+							Ticket.find({
+								planId: req.session.plan.id
+							}, function(err, results) {
+								data.tickets = results;
+								/* check if these tickets are still available */
+								async.forEach(data.tickets, function(item, callback2) {
+									console.log('tickets in plan');
+									console.log(item.ticketGroup.ID);
 
-								ticketNetwork.GetTickets({
-									ticketGroupID: item.ticketGroup.ID
-								}, function(err, results) {
-									console.log('results from GetTickets');
-									if (err) {
-										console.log('ERROR GETTING TIX');
-										console.log(err);
-										callback2(err);
-									}
-									if (typeof results.TicketGroup === "undefined") {
-										item.gone = true;
-										item.save(function(err) {
-											console.log('tickets are gone :( saved as such')
+									ticketNetwork.GetTickets({
+										ticketGroupID: item.ticketGroup.ID
+									}, function(err, results) {
+										console.log('results from GetTickets');
+										if (err) {
+											console.log('ERROR GETTING TIX');
+											console.log(err);
+											callback2(err);
+										}
+										if (typeof results.TicketGroup === "undefined") {
+											item.gone = true;
+											item.save(function(err) {
+												console.log('tickets are gone :( saved as such')
+												callback2();
+											});
+										} else {
+											/* done with loop iteration */
 											callback2();
-										});
-									} else {
-										/* done with loop iteration */
-										callback2();
-									}
+										}
+									});
+								}, function(err) {
+									/* done with outer loop iteration */
+									callback();
 								});
-							}, function(err) {
-								/* done with outer loop iteration */
-								callback();
 							});
-						});
-					},
+						},
 
-					function(callback) {
-						/* get customer who is the organizer */
-						if (req.session.plan.organizer.customerId) {
-							Customer.findOne().where('_id').equals(req.session.plan.organizer.customerId).exec(function(err, organizer) {
-								console.log('organizer: ' + req.session.plan.organizer.customerId);
-								console.log(organizer);
-								data.organizer = organizer;
+						function(callback) {
+							/* get customer who is the organizer */
+							if (req.session.plan.organizer.customerId) {
+								Customer.findOne().where('_id').equals(req.session.plan.organizer.customerId).exec(function(err, organizer) {
+									console.log('organizer: ' + req.session.plan.organizer.customerId);
+									console.log(organizer);
+									data.organizer = organizer;
+									callback();
+								});
+							} else {
 								callback();
-							});
-						} else {
-							callback();
+							}
 						}
-					}
-				],
+					],
 
-				function(err, results) {
-					if (err) {
-						me(err);
-					}
-					me(null, data);
-				});
+					function(err, results) {
+						if (err) {
+							me(err);
+						}
+						me(null, data);
+					});
 			} else {
 				me(null, data);
 			}
 		}
+	},
+
+	startPlan: function(args, req, res) {
+		var me = this;
+		req.session.plan = new Plan({
+			guid: Plan.makeGuid()
+		});
+		console.log('creating new plan in rpc/plan.startPlan');
+		req.session.plan.preferences.payment = args.payment ? args.payment : 'split-first';
+		/* must be the organizer if we're creating a new plan - this won't stick if they're not logged in */
+		req.session.visitor.context = 'organizer';
+		return me(null, {
+			plan: req.session.plan
+		});
 	},
 
 	save: function(args, req, res) {
@@ -172,51 +190,51 @@ exports.plan = {
 			.where('_id').equals(args.friendId)
 			.exec(function(err, friend) {
 
-			/* this function is a mess */
-			/* args.decision is the overall plan decision and also means they are in for tickets */
-			if (typeof args.decision !== "undefined") {
-				friend.rsvp.decision = args.decision;
-				friend.rsvp.decidedLastDate = Date.now();
-				friend.rsvp.status = "responded";
-				friend.rsvp.guestCount = parseInt(args.guestCount);
-				friend.rsvp.tickets.number = friend.rsvp.guestCount;
-				friend.rsvp.tickets.decision = friend.rsvp.decision;
-				friend.rsvp.tickets.decidedLastDate = friend.rsvp.decidedLastDate;
-			}
+				/* this function is a mess */
+				/* args.decision is the overall plan decision and also means they are in for tickets */
+				if (typeof args.decision !== "undefined") {
+					friend.rsvp.decision = args.decision;
+					friend.rsvp.decidedLastDate = Date.now();
+					friend.rsvp.status = "responded";
+					friend.rsvp.guestCount = parseInt(args.guestCount);
+					friend.rsvp.tickets.number = friend.rsvp.guestCount;
+					friend.rsvp.tickets.decision = friend.rsvp.decision;
+					friend.rsvp.tickets.decidedLastDate = friend.rsvp.decidedLastDate;
+				}
 
-			if (typeof args.tickets !== "undefined") {
-				friend.rsvp.tickets.number = parseInt(args.guestCount);
-				friend.rsvp.tickets.decision = args.tickets;
-				friend.rsvp.tickets.decidedLastDate = Date.now();
-			}
+				if (typeof args.tickets !== "undefined") {
+					friend.rsvp.tickets.number = parseInt(args.guestCount);
+					friend.rsvp.tickets.decision = args.tickets;
+					friend.rsvp.tickets.decidedLastDate = Date.now();
+				}
 
-			if (typeof args.restaurant !== "undefined") {
-				friend.rsvp.restaurant.number = parseInt(args.guestCount);
-				friend.rsvp.restaurant.decision = args.restaurant;
-				friend.rsvp.restaurant.decidedLastDate = Date.now();
-			}
+				if (typeof args.restaurant !== "undefined") {
+					friend.rsvp.restaurant.number = parseInt(args.guestCount);
+					friend.rsvp.restaurant.decision = args.restaurant;
+					friend.rsvp.restaurant.decidedLastDate = Date.now();
+				}
 
-			if (typeof args.hotel !== "undefined") {
-				friend.rsvp.hotel.number = parseInt(args.guestCount);
-				friend.rsvp.hotel.decision = args.hotel;
-				friend.rsvp.hotel.decidedLastDate = Date.now();
-			}
+				if (typeof args.hotel !== "undefined") {
+					friend.rsvp.hotel.number = parseInt(args.guestCount);
+					friend.rsvp.hotel.decision = args.hotel;
+					friend.rsvp.hotel.decidedLastDate = Date.now();
+				}
 
-			if (typeof args.parking !== "undefined") {
-				friend.rsvp.parking.number = parseInt(args.guestCount);
-				friend.rsvp.parking.decision = args.parking;
-				friend.rsvp.parking.decidedLastDate = Date.now();
-			}
+				if (typeof args.parking !== "undefined") {
+					friend.rsvp.parking.number = parseInt(args.guestCount);
+					friend.rsvp.parking.decision = args.parking;
+					friend.rsvp.parking.decidedLastDate = Date.now();
+				}
 
-			friend.save(function(err, result) {
-				data.friend = result;
-				console.log('submitRsvp');
-				console.log(data.friend);
-				console.log(result);
-				console.log(err);
-				me(null, data);
+				friend.save(function(err, result) {
+					data.friend = result;
+					console.log('submitRsvp');
+					console.log(data.friend);
+					console.log(result);
+					console.log(err);
+					me(null, data);
+				});
 			});
-		});
 	},
 
 	submitRsvpComplete: function(args, req, res) {
@@ -251,7 +269,7 @@ exports.plan = {
 		});
 	},
 
-submitNotes: function(args, req, res) {
+	submitNotes: function(args, req, res) {
 		var me = this;
 		var data = {
 			success: 1
@@ -271,7 +289,7 @@ submitNotes: function(args, req, res) {
 			if (err) {
 				return me(err);
 			}
-			return me(null,data);
+			return me(null, data);
 		});
 	},
 
@@ -301,18 +319,18 @@ submitNotes: function(args, req, res) {
 			.where('planGuid').equals(req.session.plan.guid)
 			.where('_id').equals(args.friendId)
 			.exec(function(err, friend) {
-			var payment = {
-				amount: args.amount,
-				method: args.method,
-				status: args.status,
-				type: 'outside'
-			};
-			friend.payment.push(payment);
-			friend.save(function(err) {
-				data.friend = friend;
-				me(null, data);
+				var payment = {
+					amount: args.amount,
+					method: args.method,
+					status: args.status,
+					type: 'outside'
+				};
+				friend.payment.push(payment);
+				friend.save(function(err) {
+					data.friend = friend;
+					me(null, data);
+				});
 			});
-		});
 	},
 
 
@@ -343,30 +361,28 @@ submitNotes: function(args, req, res) {
 				.where('planGuid').equals(req.session.plan.guid)
 				.where('_id').equals(f.friendId)
 				.exec(function(err, friend) {
-				/* update the friend and set the payment type: request */
-				var payment = {
-					amount: f.amount,
-					status: 'queued',
-					type: 'request'
-				};
+					/* update the friend and set the payment type: request */
+					var payment = {
+						amount: f.amount,
+						status: 'queued',
+						type: 'request'
+					};
 
-				var p = friend.payment.create(payment);
-				console.log(p);
-				friend.payment.push(p);
-				friend.save(function(err) {
-					wembliMail.sendPonyUpEmail({
-						res: res,
-						req: req,
-						friend: friend,
-						payment: payment,
-					}, function() {
-						callback();
+					var p = friend.payment.create(payment);
+					console.log(p);
+					friend.payment.push(p);
+					friend.save(function(err) {
+						wembliMail.sendPonyUpEmail({
+							res: res,
+							req: req,
+							friend: friend,
+							payment: payment,
+						}, function() {
+							callback();
+						});
 					});
 				});
-			});
 		};
-
-		console.log(args);
 
 		/* get the friend for this customer & plan */
 		async.forEach(args.ponyUpRequests, function(item, callback) {
@@ -374,12 +390,166 @@ submitNotes: function(args, req, res) {
 		}, function() {
 			Friend.find().where('planGuid').equals(req.session.plan.guid)
 				.exec(function(err, friends) {
-				console.log('finished sending pony up request');
-				console.log(err);
-				data.friends = friends;
-				me(null, data);
-			});
+					console.log('finished sending pony up request');
+					console.log(err);
+					data.friends = friends;
+					me(null, data);
+				});
 		});
+	},
+
+	sendPonyUp: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		/* you must be logged in to do this */
+		if (!req.session.customer || !req.session.plan) {
+			data.success = 0;
+			data.error = 'Not Authorized';
+			return me(null, data);
+		}
+		console.log('sendPonyUp for');
+		console.log(args);
+
+		/* perform the balanced transaction and handle errors */
+		/* get the merchant account for the organizer (make sure there is one) */
+		Customer.findById(req.session.plan.organizer.customerId, function(err, organizer) {
+			console.log('organizer: ');
+			console.log(organizer);
+			if (typeof organizer.balancedAPI !== "undefined" && typeof organizer.balancedAPI.merchantAccount !== "undefined") {
+				var onBehalfOf = organizer.balancedAPI.merchantAccount.uri;
+				var amount = parseInt(args.amount * 100);
+				var creditCard = {
+					card_number: args.creditCardNumber,
+					expiration_month: args.expirationDateMonth,
+					expiration_year: args.expirationDateYear,
+					security_code: args.cvv,
+					postal_code: args.postalCode,
+					name: args.name
+				}
+
+				var buyer = {
+					name: req.session.customer.firstName + ' ' + req.session.customer.lastName,
+					email_address: req.session.customer.email,
+					card: creditCard,
+					meta: {
+						customerId: req.session.customer._id
+					}
+				};
+
+				var bAccounts = new balanced.accounts();
+				bAccounts.create(buyer, function(err, res, body) {
+					//TODO: check for error creating customer account with balanced
+					if (err) {
+						console.log(err);
+					}
+					console.log(body);
+					/* save this in our customer document */
+					if (typeof req.session.customer.balancedAPI.customerAccount ==="undefined") {
+						req.session.customer.balancedAPI.customerAccount = {};
+					}
+					req.session.customer.balancedAPI.customerAccount.buyer = body;
+					req.session.customer.markModified('balancedAPI.customerAccount');
+					req.session.customer.save(function(err, c) {
+
+						var debits = new balanced.debits();
+						debits.create(body.debits_uri, {
+							on_behalf_of_uri: onBehalfOf,
+							amount: amount
+						}, function(err, res, transaction) {
+							console.log(err);
+							console.log('debited credit card');
+							console.log(transaction)
+							/* get the friend and add the transaction */
+							var query = {
+								'planId': req.session.plan.id,
+								'planGuid': req.session.plan.guid,
+								'customerId': req.session.customer._id
+							};
+
+							Friend.findOne(query, function(err, friend) {
+								if (err) {
+									data.success = 0;
+									data.dbError = 'unable to find friend';
+									return me(null, data);
+								}
+								data.friend = friend;
+								/* TODO see if the ponyUpRequest can be closed */
+								var payment = {
+									amount: amount,
+									status: 'completed',
+									method: 'creditcard',
+									open: false,
+									type: 'response',
+									transaction: transaction,
+									//TODO: requestId: <id of the payment that this is a response to
+								}
+
+								var p = friend.payment.create(payment);
+								console.log('saving payment');
+								console.log(p);
+								friend.payment.push(p);
+								friend.save(function(err) {
+									/* TODO:
+									wembliMail.sendPonyUpReceipt({
+										res: res,
+										req: req,
+										friend: friend,
+										payment: payment,
+									}, function() {
+										callback();
+									});
+									*/
+									return me(null, data);
+
+								});
+							});
+						});
+					});
+				});
+			}
+		});
+	},
+
+	cancelPonyUpRequest: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		/* you must be logged in as the organizer to do this */
+		if (req.session.customer._id != req.session.plan.organizer.customerId) {
+			console.log(req.session.customer._id);
+			console.log(req.session.plan.organizer.customerId);
+			data.success = 0;
+			data.error = 'Not Authorized';
+			return me(null, data);
+		}
+
+		Friend.findOne()
+			.where('planGuid').equals(req.session.plan.guid)
+			.where('_id').equals(args.friendId)
+			.exec(function(err, friend) {
+				var p = friend.payment.id(args.paymentId);
+				console.log(p);
+				p.status = 'canceled';
+				p.open = false;
+				p.date = Date.now();
+
+				p.save(function(err) {
+					console.log('save updated payment');
+					console.log(err);
+					data.payment = p;
+					friend.save(function(err) {
+						return me(null, data);
+					});
+				});
+			});
+
+
+
 	},
 
 	resendPonyUpEmail: function(args, req, res) {
@@ -400,35 +570,36 @@ submitNotes: function(args, req, res) {
 
 		console.log('resend request to ' + args.friendId + ' for ' + args.amount);
 
-
 		Friend.findOne()
 			.where('planGuid').equals(req.session.plan.guid)
 			.where('_id').equals(args.friendId)
 			.exec(function(err, friend) {
-			var p = friend.payment.id(args.paymentId);
-			console.log(p);
-			p.status = 'queued';
-			p.date = Date.now();
+				var p = friend.payment.id(args.paymentId);
+				console.log(p);
+				p.status = 'queued';
+				p.date = Date.now();
 
-			p.save(function(err) {
-				console.log('save updated payment');
-				console.log(err);
-				wembliMail.sendPonyUpEmail({
-					res: res,
-					req: req,
-					friend: friend,
-					payment: p,
-				}, function(err) {
-					if (err) {
-						console.log('err sending email: '+err);
-						return me(err);
-					}
-					data.payment = p;
-					console.log('successfully resent email');
-					return me(null, data);
+				p.save(function(err) {
+					console.log('save updated payment');
+					console.log(err);
+					wembliMail.sendPonyUpEmail({
+						res: res,
+						req: req,
+						friend: friend,
+						payment: p,
+					}, function(err) {
+						if (err) {
+							console.log('err sending email: ' + err);
+							return me(err);
+						}
+						data.payment = p;
+						console.log('successfully resent email');
+						friend.save(function(err) {
+							return me(null, data);
+						});
+					});
 				});
 			});
-		});
 	},
 
 	removeOutsidePayment: function(args, req, res) {
@@ -452,19 +623,19 @@ submitNotes: function(args, req, res) {
 			.where('planGuid').equals(req.session.plan.guid)
 			.where('_id').equals(args.friendId)
 			.exec(function(err, friend) {
-			var p = friend.payment.id(args.paymentId).remove();
-			console.log(p);
-			friend.save(function(err) {
-				console.log('save removed payment');
-				console.log(err);
-				if (err) {
-					console.log('err removing payment: '+err);
-					return me(err);
-				}
-				console.log('successfully removed payment');
-				return me(null, data);
+				var p = friend.payment.id(args.paymentId).remove();
+				console.log(p);
+				friend.save(function(err) {
+					console.log('save removed payment');
+					console.log(err);
+					if (err) {
+						console.log('err removing payment: ' + err);
+						return me(err);
+					}
+					console.log('successfully removed payment');
+					return me(null, data);
+				});
 			});
-		});
 	},
 
 	submitOrganizerRsvp: function(args, req, res) {
@@ -722,13 +893,12 @@ submitNotes: function(args, req, res) {
 
 					set.purchased = true;
 					set.payment = [{
-							organizer: true,
-							transactionToken: p.transactionToken,
-							customerId: req.session.customer.id,
-							amount: p.total,
-							qty: p.qty
-						}
-					];
+						organizer: true,
+						transactionToken: p.transactionToken,
+						customerId: req.session.customer.id,
+						amount: p.total,
+						qty: p.qty
+					}];
 				}
 
 				ticket = new Ticket(set);

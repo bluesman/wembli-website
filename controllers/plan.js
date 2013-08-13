@@ -1,6 +1,7 @@
 var gg = require('../lib/wembli/google-geocode');
 var wembliModel = require('wembli-model'),
 	Customer = wembliModel.load('customer'),
+	Friend = wembliModel.load('friend'),
 	Plan = wembliModel.load('plan');
 
 module.exports = function(app) {
@@ -57,6 +58,12 @@ module.exports = function(app) {
 		});
 	});
 
+	app.get(/^\/partials\/modals\/friend-dashboard$/, function(req, res) {
+		return res.render('partials/modals/friend-dashboard', {
+			partial: true
+		});
+	});
+
 	app.get(/^\/partials\/plan\/chatter$/, function(req, res) {
 		return res.render('partials/plan/chatter', {
 			partial: true
@@ -92,25 +99,61 @@ module.exports = function(app) {
 
 	});
 
-	/* does this ever get called? */
-	app.get('/plan/:guid', function(req, res) {
-		Plan.findOne({
-			guid: req.param('guid')
-		}, function(err, p) {
+	app.get('/plan/:guid/:section?', function(req, res) {
+
+		if (!req.session.customer) {
+			req.session.redirectUrl = '/plan/' + req.param('guid') + '/' + req.param('section');
+			return res.redirect('/login');
+		}
+
+		/* must make sure that this customer is allowed to view this plan */
+		var foundPlan = function(err, p) {
 			if (!p) {
-				return res.redirect('/');
+				return res.redirect('/dashboard');
 			};
 			req.session.plan = p;
-			res.redirect('/plan');
+			var url = '/plan';
+			if (req.param('section')) {
+				url = url + '#section' + req.param('section');
+			}
+			res.redirect(url);
+		};
+
+		/* is the guid something this customer is planning? */
+		for (var i = 0; i < req.session.customer.plans.length; i++) {
+			var g = req.session.customer.plans[i];
+			if (g === req.param('guid')) {
+				Plan.findOne({
+					guid: req.param('guid')
+				}, foundPlan);
+				break;
+			}
+		};
+
+		/* still here? check if this customer is invited to the plan */
+		Friend.findOne({
+			planGuid: req.param('guid'),
+			customerId: req.session.customer.id
+		}, function(err, f) {
+			if (!f) {
+				return res.redirect('/dashboard');
+			};
+			Plan.findOne({guid:req.param('guid')},foundPlan);
 		});
+
 	});
 
-	app.get('/partials/plan/:guid', function(req, res) {
+	app.get('/partials/plan/:guid/:section?', function(req, res) {
+		if (!req.session.customer) {
+			req.session.redirectUrl = '/plan/' + req.param('guid') + '/' + req.param('section');
+			return res.redirect('/partials/login');
+		}
+
 		Plan.findOne({
 			guid: req.param('guid')
 		}, function(err, p) {
 			if (!p) {
-				return res.redirect('/');
+				return res.redirect('/partials/dashboard');
 			};
 			req.session.plan = p;
 			res.redirect('/partials/plan');

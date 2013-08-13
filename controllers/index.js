@@ -30,7 +30,6 @@ module.exports = function(app) {
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 			});
 		},[args,req,res]);
-
 	});
 
 	app.get('/partials/index', function(req, res) {
@@ -57,6 +56,10 @@ module.exports = function(app) {
 			title: 'wembli.com - Terms & Policies.'
 		});
 
+	});
+
+	app.get('/test-angular', function(req, res) {
+		res.render('test-angular');
 	});
 
 

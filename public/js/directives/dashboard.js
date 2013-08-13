@@ -83,8 +83,34 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
           };
 
           scope.createMerchantAccount = function() {
+            /* validate dob */
+            var error = false;
+            if (!/^\d{2}[-\/]\d{2}[-\/]\d{4}$/.test(scope.createMerchantAccount.dob)) {
+              scope.createMerchantAccount.errorDob = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorDob = false;
+            }
+            if (!/^\d{10}$/.test(scope.createMerchantAccount.phoneNumber)) {
+              scope.createMerchantAccount.errorPhoneNumber = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorPhoneNumber = false;
+            }
+            /* validate routing number */
+            if (!balanced.bankAccount.validateRoutingNumber(scope.createMerchantAccount.routingNumber)) {
+              scope.createMerchantAccount.errorRoutingNumber = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorRoutingNumber = false;
+            }
+
+            if (error) {
+              return;
+            }
+
             /* reformat dob form MM-DD-YYYY to YYYY-MM-DD */
-            var dobAry = scope.createMerchantAccount.dob.split('-');
+            var dobAry = scope.createMerchantAccount.dob.split(/[-\/]/);
             var dob = dobAry[2] + '-' + dobAry[0] + '-' + dobAry[1];
 
             var accountInfo = {

@@ -3,33 +3,31 @@ footer#footer(ng-controller="FooterCtrl")
 	ul#nav
 		//- the id here actually helps build the framesMap which tells sequence which direction to scroll when clicking
 		//- make sure you give every li an id this must correspond with location.href.
-		li#search.wembli-sequence-link(direction="-1")
+		li#search
 			a#nav-search(ng-class="{'/search':'active'}[currentPath]", href="/search")
 				#search-title.segoe
 					i.icon-search
 					span &nbsp;Search
 				.arrow-right
-		li#index.wembli-sequence-link
+		li#index
 			a(href="/") Home
-		li#tickets.wembli-sequence-link(loading-duration="1500")
+		li#tickets
 			a(ng-href="/tickets{{eventLink}}") Tickets
-		li#invitation.wembli-sequence-link
+		li#invitation
 			a(href="/invitation{{eventLink}}") Invite
-		li#parking.wembli-sequence-link
+		li#parking
 			a(href="/parking{{eventLink}}") Parking
-		li#restaurants.wembli-sequence-link
+		li#restaurants
 			a(href="/restaurants{{eventLink}}") Restaurants
-		li#hotels.wembli-sequence-link
+		li#hotels
 			a(href="/hotels{{eventLink}}") Hotels
-		//- if (session.loggedIn)
-		li#dashboard.wembli-sequence-link(ng-show="loggedIn")
+		li#dashboard(ng-show="loggedIn")
 			a(href="/dashboard") Dashboard
-		li#plan.wembli-sequence-link(ng-show="loggedIn && plan")
+		li#plan(ng-show="loggedIn && plan")
 			a(href="/plan") Current Plan
-		//- else
-		li#login.wembli-sequence-link(ng-hide="loggedIn")
+		li#login(ng-hide="loggedIn")
 			a(href="/login") Log in
-		li#signup.wembli-sequence-link(ng-hide="loggedIn")
+		li#signup(ng-hide="loggedIn")
 			a(href="/signup") Sign up
 		li#help
 			i.icon-question-sign.icon-2x.display-popover(trigger="hover",placement="top", title="Click For Help & Feedback", content="Wembli is ALWAYS trying to improve! Click the question mark to get help and provide feedback.", href="#",ng-click="slide()")

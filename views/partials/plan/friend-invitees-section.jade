@@ -4,15 +4,15 @@ section#section4.friend-invitees-section.invitees-section.plan-section
 	.body
 		h3 Find out who else is invited
 		.invitees-container
-			.row.invitee(ng-repeat="friend in friends | filter:!{_id:me._id}")
+			.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:me._id}")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
-				.invitee-info
-					.invitee-name
+				.invitee-info.pull-left
+					.invitee-name.pull-left
 						span.name.orange {{friend.contactInfo.name}}&nbsp;
 						span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
-					.invitee-prefs-container
+					.invitee-prefs-container.pull-left
 						.invitee-pref.first.pull-left
 							.invitee-pref-header RSVP STATUS
 							.invitee-pref-value

@@ -7,10 +7,101 @@
 // In this case it is a simple value service.
 angular.module('wembliApp.services', []).
 
+factory('loadingModal', ['$rootScope',
+	function($rootScope) {
+		var stack = 0;
+		return {
+			title: 'Page Loading',
+			show: function(title, body) {
+				if (title) {
+					this.title = title;
+				}
+				if (body) {
+					this.body = body;
+				}
+
+				/* hide any modals right now */
+				if (stack == 0) {
+					angular.element(".modal").modal("hide");
+				}
+
+				/* show the page loading modal */
+				stack++;
+				angular.element('#generic-loading-modal').modal("show");
+				$rootScope.$broadcast('loading-modal-show');
+			},
+			hide: function() {
+				stack--;
+				if (stack < 1) {
+					stack = 0;
+					/* hide only the generic loading modal */
+					$('#generic-loading-modal').modal("hide");
+				}
+			}
+		}
+	}
+]).
+
+factory('environment', ['$location',
+	function($location) {
+		var env = 'development';
+		if (/www|www2/.test($location.host())) {
+			env = 'production';
+		}
+		return env;
+	}
+]).
+
+/* BALANCED API config settings */
+factory('balancedApiConfig', ['environment',
+	function(environment) {
+		var config = {
+			'development': {
+				'balancedMarketplace': 'TEST-MPlx4ZJIAbA85beTs7q2Omz',
+			},
+			'production': {
+				'balancedMarketplace': 'MP22BmXshSp7Q8DjgBYnKJmi',
+			}
+		};
+
+		var envConfig = config[environment];
+		envConfig.balancedMarketplaceUri = '/v1/marketplaces/' + envConfig.balancedMarketplace;
+		return envConfig;
+	}
+]).
+
+/* ticket network config */
+factory('tnConfig', ['environment',
+	function(environment) {
+		var config = {
+			'development': {
+				'baseUrl': 'https://tickettransaction2.com/Checkout.aspx',
+				'brokerId': 5006,
+				'siteNumber': 0
+			},
+			'production': {
+				'baseUrl': 'https://tickettransaction2.com/Checkout.aspx',
+				'brokerId': 5006,
+				'siteNumber': 0
+			}
+		};
+		var envConfig = config[environment];
+		envConfig.url = envConfig.baseUrl + '?brokerid=' + envConfig.brokerId + '&sitenumber=' + envConfig.siteNumber;
+		return envConfig;
+	}
+]).
+
+/* ticket purchase urls */
+factory('ticketPurchaseUrls', ['tnConfig',
+	function(tnConfig) {
+		return {
+			'tn': tnConfig.url
+		};
+	}
+]).
+
 factory('initRootScope', ['$window', '$rootScope', '$location',
 	function($window, $rootScope, $location) {
-		$rootScope.tnUrl = 'https://tickettransaction2.com/Checkout.aspx?brokerid=5006&sitenumber=0';
-
 		$rootScope.partial = false; //partial starts as false, indicating the the full page was loaded from server without any ajax partials
 		//init some scope vars
 		$rootScope.currentPath = $window.location.pathname;
@@ -25,9 +116,6 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 		$rootScope.genericLoadingModal.header = 'Patience Young Grasshopper...';
 
 		$rootScope.sequenceCompleted = true;
-
-		$rootScope.balancedMarketplace = (/tom/.test($location.host())) ? 'TEST-MPlx4ZJIAbA85beTs7q2Omz' : 'MP22BmXshSp7Q8DjgBYnKJmi';
-		$rootScope.balancedMarketplaceUri = '/v1/marketplaces/' + $rootScope.balancedMarketplace;
 
 		//templates can't make a date for some reason
 		$rootScope.getDate = function(d) {
@@ -51,7 +139,6 @@ factory('pluralizeWords', [
 		return {
 			'person': function(number) {
 				return (number == 1) ? 'person' : 'people';
-
 			},
 			'ticket': function(number) {
 				return (number == 1) ? 'ticket' : 'tickets';
@@ -63,12 +150,68 @@ factory('pluralizeWords', [
 	}
 ]).
 
-factory('planNav', [
-	function() {
+factory('planNav', ['$timeout', '$rootScope', '$location',
+	function($timeout, $rootScope, $location) {
 		var self = this;
 		self.sectionsCount = 0;
+		self.sectionsLoaded = -1;
+		self.scrollToSection = 1;
+		var planNav = {
+			init: function(sectionsCount) {
+				console.log('watch for section-loaded event');
+				var dereg = $rootScope.$on('section-loaded', function(e, data) {
+					self.sectionsLoaded++;
+					console.log('sections loaded: ' + self.sectionsLoaded);
+					if (self.sectionsLoaded == sectionsCount) {
+						/* all the sections are loaded */
+						self.sectionsLoaded = -1;
+						console.log('all sections loaded');
 
-		return {
+						/* setup the scroll handler for each of the sections */
+						angular.element('#content').on('scroll', function() {
+
+							for (var i = 1; i <= sectionsCount; i++) {
+								/* if the previous section has scrolled halfway
+								 * and this section is not more off the screen than half the height of the section
+								 * then highlight the left nav for this element
+								 */
+								var sectionNum = i;
+								var currentId = '#section' + sectionNum;
+								var prevId = '#section' + sectionNum--;
+								var h = $(currentId).height();
+								var prevHeight = ($(prevId).height() / 2);
+								var t = $(currentId).offset().top;
+								if (t <= prevHeight && t > -(h / 2)) {
+									/*
+									 * if the section nav that is active is not the one that should be active
+									 * then make that section in active
+									 */
+									if ($('.plan-section-nav.active').attr('id') !== 'nav-section' + i) {
+										$('.plan-section-nav.active').removeClass('active');
+										$('#nav-section' + i).addClass('active');
+									}
+								}
+							}
+						});
+
+						$('.plan-section-nav').removeClass('active');
+						$('#nav-section' + (self.scrollToSection)).addClass('active');
+
+						$timeout(function() {
+							console.log('hide page loading modal');
+							$('#page-loading-modal').modal("hide");
+							planNav.scrollTo(self.scrollToSection);
+						}, 1000);
+
+						dereg();
+					}
+				});
+
+			},
+			setScrollToSection: function(sectionNumber) {
+				console.l
+				self.scrollToSection = sectionNumber;
+			},
 			setSectionsCount: function(cnt) {
 				self.sectionsCount = cnt;
 				return cnt;
@@ -85,15 +228,18 @@ factory('planNav', [
 					var h = $('#section' + i).height();
 					height += parseInt($('#section' + i).height());
 				};
-				console.log('animating');
+
+				console.log('scrollToSection ' + sectionNumber);
 				$('#content').animate({
 					scrollTop: (height - 10)
 				}, 1000, 'easeOutBack');
 			}
 		};
+		return planNav;
 	}
 ]).
 
+/* plan.fetch sets plan and isLoggedIn in the $rootScope and calls customer.set() which sets customer in the root scope */
 factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 	function($rootScope, wembliRpc, customer, $timeout) {
 		var self = this;
@@ -106,7 +252,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 			get: function(callback) {
 				if (callback) {
 					if (self.plan) {
-						$rootScope.plan = self.plan;
 						callback(self.plan);
 					} else {
 						self.getStack++;
@@ -115,13 +260,11 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 							if (self.getStack == 0) {
 								dereg();
 							}
-							$rootScope.plan = self.plan;
 							callback(self.plan);
 						});
 						this.fetch();
 					}
 				} else {
-					$rootScope.plan = self.plan;
 					return self.plan;
 				}
 			},
@@ -134,7 +277,9 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 			},
 			setFriends: function(friends) {
 				self.friends = friends;
+				return self.friends;
 			},
+
 			getFriends: function() {
 				return self.friends;
 			},
@@ -152,11 +297,26 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 				return self.feed;
 			},
 
+			setFeed: function(feed) {
+				self.feed = feed;
+				return self.feed;
+			},
+
 			getOrganizer: function() {
 				return self.organizer;
 			},
 
+			setOrganizer: function(o) {
+				self.organizer = o;
+				return self.organizer;
+			},
+
 			getContext: function() {
+				return self.context;
+			},
+
+			setContext: function(c) {
+				self.context = c;
 				return self.context;
 			},
 
@@ -196,34 +356,33 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 				}
 				self.fetchInProgress = true;
 				wembliRpc.fetch('plan.init', args,
-				//response
+					//response
 
-				function(err, result) {
-					if (typeof result.plan !== "undefined") {
-						$rootScope.plan = result.plan;
-						self.plan = result.plan;
-						self.friends = result.friends;
-						self.tickets = result.tickets;
-						self.organizer = result.organizer;
-						self.context = result.context;
-						self.feed = result.feed;
-					}
+					function(err, result) {
+						if (typeof result.plan !== "undefined") {
+							$rootScope.plan = result.plan;
+							self.plan = result.plan;
+							self.friends = result.friends;
+							self.tickets = result.tickets;
+							self.organizer = result.organizer;
+							self.context = result.context;
+							self.feed = result.feed;
+						}
 
-					if (typeof result.loggedIn !== "undefined") {
-						$rootScope.loggedIn = result.loggedIn;
-					}
+						if (typeof result.loggedIn !== "undefined") {
+							$rootScope.loggedIn = result.loggedIn;
+						}
 
-					if (typeof result.customer !== "undefined" && result.customer) {
-						customer.set(result.customer);
-						$rootScope.customer = result.customer;
-					}
-					self.fetchInProgress = false;
-					$rootScope.$broadcast('plan-fetched', {});
-					if (callback) {
-						callback(self);
-					}
+						if (typeof result.customer !== "undefined" && result.customer) {
+							customer.set(result.customer);
+						}
+						self.fetchInProgress = false;
+						$rootScope.$broadcast('plan-fetched', {});
+						if (callback) {
+							callback(self);
+						}
 
-				});
+					});
 			},
 
 			poll: function(callback) {
@@ -254,25 +413,25 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 			submitRsvp: function(rsvpFor, args, callback) {
 				args.rsvpFor = rsvpFor;
 				wembliRpc.fetch('plan.submitRsvp', args, function(err, result) {
-					$('#generic-loading-modal').modal("hide");
-					if (callback) {
-						return callback(err, result);
-					}
-				},
+						$('#generic-loading-modal').modal("hide");
+						if (callback) {
+							return callback(err, result);
+						}
+					},
 
-				function(data, headersGetter) {
+					function(data, headersGetter) {
 
-					$rootScope.genericLoadingModal.header = 'Saving...';
-					$('#page-loading-modal').modal("hide");
-					$('#generic-loading-modal').modal("show");
-					return data;
-				},
+						$rootScope.genericLoadingModal.header = 'Saving...';
+						$('#page-loading-modal').modal("hide");
+						$('#generic-loading-modal').modal("show");
+						return data;
+					},
 
-				/* transformResponse */
+					/* transformResponse */
 
-				function(data, headersGetter) {
-					return JSON.parse(data);
-				});
+					function(data, headersGetter) {
+						return JSON.parse(data);
+					});
 			},
 
 			/* is rsvp complete:
@@ -346,7 +505,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 	}
 ]).
 
-factory('customer', ['$rootScope', '$q',
+factory('customer', ['$rootScope',
 	function($rootScope) {
 		var self = this;
 		self.customer = null;
@@ -357,7 +516,7 @@ factory('customer', ['$rootScope', '$q',
 			},
 
 			set: function(customer) {
-				self.customer = customer;
+				$rootScope.customer = self.customer = customer;
 				/* broadcast that customer was updated */
 				$rootScope.$broadcast('customer-changed', self.customer);
 				return self.customer;
@@ -369,10 +528,6 @@ factory('customer', ['$rootScope', '$q',
 factory('fetchModals', ['$rootScope', '$location', '$http', '$compile',
 	function($rootScope, $location, $http, $compile) {
 
-		/* put stuff in here to load a modal everytime for a given url - i'm not using this */
-		var modalPageMap = {
-			//'/invitation': ['/partials/invite-friends-wizard'],
-		};
 		var modalFetched = {};
 		var modalFetchInProgress = null;
 
@@ -386,8 +541,8 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile',
 			};
 		};
 
-		var fetchPartial = function(path, partialUrl, callback) {
-			modalFetchInProgress = path;
+		var fetchPartial = function(partialUrl, callback) {
+			modalFetchInProgress = partialUrl;
 
 			$http({
 				method: 'get',
@@ -396,7 +551,7 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile',
 			}).success(function(data, status, headers, config) {
 				$('body').prepend($compile(data)($rootScope));
 
-				modalFetched[path] = $('body :first-child').attr('id');
+				modalFetched[partialUrl] = $('body :first-child').attr('id');
 				modalFetchInProgress = null;
 
 				if (callback) {
@@ -432,24 +587,13 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile',
 					return;
 				}
 
-
-				if (typeof modalPageMap[pathKey] !== "undefined") {
-					for (var i = 0; i < modalPageMap[pathKey].length; i++) {
-						//if the modal has already been fetched, don't fetch it again but do fire the broadcast
-						fetchPartial(path, modalPageMap[pathKey][i], callback);
-					}
-					return;
-				}
-
 				if (/^\/partials/.test(path)) {
-					/* modalPageMap has no key for this url - try to just fetch ot */
-					return fetchPartial(path, path, callback);
+					return fetchPartial(path, callback);
 				}
 			}
 		};
 	}
 ]).
-
 
 factory('googleMap', ['$rootScope',
 	function($rootScope) {
@@ -718,14 +862,14 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 						self.auth = response.authResponse;
 						/* send the accessToken to wembli to auto log in */
 						wembliRpc.fetch('facebook.setAccessToken', {
-							accessToken: response.authResponse.accessToken
-						},
+								accessToken: response.authResponse.accessToken
+							},
 
-						function(err, result) {
-							if (err) {
-								return false;
-							}
-						});
+							function(err, result) {
+								if (err) {
+									return false;
+								}
+							});
 					} else {
 						self.auth = false;
 					}
@@ -805,13 +949,13 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc',
 			tweet: function(args, cb) {
 				wembliRpc.fetch('twitter.tweet', args,
 
-				function(err, result) {
-					if (err) {
-						return cb(err);
-					}
-					$rootScope.$broadcast('twitter-tweet', {});
-					cb(err, result);
-				});
+					function(err, result) {
+						if (err) {
+							return cb(err);
+						}
+						$rootScope.$broadcast('twitter-tweet', {});
+						cb(err, result);
+					});
 
 			},
 
@@ -822,31 +966,31 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc',
 			getLoginStatus: function() {
 				wembliRpc.fetch('twitter.getLoginStatus', {},
 
-				function(err, result) {
-					if (err) {
-						return false;
-					}
-					self.auth = result.loginStatus;
-					$rootScope.$broadcast('twitter-login-status', {
-						auth: self.auth
+					function(err, result) {
+						if (err) {
+							return false;
+						}
+						self.auth = result.loginStatus;
+						$rootScope.$broadcast('twitter-login-status', {
+							auth: self.auth
+						});
 					});
-				});
 			},
 
 			searchUsers: function(q, args, callback) {
 				wembliRpc.fetch('twitter.searchUsers', {
-					q: q,
-					args: args
-				},
+						q: q,
+						args: args
+					},
 
-				function(err, result) {
-					if (err) {
-						callback(false);
-					}
-					self.friends = $filter('orderBy')(result.friends, '+name');
-					self.allFriends = self.friends;
-					callback(result);
-				});
+					function(err, result) {
+						if (err) {
+							callback(false);
+						}
+						self.friends = $filter('orderBy')(result.friends, '+name');
+						self.allFriends = self.friends;
+						callback(result);
+					});
 			},
 
 			getFriends: function() {
@@ -856,14 +1000,14 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc',
 			fetchFriends: function(callback) {
 				wembliRpc.fetch('twitter.getFriends', {},
 
-				function(err, result) {
-					if (err) {
-						callback(false);
-					}
-					self.friends = result.friends.users;
-					self.allFriends = result.friends.users;
-					callback(result);
-				});
+					function(err, result) {
+						if (err) {
+							callback(false);
+						}
+						self.friends = result.friends.users;
+						self.allFriends = result.friends.users;
+						callback(result);
+					});
 			},
 
 			fetchProfile: function() { /* wembliRpc call to get twitter user info */ },
@@ -1061,15 +1205,13 @@ factory('footer', ['initRootScope', '$rootScope', '$location',
 	}
 ]).
 
-factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
-	function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc) {
-		var slidePage = {
+factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc', 'loadingModal',
+	function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc, loadingModal) {
+		return {
 			direction: -1,
 			frame: 1,
 			loadingDuration: 500,
 			getDirection: function() {
-				console.log('getting direction from slidePage');
-				console.log('direction is ' + this.direction);
 				return this.direction;
 			},
 			setDirection: function(direction) {
@@ -1088,15 +1230,13 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 				return this.loadingDuration;
 			},
 			slide: function(e, newUrl, oldUrl, callback) {
-				console.log('newUrl: '+newUrl);
-				console.log('oldUrl: '+oldUrl);
-				console.log('location hash: '+ $location.hash());
+				console.log('sliding page');
+				console.log(newUrl);
+				console.log(oldUrl);
 				/* if either new or old has a hash tag and the urls are otherwise the same the gtfo */
 				if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
 					if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
-						return plan.fetch(function() {
-
-						});
+						return;
 					}
 				}
 
@@ -1106,13 +1246,10 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 				$rootScope.sequenceCompleted = false;
 
 				/* interactive-venue-map seems to disrespect template no-cache */
-				$templateCache.removeAll();
-
-				/* hide any modals right now */
-				$(".modal").modal("hide");
+				/* $templateCache.removeAll(); */
 
 				/* show the page loading modal */
-				$('#page-loading-modal').modal("show");
+				loadingModal.show('Patience Young Grasshopper...', 'When you can take the pebble from my hand, it will be time for you to leave.');
 
 				/* init some defaults */
 				var args = {
@@ -1128,20 +1265,15 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 				/* if newUrl === oldUrl then its the same page */
 				var samePage = (newUrl === oldUrl);
 
-				/* fetchModals for this new path */
-				fetchModals.fetch(path);
-				console.log('http args: ');
-				console.log(args);
 				/* fetch the partial */
 				$http(args).success(function(data, status, headers, config) {
 					var headerFunc = headers;
 					/* fetch the plan once we have the html */
-					plan.fetch(function(planObj) {
+					plan.get(function(p) {
 						var headers = headerFunc();
 
 						/* if the server tells us explicitly what the location should be, set it here: */
 						if (typeof headers['x-wembli-location'] !== "undefined") {
-							console.log('server said to update location to '+ headers['x-wembli-location']);
 							//have to comment this out right now because this causes the page to reload :(
 							$location.path(headers['x-wembli-location']);
 							/* if x-location comes back and its the same as $location.path() - don't slide */
@@ -1149,10 +1281,9 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 						}
 
 						if (samePage) {
-							console.log('staying on the same page - dont slide');
-							$(".modal").modal("hide");
 							angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
 							$rootScope.$emit('viewContentLoaded', {});
+							loadingModal.hide();
 							return callback();
 						}
 
@@ -1200,21 +1331,16 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 						me.setDirection(direction);
 
 						/* compile the page we just fetched and link the scope */
-						angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));
+						console.log('compile the page we just fetched and attach to the right frame');
+						var frameNode = angular.element('#frame' + nextFrameID);
+						var frameHtml = $compile(data)($rootScope);
+						frameNode.html(frameHtml);
 
 						/* should this go before the compile? or after? */
 						$rootScope.$emit('viewContentLoaded', {});
 
 						/* do the animations */
 						sequence.goTo(nextFrameID, direction);
-
-						/* dismiss any modals once the page loads */
-						sequence.ready(function() {
-							$timeout(function() {
-								console.log('hide the page loading modal');
-								angular.element('#page-loading-modal').modal("hide");
-							}, me.getLoadingDuration());
-						});
 
 						$('#content').scrollTop(0);
 						$('#content').css('overflow', 'visible');
@@ -1230,6 +1356,14 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 						//update the currentPath and the currentFrame
 						$rootScope.currentPath = $location.path();
 						$rootScope.currentFrame = nextFrameID;
+
+						/* dismiss any modals once the page loads */
+						sequence.ready(function() {
+							$timeout(function() {
+								loadingModal.hide();
+							}, me.getLoadingDuration());
+						});
+
 						return callback();
 					});
 
@@ -1241,7 +1375,6 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 
 			}
 		}
-		return slidePage;
 	}
 ]).
 

@@ -1,0 +1,40 @@
+#pony-up-modal.pony-up-modal.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Secure Credit Card Payment
+	.modal-body
+		p This is a secure 128-bit SSL Transaction.  explain fees if any
+		form.pony-up-modal-form(ng-submit="sendPonyUp()")
+			.pony-up-alert.alert.alert-warning(ng-show="error")
+				.icon-warning-sign.icon-2x.pull-left
+				.text.pull-left Shoot! We did something wrong. Try again and if the problem persists, contact us!
+			.pony-up-alert.alert.alert-warning(ng-show="formError")
+				.icon-warning-sign.icon-2x.pull-left
+				.text.pull-left Please make sure you've supplied a valid amount for the mes you are requesting to pony up.
+			.pony-up-alert.alert.alert-success(ng-show="success")
+				.icon-ok-sign.icon-2x.pull-left
+				.text.pull-left.one-line Giddyup! We successfully sent yer pony up requests.
+			fieldset
+				label Pony Up Amount
+				.input-prepend(ng-class="{false:'muted'}[ponyUpRequest.open]")
+					span.add-on $
+					input.me-pony-up-amount(type="text",ng-init="ponyUp.amount=ponyUpRequest.amount",ng-model="ponyUp.amount")
+				label Card Holder Name
+				input(name="card_holder_name",ng-model="ponyUp.cardHolderName")
+				label Credit Card Number
+				input(name="credit_card_number",ng-model="ponyUp.creditCardNumber")
+				label Expiration Date - Month
+				input(name="expiration_date_month", ng-model="ponyUp.expirationDateMonth")
+				label Expiration Date - Year
+				input(name="expiration_date_year", ng-model="ponyUp.expirationDateYear")
+				label CVV
+				input(name="cvv", ng-model="ponyUp.cvv")
+				label Postal Code
+				input(name="postal_code", ng-model="ponyUp.postalCode")
+				.send-pony-up-button-container.clearfix
+					button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(type="submit",ng-hide="sendPonyUpInProgress")
+						.icon.icon-money.pull-left
+						span &nbsp;Send Pony Up!
+					button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(ng-show="sendPonyUpInProgress", disabled)
+						.icon.icon-cog.icon-spin.pull-left
+						span &nbsp;Send Pony Up!

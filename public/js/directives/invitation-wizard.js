@@ -69,8 +69,15 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
         };
 
         $scope.finished = function() {
-          $location.hash('');
+          if (!$scope.customer.email) {
+            $scope.signup.noContinue = true;
+            return $scope.gotoStep('step1');
+          }
+          console.log('email: ');
+          console.log($scope.customer.email);
+          $location.hash('#no-slide');
           $location.path('/plan');
+          $('#invitation-modal').modal("hide");
         };
 
 
@@ -401,7 +408,7 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
           plan.addFriend(addFriendArgs, function(err, result) {
             $('#invitation-modal').modal('loading');
 
-            /* If There's A No Cust Error Send Them Back To Step-1 With An Error */
+
             if (result.noCustomer) {
               $scope.signup.noContinue = true;
               return $scope.gotoStep('step1');

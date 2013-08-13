@@ -1,7 +1,7 @@
-#plan-frame
-	- var nav = planNav(req.session.visitor.context)
+- var nav = planNav(req.session.visitor.context)
+#plan-frame.init-plan-nav(sections="#{nav.length}")
 	#left
-		plan-nav(sections="#{nav.length}")
+		plan-nav
 	#middle.plan-dashboard
 		- if (req.session.visitor.context === 'organizer')
 			#plan-dashboard.organizer-plan-dashboard

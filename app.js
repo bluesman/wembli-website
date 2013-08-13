@@ -1,24 +1,25 @@
 console.log('started in ' + process.env.NODE_ENV + ' mode...');
 
-var express = require('express'),
-	date = require('./public/js/lib/date.format'),
-	redis = require('connect-redis')(express),
-	everyauth = require('everyauth'),
-	wemblirpc = require('./lib/wembli/jsonrpc'),
-	fs = require('fs');
+var date = require('./public/js/lib/date.format');
+var express = require('express');
+var redis = require('connect-redis')(express);
+var everyauth = require('everyauth');
+var wemblirpc = require('./lib/wembli/jsonrpc');
+var fs = require('fs');
 
-//init the log file
+/* init the log file - there is already an nginx access log */
 var access_logfile = fs.createWriteStream('./logs/access.log', {
 	flags: 'a'
 });
-//init the app
+
+/* init the app */
 app = module.exports = express();
 
-//static helper functions
+/* static helper functions */
 app.locals = require('./static-helpers.js');
 
-//app.settings
-app.set('host', 'beta');
+/* app.settings */
+app.set('host', 'www2');
 app.set('secure', false);
 app.set('autoIndex', false); //tell mongoose not to do autoIndex in produciton
 
@@ -30,6 +31,8 @@ if (process.env.NODE_ENV == 'development') {
 
 if (process.env.NODE_ENV == 'www2') {
 	app.set('host', 'www2');
+
+	/* temporarily set env to development */
 	process.env.NODE_ENV = 'development';
 }
 
@@ -42,9 +45,9 @@ if (process.env.NODE_ENV == 'development') {
 	app.set('twitAppSecret', 'PUdQVzslAATiRCFhTXetmjbaFGoWIM092bSkuulFdk');
 	app.set('tnUrl', 'tn.wembli.com');
 	app.set('autoIndex', true);
-	app.set('balancedSecret','0b50f03cb15a11e28537026ba7d31e6f');
-	app.set('balancedMarketplace','Test-mplx4zjiaba85bets7q2omz');
-	app.set('balancedMarketplaceUri','/v1/marketplaces/TEST-MPlx4ZJIAbA85beTs7q2Omz');
+	app.set('balancedSecret', '0b50f03cb15a11e28537026ba7d31e6f');
+	app.set('balancedMarketplace', 'Test-mplx4zjiaba85bets7q2omz');
+	app.set('balancedMarketplaceUri', '/v1/marketplaces/TEST-MPlx4ZJIAbA85beTs7q2Omz');
 }
 
 if (process.env.NODE_ENV == 'secure-www2') {
@@ -52,13 +55,15 @@ if (process.env.NODE_ENV == 'secure-www2') {
 	app.set('secure', true);
 	app.set('host', 'www2');
 	app.set('tnUrl', 'tn.wembli.com');
-	app.set('balancedSecret','42e01b00b15e11e29523026ba7c1aba6');
-	app.set('balancedMarketplace','MP22BmXshSp7Q8DjgBYnKJmi');
-	app.set('balancedMarketplaceUri','/v1/marketplaces/MP22BmXshSp7Q8DjgBYnKJmi');
+	app.set('balancedSecret', '42e01b00b15e11e29523026ba7c1aba6');
+	app.set('balancedMarketplace', 'MP22BmXshSp7Q8DjgBYnKJmi');
+	app.set('balancedMarketplaceUri', '/v1/marketplaces/MP22BmXshSp7Q8DjgBYnKJmi');
 
 }
-console.log(app.settings);
-//init the openauth thing
+
+//console.log(app.settings);
+
+/* init the openauth thing */
 var wembliEveryauth = require('./lib/wembli/everyauth.js');
 wembliEveryauth.init(everyauth);
 app.set('fbAppId', wembliEveryauth.conf.fb.appId);
@@ -93,7 +98,9 @@ app.use(express.session({
 	key: 'wembli.sid',
 	secret: '@$!#SCDFdsa',
 	store: new redis,
-	cookie: { expires: new Date(Date.now() + 86400000 * 7) }
+	cookie: {
+		expires: new Date(Date.now() + 86400000 * 7)
+	}
 }));
 app.use(express.bodyParser());
 app.use(require('./lib/wembli/visitor'));
@@ -106,14 +113,15 @@ app.set('controllers', __dirname + '/controllers');
 app.set('view engine', 'jade');
 app.use(express.methodOverride());
 app.use(require('./lib/wembli/secure'));
+
 /* remember this happens before the controller runs :( */
 app.use(function(req, res, next) {
-	res.locals.req      = req;
-	res.locals.res      = res;
-	res.locals.params   = req.params;
-	res.locals.session  = req.session;
-	res.locals.ipinfo   = req.session.ipinfo;
-	res.locals.visitor  = req.session.visitor;
+	res.locals.req = req;
+	res.locals.res = res;
+	res.locals.params = req.params;
+	res.locals.session = req.session;
+	res.locals.ipinfo = req.session.ipinfo;
+	res.locals.visitor = req.session.visitor;
 	res.locals.customer = req.session.customer;
 	next();
 });
@@ -151,19 +159,6 @@ require('./controllers/confirm')(app);
 
 //this is last so individual controllers can override
 require('./controllers/partials')(app);
-
-/* going to rewrite these
-require('./controllers/plan')(app);
-require('./controllers/dashboard')(app);
-require('./controllers/events')(app);
-require('./controllers/event-builder')(app);
-require('./controllers/friends')(app);
-require('./controllers/hotels')(app);
-require('./controllers/parking')(app);
-require('./controllers/restaurants')(app);
-require('./controllers/callback/sendgrid')(app);
-require('./controllers/callback/paypal')(app);
-*/
 
 console.log('listening on port: ' + port);
 if (!module.parent) app.listen(port);

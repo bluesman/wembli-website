@@ -8,9 +8,12 @@
 	.modal-footer
 		.progress.progress-striped.active
 			.bar(style="width:100%")
-#generic-loading-modal.modal.hide
-	.modal-header
-		h2 {{genericLoadingModal.header}}
-	.modal-body
-		.progress.progress-striped.active
-			.bar(style="width:100%")
+loading-modal
+	#generic-loading-modal.modal.hide
+		.modal-header
+			h2 {{loadingModal.title}}
+		.modal-body(ng-show="loadingModal.body")
+			p {{loadingModal.body}}
+		.modal-footer
+			.progress.progress-striped.active
+				.bar(style="width:100%")

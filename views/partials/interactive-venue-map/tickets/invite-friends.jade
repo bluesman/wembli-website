@@ -11,5 +11,6 @@ ul#buy-now-container.ticket-list-container.hide
 	p Knowing how many tickets are available will help you know how many people you can invite.
 	img(src="/images/tickets-preview-wembliman.png")
 	.controls.clearfix
-		a.invite-friends-button.btn.btn-orange.btn-large.wembli-sequence-link.pull-left(href="/event-options/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="1") Invite Friends
+		a.invite-friends-button.btn.btn-orange.btn-large.pull-left(ng-show="plan.friends[0]", href="/plan") Back To Plan
+		a.invite-friends-button.btn.btn-orange.btn-large.pull-left(ng-hide="plan.friends[0]", href="/event-options/{{plan.event.eventId}}/{{plan.event.eventName}}") Invite Friends
 		a.change-payment-preference.pull-left(target="_self",href="/start-plan/split-after?next=/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I hate waiting - I want to buy tickets now.  Friends can pony up later.

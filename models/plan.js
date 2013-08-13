@@ -232,8 +232,6 @@ this.Model = function(mongoose) {
 		this.findOne({guid: guid}, callback);
 	};
 
-
-
 	try {
 		return mongoose.model('plan');
 	} catch(e) {

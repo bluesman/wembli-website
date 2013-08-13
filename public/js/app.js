@@ -14,33 +14,40 @@ angular.module('wembliApp', [
   function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
   }
-])
-  .run(['initRootScope', '$rootScope', '$location', '$route', '$window', 'fetchModals', 'slidePage', 'facebook', 'twitter', 'plan', 'wembliRpc',
-  function(initRootScope, $scope, $location, $route, $window, fetchModals, slidePage, facebook, twitter, plan, wembliRpc) {
+]).run(['balancedApiConfig', '$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'fetchModals', 'slidePage', 'facebook', 'twitter', 'plan', 'wembliRpc',
+  function(balancedApiConfig, $timeout, initRootScope, $scope, $location, $route, $window, fetchModals, slidePage, facebook, twitter, plan, wembliRpc) {
     /* just fetch the plan right away */
     plan.fetch(function() {});
 
     /* slide pages using sequence when location changes */
     $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
       if (newUrl === oldUrl) {
-        console.log('location changed but its the same');
         return;
       }
-      console.log('LOCATION CHANGED! '+newUrl);
+      console.log('loation hash: ');
+      console.log($location.hash());
+      if ($location.hash() === '#no-slide') {
+        $location.hash('');
+        return;
+      }
       /* slide the page in if necessary */
-      slidePage.slide(e, newUrl, oldUrl, function() {
-        /* log this click in keen.io */
-        wembliRpc.fetch('analytics.addEvent', {
-          collection: 'view',
-          url: newUrl,
-          direction: slidePage.getDirection(),
-          frame: slidePage.getFrame()
+      $timeout(function() {
+        slidePage.slide(e, newUrl, oldUrl, function() {
+          /* log this click in keen.io */
+          wembliRpc.fetch('analytics.addEvent', {
+            collection: 'view',
+            url: newUrl,
+            direction: slidePage.getDirection(),
+            frame: slidePage.getFrame()
+          });
         });
       });
     });
 
     /* init the balanced js api for payments */
-    balanced.init($scope.balancedMarketplaceUri);
+    $timeout(function() {
+      balanced.init(balancedApiConfig.balancedMarketplaceUri);
+    });
 
     $window.fbAsyncInit = function() {
       FB.init({

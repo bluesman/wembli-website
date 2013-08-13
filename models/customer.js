@@ -119,6 +119,7 @@ this.Model = function(mongoose) {
 		});
 	};
 
+	/* get all the plans this customer is organizing */
 	Customer.methods.getPlans = function(callback) {
 		var c = this;
 		console.log('getting customer plans where customer id: ' + c.id);
@@ -158,6 +159,7 @@ this.Model = function(mongoose) {
 		});
 	};
 
+	/* get all the plans this customer is invited to */
 	Customer.methods.getInvitedPlans = function(callback) {
 		var c = this;
 		console.log('getting plans this customer was invited to: ' + c.id);
@@ -357,17 +359,6 @@ this.Model = function(mongoose) {
 		}
 
 	};
-
-	Customer.statics.findPlanByGuid = function(guid, callback) {
-		//get plan by guid and set it in the session
-		var query = this.findOne({});
-		query.where('eventplan').elemMatch(function(elem) {
-			elem.where('config.guid', guid);
-			elem.$ne('config.deleted', true);
-		});
-		query.exec(callback);
-	};
-
 
 	Customer.methods.fullName = function() {
 		return this.first_name + ' ' + this.last_name

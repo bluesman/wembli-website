@@ -91,44 +91,51 @@
 				.alert.alert-info.clearfix
 					.pull-left Wembli is 100% safe and secure. In order to collect money from your friends, you will need to provide your bank account information.
 					a.btn.btn-info.btn-small.pull-right(href="#pony-up-info",data-toggle="modal") Learn More
-				form#create-merchant-account-form.form-horizontal(novalidate, name="createMerchantAccountForm")
+				form#create-merchant-account-form.form-horizontal(ng-submit="createMerchantAccount()", name="createMerchantAccountForm")
 					fieldset
-						#error
-							.error-text(ng-show="createMerchantAccount.error") {{createMerchantAccount.error}}
 						legend Account Holder Information:
+						.account-info-alert.alert.alert-warning.clearfix(ng-show="createMerchantAccount.errorDob")
+							.icon-warning-sign.pull-left
+							.text.pull-left Date of Birth should follow this format: MM-DD-YYYY.
+						.account-info-alert.alert.alert-warning.clearfix(ng-show="createMerchantAccount.errorPhoneNumber")
+							.icon-warning-sign.pull-left
+							.text.pull-left Please enter a valid, 10 digit phone number.
 						.control-group
 							label.control-label Full Name
 							.controls
-								input(ng-model="createMerchantAccount.accountHolderName",value="",placeholder="Account Holder Name",name="accountHolderName",required)
+								input(type="text",ng-model="createMerchantAccount.accountHolderName",value="",placeholder="Account Holder Name",name="accountHolderName",required)
 						.control-group
 							label.control-label Date Of Birth
 							.controls
-								input(ng-model="createMerchantAccount.dob",value="",placeholder="MM-DD-YYYY",name="dob",required)
+								input(type="text",ng-model="createMerchantAccount.dob",value="",placeholder="MM-DD-YYYY",name="dob",required)
 						.control-group
 							label.control-label Phone Number
 							.controls
-								input(ng-model="createMerchantAccount.phoneNumber", value="",name="phoneNumber", placeholder="Phone Number",required)
+								input.format-phone-number(maxlength="10",type="text",ng-model="createMerchantAccount.phoneNumber", value="",name="phoneNumber", placeholder="Phone Number",required)
 						.control-group
 							label.control-label Street Address
 							.controls
-								input(ng-model="createMerchantAccount.streetAddress", value="",name="streetAddress", placeholder="Street Address",required)
+								input(type="text",ng-model="createMerchantAccount.streetAddress", value="",name="streetAddress", placeholder="Street Address",required)
 						.control-group
 							label.control-label Postal Code
 							.controls
-								input(ng-model="createMerchantAccount.postalCode", value="",name="postalCode", placeholder="Postal Code",required)
+								input.format-postal-code(type="text",ng-model="createMerchantAccount.postalCode", value="",name="postalCode", placeholder="Postal Code",required)
 						legend Bank Account Information:
+						.bank-account-info-alert.alert.alert-warning.clearfix(ng-show="createMerchantAccount.errorRoutingNumber")
+							.icon-warning-sign.pull-left
+							.text.pull-left Invalid Routing Number.
 						.control-group
 							label.control-label Account Name
 							.controls
-								input(ng-model="createMerchantAccount.accountName", name="accountName", placeholder="Account Name",required)
+								input(type="text",ng-model="createMerchantAccount.accountName", name="accountName", placeholder="Account Name",required)
 						.control-group
 							label.control-label Routing Number
 							.controls
-								input(ng-model="createMerchantAccount.routingNumber", name="routingNumber", placeholder="Routing Number",required)
+								input(type="text",ng-model="createMerchantAccount.routingNumber", name="routingNumber", placeholder="Routing Number",required)
 						.control-group
 							label.control-label Account Number
 							.controls
-								input(ng-model="createMerchantAccount.accountNumber", name="accountNumber", placeholder="Account Number",required)
+								input(type="text",ng-model="createMerchantAccount.accountNumber", name="accountNumber", placeholder="Account Number",required)
 						.control-group
 							label.control-label Account Type
 							.controls
@@ -139,7 +146,7 @@
 										option(value="savings") SAVINGS
 						.control-group
 							.controls
-								button.btn.btn-primary(ng-click="createMerchantAccount()") Create Account
+								button.btn.btn-primary(ng-disabled="createMerchantAccountForm.$invalid",type="submit") Create Account
 
 
 

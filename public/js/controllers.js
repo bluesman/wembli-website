@@ -17,32 +17,10 @@ function InviteFriendsWizardCtrl($scope) {
  * Index Controller
  */
 
-function IndexCtrl($scope, $location, $window, $templateCache, wembliRpc, fetchModals) {
-	//clear the cache when the home page loads to make sure we start fresh
-	$templateCache.removeAll();
-
-	/*
-	$scope.startPlan = function() {
-			if ($location.path() !== '/index') {
-				$location.path('/index');
-			}
-		$('#payment-type-modal').modal('show');
-	}
-
-	$scope.$on('payment-type-modal-fetched', function(e, args) {
-		if ($location.hash() === "payment-type-modal") {
-			console.log('path'+$location.path());
-			$('#payment-type-modal').modal('show');
-		}
-	});
-	*/
-
-	/* this doesn't do anything right now
-	wembliRpc.fetch('index.init', {},
-	function(err, result) {
-
-	});
-	*/
+function IndexCtrl($scope, $templateCache) {
+	/* clear the cache when the home page loads to make sure we start fresh */
+	/* taking this out for now - i'd like to be able to cache some things */
+	/* $templateCache.removeAll(); */
 };
 
 /*
@@ -51,8 +29,6 @@ function IndexCtrl($scope, $location, $window, $templateCache, wembliRpc, fetchM
 
 function ConfirmCtrl($scope, wembliRpc) {
 	wembliRpc.fetch('confirm.init', {},
-	//response
-
 	function(err, result) {
 		$scope.emailError = result.emailError;
 		$scope.resent = result.resent;
@@ -113,7 +89,7 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchMo
  * Event List Controller
  */
 
-function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, fetchModals) {
+function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, fetchModals, loadingModal, $timeout) {
 	/* does nothing right now
 	wembliRpc.fetch('eventlist.init', {},
 	function(err, result) {
@@ -149,7 +125,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 		//response callback
 
 		function(err, result) {
-			console.log('back from event.search');
+			console.log('back from '+method);
 			if (err) {
 				//handle err
 				alert('error happened - contact help@wembli.com');
@@ -160,22 +136,20 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 				$scope.events = [];
 			}
 			$scope.events = $scope.events.concat(result['event']);
-			console.log($scope.events);
 			var d = new Date($scope.events[$scope.events.length - 1].Date);
 			$scope.lastEventDate = $filter('date')(d, "MM-dd-yy");
 			$scope.lastEventId = $scope.events[$scope.events.length - 1].ID;
+			$timeout(function() {
+				loadingModal.hide();
+			},500);
 		},
 
 		function(data, headersGetter) {
-			$('#page-loading-modal').modal("hide");
-			$rootScope.genericLoadingModal.header = 'Loading Event Search...';
-			$('#generic-loading-modal').modal("show");
+			loadingModal.show('Loading Event Search...');
 			return data;
 		},
 
 		function(data, headersGetter) {
-			console.log('hide generic loading modal');
-			$('#generic-loading-modal').modal("hide");
 			return JSON.parse(data);
 		});
 
@@ -198,8 +172,6 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 	$rootScope.partial = true;
 };
 
-
-
 /*
  * Event Controller
  */
@@ -207,7 +179,8 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 function EventCtrl($scope) {};
 
 
-function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, mapInfoWindowContent) {
+function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, mapInfoWindowContent, loadingModal) {
+	loadingModal.show('Finding Parking...',null);
 	/* get the spots for this lat long and display them as markers */
 	/*
 	var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
@@ -417,8 +390,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, m
 				return;
 			}
 
-			$('#generic-loading-modal').modal("hide");
-
 			console.log('results from event.getParking');
 			$timeout(function() {
 				$scope.$apply(function() {
@@ -470,15 +441,11 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, m
 			$("#quantity-filter").change(function() {
 				filterParking();
 			});
+			loadingModal.hide();
 		},
 		/* transformRequest */
 
 		function(data, headersGetter) {
-
-			$rootScope.genericLoadingModal.header = 'Finding Parking...';
-			$('#page-loading-modal').modal("hide");
-			console.log('show generic modal');
-			$('#generic-loading-modal').modal("show");
 			return data;
 		},
 
@@ -514,13 +481,31 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, m
 	});
 };
 
-function PaymentTypeModalCtrl($scope) {
+function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 	$scope.$on('payment-type-modal-clicked', function(e, args) {
 		$scope.$apply(function() {
 			$scope.name = args.name;
 			$scope.nextLink = args.nextLink;
 		});
 	});
+
+	$scope.startPlan = function() {
+		console.log('call start plan');
+		console.log('paymentType: '+$scope.paymentType);
+		console.log('nextLink: '+ $scope.nextLink);
+
+		/* start the plan */
+		wembliRpc.fetch('plan.startPlan',{payment:$scope.paymentType}, function(err, result) {
+			console.log('result from start plan');
+			console.log(result);
+			plan.fetch(function() {
+
+			$location.path($scope.nextLink);
+			});
+
+
+		})
+	};
 };
 
 function SearchCtrl($scope) {};
@@ -771,7 +756,9 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 
 
 
-function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer) {
+function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurchaseUrls) {
+	$scope.tnUrl = ticketPurchaseUrls.tn;
+
 	/* get the login modal */
 	fetchModals.fetch('/partials/tickets-login-modal');
 
@@ -898,11 +885,11 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer) {
 
 };
 
-function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc) {
+function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+	$scope.tnUrl = ticketPurchaseUrls.tn;
+
 	plan.get(function(p) {
 		$scope.$on('tickets-login-clicked', function(e, args) {
-			console.log('ticketslogin clicked');
-			console.log(args);
 			$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
 			$scope.ticket = args.ticket;
 		});
@@ -915,12 +902,10 @@ function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 				lastName: $scope.lastName,
 				email: $scope.email
 			}, function(err, result) {
-				console.log(result);
-
 				if (result.customer) {
-					console.log('returned a customer - im logged in!');
 					/* hide this modal and display the tickets offsite modal */
-					$scope.customer = result.customer;
+					//$scope.customer = result.customer;
+					customer.set(result.customer);
 				}
 
 				if (result.loggedIn) {
@@ -964,7 +949,6 @@ function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 				email: $scope.email,
 				password: $scope.password
 			}, function(err, result) {
-				console.log(result);
 				if (result.error) {
 					$scope.loginError = result.error;
 
@@ -975,9 +959,8 @@ function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 					}
 				}
 				if (result.customer) {
-					console.log('returned a customer im logged in!');
 					/* hide this modal and display the tickets offsite modal */
-					$scope.customer = result.customer;
+					customer.set(result.customer);
 				}
 
 				if (result.loggedIn) {
@@ -1008,7 +991,6 @@ function TicketsOffsiteCtrl($scope, plan) {
 
 	$scope.submitForm = function() {
 		if ($scope.ticketGroup === null) {
-			console.log('no ticket group :(');
 			return;
 		}
 
@@ -1033,8 +1015,10 @@ function TicketsOffsiteCtrl($scope, plan) {
 
 };
 
-function VenueMapCtrl($scope, interactiveMapDefaults, plan, $filter, customer, wembliRpc) {
-	plan.get(function(p) {
+function VenueMapCtrl($rootScope, $scope, interactiveMapDefaults, plan, $filter, customer, wembliRpc) {
+	plan.fetch(function(result) {
+		var p = result.plan;
+		$scope.plan = p;
 		$scope.priceRange = {};
 		$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;
 		$scope.priceRange.low = p.preferences.tickets.priceRange.low || true;

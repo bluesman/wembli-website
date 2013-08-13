@@ -15,6 +15,11 @@ section#section2.friend-rsvp-section.rsvp-section.plan-section
 						span(ng-show="guestCountPlural") People&nbsp;
 						span(ng-hide="guestCountPlural") Person&nbsp;
 						span (including yourself).
+				.payment-type-note
+					strong ** Note:&nbsp;
+					span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
+					span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has chosen to foot the bill for this plan - W00t!
+					span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the rsvp's are in, {{organizer.firstName}} will lock in the tickets then send a link for everyone to pay for their portion of the outing.
 			.info-container.pull-right
 				.info
 					.row.first-row
@@ -38,11 +43,6 @@ section#section2.friend-rsvp-section.rsvp-section.plan-section
 						h3.pull-left Rsvp Date:
 						.data.pull-left(ng-show="plan.rsvpDate") {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
 						.data.pull-left(ng-hide="plan.rsvpDate") TBD
-		.payment-type-note
-			strong ** Note:&nbsp;
-			span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
-			span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has chosen to foot the bill for this plan - W00t!
-			span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the rsvp's are in, {{organizer.firstName}} will lock in the tickets then send a link for everyone to pay for their portion of the outing.
 		.section-bottom
 			.total-coming.pull-left
 				.header
@@ -59,4 +59,4 @@ section#section2.friend-rsvp-section.rsvp-section.plan-section
 			.next-wrapper.pull-right
 				.img
 					img(src="/images/cartoon-man-megaphone1.png")
-				button#next-section2.btn.btn-orange.btn-large.scroll-to Next
+				button#next-section3.btn.btn-orange.btn-large.scroll-to Next

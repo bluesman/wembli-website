@@ -8632,8 +8632,11 @@ body {
 }
 #tickets-frame section {
   text-align: left;
-  width: 98%;
+  padding: 0 20px 20px;
+  position: relative;
+  z-index: 1;
   margin: auto;
+  background-color: #ffffff;
 }
 #tickets-frame section .header h1 {
   width: 100%;
@@ -8647,9 +8650,11 @@ body {
   font-size: 1.25em;
 }
 #tickets-frame #map-background {
+  position: absolute;
+  bottom: 0px;
   overflow: hidden;
   text-align: center;
-  position: absolute;
+  float: left;
   width: 68%;
   height: 100%;
 }
@@ -8713,9 +8718,8 @@ body {
 #tickets-frame #map-background .ZoomControls {
   position: absolute;
   left: 75px;
-  top: 6px;
+  top: 120px;
   width: 35px;
-  z-index: 10;
   color: #ffffff;
   font-weight: bold;
 }
@@ -8742,7 +8746,7 @@ body {
 }
 #tickets-frame #map-background #groups-container {
   position: absolute;
-  bottom: 20px;
+  bottom: 120px;
   left: 20px;
 }
 #tickets-frame #tickets-invite-friends {
@@ -10204,89 +10208,89 @@ a#facebook-login-button {
   font-weight: bold;
   width: 200px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee {
   margin: 0 30px 40px 0;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .img-container {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .img-container {
   width: 75px;
   text-align: center;
   line-height: 12px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .img-container .rsvp-for {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .img-container .rsvp-for {
   font-size: .8em;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info {
   margin-left: 10px;
   width: 80%;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container {
   *zoom: 1;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:before,
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:after {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:after {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:before,
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:after {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container:after {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
   clear: both;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref {
   width: 20%;
   text-align: center;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-header {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-header {
   text-transform: uppercase;
   color: #767676;
   font-style: italic;
   margin: 10px 5px;
   font-size: 14px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .icon {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .icon {
   height: 45px;
   line-height: 45px;
   vertical-align: middle;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .dollar-sign {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .dollar-sign {
   font-size: 30px;
   height: 45px;
   line-height: 45px;
   vertical-align: middle;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list {
   text-align: left;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-header {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-header {
   color: #d8d6d7;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .icon {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .icon {
   color: #d8d6d7;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .dollar-sign {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .dollar-sign {
   color: #d8d6d7;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .first {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .first {
   text-align: left;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-prefs-container .first i {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .first i {
   margin-left: 25px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-name {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name {
   height: 24px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-name .name {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .name {
   font-size: 24px;
 }
-#plan-frame #middle #plan-dashboard .invitees-container .row.invitee .invitee-info .invitee-name .guests {
+#plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .guests {
   font-weight: bold;
 }
 #plan-frame #middle #plan-dashboard .itinerary-section .body {
@@ -10363,7 +10367,7 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container {
   top: 375px;
   left: 610px;
-  min-height: 300px;
+  min-height: 280px;
   background-color: #ffffff;
 }
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container {
