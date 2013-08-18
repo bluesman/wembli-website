@@ -10225,6 +10225,7 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container {
   *zoom: 1;
+  width: 100%;
 }
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {

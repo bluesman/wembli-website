@@ -26,8 +26,8 @@ module.exports = function(app) {
 				/* tell keenio that a facebook friend was invited */
 				var d = {
 					event: 'invited',
-					service: friend.contactInfo.service,
-					friendId: friend._id
+					service: f.contactInfo.service,
+					friendId: f._id
 				};
 				keen.addEvent('rsvp', d, req, res, function(err, result) {
 					return res.send(200);

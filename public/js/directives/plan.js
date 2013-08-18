@@ -237,13 +237,12 @@ directive('infoSlideDownLabel', [
   }
 ]).
 
-directive('planDashboard', ['$rootScope', '$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav',
-  function($rootScope, $window, $location, wembliRpc, plan, customer, pluralize, fetchModals, planNav) {
+directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav',
+  function($timeout, $rootScope, $window, $location, wembliRpc, plan, customer, pluralize, fetchModals, planNav) {
     return {
       restrict: 'C',
       replace: true,
       cache: true,
-      scope: true,
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
 
@@ -289,22 +288,33 @@ directive('planDashboard', ['$rootScope', '$window', '$location', 'wembliRpc', '
             }
           };
 
-          plan.get(function(p) {
-            $scope.plan = p;
-            $scope.organizer = plan.getOrganizer();
-            $scope.tickets = plan.getTickets();
-            $scope.friends = plan.getFriends();
+          var reloadPlan = function() {
+            plan.get(function(p) {
+              $scope.plan = p;
+              $scope.organizer = plan.getOrganizer();
+              $scope.tickets = plan.getTickets();
+              $scope.friends = plan.getFriends();
 
-            /* get the friend that is this customer */
-            for (var i = 0; i < $scope.friends.length; i++) {
-              if ($scope.friends[i].customerId === customer.get().id) {
-                $scope.me = $scope.friends[i];
-                console.log('scope.me set');
-              }
-            };
+              /* get the friend that is this customer */
+              for (var i = 0; i < $scope.friends.length; i++) {
+                if ($scope.friends[i].customerId === customer.get().id) {
+                  $scope.me = $scope.friends[i];
+                  console.log('scope.me set');
+                }
+              };
+              console.log('reloadplan into scope:');
+              console.log($scope.tickets);
+            });
+          };
 
+          $rootScope.$on('plan-tickets-changed', function(e, ticketGroup) {
+            plan.fetch(function(result) {
+              reloadPlan();
+              $rootScope.$broadcast('foo-test');
+            });
           });
 
+          reloadPlan();
         }
       ],
       compile: function(element, attr, transclude) {
@@ -494,6 +504,11 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
             $scope.plan = plan.get();
             $scope.calcTotalComing();
           });
+
+          /* update the rsvp date when it changes */
+          $scope.$on('plan-rsvp-changed', function(e, rsvpDate) {
+            $scope.plan.rsvpDate = rsvpDate;
+          });
         }
       ],
       compile: function(element, attr, transclude) {
@@ -636,16 +651,26 @@ directive('organizerRsvpSection', ['$rootScope', 'planNav', 'plan',
   }
 ]).
 
-directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls',
-  function($rootScope, ticketPurchaseUrls) {
+directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan',
+  function($rootScope, ticketPurchaseUrls, plan) {
     return {
       restrict: 'E',
       cache: false,
       replace: true,
-      scope: true,
       templateUrl: '/partials/plan/cart-section',
+      controller: ['$scope', '$element', '$attrs', '$transclude',
+        function($scope, $element, $attrs, $transclude, $timeout) {
+          $scope.$on('foo-test', function(e) {
+            console.log('foo-test called');
+            console.log($scope.tickets);
+          });
+
+
+        }
+      ],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
+          console.log('init cart section');
           scope.tnUrl = ticketPurchaseUrls.tn;
           $rootScope.$broadcast('section-loaded');
         };
@@ -1488,6 +1513,12 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
               scope.me.rsvp.hotel.decision = false;
             }
 
+            console.log('toggle inputs!!!');
+            scope.toggleInputs('parking', scope.me.rsvp.parking.decision);
+            scope.toggleInputs('restaurant', scope.me.rsvp.restaurant.decision);
+            scope.toggleInputs('hotel', scope.me.rsvp.hotel.decision);
+
+
           }
 
           fetchModals.fetch('/partials/modals/friend-dashboard', function() {
@@ -1619,7 +1650,7 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
                   if (!$scope.ponyUp.amount) {
                     $scope.ponyUp = {};
                     $scope.ponyUp.amount = p.amount;
-                    $scope.ponyUp.cardHolderName = $scope.customer.firstName +' '+$scope.customer.lastName;
+                    $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
                   }
                   console.log('ponyUp Scope');
                   console.log($scope.ponyUp);

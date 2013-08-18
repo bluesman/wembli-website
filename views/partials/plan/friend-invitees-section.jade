@@ -9,7 +9,7 @@ section#section4.friend-invitees-section.invitees-section.plan-section
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
 				.invitee-info.pull-left
-					.invitee-name.pull-left
+					.invitee-name
 						span.name.orange {{friend.contactInfo.name}}&nbsp;
 						span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} guest(s)
 					.invitee-prefs-container.pull-left

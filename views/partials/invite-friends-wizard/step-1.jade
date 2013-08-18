@@ -18,6 +18,7 @@ form#invite-wizard-signup-form.invite-wizard-step1-form(name="signup",ng-show="s
 			input.first-name.pull-left(required, ng-model="customer.firstName", placeholder="YOUR FIRST NAME",type="text",name="firstName")
 			input.last-name.pull-left(required, ng-model="customer.lastName",placeholder="YOUR LAST NAME",type="text",name="lastName")
 			input.email(required, type="email",ng-model="customer.email",placeholder="YOUR EMAIL ADDRESS",name="email")
+		button.submit-step.btn.btn-primary.btn-large(ng-click="submitSignup()") Continue
 		.switch-login
 			a(ng-click="showForm('showLoginForm','showSignupForm')",href="#",ng-hide="customer.id") Already have an account? Click here to log in.
 	.form-controls()

@@ -97,6 +97,8 @@ directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$
               ticketGroup: ticket,
             }, function(err, result) {
               scope.plan = result.plan;
+              console.log('plan-tickets-changed event called');
+              $rootScope.$broadcast('plan-tickets-changed',ticket);
             });
           });
         }
@@ -244,7 +246,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               options.OnInit = function(e, MapType) {
                 $(".ZoomIn").html('+');
                 $(".ZoomOut").html('-');
-                $(".tuMapControl").parent("div").attr('style', "position:absolute;left:5px;top:120px;font-size:12px");
+                $(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
                 loadingModal.hide()
               };
 
