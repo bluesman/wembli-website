@@ -1848,8 +1848,8 @@ directive('planFeed', ['plan', '$timeout', 'wembliRpc',
     - delete a comment
  */
 
-directive('planChatter', ['wembliRpc', '$rootScope',
-  function(wembliRpc, $rootScope) {
+directive('planChatter', ['$timeout', 'wembliRpc', '$rootScope',
+  function($timeout, wembliRpc, $rootScope) {
     return {
       restrict: 'E',
       replace: true,
@@ -1866,16 +1866,27 @@ directive('planChatter', ['wembliRpc', '$rootScope',
               $scope.createChatterInProgress = false;
             });
           }
-        }
+        };
+
       },
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
+          /*
           scope.chatterLoading = true;
           wembliRpc.fetch('chatter.get', {}, function(err, results) {
             scope.chatters = results.chatters;
             scope.chatterLoading = false;
             $rootScope.$broadcast('section-loaded');
           });
+  */
+        (function tick() {
+          wembliRpc.fetch('chatter.get', {}, function(err, results) {
+            scope.chatters = results.chatters;
+            $timeout(tick, 3000);
+          });
+        })();
+
+
         };
       }
     }

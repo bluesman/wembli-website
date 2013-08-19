@@ -295,6 +295,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               $('#venue-map-container').css("height", $($window).height() - 60);
               $('#tickets').css("height", $($window).height() - 60);
               $('#venue-map-container').css("width", $($window).width() - 480);
+              console.log('making tuMap');
               $('#venue-map-container').tuMap(options);
               $('.price-slider').slider({
                 range: true,

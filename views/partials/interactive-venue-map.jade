@@ -1,5 +1,6 @@
 - plan = req.session.plan
 #interactive-venue-map.clearfix(ng-controller="VenueMapCtrl")
+	- console.log('visitor context: '+visitor.context)
 	- var include = 'buy-now';
 	- if (visitor.context === 'organizer')
 		- if (plan.preferences.payment === 'split-first')
@@ -12,9 +13,12 @@
 		- else
 			- include = 'buy-now'
 			- header = "Choose Tickets To Buy"
-	- else
-		- include = 'invite-friends'
+	- else if(visitor.context === 'friend')
 		- header = "See What Tickets Are Available";
+		- include = 'read-only'
+	- else
+		- header = "See What Tickets Are Available";
+		- include = 'invite-friends'
 	section
 		.header.clearfix
 			h1.pull-left #{header}
@@ -32,6 +36,8 @@
 			include interactive-venue-map/tickets/add-to-plan
 		- if (include == 'buy-now')
 			include interactive-venue-map/tickets/buy-now
+		- if (include == 'read-only')
+			include interactive-venue-map/tickets/read-only
 
 
 
