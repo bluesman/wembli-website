@@ -171,6 +171,8 @@ this.Model = function(mongoose) {
 				console.log('this id '+id+' was not already in plan.'+key+' so adding it');
 				p[key].push(id);
 				p.markModified(key);
+				console.log('about to save plan--------------');
+				console.log(p);
 				p.save(callback);
 			} else {
 				callback();

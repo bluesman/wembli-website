@@ -774,6 +774,7 @@ exports.plan = {
 				console.log('saved friend: ' + friend.id);
 				console.log(friend);
 				/* now add the friend to the plan */
+				console.log(req.session.plan);
 				req.session.plan.addFriend(friend, function(err) {
 					if (err) {
 						console.log(err);

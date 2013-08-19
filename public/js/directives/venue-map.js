@@ -91,14 +91,13 @@ directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           element.click(function(e) {
+            console.log('clicked add tickets');
             var ticket = JSON.parse(attr.ticket);
             ticket.selectedQty = attr.quantity;
             wembliRpc.fetch('plan.addTicketGroup', {
               ticketGroup: ticket,
             }, function(err, result) {
-              scope.plan = result.plan;
-              console.log('plan-tickets-changed event called');
-              $rootScope.$broadcast('plan-tickets-changed',ticket);
+
             });
           });
         }
@@ -133,7 +132,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
         return function(scope, element, attr) {
             /* don't cache this partial - cache:false doesn't do it */
           $templateCache.remove("/partials/interactive-venue-map");
-
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
               $('#venue-map-container').tuMap("Refresh", "Reset");

@@ -237,17 +237,15 @@ directive('infoSlideDownLabel', [
   }
 ]).
 
-directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav',
-  function($timeout, $rootScope, $window, $location, wembliRpc, plan, customer, pluralize, fetchModals, planNav) {
+directive('planDashboard', ['$rootScope', '$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav',
+  function($rootScope, $window, $location, wembliRpc, plan, customer, pluralize, fetchModals, planNav) {
     return {
       restrict: 'C',
       replace: true,
-      cache: true,
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
-
+          console.log('start plan dashboard controller');
           $scope.calcTotalComing = function() {
-            console.log('recalc total coming');
             $scope.totalComing = 0;
             $scope.friendsComing = [];
             $scope.totalPoniedUp = 0;
@@ -288,7 +286,7 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
             }
           };
 
-          var reloadPlan = function() {
+          plan.fetch(function(results) {
             plan.get(function(p) {
               $scope.plan = p;
               $scope.organizer = plan.getOrganizer();
@@ -302,19 +300,17 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                   console.log('scope.me set');
                 }
               };
-              console.log('reloadplan into scope:');
               console.log($scope.tickets);
             });
-          };
-
-          $rootScope.$on('plan-tickets-changed', function(e, ticketGroup) {
+          });
+          /*
+          $scope.$on('plan-tickets-changed', function(e, ticketGroup) {
             plan.fetch(function(result) {
               reloadPlan();
               $rootScope.$broadcast('foo-test');
             });
           });
-
-          reloadPlan();
+          */
         }
       ],
       compile: function(element, attr, transclude) {
@@ -340,7 +336,6 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
     return {
       restrict: 'C',
       replace: true,
-      cache: true,
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
           console.log('controller running for organizer plan dashboard');
@@ -655,17 +650,15 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan',
   function($rootScope, ticketPurchaseUrls, plan) {
     return {
       restrict: 'E',
-      cache: false,
       replace: true,
       templateUrl: '/partials/plan/cart-section',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
+          console.log('SETTING SCOPE ON FOO TEST');
           $scope.$on('foo-test', function(e) {
             console.log('foo-test called');
             console.log($scope.tickets);
           });
-
-
         }
       ],
       compile: function(element, attr, transclude) {

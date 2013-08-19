@@ -92,10 +92,10 @@ module.exports = function(app) {
 };
 
 function getBeginDate() {
-	var daysPadding = 2; //how many days from today for the beginDate
+	var daysPadding = 3; //how many days from today for the beginDate
 	var d = Date.today();
 	d2 = new Date(d);
-	d2.setDate(d.getDate() + 2);
+	d2.setDate(d.getDate() + daysPadding);
 	//format the beginDate for the tn query
 	return d2.format("shortDate");
 }

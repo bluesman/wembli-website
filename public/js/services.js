@@ -247,7 +247,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 		self.tickets = null;
 		self.fetchInProgress = false;
 		self.getStack = 0;
-
+		self.fetchStack = 0;
 		return {
 			get: function(callback) {
 				if (callback) {
@@ -340,6 +340,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 
 			//get plan from server and return it
 			fetch: function(args, callback) {
+				console.log('CALLING FETCH');
 				if (typeof callback === "undefined") {
 					callback = args;
 					args = {};
@@ -347,8 +348,12 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 
 				if (self.fetchInProgress) {
 					if (callback) {
+						self.fetchStack++;
 						var dereg = $rootScope.$on('plan-fetched', function() {
-							dereg();
+							self.fetchStack--;
+							if (self.fetchStack == 0) {
+								dereg();
+							}
 							callback(self);
 						});
 					}
@@ -359,6 +364,8 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 					//response
 
 					function(err, result) {
+				console.log('BACK FROM FETCH');
+
 						if (typeof result.plan !== "undefined") {
 							$rootScope.plan = result.plan;
 							self.plan = result.plan;
@@ -1246,7 +1253,7 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 				$rootScope.sequenceCompleted = false;
 
 				/* interactive-venue-map seems to disrespect template no-cache */
-				/* $templateCache.removeAll(); */
+				$templateCache.removeAll();
 
 				/* show the page loading modal */
 				loadingModal.show('Patience Young Grasshopper...', 'When you can take the pebble from my hand, it will be time for you to leave.');

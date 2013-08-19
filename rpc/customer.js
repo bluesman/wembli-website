@@ -571,7 +571,20 @@ exports.customer = {
 					req.session.customer = c;
 					req.session.rememberEmail = c.email;
 					data.customer = c;
-					return me(null, data);
+
+					/* save the plan in the session */
+					if (req.session.plan) {
+						req.session.plan.save(function(err) {
+							Plan.findById(req.session.plan._id,function(err, plan) {
+								req.session.plan = plan;
+							return me(null, data);
+
+							})
+						});
+					} else {
+						return me(null, data);
+					}
+
 				}
 
 				if (typeof c.password === "undefined") {
