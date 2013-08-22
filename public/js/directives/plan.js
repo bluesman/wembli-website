@@ -111,6 +111,97 @@ directive('rsvpFor', ['$rootScope',
   }
 ]).
 
+directive('createAccountModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
+  function($rootScope, pluralize, wembliRpc, plan) {
+    return {
+      restrict: 'C',
+      cache: false,
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+
+          scope.createBalancedAccount = function() {
+            /* validate dob */
+            var error = false;
+            if (!/^\d{2}[-\/]\d{2}[-\/]\d{4}$/.test(scope.createMerchantAccount.dob)) {
+              scope.createMerchantAccount.errorDob = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorDob = false;
+            }
+            if (!/^\d{10}$/.test(scope.createMerchantAccount.phoneNumber)) {
+              scope.createMerchantAccount.errorPhoneNumber = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorPhoneNumber = false;
+            }
+            /* validate routing number */
+            if (!balanced.bankAccount.validateRoutingNumber(scope.createMerchantAccount.routingNumber)) {
+              scope.createMerchantAccount.errorRoutingNumber = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorRoutingNumber = false;
+            }
+
+            if (error) {
+              return;
+            }
+
+            /* reformat dob form MM-DD-YYYY to YYYY-MM-DD */
+            var dobAry = scope.createMerchantAccount.dob.split(/[-\/]/);
+            var dob = dobAry[2] + '-' + dobAry[0] + '-' + dobAry[1];
+
+            var accountInfo = {
+              name: scope.createMerchantAccount.accountHolderName,
+              dob: dob,
+              phoneNumber: scope.createMerchantAccount.phoneNumber,
+              streetAddress: scope.createMerchantAccount.streetAddress,
+              postalCode: scope.createMerchantAccount.postalCode,
+              bankAccount: {
+                name: scope.createMerchantAccount.accountName,
+                accountNumber: scope.createMerchantAccount.accountNumber,
+                routingNumber: scope.createMerchantAccount.routingNumber,
+                type: scope.createMerchantAccount.accountType
+              }
+            }
+            console.log('accountinfo for createMerchantAccount');
+            console.log(accountInfo);
+            /*
+              this is the balanced js client lib - it doesn't let you do much..we don't want to just create a bank account
+              we want to create a merchant account..for that we have to do it server side
+              balanced.bankAccount.create(bankAccountData, handleCreateMerchant);
+            */
+
+            wembliRpc.fetch('customer.createMerchantAccount', accountInfo, function(err, result) {
+              if (err) {
+                alert('something bad happened contact help@wembli.com');
+              }
+              /* back from creating merchant account */
+              console.log('created merchant account');
+              console.log(result);
+
+              $('#generic-loading-modal').modal("hide");
+              $rootScope.$broadcast('bank-account-created', result);
+              $('#create-account-modal').modal('hide');
+            }, function(data, headersGetter) {
+
+              $rootScope.genericLoadingModal.header = 'Securely saving your information...';
+              $('#page-loading-modal').modal("hide");
+              console.log('show generic modal');
+              $('#generic-loading-modal').modal("show");
+              return data;
+
+            }, function(data, headersGetter) {
+              return JSON.parse(data);
+            });
+
+          };
+
+        };
+      }
+    }
+  }
+]).
+
 directive('rsvpForModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
   function($rootScope, pluralize, wembliRpc, plan) {
     return {
@@ -272,10 +363,10 @@ directive('planDashboard', ['$rootScope', '$window', '$location', 'wembliRpc', '
                 for (var j = 0; j < $scope.friends[i].payment.length; j++) {
                   var p = $scope.friends[i].payment[j];
                   if (p.type !== 'request') {
-                    $scope.friends[i].totalPoniedUp += parseFloat(p.amount);
+                    $scope.friends[i].totalPoniedUp += p.amount;
                   }
                 };
-                $scope.totalPoniedUp += $scope.friends[i].totalPoniedUp;
+                $scope.totalPoniedUp += parseFloat($scope.friends[i].totalPoniedUp).toFixed(2);
               }
             };
 
@@ -672,8 +763,8 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan',
   }
 ]).
 
-directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeout',
-  function($rootScope, plan, wembliRpc, $timeout) {
+directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeout', 'customer',
+  function($rootScope, plan, wembliRpc, $timeout, customer) {
     return {
       restrict: 'E',
       cache: false,
@@ -840,7 +931,7 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
                     wembliRpc.fetch('plan.resendPonyUpEmail', {
                       'friendId': f._id,
                       'paymentId': p._id,
-                      'amount': p.amount
+                      'amount': parseInt(p.amount * 100),
                     }, function(err, result) {
 
                       if (err) {
@@ -870,6 +961,13 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
 
           $scope.sendPonyUpEmail = function() {
             console.log('trying to send pony up email');
+
+            /* check if they have an account - if not throw a modal to collect account info */
+            if ((typeof customer.get().balancedAPI === "undefined") || (typeof customer.get().balancedAPI.bankAccounts === "undefined")) {
+              $('#create-account-modal').modal('show');
+              return;
+            }
+
             $scope.sendPonyUpInProgress = true;
             $scope.error = $scope.formError = $scope.success = false;
             /* get all the friends that have sendponyup checked and get the amounts */
@@ -880,7 +978,7 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
                 if (f.ponyUp.amount > 0) {
                   var d = {
                     'friendId': f._id,
-                    'amount': parseFloat(f.ponyUp.amount).toFixed(2)
+                    'amount': parseInt(f.ponyUp.amount * 100)
                   };
                   ponyUpRequests.push(d);
                 } else {
@@ -935,6 +1033,11 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
               $scope.paymentTotals();
             });
           };
+
+          var dereg = $scope.$on('bank-account-created', function(e) {
+            $scope.sendPonyUpEmail();
+            dereg();
+          });
 
           /*
             sum all the type: requests
@@ -1640,7 +1743,7 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
                 if (p.type === 'request' && p.open) {
                   /* found a pony up request */
                   $scope.ponyUpRequest = p;
-                  if (!$scope.ponyUp.amount) {
+                  if (!$scope.ponyUp || !$scope.ponyUp.amount) {
                     $scope.ponyUp = {};
                     $scope.ponyUp.amount = p.amount;
                     $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
@@ -1672,15 +1775,15 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
               var p = me.payment[j];
               if (p.type == 'request') {
                 if (p.status !== 'canceled') {
-                  requested += parseFloat(p.amount);
+                  requested += parseInt(p.amount)/100;
                 }
               } else {
-                paid += parseFloat(p.amount);
+                paid += parseInt(p.amount)/100;
               }
             }
-            me.payment.requested = requested;
-            me.payment.received = received;
-            me.payment.balance = requested - received;
+            me.payment.requested = parseFloat(requested).toFixed(2);
+            me.payment.received = parseFloat(received).toFixed(2);
+            me.payment.balance = parseFloat(requested - received).toFixed(2);
             console.log(me);
 
           }
@@ -1708,32 +1811,35 @@ directive('ponyUpModal', ['$rootScope', 'wembliRpc', 'plan',
             console.log(ponyUp);
             //$scope.ponyUp = JSON.parse(ponyUp);
             scope.ponyUp = ponyUp;
-
-            scope.sendPonyUp = function() {
-              console.log('trying to send pony up');
-              scope.sendPonyUpInProgress = true;
-              scope.error = scope.formError = scope.success = false;
-              scope.sendPonyUpInProgress = false;
-
-              wembliRpc.fetch('plan.sendPonyUp', scope.ponyUp, function(err, result) {
-                if (err) {
-                  console.log('error');
-                  console.log(err);
-                  scope.error = true;
-                  return;
-                }
-
-                if (!result.success) {
-                  scope.error = true;
-                  return;
-                }
-                scope.success = true;
-                console.log('result from send ponyup');
-                console.log(result);
-                $rootScope.$broadcast('pony-up-success', result.friend);
-              });
-            };
           });
+          scope.sendPonyUp = function() {
+            console.log('trying to send pony up');
+            scope.sendPonyUpInProgress = true;
+            scope.error = scope.formError = scope.success = false;
+
+            wembliRpc.fetch('plan.sendPonyUp', scope.ponyUp, function(err, result) {
+              scope.sendPonyUpInProgress = false;
+              if (err) {
+                console.log('error');
+                console.log(err);
+                scope.error = true;
+                scope.errorMessage = err;
+                scope.success = false;
+                return;
+              }
+
+              if (!result.success) {
+                scope.error = true;
+                scope.success = false;
+                scope.errorMessage = result.error;
+                return;
+              }
+              scope.success = true;
+              console.log('result from send ponyup');
+              console.log(result);
+              $rootScope.$broadcast('pony-up-success', result.friend);
+            });
+          };
         };
       }
     }
@@ -1871,20 +1977,14 @@ directive('planChatter', ['$timeout', 'wembliRpc', '$rootScope',
       },
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          /*
+
           scope.chatterLoading = true;
           wembliRpc.fetch('chatter.get', {}, function(err, results) {
             scope.chatters = results.chatters;
             scope.chatterLoading = false;
             $rootScope.$broadcast('section-loaded');
           });
-  */
-        (function tick() {
-          wembliRpc.fetch('chatter.get', {}, function(err, results) {
-            scope.chatters = results.chatters;
-            $timeout(tick, 3000);
-          });
-        })();
+
 
 
         };

@@ -68,7 +68,7 @@
 					p Address: {{customer.balancedAPI.customerAccount.address.line1}}, {{customer.balancedAPI.customerAccount.address.city}}, {{customer.balancedAPI.customerAccount.address.state}} {{customer.balancedAPI.customerAccount.address.postal_code}}
 					p Phone: {{customer.balancedAPI.customerAccount.phone}}
 					p Birth Month: {{customer.balancedAPI.customerAccount.dob}}
-					.bank-accounts(ng-show="customer.balancedAPI.customerAccount.bank_accounts")
+					.bank-accounts(ng-show="customer.balancedAPI.bankAccounts")
 						.body-header.clearfix
 							h4.pull-left Bank Accounts:
 						.no-bank-account(ng-show="noValidBankAccounts")
@@ -76,9 +76,9 @@
 								p You do not currently have a bank account associated with your wembli account.
 								p If you want to be able to collect money from friends, please provide your bank account information.
 								a.btn.btn-primary.btn-small.pull-right(href="#add-bank-account",data-toggle="modal") Add Account
-						.bank-account(ng-show="ba.is_valid",ng-repeat="ba in customer.balancedAPI.customerAccount.bank_accounts.items")
+						.bank-account(ng-show="ba.is_valid",ng-repeat="ba in customer.balancedAPI.bankAccounts.items")
 							.row
-								.name.pull-left {{customer.balancedAPI.customerAccount.bank_accounts.items[0].name}} - {{ba.type}} ({{ba.bank_name}})
+								.name.pull-left {{customer.balancedAPI.bankAccounts.items[0].name}} - {{ba.type}} ({{ba.bank_name}})
 								.account-number.pull-right {{ba.account_number}}
 							.row
 								.status-valid.green.pull-left(ng-show="ba.is_valid")

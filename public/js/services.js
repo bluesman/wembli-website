@@ -364,7 +364,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 					//response
 
 					function(err, result) {
-				console.log('BACK FROM FETCH');
+						console.log('BACK FROM FETCH');
 
 						if (typeof result.plan !== "undefined") {
 							$rootScope.plan = result.plan;

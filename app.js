@@ -45,9 +45,12 @@ if (process.env.NODE_ENV == 'development') {
 	app.set('twitAppSecret', 'PUdQVzslAATiRCFhTXetmjbaFGoWIM092bSkuulFdk');
 	app.set('tnUrl', 'tn.wembli.com');
 	app.set('autoIndex', true);
-	app.set('balancedSecret', '0b50f03cb15a11e28537026ba7d31e6f');
-	app.set('balancedMarketplace', 'Test-mplx4zjiaba85bets7q2omz');
-	app.set('balancedMarketplaceUri', '/v1/marketplaces/TEST-MPlx4ZJIAbA85beTs7q2Omz');
+	//app.set('balancedSecret', '0b50f03cb15a11e28537026ba7d31e6f');
+	//app.set('balancedMarketplace', 'Test-mplx4zjiaba85bets7q2omz');
+	//app.set('balancedMarketplaceUri', '/v1/marketplaces/TEST-MPlx4ZJIAbA85beTs7q2Omz');
+	app.set('balancedSecret', '70ef5cc80a1d11e38167026ba7cd33d0');
+	app.set('balancedMarketplace', 'TEST-MP3rlrmmGqQLEknYFMbRFJJe');
+	app.set('balancedMarketplaceUri', '/v1/marketplaces/TEST-MP3rlrmmGqQLEknYFMbRFJJe');
 }
 
 if (process.env.NODE_ENV == 'secure-www2') {

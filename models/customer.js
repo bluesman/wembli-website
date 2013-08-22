@@ -51,7 +51,8 @@ this.Model = function(mongoose) {
 		forgotPassword: [ForgotPassword],
 		plans: [String],
 		balancedAPI: {
-			merchantAccount:{},
+			creditCards:{},
+			bankAccounts:{},
 			customerAccount:{},
 		},
 		created: {

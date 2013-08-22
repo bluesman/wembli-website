@@ -29,19 +29,22 @@ exports.customer = {
 			return me(null, data);
 		}
 		console.log(args);
+		console.log(req.session.customer);
 
 		var customer = new balanced.customers();
-		customer.update(req.session.customer.balancedAPI.customerAccount.uri, args ,function(err, bRes, customer) {
-			/* get a list of bank accounts for this merchant */
-			var bAccount = new balanced.accounts();
-			bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {
-				limit: 100,
-				offset: 0
-			}, function(err, bRes, bankAccounts) {
-				customer.bank_accounts = bankAccounts;
-				data.accountHolderInfo = customer;
-				req.session.customer.balancedAPI.customerAccount = customer;
-				req.session.customer.markModified('balancedAPI.customerAccount');
+		customer.update(req.session.customer.balancedAPI.customerAccount.uri, args, function(err, bRes, bCustomer) {
+			/* get bank accounts for this customer */
+			customer.setContext(bCustomer);
+			customer.listBankAccounts(function(err, bRes, bankAccounts) {
+				console.log(bankAccounts);
+				data.accountHolderInfo = bCustomer;
+				data.bankAccounts = bankAccounts;
+				console.log('req.session.customer');
+				console.log(req.session);
+				req.session.customer.balancedAPI.customerAccount = bCustomer;
+				req.session.customer.balancedAPI.bankAccounts = bankAccounts;
+
+				req.session.customer.markModified('balancedAPI');
 				req.session.customer.save(function(err) {
 					console.log('saved customer after update customer info');
 					console.log(err);
@@ -219,41 +222,24 @@ exports.customer = {
 		console.log(args);
 
 		/* save the customer and respond when all is done */
-		var saveCustomer = function(person) {
-			var customer = new balanced.customers();
-			customer.get(req.session.customer.balancedAPI.merchantAccount.customer_uri, function(err, bRes, customerInfo) {
-				console.log('get customer for merchant account');
-				console.log(customerInfo);
-				customer.setContext(customerInfo);
-				var ary = person.merchant.dob.split('-');
-				var dob = ary[0] + '-' + ary[1];
-				var customerUpdate = {
-					name: person.name,
-					email: person.email_address,
-					address: {
-						line1: person.merchant.street_address,
-						city: person.merchant.city,
-						postal_code: person.merchant.postal_code,
-						country_code: person.merchant.country_code
-					},
-					phone: person.merchant.phone_number,
-					dob: dob,
-					tax_id: person.merchant.tax_id
-				};
+		var saveCustomer = function(bCustomer) {
+			console.log('created customer account');
+			console.log(bCustomer);
+			var customer = new balanced.customers(bCustomer);
+			customer.listBankAccounts(function(err, bRes, bankAccounts) {
+				console.log('bank accounts');
+				console.log(bankAccounts);
+				data.accountHolderInfo = bCustomer;
+				data.bankAccounts = bankAccounts;
+				req.session.customer.balancedAPI.customerAccount = bCustomer;
+				req.session.customer.balancedAPI.bankAccounts = bankAccounts;
 
-				customer.update(customerUpdate, function(err, bRes, result) {
-					/* get a list of bank accounts for this merchant */
-					var bAccount = new balanced.accounts();
-					bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {}, function(err, bRes, bankAccounts) {
-						req.session.customer.balancedAPI.customerAccount = result;
-						req.session.customer.balancedAPI.customerAccount.bank_accounts = bankAccounts;
-						req.session.customer.markModified('balancedAPI.customerAccount');
-						req.session.customer.save(function(err) {
-							console.log('saved customer after bank account added');
-							console.log(err);
-							return me(null, data);
-						});
-					});
+				req.session.customer.markModified('balancedAPI.customerAccount');
+				req.session.customer.markModified('balancedAPI.bankAccounts');
+				req.session.customer.save(function(err) {
+					console.log('saved customer after update customer info');
+					console.log(err);
+					return me(null, data);
 				});
 			});
 		};
@@ -261,14 +247,14 @@ exports.customer = {
 		/* create a new merchant account */
 		var person = {
 			name: args.name,
-			email_address: req.session.customer.email,
-			merchant: {
-				type: "person",
-				phone_number: "+1" + args.phoneNumber,
-				email_address: req.session.customer.email,
-				dob: args.dob,
-				name: args.name,
-				street_address: args.streetAddress,
+			email: req.session.customer.email,
+			meta: {
+				customerId: req.session.customer._id
+			},
+			phone: "+1" + args.phoneNumber,
+			dob: args.dob,
+			address: {
+				line1: args.streetAddress,
 				postal_code: args.postalCode,
 			},
 			bank_account: {
@@ -280,23 +266,23 @@ exports.customer = {
 		};
 
 		/* extra info incase underwriting fails the first time */
-		if (typeof args.tax_id !== "undefined") {
-			person.merchant.tax_id = args.tax_id;
+		if (typeof args.ssn_last4 !== "undefined") {
+			person.ssn_last4 = args.ssn_last4;
 		}
 		if (typeof args.city !== "undefined") {
-			person.merchant.city = args.city;
+			person.address.city = args.city;
 		}
 		if (typeof args.country_code !== "undefined") {
-			person.merchant.country_code = args.country_code;
+			person.address.country_code = args.country_code;
 		}
 
 		console.log(person);
 
-		var account = new balanced.accounts();
-		account.create(person, function(err, bRes, merchantAccount) {
+		var customers = new balanced.customers();
+		customers.create(person, function(err, bRes, bCustomer) {
 			if (bRes.statusCode != 201) {
-				console.log(merchantAccount);
-				switch (merchantAccount.status_code) {
+				console.log(bCustomer);
+				switch (bCustomer.status_code) {
 					case 300:
 						break;
 					case 400:
@@ -305,22 +291,18 @@ exports.customer = {
 						console.log('account exists...getting it');
 						/* get account data by account_uri */
 						/* update account data */
-						account.update(merchantAccount.extras.account_uri, person, function(err, bRes, updateResponse) {
-							console.log('update to merchant account');
+						customers.update(bCustomer.extras.account_uri, person, function(err, bRes, updateResponse) {
+							console.log('update to customer account');
 							console.log(updateResponse);
-							req.session.customer.balancedAPI.merchantAccount = updateResponse;
-							return saveCustomer(person);
+							return saveCustomer(updatedResponse);
 						});
 						break;
 				}
 			} else {
-				console.log('created merchant account');
-				console.log(merchantAccount);
-				req.session.customer.balancedAPI.merchantAccount = merchantAccount;
 				/* get the customer for this merchant account */
 
 				/* call the balancedAPI to get bank accounts for this customer */
-				return saveCustomer(person);
+				return saveCustomer(bCustomer);
 			}
 		});
 	},
@@ -383,13 +365,13 @@ exports.customer = {
 
 		var respond = function(data) {
 			req.session.signupForm.firstName = data.firstName || req.session.signupForm.firstName || args.firstName;
-			req.session.signupForm.lastName  = data.lastName  || req.session.signupForm.lastName  || args.lastName;
-			req.session.signupForm.email     = data.email     || req.session.signupForm.email     || args.email;
+			req.session.signupForm.lastName = data.lastName || req.session.signupForm.lastName || args.lastName;
+			req.session.signupForm.email = data.email || req.session.signupForm.email || args.email;
 			req.session.signupForm.formError = data.formError;
-			req.session.signupForm.exists    = data.exists;
+			req.session.signupForm.exists = data.exists;
 			req.session.signupForm.loginRedirect = data.loginRedirect || req.session.loginRedirect;
-			req.session.signupForm.redirectUrl   = data.redirectUrl   || req.session.redirectUrl;
-			req.session.signupForm.noPassword    = data.noPassword;
+			req.session.signupForm.redirectUrl = data.redirectUrl || req.session.redirectUrl;
+			req.session.signupForm.noPassword = data.noPassword;
 
 			console.log('responding customer.signup');
 			console.log(req.session.signupForm);
@@ -572,19 +554,7 @@ exports.customer = {
 					req.session.rememberEmail = c.email;
 					data.customer = c;
 
-					/* save the plan in the session */
-					if (req.session.plan) {
-						req.session.plan.save(function(err) {
-							Plan.findById(req.session.plan._id,function(err, plan) {
-								req.session.plan = plan;
-							return me(null, data);
-
-							})
-						});
-					} else {
-						return me(null, data);
-					}
-
+					return me(null, data);
 				}
 
 				if (typeof c.password === "undefined") {

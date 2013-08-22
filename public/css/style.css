@@ -9829,6 +9829,15 @@ a#facebook-login-button {
   width: 100%;
   text-align: left;
 }
+#create-account-modal {
+  width: 650px;
+  height: 600px;
+  margin: -345px 0 0 -375px;
+}
+#create-account-modal .modal-body {
+  padding: 20px;
+  max-height: 600px;
+}
 #plan-frame {
   *zoom: 1;
   /* this was removed */
@@ -11072,7 +11081,6 @@ a#facebook-login-button {
   font-size: 12px;
 }
 #invitation-modal.modal {
-  height: ;
   width: 775px;
   margin: -345px 0 0 -375px;
 }

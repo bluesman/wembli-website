@@ -1,3 +1,67 @@
+#create-account-modal.create-account-modal.modal.hide
+	.modal-header
+		i.close.icon-remove(data-dismiss="modal")
+		h2 What Bank Account Will Friends Deposit Into?
+	.modal-body
+		#payment-information.payment-information
+			.payment-information-wrapper
+				#new-merchant-account
+					form#create-merchant-account-form.form-horizontal(ng-submit="createBalancedAccount()", name="createMerchantAccountForm")
+						fieldset(ng-hide="customer.balancedAPI.customerAccount")
+							.account-info-alert.alert.alert-warning.clearfix(ng-show="createMerchantAccount.errorDob")
+								.icon-warning-sign.pull-left
+								.text.pull-left Date of Birth should follow this format: MM-DD-YYYY.
+							.account-info-alert.alert.alert-warning.clearfix(ng-show="createMerchantAccount.errorPhoneNumber")
+								.icon-warning-sign.pull-left
+								.text.pull-left Please enter a valid, 10 digit phone number.
+							.control-group
+								label.control-label Full Name
+								.controls
+									input(type="text",ng-model="createMerchantAccount.accountHolderName",value="",placeholder="Account Holder Name",name="accountHolderName",required)
+							.control-group
+								label.control-label Date Of Birth
+								.controls
+									input(type="text",ng-model="createMerchantAccount.dob",value="",placeholder="MM-DD-YYYY",name="dob",required)
+							.control-group
+								label.control-label Phone Number
+								.controls
+									input.format-phone-number(maxlength="10",type="text",ng-model="createMerchantAccount.phoneNumber", value="",name="phoneNumber", placeholder="Phone Number",required)
+							.control-group
+								label.control-label Street Address
+								.controls
+									input(type="text",ng-model="createMerchantAccount.streetAddress", value="",name="streetAddress", placeholder="Street Address",required)
+							.control-group
+								label.control-label Postal Code
+								.controls
+									input.format-postal-code(type="text",ng-model="createMerchantAccount.postalCode", value="",name="postalCode", placeholder="Postal Code",required)
+						fieldset(ng-hide="customer.balancedAPI.bankAccounts")
+							.bank-account-info-alert.alert.alert-warning.clearfix(ng-show="createMerchantAccount.errorRoutingNumber")
+								.icon-warning-sign.pull-left
+								.text.pull-left Invalid Routing Number.
+							.control-group
+								label.control-label Account Name
+								.controls
+									input(type="text",ng-model="createMerchantAccount.accountName", name="accountName", placeholder="Account Name",required)
+							.control-group
+								label.control-label Routing Number
+								.controls
+									input(type="text",ng-model="createMerchantAccount.routingNumber", name="routingNumber", placeholder="Routing Number",required)
+							.control-group
+								label.control-label Account Number
+								.controls
+									input(type="text",ng-model="createMerchantAccount.accountNumber", name="accountNumber", placeholder="Account Number",required)
+							.control-group
+								label.control-label Account Type
+								.controls
+									span.nullable
+										select(ng-model="createMerchantAccount.accountType",name="accountType",required)
+											option(value="") Select Account Type
+											option(value="checking") CHECKING
+											option(value="savings") SAVINGS
+							.control-group
+								.controls
+									button.btn.btn-primary(ng-disabled="createMerchantAccountForm.$invalid",type="submit") Create Account
+
 #rsvp-complete-modal.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")

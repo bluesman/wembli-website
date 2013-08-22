@@ -2,16 +2,18 @@
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")
 		h2 Secure Credit Card Payment
-	.modal-body
+	.modal-body(ng-show="success")
+		p Success!
+	.modal-body(ng-hide="success")
 		p This is a secure 128-bit SSL Transaction.  explain fees if any
 		form.pony-up-modal-form(ng-submit="sendPonyUp()")
-			.pony-up-alert.alert.alert-warning(ng-show="error")
+			.pony-up-alert.alert.alert-warning.clearfix(ng-show="error")
 				.icon-warning-sign.icon-2x.pull-left
-				.text.pull-left Shoot! We did something wrong. Try again and if the problem persists, contact us!
-			.pony-up-alert.alert.alert-warning(ng-show="formError")
+				.text.pull-left Shoot! Something went wrong. Try again and if the problem persists, contact us!
+			.pony-up-alert.alert.alert-warning.clearfix(ng-show="formError")
 				.icon-warning-sign.icon-2x.pull-left
 				.text.pull-left Please make sure you've supplied a valid amount for the mes you are requesting to pony up.
-			.pony-up-alert.alert.alert-success(ng-show="success")
+			.pony-up-alert.alert.alert-success.clearfix(ng-show="success")
 				.icon-ok-sign.icon-2x.pull-left
 				.text.pull-left.one-line Giddyup! We successfully sent yer pony up requests.
 			fieldset

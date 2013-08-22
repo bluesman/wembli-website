@@ -21,7 +21,7 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
             scope.noValidBankAccounts = true;
             /* check for a valid bank account */
             if (scope.customer.balancedAPI.customerAccount) {
-              angular.forEach(scope.customer.balancedAPI.customerAccount.bank_accounts.items, function(bank) {
+              angular.forEach(scope.customer.balancedAPI.bankAccounts.items, function(bank) {
                 if (bank.is_valid) {
                   console.log('bank is valid: ' + bank.account_number);
                   scope.noValidBankAccounts = false;
@@ -70,15 +70,15 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
 
               wembliRpc.fetch('customer.changePassword', args,
 
-              function(err, result) {
-                console.log(result);
-                scope.changePasswordForm.error = result.formError;
-                scope.changePasswordForm.mismatch = result.passwordMismatch;
-                scope.changePasswordForm.tooShort = result.passwordTooShort;
-                if (!scope.changePasswordForm.error) {
-                  scope.changePasswordForm.success = true;
-                }
-              });
+                function(err, result) {
+                  console.log(result);
+                  scope.changePasswordForm.error = result.formError;
+                  scope.changePasswordForm.mismatch = result.passwordMismatch;
+                  scope.changePasswordForm.tooShort = result.passwordTooShort;
+                  if (!scope.changePasswordForm.error) {
+                    scope.changePasswordForm.success = true;
+                  }
+                });
             }
           };
 
@@ -166,28 +166,28 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
           scope.routeDashboard = function(h) {
             console.log(h);
             console.log('hash is: ' + h)
-	    if (/^#/.test(h)) {
-		h = h.split('#')[1];
-	    }
-	    var routes = {
-		'preferences': 'showPreferences',
-		'settings':'showSettings',
-		'payment-information':'showPaymentInformation',
-	    };
-	    angular.forEach(routes,function(value, key) {
-		    /*default to dashboard*/
-		    if (typeof routes[h] === "undefined") {
-			scope[value] = false;
-			scope.showDashboard = true;
-		    } else {
-			scope.showDashboard = false;
-			scope[value] = (key === h);
-		    }
-	    });
-	    if (h === 'pony-up-info') {
-		scope.showDashboard = false;
-		scope.showPaymentInformation = true;
-	    }
+            if (/^#/.test(h)) {
+              h = h.split('#')[1];
+            }
+            var routes = {
+              'preferences': 'showPreferences',
+              'settings': 'showSettings',
+              'payment-information': 'showPaymentInformation',
+            };
+            angular.forEach(routes, function(value, key) {
+              /*default to dashboard*/
+              if (typeof routes[h] === "undefined") {
+                scope[value] = false;
+                scope.showDashboard = true;
+              } else {
+                scope.showDashboard = false;
+                scope[value] = (key === h);
+              }
+            });
+            if (h === 'pony-up-info') {
+              scope.showDashboard = false;
+              scope.showPaymentInformation = true;
+            }
 
           };
 
@@ -445,4 +445,3 @@ directive('deleteBankAccount', ['customer', 'wembliRpc', '$rootScope', '$locatio
     }
   }
 ]);
-
