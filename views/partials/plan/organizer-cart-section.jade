@@ -85,7 +85,8 @@ section#section3.organizer-cart-section.cart-section.plan-section
 							//- .remove
 								button.btn.btn-orange(ng-click="removeTicketGroup(ticket._id)") Remove From Plan
 							.controls.clearfix
-								a.btn.btn-orange.btn-large.buy-tickets-offsite.pull-left(ng-hide="{'split-after':true}[plan.preferences.tickets.payment]",ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy Tickets Now
+								a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+								//- a.btn.btn-orange.btn-large.buy-tickets-offsite.pull-left(ng-hide="{'split-after':true}[plan.preferences.tickets.payment]",ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy Tickets Now
 								a.change-tickets-link.wembli-sequence-link.pull-left(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Change Tickets
 		.container.parking-container.clearfix
 			.cartoon-man.pull-left

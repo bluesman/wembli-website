@@ -145,7 +145,7 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 								td.history-header(ng-show="{'outside':true}[history.type]") Amt Received:
 								td.history-header(ng-show="{'request':true}[history.type]") Amt Requested:
 								td.history-header(ng-show="{'response':true}[history.type]") Amt Received:
-								td.amount {{history.amount/100 | currency}}
+								td.amount {{history.amount | currency}}
 								td.actions(ng-show="{'request':true}[history.type] && history.open")
 									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-hide="history.error || history.resent || history.resendPonyUpInProgress", ng-click="resendPonyUp(friend._id, history._id)")
 										i.icon.icon-envelope.pull-left

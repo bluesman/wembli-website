@@ -974,14 +974,16 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
             var ponyUpRequests = [];
             for (var i = 0; i < $scope.friends.length; i++) {
               var f = $scope.friends[i];
-              if (f.ponyUp.request) {
-                if (f.ponyUp.amount > 0) {
+              if ((typeof f.ponyUp.amount !== "undefined") && f.ponyUp.request) {
+                if (parseFloat(f.ponyUp.amount) > 0) {
                   var d = {
                     'friendId': f._id,
-                    'amount': parseInt(f.ponyUp.amount * 100)
+                    'amount': parseInt(parseFloat(f.ponyUp.amount) * 100)
                   };
                   ponyUpRequests.push(d);
                 } else {
+                  console.log('error');
+                  console.log(f);
                   $scope.error = false;
                   $scope.success = false;
                   $scope.formError = true;
@@ -1063,15 +1065,23 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
                     f.ponyUp.request = false;
                   }
                   if (p.status !== 'canceled') {
-                    requested += parseFloat(p.amount);
+                    requested += parseInt(p.amount);
+                    p.amount = parseFloat(parseInt(p.amount) / 100).toFixed(2);
+
                   }
                 } else {
-                  received += parseFloat(p.amount);
+                  received += parseInt(p.amount);
                 }
               }
-              f.payment.requested = requested;
-              f.payment.received = received;
-              f.payment.balance = requested - received;
+              console.log('payment totals figure out requested' + requested);
+              var reqFloat = parseFloat(requested) / 100;
+              var recFloat = parseFloat(received) / 100;
+              var balFloat = parseFloat((requested - received)) / 100;
+              console.log('balFloat' + balFloat);
+              f.payment.requested = parseFloat(reqFloat).toFixed(2);
+              f.payment.received = parseFloat(recFloat).toFixed(2);
+              f.payment.balance = parseFloat(balFloat).toFixed(2);
+
               console.log(f);
             }
           }
@@ -1241,6 +1251,7 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
                 preference: scope.me.rsvp.hotel.preference
               },
             }, function(err, result) {
+              console.log('scope.me is set');
               scope.me = result.friend;
               /* update scope friends too */
               var f = [];
@@ -1585,34 +1596,41 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
 
             scope.calcTotalComing();
 
-            scope.guestCountPlural = pluralize(scope.me.rsvp.guestCount);
+            var watchMe = function() {
+              scope.guestCountPlural = pluralize(scope.me.rsvp.guestCount);
+
+              if (scope.me.rsvp.decision === null) {
+                /* if they have not set the rsvp default to yes */
+                scope.setRsvp('decision', true);
+              }
+
+              if (typeof scope.me.rsvp.parking.decision === "undefined") {
+                scope.me.rsvp.parking.decision = true;
+              }
+
+              if (typeof scope.me.rsvp.restaurant.decision === "undefined") {
+                scope.me.rsvp.restaurant.decision = true;
+              }
+
+              if (typeof scope.me.rsvp.hotel.decision === "undefined") {
+                scope.me.rsvp.hotel.decision = false;
+              }
+
+              console.log('toggle inputs!!!');
+              scope.toggleInputs('parking', scope.me.rsvp.parking.decision);
+              scope.toggleInputs('restaurant', scope.me.rsvp.restaurant.decision);
+              scope.toggleInputs('hotel', scope.me.rsvp.hotel.decision);
+            };
 
             /* safety check - if scope.me is undefined then they are not invited to this plan and shoudl not be viewing it */
             if (typeof scope.me === "undefined") {
-              $location.path('/logout');
+              var dereg = scope.$watch('me', function(newVal) {
+                if (typeof newVal !== "undefined") {
+                  watchMe();
+                  dereg();
+                }
+              });
             }
-
-            if (scope.me.rsvp.decision === null) {
-              /* if they have not set the rsvp default to yes */
-              scope.setRsvp('decision', true);
-            }
-
-            if (typeof scope.me.rsvp.parking.decision === "undefined") {
-              scope.me.rsvp.parking.decision = true;
-            }
-
-            if (typeof scope.me.rsvp.restaurant.decision === "undefined") {
-              scope.me.rsvp.restaurant.decision = true;
-            }
-
-            if (typeof scope.me.rsvp.hotel.decision === "undefined") {
-              scope.me.rsvp.hotel.decision = false;
-            }
-
-            console.log('toggle inputs!!!');
-            scope.toggleInputs('parking', scope.me.rsvp.parking.decision);
-            scope.toggleInputs('restaurant', scope.me.rsvp.restaurant.decision);
-            scope.toggleInputs('hotel', scope.me.rsvp.hotel.decision);
 
 
           }
@@ -1735,7 +1753,6 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
 
           $scope.$watch('me', function(scope, newValue, oldValue) {
             if (typeof newValue !== "undefined") {
-              console.log(newValue);
               /* evaluate what phase the pony-up section is in */
               /* check for any pony up requets from the organizer and grab the most recent one */
               for (var i = 0; i < newValue.payment.length; i++) {
@@ -1745,11 +1762,9 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
                   $scope.ponyUpRequest = p;
                   if (!$scope.ponyUp || !$scope.ponyUp.amount) {
                     $scope.ponyUp = {};
-                    $scope.ponyUp.amount = p.amount;
+                    $scope.ponyUp.amount = parseFloat(p.amount / 100).toFixed(2);
                     $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
                   }
-                  console.log('ponyUp Scope');
-                  console.log($scope.ponyUp);
                 }
               };
             }
@@ -1775,15 +1790,18 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
               var p = me.payment[j];
               if (p.type == 'request') {
                 if (p.status !== 'canceled') {
-                  requested += parseInt(p.amount)/100;
+                  requested += parseInt(p.amount);
+                  p.amount = parseFloat(parseInt(p.amount) / 100).toFixed(2);
                 }
               } else {
-                paid += parseInt(p.amount)/100;
+                paid += parseInt(p.amount);
               }
+
             }
-            me.payment.requested = parseFloat(requested).toFixed(2);
-            me.payment.received = parseFloat(received).toFixed(2);
-            me.payment.balance = parseFloat(requested - received).toFixed(2);
+            console.log('payment totals figure out requested');
+            me.payment.requested = parseFloat(requested / 100).toFixed(2);
+            me.payment.received = parseFloat(received / 100).toFixed(2);
+            me.payment.balance = parseFloat((requested - received) / 100).toFixed(2);
             console.log(me);
 
           }
@@ -1816,8 +1834,15 @@ directive('ponyUpModal', ['$rootScope', 'wembliRpc', 'plan',
             console.log('trying to send pony up');
             scope.sendPonyUpInProgress = true;
             scope.error = scope.formError = scope.success = false;
-
-            wembliRpc.fetch('plan.sendPonyUp', scope.ponyUp, function(err, result) {
+            var args = {};
+            args.amount = scope.ponyUp.amount * 100;
+            args.cardHolderName = scope.ponyUp.cardHolderName;
+            args.creditCardNumber = scope.ponyUp.creditCardNumber;
+            args.expirationDateMonth = scope.ponyUp.expirationDateMonth;
+            args.expirationDateYear = scope.ponyUp.expirationDateYear;
+            args.cvv = scope.ponyUp.cvv;
+            args.postalCode = scope.ponyUp.postalCode;
+            wembliRpc.fetch('plan.sendPonyUp', args, function(err, result) {
               scope.sendPonyUpInProgress = false;
               if (err) {
                 console.log('error');
@@ -1873,6 +1898,20 @@ directive('jquerySlider', [
               min: parseInt(attr.min),
               max: parseInt(attr.max),
               step: parseFloat(attr.step),
+              create: function(event, ui) {
+                if (typeof attr.disable !== "undefined") {
+                  if (attr.disable === "true") {
+                    element.slider("disable");
+                  }
+                } else {
+                  attr.$observe('disable', function(disable) {
+                    if (attr.disable === "true") {
+                      element.slider("disable");
+                    }
+                  });
+
+                }
+              },
               slide: function(event, ui) {
                 scope.$apply(function() {
                   slideFn.call(slideFn, event, ui, scope, element, attr)
@@ -1895,11 +1934,6 @@ directive('jquerySlider', [
 
             element.slider(sliderArgs);
 
-            attr.$observe('disable', function(disable) {
-              if (attr.disable === "true") {
-                element.slider("disable");
-              }
-            });
           });
         };
       }

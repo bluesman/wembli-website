@@ -354,8 +354,6 @@ exports.plan = {
 		}
 
 		var sendPonyUpRequest = function(f, callback) {
-			var cents = parseFloat(f.amount).toFixed(2) * 100;
-			f.amount = parseInt(cents);
 			console.log('sent request to ' + f.friendId + ' for ' + f.amount);
 
 			Friend.findOne()
@@ -415,8 +413,7 @@ exports.plan = {
 		console.log('sendPonyUp for');
 		console.log(args);
 
-		var cents = parseFloat(args.amount).toFixed(2) * 100;
-		var amount = parseInt(cents);
+		var amount = parseInt(args.amount);
 		console.log('amount: ' + amount);
 
 		var creditCard = {
@@ -451,16 +448,117 @@ exports.plan = {
 			var onBehalfOf = organizer.balancedAPI.customerAccount.uri;
 			console.log('onBehalfOf: ' + onBehalfOf);
 
+
+			var successfulDebit = function(transaction, data) {
+				/* deposit funds into the organizer's account */
+				/* assuming there will only ever be 1 bank account right now */
+				var bankAccount = new balanced.bank_accounts(organizer.balancedAPI.bankAccounts.items[0]);
+				/* TODO: appears on statement as */
+				bankAccount.credit({
+					amount: amount
+				}, function(err, res, credit) {
+					/* if there's an error gtfo */
+					/* TODO:if there's an error - refund the creditcard */
+					if (err) {
+						data.success = 0;
+						data.error = 'unable to credit bank account: ' + err;
+						return me(null, data);
+					}
+
+					/* get the friend and add the transaction */
+					var query = {
+						'planId': req.session.plan.id,
+						'planGuid': req.session.plan.guid,
+						'customerId': req.session.customer._id
+					};
+
+					Friend.findOne(query, function(err, friend) {
+						if (err) {
+							data.success = 0;
+							data.error = 'unable to find friend: ' + err;
+							return me(null, data);
+						}
+
+						/* find the open pony up request */
+						var ponyUpRequest;
+						for (var i = 0; i < friend.payment.length; i++) {
+							if (friend.payment[i].type == 'request' && friend.payment[i].open) {
+								ponyUpRequest = friend.payment[i];
+								friend.payment[i].status = 'responded';
+								friend.payment[i].open = false;
+							}
+						};
+
+						data.friend = friend;
+						var payment = {
+							amount: amount,
+							status: 'completed',
+							method: 'creditcard',
+							open: false,
+							type: 'response',
+							transaction: {
+								debit: transaction,
+								credit: credit
+							},
+							requestId: ponyUpRequest._id
+						};
+
+						var p = friend.payment.create(payment);
+
+						console.log('saving payment');
+						console.log(p);
+
+						friend.payment.push(p);
+						friend.save(function(err) {
+							/* TODO:
+												wembliMail.sendPonyUpReceipt({
+													res: res,
+													req: req,
+													friend: friend,
+													payment: payment,
+												}, function() {
+													callback();
+												});
+												*/
+							return me(null, data);
+						});
+					});
+				});
+			};
+
 			/* check if there's an existing balanced customerAccount for this logged in customer */
 			if (req.session.customer.balancedAPI.customerAccount && req.session.customer.balancedAPI.customerAccount.uri) {
 				console.log('balanced customer account exists');
 				if (req.session.customer.balancedAPI.creditCards) {
-				console.log('balanced credit cards exist');
+					console.log('balanced credit cards exist');
 					/* they already have cards, check if the one they are using is one of them */
 					for (var i = 0; i < req.session.customer.balancedAPI.creditCards.items.length; i++) {
 						var card = req.session.customer.balancedAPI.creditCards.items[i];
-						console.log(card);
-						me(null, data);
+						var lastFour = args.creditCardNumber.substr(args.creditCardNumber.length - 4);
+						if ((lastFour == card.last_four) && card.is_valid) {
+							/* use it */
+							/* charge the card */
+							var bCustomers = new balanced.customers();
+							bCustomers.setContext(card.customer);
+							bCustomers.debit({
+								customer_uri: card.customer.uri,
+								on_behalf_of_uri: onBehalfOf,
+								amount: amount
+							}, function(err, res, transaction) {
+								console.log(err);
+								console.log('debited credit card');
+								console.log(transaction)
+
+								/* if there's an error gtfo */
+								if (err) {
+									data.success = 0;
+									data.error = 'unable to debit card: ' + err;
+									return me(null, data);
+								}
+								return successfulDebit(transaction, data);
+							});
+
+						}
 					};
 				}
 			} else {
@@ -511,81 +609,7 @@ exports.plan = {
 									data.error = 'unable to debit card: ' + err;
 									return me(null, data);
 								}
-
-								/* deposit funds into the organizer's account */
-								/* assuming there will only ever be 1 bank account right now */
-								var bankAccount = new balanced.bank_accounts(organizer.balancedAPI.bankAccounts.items[0]);
-								/* TODO: appears on statement as */
-								bankAccount.credit({
-									amount: amount
-								}, function(err, res, credit) {
-									/* if there's an error gtfo */
-									/* TODO:if there's an error - refund the creditcard */
-									if (err) {
-										data.success = 0;
-										data.error = 'unable to credit bank account: ' + err;
-										return me(null, data);
-									}
-
-									/* get the friend and add the transaction */
-									var query = {
-										'planId': req.session.plan.id,
-										'planGuid': req.session.plan.guid,
-										'customerId': req.session.customer._id
-									};
-
-									Friend.findOne(query, function(err, friend) {
-										if (err) {
-											data.success = 0;
-											data.error = 'unable to find friend: ' + err;
-											return me(null, data);
-										}
-
-										/* find the open pony up request */
-										var ponyUpRequest;
-										for (var i = 0; i < friend.payment.length; i++) {
-											if (friend.payment[i].type == 'request' && friend.payment[i].open) {
-												ponyUpRequest = friend.payment[i];
-												friend.payment[i].status = 'responded';
-												friend.payment[i].open = false;
-											}
-										};
-
-										data.friend = friend;
-										var payment = {
-											amount: amount,
-											status: 'completed',
-											method: 'creditcard',
-											open: false,
-											type: 'response',
-											transaction: {
-												debit: transaction,
-												credit: credit
-											},
-											requestId: ponyUpRequest._id
-										};
-
-										var p = friend.payment.create(payment);
-
-										console.log('saving payment');
-										console.log(p);
-
-										friend.payment.push(p);
-										friend.save(function(err) {
-											/* TODO:
-												wembliMail.sendPonyUpReceipt({
-													res: res,
-													req: req,
-													friend: friend,
-													payment: payment,
-												}, function() {
-													callback();
-												});
-												*/
-											return me(null, data);
-										});
-									});
-								});
+								return successfulDebit(transaction, data);
 							});
 						});
 					});
