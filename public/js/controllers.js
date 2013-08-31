@@ -179,6 +179,616 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 function EventCtrl($scope) {};
 
 
+function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, mapInfoWindowContent, loadingModal) {
+	loadingModal.show('Finding hotels...',null);
+	/* get the spots for this lat long and display them as markers */
+	/*
+	var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+	markers.addLayer(new L.marker([30.269218,-97.735557]));
+	console.log('setting markers in ctrl');
+	console.log(markers);
+	$scope.markers = markers;
+	*/
+
+	$scope.determineRange = function(price) {
+		/* hard coded price range for now */
+		var i = parseFloat(price);
+		if (i <= 20) {
+			return '$';
+		}
+		if (i > 20 && i <= 50) {
+			return '$$';
+		}
+		if (i > 50) {
+			return '$$$';
+		}
+	};
+
+	$scope.determineDistance = function(feet) {
+		return parseFloat(feet / 5280).toFixed(2);
+	}
+
+	$scope.notFound = true;
+
+	console.log('setting watch for hotels');
+
+	$scope.$watch('hotels', function(hotels) {
+		/* make markers & infoWindows for these and add them to the map */
+		if (!hotels) {
+			return;
+		};
+
+		$scope.notFound = false;
+
+		$timeout(function() {
+			angular.forEach(hotels.listing, function(v, i) {
+				console.log('hotels listing:');
+				console.log(v);
+
+				if (!googleMap.hasMarker(v.lat, v.lng)) {
+					var marker = new google.maps.Marker({
+						position: new google.maps.LatLng(v.lat, v.lng),
+						map: googleMap.getMap(),
+					});
+					marker.setIcon("/images/icons/map-icons/entertainment/hotel_0star.png");
+					marker.setAnimation(google.maps.Animation.DROP);
+
+					var win = new google.maps.InfoWindow({
+						content: mapInfoWindowContent.create({
+							header: v.location_name,
+							body: v.address + ', ' + v.city
+						}),
+						pixelOffset: new google.maps.Size(10, 0),
+					});
+					google.maps.event.addListener(marker, 'click', function() {
+						console.log('clicked infowindow')
+						if (googleMap.isInfoWindowOpen(marker)) {
+							googleMap.closeInfoWindow(marker);
+						} else {
+							googleMap.openInfoWindow(marker);
+						}
+					});
+
+					/* put the marker on the map */
+					googleMap.addMarker(marker);
+					/* put the infoWindow on the map */
+					googleMap.addInfoWindow(win, marker);
+				}
+			});
+		});
+	});
+
+	console.log('setting watch for google hotels');
+	var deregGP = $scope.$watch('googleHotels', function(hotels) {
+		console.log('googleHotels changed: ');
+		console.log(hotels);
+		/* make markers & infoWindows for these and add them to the map */
+		if (!hotels) {
+			console.log('google hotels outa here');
+			return;
+		};
+
+		console.log('notfound is false');
+		$scope.notFound = false;
+
+		$timeout(function() {
+			angular.forEach(hotels, function(place, i) {
+				console.log('google hotels item:');
+				console.log(place);
+
+
+				//if (!googleMap.hasMarker(place.geometry.location.lat(), place.geometry.location.lng())) {
+				console.log(place);
+				var marker = new google.maps.Marker({
+					map: googleMap.getMap(),
+					position: place.geometry.location,
+				});
+				marker.setIcon("/images/icons/map-icons/entertainment/hotel_0star.png");
+				marker.setAnimation(google.maps.Animation.DROP);
+
+				var win = new google.maps.InfoWindow({
+					content: mapInfoWindowContent.create({
+						header: place.name,
+						body: place.vicinity
+					}),
+					pixelOffset: new google.maps.Size(10, 0),
+				});
+
+				google.maps.event.addListener(marker, 'click', function() {
+					console.log('clicked infowindow')
+					if (googleMap.isInfoWindowOpen(marker)) {
+						googleMap.closeInfoWindow(marker);
+					} else {
+						googleMap.openInfoWindow(marker);
+					}
+				});
+
+				/* put the marker on the map */
+				googleMap.addMarker(marker);
+				/* put the infoWindow on the map */
+				googleMap.addInfoWindow(win, marker);
+				//}
+			});
+			deregGP();
+
+		});
+
+	});
+
+	function getHotels(p) {
+		console.log('plan');
+		console.log(p);
+
+		/* reset the map */
+		googleMap.isDrawn(false);
+
+		var lat = p.venue.data.geocode.geometry.location.lat;
+		var lng = p.venue.data.geocode.geometry.location.lng;
+
+		/* make a marker for the venue */
+		var marker = new google.maps.Marker({
+			map: googleMap.getMap(),
+			position: new google.maps.LatLng(lat, lng),
+		});
+		marker.setIcon("/images/icons/map-icons/sports/stadium.png");
+		marker.setAnimation(google.maps.Animation.DROP);
+
+		/* infoWindow for the venue marker */
+		var win = new google.maps.InfoWindow({
+			content: mapInfoWindowContent.create({
+				header: p.event.eventVenue,
+				body: p.venue.data.Street1 + ', ' + p.event.eventCity + ', ' + p.event.eventState
+			}),
+			pixelOffset: new google.maps.Size(10, 0),
+		});
+
+		google.maps.event.addListener(marker, 'click', function() {
+			console.log('clicked infowindow')
+			if (googleMap.isInfoWindowOpen(marker)) {
+				googleMap.closeInfoWindow(marker);
+			} else {
+				googleMap.openInfoWindow(marker);
+			}
+		});
+
+		/* put the marker on the map */
+		googleMap.addMarker(marker);
+		/* put the infoWindow on the map */
+		googleMap.addInfoWindow(win, marker);
+		/* open the infowindow for the venue by default */
+		googleMap.openInfoWindow(marker);
+
+		/* get all the google hotels nearby and add it to the scope */
+		var request = {
+			location: new google.maps.LatLng(lat, lng),
+			radius: 1500,
+			types: ['lodging']
+		};
+		var service = new google.maps.places.PlacesService(googleMap.getMap());
+		service.nearbySearch(request, function(results, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				console.log('got googleParking results');
+				console.log(results);
+				$scope.$apply(function() {
+					$scope.googleHotels = results;
+				});
+			}
+		});
+
+		/* get parking from parkwhiz and update scope */
+		wembliRpc.fetch('event.getHotels', {
+			lat: lat,
+			lng: lng,
+			//start: start, //optional
+			//end: end //optional
+		}, function(err, result) {
+
+			if (err) {
+				//handle err
+				alert('error happened - contact help@wembli.com');
+				return;
+			}
+
+			console.log('results from event.getHotels');
+			$timeout(function() {
+				$scope.$apply(function() {
+					$scope.hotels = result.hotels;
+				});
+			});
+			//var minRestaurantPrice = result.restaurant.min_price;
+			//var maxRestaurantPrice = result.restaurant.max_price;
+
+			var minHotelPrice = 0;
+			var maxHotelPrice = 600;
+
+			var initSlider = function() {
+				/*Set Minimum and Maximum Price from your Dataset*/
+				$("#price-slider").slider("option", "min", minHotelPrice);
+				$("#price-slider").slider("option", "max", maxHotelPrice);
+				$("#price-slider").slider("option", "values", [minHotelPrice, maxHotelPrice]);
+				$("#amount").val("$" + minHotelPrice + " - $" + maxHotelPrice);
+			};
+
+			var filterHotel = function() {
+				var priceRange = $("#price-slider").slider("option", "values");
+
+				/* hide parking locations that are out of range */
+				console.log('filtering hotel');
+			};
+
+			//set the height of the map-container to the window height
+			//$('#map-container').css("height", $($window).height() - 60);
+			//$('#parking').css("height", $($window).height() - 60);
+			//$('#map-container').css("width", $($window).width() - 480);
+
+			$('#price-slider').slider({
+				range: true,
+				min: minHotelPrice,
+				max: maxHotelPrice,
+				step: 5,
+				values: [minHotelPrice, maxHotelPrice],
+				slide: function(event, ui) {
+					$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+				},
+				stop: function(event, ui) {
+					filterHotel();
+				}
+
+			});
+
+			var amtVal = "$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1);
+			$("#amount").val(amtVal);
+
+			/* filter tix when the drop down changes */
+			$("#quantity-filter").change(function() {
+				filterHotel();
+			});
+			loadingModal.hide();
+		},
+		/* transformRequest */
+
+		function(data, headersGetter) {
+			return data;
+		},
+
+		/* transformResponse */
+
+		function(data, headersGetter) {
+			return JSON.parse(data);
+		});
+	};
+
+
+	plan.get(function(p) {
+		$scope.context = plan.getContext() || 'visitor';
+		$scope.backToPlan = false;
+		if ($scope.context === 'friend') {
+			$scope.backToPlan = true;
+		}
+		if (plan.getFriends().length > 0) {
+			$scope.backToPlan = true;
+		}
+
+		if (googleMap.isDrawn()) {
+			console.log('google map is drawn');
+			getHotels(p);
+		} else {
+			console.log('google map is not drawn');
+			var dereg = $rootScope.$on('google-map-drawn', function() {
+				console.log('google map is draen now');
+				getHotels(p);
+				dereg();
+			});
+		}
+	});
+};
+
+
+function RestaurantsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, mapInfoWindowContent, loadingModal) {
+	loadingModal.show('Finding Restaurants...',null);
+	/* get the spots for this lat long and display them as markers */
+	/*
+	var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
+	markers.addLayer(new L.marker([30.269218,-97.735557]));
+	console.log('setting markers in ctrl');
+	console.log(markers);
+	$scope.markers = markers;
+	*/
+
+	$scope.determineRange = function(price) {
+		/* hard coded price range for now */
+		var i = parseFloat(price);
+		if (i <= 20) {
+			return '$';
+		}
+		if (i > 20 && i <= 50) {
+			return '$$';
+		}
+		if (i > 50) {
+			return '$$$';
+		}
+	};
+
+	$scope.determineDistance = function(feet) {
+		return parseFloat(feet / 5280).toFixed(2);
+	}
+
+	$scope.notFound = true;
+
+	console.log('setting watch for restaurantReservations');
+
+	$scope.$watch('deals', function(deals) {
+		/* make markers & infoWindows for these and add them to the map */
+		if (!deals) {
+			return;
+		};
+
+		$scope.notFound = false;
+
+		$timeout(function() {
+			angular.forEach(deals, function(d, i) {
+				console.log('deals listing:');
+				console.log(d);
+
+				if (!googleMap.hasMarker(d.business.locations[0].lat, d.business.locations[0].lon)) {
+					var marker = new google.maps.Marker({
+						position: new google.maps.LatLng(d.business.locations[0].lat, d.business.locations[0].lon),
+						map: googleMap.getMap(),
+					});
+					marker.setIcon("/images/icons/map-icons/entertainment/restaurant.png");
+					marker.setAnimation(google.maps.Animation.DROP);
+
+					var win = new google.maps.InfoWindow({
+						content: mapInfoWindowContent.create({
+							header: d.business.name,
+							body: d.business.locations[0].address + ', ' + d.business.locations[0].locality
+						}),
+						pixelOffset: new google.maps.Size(10, 0),
+					});
+
+					google.maps.event.addListener(marker, 'click', function() {
+						console.log('clicked infowindow')
+						if (googleMap.isInfoWindowOpen(marker)) {
+							googleMap.closeInfoWindow(marker);
+						} else {
+							googleMap.openInfoWindow(marker);
+						}
+					});
+
+					/* put the marker on the map */
+					googleMap.addMarker(marker);
+					/* put the infoWindow on the map */
+					googleMap.addInfoWindow(win, marker);
+				}
+			});
+		});
+	});
+
+	console.log('setting watch for google restaurants');
+	var deregGP = $scope.$watch('googleRestaurants', function(restaurants) {
+		console.log('googleRestaurants changed: ');
+		console.log(restaurants);
+		/* make markers & infoWindows for these and add them to the map */
+		if (!restaurants) {
+			console.log('google restaurants outa here');
+			return;
+		};
+
+		console.log('notfound is false');
+		$scope.notFound = false;
+
+		$timeout(function() {
+			angular.forEach(restaurants, function(place, i) {
+				console.log('google restaurant item:');
+				console.log(place);
+
+
+				//if (!googleMap.hasMarker(place.geometry.location.lat(), place.geometry.location.lng())) {
+				console.log(place);
+				var marker = new google.maps.Marker({
+					map: googleMap.getMap(),
+					position: place.geometry.location,
+				});
+				marker.setIcon("/images/icons/map-icons/entertainment/restaurant.png");
+				marker.setAnimation(google.maps.Animation.DROP);
+
+				var win = new google.maps.InfoWindow({
+					content: mapInfoWindowContent.create({
+						header: place.name,
+						body: place.vicinity
+					}),
+					pixelOffset: new google.maps.Size(10, 0),
+				});
+
+				google.maps.event.addListener(marker, 'click', function() {
+					console.log('clicked infowindow')
+					if (googleMap.isInfoWindowOpen(marker)) {
+						googleMap.closeInfoWindow(marker);
+					} else {
+						googleMap.openInfoWindow(marker);
+					}
+				});
+
+				/* put the marker on the map */
+				googleMap.addMarker(marker);
+				/* put the infoWindow on the map */
+				googleMap.addInfoWindow(win, marker);
+				//}
+			});
+			deregGP();
+
+		});
+
+	});
+
+	function getRestaurants(p) {
+		console.log('plan');
+		console.log(p);
+
+		/* reset the map */
+		googleMap.isDrawn(false);
+
+		var lat = p.venue.data.geocode.geometry.location.lat;
+		var lng = p.venue.data.geocode.geometry.location.lng;
+
+		/* make a marker for the venue */
+		var marker = new google.maps.Marker({
+			map: googleMap.getMap(),
+			position: new google.maps.LatLng(lat, lng),
+		});
+		marker.setIcon("/images/icons/map-icons/sports/stadium.png");
+		marker.setAnimation(google.maps.Animation.DROP);
+
+		/* infoWindow for the venue marker */
+		var win = new google.maps.InfoWindow({
+			content: mapInfoWindowContent.create({
+				header: p.event.eventVenue,
+				body: p.venue.data.Street1 + ', ' + p.event.eventCity + ', ' + p.event.eventState
+			}),
+			pixelOffset: new google.maps.Size(10, 0),
+		});
+
+		google.maps.event.addListener(marker, 'click', function() {
+			console.log('clicked infowindow')
+			if (googleMap.isInfoWindowOpen(marker)) {
+				googleMap.closeInfoWindow(marker);
+			} else {
+				googleMap.openInfoWindow(marker);
+			}
+		});
+
+		/* put the marker on the map */
+		googleMap.addMarker(marker);
+		/* put the infoWindow on the map */
+		googleMap.addInfoWindow(win, marker);
+		/* open the infowindow for the venue by default */
+		googleMap.openInfoWindow(marker);
+
+		/* get all the google restaurants nearby and add it to the scope */
+		/*
+		var request = {
+			location: new google.maps.LatLng(lat, lng),
+			radius: 1500,
+			types: ['restaurant']
+		};
+		var service = new google.maps.places.PlacesService(googleMap.getMap());
+		service.nearbySearch(request, function(results, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				console.log('got googleParking results');
+				console.log(results);
+				$scope.$apply(function() {
+					$scope.googleRestaurants = results;
+				});
+			}
+		});
+		*/
+		/* get parking from parkwhiz and update scope */
+		wembliRpc.fetch('event.getDeals', {
+			lat: lat,
+			lon: lng,
+		}, function(err, result) {
+
+			if (err) {
+				//handle err
+				alert('error happened - contact help@wembli.com');
+				return;
+			}
+
+			console.log('results from event.getDeals');
+			console.log(result);
+			$timeout(function() {
+				$scope.$apply(function() {
+					$scope.deals = result.deals;
+				});
+			});
+			//var minRestaurantPrice = result.restaurant.min_price;
+			//var maxRestaurantPrice = result.restaurant.max_price;
+
+			var minRestaurantPrice = 0;
+			var maxRestaurantPrice = 600;
+
+			var initSlider = function() {
+				/*Set Minimum and Maximum Price from your Dataset*/
+				$("#price-slider").slider("option", "min", minRestaurantPrice);
+				$("#price-slider").slider("option", "max", maxRestaurantPrice);
+				$("#price-slider").slider("option", "values", [minRestaurantPrice, maxRestaurantPrice]);
+				$("#amount").val("$" + minRestaurantPrice + " - $" + maxRestaurantPrice);
+			};
+
+			var filterRestaurant = function() {
+				var priceRange = $("#price-slider").slider("option", "values");
+
+				/* hide parking locations that are out of range */
+				console.log('filtering restaurant');
+			};
+
+			//set the height of the map-container to the window height
+			//$('#map-container').css("height", $($window).height() - 60);
+			//$('#parking').css("height", $($window).height() - 60);
+			//$('#map-container').css("width", $($window).width() - 480);
+
+			$('#price-slider').slider({
+				range: true,
+				min: minRestaurantPrice,
+				max: maxRestaurantPrice,
+				step: 5,
+				values: [minRestaurantPrice, maxRestaurantPrice],
+				slide: function(event, ui) {
+					$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+				},
+				stop: function(event, ui) {
+					filterRestaurant();
+				}
+
+			});
+
+			var amtVal = "$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1);
+			$("#amount").val(amtVal);
+
+			/* filter tix when the drop down changes */
+			$("#quantity-filter").change(function() {
+				filterRestaurant();
+			});
+			loadingModal.hide();
+		},
+		/* transformRequest */
+
+		function(data, headersGetter) {
+			return data;
+		},
+
+		/* transformResponse */
+
+		function(data, headersGetter) {
+			return JSON.parse(data);
+		});
+	};
+
+
+	plan.get(function(p) {
+		$scope.context = plan.getContext() || 'visitor';
+		$scope.backToPlan = false;
+		if ($scope.context === 'friend') {
+			$scope.backToPlan = true;
+		}
+		if (plan.getFriends().length > 0) {
+			$scope.backToPlan = true;
+		}
+
+		if (googleMap.isDrawn()) {
+			console.log('google map is drawn');
+			getRestaurants(p);
+		} else {
+			console.log('google map is not drawn');
+			var dereg = $rootScope.$on('google-map-drawn', function() {
+				console.log('google map is draen now');
+				getRestaurants(p);
+				dereg();
+			});
+		}
+	});
+};
+
 function ParkingCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, mapInfoWindowContent, loadingModal) {
 	loadingModal.show('Finding Parking...',null);
 	/* get the spots for this lat long and display them as markers */

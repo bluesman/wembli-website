@@ -1,5 +1,6 @@
 var ticketNetwork = require('../lib/wembli/ticketnetwork');
 var pw = require('../lib/wembli/parkwhiz');
+var yipit = require('../lib/wembli/yipit');
 var async = require('async');
 
 exports.event = {
@@ -128,6 +129,7 @@ exports.event = {
 			});
 		});
 	},
+
 	getParking: function(args, req, res) {
 		var me = this;
 		/*convert date into timestamp */
@@ -150,6 +152,85 @@ exports.event = {
 				return me(err);
 			}
 			me(null,{success:1,parking:results});
+		});
+	},
+
+
+
+	getDeals: function(args, req, res) {
+		var me = this;
+		/*convert date into timestamp */
+		var date = req.session.plan.event.eventDate;
+		var eDate = new Date(date);
+		eDate.clearTime();
+		eDate.addHours(9);
+		var start = eDate.getTime() / 1000;
+		eDate.addHours(5);
+		var end = eDate.getTime() / 1000;
+		/* get the deals for this lat/log */
+		//pw.search({lat:geocode[0].lat,lng:geocode[0].lon,start:start,end:end}, function(err, results) {
+		yipit.deals({
+			lat: req.session.plan.venue.data.geocode.geometry.location.lat,
+			lon: req.session.plan.venue.data.geocode.geometry.location.lng,
+			radius: args.radius || 30,
+			tag:'restaurants'
+		}, function(err, results) {
+			if (err) {
+				return me(err);
+			}
+			console.log('DEALS:');
+			console.log(results);
+			me(null,{success:1,deals:results.response.deals});
+		});
+	},
+
+
+	getRestaurants: function(args, req, res) {
+		var me = this;
+		/*convert date into timestamp */
+		var date = req.session.plan.event.eventDate;
+		var eDate = new Date(date);
+		eDate.clearTime();
+		eDate.addHours(9);
+		var start = eDate.getTime() / 1000;
+		eDate.addHours(5);
+		var end = eDate.getTime() / 1000;
+		/* get the parking for this lat/log */
+		//pw.search({lat:geocode[0].lat,lng:geocode[0].lon,start:start,end:end}, function(err, results) {
+		pw.search({
+			lat: req.session.plan.venue.data.geocode.geometry.location.lat,
+			lng: req.session.plan.venue.data.geocode.geometry.location.lng,
+			start: start,
+			end: end
+		}, function(err, results) {
+			if (err) {
+				return me(err);
+			}
+			me(null,{success:1,restaurants:results});
+		});
+	},
+	getHotels: function(args, req, res) {
+		var me = this;
+		/*convert date into timestamp */
+		var date = req.session.plan.event.eventDate;
+		var eDate = new Date(date);
+		eDate.clearTime();
+		eDate.addHours(9);
+		var start = eDate.getTime() / 1000;
+		eDate.addHours(5);
+		var end = eDate.getTime() / 1000;
+		/* get the parking for this lat/log */
+		//pw.search({lat:geocode[0].lat,lng:geocode[0].lon,start:start,end:end}, function(err, results) {
+		pw.search({
+			lat: req.session.plan.venue.data.geocode.geometry.location.lat,
+			lng: req.session.plan.venue.data.geocode.geometry.location.lng,
+			start: start,
+			end: end
+		}, function(err, results) {
+			if (err) {
+				return me(err);
+			}
+			me(null,{success:1,hotels:results});
 		});
 	}
 

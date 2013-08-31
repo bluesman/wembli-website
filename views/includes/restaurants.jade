@@ -1,1 +1,21 @@
-#restaurants-frame.animate-in restaurants page
+#restaurants-frame(ng-controller="RestaurantsCtrl")
+	#map-background
+		#restaurants-map-container.restaurants-map.map-container(lat="#{lat}",lng="#{lon}",zoom="12",draggable="true",map-type-id="ROADMAP")
+	#restaurants.pull-right
+		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
+		.event-social-links
+		- console.log('plan prefs in restaurants list');
+		- console.log(req.session.plan.preferences);
+		- if (req.session.plan.preferences.payment === 'split-first')
+			include restaurants/read-only
+		- else
+			//- include parking/buy-now
+		.no-results
+			.notify-email(ng-show="notFound",type="restaurants",ng-transclude)
+				.collect-email(ng-hide="emailCollected")
+					p Aww shucks! We haven't got any restaurant listings to show you.  Enter your email below if you'd like to be notified when restaurants become available.
+					fieldset
+						input#email
+					button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
+				.collected-email(ng-show="emailCollected")
+					p OK! We'll let you know if any restaurants become available!

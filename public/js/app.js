@@ -9,6 +9,8 @@ angular.module('wembliApp', [
     'wembliApp.directives.plan',
     'wembliApp.directives.invitationWizard',
     'wembliApp.directives.parkingMap',
+    'wembliApp.directives.restaurantsMap',
+    'wembliApp.directives.hotelsMap',
     'wembliApp.directives.venueMap',
 ]).config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {

@@ -1,1 +1,21 @@
-#hotels-frame.animate-in hotels page
+#hotels-frame(ng-controller="HotelsCtrl")
+	#map-background
+		#hotels-map-container.hotels-map.map-container(lat="#{lat}",lng="#{lon}",zoom="15",draggable="true",map-type-id="ROADMAP")
+	#hotels.pull-right
+		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
+		.event-social-links
+		- console.log('plan prefs in hotels list');
+		- console.log(req.session.plan.preferences);
+		- if (req.session.plan.preferences.payment === 'split-first')
+			include hotels/read-only
+		- else
+			//- include parking/buy-now
+		.no-results
+			.notify-email(ng-show="notFound",type="hotels",ng-transclude)
+				.collect-email(ng-hide="emailCollected")
+					p Aww shucks! We haven't got any restaurant listings to show you.  Enter your email below if you'd like to be notified when hotels become available.
+					fieldset
+						input#email
+					button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
+				.collected-email(ng-show="emailCollected")
+					p OK! We'll let you know if any hotels become available!
