@@ -101,10 +101,38 @@ filter('pluralize', ['$filter', 'pluralizeWords',
 	}
 ]).
 
+filter('parkingTotals', ['$filter','plan',
+	function($filter,plan) {
+		return function(parking) {
+			return parking;
+		};
+	}
+]).
+
+filter('hotelsTotals', ['$filter','plan',
+	function($filter,plan) {
+		return function(hotels) {
+			return hotels;
+		};
+	}
+]).
+
+filter('restaurantsTotals', ['$filter','plan',
+	function($filter,plan) {
+		return function(restaurants) {
+			return restaurants;
+		};
+	}
+]).
+
+
 filter('ticketTotals', ['$filter','plan',
 	function($filter,plan) {
 		var fee = 0.15;
 		return function(tickets) {
+			if (typeof tickets ===  "undefined") {
+				return;
+			}
 			var groupTotal = 0;
 			var groupCount = 0;
 			var groups = [];

@@ -1,0 +1,31 @@
+//- have hotels and purchased
+.body.add-on-included(ng-show="hotels[0] && hotels[0].payment && hotels[0].payment.receipt")
+	ul.hotels-list-container
+		li.hotels-row(ng-repeat="p in hotels | hotelsTotals")
+			.hotels-container
+				.hotels-info
+					strong Order ID:&nbsp;
+					span {{hotels._id}}
+				.hotels-info.clearfix
+					.hotels-section.pull-left
+						strong SECTION/AISLE:
+						span {{hotels.hotelsGroup.Section}}&nbsp;
+					.hotels-row.pull-left
+						strong ROW/BOX:
+						span {{hotels.hotelsGroup.Row}}
+					.hotels-seat.pull-left
+						strong SEATS:
+						span(ng-show="{'*':true}[hotels.hotelsGroup.LowSeat]") {{hotels.hotelsGroup.LowSeat}}
+						span(ng-hide="{'*':true}[hotels.hotelsGroup.LowSeat]") {{hotels.hotelsGroup.LowSeat}} - {{hotels.hotelsGroup.HighSeat}}
+				.hotels-notes(ng-show="hotels.hotelsGroup.Notes")
+					span NOTES:&nbsp;
+					span {{hotels.hotelsGroup.Notes}}
+				.hotels-payment.clearfix
+					.per-person.pull-left
+						strong Total cost for {{hotels.payment.receipt.request_hotels}} {{hotels.payment.receipt.request_hotels | pluralize:'hotels'}}:
+					.hotels-total.pull-left
+						{{hotels.payment.sale_total | currency}}
+			.controls.clearfix
+				a.view-hotels-link.pull-left.btn.btn-large.btn-orange(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") View hotels On Map
+				- if (req.session.plan.preferences.payment === 'split-after')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!

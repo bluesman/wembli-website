@@ -17,9 +17,9 @@
 			input.amount(type="text")
 		#add-to-plan-price-slider.price-slider
 #add-to-plan-header-container.ticket-list-header-container
-	a#price-header(href="#",ng-click="sortByPrice()") Price
-	a#section-header(href="#",ng-click="sortBySection()") Section
-	a#qty-header(href="#",ng-click="sortByQty()") Qty
+	a.price-header(href="#",ng-click="sortByPrice()") Price
+	a.section-header(href="#",ng-click="sortBySection()") Section
+	a.qty-header(href="#",ng-click="sortByQty()") Qty
 ul#add-to-plan-container.ticket-list-container
 	li.ticket-row(ng-repeat="ticket in tickets")
 		.ticket-section.hide {{ticket.Section}}
@@ -34,5 +34,5 @@ ul#add-to-plan-container.ticket-list-container
 			strong Qty:
 			select(id="qty-{{ticket.ID}}",ng-model="ticket.selectedQty",name="qty-{{ticket.ID}}",ng-options="q for q in ticket.ValidSplits.int")
 			.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
-		a.btn.btn-primary.btn-large.add-tickets-to-plan.wembli-sequence-link(ticket="{{ticket}}",quantity="{{ticket.selectedQty}}",ng-href="/plan",ng-hide="ticket.ticketsInPlan") Add
-		a.btn.btn-orange.btn-large.wembli-sequence-link(ng-click="removeTicketGroup(ticket._id)",ng-href="/plan",ng-show="ticket.ticketsInPlan") Remove
+		a.btn.btn-primary.btn-large.add-tickets-to-plan(ticket="{{ticket}}",quantity="{{ticket.selectedQty}}",ng-href="/plan",ng-hide="ticket.ticketsInPlan") Add
+		a.btn.btn-orange.btn-large(ng-click="removeTicketGroup(ticket._id)",ng-href="/plan",ng-show="ticket.ticketsInPlan") Remove

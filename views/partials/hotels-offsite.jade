@@ -1,0 +1,28 @@
+#hotels-offsite-modal.modal.hide(ng-controller="HotelsOffsiteCtrl")
+	#hotels-offsite
+		.modal-header
+			h2 How'd It Go?
+		.modal-body
+			p Before we take you to your planning dashboard we need to know:
+			form#hotels-offsite-form(name="hotels-offsite-form")
+				label.radio
+					input#option-group-bought(ng-model="hotelsOffsite",type="radio",name="hotels_offsite",value="bought",ng-init="hotelsOffsite='bought'")
+					.option-content
+						h3 I Got My Hotel Room!
+						p
+							span I just bought
+							input#qty.focus-on-click(name="qty",ng-model="qty",type="text")
+							span spot(s) for a total of
+							span#amount-paid-prepend.input-prepend
+								span.add-on $
+								input#amount-paid.focus-on-click(type="text",name="amount_paid",ng-model="amountPaid")
+								span .&nbsp;&nbsp;
+								span.orange &nbsp;<--- is this correct?
+				label.radio
+					input#option-group-skip(ng-model="hotelsOffsite",type="radio",name="hotels_offsite",value="skip")
+					.option-content
+						h3 Show Me Somethin' Else
+						p I decided not to buy. Show me other options.
+		.modal-footer
+			a.btn.btn-primary.btn-large(ng-show="showButton()",ng-click="submitForm()",href="/plan/{{eventId}}/{{eventName}}") Back To Plan
+			a.btn.btn-cancel.btn-large(ng-hide="showButton()",ng-click="cancelForm()") See More Hotels

@@ -62,7 +62,28 @@ section#section1(class="#{sectionClass} itinerary-section plan-section")
 			.parking-container
 				h2 Parking
 				.row
-					.info.clearfix
+					.info.clearfix(ng-hide="parking[0].parking")
+						.parking-name
+							strong NAME:&nbsp;
+							span TBD
+						.parking-location
+							strong LOCATION:&nbsp;
+							span TBD
+					.info.clearfix(ng-show="parking[0].parking && {'pw':true}[parking[0].service]")
+						.parking-name
+							strong NAME:&nbsp;
+							span {{parking[0].parking.location_name}}
+						.parking-location
+							strong LOCATION:&nbsp;
+							span {{parking[0].parking.address}}, {{parking[0].parking.city}}, {{parking[0].parking.state}} {{parking[0].parking.zip}}
+					.info.clearfix(ng-show="parking[0].parking && {'google':true}[parking[0].service]")
+						.parking-name
+							strong NAME:&nbsp;
+							span {{parking[0].parking.name}}
+						.parking-location
+							strong LOCATION:&nbsp;
+							span {{parking[0].parking.vicinity}}
+
 			.hotel-container
 				h2 Hotel
 				.row
@@ -73,7 +94,7 @@ section#section1(class="#{sectionClass} itinerary-section plan-section")
 					.info.clearfix
 			.google-map-container
 				h2 Map
-				#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="15",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
+				#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
 			.notes-container
 				h2 Notes
 				- if (visitor.context === 'organizer')

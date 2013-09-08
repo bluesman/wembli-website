@@ -1,0 +1,12 @@
+//- no-split
+.container.tickets-container.clearfix
+	include ../tickets-icon
+	.pull-left
+		include ../tickets-header
+		//- no tickets, rsvp doesn't matter and no split
+		.body.add-on-included(ng-hide="tickets[0]")
+			p Ok! Go ahead and find some tickets!
+			.button-container.clearfix
+				a.pull-left.btn.btn-orange.btn-large(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
+		include ../chosen-tickets
+		include ../purchased-tickets

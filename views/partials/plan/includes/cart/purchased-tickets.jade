@@ -1,0 +1,31 @@
+//- have tickets and purchased
+.body.add-on-included(ng-show="tickets[0] && tickets[0].payment && tickets[0].payment.receipt")
+	ul.ticket-list-container
+		li.ticket-row(ng-repeat="ticket in tickets | ticketTotals")
+			.ticket-container
+				.ticket-info
+					strong Wembli Order ID:&nbsp;
+					span {{ticket._id}}
+				.ticket-info.clearfix
+					.ticket-section.pull-left
+						strong SECTION/AISLE:
+						span {{ticket.ticketGroup.Section}}&nbsp;
+					.ticket-row.pull-left
+						strong ROW/BOX:
+						span {{ticket.ticketGroup.Row}}
+					.ticket-seat.pull-left
+						strong SEATS:
+						span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
+						span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
+				.ticket-notes(ng-show="ticket.ticketGroup.Notes")
+					span NOTES:&nbsp;
+					span {{ticket.ticketGroup.Notes}}
+				.ticket-payment.clearfix
+					.per-person.pull-left
+						strong Total cost for {{ticket.payment.receipt.request_tickets}} {{ticket.payment.receipt.request_tickets | pluralize:'ticket'}}:
+					.ticket-total.pull-left
+						{{ticket.payment.sale_total | currency}}
+			.controls.clearfix
+				a.view-tickets-link.pull-left.btn.btn-large.btn-orange(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") View Tickets On Map
+				- if (req.session.plan.preferences.payment === 'split-after')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!

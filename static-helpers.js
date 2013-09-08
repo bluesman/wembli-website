@@ -3,52 +3,70 @@ var wembliModel = require('wembli-model'),
 
 module.exports = {
 	/* STATIC */
-	planNav: function(mode) {
+	planNav: function(mode, payment) {
 		console.log('plan nav for: '+mode);
 		var nav = {
 			'organizer': [{
+				'name': "itinerary",
 				'icon': "icon-file-alt",
 				'text': "Itinerary",
 			}, {
+				'name': "rsvp",
 				'icon': "icon-envelope",
 				'text': "RSVP's",
 			}, {
+				'name': "cart",
 				'icon': "icon-shopping-cart",
 				'text': "Cart",
 			}, {
+				'name': "pony-up",
 				'icon': "icon-money",
-				'text': "Pony Up",
+				'text': "Pony Up!",
 			}, {
+				'name': "chatter",
 				'icon': "icon-comments-alt",
 				'text': "Chatter",
 			}],
 			'friend': [{
+				'name': "itinerary",
 				'icon': "icon-file-alt",
 				'text': "Itinerary",
 			}, {
+				'name': "rsvp",
 				'icon': "icon-envelope",
 				'text': "RSVP",
 			}, {
+				'name': "vote",
 				'icon': "icon-bar-chart",
 				'text': "Vote",
 			}, {
+				'name': "invitees",
 				'icon': "icon-group",
 				'text': "Invitees",
 			}, {
+				'name': "pony-up",
 				'icon': "icon-money",
 				'text': "Pony Up!",
 			}, {
+				'name': "chatter",
 				'icon': "icon-comments-alt",
 				'text': "Chatter",
 			}]
 		};
 		var thisNav = nav[mode];
+		var newNav = [];
+		var num = 0;
 		for (var i = 0; i < thisNav.length; i++) {
-			thisNav[i]['section'] = "section" + (i + 1);
+			if ((payment === 'no-split') && thisNav[i]['name'] === 'pony-up') {
+				continue;
+			}
+			num++;
+			thisNav[i]['section'] = "section" + num;
 			thisNav[i]['id']      = "nav-" + thisNav[i]['section'];
 			thisNav[i]['href']    = "#" + thisNav[i]['section'];
+			newNav.push(thisNav[i]);
 		}
-		return thisNav;
+		return newNav;
 
 	},
 

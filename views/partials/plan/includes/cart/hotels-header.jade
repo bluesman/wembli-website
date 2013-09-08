@@ -1,0 +1,6 @@
+.header
+	label.hotel-label.clearfix
+		i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.hotels")
+		i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.hotels")
+		input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.hotels", ng-click="savePrefs()")
+		h3 Hotel

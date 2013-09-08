@@ -1,3 +1,10 @@
+/*
+
+TODO:
+- make sure friends can not do organizer functionality:
+	- change friend rsvp
+
+*/
 var wembliUtils = require('wembli/utils');
 var wembliMail = require('wembli/email');
 var wembliModel = require('../lib/wembli-model');
@@ -6,6 +13,9 @@ var Friend = wembliModel.load('friend');
 var Plan = wembliModel.load('plan');
 var Feed = wembliModel.load('feed');
 var Ticket = wembliModel.load('ticket');
+var Parking = wembliModel.load('parking');
+var Restaurant = wembliModel.load('restaurant');
+var Hotel = wembliModel.load('hotel');
 var feedRpc = require('./feed').feed;
 var async = require('async');
 var ticketNetwork = require('../lib/wembli/ticketnetwork');
@@ -95,6 +105,70 @@ exports.plan = {
 									/* done with outer loop iteration */
 									callback();
 								});
+							});
+						},
+
+						function(callback) {
+							/* get parking for this plan */
+							Parking.find({
+								planId: req.session.plan.id
+							}, function(err, results) {
+								data.parking = results;
+								callback();
+								/* check if these parking spots are still available
+										TODO: not sure what the best way to do this is just yet
+								 */
+								/*
+								async.forEach(data.parking, function(item, callback2) {
+									console.log('parking in plan');
+									console.log(item);
+
+									ticketNetwork.GetTickets({
+										ticketGroupID: item.ticketGroup.ID
+									}, function(err, results) {
+										console.log('results from GetTickets');
+										if (err) {
+											console.log('ERROR GETTING TIX');
+											console.log(err);
+											callback2(err);
+										}
+										if (typeof results.TicketGroup === "undefined") {
+											item.gone = true;
+											item.save(function(err) {
+												console.log('tickets are gone :( saved as such')
+												callback2();
+											});
+										} else {
+											// done with loop iteration
+											callback2();
+										}
+									});
+								}, function(err) {
+									// done with outer loop iteration
+									callback();
+								});
+								*/
+
+							});
+						},
+
+						function(callback) {
+							/* get restaurants for this plan */
+							Restaurant.find({
+								planId: req.session.plan.id
+							}, function(err, results) {
+								data.restaurants = results;
+								callback();
+							});
+						},
+
+						function(callback) {
+							/* get hotels for this plan */
+							Hotel.find({
+								planId: req.session.plan.id
+							}, function(err, results) {
+								data.hotels = results;
+								callback();
 							});
 						},
 
@@ -652,9 +726,6 @@ exports.plan = {
 					});
 				});
 			});
-
-
-
 	},
 
 	resendPonyUpEmail: function(args, req, res) {
@@ -915,6 +986,262 @@ exports.plan = {
 		});
 	},
 
+	addParking: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add tickets to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		if (typeof args.parking === "undefined") {
+			console.log('no parking');
+			data.noParking = true;
+			return me(null, data);
+		}
+
+		console.log('add parking to plan:');
+		console.log(args);
+
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+		};
+
+		/* find all the existing parking for this plan and remove them if payment is not complete */
+		Parking.find(query, function(err, parking) {
+			if (err) {
+				data.success = 0;
+				data.dbError = 'unable to find ticketGroup';
+				return me(null, data);
+			}
+
+			/* check if parking is purchased if it is not remove it */
+			async.forEach(parking, function(item, callback) {
+				console.log('checking parking');
+				console.log(item);
+				/* check if any of these are not yet purchased and remove them */
+				if (!item.purchased) {
+					item.remove(function(err) {
+						console.log('removed unpaidfor ticket');
+						/* now remove the ticket from the plan */
+						req.session.plan.removeParking(item.id, function(err) {
+							if (err) {
+								console.log(err);
+								data.success = 0;
+								data.dbError = 'unable to add ticketGroup ' + item.id;
+								return callback();
+							}
+							console.log('removed parking from plan: ' + req.session.plan.guid);
+							return callback();
+						});
+					})
+				} else {
+					callback();
+				}
+			}, function() {
+
+				/* finished iterating through existing parking */
+				var set = {
+					planId: req.session.plan.id,
+					planGuid: req.session.plan.guid,
+					service: args.service,
+					eventId: args.eventId,
+					parking: args.parking,
+					total: args.total,
+				};
+
+				console.log(set);
+				if (typeof args.payment !== "undefined") {
+
+					var pmt = JSON.parse(args.payment);
+					var payment = {
+						organizer: true,
+						customerId: req.session.customer.id,
+					};
+
+					if (typeof pmt.amount !== "undefined") {
+						payment.amount = pmt.total;
+					}
+
+					if (typeof pmt.receipt !== "undefined") {
+						set.purchased = true;
+						payment.receipt = pmt.receipt;
+					}
+
+					set.payment = payment;
+				}
+
+				p = new Parking(set);
+
+				p.save(function(err) {
+					if (err) {
+						data.success = 0;
+						data.dbError = 'unable to save parking';
+						return me(null, data);
+					}
+
+					/* now add the ticket to the plan */
+					req.session.plan.addParking(p, function(err) {
+						if (err) {
+							console.log(err);
+							data.success = 0;
+							data.dbError = 'unable to add Parking ' + p.id;
+							return me(null, data);
+						}
+						console.log('added parking to plan: ' + req.session.plan.guid);
+						data.parking = p;
+						return me(null, data);
+					});
+				});
+			});
+		});
+
+
+	},
+
+	addParkingReceipt: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add tickets to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		if (typeof args.parkingId === "undefined") {
+			console.log('no parking');
+			data.noParking = true;
+			return me(null, data);
+		}
+
+		console.log('add parking receipt to parking:');
+		console.log(args);
+
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+			'service': args.service
+		};
+
+		/* find all the existing parking for this plan and remove them if payment is not complete */
+		Parking.find(query, function(err, parking) {
+			console.log('found parking');
+			console.log(parking);
+			if (err) {
+				data.success = 0;
+				data.dbError = 'unable to find parking';
+				return me(null, data);
+			}
+
+			var notFound = true;
+			/* TODO: to actually support an array of parking, this needs to change */
+			for (var i = 0; i < parking.length; i++) {
+				var item = parking[i];
+				console.log('existing parking to add receipt to');
+				console.log(item);
+
+				/* find the parking that matches args.parkingId */
+				if (args.parkingId == item.id) {
+					notFound = false;
+					item.purchased = true;
+					console.log('adding receipt for:');
+					console.log(item);
+					item.payment.receipt = args.receipt;
+					item.save(function(err) {
+						if (err) {
+							data.success = 0;
+							data.dbError = 'unable to save parking';
+							return me(null, data);
+						}
+
+						data.parking = item;
+						return me(null, data);
+					});
+					break;
+				}
+			};
+			if (notFound) {
+				console.log('parking not found for add receipt');
+				data.notFound = notFound;
+				me(null, data);
+			}
+		});
+	},
+
+
+
+	removeParking: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add parking to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+		console.log('remove parking args:');
+		console.log(args);
+
+		Parking.remove({
+			"_id": args.parkingId
+		}, function(err) {
+			console.log('remove parking err is: ' + err);
+			/* delete the parking id from the plan and save it */
+			var newParking = [];
+			for (var i = 0; i < req.session.plan.parking.length; i++) {
+				if (req.session.plan.parking[i]._id != args.parkingId) {
+					newParking.push(req.session.plan.parking[i]);
+				}
+			};
+			console.log('removing parking from plan');
+			req.session.plan.parking = newParking;
+			req.session.plan.save(function(err, results) {
+				console.log('saved plan after removing parking - err is:' + err);
+				/* get parking to return */
+				Parking.find({
+					planId: req.session.plan.id
+				}, function(err, results) {
+					data.parking = results;
+					me(null, data);
+				});
+			});
+		});
+	},
+
 	addTicketGroup: function(args, req, res) {
 		var me = this;
 
@@ -963,7 +1290,7 @@ exports.plan = {
 			/* check if these tickets are still available */
 			async.forEach(tickets, function(item, callback) {
 				/* check if any of these are not yet purchased and remove them */
-				if (!item.payment[0]) {
+				if (!item.purchased) {
 					item.remove(function(err) {
 						console.log('removed unpaidfor ticket');
 						/* now remove the ticket from the plan */
@@ -982,11 +1309,13 @@ exports.plan = {
 					callback();
 				}
 			}, function() {
+
 				/* finished iterating through existing tickets */
 				var set = {
 					planId: req.session.plan.id,
 					planGuid: req.session.plan.guid,
 					service: 'tn',
+					eventId: args.eventId,
 					ticketGroup: args.ticketGroup,
 					qty: args.qty,
 					total: args.total,
@@ -994,17 +1323,17 @@ exports.plan = {
 
 				console.log(set);
 				if (typeof args.payment !== "undefined") {
-					console.log(args.payment);
-					var p = JSON.parse(args.payment);
 
-					set.purchased = true;
-					set.payment = [{
+					var p = JSON.parse(args.payment);
+					var payment = {
 						organizer: true,
 						transactionToken: p.transactionToken,
 						customerId: req.session.customer.id,
 						amount: p.total,
 						qty: p.qty
-					}];
+					};
+
+					set.payment = payment;
 				}
 
 				ticket = new Ticket(set);

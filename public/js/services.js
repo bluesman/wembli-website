@@ -143,6 +143,15 @@ factory('pluralizeWords', [
 			'ticket': function(number) {
 				return (number == 1) ? 'ticket' : 'tickets';
 			},
+			'parking': function(number) {
+				return (number == 1) ? 'parking' : 'parking';
+			},
+			'restaurant': function(number) {
+				return (number == 1) ? 'restaurant' : 'restaurants';
+			},
+			'hotel': function(number) {
+				return (number == 1) ? 'hotel' : 'hotels';
+			},
 			'guest': function(number) {
 				return (number == 1) ? 'guest' : 'guests';
 			}
@@ -158,10 +167,13 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 		self.scrollToSection = 1;
 		var planNav = {
 			init: function(sectionsCount) {
+				if (self.sectionsCount == 0) {
+					self.sectionsCount = sectionsCount;
+				}
 				console.log('watch for section-loaded event');
 				var dereg = $rootScope.$on('section-loaded', function(e, data) {
 					self.sectionsLoaded++;
-					console.log('sections loaded: ' + self.sectionsLoaded);
+					console.log('sections loaded: ' + self.sectionsLoaded + ' of ' + self.sectionsCount);
 					if (self.sectionsLoaded == sectionsCount) {
 						/* all the sections are loaded */
 						self.sectionsLoaded = -1;
@@ -180,6 +192,7 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 								var prevId = '#section' + sectionNum--;
 								var h = $(currentId).height();
 								var prevHeight = ($(prevId).height() / 2);
+
 								var t = $(currentId).offset().top;
 								if (t <= prevHeight && t > -(h / 2)) {
 									/*
@@ -239,6 +252,65 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 	}
 ]).
 
+factory('parking', ['wembliRpc', 'googlePlaces',
+	function(wembliRpc, googlePlaces) {
+		var self = this;
+		self.googleParking = null;
+		self.parkingReservations = null;
+
+		return {
+			getGoogleParking: function() {
+				return self.googleParking;
+			},
+			getParkingReservations: function() {
+				return self.parkingReservations;
+			},
+			setGoogleParking: function(p) {
+				self.googleParking = p;
+			},
+			setParkingReservations: function(p) {
+				self.setParkingReservations = p;
+			},
+			fetchGoogleParking: function(args, callback) {
+				args.radius = args.radius || 5000; /* meters, little over 3 miles */
+				console.log('getting parking');
+
+				googlePlaces.getParking(args.lat, args.lng, args.radius, function(results, status) {
+					if (status == google.maps.places.PlacesServiceStatus.OK) {
+						console.log('got googleParking results');
+						self.googleParking = results;
+					}
+					callback(null, self.googleParking);
+				});
+
+			},
+			fetchParkingReservations: function(args, callback) {
+				/* get parking from parkwhiz and update scope */
+				wembliRpc.fetch('event.getParking', {
+					lat: args.lat,
+					lng: args.lng,
+					radius: args.radius
+					//start: start, //optional
+					//end: end //optional
+				}, function(err, result) {
+
+					if (err) {
+						//handle err
+						alert('error happened - contact help@wembli.com');
+						return;
+					}
+
+					console.log('resuts from event.getParking');
+					if (typeof result.parking !== "undefined") {
+						self.parkingReservations = result.parking;
+					}
+					callback(null, self.parkingReservations);
+				});
+			}
+		};
+	}
+]).
+
 /* plan.fetch sets plan and isLoggedIn in the $rootScope and calls customer.set() which sets customer in the root scope */
 factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 	function($rootScope, wembliRpc, customer, $timeout) {
@@ -293,6 +365,33 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 				return self.tickets;
 			},
 
+			getParking: function() {
+				return self.parking;
+			},
+
+			setParking: function(parking) {
+				self.parking = parking;
+				return self.parking;
+			},
+
+			getHotels: function() {
+				return self.hotels;
+			},
+
+			setHotels: function(hotels) {
+				self.hotels = hotels;
+				return self.hotels;
+			},
+
+			getRestaurants: function() {
+				return self.restaurants;
+			},
+
+			setRestaurants: function(restaurants) {
+				self.restaurants = restaurants;
+				return self.restaurants;
+			},
+
 			getFeed: function() {
 				return self.feed;
 			},
@@ -330,8 +429,24 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 				});
 			},
 
+			addParking: function(args, callback) {
+				wembliRpc.fetch('plan.addParking', args, callback);
+			},
+
+			addParkingReceipt: function(args, callback) {
+				wembliRpc.fetch('plan.addParkingReceipt', args, callback);
+			},
+
+			removeParking: function(args, callback) {
+				wembliRpc.fetch('plan.removeParking', args, callback);
+			},
+
 			addTicketGroup: function(args, callback) {
 				wembliRpc.fetch('plan.addTicketGroup', args, callback);
+			},
+
+			removeTicketGroup: function(args, callback) {
+				wembliRpc.fetch('plan.removeTicketGroup', args, callback);
 			},
 
 			savePreferences: function(args, callback) {
@@ -340,7 +455,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 
 			//get plan from server and return it
 			fetch: function(args, callback) {
-				console.log('CALLING FETCH');
 				if (typeof callback === "undefined") {
 					callback = args;
 					args = {};
@@ -364,13 +478,14 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 					//response
 
 					function(err, result) {
-						console.log('BACK FROM FETCH');
-
 						if (typeof result.plan !== "undefined") {
 							$rootScope.plan = result.plan;
 							self.plan = result.plan;
 							self.friends = result.friends;
 							self.tickets = result.tickets;
+							self.parking = result.parking;
+							self.hotels = result.hotels;
+							self.restaurants = result.restaurants;
 							self.organizer = result.organizer;
 							self.context = result.context;
 							self.feed = result.feed;
@@ -620,20 +735,30 @@ factory('googleMap', ['$rootScope',
 		self.zoom = 14;
 		self.center = new google.maps.LatLng(32.722439302963, -117.1645658798);
 
-
-
 		var mapDefaults = {
 			center: self.center,
 			zoom: self.zoom,
 			draggable: true,
 			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+
+		function floatEqual(f1, f2) {
+			return (Math.abs(f1 - f2) < 0.000001);
 		}
 
-			function floatEqual(f1, f2) {
-				return (Math.abs(f1 - f2) < 0.000001);
-			}
-
 		return {
+			/* clear the googleMap state so a new map can be drawn */
+			init: function() {
+				self._markers = [];
+				self._infoWindows = [];
+				self._map = null;
+
+				/* state */
+				self.drawn = false;
+				self.dragging = false;
+				self.zoom = 14;
+				self.center = new google.maps.LatLng(32.722439302963, -117.1645658798);
+			},
 			/* create a google map instance */
 			draw: function(element, options, handlers) {
 				var o = angular.extend(mapDefaults, options);
@@ -760,6 +885,126 @@ factory('googleMap', ['$rootScope',
 
 	}
 ]).
+
+factory('googlePlaces', ['googleMap',
+	function(googleMap) {
+		return {
+			getParking: function(lat, lng, radius, callback) {
+				/* get all the google parking nearby and add it to the scope */
+				var request = {
+					location: new google.maps.LatLng(lat, lng),
+					radius: radius,
+					types: ['parking']
+				};
+
+				var service = new google.maps.places.PlacesService(googleMap.getMap());
+
+				service.nearbySearch(request, callback);
+
+			}
+
+		};
+	}
+]).
+
+factory('mapMarker', ['mapInfoWindowContent',
+	function(mapInfoWindowContent) {
+		return {
+			create: function(googleMap, args) {
+
+				var markerArgs = {
+					map: googleMap.getMap()
+				};
+
+				if (typeof args.position !== "undefined") {
+					markerArgs.position = args.position;
+				}
+
+				if ((typeof args.lat !== "undefined") && (typeof args.lng !== "undefined")) {
+					markerArgs.position = new google.maps.LatLng(args.lat, args.lng);
+				}
+
+				/* make a marker for the venue */
+				var marker = new google.maps.Marker(markerArgs);
+				marker.setIcon(args.icon);
+				marker.setAnimation(google.maps.Animation.DROP);
+
+				/* infoWindow for the venue marker */
+				var win = new google.maps.InfoWindow({
+					content: mapInfoWindowContent.create({
+						header: args.name,
+						body: args.body
+					}),
+					pixelOffset: new google.maps.Size(10, 0),
+				});
+
+				google.maps.event.addListener(marker, 'click', function() {
+					console.log('clicked infowindow')
+					if (googleMap.isInfoWindowOpen(marker)) {
+						googleMap.closeInfoWindow(marker);
+					} else {
+						googleMap.openInfoWindow(marker);
+					}
+				});
+
+				/* put the marker on the map */
+				googleMap.addMarker(marker);
+				/* put the infoWindow on the map */
+				googleMap.addInfoWindow(win, marker);
+
+			}
+		};
+
+	}
+]).
+
+
+
+factory('mapVenue', ['mapInfoWindowContent',
+	function(mapInfoWindowContent) {
+		return {
+			create: function(googleMap, args) {
+
+				/* make a marker for the venue */
+				var marker = new google.maps.Marker({
+					map: googleMap.getMap(),
+					position: new google.maps.LatLng(args.lat, args.lng),
+				});
+				marker.setIcon("/images/icons/map-icons/sports/stadium.png");
+				marker.setAnimation(google.maps.Animation.DROP);
+
+				/* infoWindow for the venue marker */
+				var win = new google.maps.InfoWindow({
+					content: mapInfoWindowContent.create({
+						header: args.name,
+						body: args.street + ', ' + args.city + ', ' + args.state
+					}),
+					pixelOffset: new google.maps.Size(10, 0),
+				});
+
+				google.maps.event.addListener(marker, 'click', function() {
+					console.log('clicked infowindow')
+					if (googleMap.isInfoWindowOpen(marker)) {
+						googleMap.closeInfoWindow(marker);
+					} else {
+						googleMap.openInfoWindow(marker);
+					}
+				});
+
+				/* put the marker on the map */
+				googleMap.addMarker(marker);
+				/* put the infoWindow on the map */
+				googleMap.addInfoWindow(win, marker);
+				/* open the infowindow for the venue by default */
+				googleMap.openInfoWindow(marker);
+
+
+			}
+		};
+
+	}
+]).
+
 
 factory('mapInfoWindowContent', [
 	function() {
@@ -1237,15 +1482,15 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 				return this.loadingDuration;
 			},
 			slide: function(e, newUrl, oldUrl, callback) {
-				console.log('sliding page');
-				console.log(newUrl);
-				console.log(oldUrl);
 				/* if either new or old has a hash tag and the urls are otherwise the same the gtfo */
 				if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
 					if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
 						return;
 					}
 				}
+				console.log('sliding page');
+				console.log(newUrl);
+				console.log(oldUrl);
 
 				var me = this;
 				var path = $location.path();
@@ -1347,6 +1592,7 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 						$rootScope.$emit('viewContentLoaded', {});
 
 						/* do the animations */
+						console.log('gotoframe: ' + nextFrameID);
 						sequence.goTo(nextFrameID, direction);
 
 						$('#content').scrollTop(0);
@@ -1362,12 +1608,17 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 
 						//update the currentPath and the currentFrame
 						$rootScope.currentPath = $location.path();
+						var frameToRemove = '#frame' + $rootScope.currentFrame + ' > div';
 						$rootScope.currentFrame = nextFrameID;
 
 						/* dismiss any modals once the page loads */
 						sequence.ready(function() {
 							$timeout(function() {
 								loadingModal.hide();
+								/* clear the old fram element */
+								console.log('remove frame: ' + frameToRemove);
+								angular.element(frameToRemove).remove();
+
 							}, me.getLoadingDuration());
 						});
 

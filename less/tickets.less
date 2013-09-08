@@ -7,7 +7,7 @@
 		}
 	}
 }
-#rsvp-login-modal, #tickets-login-modal {
+#parking-login-modal, #rsvp-login-modal, #tickets-login-modal {
 
 	.not-friend {
 		text-align:center;
@@ -19,6 +19,10 @@
 			padding:0 20px;
 			input[type=radio] {
 				margin:45px 25px 45px 0;
+			}
+
+			input#facebook-login {
+				visibility: hidden;
 			}
 
 			.option-content {
@@ -51,7 +55,7 @@
 	}
 }
 
-#tickets-offsite-modal {
+#parking-offsite-modal, #tickets-offsite-modal {
 	form {
 		margin:20px;
 		label.radio {
@@ -88,6 +92,12 @@
 	}
 }
 
+.back-to-plan-container {
+	text-align: center;
+	padding:20px;
+	#translucent > .background(@grayLight,0.9);
+}
+
 #tickets-frame {
 	overflow:hidden;
 	.clearfix();
@@ -116,7 +126,7 @@
 	}
 
 	#map-background {
-		position:absolute;
+		position:relative;
 		bottom:0px;
 		overflow:hidden;
 		text-align:center;
@@ -150,8 +160,8 @@
 
 		.ZoomControls {
 			position:absolute;
-			left:75px;
-			top:120px;
+			left:20px;
+			top:0px;
 			width:35px;
 			color:@white;
 			font-weight:bold;
@@ -233,7 +243,6 @@
 		.filter-container {
 			.clearfix();
 			position:relative;
-			margin-top:20px;
 			text-align:left;
 
 			.popover-container {
@@ -353,6 +362,8 @@
 					}
 				}
 
+
+
 				.ticket-info {
 					text-align:left;
 					font-weight:bold;
@@ -422,6 +433,10 @@
 
 		}
 
+		#purchased-tickets-filters {
+
+		}
+
 		#read-only-header-container {
 			#read-only-header {
 				.clearfix();
@@ -448,16 +463,16 @@
 			}
 		}
 
-		#add-to-plan-header-container, #buy-now-header-container {
-			a#price-header {
+		#purchased-tickets-header-container, #add-to-plan-header-container, #buy-now-header-container {
+			a.price-header {
 				width:65px;
 			}
-			a#section-header {
+			a.section-header {
 				width:195px;
 				text-align:left;
 				margin-left:5px;
 			}
-			a#qty-header {
+			a.qty-header {
 				width:100px;
 				text-align:left;
 			}
@@ -481,7 +496,7 @@
 			}
 		}
 
-		#add-to-plan-container, #buy-now-container {
+		#purchased-tickets-container, #add-to-plan-container, #buy-now-container {
 			.ticket-info {
 				margin-top:0;
 			}

@@ -1,0 +1,24 @@
+#purchased-tickets-filters.filter-container.clearfix
+	h3.pull-left Tickets You've Purchased:
+#purchased-tickets-header-container.ticket-list-header-container
+	a.price-header(href="#",ng-click="sortByPrice()") Price
+	a.section-header(href="#",ng-click="sortBySection()") Section
+	a.qty-header(href="#",ng-click="sortByQty()") Qty
+ul#purchased-tickets-container.ticket-list-container
+	li.ticket-row(ng-repeat="ticket in tickets | filter:{ticketsInPlan:true}")
+		.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+		.ticket-section.hide {{ticket.Section}}
+		.seat-row.hide {{ticket.Row}}
+		.ticket-price
+			.actual-price ${{ticket.ActualPrice}}
+			.each (each)
+		.ticket-info
+			.ticket-section-name Section: {{ticket.Section}}
+			.seat-row-name Row: {{ticket.Row}}
+		.qty-container
+			strong Qty:
+			span(ng-model="ticket.selectedQty") {{ticket.selectedQty}}
+.back-to-plan-container
+	a.btn.btn-primary.btn-large(ng-show="backToPlan",href="/plan#section3",direction="1") Back To The Plan
+
+

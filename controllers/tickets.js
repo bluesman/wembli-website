@@ -5,6 +5,7 @@ var eventRpc = require('../rpc/event').event;
 var venueRpc = require('../rpc/venue').venue;
 var wembliModel = require('wembli-model'),
 	Customer = wembliModel.load('customer'),
+	Ticket = wembliModel.load('ticket'),
 	Plan = wembliModel.load('plan');
 
 
@@ -127,12 +128,12 @@ module.exports = function(app) {
 							Plan.findOne()
 								.where('organizer').equals(req.session.customer._id)
 								.where('event.eventId').equals(req.param("eventId")).exec(function(err, p) {
-								if (p === null) {
-									return newPlan();
-								}
-								req.session.plan = p;
-								return res.render(template, locals);
-							});
+									if (p === null) {
+										return newPlan();
+									}
+									req.session.plan = p;
+									return res.render(template, locals);
+								});
 						} else {
 							newPlan();
 						}
@@ -168,4 +169,31 @@ module.exports = function(app) {
 		})
 	});
 
+	app.get('/partials/interactive-venue-map', function(req, res) {
+		/* get any purchased tickets for this plan */
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+		};
+
+		/* right now - you can only have 1 un-purchased ticket group..so remove any tickets that are unpurchased from the plan */
+
+		/* find all the existing tickets for this plan */
+		Ticket.find(query, function(err, tickets) {
+
+			var ticketsPurchased = [];
+			/* check if these tickets are purchased */
+			async.forEach(tickets, function(item, callback) {
+					if (item.purchased) {
+						ticketsPurchased.push(item);
+					}
+					callback();
+				},
+				function() {
+					console.log('tickets purchased:');
+					console.log(ticketsPurchased);
+					return res.render('partials/interactive-venue-map',{ticketsPurchased:ticketsPurchased});
+				});
+		});
+	});
 }

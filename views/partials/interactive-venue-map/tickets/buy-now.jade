@@ -1,3 +1,6 @@
+h3(ng-show="{'split-after':true}[plan.preferences.payment]")
+	span.orange Buy Tickets Now&nbsp;
+	span Then Have Friends Pay You Back
 #buy-now-filters.filter-container
 	.qty-filter
 		strong Qty:
@@ -14,9 +17,9 @@
 			input.amount(type="text")
 		#buy-now-price-slider.price-slider
 #buy-now-header-container.ticket-list-header-container
-	a#price-header(href="#",ng-click="sortByPrice()") Price
-	a#section-header(href="#",ng-click="sortBySection()") Section
-	a#qty-header(href="#",ng-click="sortByQty()") Qty
+	a.price-header(href="#",ng-click="sortByPrice()") Price
+	a.section-header(href="#",ng-click="sortBySection()") Section
+	a.qty-header(href="#",ng-click="sortByQty()") Qty
 ul#buy-now-container.ticket-list-container
 	li.ticket-row(ng-repeat="ticket in tickets")
 		.ticket-section.hide {{ticket.Section}}

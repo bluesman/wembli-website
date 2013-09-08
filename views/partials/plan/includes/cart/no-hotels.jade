@@ -1,0 +1,7 @@
+//- hotel not part of this plan
+.body.add-on-not-included(ng-hide="plan.preferences.addOns.hotels")
+	p If you live close enough to the venue to go home and get your beauty rest then by all means sleep tight.  But if you're going to be out of town or far enough away to risk  having to pull over and sleep at a truck-stop on the way home - then click the button below and lock in a comfy bed at the diggs of your choice.
+	p You can thank us later.
+	label
+		.btn.btn-primary.btn-large(href="#") Add Hotel To Plan
+		input.hide(type="checkbox",ng-model="plan.preferences.addOns.hotels", ng-click="savePrefs()")

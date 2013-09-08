@@ -1,0 +1,16 @@
+- if (req.session.plan.preferences.payment === 'split-first')
+	//- restaurants part of the plan, none chosen, rsvp not complete, split first
+	.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && !plan.restaurants[0] && !plan.rsvpComplete && {'split-first':true,null:true}[plan.preferences.restaurants.payment]")
+		p Soon you'll be able to cook up a great restaurant plan but first you'll have to wait for your friends to RSVP.  Once votes are in it'll be easy as apple pie to find great eats.
+		p In the meantime why not whet your appetite by looking through some restaurants near your event?
+		.button-container.clearfix
+			a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Restaurants
+			a.buy-now.wembli-sequence-link(ng-click="setPayment('restaurants','split-after')",href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Forget RSVP's - I want to pick now
+- else
+	//- restaurants part of the plan, none chosen, rsvp not complete, split after
+	.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && !plan.restaurants[0] && !plan.rsvpComplete && {'split-after':true}[plan.preferences.restaurants.payment]")
+		p Go ahead and pick a restaurant before getting feedback from your friends - you can always change it later!
+		.button-container.clearfix
+			a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
+			- if (req.session.plan.preferences.payment === 'split-after')
+				a.buy-now(ng-click="setPayment('restaurants','split-first')",href="#") I changed my mind, I want to know who's coming first

@@ -49,7 +49,7 @@
 								input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="login_email",required)
 								input.focus-on-click.password(type="password",ng-model="password",placeholder="PASSWORD",name="password",required)
 				label.radio
-					input#radio-login(ng-model="authAction",type="radio",name="auth_action",value="facebook")
+					input#facebook-login(ng-model="authAction",type="radio",name="auth_action",value="facebook")
 					.option-content
 						h3 3. Login with facebook:
 						.facebook-login
@@ -57,7 +57,7 @@
 								i.icon-facebook.icon-2x.pull-left
 								span Login with Facebook
 	.modal-footer
-		button.btn.btn-primary.btn-large(ng-click="authActions[authAction]()",ng-hide="customer")
+		button.btn.btn-primary.btn-large.muted(ng-click="authActions[authAction]()",ng-hide="customer", ng-class="{'facebook':'muted'}[authAction]")
 			span(ng-hide="continueSpinner") Continue
 			span.icon-spinner.icon-spin(ng-show="continueSpinner")
 		a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket="{{ticket}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",ng-show="customer",target="_blank") Buy Tickets

@@ -26,12 +26,14 @@ angular.module('wembliApp', [
       if (newUrl === oldUrl) {
         return;
       }
-      console.log('loation hash: ');
-      console.log($location.hash());
-      if ($location.hash() === '#no-slide') {
+      if ($location.hash() === 'no-slide') {
         $location.hash('');
         return;
       }
+
+      console.log('loation hash: ');
+      console.log($location.hash());
+
       /* slide the page in if necessary */
       $timeout(function() {
         slidePage.slide(e, newUrl, oldUrl, function() {

@@ -3,12 +3,15 @@ section#section2.friend-rsvp-section.rsvp-section.plan-section
 		h1.pull-left RSVP
 	.body
 		h3 {{organizer.firstName}} {{organizer.lastName}} Is Planning An Event And You're Invited!
-		.friend-rsvp-container.rsvp-container.clearfix
-			h4 Are You In Or Out?
+		.organizer-rsvp-container.rsvp-container.clearfix
+			.img-container.pull-left
+				img.img-polaroid(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
+				img.img-polaroid(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
 			.collect-rsvp-container.pull-left
+				h4 Are You In Or Out?
 				.collect-rsvp
-					a#yes(ng-click="setRsvp('decision',true)",ng-class="{true:'active'}[me.rsvp.decision]") Yes!
-					a#no(ng-click="setRsvp('decision',false)",ng-class="{false:'active'}[me.rsvp.decision]") No.
+					a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[me.rsvp.decision]",href="#no-slide") Yes!
+					a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[me.rsvp.decision]", href="#no-slide") No.
 				fieldset(ng-show="plan.preferences.inviteOptions.guestFriends")
 					label
 						input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="me.rsvp.guestCount",placeholder="1")
@@ -19,7 +22,7 @@ section#section2.friend-rsvp-section.rsvp-section.plan-section
 					strong ** Note:&nbsp;
 					span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
 					span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has chosen to foot the bill for this plan - W00t!
-					span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the rsvp's are in, {{organizer.firstName}} will lock in the tickets then send a link for everyone to pay for their portion of the outing.
+					span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has already locked in the tickets as soon as all the RSVPs are in you'll get a Pony Up email so you can pay your share of the bill.
 			.info-container.pull-right
 				.info
 					.row.first-row

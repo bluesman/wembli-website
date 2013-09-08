@@ -1,21 +1,22 @@
 #parking-frame(ng-controller="ParkingCtrl")
 	#map-background
-		#parking-map-container.parking-map.map-container(lat="#{lat}",lng="#{lon}",zoom="15",draggable="true",map-type-id="ROADMAP")
+		#parking-map-container.parking-map.map-container(lat="#{lat}",lng="#{lon}",zoom="13",draggable="true",map-type-id="ROADMAP")
 	#parking.pull-right
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
-		- console.log('plan prefs in parking list');
-		- console.log(req.session.plan.preferences);
-		- if (req.session.plan.preferences.payment === 'split-first')
-			include parking/read-only
+		- if (typeof parkingPurchased[0] !== "undefined")
+			include parking/purchased-parking
 		- else
-			//- include parking/buy-now
-		.no-results
-			.notify-email(ng-show="notFound",type="parking",ng-transclude)
-				.collect-email(ng-hide="emailCollected")
-					p Aww shucks! We haven't got any parking listings to show you.  Enter your email below if you'd like to be notified when parking becomes available.
-					fieldset
-						input#email
-					button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
-				.collected-email(ng-show="emailCollected")
-					p OK! We'll let you know if any parking spots become available!
+			- if (req.session.plan.preferences.payment === 'split-first')
+				include parking/read-only
+			- else
+				include parking/buy-now
+			.no-results
+				.notify-email(ng-show="notFound",type="parking",ng-transclude)
+					.collect-email(ng-hide="emailCollected")
+						p Aww shucks! We haven't got any parking listings to show you.  Enter your email below if you'd like to be notified when parking becomes available.
+						fieldset
+							input#email
+						button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
+					.collected-email(ng-show="emailCollected")
+						p OK! We'll let you know if any parking spots become available!

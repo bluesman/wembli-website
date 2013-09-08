@@ -1,0 +1,31 @@
+//- have restaurants and purchased
+.body.add-on-included(ng-show="restaurants[0] && restaurants[0].payment && restaurants[0].payment.receipt")
+	ul.restaurants-list-container
+		li.restaurants-row(ng-repeat="p in restaurants | restaurantsTotals")
+			.restaurants-container
+				.restaurants-info
+					strong Order ID:&nbsp;
+					span {{restaurants._id}}
+				.restaurants-info.clearfix
+					.restaurants-section.pull-left
+						strong SECTION/AISLE:
+						span {{restaurants.restaurantsGroup.Section}}&nbsp;
+					.restaurants-row.pull-left
+						strong ROW/BOX:
+						span {{restaurants.restaurantsGroup.Row}}
+					.restaurants-seat.pull-left
+						strong SEATS:
+						span(ng-show="{'*':true}[restaurants.restaurantsGroup.LowSeat]") {{restaurants.restaurantsGroup.LowSeat}}
+						span(ng-hide="{'*':true}[restaurants.restaurantsGroup.LowSeat]") {{restaurants.restaurantsGroup.LowSeat}} - {{restaurants.restaurantsGroup.HighSeat}}
+				.restaurants-notes(ng-show="restaurants.restaurantsGroup.Notes")
+					span NOTES:&nbsp;
+					span {{restaurants.restaurantsGroup.Notes}}
+				.restaurants-payment.clearfix
+					.per-person.pull-left
+						strong Total cost for {{restaurants.payment.receipt.request_restaurants}} {{restaurants.payment.receipt.request_restaurants | pluralize:'restaurants'}}:
+					.restaurants-total.pull-left
+						{{restaurants.payment.sale_total | currency}}
+			.controls.clearfix
+				a.view-restaurants-link.pull-left.btn.btn-large.btn-orange(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") View restaurants On Map
+				- if (req.session.plan.preferences.payment === 'split-after')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!

@@ -108,7 +108,9 @@ module.exports = function(app) {
 
 		/* must make sure that this customer is allowed to view this plan */
 		var foundPlan = function(err, p) {
+			console.log("FOUND PLAN");
 			if (!p) {
+				console.log('REDIRECTING TO DASHBOARD because there is no plan for ' + req.param('guid'))
 				return res.redirect('/dashboard');
 			};
 			req.session.plan = p;
@@ -120,27 +122,31 @@ module.exports = function(app) {
 		};
 
 		/* is the guid something this customer is planning? */
+		var planFound = false;
 		for (var i = 0; i < req.session.customer.plans.length; i++) {
 			var g = req.session.customer.plans[i];
 			if (g === req.param('guid')) {
-				Plan.findOne({
-					guid: req.param('guid')
-				}, foundPlan);
+				planFound = true;
+				var query = {"guid":req.param('guid')};
+				Plan.findOne(query, foundPlan);
 				break;
 			}
 		};
-
-		/* still here? check if this customer is invited to the plan */
-		Friend.findOne({
-			planGuid: req.param('guid'),
-			customerId: req.session.customer.id
-		}, function(err, f) {
-			if (!f) {
-				return res.redirect('/dashboard');
-			};
-			Plan.findOne({guid:req.param('guid')},foundPlan);
-		});
-
+		if (!planFound) {
+			/* still here? check if this customer is invited to the plan */
+			Friend.findOne({
+				planGuid: req.param('guid'),
+				customerId: req.session.customer.id
+			}, function(err, f) {
+				if (!f) {
+					console.log('REDIRECTING TO DASHBOARD because this customer is not invited to this plan')
+					return res.redirect('/dashboard');
+				};
+				Plan.findOne({
+					guid: req.param('guid')
+				}, foundPlan);
+			});
+		}
 	});
 
 	app.get('/partials/plan/:guid/:section?', function(req, res) {

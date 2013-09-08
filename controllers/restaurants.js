@@ -20,6 +20,11 @@ module.exports = function(app) {
 		});
 	});
 
+	app.get('/restaurants/:eventId/:eventName/login/:service/:restaurantId', function(req, res) {
+		return res.redirect('/restaurants/' + req.param('eventId') + '/' + req.param('eventName') + '#restaurants-login-modal-' + req.param('service') + '-' + req.param('restaurantId'));
+	});
+
+
 	var initRestaurantView = function(req, res, callback) {
 
 		var locals = {

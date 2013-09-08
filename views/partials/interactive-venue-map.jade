@@ -2,23 +2,29 @@
 #interactive-venue-map.clearfix(ng-controller="VenueMapCtrl")
 	- console.log('visitor context: '+visitor.context)
 	- var include = 'buy-now';
-	- if (visitor.context === 'organizer')
-		- if (plan.preferences.payment === 'split-first')
-			- if (!plan.rsvpComplete)
-				- include = 'invite-friends'
-				- header = "See What's Available Then Invite Friends";
-			- else
-				- include = 'add-to-plan'
-				- header = "Add Tickets To Your Cart"
-		- else
-			- include = 'buy-now'
-			- header = "Choose Tickets To Buy"
-	- else if(visitor.context === 'friend')
-		- header = "See What Tickets Are Available";
-		- include = 'read-only'
+
+	//- if they already have tickets in the plan, just display the tickets
+	- if (typeof ticketsPurchased[0] !== "undefined")
+		- include = 'purchased-tickets'
+		- header = 'Your Tickets'
 	- else
-		- header = "See What Tickets Are Available";
-		- include = 'invite-friends'
+		- if (visitor.context === 'organizer')
+			- if (plan.preferences.payment === 'split-first')
+				- if (!plan.rsvpComplete)
+					- include = 'invite-friends'
+					- header = "See What's Available Then Invite Friends";
+				- else
+					- include = 'add-to-plan'
+					- header = "Add Tickets To Your Cart"
+			- else
+				- include = 'buy-now'
+				- header = "Choose Tickets To Buy"
+		- else if(visitor.context === 'friend')
+			- header = "See What Tickets Are Available";
+			- include = 'read-only'
+		- else
+			- header = "See What Tickets Are Available";
+			- include = 'invite-friends'
 	section
 		.header.clearfix
 			h1.pull-left #{header}
@@ -30,6 +36,8 @@
 		#venue-map-container
 		//- #groups-container
 	#tickets.pull-right
+		- if (include == 'purchased-tickets')
+			include interactive-venue-map/tickets/purchased-tickets
 		- if (include == 'invite-friends')
 			include interactive-venue-map/tickets/invite-friends
 		- if (include == 'add-to-plan')

@@ -1,0 +1,4 @@
+.totals.pull-left
+	.total-bill Total Bill = {{tickets.total + parking.total + restaurants.total + hotels.total | currency}}
+	.total-ponied-up Total Ponied Up = {{totalPoniedUp | currency}}
+	.balance.orange Balance = {{tickets.total + parking.total + restaurants.total + hotels.total - totalPoniedUp | currency}}

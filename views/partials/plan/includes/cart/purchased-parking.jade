@@ -1,0 +1,28 @@
+//- have parking and purchased
+.body.add-on-included(ng-show="parking[0] && parking[0].payment && parking[0].payment.receipt")
+	ul.parking-list-container.add-on-container
+		li.parking-row.add-on-row(ng-repeat="p in parking | parkingTotals")
+
+			.parking-container.add-on-container(ng-show="{'google':true}[p.service]")
+				.parking-info.add-on-info.clearfix
+					.parking-name
+						strong NAME:
+						span {{p.parking.name}}&nbsp;
+					.parking-location
+						strong LOCATION:
+						span {{p.parking.vicinity}}
+
+			//- TODO: show a parkwhiz logo? add notes field to keep track of order info from parkwhiz?
+			.parking-container.add-on-container(ng-show="{'pw':true}[p.service]")
+				.parking-info.add-on-info.clearfix
+					.parking-name.pull-left
+						strong NAME:&nbsp;
+						span {{p.parking.location_name}}&nbsp;
+					.parking-location.pull-left
+						strong LOCATION:&nbsp;
+						span {{p.parking.address}}, {{p.parking.city}}, {{p.parking.state}} {{p.parking.zip}}
+
+			.controls.clearfix
+				a.view-parking-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") View parking On Map
+				- if (req.session.plan.preferences.payment === 'split-after')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!

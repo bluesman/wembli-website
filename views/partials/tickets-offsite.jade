@@ -31,5 +31,5 @@
 						h3 Show Me Somethin' Else
 						p I decided not to buy those stinkin' tickets. Show me other options.
 		.modal-footer
-			a.btn.btn-primary.btn-large.wembli-sequence-link(ng-show="showButton()",ng-click="submitForm()",href="/event-options/{{plan.event.eventId}}/{{plan.event.eventName}}") Continue
+			a.btn.btn-primary.btn-large(ng-show="showButton()",ng-click="submitForm()",href="/event-options/{{eventId}}/{{eventName}}") Continue
 			a.btn.btn-cancel.btn-large(ng-hide="showButton()",ng-click="cancelForm()") See More Tickets

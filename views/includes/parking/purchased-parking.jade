@@ -1,0 +1,22 @@
+#purchased-parking-filters.filter-container.parking-list-header-container.clearfix
+	h3.pull-left Parking You've Purchased:
+#purchased-parking-list-header-container.parking-list-header-container
+	a.range-header(href="#",ng-click="sortByPrice()") Price
+	a.section-header(href="#",ng-click="sortBySection()") Location
+	a.distance-header(href="#",ng-click="sortByDistance()") Distance
+
+ul#purchased-parking-container.parking-list-container
+	li.parking-row(ng-repeat="item in parking")
+		.parking-price
+			.actual-price ${{item.parking.price}}
+			.each (each)
+		.parking-info
+			.parking-location-name {{item.parking.location_name}}
+			.parking-address
+				div {{item.parking.address}}
+				div {{item.parking.city}}, {{item.parking.state}}
+		.parking-distance {{determineDistance(item.parking.distance)}} mi.
+.back-to-plan-container
+	a.btn.btn-primary.btn-large(href="/plan#section3",direction="1") Back To The Plan
+
+

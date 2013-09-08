@@ -50,30 +50,50 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
       restrict: 'EAC',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-
           attr.$observe('ticket', function(val) {
             if (typeof val === "undefined" || val === "") {
               return;
             }
             var ticket = JSON.parse(val);
+            var p = plan.get();
+
             element.click(function(e) {
               var shipping = 15;
               var serviceCharge = (parseFloat(ticket.ActualPrice) * .15) * parseInt(ticket.selectedQty);
               var actualPrice = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
               var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
               amountPaid = amountPaid.toFixed(2);
-              $rootScope.$broadcast('tickets-offsite-clicked', {
-                qty: ticket.selectedQty,
-                amountPaid: amountPaid,
-                ticketGroup: ticket,
-                eventId: ticket.RventId,
-                sessionId: ticket.sessionId
-              });
+              console.log(p);
 
-              var Promise = $timeout(function() {
-                $('#tickets-login-modal').modal('hide');
-                $('#tickets-offsite-modal').modal('show');
-              }, 1500);
+              /* add this ticket group - it will be removed if they later say they did not buy it */
+              plan.addTicketGroup({
+                service: 'tn',
+                eventId: p.event.eventId,
+                ticketGroup: ticket,
+                qty: ticket.selectedQty,
+                total: amountPaid,
+                payment: JSON.stringify({
+                  transactionToken: ticket.sessionId,
+                  amount: amountPaid,
+                  qty: ticket.selectedQty
+                })
+              }, function(err, results) {
+                console.log('results form adding tickets to plan');
+                console.log(results);
+                $rootScope.$broadcast('tickets-offsite-clicked', {
+                  qty: ticket.selectedQty,
+                  amountPaid: amountPaid,
+                  ticketGroup: ticket,
+                  eventId: p.event.eventId,
+                  eventName: p.event.eventName,
+                  sessionId: ticket.sessionId,
+                  ticketId: results.ticketGroup._id
+                });
+                var Promise = $timeout(function() {
+                  $('#tickets-login-modal').modal('hide');
+                  $('#tickets-offsite-modal').modal('show');
+                }, 1500);
+              });
             });
           });
         }
@@ -116,7 +136,8 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
 
-      }],
+        }
+      ],
       compile: function(element, attr, transclude) {
         var generateTnSessionId = function() {
           var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
@@ -130,96 +151,98 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
         };
 
         return function(scope, element, attr) {
-            /* don't cache this partial - cache:false doesn't do it */
+          /* don't cache this partial - cache:false doesn't do it */
           $templateCache.remove("/partials/interactive-venue-map");
+
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
               $('#venue-map-container').tuMap("Refresh", "Reset");
             }
           });
+
           plan.fetch(function(result) {
             var p = result.plan;
             //get the tix and make the ticket list
             wembliRpc.fetch('event.getTickets', {
-              eventID: p.event.eventId
-            }, function(err, result) {
-              if (err) {
-                //handle err
-                alert('error happened - contact help@wembli.com');
-                return;
-              }
-
-              if (typeof result.tickets[0] === "undefined") {
-                loadingModal.hide();
-                $('#no-tickets').modal("show");
-                scope.noTickets = true;
-                return;
-              }
-
-              scope.event = result.event;
-              scope.tickets = result.tickets;
-
-              /* get min and max tix price for this set of tix */
-              scope.minTixPrice = 0;
-              scope.maxTixPrice = 200;
-              angular.forEach(scope.tickets, function(el) {
-                if (parseInt(el.ActualPrice) < scope.minTixPrice) {
-                  scope.minTixPrice = parseInt(el.ActualPrice);
-                }
-                if (parseInt(el.ActualPrice) > scope.maxTixPrice) {
-                  scope.maxTixPrice = parseInt(el.ActualPrice);
+                eventID: p.event.eventId
+              }, function(err, result) {
+                if (err) {
+                  //handle err
+                  alert('error happened - contact help@wembli.com');
+                  return;
                 }
 
-                el.selectedQty = el.ValidSplits.int[0];
-                /* how high to count in the qty filter */
-                scope.maxSplit = 1;
-                /* better idea would be to sort desc and take the 1st one */
-                angular.forEach(el.ValidSplits.int, function(split) {
-                  if (split > scope.maxSplit) {
-                    scope.maxSplit = split;
+                if (typeof result.tickets[0] === "undefined") {
+                  loadingModal.hide();
+                  $('#no-tickets').modal("show");
+                  scope.noTickets = true;
+                  return;
+                }
+
+                scope.event = result.event;
+                scope.tickets = result.tickets;
+
+                /* get min and max tix price for this set of tix */
+                scope.minTixPrice = 0;
+                scope.maxTixPrice = 200;
+                angular.forEach(scope.tickets, function(el) {
+                  if (parseInt(el.ActualPrice) < scope.minTixPrice) {
+                    scope.minTixPrice = parseInt(el.ActualPrice);
                   }
-                  if ($location.search().qty) {
-                    if ($location.search().qty == split) {
-                      el.selectedQty = $location.search().qty;
+                  if (parseInt(el.ActualPrice) > scope.maxTixPrice) {
+                    scope.maxTixPrice = parseInt(el.ActualPrice);
+                  }
+
+                  el.selectedQty = el.ValidSplits.int[0];
+                  /* how high to count in the qty filter */
+                  scope.maxSplit = 1;
+                  /* better idea would be to sort desc and take the 1st one */
+                  angular.forEach(el.ValidSplits.int, function(split) {
+                    if (split > scope.maxSplit) {
+                      scope.maxSplit = split;
                     }
-                  }
+                    if ($location.search().qty) {
+                      if ($location.search().qty == split) {
+                        el.selectedQty = $location.search().qty;
+                      }
+                    }
 
+                  });
+
+                  el.sessionId = generateTnSessionId();
+
+                  el.ticketsInPlan = false;
+                  var t = plan.getTickets();
+                  for (var i = 0; i < t.length; i++) {
+                    if (t[i].ticketGroup.ID == el.ID) {
+                      el.ticketsInPlan = true;
+                      el._id = t[i]._id;
+                    }
+                  };
                 });
 
-                el.sessionId = generateTnSessionId();
-
-                el.ticketsInPlan = false;
-                var t = plan.getTickets();
-                for (var i = 0; i < t.length; i++) {
-
-                  if (t[i].ticketGroup.ID == el.ID) {
-                    el.ticketsInPlan = true;
-                    el._id = t[i]._id;
-                  }
+                var initSlider = function() {
+                  /*Set Minimum and Maximum Price from your Dataset*/
+                  $(".price-slider").slider("option", "min", scope.minTixPrice);
+                  $(".price-slider").slider("option", "max", scope.maxTixPrice);
+                  $(".price-slider").slider("option", "values", [scope.minTixPrice, scope.maxTixPrice]);
+                  $(".amount").val("$" + scope.minTixPrice + " - $" + scope.maxTixPrice);
                 };
-              });
 
-              var initSlider = function() {
-                /*Set Minimum and Maximum Price from your Dataset*/
-                $(".price-slider").slider("option", "min", scope.minTixPrice);
-                $(".price-slider").slider("option", "max", scope.maxTixPrice);
-                $(".price-slider").slider("option", "values", [scope.minTixPrice, scope.maxTixPrice]);
-                $(".amount").val("$" + scope.minTixPrice + " - $" + scope.maxTixPrice);
-              };
+                var filterTickets = function(args) {
+                  console.log('filtering tix');
+                  var priceRange = $(".price-slider").slider("option", "values");
+                  $("#venue-map-container").tuMap("SetOptions", {
+                    TicketsFilter: {
+                      MinPrice: priceRange[0],
+                      MaxPrice: priceRange[1],
+                      Quantity: args.quantity,
+                      eTicket: $("#e-ticket-filter").is(":checked")
+                    }
+                  }).tuMap("Refresh");
 
-              var filterTickets = function(args) {
-                var priceRange = $(".price-slider").slider("option", "values");
-                $("#venue-map-container").tuMap("SetOptions", {
-                  TicketsFilter: {
-                    MinPrice: priceRange[0],
-                    MaxPrice: priceRange[1],
-                    Quantity: args.quantity,
-                    eTicket: $("#e-ticket-filter").is(":checked")
-                  }
-                }).tuMap("Refresh");
-
-                /* this is supposed to update selected Qty when the filter changes but its not working */
-                /*
+                  /* this is supposed to update selected Qty when the filter changes but its not working */
+                  /*
                 angular.forEach(scope.tickets, function(el) {
                   console.log(el);
                   el.selectedQty = el.ValidSplits.int[0];
@@ -235,120 +258,124 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                   });
                 });
                 */
-              };
+                };
 
-              var options = interactiveMapDefaults;
-              options.MapId = scope.event.VenueConfigurationID;
-              options.EventId = scope.event.ID;
+                var options = interactiveMapDefaults;
+                options.MapId = scope.event.VenueConfigurationID;
+                options.EventId = scope.event.ID;
 
-              options.OnInit = function(e, MapType) {
-                $(".ZoomIn").html('+');
-                $(".ZoomOut").html('-');
-                $(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
-                loadingModal.hide()
-              };
-
-              options.OnError = function(e, Error) {
-                if (Error.Code === 1) {
-                  if (typeof scope.event.MapUrl === "undefined") {
-                    scope.event.MapUrl = "/images/no-seating-chart.jpg";
-                  }
-                  /* chart not found - display the tn chart */
-                  $('#venue-map-container').css("background", 'url(' + scope.event.MapUrl + ') no-repeat center center');
+                options.OnInit = function(e, MapType) {
+                  $(".ZoomIn").html('+');
+                  $(".ZoomOut").html('-');
+                  $(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
                   loadingModal.hide()
-                }
-              };
+                };
 
-              options.ToolTipFormatter = function(Data) {
+                options.OnError = function(e, Error) {
+                  if (Error.Code === 1) {
+                    if (typeof scope.event.MapUrl === "undefined") {
+                      scope.event.MapUrl = "/images/no-seating-chart.jpg";
+                    }
+                    /* chart not found - display the tn chart */
+                    $('#venue-map-container').css("background", 'url(' + scope.event.MapUrl + ') no-repeat center center');
+                    loadingModal.hide()
+                  }
+                };
 
-              };
+                options.ToolTipFormatter = function(Data) {
 
-              options.OnMouseover = function(e, Section) {
-                if (Section.Active) {} else {}
-              };
+                };
 
-              options.OnMouseout = function(e, Section) {
-                if (Section.Active) {}
-              };
+                options.OnMouseover = function(e, Section) {
+                  if (Section.Active) {} else {}
+                };
 
-              options.OnClick = function(e, Section) {
-                if (Section.Active && Section.Selected) {}
-              };
+                options.OnMouseout = function(e, Section) {
+                  if (Section.Active) {}
+                };
 
-              options.OnControlClick = function(e, Data) {
-                if (Section.Selected) {}
-              };
+                options.OnClick = function(e, Section) {
+                  if (Section.Active && Section.Selected) {}
+                };
 
-              options.OnGroupClick = function(e, Group) {
-                if (Group.Selected) {
+                options.OnControlClick = function(e, Data) {
+                  if (Section.Selected) {}
+                };
 
-                }
-              };
+                options.OnGroupClick = function(e, Group) {
+                  if (Group.Selected) {
 
-              options.OnTicketSelected = function(e, Ticket) {}
+                  }
+                };
 
-              options.OnReset = function(e) {
-                //Write Code Here
-              };
+                options.OnTicketSelected = function(e, Ticket) {}
 
-              //set the height of the map-container to the window height
-              $('#venue-map-container').css("height", $($window).height() - 60);
-              $('#tickets').css("height", $($window).height() - 60);
-              $('#venue-map-container').css("width", $($window).width() - 480);
-              console.log('making tuMap');
-              $('#venue-map-container').tuMap(options);
-              $('.price-slider').slider({
-                range: true,
-                min: scope.minTixPrice,
-                max: scope.maxTixPrice,
-                step: 5,
-                values: [scope.minTixPrice, scope.maxTixPrice],
-                slide: function(event, ui) {
-                  $(".amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-                },
-                stop: function(event, ui) {
-                  var q = $(this).val();
-                  filterTickets({
-                    quantity: q
+                options.OnReset = function(e) {
+                  //Write Code Here
+                };
+
+                //set the height of the map-container to the window height 174 is the header + the footer
+                $('#venue-map-container').css("height", $($window).height() - 174);
+                $('#tickets').css("height", $($window).height() - 174);
+                $('#venue-map-container').css("width", $($window).width() - 480);
+                console.log('making tuMap');
+                $('#venue-map-container').tuMap(options);
+
+                if ($('.price-slider').length) {
+                  $('.price-slider').slider({
+                    range: true,
+                    min: scope.minTixPrice,
+                    max: scope.maxTixPrice,
+                    step: 5,
+                    values: [scope.minTixPrice, scope.maxTixPrice],
+                    slide: function(event, ui) {
+                      $(".amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                    },
+                    stop: function(event, ui) {
+                      var q = $(this).val();
+                      filterTickets({
+                        quantity: q
+                      });
+                    }
+
                   });
+
+                  var amtVal = "$" + $(".price-slider").slider("values", 0) + " - $" + $(".price-slider").slider("values", 1);
+                  $(".amount").val(amtVal);
                 }
 
+                if ($(".quantity-filter").length) {
+                  console.log('qty filter');
+                  /* filter tix when the drop down changes */
+                  $(".quantity-filter").change(function() {
+                    var q = $(this).val();
+                    filterTickets({
+                      quantity: q
+                    });
+                  });
+
+                  /* default value for quantity-filter? */
+                  var s = $location.search();
+                  if (s.qty) {
+                    $(".quantity-filter").val(s.qty);
+                    filterTickets({
+                      quantity: s.qty
+                    });
+                  }
+                }
+
+              },
+              /* transformRequest */
+              function(data, headersGetter) {
+                $rootScope.genericLoadingModal.header = 'Finding Tickets...';
+                loadingModal.show('Finding Tickets...', 'We\'re scouring the internet for ' + p.event.eventName + ' tickets!');
+                return data;
+              },
+
+              /* transformResponse */
+              function(data, headersGetter) {
+                return JSON.parse(data);
               });
-
-              var amtVal = "$" + $(".price-slider").slider("values", 0) + " - $" + $(".price-slider").slider("values", 1);
-              $(".amount").val(amtVal);
-
-              /* filter tix when the drop down changes */
-              $(".quantity-filter").change(function() {
-                var q = $(this).val();
-                filterTickets({
-                  quantity: q
-                });
-              });
-              /* default value for quantity-filter? */
-              var s = $location.search();
-              if (s.qty) {
-                $(".quantity-filter").val(s.qty);
-                filterTickets({
-                  quantity: s.qty
-                });
-              }
-            },
-            /* transformRequest */
-
-
-            function(data, headersGetter) {
-              $rootScope.genericLoadingModal.header = 'Finding Tickets...';
-              loadingModal.show('Finding Tickets...', 'We\'re scouring the internet for '+ p.event.eventName + ' tickets!');
-              return data;
-            },
-
-            /* transformResponse */
-
-
-            function(data, headersGetter) {
-              return JSON.parse(data);
-            });
           });
         }
       }

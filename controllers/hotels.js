@@ -19,6 +19,12 @@ module.exports = function(app) {
 		});
 	});
 
+
+	app.get('/hotels/:eventId/:eventName/login/:service/:hotelId', function(req, res) {
+		return res.redirect('/hotels/' + req.param('eventId') + '/' + req.param('eventName') + '#hotels-login-modal-' + req.param('service') + '-' + req.param('hotelId'));
+	});
+
+
 	var initRestaurantView = function(req, res, callback) {
 
 		var locals = {

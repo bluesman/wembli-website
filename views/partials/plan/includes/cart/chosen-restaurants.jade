@@ -1,0 +1,57 @@
+//- restaurants part of the plan, restaurant chosen, rsvp is complete, split doesn't matter cause there's nothing to buy yet
+.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && restaurants[0] && !restaurants[0].payment.receipt")
+	//- restaurants is chosen and its parkwhiz
+	//- restaurants is chosen and its google restaurants
+	ul.restaurants-list-container
+		li.restaurants-row(ng-repeat="p in restaurants | restaurantsTotals")
+			.restaurants-container.display-popover(title="restaurants Cost Breakdown",placement="right",html="true",content-id="{{restaurants._id}}-restaurants-popover-content",trigger="hover")
+				div(id="{{restaurants._id}}-restaurants-popover-content").hide
+					.row.clearfix
+						strong.pull-left  Restaurants Price
+						.pull-right {{restaurants.restaurantsGroup.costBreakdown.restaurantsPrice | currency}}
+					.row.clearfix.border-bottom
+						strong.pull-left  Restaurants Service Fee&nbsp;
+						.pull-right {{restaurants.restaurantsGroup.costBreakdown.serviceFee | currency}}
+					.row.clearfix
+						strong.pull-left  Cost Per Person&nbsp;
+						.pull-right {{restaurants.restaurantsGroup.costBreakdown.totalEach | currency}}
+					.row.clearfix
+						strong.pull-left  Est. Delivery Fee* Per Invitee&nbsp;
+						.pull-right {{restaurants.restaurantsGroup.costBreakdown.deliveryFeeEach | currency}}
+					.row.clearfix
+						strong.pull-left  Total (x{{restaurants.restaurantsGroup.selectedQty}} {{restaurants.restaurantsGroup.selectedQty | pluralize:'restaurants'}}):&nbsp;
+						strong.pull-right {{restaurants.restaurantsGroup.costBreakdown.total | currency}}
+					.row.disclaimer
+						small
+							strong *
+							span Delivery fee varies depending on the delivery method you choose when you purchase the restaurants.
+				.restaurants-info.clearfix
+					.restaurants-section.pull-left
+						strong SECTION/AISLE:
+						span {{restaurants.restaurantsGroup.Section}}&nbsp;
+					.restaurants-row.pull-left
+						strong ROW/BOX:
+						span {{restaurants.restaurantsGroup.Row}}
+					.restaurants-seat.pull-left
+						strong SEATS:
+						span(ng-show="{'*':true}[restaurants.restaurantsGroup.LowSeat]") {{restaurants.restaurantsGroup.LowSeat}}
+						span(ng-hide="{'*':true}[restaurants.restaurantsGroup.LowSeat]") {{restaurants.restaurantsGroup.LowSeat}} - {{restaurants.restaurantsGroup.HighSeat}}
+				.restaurants-notes
+					span NOTES:&nbsp;
+					span {{restaurants.restaurantsGroup.Notes}}
+				.restaurants-payment.clearfix
+					.per-person.pull-left
+						strong Total cost for
+					.qty-container.pull-left
+						select(id="qty-{{restaurants.restaurantsGroup.ID}}",ng-model="restaurants.restaurantsGroup.selectedQty",name="qty-{{restaurants.restaurantsGroup.ID}}",ng-options="q for q in restaurants.restaurantsGroup.ValidSplits.int")
+					.pull-left
+						strong {{restaurants.restaurantsGroup.selectedQty | pluralize:'restaurants'}}:
+					.restaurants-total.pull-left
+						{{restaurants.restaurantsGroup.costBreakdown.total | currency}}
+			.controls.clearfix
+				- if (req.session.plan.preferences.payment === 'split-first')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+				- else
+					//- TODO: make this a parkwhiz offsite link
+					a.btn.btn-orange.btn-large.buy-restaurants-offsite.pull-left(ng-hide="{'split-after':true}[plan.preferences.restaurants.payment]",restaurants="{{restaurants.restaurantsGroup}}",ng-href="{{tnUrl}}&tgid={{restaurants.restaurantsGroup.ID}}&evtid={{restaurants.restaurantsGroup.EventID}}&price={{restaurants.restaurantsGroup.ActualPrice}}&treq={{restaurants.restaurantsGroup.selectedQty}}&req.sessionId={{restaurants.restaurantsGroup.sessionId}}",target="_blank") Buy restaurants Now
+				a.change-restaurants-link.pull-left(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Change restaurants

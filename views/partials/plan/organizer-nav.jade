@@ -1,8 +1,8 @@
-- var nav = planNav(req.session.visitor.context)
+- var nav = planNav(req.session.visitor.context, req.session.plan.preferences.payment)
 #plan-nav.affix
 	.spacer
 	.line
-	a.plan-section-nav.wembli-sequence-link(href="/dashboard",direction="0")
+	a.plan-section-nav(href="/dashboard",direction="0")
 		i.icon-dashboard.icon-2x
 		div
 			span Back To Dashboard
