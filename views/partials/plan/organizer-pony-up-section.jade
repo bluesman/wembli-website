@@ -9,7 +9,8 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 				input.pull-left.hide(type="checkbox",ng-model="ponyUp.selectAll")
 				h3 Send pony up request for all friends
 		#no-invitees(ng-hide="friends[0]")
-			button.btn.btn-primary.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
+			p You haven't invited anyone yet - who should Pony Up?
+			button.btn.btn-orange.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
 				span Invite People&nbsp;
 				i.icon-double-angle-right
 		.invitees-container(ng-show="friends[0] && !(plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])") no tickets or add-ons chosen yet

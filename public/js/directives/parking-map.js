@@ -13,8 +13,6 @@ directive('parkingLoginModal', ['$rootScope', '$window', '$location', '$http', '
           attr.$observe('parking', function(val) {
             var parking = JSON.parse(val);
             var displayParkingLoginModal = function(e) {
-              console.log('display parking login modal with parking:');
-              console.log(parking);
               $rootScope.$broadcast('parking-login-clicked', {
                 parking: parking
               });
@@ -33,8 +31,6 @@ directive('parkingLoginModal', ['$rootScope', '$window', '$location', '$http', '
               var h = $location.hash();
               var service = h.split('-')[3];
               var id = h.split('-')[4];
-              console.log('service:' + service);
-              console.log('id' + id);
 
               if (service === 'google') {
                 if (parking.id == id) {
@@ -43,8 +39,6 @@ directive('parkingLoginModal', ['$rootScope', '$window', '$location', '$http', '
                 }
               }
               if (service === 'pw') {
-                console.log('parking login is in hash and service is pw');
-                console.log(parking);
                 if (parking.listing_id == id) {
                   displayParkingLoginModal();
                 }
@@ -67,12 +61,10 @@ directive('buyParkingOffsite', ['$rootScope', '$window', '$location', '$http', '
       restrict: 'EAC',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          console.log('SETTING CLICK FOR OFFSITE');
           element.click(function(e) {
             $location.hash('');
             var parking = JSON.parse(attr.parking);
             var amountPaid = parseFloat(parking.price);
-            console.log('clicked buy parking offsite button');
             /* add this ticket group - it will be removed if they later say they did not buy it */
             plan.addParking({
               service: 'pw',
@@ -83,12 +75,7 @@ directive('buyParkingOffsite', ['$rootScope', '$window', '$location', '$http', '
                 amount: amountPaid,
               })
             }, function(err, results) {
-              console.log('results form adding parking to plan');
-              console.log(results);
-
               var p = plan.getParking();
-              console.log('existing parking');
-              console.log(p);
 
               var newP = [];
 
@@ -104,8 +91,6 @@ directive('buyParkingOffsite', ['$rootScope', '$window', '$location', '$http', '
                 };
               }
               plan.setParking(newP);
-              console.log('new parking');
-              console.log(newP);
               $rootScope.$broadcast('parking-changed', {
                 parking: newP
               });
@@ -138,13 +123,7 @@ directive('addParkingToPlan', ['$rootScope', '$window', '$location', '$http', '$
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           element.click(function(e) {
-            console.log('clicked add parking');
-            console.log(attr.parking);
             var parkingToAdd = JSON.parse(attr.parking);
-            console.log(parkingToAdd);
-            console.log('service');
-            console.log(attr.service);
-
             var payment = {};
 
             /*
@@ -165,12 +144,7 @@ directive('addParkingToPlan', ['$rootScope', '$window', '$location', '$http', '$
               total: 0,
               payment: JSON.stringify(payment)
             }, function(err, result) {
-              console.log('back from adding parking');
-              console.log(result);
-
               var p = plan.getParking();
-              console.log('existing parking');
-              console.log(p);
 
               var newP = [];
 
@@ -186,8 +160,6 @@ directive('addParkingToPlan', ['$rootScope', '$window', '$location', '$http', '$
                 };
               }
               plan.setParking(newP);
-              console.log('new parking');
-              console.log(newP);
               $rootScope.$broadcast('parking-changed', {
                 parking: newP
               });
@@ -207,8 +179,6 @@ directive('parkingMap', ['$rootScope', 'googleMap',
       replace: true,
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          console.log('link parking map!');
-
           var mapTypeId = (attr.mapTypeId) ? google.maps.MapTypeId[attr.mapTypeId] : google.maps.MapTypeId.ROADMAP;
 
           /* draw the map */
@@ -223,8 +193,6 @@ directive('parkingMap', ['$rootScope', 'googleMap',
           if (attr.draggable) {
             mapOpts.draggable = attr.draggable;
           }
-          console.log('mapopts');
-          console.log(mapOpts);
           if (scope.sequenceCompleted) {
             googleMap.draw(element, mapOpts);
           } else {

@@ -101,14 +101,6 @@ filter('pluralize', ['$filter', 'pluralizeWords',
 	}
 ]).
 
-filter('parkingTotals', ['$filter','plan',
-	function($filter,plan) {
-		return function(parking) {
-			return parking;
-		};
-	}
-]).
-
 filter('hotelsTotals', ['$filter','plan',
 	function($filter,plan) {
 		return function(hotels) {
@@ -125,68 +117,6 @@ filter('restaurantsTotals', ['$filter','plan',
 	}
 ]).
 
-
-filter('ticketTotals', ['$filter','plan',
-	function($filter,plan) {
-		var fee = 0.15;
-		return function(tickets) {
-			if (typeof tickets ===  "undefined") {
-				return;
-			}
-			var groupTotal = 0;
-			var groupCount = 0;
-			var groups = [];
-			var groupTotalEach = {};
-			var fee = 0.15;
-			var deliveryFee = 15;
-			var deliverySplitBy = 0;
-			var p = plan.get();
-			if (!p) {
-				return;
-			}
-			if (p.organizer.rsvp.decision) {
-				deliverySplitBy++;
-			}
-			var friends = plan.getFriends();
-			for (var i = 0; i < friends.length; i++) {
-				var f = friends[i];
-				/* add 1 for each friend who is invited and going but don't count their guests */
-				if (f.inviteStatus && f.rsvp.decision) {
-					deliverySplitBy++;
-				}
-			};
-
-			for (var i = 0; i < tickets.length; i++) {
-				var t = tickets[i];
-				var groupNumber = i + 1;
-				var cb = {};
-				cb.ticketPrice = parseFloat(t.ticketGroup.ActualPrice);
-				cb.serviceFee = parseFloat(t.ticketGroup.ActualPrice) * fee;
-				cb.deliveryFee = deliveryFee;
-
-				cb.deliveryFeeEach = cb.deliveryFee / deliverySplitBy;
-
-				cb.totalEach = cb.ticketPrice + cb.serviceFee;
-				cb.total = cb.totalEach * parseInt(t.ticketGroup.selectedQty) + cb.deliveryFee;
-
-				groupTotal += cb.total;
-				groupCount += parseInt(t.ticketGroup.selectedQty);
-				groups.push({
-					value: i,
-					label: 'Ticket Group ' + groupNumber
-				});
-				groupTotalEach[i] = cb.totalEach;
-				t.ticketGroup.costBreakdown = cb;
-			};
-
-			tickets.total = groupTotal;
-			tickets.totalQty = groupCount;
-			tickets.groups = groups;
-			tickets.groupTotalEach = groupTotalEach;
-			return tickets;
-		};
-	}
-]).
 
 /* yikes! this gets called for every digest */
 filter('friendPonyUp', ['$filter', 'plan',

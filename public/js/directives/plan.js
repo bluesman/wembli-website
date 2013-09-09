@@ -505,7 +505,6 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
       replace: true,
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
-          console.log('CONTROLLER IN organizer-dashboard');
           /* display a modal when they click to go off and buy tickets */
           fetchModals.fetch('/partials/tickets-offsite', function(err) {
             if (err) {
@@ -771,6 +770,97 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan',
         return function(scope, element, attr, controller) {
           scope.tnUrl = ticketPurchaseUrls.tn;
           $rootScope.$broadcast('section-loaded');
+
+          /* watch add-ons to generate totals */
+
+          function generateTotals(args) {
+            console.log('generating totals');
+            plan.get(function(p) {
+
+              var groupTotal = 0;
+              var groupCount = 0;
+              var groups = [];
+              var groupTotalEach = {};
+              var fee = args.fee || 0;
+              var deliveryFee = args.deliveryFee || 0;
+              var deliverySplitBy = 0;
+
+              /* count the organizer in the split? */
+              if (p.organizer.rsvp.decision) {
+                deliverySplitBy++;
+              }
+
+              /* get the friends to split by */
+              var friends = plan.getFriends();
+              for (var i = 0; i < friends.length; i++) {
+                var f = friends[i];
+                /* add 1 for each friend who is invited and going but don't count their guests */
+                if (f.inviteStatus && f.rsvp.decision) {
+                  deliverySplitBy++;
+                }
+              };
+
+              /* loop through the list of add-ons and generate totals */
+              for (var i = 0; i < args.list.length; i++) {
+                var item = args.list[i];
+
+                /* don't count it if there's no receipt*/
+                if ((typeof item.payment === "undefined") || (item.payment.receipt === "undefined")) {
+                  continue;
+                }
+
+                var cb = {};
+                var groupNumber = i + 1;
+
+                cb.price = parseFloat(item.payment.receipt.amountPaid) || 0;
+                cb.serviceFee = cb.price * fee;
+                cb.deliveryFee = deliveryFee;
+                cb.deliveryFeeEach = (deliverySplitBy > 0) ? cb.deliveryFee / deliverySplitBy : 0;
+                cb.totalEach = cb.price + cb.serviceFee;
+                var qty = item.payment.receipt.qty || 0;
+                cb.total = cb.totalEach * qty + cb.deliveryFee;
+
+                groupTotal += cb.total;
+                groupCount += qty;
+                groups.push({
+                  value: i,
+                  label: args.label + groupNumber
+                });
+                groupTotalEach[i] = cb.totalEach;
+                item.costBreakdown = cb;
+              };
+
+              args.list.total = groupTotal;
+              args.list.totalQty = groupCount;
+              args.list.groups = groups;
+              args.list.groupTotalEach = groupTotalEach;
+              console.log(args.list);
+            });
+
+          };
+
+          scope.$watch('parking', function(parking) {
+            if (typeof parking === "undefined") {
+              return;
+            }
+            generateTotals({
+              label: 'Parking Spot ',
+              list: parking
+            });
+          });
+
+          scope.$watch('tickets', function(tickets) {
+            if (typeof tickets === "undefined") {
+              return;
+            }
+            generateTotals({
+              label: 'Ticket Group ',
+              list: tickets,
+              fee: 0.15,
+              deliveryFee: 15
+            });
+          });
+
         };
       }
     };
@@ -793,7 +883,6 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
             angular.forEach($scope.friends, function(f) {
               if (f._id == friendId) {
                 if (!f.ponyUp.outsideSourceAmount || (parseFloat(f.ponyUp.outsideSourceAmount) == 0)) {
-                  console.log('no outside source amount');
                   return;
                 }
                 f.ponyUp.submitInProgress = true;
@@ -897,8 +986,6 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
                         return;
                       }
 
-                      console.log('result from cancel pony up request');
-                      console.log(result);
                       f.payment.push(result.payment);
                       p.cancelPonyUpRequestInProgress = false;
                       $scope.paymentTotals();

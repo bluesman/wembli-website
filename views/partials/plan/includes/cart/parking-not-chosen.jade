@@ -13,5 +13,5 @@
 		.button-container.clearfix
 			a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Parking
 			- if (req.session.plan.preferences.payment === 'split-after')
-				a.buy-now(ng-show="{'split-after':true}[plan.preferences.payment]", ng-click="setPayment('parking','split-first')",href="#") I changed my mind, I want to know who's coming first
+				//- a.buy-now(ng-show="{'split-after':true}[plan.preferences.payment]", ng-click="setPayment('parking','split-first')",href="#") I changed my mind, I want to know who's coming first
 

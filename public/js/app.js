@@ -31,9 +31,6 @@ angular.module('wembliApp', [
         return;
       }
 
-      console.log('loation hash: ');
-      console.log($location.hash());
-
       /* slide the page in if necessary */
       $timeout(function() {
         slidePage.slide(e, newUrl, oldUrl, function() {

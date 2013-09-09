@@ -1,7 +1,7 @@
 //- have tickets but not purchased
 .body.add-on-included(ng-show="tickets[0] && !tickets[0].payment.receipt")
 	ul.ticket-list-container
-		li.ticket-row(ng-repeat="ticket in tickets | ticketTotals")
+		li.ticket-row(ng-repeat="ticket in tickets")
 			.ticket-container.display-popover(title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{ticket._id}}-tickets-popover-content",trigger="hover")
 				div(id="{{ticket._id}}-tickets-popover-content").hide
 					.row.clearfix

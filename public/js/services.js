@@ -1,6 +1,8 @@
 'use strict';
 
 /* Services */
+var runCount = 0;
+
 
 
 // Demonstrate how to register services
@@ -170,18 +172,14 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 				if (self.sectionsCount == 0) {
 					self.sectionsCount = sectionsCount;
 				}
-				console.log('watch for section-loaded event');
 				var dereg = $rootScope.$on('section-loaded', function(e, data) {
 					self.sectionsLoaded++;
-					console.log('sections loaded: ' + self.sectionsLoaded + ' of ' + self.sectionsCount);
 					if (self.sectionsLoaded == sectionsCount) {
 						/* all the sections are loaded */
 						self.sectionsLoaded = -1;
-						console.log('all sections loaded');
 
 						/* setup the scroll handler for each of the sections */
 						angular.element('#content').on('scroll', function() {
-
 							for (var i = 1; i <= sectionsCount; i++) {
 								/* if the previous section has scrolled halfway
 								 * and this section is not more off the screen than half the height of the section
@@ -211,11 +209,9 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 						$('#nav-section' + (self.scrollToSection)).addClass('active');
 
 						$timeout(function() {
-							console.log('hide page loading modal');
 							$('#page-loading-modal').modal("hide");
 							planNav.scrollTo(self.scrollToSection);
 						}, 1000);
-
 						dereg();
 					}
 				});
@@ -242,7 +238,6 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 					height += parseInt($('#section' + i).height());
 				};
 
-				console.log('scrollToSection ' + sectionNumber);
 				$('#content').animate({
 					scrollTop: (height - 10)
 				}, 1000, 'easeOutBack');
@@ -273,11 +268,9 @@ factory('parking', ['wembliRpc', 'googlePlaces',
 			},
 			fetchGoogleParking: function(args, callback) {
 				args.radius = args.radius || 5000; /* meters, little over 3 miles */
-				console.log('getting parking');
 
 				googlePlaces.getParking(args.lat, args.lng, args.radius, function(results, status) {
 					if (status == google.maps.places.PlacesServiceStatus.OK) {
-						console.log('got googleParking results');
 						self.googleParking = results;
 					}
 					callback(null, self.googleParking);
@@ -300,7 +293,6 @@ factory('parking', ['wembliRpc', 'googlePlaces',
 						return;
 					}
 
-					console.log('resuts from event.getParking');
 					if (typeof result.parking !== "undefined") {
 						self.parkingReservations = result.parking;
 					}
@@ -465,9 +457,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 						self.fetchStack++;
 						var dereg = $rootScope.$on('plan-fetched', function() {
 							self.fetchStack--;
-							if (self.fetchStack == 0) {
-								dereg();
-							}
+							dereg();
 							callback(self);
 						});
 					}
@@ -475,8 +465,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 				}
 				self.fetchInProgress = true;
 				wembliRpc.fetch('plan.init', args,
-					//response
-
 					function(err, result) {
 						if (typeof result.plan !== "undefined") {
 							$rootScope.plan = result.plan;
@@ -939,7 +927,6 @@ factory('mapMarker', ['mapInfoWindowContent',
 				});
 
 				google.maps.event.addListener(marker, 'click', function() {
-					console.log('clicked infowindow')
 					if (googleMap.isInfoWindowOpen(marker)) {
 						googleMap.closeInfoWindow(marker);
 					} else {
@@ -983,7 +970,6 @@ factory('mapVenue', ['mapInfoWindowContent',
 				});
 
 				google.maps.event.addListener(marker, 'click', function() {
-					console.log('clicked infowindow')
 					if (googleMap.isInfoWindowOpen(marker)) {
 						googleMap.closeInfoWindow(marker);
 					} else {
@@ -1457,8 +1443,8 @@ factory('footer', ['initRootScope', '$rootScope', '$location',
 	}
 ]).
 
-factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc', 'loadingModal',
-	function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc, loadingModal) {
+factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc', 'loadingModal',
+	function($document, $rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc, loadingModal) {
 		return {
 			direction: -1,
 			frame: 1,
@@ -1582,8 +1568,13 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 						direction = parseInt($rootScope.direction) || direction;
 						me.setDirection(direction);
 
+						/* get rid of the contents in the old frame */
+						var frameToRemove = '#frame' + $rootScope.currentFrame + ' > div';
+						$(frameToRemove).remove();
+						/* clear any events bound to the content element */
+						$('#content').off();
+
 						/* compile the page we just fetched and link the scope */
-						console.log('compile the page we just fetched and attach to the right frame');
 						var frameNode = angular.element('#frame' + nextFrameID);
 						var frameHtml = $compile(data)($rootScope);
 						frameNode.html(frameHtml);
@@ -1592,7 +1583,6 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 						$rootScope.$emit('viewContentLoaded', {});
 
 						/* do the animations */
-						console.log('gotoframe: ' + nextFrameID);
 						sequence.goTo(nextFrameID, direction);
 
 						$('#content').scrollTop(0);
@@ -1608,17 +1598,12 @@ factory('slidePage', ['$rootScope', '$window', '$templateCache', '$timeout', '$l
 
 						//update the currentPath and the currentFrame
 						$rootScope.currentPath = $location.path();
-						var frameToRemove = '#frame' + $rootScope.currentFrame + ' > div';
 						$rootScope.currentFrame = nextFrameID;
 
 						/* dismiss any modals once the page loads */
 						sequence.ready(function() {
 							$timeout(function() {
 								loadingModal.hide();
-								/* clear the old fram element */
-								console.log('remove frame: ' + frameToRemove);
-								angular.element(frameToRemove).remove();
-
 							}, me.getLoadingDuration());
 						});
 

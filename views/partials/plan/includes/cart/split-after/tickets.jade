@@ -8,7 +8,7 @@
 			p Ok! Add tickets to your cart and then you can check out right away.  Don't worry, you can still have your friends pony up after you've bought the tickets.
 			.button-container.clearfix(ng-show="{'split-after':true}[plan.preferences.tickets.payment]")
 				a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
-				a.buy-now(ng-click="setPayment('tickets','split-first')",href="#") I changed my mind, I want to know who's coming first
+				//- a.buy-now(ng-click="setPayment('tickets','split-first')",href="#") I changed my mind, I want to know who's coming first
 		include ../chosen-tickets
 		include ../purchased-tickets
 

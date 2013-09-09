@@ -63,7 +63,6 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
               var actualPrice = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
               var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
               amountPaid = amountPaid.toFixed(2);
-              console.log(p);
 
               /* add this ticket group - it will be removed if they later say they did not buy it */
               plan.addTicketGroup({
@@ -78,8 +77,6 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
                   qty: ticket.selectedQty
                 })
               }, function(err, results) {
-                console.log('results form adding tickets to plan');
-                console.log(results);
                 $rootScope.$broadcast('tickets-offsite-clicked', {
                   qty: ticket.selectedQty,
                   amountPaid: amountPaid,
@@ -111,7 +108,6 @@ directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           element.click(function(e) {
-            console.log('clicked add tickets');
             var ticket = JSON.parse(attr.ticket);
             ticket.selectedQty = attr.quantity;
             wembliRpc.fetch('plan.addTicketGroup', {
@@ -149,19 +145,15 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
           }
           return sid;
         };
-
         return function(scope, element, attr) {
           /* don't cache this partial - cache:false doesn't do it */
           $templateCache.remove("/partials/interactive-venue-map");
-
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
               $('#venue-map-container').tuMap("Refresh", "Reset");
             }
           });
-
-          plan.fetch(function(result) {
-            var p = result.plan;
+          plan.get(function(p) {
             //get the tix and make the ticket list
             wembliRpc.fetch('event.getTickets', {
                 eventID: p.event.eventId
@@ -230,7 +222,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                 };
 
                 var filterTickets = function(args) {
-                  console.log('filtering tix');
                   var priceRange = $(".price-slider").slider("option", "values");
                   $("#venue-map-container").tuMap("SetOptions", {
                     TicketsFilter: {
@@ -318,7 +309,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                 $('#venue-map-container').css("height", $($window).height() - 174);
                 $('#tickets').css("height", $($window).height() - 174);
                 $('#venue-map-container').css("width", $($window).width() - 480);
-                console.log('making tuMap');
                 $('#venue-map-container').tuMap(options);
 
                 if ($('.price-slider').length) {
@@ -345,7 +335,6 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                 }
 
                 if ($(".quantity-filter").length) {
-                  console.log('qty filter');
                   /* filter tix when the drop down changes */
                   $(".quantity-filter").change(function() {
                     var q = $(this).val();

@@ -2,7 +2,7 @@
 	//- parking is chosen and its parkwhiz
 	//- parking is chosen and its google parking
 	ul.parking-list-container
-		li.parking-row(ng-repeat="p in parking | parkingTotals")
+		li.parking-row(ng-repeat="p in parking")
 			.parking-container.display-popover(title="Parking Cost Breakdown",placement="right",html="true",content-id="{{parking._id}}-parking-popover-content",trigger="hover")
 				div(id="{{parking._id}}-parking-popover-content").hide
 					.row.clearfix

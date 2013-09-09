@@ -1,7 +1,7 @@
 //- have tickets and purchased
 .body.add-on-included(ng-show="tickets[0] && tickets[0].payment && tickets[0].payment.receipt")
 	ul.ticket-list-container
-		li.ticket-row(ng-repeat="ticket in tickets | ticketTotals")
+		li.ticket-row(ng-repeat="ticket in tickets")
 			.ticket-container
 				.ticket-info
 					strong Wembli Order ID:&nbsp;
