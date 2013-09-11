@@ -154,6 +154,8 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
             }
           });
           plan.get(function(p) {
+            console.log('plan before get tickets');
+            console.log(p);
             //get the tix and make the ticket list
             wembliRpc.fetch('event.getTickets', {
                 eventID: p.event.eventId

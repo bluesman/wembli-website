@@ -11685,6 +11685,9 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .controls .change-add-on-link {
   margin: 10px 50px;
 }
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .controls .view-add-on-link {
+  margin-right: 20px;
+}
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .totals {
   font-size: 3em;
   width: 550px;

@@ -1,7 +1,7 @@
 //- have hotels and purchased
 .body.add-on-included(ng-show="hotels[0] && hotels[0].payment && hotels[0].payment.receipt")
 	ul.hotels-list-container
-		li.hotels-row(ng-repeat="p in hotels | hotelsTotals")
+		li.hotels-row(ng-repeat="p in hotels")
 			.hotels-container
 				.hotels-info
 					strong Order ID:&nbsp;

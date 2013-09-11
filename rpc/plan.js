@@ -23,6 +23,9 @@ var balanced = require('wembli/balanced-api')({
 	secret: app.settings.balancedSecret,
 	marketplace_uri: app.settings.balancedMarketplaceUri
 });
+var eventRpc = require('./event').event;
+var venueRpc = require('./venue').venue;
+var gg = require('../lib/wembli/google-geocode');
 
 exports.plan = {
 	init: function(args, req, res) {
@@ -201,18 +204,99 @@ exports.plan = {
 
 	startPlan: function(args, req, res) {
 		var me = this;
+		var data = {
+			success: 1
+		};
+
 		req.session.plan = new Plan({
 			guid: Plan.makeGuid()
 		});
 		console.log('creating new plan in rpc/plan.startPlan');
+		console.log(args);
+		args.eventID = parseInt(args.eventId);
+
 		req.session.plan.preferences.payment = args.payment ? args.payment : 'split-first';
+		if (args.payment !== "split-first") {
+			/* set all the addons to have this payment too */
+			req.session.plan.preferences.tickets.payment = args.payment;
+			req.session.plan.preferences.parking.payment = args.payment;
+			req.session.plan.preferences.restaurants.payment = args.payment;
+			req.session.plan.preferences.hotels.payment = args.payment;
+		}
 		/* must be the organizer if we're creating a new plan - this won't stick if they're not logged in */
 		req.session.visitor.context = 'organizer';
-		return me(null, {
-			plan: req.session.plan
-		});
-	},
 
+		/* if there is a customer check for an existing plan for this event and use that */
+		if (req.session.customer) {
+			Plan.findOne()
+				.where('organizer').equals(req.session.customer._id)
+				.where('event.eventId').equals(args.eventId).exec(function(err, p) {
+					if (p === null) {
+						return newPlan();
+					}
+					req.session.plan = p;
+					req.session.plan.save(function() {
+						data.plan = req.session.plan;
+						return me(null, data);
+					});
+				});
+		} else {
+			newPlan();
+		}
+
+		function newPlan() {
+			/* get the event and venue data and stuff it in the plan */
+			eventRpc['get'].apply(function(err, results) {
+				var venueId = '';
+				/* its possible that this event is no longer available - if that is the case, send them to the no-event page */
+				if (err || !results.event[0]) {
+					console.log(err);
+					console.log(results);
+					data.noEvent = true;
+					data.success = false;
+					return me(null, data);
+				} else {
+					venueId = results.event[0].VenueID;
+				}
+				console.log('VENUEID ' + venueId);
+
+				/* get the venue data for this event - why do this if i already did? */
+				venueRpc['get'].apply(function(err, venueResults) {
+					console.log(err);
+					console.log(venueResults);
+
+					var address = venueResults.venue[0].Street1 + ', ' + venueResults.venue[0].City + ', ' + venueResults.venue[0].StateProvince + ' ' + venueResults.venue[0].ZipCode;
+
+					gg.geocode(address, function(err, geocode) {
+						req.session.plan.event.eventId = args.eventId;
+						req.session.plan.event.eventName = args.eventName;
+						req.session.plan.event.eventDate = results.event[0].Date;
+						req.session.plan.event.eventVenue = results.event[0].Venue;
+						req.session.plan.event.eventCity = results.event[0].City;
+						req.session.plan.event.eventState = results.event[0].StateProvince;
+						req.session.plan.event.data = results.event[0];
+						req.session.plan.venue.venueId = results.event[0].VenueID;
+						req.session.plan.venue.data = venueResults.venue[0];
+						if (typeof geocode !== "undefined") {
+							req.session.plan.venue.data.geocode = geocode[0];
+						}
+						data.plan = req.session.plan;
+						return me(null, data);
+
+					});
+				}, [{
+						VenueID: venueId
+					},
+					req, res
+				]);
+			}, [{
+					eventID: args.eventID
+				},
+				req, res
+			]);
+		};
+
+	},
 	save: function(args, req, res) {
 		var me = this;
 		var data = {
@@ -1052,7 +1136,7 @@ exports.plan = {
 					callback();
 				}
 			}, function() {
-
+				console.log('removed unpurchased parking now adding parking');
 				/* finished iterating through existing parking */
 				var set = {
 					planId: req.session.plan.id,

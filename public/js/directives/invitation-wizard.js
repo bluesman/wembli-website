@@ -3,12 +3,17 @@
 /* Directives */
 angular.module('wembliApp.directives.invitationWizard', []).
 
-directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '$timeout', 'sequence', 'fetchModals', 'plan', '$location', 'wembliRpc', 'customer', 'facebook', 'twitter',
-  function($rootScope, $http, $filter, $window, $timeout, sequence, fetchModals, plan, $location, wembliRpc, customer, facebook, twitter) {
+directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '$timeout', 'sequence', 'fetchModals', 'plan', '$location', 'wembliRpc', 'customer', 'facebook', 'twitter', 'loggedIn',
+  function($rootScope, $http, $filter, $window, $timeout, sequence, fetchModals, plan, $location, wembliRpc, customer, facebook, twitter, loggedIn) {
     return {
       restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+
+          $scope.$watch('customer', function(newVal) {
+            $scope.loggedIn = loggedIn.check();
+          });
+
           $scope.planFriends = [];
 
           $scope.selectedFriends = {
@@ -86,7 +91,7 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
           // i think this will be inherited from the plan directive
           plan.get(function(p) {
             $scope.plan = p;
-
+            $scope.loggedIn = loggedIn.check();
             //display the modal if there's a plan
             if ($scope.plan && typeof $scope.plan.event.eventId === "undefined") {
               return;
@@ -192,8 +197,8 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
   }
 ]).
 
-directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan',
-  function(wembliRpc, $window, customer, plan) {
+directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn',
+  function(wembliRpc, $window, customer, plan, loggedIn) {
     return {
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
@@ -249,6 +254,11 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan',
                   return;
                 }
                 $scope.customer = customer.get();
+                console.log('customer signed up:');
+                console.log(customer);
+                console.log(result);
+                console.log('LOGGEDIN: '+loggedIn.check());
+
                 $scope.signup.success = true;
                 $scope.showForm('showSignupView', 'showSignupForm');
                 return $scope.gotoStep('step2');

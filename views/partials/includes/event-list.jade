@@ -2,5 +2,5 @@
 	- if (typeof heading !== "undefined")
 		h3= heading
 	ul.event-list(events="{{events}}")
-		li.event-wrapper.start-plan(name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-cloak)
+		li.event-wrapper.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events",ng-cloak)
 			include event

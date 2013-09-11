@@ -958,16 +958,29 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 		if ((typeof purchasedParking[0] !== "undefined") && purchasedParking[0].purchased) {
 			console.log('setting scope parking');
 			$scope.parking = purchasedParking;
-			if (!googleMap.hasMarker(purchasedParking[0].parking.lat, purchasedParking[0].parking.lng)) {
-				mapMarker.create(googleMap, {
-					icon: "/images/icons/map-icons/transportation/parkinggarage.png",
-					lat: purchasedParking[0].parking.lat,
-					lng: purchasedParking[0].parking.lng,
-					name: purchasedParking[0].parking.location_name,
-					body: purchasedParking[0].parking.address + ', ' + purchasedParking[0].parking.city
-				});
+			if (purchasedParking[0].service === 'pw') {
+				if (!googleMap.hasMarker(purchasedParking[0].parking.lat, purchasedParking[0].parking.lng)) {
+					mapMarker.create(googleMap, {
+						icon: "/images/icons/map-icons/transportation/parkinggarage.png",
+						lat: purchasedParking[0].parking.lat,
+						lng: purchasedParking[0].parking.lng,
+						name: purchasedParking[0].parking.location_name,
+						body: purchasedParking[0].parking.address + ', ' + purchasedParking[0].parking.city
+					});
+				}
 			}
+			if (purchasedParking[0].service === 'google') {
+				if (!googleMap.hasMarker(purchasedParking[0].parking.geometry.location.pb, purchasedParking[0].parking.geometry.location.qb)) {
+					mapMarker.create(googleMap, {
+						icon: "/images/icons/map-icons/transportation/parkinggarage.png",
+						lat: purchasedParking[0].parking.geometry.location.pb,
+						lng: purchasedParking[0].parking.geometry.location.qb,
+						name: purchasedParking[0].parking.name,
+						body: purchasedParking[0].parking.vicinity
+					});
+				}
 
+			}
 			loadingModal.hide();
 		} else {
 			getParking(p, {
@@ -1032,7 +1045,11 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 	$scope.$on('payment-type-modal-clicked', function(e, args) {
 		$scope.$apply(function() {
+			console.log('payment modal clicked');
+			console.log(args);
 			$scope.name = args.name;
+			$scope.eventId = args.eventId;
+			$scope.eventName = args.eventName;
 			$scope.nextLink = args.nextLink;
 		});
 	});
@@ -1044,12 +1061,13 @@ function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 
 		/* start the plan */
 		wembliRpc.fetch('plan.startPlan', {
-			payment: $scope.paymentType
+			payment: $scope.paymentType,
+			eventId: $scope.eventId,
+			eventName: $scope.eventName
 		}, function(err, result) {
 			console.log('result from start plan');
 			console.log(result);
 			plan.fetch(function() {
-
 				$location.path($scope.nextLink);
 			});
 

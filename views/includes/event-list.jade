@@ -4,8 +4,8 @@
 		h3= heading
 	ul
 		each event in events
-			li.event-wrapper.start-plan(name="#{event.Name}",id="#{event.ID}-wrapper")
+			li.event-wrapper.start-plan(event-name="#{event.Name}",event-id="#{event.ID}",name="#{event.Name}",id="#{event.ID}-wrapper")
 				include event
 		//- this is needed for the more events client side functionality
-		li.event-wrapper.start-plan(name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
+		li.event-wrapper.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
 			include ../partials/includes/event

@@ -139,7 +139,7 @@ directive('addParkingToPlan', ['$rootScope', '$window', '$location', '$http', '$
 
             wembliRpc.fetch('plan.addParking', {
               service: attr.service,
-              eventId: p.event.eventId,
+              eventId: plan.get().event.eventId,
               parking: parkingToAdd,
               total: 0,
               payment: JSON.stringify(payment)

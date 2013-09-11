@@ -8,8 +8,13 @@
 		- include = 'purchased-tickets'
 		- header = 'Your Tickets'
 	- else
+		- var split = 'split-first';
+		- if (typeof plan.preferences.tickets.payment !== "undefined")
+			- split = plan.preferences.tickets.payment;
+		- else
+			- split = plan.preferences.payment;
 		- if (visitor.context === 'organizer')
-			- if (plan.preferences.payment === 'split-first')
+			- if (split === 'split-first')
 				- if (!plan.rsvpComplete)
 					- include = 'invite-friends'
 					- header = "See What's Available Then Invite Friends";

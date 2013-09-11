@@ -18,7 +18,7 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 		//- show the pony up form if they have invited friends and have chosen at least one of tickets, parking, restaurants or hotel
 		form.invitees-container(ng-submit="sendPonyUpEmail()",ng-show="friends[0] && (plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])")
 			h3 Make sure the checkbox is green next to the people you want to pony up then click the pony up button to send
-			.row.invitee.clearfix(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{'rsvp.decision':true} | friendPonyUp")
+			.row.invitee.clearfix(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{'rsvp.decision':true}")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")

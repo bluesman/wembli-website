@@ -324,6 +324,68 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
 
+          function friendsPonyUp(friends) {
+            var fee = 0.15;
+            var deliveryFee = 15;
+            var deliverySplitBy = 0;
+            if (plan.get().organizer.rsvp.decision) {
+              deliverySplitBy++;
+            }
+            deliverySplitBy += friends.length;
+            /* this should probably be in its own function */
+            var groupTotal = 0;
+            var groupCount = 0;
+            var groups = [];
+            var groupTotalEach = {};
+            var tickets = plan.getTickets();
+
+            for (var i = 0; i < tickets.length; i++) {
+              var t = tickets[i]
+              var groupNumber = i + 1;
+              var cb = {};
+              cb.ticketPrice = parseFloat(t.ticketGroup.ActualPrice);
+              cb.serviceFee = parseFloat(t.ticketGroup.ActualPrice) * fee;
+              cb.deliveryFee = deliveryFee;
+
+              cb.deliveryFeeEach = cb.deliveryFee / deliverySplitBy;
+
+              cb.totalEach = cb.ticketPrice + cb.serviceFee;
+              cb.total = cb.totalEach * parseInt(t.ticketGroup.selectedQty) + cb.deliveryFeeEach;
+
+              groupTotal += cb.total;
+              groupCount += parseInt(t.ticketGroup.selectedQty);
+              groups.push({
+                value: i,
+                label: 'Ticket Group ' + groupNumber
+              });
+              groupTotalEach[i] = cb.totalEach;
+              t.ticketGroup.costBreakdown = cb;
+            };
+
+            tickets.total = groupTotal;
+            tickets.totalQty = groupCount;
+            tickets.groups = groups;
+            tickets.groupTotalEach = groupTotalEach;
+
+            /* assuming there's only 1 ticketGroup for now */
+            /* kim and ash say guests don't count for a delivery fee */
+            var totalPoniedUp = 0;
+            for (var i = 0; i < friends.length; i++) {
+              if (typeof tickets[0] !== "undefined") {
+                if (typeof friends[i].tickets == "undefined") {
+                  friends[i].tickets = {};
+                }
+                friends[i].tickets.group = tickets[0].ticketGroup;
+                var suggested = friends[i].tickets.group.costBreakdown.totalEach * friends[i].rsvp.guestCount + friends[i].tickets.group.costBreakdown.deliveryFeeEach;
+                friends[i].tickets.suggestedPonyUpAmount = suggested.toFixed(2);
+              } else {
+                friends[i].tickets = [];
+              }
+            };
+            return friends;
+          };
+
+
           $scope.calcTotalComing = function() {
             $scope.totalComing = 0;
             $scope.friendsComing = [];
@@ -415,7 +477,7 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                 $scope.plan = p;
                 $scope.organizer = plan.getOrganizer();
                 $scope.tickets = plan.getTickets();
-                $scope.friends = plan.getFriends();
+                $scope.friends = friendsPonyUp(plan.getFriends());
                 $scope.parking = plan.getParking();
                 $scope.hotels = plan.getHotels();
                 $scope.restaurants = plan.getRestaurants();
@@ -444,6 +506,9 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                     console.log('scope.me set');
                     console.log($scope.me);
                   }
+
+                  /* get the pony up totals for each friend */
+
                 };
                 $scope.calcTotalComing();
               }, 0);
@@ -1237,8 +1302,8 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
               if (parking[0].service === "google") {
                 mapMarker.create(googleMap, {
                   icon: "/images/icons/map-icons/transportation/parkinggarage.png",
-                  lat: parking[0].parking.geometry.location.ob,
-                  lng: parking[0].parking.geometry.location.pb,
+                  lat: parking[0].parking.geometry.location.pb,
+                  lng: parking[0].parking.geometry.location.qb,
                   name: parking[0].parking.name,
                   body: parking[0].parking.vicinity
                 });

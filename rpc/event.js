@@ -110,6 +110,8 @@ exports.event = {
 				success: 1,
 				event: results.Event
 			};
+			console.log('args for get tickets');
+			console.log(args);
 			ticketNetwork.GetTickets(args, function(err, results) {
 
 				if (err) {

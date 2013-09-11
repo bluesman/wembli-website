@@ -815,7 +815,9 @@ directive('startPlan', ['$rootScope', 'fetchModals',
             }
             $rootScope.$broadcast('payment-type-modal-clicked', {
               nextLink: nextLink,
-              name: attr.name
+              name: attr.name,
+              eventId: attr.eventId,
+              eventName: attr.eventName
             });
             /* show the popup to collect payment type */
             $('#payment-type-modal').modal('show');

@@ -304,8 +304,8 @@ factory('parking', ['wembliRpc', 'googlePlaces',
 ]).
 
 /* plan.fetch sets plan and isLoggedIn in the $rootScope and calls customer.set() which sets customer in the root scope */
-factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
-	function($rootScope, wembliRpc, customer, $timeout) {
+factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
+	function($rootScope, wembliRpc, customer, $timeout, loggedIn) {
 		var self = this;
 		self.plan = null;
 		self.tickets = null;
@@ -481,6 +481,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout',
 
 						if (typeof result.loggedIn !== "undefined") {
 							$rootScope.loggedIn = result.loggedIn;
+							loggedIn.set(result.loggedIn);
 						}
 
 						if (typeof result.customer !== "undefined" && result.customer) {
@@ -1322,12 +1323,14 @@ factory('wembliRpc', ['$rootScope', '$http', 'customer', 'loggedIn',
 				/* every wembliRpc call should try to return the customer */
 				if (typeof result.customer !== "undefined") {
 					customer.set(result.customer);
+
 					$rootScope.$broadcast('customer-fetched', {
 						customer: customer
 					});
 				}
 
 				if (typeof result.loggedIn !== "undefined") {
+					$rootScope.loggedIn = result.loggedIn;
 					loggedIn.set(result.loggedIn);
 				}
 

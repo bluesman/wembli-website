@@ -8,7 +8,10 @@
 			include parking/purchased-parking
 		- else
 			- if (req.session.plan.preferences.payment === 'split-first')
-				include parking/read-only
+				- if (req.session.plan.preferences.parking.payment === 'split-first')
+					include parking/read-only
+				- else
+					include parking/buy-now
 			- else
 				include parking/buy-now
 			.no-results

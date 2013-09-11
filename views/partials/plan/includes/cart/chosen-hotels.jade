@@ -1,7 +1,7 @@
 //- hotels part of the plan, hotel chosen, rsvp not complete, split first - must wait for rsvp complete
 .body.add-on-included(ng-show="plan.preferences.addOns.hotels && hotels[0] && !hotels[0].payment.receipt")
 	ul.hotels-list-container
-		li.hotels-row(ng-repeat="p in hotels | hotelsTotals")
+		li.hotels-row(ng-repeat="p in hotels")
 			.hotels-container.display-popover(title="hotels Cost Breakdown",placement="right",html="true",content-id="{{hotels._id}}-hotels-popover-content",trigger="hover")
 				div(id="{{hotels._id}}-hotels-popover-content").hide
 					.row.clearfix

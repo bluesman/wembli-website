@@ -1,17 +1,17 @@
-- if (req.session.plan.preferences.payment === 'split-first')
+- if (req.session.plan.preferences.parking.payment === 'split-first')
 	//- parking is part of the plan, parking not chosen, rsvp is not complete and they want to split first
 	.body.add-on-included(ng-show="plan.preferences.addOns.parking && !plan.parking[0]")
 		p Hit the breaks there, sonic. Once your frineds all RSVP and you have a final headcount, WEMbli will prompt you to choose parking.
 		p If you don't want to wait for those slow-pokes go ahead and pick now.
 		.button-container.clearfix
-			a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Parking
-			a.buy-now.wembli-sequence-link(ng-click="setPayment('parking','split-after')",href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Forget RSVP's - I want to pick now
+			a.pull-left.btn.btn-orange.btn-large(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Parking
+			a.buy-now(ng-click="setPayment('parking','split-after')",href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Forget RSVP's - I want to pick now
 - else
-	//- parking is part of the plan, parking is not chosen, rsvp is not complete and they want to split after
+	//- parking is part of the plan, parking is not chosen, doesn't matter and they do not want to split first
 	.body.add-on-included(ng-show="plan.preferences.addOns.parking && !plan.parking[0]")
 		p Go ahead and choose your parking.  If there's no option to pre-purchase parking for your event, you can still pick a lot and we'll forward the info on to your pals so they know where to park also.
 		.button-container.clearfix
-			a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Parking
+			a.pull-left.btn.btn-orange.btn-large(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Parking
 			- if (req.session.plan.preferences.payment === 'split-after')
-				//- a.buy-now(ng-show="{'split-after':true}[plan.preferences.payment]", ng-click="setPayment('parking','split-first')",href="#") I changed my mind, I want to know who's coming first
+				//- a.buy-now(ng-show="{'split-after':true}[plan.preferences.parking.payment]", ng-click="setPayment('parking','split-first')",href="#") I changed my mind, I want to know who's coming first
 

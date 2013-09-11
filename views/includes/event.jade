@@ -25,14 +25,14 @@
 			case payment
 				when "split-first"
 					- btnText = btnText ? btnText : 'Start Plan';
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
 				when "split-after"
 					- btnText = btnText ? btnText : 'See Tickets';
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
 				when "no-split"
 					- btnText = btnText ? btnText : 'See Tickets';
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
 				default
 					- btnText = btnText ? btnText : 'Start Plan';
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name)= btnText
 

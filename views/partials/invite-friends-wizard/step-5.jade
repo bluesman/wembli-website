@@ -29,5 +29,5 @@ form#invite-wizard-step5-form(name="wemblimailForm")
 					.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
 						span.label.label-important declined
 	.form-controls()
-		a.skip-step(data-dismiss="modal",ng-click="finished()") Skip this step
-		button.submit-step.btn.btn-primary.btn-large(ng-click="finished()") Finished!
+		a.skip-step(data-dismiss="modal",ng-show="loggedIn", ng-click="finished()") Skip this step
+		button.submit-step.btn.btn-primary.btn-large(ng-disabled="{true:'disabled'}[!loggedIn]",ng-click="finished()") Finished!

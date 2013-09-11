@@ -1,7 +1,7 @@
 //- have restaurants and purchased
 .body.add-on-included(ng-show="restaurants[0] && restaurants[0].payment && restaurants[0].payment.receipt")
 	ul.restaurants-list-container
-		li.restaurants-row(ng-repeat="p in restaurants | restaurantsTotals")
+		li.restaurants-row(ng-repeat="p in restaurants")
 			.restaurants-container
 				.restaurants-info
 					strong Order ID:&nbsp;

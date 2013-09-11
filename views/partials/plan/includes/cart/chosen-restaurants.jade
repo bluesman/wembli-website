@@ -3,7 +3,7 @@
 	//- restaurants is chosen and its parkwhiz
 	//- restaurants is chosen and its google restaurants
 	ul.restaurants-list-container
-		li.restaurants-row(ng-repeat="p in restaurants | restaurantsTotals")
+		li.restaurants-row(ng-repeat="p in restaurants")
 			.restaurants-container.display-popover(title="restaurants Cost Breakdown",placement="right",html="true",content-id="{{restaurants._id}}-restaurants-popover-content",trigger="hover")
 				div(id="{{restaurants._id}}-restaurants-popover-content").hide
 					.row.clearfix
