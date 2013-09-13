@@ -12,7 +12,12 @@ exports.search = {
 		var args = {
 			searchTerms: q
 		};
-		var d = new Date();
+
+		var daysPadding = 4; //how many days from today for the beginDate
+		var d1 = Date.today();
+		var d = new Date(d1);
+		d.setDate(d1.getDate() + daysPadding);
+
 		if(typeof date != "undefined" && date != '') {
 			d = new Date(date);
 		}

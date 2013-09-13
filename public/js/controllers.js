@@ -155,7 +155,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			$scope.search = $location.search().search;
 		}
 		//begin date for event list
-		var daysPadding = 2; //how many days from today for the beginDate
+		var daysPadding = 4; //how many days from today for the beginDate
 		var d = new Date();
 		d2 = new Date(d);
 		d2.setDate(d.getDate() + daysPadding);

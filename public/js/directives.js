@@ -639,7 +639,8 @@ directive('eventWrapper', ['wembliRpc', '$window',
                 scope.ticketSummaryData.locked = false;
                 /* init the popover */
                 var summaryContent = "";
-
+                console.log('summary content result');
+                console.log(result);
                 if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
                   if (result.ticketPricingInfo.ticketsAvailable === '0') {
                     summaryContent = "Click for ticket information";

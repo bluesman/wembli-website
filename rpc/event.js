@@ -45,7 +45,8 @@ exports.event = {
 	get: function(args, req, res) {
 		var me = this;
 		args.cnt = (args.cnt) ? args.cnt : 15;
-
+		console.log('args for get event');
+		console.log(args);
 		if (args.nearZip == "undefined") {
 			//get more top events
 			delete args.nearZip;
