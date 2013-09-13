@@ -94,4 +94,9 @@ module.exports = function(app) {
 			res.render("partials/parking", locals);
 		});
 	});
+
+	app.get('/partials/modals/parking-modals', function(req, res) {
+		return res.render('partials/modals/parking-modals');
+	});
+
 }

@@ -198,4 +198,8 @@ module.exports = function(app) {
 				});
 		});
 	});
+	app.get('/partials/modals/tickets-modals', function(req, res) {
+		return res.render('partials/modals/tickets-modals');
+	});
+
 }

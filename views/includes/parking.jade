@@ -1,9 +1,13 @@
 #parking-frame(ng-controller="ParkingCtrl")
 	#map-background
 		#parking-map-container.parking-map.map-container(lat="#{lat}",lng="#{lon}",zoom="13",draggable="true",map-type-id="ROADMAP")
-	#parking.pull-right
+	#parking.addons-list.pull-right
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
+		.continue-controls
+			a.btn.btn-orange.btn-large(ng-hide="backToPlan",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
+			a.btn.btn-orange.btn-large(ng-show="backToPlan",href="/plan#section3",direction="1") Back To The Plan
+
 		- if (typeof parkingPurchased[0] !== "undefined")
 			include parking/purchased-parking
 		- else

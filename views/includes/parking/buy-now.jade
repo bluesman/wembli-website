@@ -1,58 +1,81 @@
-#parking-price-range
-	h3.pull-left Pick Your Parking Spot:
-	form#price-range-form.form-inline
-		fieldset.pull-left
-			label.checkbox(ng-click="handlePriceRange()",title="LOW: Under $20")
-				input#low(type="checkbox",ng-model="priceRange.low")
-				span.dollar-sign(ng-class="{true:'orange'}[priceRange.low]") $
-			label.checkbox(ng-click="handlePriceRange()",title="MEDIUM: From $20 to $50")
-				input#med(type="checkbox",ng-model="priceRange.med")
-				span.dollar-sign(ng-class="{true:'orange'}[priceRange.med]") $$
-			label.checkbox(ng-click="handlePriceRange()",title="Above $50")
-				input#high(type="checkbox",ng-model="priceRange.high")
-				span.dollar-sign(ng-class="{true:'orange'}[priceRange.high]") $$$
-		a.btn.btn-primary.btn-large.pull-left(ng-hide="backToPlan",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
-		a.btn.btn-primary.btn-large.pull-left(ng-show="backToPlan",href="/plan",direction="1") Back To The Plan
-#group-parking-list-header-container.parking-list-header-container
-	#group-parking-list-header
-		h4.pull-left Preview parking options in your price range
+//-
+	#parking-price-range.price-range
+		h3.pull-left Pick Your Parking Spot:
+		form#price-range-form.price-range-form.form-inline
+			fieldset.pull-left
+				label.checkbox(ng-click="handlePriceRange()",title="LOW: Under $20")
+					input#low(type="checkbox",ng-model="priceRange.low")
+					span.dollar-sign(ng-class="{true:'orange'}[priceRange.low]") $
+				label.checkbox(ng-click="handlePriceRange()",title="MEDIUM: From $20 to $50")
+					input#med(type="checkbox",ng-model="priceRange.med")
+					span.dollar-sign(ng-class="{true:'orange'}[priceRange.med]") $$
+				label.checkbox(ng-click="handlePriceRange()",title="Above $50")
+					input#high(type="checkbox",ng-model="priceRange.high")
+					span.dollar-sign(ng-class="{true:'orange'}[priceRange.high]") $$$
+			a.btn.btn-primary.btn-large.pull-left(ng-hide="backToPlan",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
+			a.btn.btn-primary.btn-large.pull-left(ng-show="backToPlan",href="/plan",direction="1") Back To The Plan
+#parking-list-header-container.parking-list-header-container.list-header-container
+	#parking-list-header.list-header
+		h4.pull-left Parking options near your event
 		.popover-container.pull-left
-			i.icon-question-sign.display-popover(placement="bottom",trigger="hover",animation="true",title="Preview PArking",content="Get a sneak peak at the kind of parking your price range will get you. Once you know how many people are coming, you'll be able to reserve parking.")
-	a.range-header(href="#",ng-click="sortByPrice()") Price
-	a.section-header(href="#",ng-click="sortBySection()") Location
-	a.qty-header(href="#",ng-click="sortByQty()") Spots Available
-	a.distance-header(href="#",ng-click="sortByDistance()") Distance
-ul#group-parking-list-container.parking-list-container
+			i.icon-question-sign.display-popover(placement="bottom",trigger="hover",animation="true",title="Preview Parking",content="Choose parking for the event.  Not all parking is available for online reservations, but you can add parking to your plan no matter what.")
+	//-
+		a.range-header(href="#",ng-click="sortByPrice()") Price
+		a.section-header(href="#",ng-click="sortBySection()") Location
+		a.qty-header(href="#",ng-click="sortByQty()") Spots Available
+		a.distance-header(href="#",ng-click="sortByDistance()") Distance
+ul#parking-list-container.parking-list-container.list-container
 	//- parkwhiz parking
-	li.parking-row.bounce-map-marker(lat="{{parking.lat}}",lng="{{parking.lng}}",ng-repeat="parking in parkingReservations.parking_listings",ng-hide="parking.hide")
-		.parking-price
-			.actual-price ${{parking.price}}
-			.each (each)
-		.parking-info
-			.parking-location-name {{parking.location_name}}
-			.parking-address
-				div {{parking.address}}
-				div {{parking.city}}, {{parking.state}}
-		.parking-available {{parking.available_spots}} spots
-		.parking-distance {{determineDistance(parking.distance)}} mi.
-		a.btn.btn-primary.btn-large.parking-login-modal(parking="{{parking}}",ng-href="#parking-login-modal-pw-{{parking.listing_id}}",ng-hide="customer") Buy
-		a.btn.btn-primary.btn-large.buy-parking-offsite(parking="{{parking}}",ng-href="{{parking.www_reserve_url}}",ng-show="customer && !parking.parkingInPlan",target="_blank") Buy
-		button.btn.btn-orange.btn-small(ng-show="parking.parkingInPlan && parking.purchased") You Purchased This
-		button.btn.btn-orange.btn-small(ng-click="removeParking(parking._id)",ng-show="parking.parkingInPlan && !parking.purchased") Remove From Plan
+	li.parking-row.row.bounce-map-marker(lat="{{parking.lat}}",lng="{{parking.lng}}",ng-repeat="parking in parkingReservations.parking_listings | filter:{hide:false}",ng-hide="parking.hide")
+		.top.clearfix
+			.icon.pull-left
+				i.icon-truck.icon-flip-horizontal.icon-2x
+			.title.pull-left {{parking.location_name}}
+		.bottom.clearfix
+			.price.pull-left
+				.header price
+				.value ${{parking.price}}
+			.contact.pull-left.clearfix
+				.business.pull-left
+					.address
+						div {{parking.address}}
+						div {{parking.city}}, {{parking.state}}
+						div {{determineDistance(parking.distance)}} mi.
+			.discount.pull-right
+				.value {{parking.available_spots}}
+				.header spots
+			.controls.pull-right
+				.actions
+					a.btn.btn-primary.btn-large.parking-login-modal(parking="{{parking}}",ng-href="#parking-login-modal-pw-{{parking.listing_id}}",ng-hide="customer") Buy
+					a.btn.btn-primary.btn-large.buy-parking-offsite(parking="{{parking}}",ng-href="{{parking.www_reserve_url}}",ng-show="customer && !parking.parkingInPlan",target="_blank") Buy
+					button.btn.btn-orange.btn-small(ng-show="parking.parkingInPlan && parking.purchased") Purchased
+					button.btn.btn-orange.btn-small(ng-click="removeParking(parking._id)",ng-show="parking.parkingInPlan && !parking.purchased") Remove
 	//- google parking
-	li.parking-row.bounce-map-marker(lat="{{parking.geometry.location.lat()}}",lng="{{parking.geometry.location.lng()}}",ng-repeat="parking in googleParking",ng-hide="parking.hide")
-		.parking-range
-			.dollar-sign N/A
-		.parking-info
-			.parking-location-name {{parking.name}}
-			.parking-address {{parking.vicinity}}
-		.no-reservations-available
-			.message Online reservations are not available.
-			a.btn.btn-primary.btn-small.parking-login-modal(parking="{{parking}}",service="google", ng-href="#parking-login-modal-google-{{parking.id}}",ng-hide="customer") Add To Plan
-			a.btn.btn-primary.btn-small.add-parking-to-plan(ng-show="customer && backToPlan && !parking.parkingInPlan", service="google", parking="{{parking}}", ng-href="/plan") Add To Plan
-			button.btn.btn-primary.btn-small.add-parking-to-plan(parking="{{parking}}", service="google", ng-hide="!customer || backToPlan || parking.parkingInPlan") Add To Plan
-			a.btn.btn-orange.btn-small(ng-click="removeParking(parking._id)",ng-href="/plan",ng-show="backToPlan && parking.parkingInPlan") Remove From Plan
-			button.btn.btn-orange.btn-small(ng-click="removeParking(parking._id)",ng-show="!backToPlan && parking.parkingInPlan") Remove From Plan
+	li.parking-row.row.bounce-map-marker(lat="{{parking.geometry.location.lat()}}",lng="{{parking.geometry.location.lng()}}",ng-repeat="parking in googleParking",ng-hide="parking.hide")
+		.top.clearfix
+			.icon.pull-left
+				i.icon-truck.icon-flip-horizontal.icon-2x
+			.title.pull-left {{parking.name}}
+		.bottom.clearfix
+			.price.pull-left
+				.header price
+				.value N/A
+			.contact.pull-left.clearfix
+				.business.pull-left
+					.address
+						div {{parking.vicinity}}
+				.message Online reservations are not available.
+				.details
+					a.btn.btn-small.parking-more-info(parking="{{parking}}",href="#parking-info-modal") view details
+			.controls.pull-right
+				.actions
+					a.btn.btn-primary.btn-large.parking-login-modal(parking="{{parking}}",service="google", ng-href="#parking-login-modal-google-{{parking.id}}",ng-hide="customer") Add
+					a.btn.btn-primary.btn-large.add-parking-to-plan(ng-show="customer && backToPlan && !parking.parkingInPlan", service="google", parking="{{parking}}", ng-href="/plan") Add
+					button.btn.btn-primary.btn-large.add-parking-to-plan(parking="{{parking}}", service="google", ng-hide="!customer || backToPlan || parking.parkingInPlan") Add
+					a.btn.btn-orange.btn-large(ng-click="removeParking(parking._id)",ng-href="/plan",ng-show="backToPlan && parking.parkingInPlan") Remove
+					button.btn.btn-orange.btn-large(ng-click="removeParking(parking._id)",ng-show="!backToPlan && parking.parkingInPlan") Remove
+
+
 
 
 

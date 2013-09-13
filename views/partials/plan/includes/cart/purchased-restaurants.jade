@@ -1,31 +1,39 @@
 //- have restaurants and purchased
 .body.add-on-included(ng-show="restaurants[0] && restaurants[0].payment && restaurants[0].payment.receipt")
-	ul.restaurants-list-container
-		li.restaurants-row(ng-repeat="p in restaurants")
-			.restaurants-container
-				.restaurants-info
-					strong Order ID:&nbsp;
-					span {{restaurants._id}}
-				.restaurants-info.clearfix
-					.restaurants-section.pull-left
-						strong SECTION/AISLE:
-						span {{restaurants.restaurantsGroup.Section}}&nbsp;
-					.restaurants-row.pull-left
-						strong ROW/BOX:
-						span {{restaurants.restaurantsGroup.Row}}
-					.restaurants-seat.pull-left
-						strong SEATS:
-						span(ng-show="{'*':true}[restaurants.restaurantsGroup.LowSeat]") {{restaurants.restaurantsGroup.LowSeat}}
-						span(ng-hide="{'*':true}[restaurants.restaurantsGroup.LowSeat]") {{restaurants.restaurantsGroup.LowSeat}} - {{restaurants.restaurantsGroup.HighSeat}}
-				.restaurants-notes(ng-show="restaurants.restaurantsGroup.Notes")
-					span NOTES:&nbsp;
-					span {{restaurants.restaurantsGroup.Notes}}
+	ul.restaurants-list-container.add-on-container
+		li.restaurants-row.add-on-row(ng-repeat="p in restaurants")
+
+
+			.restaurants-container.add-on-container(ng-show="{'google':true}[p.service]")
+				.restaurants-info.add-on-info.clearfix
+					.restaurants-name
+						strong NAME:
+						span {{p.restaurant.name}}&nbsp;
+					.restaurants-location
+						strong LOCATION:
+						span {{p.restaurant.vicinity}}
+
+			//- TODO: show a parkwhiz logo? add notes field to keep track of order info from parkwhiz?
+			.restaurants-container.add-on-container(ng-show="{'yipit':true}[p.service]")
+				.restaurants-info.add-on-info.clearfix
+					.restaurants-deal-name.pull-left
+						strong {{p.restaurant.title}}&nbsp;
+					.restaurants-name.pull-left
+						strong RESTAURANT:&nbsp;
+						span {{p.restaurant.business.name}}
+					.restaurants-location.pull-left
+						strong LOCATION:&nbsp;
+						span {{p.restaurant.business.locations[0].address}}, {{p.restaurant.business.locations[0].locality}}, {{p.restaurant.business.locations[0].state}} {{p.restaurant.business.location[0].zip_code}}
+					.restaurants-location.pull-left
+						strong PHONE:&nbsp;
+						span {{p.restaurant.business.locations[0].phone}}
 				.restaurants-payment.clearfix
 					.per-person.pull-left
-						strong Total cost for {{restaurants.payment.receipt.request_restaurants}} {{restaurants.payment.receipt.request_restaurants | pluralize:'restaurants'}}:
+						strong Total cost for {{restaurants.payment.receipt.request_restaurants}} {{restaurants.payment.receipt.request_restaurants | pluralize:'restaurant'}}:
 					.restaurants-total.pull-left
 						{{restaurants.payment.sale_total | currency}}
 			.controls.clearfix
-				a.view-restaurants-link.pull-left.btn.btn-large.btn-orange(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") View restaurants On Map
-				- if (req.session.plan.preferences.payment === 'split-after')
-					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+				a.view-restaurants-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") View restaurants On Map
+				- if (req.session.plan.preferences.restaurants.payment !== 'no-split')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-hide="p.payment.receipt['not-available']", ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+

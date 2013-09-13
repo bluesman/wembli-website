@@ -12,7 +12,7 @@
 						p
 							span I just bought
 							input#qty.focus-on-click(name="qty",ng-model="qty",type="text")
-							span spot(s) for a total of
+							span {{qty | pluralize:'deal'}} for a total of
 							span#amount-paid-prepend.input-prepend
 								span.add-on $
 								input#amount-paid.focus-on-click(type="text",name="amount_paid",ng-model="amountPaid")
@@ -24,5 +24,5 @@
 						h3 Show Me Somethin' Else
 						p I decided not to buy. Show me other options.
 		.modal-footer
-			a.btn.btn-primary.btn-large(ng-show="showButton()",ng-click="submitForm()",href="/plan/{{eventId}}/{{eventName}}") Back To Plan
-			a.btn.btn-cancel.btn-large(ng-hide="showButton()",ng-click="cancelForm()") See More restaurants
+			button.btn.btn-primary.btn-large(ng-show="showButton()",ng-click="submitForm()") Continue
+			button.btn.btn-cancel.btn-large(ng-hide="showButton()",ng-click="cancelForm()") See More restaurants

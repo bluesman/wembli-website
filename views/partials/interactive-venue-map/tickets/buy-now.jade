@@ -1,6 +1,5 @@
-h3(ng-show="{'split-after':true}[plan.preferences.payment]")
-	span.orange Buy Tickets Now&nbsp;
-	span Then Have Friends Pay You Back
+#tickets-list-header.list-header-container(ng-show="{'split-after':true}[plan.preferences.payment]")
+	h3.list-header Buy Tickets Now Then Have Friends Pay You Back
 #buy-now-filters.filter-container
 	.qty-filter
 		strong Qty:
@@ -16,14 +15,46 @@ h3(ng-show="{'split-after':true}[plan.preferences.payment]")
 			label(for="amount") Price range:
 			input.amount(type="text")
 		#buy-now-price-slider.price-slider
-#buy-now-header-container.ticket-list-header-container
+#buy-now-header-container.ticket-list-header-container.list-header-container
 	a.price-header(href="#",ng-click="sortByPrice()") Price
 	a.section-header(href="#",ng-click="sortBySection()") Section
 	a.qty-header(href="#",ng-click="sortByQty()") Qty
-ul#buy-now-container.ticket-list-container
-	li.ticket-row(ng-repeat="ticket in tickets")
+ul#buy-now-container.ticket-list-container.list-container
+	li.ticket-row.row.display-popover(ng-repeat="ticket in tickets", placement="left",trigger="hover",animation="true",title="Notes:",content="{{ticket.Notes}}")
+		.ticket-price.hide
+			.actual-price ${{ticket.ActualPrice}}
 		.ticket-section.hide {{ticket.Section}}
 		.seat-row.hide {{ticket.Row}}
+		.top.clearfix
+			.icon.pull-left
+				i.icon-ticket.icon-2x
+			.title.pull-left {{ticket.TicketGroupType}}
+		.bottom.clearfix
+			.price.pull-left
+				.header price
+				.value ${{ticket.ActualPrice}}
+			.ticket-info.pull-left
+				.seats
+					div
+						strong Section:&nbsp;
+						span {{ticket.Section}}&nbsp;
+					div
+						strong Row:&nbsp;
+						span {{ticket.Row}}&nbsp;
+					div
+						strong Seats:&nbsp;
+						span(ng-show="{'\*':true}[ticket.LowSeat]") *
+						span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
+			.qty.pull-right
+				select(id="qty-{{ticket.ID}}",ng-model="ticket.selectedQty",name="qty-{{ticket.ID}}",ng-options="q for q in ticket.ValidSplits.int")
+				.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+				.header qty
+			.controls.pull-right
+				.actions
+					a.btn.btn-primary.btn-large.tickets-login-modal(ticket="{{ticket}}",ng-href="#tickets-login-modal-{{ticket.ID}}",ng-hide="customer") Buy Tix
+					a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket="{{ticket}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",ng-show="customer",target="_blank") Buy Tix
+//-
+	li.ticket-row.row(ng-repeat="ticket in tickets")
 		.ticket-price
 			.actual-price ${{ticket.ActualPrice}}
 			.each (each)
@@ -34,5 +65,3 @@ ul#buy-now-container.ticket-list-container
 			strong Qty:
 			select(id="qty-{{ticket.ID}}",ng-model="ticket.selectedQty",name="qty-{{ticket.ID}}",ng-options="q for q in ticket.ValidSplits.int")
 			.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
-		a.btn.btn-primary.btn-large.tickets-login-modal(ticket="{{ticket}}",ng-href="#tickets-login-modal-{{ticket.ID}}",ng-hide="customer") Buy
-		a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket="{{ticket}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",ng-show="customer",target="_blank") Buy

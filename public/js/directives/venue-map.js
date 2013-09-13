@@ -150,6 +150,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
           $templateCache.remove("/partials/interactive-venue-map");
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
+              console.log('refresh map');
               $('#venue-map-container').tuMap("Refresh", "Reset");
             }
           });
@@ -175,11 +176,17 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
                 scope.event = result.event;
                 scope.tickets = result.tickets;
-
+                console.log(scope.tickets);
                 /* get min and max tix price for this set of tix */
                 scope.minTixPrice = 0;
                 scope.maxTixPrice = 200;
+                var newT = [];
                 angular.forEach(scope.tickets, function(el) {
+                  /* filter out parking for now and TODO: add to parking page */
+                  if (/parking/gi.test(el.Section)) {
+                    console.log('got parking in tickets!');
+                    return;
+                  }
                   if (parseInt(el.ActualPrice) < scope.minTixPrice) {
                     scope.minTixPrice = parseInt(el.ActualPrice);
                   }
@@ -203,17 +210,22 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
                   });
 
-                  el.sessionId = generateTnSessionId();
 
                   el.ticketsInPlan = false;
                   var t = plan.getTickets();
                   for (var i = 0; i < t.length; i++) {
                     if (t[i].ticketGroup.ID == el.ID) {
+                      console.log('IN PLAN');
                       el.ticketsInPlan = true;
                       el._id = t[i]._id;
+                    } else {
+                      el.sessionId = generateTnSessionId();
                     }
                   };
+                  newT.push(el);
                 });
+
+                scope.tickets = newT;
 
                 var initSlider = function() {
                   /*Set Minimum and Maximum Price from your Dataset*/
@@ -225,6 +237,11 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
                 var filterTickets = function(args) {
                   var priceRange = $(".price-slider").slider("option", "values");
+
+                  console.log('priceRange');
+                  console.log(priceRange);
+                  console.log('qty');
+                  console.log(args);
                   $("#venue-map-container").tuMap("SetOptions", {
                     TicketsFilter: {
                       MinPrice: priceRange[0],
@@ -314,6 +331,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                 $('#venue-map-container').tuMap(options);
 
                 if ($('.price-slider').length) {
+                  console.log('price slider exuists');
                   $('.price-slider').slider({
                     range: true,
                     min: scope.minTixPrice,
@@ -337,6 +355,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                 }
 
                 if ($(".quantity-filter").length) {
+                  console.log('qty filter exists');
                   /* filter tix when the drop down changes */
                   $(".quantity-filter").change(function() {
                     var q = $(this).val();
@@ -348,6 +367,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                   /* default value for quantity-filter? */
                   var s = $location.search();
                   if (s.qty) {
+                    console.log('qty exists');
                     $(".quantity-filter").val(s.qty);
                     filterTickets({
                       quantity: s.qty

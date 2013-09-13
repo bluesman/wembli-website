@@ -12,7 +12,7 @@
 						p
 							span I just bought
 							input#qty.focus-on-click(name="qty",ng-model="qty",type="text")
-							span spot(s) for a total of
+							span {{qty | pluralize:'spot'}} for a total of
 							span#amount-paid-prepend.input-prepend
 								span.add-on $
 								input#amount-paid.focus-on-click(type="text",name="amount_paid",ng-model="amountPaid")

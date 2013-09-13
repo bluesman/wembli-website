@@ -3,6 +3,7 @@ var async         = require('async');
 var eventRpc      = require('../rpc/event').event;
 var dateUtils     = require('date-utils');
 var ua            = require('useragent');
+var planRpc = require('../rpc/plan').event;
 //ua(true); //sync with remote server to make sure we have the latest and greatest
 var querystring = require('querystring');
 var wembliModel = require('wembli-model'),
@@ -36,10 +37,16 @@ module.exports = function(app) {
 	};
 
 	app.get(/^\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
+
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		console.log('creating new plan in search partial controller');
-		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
-		/* must be the organizer if we're creating a new plan - this won't stick if they're not logged in */
+		console.log('creating new plan in search partial controller '+req.params[0]);
+
+		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.parking.payment     = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.restaurants.payment = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.hotels.payment      = req.params[0] ? req.params[0] : 'split-first';
+
 		req.session.visitor.context = 'organizer';
 
 		if(req.param('next')) {
@@ -55,7 +62,13 @@ module.exports = function(app) {
 	app.get(/^\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		req.session.plan.preferences.payment = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.parking.payment     = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.restaurants.payment = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.hotels.payment      = req.params[0] ? req.params[0] : 'split-first';
+
+
 		console.log('creating new plan in search controller as: '+req.session.plan.preferences.payment);
 		if(req.param('next')) {
 			res.setHeader('x-wembli-location',req.param('next'));

@@ -19,7 +19,7 @@
 						strong.pull-left  Est. Delivery Fee* Per Invitee&nbsp;
 						.pull-right {{restaurants.restaurantsGroup.costBreakdown.deliveryFeeEach | currency}}
 					.row.clearfix
-						strong.pull-left  Total (x{{restaurants.restaurantsGroup.selectedQty}} {{restaurants.restaurantsGroup.selectedQty | pluralize:'restaurants'}}):&nbsp;
+						strong.pull-left  Total (x{{restaurants.restaurantsGroup.selectedQty}} {{restaurants.restaurantsGroup.selectedQty | pluralize:'restaurant'}}):&nbsp;
 						strong.pull-right {{restaurants.restaurantsGroup.costBreakdown.total | currency}}
 					.row.disclaimer
 						small
@@ -45,7 +45,7 @@
 					.qty-container.pull-left
 						select(id="qty-{{restaurants.restaurantsGroup.ID}}",ng-model="restaurants.restaurantsGroup.selectedQty",name="qty-{{restaurants.restaurantsGroup.ID}}",ng-options="q for q in restaurants.restaurantsGroup.ValidSplits.int")
 					.pull-left
-						strong {{restaurants.restaurantsGroup.selectedQty | pluralize:'restaurants'}}:
+						strong {{restaurants.restaurantsGroup.selectedQty | pluralize:'restaurant'}}:
 					.restaurants-total.pull-left
 						{{restaurants.restaurantsGroup.costBreakdown.total | currency}}
 			.controls.clearfix

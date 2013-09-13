@@ -479,17 +479,10 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 	});
 };
 
-
-function RestaurantsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, mapInfoWindowContent, loadingModal) {
-	loadingModal.show('Finding Restaurants...', null);
+function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembliRpc, fetchModals, googleMap, googlePlaces, mapVenue, mapMarker, mapInfoWindowContent, loadingModal) {
+	loadingModal.show('Finding Restaurants & Deals...', null);
 	/* get the spots for this lat long and display them as markers */
-	/*
-	var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
-	markers.addLayer(new L.marker([30.269218,-97.735557]));
-	console.log('setting markers in ctrl');
-	console.log(markers);
-	$scope.markers = markers;
-	*/
+	googleMap.init();
 
 	$scope.determineRange = function(price) {
 		/* hard coded price range for now */
@@ -511,278 +504,268 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMa
 
 	$scope.notFound = true;
 
-	console.log('setting watch for restaurantReservations');
+	var filterNone = function() {
+		$scope.$apply(function() {
+			for (var i = 0; i < $scope.deals.length; i++) {
+				$scope.deals[i].hide = false;
+			};
+		});
+	}
 
+	var filterDealsById = function(id) {
+		console.log('filtering: ' + id);
+		if (typeof id === "undefined") {
+			return filterNone();
+		}
+		$scope.$apply(function() {
+
+			for (var i = 0; i < $scope.deals.length; i++) {
+				$scope.deals[i].hide = ($scope.deals[i].id != id);
+			}
+		});
+
+	};
+
+	updateDeals = function(deals) {
+		$scope.notFound = false;
+
+		angular.forEach(deals, function(d, i) {
+			console.log('deals listing:');
+			console.log(d);
+			d.service = 'yipit';
+			d.hide = (typeof d.hide === "undefined") ? false : d.hide;
+
+
+			if (typeof $scope.restaurants !== "undefined") {
+				if (typeof $scope.restaurants[0] === "undefined") {
+					d.restaurantInPlan = false;
+				} else {
+
+					for (var i = 0; i < $scope.restaurants.length; i++) {
+						var r = $scope.restaurants[i];
+						if ((r.restaurant.service === 'yipit') && (r.restaurant.id == d.id)) {
+							d._id = r._id;
+							d.purchased = r.purchased;
+							d.restaurantInPlan = true;
+						} else {
+							d.restaurantInPlan = false;
+						}
+					};
+				}
+			}
+			if (!googleMap.hasMarker(d.business.locations[0].lat, d.business.locations[0].lon)) {
+				mapMarker.create(googleMap, {
+					icon: "/images/icons/map-icons/entertainment/restaurant.png",
+					lat: d.business.locations[0].lat,
+					lng: d.business.locations[0].lon,
+					name: d.title,
+					body: d.business.name,
+					click: {
+						on: function() {
+							filterDealsById(d.id)
+						},
+						off: function() {
+							filterDealsById()
+						}
+					}
+				});
+			}
+		});
+	};
+
+	updateGoogleRestaurants = function(googleRestaurants) {
+		$scope.notFound = false;
+		console.log('updating google restaurants');
+		angular.forEach(googleRestaurants, function(place, i) {
+			place.service = 'google';
+			if (typeof $scope.restaurants !== "undefined") {
+
+				if (typeof $scope.restaurants[0] === "undefined") {
+					place.restaurantInPlan = false;
+				} else {
+					for (var i = 0; i < $scope.restaurants.length; i++) {
+						var r = $scope.restaurants[i];
+						console.log('RESTAURANT ');
+						console.log(r);
+						if ((r.restaurant.service === 'google') && (r.restaurant.id == place.id)) {
+							place._id = r._id;
+							place.restaurantInPlan = true;
+						} else {
+							place.restaurantInPlan = false;
+						}
+					};
+				}
+			}
+			if (!googleMap.hasMarker(place.geometry.location.ob, place.geometry.location.pb)) {
+				mapMarker.create(googleMap, {
+					icon: "/images/icons/map-icons/entertainment/restaurant.png",
+					position: place.geometry.location,
+					name: place.name,
+					body: place.vicinity
+				});
+			}
+		});
+	};
+
+	$scope.$on('restaurants-changed', function(e, args) {
+		console.log('caught restaurants-changed');
+		console.log(args.restaurants);
+
+		$scope.restaurants = args.restaurants;
+		$timeout(function() {
+			return updateDeals($scope.deals);
+		});
+		$timeout(function() {
+			return updateGoogleRestaurants($scope.googleRestaurants);
+		});
+	});
+
+	/* watch for parkingReservations (right now its just parkwhiz) */
 	$scope.$watch('deals', function(deals) {
+		console.log('deals changed');
 		/* make markers & infoWindows for these and add them to the map */
 		if (!deals) {
 			return;
 		};
-
-		$scope.notFound = false;
-
 		$timeout(function() {
-			angular.forEach(deals, function(d, i) {
-				console.log('deals listing:');
-				console.log(d);
-
-				if (!googleMap.hasMarker(d.business.locations[0].lat, d.business.locations[0].lon)) {
-					var marker = new google.maps.Marker({
-						position: new google.maps.LatLng(d.business.locations[0].lat, d.business.locations[0].lon),
-						map: googleMap.getMap(),
-					});
-					marker.setIcon("/images/icons/map-icons/entertainment/restaurant.png");
-					marker.setAnimation(google.maps.Animation.DROP);
-
-					var win = new google.maps.InfoWindow({
-						content: mapInfoWindowContent.create({
-							header: d.business.name,
-							body: d.business.locations[0].address + ', ' + d.business.locations[0].locality
-						}),
-						pixelOffset: new google.maps.Size(10, 0),
-					});
-
-					google.maps.event.addListener(marker, 'click', function() {
-						console.log('clicked infowindow')
-						if (googleMap.isInfoWindowOpen(marker)) {
-							googleMap.closeInfoWindow(marker);
-						} else {
-							googleMap.openInfoWindow(marker);
-						}
-					});
-
-					/* put the marker on the map */
-					googleMap.addMarker(marker);
-					/* put the infoWindow on the map */
-					googleMap.addInfoWindow(win, marker);
-				}
-			});
+			return updateDeals(deals);
 		});
 	});
 
-	console.log('setting watch for google restaurants');
-	var deregGP = $scope.$watch('googleRestaurants', function(restaurants) {
-		console.log('googleRestaurants changed: ');
-		console.log(restaurants);
+	$scope.$watch('googleRestaurants', function(googleRestaurants) {
 		/* make markers & infoWindows for these and add them to the map */
-		if (!restaurants) {
-			console.log('google restaurants outa here');
+		if (!googleRestaurants) {
+			console.log('googleRestaurants outa here');
 			return;
 		};
-
-		console.log('notfound is false');
-		$scope.notFound = false;
-
 		$timeout(function() {
-			angular.forEach(restaurants, function(place, i) {
-				console.log('google restaurant item:');
-				console.log(place);
-
-
-				//if (!googleMap.hasMarker(place.geometry.location.lat(), place.geometry.location.lng())) {
-				console.log(place);
-				var marker = new google.maps.Marker({
-					map: googleMap.getMap(),
-					position: place.geometry.location,
-				});
-				marker.setIcon("/images/icons/map-icons/entertainment/restaurant.png");
-				marker.setAnimation(google.maps.Animation.DROP);
-
-				var win = new google.maps.InfoWindow({
-					content: mapInfoWindowContent.create({
-						header: place.name,
-						body: place.vicinity
-					}),
-					pixelOffset: new google.maps.Size(10, 0),
-				});
-
-				google.maps.event.addListener(marker, 'click', function() {
-					console.log('clicked infowindow')
-					if (googleMap.isInfoWindowOpen(marker)) {
-						googleMap.closeInfoWindow(marker);
-					} else {
-						googleMap.openInfoWindow(marker);
-					}
-				});
-
-				/* put the marker on the map */
-				googleMap.addMarker(marker);
-				/* put the infoWindow on the map */
-				googleMap.addInfoWindow(win, marker);
-				//}
-			});
-			deregGP();
-
-		});
-
+			console.log('updated google restaurants');
+			return updateGoogleRestaurants(googleRestaurants);
+		})
 	});
 
-	function getRestaurants(p) {
-		console.log('plan');
-		console.log(p);
+	function getRestaurants(p, args) {
+		/* no google restaurants for now until we figure how to fit it in with deals */
+		/*
+		restaurants.fetchGoogleRestaurants(args, function(err, r) {
+			$scope.$apply(function() {
+				console.log('updating googleRestaurants');
+				$scope.googleRestaurants = r;
+			});
+		});
+		*/
+		restaurants.fetchDeals(args, function(err, r) {
+			console.log('FETCHED RESTAURANT DEALS');
+			console.log(r);
+			$timeout(function() {
+				$scope.$apply(function() {
+					$scope.deals = r;
+					loadingModal.hide();
+				});
+			});
+		});
+	};
 
-		/* reset the map */
-		googleMap.isDrawn(false);
-
+	var initMap = function(p) {
 		var lat = p.venue.data.geocode.geometry.location.lat;
 		var lng = p.venue.data.geocode.geometry.location.lng;
 
-		/* make a marker for the venue */
-		var marker = new google.maps.Marker({
-			map: googleMap.getMap(),
-			position: new google.maps.LatLng(lat, lng),
-		});
-		marker.setIcon("/images/icons/map-icons/sports/stadium.png");
-		marker.setAnimation(google.maps.Animation.DROP);
+		console.log('PLAN in init restaurants map');
+		console.log(p);
+		$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;
 
-		/* infoWindow for the venue marker */
-		var win = new google.maps.InfoWindow({
-			content: mapInfoWindowContent.create({
-				header: p.event.eventVenue,
-				body: p.venue.data.Street1 + ', ' + p.event.eventCity + ', ' + p.event.eventState
-			}),
-			pixelOffset: new google.maps.Size(10, 0),
+		mapVenue.create(googleMap, {
+			lat: lat,
+			lng: lng,
+			name: p.event.eventVenue,
+			street: p.venue.data.Street1,
+			city: p.event.eventCity,
+			state: p.event.eventState
 		});
 
-		google.maps.event.addListener(marker, 'click', function() {
-			console.log('clicked infowindow')
-			if (googleMap.isInfoWindowOpen(marker)) {
-				googleMap.closeInfoWindow(marker);
-			} else {
-				googleMap.openInfoWindow(marker);
+		var purchasedRestaurants = plan.getRestaurants();
+		if ((typeof purchasedRestaurants[0] !== "undefined") && purchasedRestaurants[0].purchased) {
+			console.log('setting scope restaurants');
+			$scope.restaurants = purchasedRestaurants;
+			if (purchasedRestaurants[0].service === 'yipit') {
+				if (!googleMap.hasMarker(purchasedRestaurants[0].restaurant.business.locations[0].lat, purchasedRestaurants[0].restaurant.business.locations[0].lon)) {
+					mapMarker.create(googleMap, {
+						icon: "/images/icons/map-icons/entertainment/restaurant.png",
+						lat: purchasedRestaurants[0].restaurant.business.locations[0].lat,
+						lng: purchasedRestaurants[0].restaurant.business.locations[0].lon,
+						name: purchasedRestaurants[0].restaurant.business.name,
+						body: purchasedRestaurants[0].title
+					});
+				}
 			}
-		});
-
-		/* put the marker on the map */
-		googleMap.addMarker(marker);
-		/* put the infoWindow on the map */
-		googleMap.addInfoWindow(win, marker);
-		/* open the infowindow for the venue by default */
-		googleMap.openInfoWindow(marker);
-
-		/* get all the google restaurants nearby and add it to the scope */
-		/*
-		var request = {
-			location: new google.maps.LatLng(lat, lng),
-			radius: 1500,
-			types: ['restaurant']
-		};
-		var service = new google.maps.places.PlacesService(googleMap.getMap());
-		service.nearbySearch(request, function(results, status) {
-			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				console.log('got googleParking results');
-				console.log(results);
-				$scope.$apply(function() {
-					$scope.googleRestaurants = results;
-				});
-			}
-		});
-		*/
-		/* get parking from parkwhiz and update scope */
-		wembliRpc.fetch('event.getDeals', {
-				lat: lat,
-				lon: lng,
-			}, function(err, result) {
-
-				if (err) {
-					//handle err
-					alert('error happened - contact help@wembli.com');
-					return;
+			if (purchasedRestaurants[0].service === 'google') {
+				if (!googleMap.hasMarker(purchasedRestaurants[0].restaurant.geometry.location.pb, purchasedRestaurants[0].restaurant.geometry.location.qb)) {
+					mapMarker.create(googleMap, {
+						icon: "/images/icons/map-icons/entertainment/restaurant.png",
+						lat: purchasedRestaurants[0].restaurant.geometry.location.pb,
+						lng: purchasedRestaurants[0].restaurant.geometry.location.qb,
+						name: purchasedRestaurants[0].restaurant.name,
+						body: purchasedRestaurants[0].restaurant.vicinity
+					});
 				}
 
-				console.log('results from event.getDeals');
-				console.log(result);
-				$timeout(function() {
-					$scope.$apply(function() {
-						$scope.deals = result.deals;
-					});
-				});
-				//var minRestaurantPrice = result.restaurant.min_price;
-				//var maxRestaurantPrice = result.restaurant.max_price;
-
-				var minRestaurantPrice = 0;
-				var maxRestaurantPrice = 600;
-
-				var initSlider = function() {
-					/*Set Minimum and Maximum Price from your Dataset*/
-					$("#price-slider").slider("option", "min", minRestaurantPrice);
-					$("#price-slider").slider("option", "max", maxRestaurantPrice);
-					$("#price-slider").slider("option", "values", [minRestaurantPrice, maxRestaurantPrice]);
-					$("#amount").val("$" + minRestaurantPrice + " - $" + maxRestaurantPrice);
-				};
-
-				var filterRestaurant = function() {
-					var priceRange = $("#price-slider").slider("option", "values");
-
-					/* hide parking locations that are out of range */
-					console.log('filtering restaurant');
-				};
-
-				//set the height of the map-container to the window height
-				//$('#map-container').css("height", $($window).height() - 60);
-				//$('#parking').css("height", $($window).height() - 60);
-				//$('#map-container').css("width", $($window).width() - 480);
-
-				$('#price-slider').slider({
-					range: true,
-					min: minRestaurantPrice,
-					max: maxRestaurantPrice,
-					step: 5,
-					values: [minRestaurantPrice, maxRestaurantPrice],
-					slide: function(event, ui) {
-						$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-					},
-					stop: function(event, ui) {
-						filterRestaurant();
-					}
-
-				});
-
-				var amtVal = "$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1);
-				$("#amount").val(amtVal);
-
-				/* filter tix when the drop down changes */
-				$("#quantity-filter").change(function() {
-					filterRestaurant();
-				});
-				loadingModal.hide();
-			},
-			/* transformRequest */
-
-			function(data, headersGetter) {
-				return data;
-			},
-
-			/* transformResponse */
-
-			function(data, headersGetter) {
-				return JSON.parse(data);
+			}
+			loadingModal.hide();
+		} else {
+			console.log('getting restaurants');
+			getRestaurants(p, {
+				lat: lat,
+				lng: lng
 			});
+		}
 	};
 
-
-	plan.get(function(p) {
-		$scope.context = plan.getContext() || 'visitor';
-
-		$scope.backToPlan = true;
-		if (plan.getFriends().length == 0) {
-			$scope.backToPlan = false;
-		}
-		if ($scope.context === 'friend') {
-			$scope.backToPlan = true;
-		}
-
-		if (googleMap.isDrawn()) {
-			console.log('google map is drawn');
-			getRestaurants(p);
-		} else {
-			console.log('google map is not drawn');
-			var dereg = $rootScope.$on('google-map-drawn', function() {
-				console.log('google map is draen now');
-				getRestaurants(p);
-				dereg();
+	$scope.removeRestaurant = function(restaurantId) {
+		/* remove the restaurant and close the modal */
+		console.log('removingrestaurant: ' + restaurantId);
+		plan.removeRestaurant({
+			restaurantId: restaurantId
+		}, function(err, results) {
+			console.log('removed restaurant from plan:');
+			console.log(results);
+			$rootScope.$broadcast('restaurants-changed', {
+				parking: []
 			});
+		});
+	};
+
+	/* display a modal when they click to go off and buy tickets */
+	fetchModals.fetch('/partials/modals/restaurants-modals', function(err) {
+		if (err) {
+			return console.log('no modal for restaurants offsite');
 		}
+
+		plan.get(function(p) {
+			$scope.restaurants = plan.getRestaurants();
+			console.log('restaurants from plan: ');
+			console.log($scope.restaurants);
+			$scope.context = plan.getContext() || 'visitor';
+
+			$scope.backToPlan = true;
+			if (plan.getFriends().length == 0) {
+				$scope.backToPlan = false;
+			}
+			if ($scope.context === 'friend') {
+				$scope.backToPlan = true;
+			}
+
+			if (googleMap.isDrawn()) {
+				console.log('google map is drawn');
+				initMap(p);
+			} else {
+				console.log('google map is not drawn');
+				var dereg = $rootScope.$on('google-map-drawn', function() {
+					console.log('google map is drawn now');
+					initMap(p);
+					dereg();
+				});
+			}
+		});
 	});
 };
 
@@ -812,12 +795,59 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 
 	$scope.notFound = true;
 
+	var filterNone = function(service) {
+		$scope.$apply(function() {
+			for (var i = 0; i < $scope.googleParking.length; i++) {
+				$scope.googleParking[i].hide = false;
+			};
+			for (var i = 0; i < $scope.parkingReservations.parking_listings.length; i++) {
+				$scope.parkingReservations.parking_listings[i].hide = false;
+			};
+		});
+	}
+
+	var filterGoogleParkingById = function(id) {
+		console.log('filtering: ' + id);
+		if (typeof id === "undefined") {
+			return filterNone();
+		}
+		$scope.$apply(function() {
+			for (var i = 0; i < $scope.googleParking.length; i++) {
+				$scope.googleParking[i].hide = ($scope.googleParking[i].id != id);
+			}
+			for (var i = 0; i < $scope.parkingReservations.parking_listings.length; i++) {
+				$scope.parkingReservations.parking_listings[i].hide = true;
+			}
+		});
+	};
+
+	var filterParkingReservationsById = function(id) {
+		console.log('filtering: ' + id);
+		if (typeof id === "undefined") {
+			return filterNone();
+		}
+
+		$scope.$apply(function() {
+			for (var i = 0; i < $scope.parkingReservations.parking_listings.length; i++) {
+				$scope.parkingReservations.parking_listings[i].hide = ($scope.parkingReservations.parking_listings[i].listing_id != id);
+			}
+			for (var i = 0; i < $scope.googleParking.length; i++) {
+				$scope.googleParking[i].hide = true;
+			}
+		});
+	};
+
+
 	updateParkingReservations = function(parkingReservations) {
 		$scope.notFound = false;
+		if (typeof parkingReservations == "undefined") {
+			return;
+		}
 		angular.forEach(parkingReservations.parking_listings, function(v, i) {
 			console.log('each parking reservation');
 			/* this will have to be set serverside once we aggregate */
 			v.service = 'pw';
+			v.hide = (typeof v.hide === "undefined") ? false : v.hide;
 
 			/* check if this parking is in the plan */
 			if (typeof $scope.parking !== "undefined") {
@@ -843,17 +873,31 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 					lat: v.lat,
 					lng: v.lng,
 					name: v.location_name,
-					body: v.address + ', ' + v.city
+					body: v.address + ', ' + v.city,
+					click: {
+						on: function() {
+							filterParkingReservationsById(v.listing_id)
+						},
+						off: function() {
+							filterParkingReservationsById()
+						}
+					}
+
 				});
 			}
 		});
 	};
 
 	updateGoogleParking = function(googleParking) {
+		if (typeof googleParking =="undefined") {
+			return;
+		}
 		$scope.notFound = false;
 		console.log('updating google parking');
 		angular.forEach(googleParking, function(place, i) {
+			console.log(place);
 			place.service = 'google';
+			place.hide = (typeof place.hide === "undefined") ? false : place.hide;
 			if (typeof $scope.parking !== "undefined") {
 
 				if (typeof $scope.parking[0] === "undefined") {
@@ -875,7 +919,16 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 					icon: "/images/icons/map-icons/transportation/parkinggarage.png",
 					position: place.geometry.location,
 					name: place.name,
-					body: place.vicinity
+					body: place.vicinity,
+					click: {
+						on: function() {
+							filterGoogleParkingById(place.id)
+						},
+						off: function() {
+							filterGoogleParkingById()
+						}
+					}
+
 				});
 			}
 		});
@@ -1004,11 +1057,8 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 		});
 	};
 
-	/* get the login modal */
-	fetchModals.fetch('/partials/parking-login-modal');
-
 	/* display a modal when they click to go off and buy tickets */
-	fetchModals.fetch('/partials/parking-offsite', function(err) {
+	fetchModals.fetch('/partials/modals/parking-modals', function(err) {
 		if (err) {
 			return console.log('no modal for buy tickets offsite');
 		}
@@ -1327,11 +1377,8 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurchaseUrls) {
 	$scope.tnUrl = ticketPurchaseUrls.tn;
 
-	/* get the login modal */
-	fetchModals.fetch('/partials/tickets-login-modal');
-
 	/* display a modal when they click to go off and buy tickets */
-	fetchModals.fetch('/partials/tickets-offsite', function(err) {
+	fetchModals.fetch('/partials/modals/tickets-modals', function(err) {
 		if (err) {
 			return console.log('no modal for buy tickets offsite');
 		}
@@ -1642,7 +1689,21 @@ function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 };
 
 function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
-	$scope.tnUrl = ticketPurchaseUrls.tn;
+	plan.get(function(p) {
+		$scope.$on('restaurants-login-clicked', function(e, args) {
+			$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
+			console.log('restaurants login clicked');
+			console.log(args);
+			if (args.restaurant.service === 'google') {
+				$scope.redirectUrl += 'google/' + args.restaurant.id;
+			} else {
+				$scope.redirectUrl += 'yipit/' + args.restaurant.id;
+			}
+			$scope.restaurant = args.restaurant;
+			//$scope.googleParking = args.googleParking;
+			//$scope.parkingReservations = args.parkingReservations;
+		});
+	});
 
 	plan.get(function(p) {
 		$scope.$on('tickets-login-clicked', function(e, args) {
@@ -1857,7 +1918,7 @@ function TicketsOffsiteCtrl($scope, plan, $http) {
 
 };
 
-function ParkingOffsiteCtrl($scope, plan, $http, $location) {
+function ParkingOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
 	plan.get(function(p) {
 		console.log('plan in parking-offsite');
 		console.log(p);
@@ -1924,43 +1985,114 @@ function ParkingOffsiteCtrl($scope, plan, $http, $location) {
 	};
 
 };
+function ParkingInfoCtrl($scope, plan, googlePlaces) {
 
-function RestaurantsOffsiteCtrl($scope, plan, $http) {
 	plan.get(function(p) {
-		console.log('plan in tickets tickets-offsite');
+		console.log('plan in parking-info');
 		console.log(p);
 		$scope.plan = p;
 	});
 
-	$scope.$on('tickets-offsite-clicked', function(e, args) {
-		console.log('handle tickets-offsite-clicked');
+
+	$scope.$on('parking-info-clicked', function(e, args) {
+		console.log('handle parking-info-clicked');
 		console.log(args);
-		$scope.qty = args.qty;
+		$scope.parking = args.parking;
+
+		/* get the place details */
+		googlePlaces.getDetails(args.parking.reference, function(place, status) {
+		  if (status == google.maps.places.PlacesServiceStatus.OK) {
+		  	$scope.$apply(function() {
+			  	$scope.details = place;
+			  	console.log(place);
+		  	});
+		  }
+		});
+	});
+
+};
+
+
+function RestaurantsInfoCtrl($scope, plan) {
+
+	plan.get(function(p) {
+		console.log('plan in restaurants-offsite');
+		console.log(p);
+		$scope.plan = p;
+	});
+
+
+	$scope.$on('restaurants-info-clicked', function(e, args) {
+		console.log('handle restaurants-info-clicked');
+		console.log(args);
+		$scope.restaurant = args.restaurant;
+	});
+
+};
+
+function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
+
+	plan.get(function(p) {
+		console.log('plan in restaurants-offsite');
+		console.log(p);
+		$scope.plan = p;
+	});
+
+
+	$scope.$on('restaurants-offsite-clicked', function(e, args) {
+		console.log('handle restaurants-offsite-clicked');
+		console.log(args);
 		$scope.amountPaid = args.amountPaid;
 		$scope.eventId = args.eventId,
 		$scope.eventName = args.eventName,
-		$scope.sessionId = args.sessionId,
-		$scope.ticketGroup = args.ticketGroup,
-		$scope.ticketId = args.ticketId
-	})
+		$scope.restaurantId = args.restaurantId,
+		$scope.restaurant = args.restaurant;
+		$scope.qty = args.qty;
+	});
 
 	$scope.showButton = function() {
-		return ($scope.ticketsOffsite === 'bought');
+		return ($scope.restaurantsOffsite === 'bought');
 	};
 
 	$scope.submitForm = function() {
-		/* for testing, fire the ticketnetwork pixel */
-		$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+		console.log('adding restaurant receipt for:');
+		console.log($scope.restaurantId);
+		/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
+		plan.addRestaurantReceipt({
+			restaurantId: $scope.restaurantId,
+			service: $scope.restaurant.service,
+			receipt: {
+				qty: $scope.qty,
+				amountPaid: $scope.amountPaid
+			}
+		}, function(err, result) {
+			console.log('added restaurant receipt:');
+			console.log(err);
+			console.log(result);
+
+			$('#restaurants-offsite-modal').modal('hide');
+			/* have to back to plan so they don't have a chance to buy more */
+			$location.path("/plan");
+			/* uncomment if we end up supporting multiple parking in a plan
+			$rootScope.$broadcast('parking-changed', {
+				parking: [result.parking]
+			});
+			*/
+		});
 	};
 
 	$scope.cancelForm = function() {
-		/* remove the ticketgroup and close the modal */
-		plan.removeTicketGroup({
-			ticketId: $scope.ticketId
+		/* remove the parking and close the modal */
+		plan.removeRestaurant({
+			restaurantId: $scope.restaurantId
 		}, function(err, results) {
-			console.log('removed ticketgroup from plan:');
+			console.log('removed restaurant from plan:');
 			console.log(results);
-			$('#tickets-offsite-modal').modal('hide');
+			$('#restaurants-offsite-modal').modal('hide');
+			$rootScope.$broadcast('restaurants-changed', {
+				restaurants: results.restaurants
+			});
+
 		});
 
 	};
@@ -2010,8 +2142,8 @@ function HotelsOffsiteCtrl($scope, plan, $http) {
 };
 
 function VenueMapCtrl($rootScope, $scope, interactiveMapDefaults, plan, $filter, customer, wembliRpc) {
-	plan.fetch(function(result) {
-		var p = result.plan;
+	plan.get(function(p) {
+		//var p = result.plan;
 		$scope.plan = p;
 		$scope.priceRange = {};
 		$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;

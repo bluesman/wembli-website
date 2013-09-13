@@ -3,6 +3,35 @@
 /* Directives */
 angular.module('wembliApp.directives.parkingMap', []).
 
+directive('parkingMoreInfo', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
+  function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
+    return {
+      restrict: 'EAC',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          attr.$observe('parking', function(val) {
+            if (typeof val === "undefined") {
+              return;
+            }
+            var parking = JSON.parse(val);
+
+            element.click(function() {
+              console.log('clicked parking more info');
+              console.log(parking);
+              $rootScope.$broadcast('parking-info-clicked', {
+                parking: parking
+              });
+
+              if ($('#parking-info-modal').length > 0) {
+                $('#parking-info-modal').modal('show');
+              }
+            });
+          });
+        }
+      }
+    }
+  }
+]).
 
 directive('parkingLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
   function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {

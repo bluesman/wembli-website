@@ -1,0 +1,71 @@
+//-
+	#restaurants-price-range.price-range
+		h3.pull-left Pick Your Restaurant:
+		form#price-range-form.price-range-form.form-inline
+			fieldset.pull-left
+				label.checkbox(ng-click="handlePriceRange()",title="LOW: Under $20")
+					input#low(type="checkbox",ng-model="priceRange.low")
+					span.dollar-sign(ng-class="{true:'orange'}[priceRange.low]") $
+				label.checkbox(ng-click="handlePriceRange()",title="MEDIUM: From $20 to $50")
+					input#med(type="checkbox",ng-model="priceRange.med")
+					span.dollar-sign(ng-class="{true:'orange'}[priceRange.med]") $$
+				label.checkbox(ng-click="handlePriceRange()",title="Above $50")
+					input#high(type="checkbox",ng-model="priceRange.high")
+					span.dollar-sign(ng-class="{true:'orange'}[priceRange.high]") $$$
+			a.btn.btn-primary.btn-large.pull-left(ng-hide="backToPlan",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
+			a.btn.btn-primary.btn-large.pull-left(ng-show="backToPlan",href="/plan",direction="1") Back To The Plan
+#restaurants-list-header-container.restaurants-list-header-container.list-header-container
+	#restaurants-list-header.list-header
+		h4.pull-left Get A Deal At Nearby Restaurants
+		.popover-container.pull-left
+			i.icon-question-sign.display-popover(placement="bottom",trigger="hover",animation="true",title="Buy A Restaurant Deal",content="If you're gonna eat anyway, you might was well save some dough!")
+
+	//-
+		a.range-header(href="#",ng-click="sortByPrice()") Price
+		a.section-header(href="#",ng-click="sortByDiscount()") Discount
+		a.qty-header(href="#",ng-click="sortByTitle()") Deal
+ul#restaurants-list-container.restaurants-list-container.list-container
+	li.restaurants-row.row.bounce-map-marker(lat="{{deal.business.locations[0].lat}}",lng="{{deal.business.locations[0].lon}}",ng-repeat="deal in deals | filter:{hide:false}",ng-hide="deals.hide")
+		.top.clearfix
+			.icon.pull-left
+				i.icon-food.icon-2x
+			.title.pull-left {{deal.title}}
+		.bottom.clearfix
+			.price.pull-left
+				.header price
+				.value {{deal.price.formatted}}
+			.contact.pull-left.clearfix
+				.business.pull-left
+					.name {{deal.business.name}}
+					.address
+						div {{deal.business.locations[0].address}}
+						div {{deal.business.locations[0].locality}}, {{deal.business.locations[0].state}} {{deal.business.locations[0].zip_code}}
+				.details
+					a.btn.btn-small.restaurants-more-info(restaurant="{{deal}}",href="#restaurants-info-modal") view details
+			.discount.pull-right
+				.value {{deal.discount.formatted}}
+				.header discount
+			.controls.pull-right
+				.actions
+					a.btn.btn-primary.btn-large.restaurants-login-modal(restaurant="{{deal}}",ng-href="#restaurants-login-modal-yipit-{{restaurants.listing_id}}",ng-hide="customer") Buy
+					a.btn.btn-primary.btn-large.buy-restaurants-offsite(restaurant="{{deal}}",ng-href="{{deal.url}}",ng-show="customer && !deal.dealInPlan",target="_blank") Buy
+					button.btn.btn-orange.btn-small(ng-show="deal.dealInPlan && deal.purchased") Purchased
+					button.btn.btn-orange.btn-small(ng-click="removeDeal(deal._id)",ng-show="deal.dealInPlan && !deal.purchased") Remove
+
+	//- TODO: google restaurants
+		li.restaurants-row.row.bounce-map-marker(lat="{{restaurants.geometry.location.lat()}}",lng="{{restaurants.geometry.location.lng()}}",ng-repeat="restaurants in googleParking",ng-hide="restaurants.hide")
+			.restaurants-range
+				.dollar-sign N/A
+			.restaurants-info
+				.restaurants-location-name {{restaurants.name}}
+				.restaurants-address {{restaurants.vicinity}}
+			.no-reservations-available
+				.message Online reservations are not available.
+				a.btn.btn-primary.btn-small.restaurants-login-modal(restaurants="{{restaurants}}",service="google", ng-href="#restaurants-login-modal-google-{{restaurants.id}}",ng-hide="customer") Add To Plan
+				a.btn.btn-primary.btn-small.add-restaurants-to-plan(ng-show="customer && backToPlan && !restaurants.parkingInPlan", service="google", restaurants="{{restaurants}}", ng-href="/plan") Add To Plan
+				button.btn.btn-primary.btn-small.add-restaurants-to-plan(restaurants="{{restaurants}}", service="google", ng-hide="!customer || backToPlan || restaurants.parkingInPlan") Add To Plan
+				a.btn.btn-orange.btn-small(ng-click="removeParking(restaurants._id)",ng-href="/plan",ng-show="backToPlan && restaurants.parkingInPlan") Remove From Plan
+				button.btn.btn-orange.btn-small(ng-click="removeParking(restaurants._id)",ng-show="!backToPlan && restaurants.parkingInPlan") Remove From Plan
+
+
+

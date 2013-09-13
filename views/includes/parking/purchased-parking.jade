@@ -1,29 +1,49 @@
-#purchased-parking-filters.filter-container.parking-list-header-container.clearfix
-	h3.pull-left Parking You've Purchased:
-#purchased-parking-list-header-container.parking-list-header-container
-	a.range-header(href="#",ng-click="sortByPrice()") Price
-	a.section-header(href="#",ng-click="sortBySection()") Location
-	a.distance-header(href="#",ng-click="sortByDistance()") Distance
+#purchased-parking-filters.filter-container.parking-list-header-container.list-header-container.clearfix
+	h3.pull-left Parking In Your Plan:
+//-
+	#purchased-parking-list-header-container.parking-list-header-container
+		a.range-header(href="#",ng-click="sortByPrice()") Price
+		a.section-header(href="#",ng-click="sortBySection()") Location
+		a.distance-header(href="#",ng-click="sortByDistance()") Distance
 
-ul#purchased-parking-container.parking-list-container
+ul#purchased-parking-container.parking-list-container.list-container
 	li(ng-repeat="item in parking")
-		.parking-row(ng-show="{'pw':true}[item.service]")
-			.parking-price
-				.actual-price ${{item.parking.price}}
-				.each (each)
-			.parking-info
-				.parking-location-name {{item.parking.location_name}}
-				.parking-address
-					div {{item.parking.address}}
-					div {{item.parking.city}}, {{item.parking.state}}
-			.parking-distance {{determineDistance(item.parking.distance)}} mi.
-		.parking-row(ng-show="{'google':true}[item.service]")
-			.parking-price
-				.actual-price N/A
-			.parking-info
-				.parking-location-name {{item.parking.name}}
-				.parking-address {{item.parking.vicinity}}
-.back-to-plan-container
-	a.btn.btn-primary.btn-large(href="/plan#section3",direction="1") Back To The Plan
+		.parking-row.row.bounce-map-marker(lat="{{parking.lat}}",lng="{{parking.lng}}",ng-show="{'pw':true}[item.service]")
+			.top.clearfix
+				.icon.pull-left
+					i.icon-truck.icon-flip-horizontal.icon-2x
+				.title.pull-left {{item.parking.location_name}}
+			.bottom.clearfix
+				.price.pull-left
+					.header price
+					.value ${{item.parking.price}}
+				.contact.pull-left.clearfix
+					.business.pull-left
+						.address
+							div {{item.parking.address}}
+							div {{item.parking.city}}, {{item.parking.state}}
+							div {{determineDistance(item.parking.distance)}} mi.
+				.discount.pull-right
+					.value {{item.parking.available_spots}}
+					.header spots
+		.parking-row.row.bounce-map-marker(lat="{{item.parking.geometry.location.pb}}",lng="{{item.parking.geometry.location.qb}}",ng-show="{'google':true}[item.service]")
+			.top.clearfix
+				.icon.pull-left
+					i.icon-truck.icon-flip-horizontal.icon-2x
+				.title.pull-left {{item.parking.name}}
+			.bottom.clearfix
+				.price.pull-left
+					.header price
+					.value N/A
+				.contact.pull-left.clearfix
+					.business.pull-left
+						.address
+							div {{item.parking.vicinity}}
+					.message Online reservations are not available.
+					.details
+						a.btn.btn-small.parking-more-info(parking="{{item.parking}}",href="#parking-info-modal") view details
+				.controls.pull-right
+					.actions
+						a.btn.btn-orange.btn-large(ng-click="removeParking(item._id)",ng-href="/plan#section3") Remove
 
 

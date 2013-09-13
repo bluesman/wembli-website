@@ -1,7 +1,7 @@
 #hotels-frame(ng-controller="HotelsCtrl")
 	#map-background
 		#hotels-map-container.hotels-map.map-container(lat="#{lat}",lng="#{lon}",zoom="15",draggable="true",map-type-id="ROADMAP")
-	#hotels.pull-right
+	#hotels.addons-list.pull-right
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
 		- console.log('plan prefs in hotels list');

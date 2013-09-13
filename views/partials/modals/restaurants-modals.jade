@@ -1,0 +1,131 @@
+#restaurants-login-modal.modal.hide(ng-controller="RestaurantsLoginCtrl")
+	.confirm(ng-show="customer")
+		.modal-header
+			h2 You're Logged In - Now Get Your Deal!
+		.modal-body
+			.top.clearfix
+				.icon.pull-left
+					i.icon-food.icon-2x
+				.title.pull-left {{restaurant.title}}
+			.bottom.clearfix
+				.price.pull-left
+					.header price
+					.value {{restaurant.price.formatted}}
+				.contact.pull-left.clearfix
+					.business.pull-left
+						.name {{restaurant.business.name}}
+						.address
+							div {{restaurant.business.locations[0].address}}
+							div {{restaurant.business.locations[0].locality}}, {{restaurant.business.locations[0].state}} {{restaurant.business.locations[0].zip_code}}
+				.discount.pull-right
+					.value {{restaurant.discount.formatted}}
+					.header discount
+	.login(ng-hide="customer")
+		.modal-header
+			h2 Login To Buy Your Restaurant Deal
+		.modal-body
+			form#restaurants-login-form(name="restaurants-login")
+				p Choose from the options below:
+				label.radio
+					input#radio-signup(ng-model="authAction",type="radio",name="auth_action",value="signup",ng-init="authAction='signup'")
+					.option-content
+						h3 1. Create an account:
+						fieldset()
+							#signup-error.alert.alert-block.fade.in(ng-show="signupError")
+								.error-text.icon-spinner.icon-spin.icon-2x(ng-show="signupSpinner")
+								.error-text(ng-show="formError") Please provide a name and email address.
+								.error-text(ng-show="accountExists")
+									span Hey! This account already exists. Log in using one of the options below or&nbsp;
+									a.send-forgot-password-email(href="#") request a password change email
+									span .
+								.error-text(ng-show="forgotPasswordEmailSent") An email has been sent to you. Follow the instructions to reset your password.
+							.name-group.control-group
+								input.focus-on-click.first-name.pull-left(ng-model="firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
+								input.focus-on-click.last-name.pull-left(ng-model="lastName",placeholder="LAST NAME",type="text",name="lastName",required)
+								input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="signup_email",required)
+				label.radio
+					input#radio-login(ng-model="authAction",type="radio",name="auth_action",value="login")
+					.option-content
+						h3 2. Login to your existing account:
+						fieldset()
+							#error.alert.alert-block.fade.in(ng-show="loginError")
+								.error-text(ng-show="noPassword") No password was set for this account.  A email has been sent you. Follow the instructions to set your password.
+								.error-text(ng-show="invalidCredentials") Woops! Looks like your email or password was incorrect.
+							.name-group.control-group
+								input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="login_email",required)
+								input.focus-on-click.password(type="password",ng-model="password",placeholder="PASSWORD",name="password",required)
+				label.radio
+					input#facebook-login(ng-model="authAction",type="radio",name="auth_action",value="facebook")
+					.option-content
+						h3 3. Login with facebook:
+						.facebook-login
+							a#facebook-login-button.btn.btn-primary(target="_self",ng-href="/auth/facebook?redirectUrl={{redirectUrl}}")
+								i.icon-facebook.icon-2x.pull-left
+								span Login with Facebook
+
+	.modal-footer
+		button.btn.btn-primary.btn-large(ng-click="authActions[authAction]()",ng-hide="customer", ng-class="{'facebook':'muted'}[authAction]")
+			span(ng-hide="continueSpinner") Continue
+			span.icon-spinner.icon-spin(ng-show="continueSpinner")
+		a.btn.btn-primary.btn-large.buy-restaurants-offsite(ng-show="customer && {'yipit':true}[restaurant.service]", restaurant="{{restaurant}}",ng-href="{{restaurant.url}}",target="_blank") Get This Deal
+		.confirm-add-restaurant.clearfix(ng-hide="!customer || {'yipit':true}[restaurant.service]")
+			button.btn.btn-large.pull-left(ng-click="closeLoginModal()") Cancel
+			button.btn.btn-primary.btn-large.add-restaurant-to-plan.pull-left(restaurant="{{restaurant}}",service="{{restaurant.service}}",ng-click="closeLoginModal()") Continue
+#restaurants-offsite-modal.modal.hide(ng-controller="RestaurantsOffsiteCtrl")
+	#restaurants-offsite
+		.modal-header
+			h2 How'd It Go?
+		.modal-body
+			p Before we take you to your planning dashboard we need to know:
+			form#restaurants-offsite-form(name="restaurants-offsite-form")
+				label.radio
+					input#option-group-bought(ng-model="restaurantsOffsite",type="radio",name="restaurants_offsite",value="bought",ng-init="restaurantsOffsite='bought'")
+					.option-content
+						h3 I Got My Restaurant Deal!
+						p
+							span I just bought
+							input#qty.focus-on-click(name="qty",ng-model="qty",type="text")
+							span {{qty | pluralize:'deal'}} for a total of
+							span#amount-paid-prepend.input-prepend
+								span.add-on $
+								input#amount-paid.focus-on-click(type="text",name="amount_paid",ng-model="amountPaid")
+								span .&nbsp;&nbsp;
+								span.orange &nbsp;<--- is this correct?
+				label.radio
+					input#option-group-skip(ng-model="restaurantsOffsite",type="radio",name="restaurants_offsite",value="skip")
+					.option-content
+						h3 Show Me Somethin' Else
+						p I decided not to buy. Show me other options.
+		.modal-footer
+			button.btn.btn-primary.btn-large(ng-show="showButton()",ng-click="submitForm()") Continue
+			button.btn.btn-cancel.btn-large(ng-hide="showButton()",ng-click="cancelForm()") See More restaurants
+#restaurants-info-modal.modal.hide(ng-controller="RestaurantsInfoCtrl")
+	.modal-header
+		h2 {{restaurant.title}}
+	.modal-body.clearfix
+		.left.pull-left
+			img.image.pull-left(ng-src="{{restaurant.images.image_small}}")
+			.pricing.clearfix
+				.price.pull-left
+					.header price
+					.value {{restaurant.price.formatted}}
+				.discount.pull-left
+					.value {{restaurant.discount.formatted}}
+					.header discount
+		.right.pull-left
+			.details
+				.description {{restaurant.description}}
+				.purchase-by
+					strong Purchase By:&nbsp;
+					span {{restaurant.end_date}}
+			.contact
+				.business
+					.name
+						a(ng-show="restaurant.business.url",ng-href="{{restaurant.business.url}}", target="_blank") {{restaurant.business.name}}
+						span(ng-hide="restaurant.business.url") {{restaurant.business.name}}
+					.address
+						div {{restaurant.business.locations[0].address}}
+						div {{restaurant.business.locations[0].locality}}, {{restaurant.business.locations[0].state}} {{restaurant.business.locations[0].zip_code}}
+					.phone {{restaurant.business.locations[0].phone}}
+	.modal-footer
+		a.btn.btn-cancel.btn-large(href="#", data-dismiss="modal") Close

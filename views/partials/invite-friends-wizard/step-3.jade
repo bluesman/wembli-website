@@ -18,18 +18,18 @@ form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="facebook.loginStatu
 			.spinner(ng-hide="facebook.friends")
 				i.icon-spinner.icon-spin.icon-2x(ng-hide="facebook.friends")
 			.friends-list(ng-show="facebook.friends")
-				label.friend.clearfix(ng-click="addFacebookFriend(friend, $event)",ng-repeat="friend in facebook.friends | filter:facebook.friendFilterKey")
+				label.friend.clearfix(ng-click="addFacebookFriend(f, $event)",ng-repeat="f in facebook.friends | filter:facebook.friendFilterKey")
 					.friend-controls.pull-left
-						input(id="{{friend.contactInfo.serviceId}}",type="checkbox",ng-model="friend.checked")
+						input(id="{{f.contactInfo.serviceId}}",type="checkbox",ng-model="f.checked")
 					.friend-img.pull-left
-						img.picture(ng-src="https://graph.facebook.com/{{friend.id}}/picture?height=30&width=30")
+						img.picture(ng-src="https://graph.facebook.com/{{f.id}}/picture?height=30&width=30")
 					.friend-name.pull-left
-						.name {{friend.name}}
-					.friend-status.pull-right(ng-show="friend.checked && rsvpUndecided(friend)")
+						.name {{f.name}}
+					.friend-status.pull-right(ng-show="f.checked && rsvpUndecided(f)")
 						span.label.label-info undecided&nbsp;
-					.friend-status.pull-right(ng-show="friend.checked && rsvpAccepted(friend)")
+					.friend-status.pull-right(ng-show="f.checked && rsvpAccepted(f)")
 						span.label.label-success accepted&nbsp;
-					.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
+					.friend-status.pull-right(ng-show="rsvpDeclined(f)")
 						span.label.label-important declined&nbsp;
 	.form-controls
 		a.skip-step(ng-click="skipStep('step3')") Skip this step

@@ -136,10 +136,12 @@ this.Model = function(mongoose) {
 
 	/* methods */
 	Plan.methods.addHotel = function(hotel,callback) {
+		this.preferences.addOns.hotels = true;
 		return this.addItem('hotels',hotel,callback);
 	}
 
 	Plan.methods.addRestaurant = function(restaurant,callback) {
+		this.preferences.addOns.restaurants = true;
 		return this.addItem('restaurants',restaurant,callback);
 	}
 
@@ -148,6 +150,7 @@ this.Model = function(mongoose) {
 	}
 
 	Plan.methods.addParking = function(parking,callback) {
+		this.preferences.addOns.parking = true;
 		return this.addItem('parking',parking,callback);
 	}
 

@@ -1,0 +1,41 @@
+#purchased-restaurants-filters.filter-container.restaurants-list-header-container.list-header-container.clearfix
+	h3.pull-left Restaurant Deals You've Purchased:
+//-
+	#purchased-restaurants-list-header-container.restaurants-list-header-container.list-header-container
+		a.range-header(href="#",ng-click="sortByPrice()") Price
+		a.section-header(href="#",ng-click="sortBySection()") Location
+		a.distance-header(href="#",ng-click="sortByDistance()") Distance
+
+ul#purchased-restaurants-container.restaurants-list-container.list-container
+	li(ng-repeat="deal in restaurants")
+		.restaurants-row.row.bounce-map-marker.clearfix(ng-show="{'yipit':true}[deal.service]",lat="{{deal.restaurant.business.locations[0].lat}}",lng="{{deal.restaurant.business.locations[0].lon}}")
+			.top.clearfix
+				.icon.pull-left
+					i.icon-food.icon-2x
+				.title.pull-left {{deal.restaurant.title}}
+			.bottom.clearfix
+				.price.pull-left
+					.header price
+					.value {{deal.restaurant.price.formatted}}
+				.contact.pull-left.clearfix
+					.business.pull-left
+						.name {{deal.restaurant.business.name}}
+						.address
+							div {{deal.restaurant.business.locations[0].address}}
+							div {{deal.restaurant.business.locations[0].locality}}, {{deal.restaurant.business.locations[0].state}} {{deal.restaurant.business.locations[0].zip_code}}
+				.discount.pull-right
+					.value {{deal.restaurant.discount.formatted}}
+					.header discount
+				.controls.pull-right
+					.details
+						a.btn.btn-small.restaurants-more-info(restaurant="{{deal.restaurant}}",href="#restaurants-info-modal") view details
+					.actions
+		//-
+			.restaurants-row(ng-show="{'google':true}[item.service]")
+				.restaurants-price
+					.actual-price N/A
+				.restaurants-info
+					.restaurants-location-name {{item.restaurant.name}}
+					.restaurants-address {{item.restaurant.vicinity}}
+
+

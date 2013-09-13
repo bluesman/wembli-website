@@ -1,21 +1,29 @@
 #restaurants-frame(ng-controller="RestaurantsCtrl")
 	#map-background
-		#restaurants-map-container.restaurants-map.map-container(lat="#{lat}",lng="#{lon}",zoom="12",draggable="true",map-type-id="ROADMAP")
-	#restaurants.pull-right
+		#restaurants-map-container.restaurants-map.map-container(lat="#{lat}",lng="#{lng}",zoom="12",draggable="true",map-type-id="ROADMAP")
+	#restaurants.addons-list.pull-right
 		.event-data(ng-cloak, event-id="{{eventId}}",direction="1")
 		.event-social-links
-		- console.log('plan prefs in restaurants list');
-		- console.log(req.session.plan.preferences);
-		- if (req.session.plan.preferences.payment === 'split-first')
-			include restaurants/read-only
+		.continue-controls
+			a.btn.btn-orange.btn-large(ng-hide="backToPlan",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
+			a.btn.btn-orange.btn-large(ng-show="backToPlan",href="/plan#section3",direction="1") Back To The Plan
+
+		- if (typeof dealsPurchased[0] !== "undefined")
+			include restaurants/purchased-deals
 		- else
-			//- include parking/buy-now
-		.no-results
-			.notify-email(ng-show="notFound",type="restaurants",ng-transclude)
-				.collect-email(ng-hide="emailCollected")
-					p Aww shucks! We haven't got any restaurant listings to show you.  Enter your email below if you'd like to be notified when restaurants become available.
-					fieldset
-						input#email
-					button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
-				.collected-email(ng-show="emailCollected")
-					p OK! We'll let you know if any restaurants become available!
+			- if (req.session.plan.preferences.payment === 'split-first')
+				- if (req.session.plan.preferences.restaurants.payment === 'split-first')
+					include restaurants/read-only
+				- else
+					include restaurants/buy-now
+			- else
+				include restaurants/buy-now
+			.no-results
+				.notify-email(ng-show="notFound",type="restaurants",ng-transclude)
+					.collect-email(ng-hide="emailCollected")
+						p Aww shucks! We haven't got any restaurant listings to show you.  Enter your email below if you'd like to be notified when restaurants become available.
+						fieldset
+							input#email
+						button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
+					.collected-email(ng-show="emailCollected")
+						p OK! We'll let you know if any restaurants become available!

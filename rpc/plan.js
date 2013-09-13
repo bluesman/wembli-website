@@ -1070,6 +1070,260 @@ exports.plan = {
 		});
 	},
 
+	addRestaurant: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add restaurant to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		if (typeof args.restaurant === "undefined") {
+			console.log('no restaurant');
+			data.noRestaurant = true;
+			return me(null, data);
+		}
+
+		console.log('add restaurant to plan:');
+		console.log(args);
+
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+		};
+
+		/* find all the existing parking for this plan and remove them if payment is not complete */
+		Restaurant.find(query, function(err, restaurants) {
+			if (err) {
+				data.success = 0;
+				data.dbError = 'unable to find restaurant';
+				return me(null, data);
+			}
+
+			/* check if restaurant is purchased if it is not remove it */
+			async.forEach(restaurants, function(item, callback) {
+				console.log('checking restaurant');
+				console.log(item);
+				/* check if any of these are not yet purchased and remove them */
+				if (!item.purchased) {
+					item.remove(function(err) {
+						console.log('removed unpaidfor Restaurant');
+						/* now remove the ticket from the plan */
+						req.session.plan.removeRestaurant(item.id, function(err) {
+							if (err) {
+								console.log(err);
+								data.success = 0;
+								data.dbError = 'unable to add Restaurant ' + item.id;
+								return callback();
+							}
+							console.log('removed Restaurant from plan: ' + req.session.plan.guid);
+							return callback();
+						});
+					})
+				} else {
+					callback();
+				}
+			}, function() {
+				console.log('removed unpurchased Restaurant now adding Restaurant');
+				/* finished iterating through existing restaurant */
+				var set = {
+					planId: req.session.plan.id,
+					planGuid: req.session.plan.guid,
+					service: args.service,
+					eventId: args.eventId,
+					restaurant: args.restaurant,
+					total: args.total,
+				};
+
+				console.log(set);
+				if (typeof args.payment !== "undefined") {
+
+					var pmt = JSON.parse(args.payment);
+					var payment = {
+						organizer: true,
+						customerId: req.session.customer.id,
+					};
+
+					if (typeof pmt.amount !== "undefined") {
+						payment.amount = pmt.total;
+					}
+
+					if (typeof pmt.receipt !== "undefined") {
+						set.purchased = true;
+						payment.receipt = pmt.receipt;
+					}
+
+					set.payment = payment;
+				}
+
+				r = new Restaurant(set);
+
+				r.save(function(err) {
+					if (err) {
+						data.success = 0;
+						data.dbError = 'unable to save restaurant';
+						return me(null, data);
+					}
+
+					/* now add the ticket to the plan */
+					req.session.plan.addRestaurant(r, function(err) {
+						if (err) {
+							console.log(err);
+							data.success = 0;
+							data.dbError = 'unable to add Parking ' + r.id;
+							return me(null, data);
+						}
+						console.log('added parking to plan: ' + req.session.plan.guid);
+						data.restaurant = r;
+						return me(null, data);
+					});
+				});
+			});
+		});
+	},
+
+	addRestaurantReceipt: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add tickets to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		if (typeof args.restaurantId === "undefined") {
+			console.log('no restaurant');
+			data.noRestaurant = true;
+			return me(null, data);
+		}
+
+		console.log('add receipt to restaurant:');
+		console.log(args);
+
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+			'service': args.service
+		};
+
+		/* find all the existing parking for this plan and remove them if payment is not complete */
+		Restaurant.find(query, function(err, restaurants) {
+			console.log('found restaurants');
+			console.log(restaurants);
+			if (err) {
+				data.success = 0;
+				data.dbError = 'unable to find restaurant';
+				return me(null, data);
+			}
+
+			var notFound = true;
+			/* TODO: to actually support an array of parking, this needs to change */
+			for (var i = 0; i < restaurants.length; i++) {
+				var item = restaurants[i];
+				console.log('existing restaurants to add receipt to');
+				console.log(item);
+
+				/* find the parking that matches args.parkingId */
+				if (args.restaurantId == item.id) {
+					notFound = false;
+					item.purchased = true;
+					console.log('adding receipt for:');
+					console.log(item);
+					item.payment.receipt = args.receipt;
+					item.save(function(err) {
+						if (err) {
+							data.success = 0;
+							data.dbError = 'unable to save parking';
+							return me(null, data);
+						}
+
+						data.restaurant = item;
+						return me(null, data);
+					});
+					break;
+				}
+			};
+			if (notFound) {
+				console.log('restaurant not found for add receipt');
+				data.notFound = notFound;
+				me(null, data);
+			}
+		});
+	},
+
+
+	removeRestaurant: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add parking to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+		console.log('remove restaurant args:');
+		console.log(args);
+
+		Restaurant.remove({
+			"_id": args.restaurantId
+		}, function(err) {
+			console.log('remove restaurant err is: ' + err);
+			/* delete the restaurant id from the plan and save it */
+			var newRestaurants = [];
+			for (var i = 0; i < req.session.plan.restaurants.length; i++) {
+				if (req.session.plan.restaurants[i]._id != args.restaurantId) {
+					newRestaurants.push(req.session.plan.restaurants[i]);
+				}
+			};
+			console.log('removing restaurants from plan');
+			req.session.plan.restaurants = newRestaurants;
+			req.session.plan.save(function(err, results) {
+				console.log('saved plan after removing restaurant - err is:' + err);
+				/* get parking to return */
+				Restaurant.find({
+					planId: req.session.plan.id
+				}, function(err, results) {
+					data.restaurants = results;
+					me(null, data);
+				});
+			});
+		});
+	},
+
+
 	addParking: function(args, req, res) {
 		var me = this;
 

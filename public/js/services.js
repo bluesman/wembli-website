@@ -139,6 +139,12 @@ factory('pluralize', ['$rootScope', 'wembliRpc', 'customer',
 factory('pluralizeWords', [
 	function() {
 		return {
+			'deal': function(number) {
+				return (number == 1) ? 'deal' : 'deals';
+			},
+			'spot': function(number) {
+				return (number == 1) ? 'spot' : 'spots';
+			},
 			'person': function(number) {
 				return (number == 1) ? 'person' : 'people';
 			},
@@ -264,7 +270,7 @@ factory('parking', ['wembliRpc', 'googlePlaces',
 				self.googleParking = p;
 			},
 			setParkingReservations: function(p) {
-				self.setParkingReservations = p;
+				self.parkingReservations = p;
 			},
 			fetchGoogleParking: function(args, callback) {
 				args.radius = args.radius || 5000; /* meters, little over 3 miles */
@@ -297,6 +303,117 @@ factory('parking', ['wembliRpc', 'googlePlaces',
 						self.parkingReservations = result.parking;
 					}
 					callback(null, self.parkingReservations);
+				});
+			}
+		};
+	}
+]).
+
+
+factory('restaurants', ['wembliRpc', 'googlePlaces',
+	function(wembliRpc, googlePlaces) {
+		var self = this;
+		self.googleRestaurants = null;
+		self.deals = null;
+
+		return {
+			getGoogleRestaurants: function() {
+				return self.googleRestaurants;
+			},
+			getDeals: function() {
+				return self.deals;
+			},
+			setGoogleRestaurants: function(r) {
+				self.googleRestaurants = r;
+			},
+			setDeals: function(r) {
+				self.deals = r;
+			},
+			fetchGoogleRestaurants: function(args, callback) {
+				args.radius = args.radius || 5000; /* meters, little over 3 miles */
+
+				googlePlaces.getRestaurants(args.lat, args.lng, args.radius, function(results, status) {
+					if (status == google.maps.places.PlacesServiceStatus.OK) {
+						self.googleRestaurants = results;
+					}
+					callback(null, self.googleRestaurants);
+				});
+
+			},
+			fetchDeals: function(args, callback) {
+				/* get parking from parkwhiz and update scope */
+				wembliRpc.fetch('event.getRestaurantDeals', {
+					lat: args.lat,
+					lng: args.lng,
+					radius: args.radius
+				}, function(err, result) {
+
+					if (err) {
+						console.log('error fetching deals');
+						//handle err
+						alert('error happened - contact help@wembli.com');
+						return;
+					}
+
+					if (typeof result.deals !== "undefined") {
+						self.deals = result.deals;
+					}
+					callback(null, self.deals);
+				});
+			}
+		};
+	}
+]).
+
+
+factory('hotels', ['wembliRpc', 'googlePlaces',
+	function(wembliRpc, googlePlaces) {
+		var self = this;
+		self.googleHotels = null;
+		self.expediaHotels = null;
+
+		return {
+			getGoogleHotels: function() {
+				return self.googleHotels;
+			},
+			getExpediaHotels: function() {
+				return self.expediaHotels;
+			},
+			setGoogleHotels: function(h) {
+				self.googleHotels = h;
+			},
+			setExpediaHotels: function(p) {
+				self.expediaHotels = p;
+			},
+			fetchGoogleHotels: function(args, callback) {
+				args.radius = args.radius || 5000; /* meters, little over 3 miles */
+
+				googlePlaces.getHotels(args.lat, args.lng, args.radius, function(results, status) {
+					if (status == google.maps.places.PlacesServiceStatus.OK) {
+						self.googleHotels = results;
+					}
+					callback(null, self.googleHotels);
+				});
+
+			},
+			fetchExpediaHotels: function(args, callback) {
+				/* get parking from parkwhiz and update scope */
+				wembliRpc.fetch('event.getHotels', {
+					lat: args.lat,
+					lng: args.lng,
+					radius: args.radius
+				}, function(err, result) {
+
+					if (err) {
+						//handle err
+						alert('error happened - contact help@wembli.com');
+						return;
+					}
+
+					if (typeof result.hotels !== "undefined") {
+						self.expediaHotels = result.hotels;
+					}
+					callback(null, self.expediaHotels);
 				});
 			}
 		};
@@ -419,6 +536,22 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 					}
 					callback(err, result);
 				});
+			},
+
+			addRestaurant: function(args, callback) {
+				wembliRpc.fetch('plan.addRestaurant', args, callback);
+			},
+
+			addRestaurantReceipt: function(args, callback) {
+				wembliRpc.fetch('plan.addRestaurantReceipt', args, callback);
+			},
+
+			removeRestaurant: function(args, callback) {
+				wembliRpc.fetch('plan.removeRestaurant', args, callback);
+			},
+
+			addHotel: function(args, callback) {
+				wembliRpc.fetch('plan.addHotel', args, callback);
 			},
 
 			addParking: function(args, callback) {
@@ -890,7 +1023,42 @@ factory('googlePlaces', ['googleMap',
 
 				service.nearbySearch(request, callback);
 
+			},
+			getRestaurants: function(lat, lng, radius, callback) {
+				/* get all the google parking nearby and add it to the scope */
+				var request = {
+					location: new google.maps.LatLng(lat, lng),
+					radius: radius,
+					types: ['restaurant']
+				};
+
+				var service = new google.maps.places.PlacesService(googleMap.getMap());
+
+				service.nearbySearch(request, callback);
+
+			},
+			getHotels: function(lat, lng, radius, callback) {
+				/* get all the google parking nearby and add it to the scope */
+				var request = {
+					location: new google.maps.LatLng(lat, lng),
+					radius: radius,
+					types: ['lodging']
+				};
+
+				var service = new google.maps.places.PlacesService(googleMap.getMap());
+
+				service.nearbySearch(request, callback);
+
+			},
+
+			getDetails: function(reference, callback) {
+				var request = {
+					reference: reference
+				};
+				var service = new google.maps.places.PlacesService(googleMap.getMap());
+				service.getDetails(request, callback);
 			}
+
 
 		};
 	}
@@ -934,6 +1102,16 @@ factory('mapMarker', ['mapInfoWindowContent',
 						googleMap.openInfoWindow(marker);
 					}
 				});
+
+				if (typeof args.click !== "undefined") {
+					google.maps.event.addListener(marker, 'click', function() {
+						if (googleMap.isInfoWindowOpen(marker)) {
+							args.click.on();
+						} else {
+							args.click.off();
+						}
+					});
+				}
 
 				/* put the marker on the map */
 				googleMap.addMarker(marker);

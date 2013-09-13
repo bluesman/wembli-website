@@ -444,11 +444,15 @@ directive('bounceMapMarker', ['plan', 'googleMap',
         return function(scope, element, attr) {
           element.mouseleave(function() {
             var marker = googleMap.findMarker(attr.lat, attr.lng);
-            marker.setAnimation(null);
+            if (marker) {
+              marker.setAnimation(null);
+            }
           });
           element.mouseover(function() {
             var marker = googleMap.findMarker(attr.lat, attr.lng);
-            marker.setAnimation(google.maps.Animation.BOUNCE);
+            if (marker) {
+              marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
           });
         }
       }

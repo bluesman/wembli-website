@@ -1320,6 +1320,32 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
               }
             }
 
+            /* marker for the restaurant if there is a deal chosen */
+            var restaurants = plan.getRestaurants();
+            if (typeof restaurants[0] !== "undefined") {
+              console.log('mapping restaurant');
+              console.log(restaurants);
+              if (restaurants[0].service === "google") {
+                mapMarker.create(googleMap, {
+                  icon: "/images/icons/map-icons/entertainment/restaurant.png",
+                  lat: restaurants[0].restaurant.geometry.location.pb,
+                  lng: restaurants[0].restaurant.geometry.location.qb,
+                  name: restaurants[0].restaurant.name,
+                  body: restaurants[0].restaurant.vicinity
+                });
+              }
+
+              if (restaurants[0].service === "yipit") {
+                mapMarker.create(googleMap, {
+                  icon: "/images/icons/map-icons/entertainment/restaurant.png",
+                  lat: restaurants[0].restaurant.business.locations[0].lat,
+                  lng: restaurants[0].restaurant.business.locations[0].lon,
+                  name: restaurants[0].restaurant.title,
+                  body: restaurants[0].restaurant.business.name
+                });
+              }
+            }
+
             if (scope.sequenceCompleted) {
               //googleMap.draw(element, mapOpts);
             } else {
