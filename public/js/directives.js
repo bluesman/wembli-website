@@ -558,11 +558,17 @@ directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequenc
     return {
       restrict: 'C',
       cache: false,
-      transclude: true,
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           scope.emailCollected = false;
+          scope.notifyEmail = '';
+
           scope.collectEmail = function() {
+            console.log('email:'+scope.notifyEmail);
+
+            wembliRpc.fetch('customer.notify',{addOn:attr.addOn,email:scope.notifyEmail}, function(err, result) {
+
+            });
             scope.emailCollected = true;
           }
         }

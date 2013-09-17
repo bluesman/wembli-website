@@ -63,7 +63,7 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
               var actualPrice = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
               var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
               amountPaid = amountPaid.toFixed(2);
-
+              console.log(ticket);
               /* add this ticket group - it will be removed if they later say they did not buy it */
               plan.addTicketGroup({
                 service: 'tn',
@@ -77,6 +77,7 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
                   qty: ticket.selectedQty
                 })
               }, function(err, results) {
+                console.log(results);
                 $rootScope.$broadcast('tickets-offsite-clicked', {
                   qty: ticket.selectedQty,
                   amountPaid: amountPaid,
@@ -212,6 +213,8 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
 
                   el.ticketsInPlan = false;
+                  el.sessionId = generateTnSessionId();
+
                   var t = plan.getTickets();
                   for (var i = 0; i < t.length; i++) {
                     if (t[i].ticketGroup.ID == el.ID) {
@@ -219,12 +222,13 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                       el.ticketsInPlan = true;
                       el._id = t[i]._id;
                     } else {
-                      el.sessionId = generateTnSessionId();
+                      console.log('session: '+el.sessionId);
                     }
                   };
                   newT.push(el);
                 });
-
+                console.log("NEWT");
+                console.log(newT);
                 scope.tickets = newT;
 
                 var initSlider = function() {

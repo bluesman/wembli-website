@@ -213,7 +213,7 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 			return;
 		};
 
-		$scope.notFound = false;
+		//$scope.notFound = false;
 
 		$timeout(function() {
 			angular.forEach(hotels.listing, function(v, i) {
@@ -264,7 +264,7 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 		};
 
 		console.log('notfound is false');
-		$scope.notFound = false;
+		//$scope.notFound = false;
 
 		$timeout(function() {
 			angular.forEach(hotels, function(place, i) {

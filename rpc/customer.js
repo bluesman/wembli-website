@@ -4,6 +4,7 @@ var wembliMail = require('wembli/email');
 var wembliUtils = require('wembli/utils');
 var wembliModel = require('wembli-model');
 var Customer = wembliModel.load('customer');
+var Notify = wembliModel.load('notify');
 var Plan = wembliModel.load('plan');
 var Feed = wembliModel.load('feed');
 var balanced = require('wembli/balanced-api')({
@@ -714,7 +715,33 @@ exports.customer = {
 	//get all the plans this customer is invited to
 	getPlansInvitedTo: function(args, req, res) {
 
+	},
+
+	notify: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+		console.log('args in notify: ');
+		console.log(args);
+
+		if (args.email && req.session.plan) {
+			var newNotify = {
+				email: args.email,
+				addOn:args.addOn,
+				event: req.session.plan.event.data
+			};
+			var notify = new Notify(newNotify);
+			notify.save(function(err) {
+				console.log('err');
+				console.log(err);
+				return me(null, data);
+			});
+
+		}
+
 	}
+
 
 	/* do i need this? 20120917
 	ezxxists: function(email) {

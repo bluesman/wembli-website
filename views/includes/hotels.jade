@@ -9,13 +9,13 @@
 		- if (req.session.plan.preferences.payment === 'split-first')
 			include hotels/read-only
 		- else
-			//- include parking/buy-now
+			//- include hotels/buy-now
 		.no-results
-			.notify-email(ng-show="notFound",type="hotels",ng-transclude)
+			.notify-email(ng-show="notFound",add-on="hotels")
 				.collect-email(ng-hide="emailCollected")
-					p Aww shucks! We haven't got any restaurant listings to show you.  Enter your email below if you'd like to be notified when hotels become available.
+					p Hey! This feature is coming up right around the corner! Enter your email below and we'll notify you as soon as it's ready.
 					fieldset
-						input#email
+						input#email(ng-model="notifyEmail")
 					button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
 				.collected-email(ng-show="emailCollected")
 					p OK! We'll let you know if any hotels become available!

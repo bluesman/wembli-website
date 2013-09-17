@@ -8,6 +8,7 @@
 // --------------------------------------------------
 
 // Accent colors
+/* old colors
 @blue:                  #4380B8;
 @blueDark:              #426799;
 @blueDarker:            #214478;
@@ -19,26 +20,57 @@
 @yellowDark:						darken(@yellow, 25%);
 @orange:                #FF6700;
 @orangeDark:						#E55B00;
+@orange:								#FFCC00;
+@orangeDark:
 @pink:                  #c3325f;
 @purple:                #7a43b6;
 
-// Grays
-@black:                 #000;
+@gray:                  #767676;
 @grayDarker:            #333;
 @grayDark:              #524F45;
-@gray:                  #767676;
 @grayLight:             #D8D6D7;
 @grayLighter:           #F0F0F0;
-@white:                 #FFF;
 
-// Links
 @linkColor:             @blue;
 @linkColorHover:        darken(@linkColor, 15%);
 @linkColorVisited:      #524F45;
 
+*/
+
+@blueDark:							#05568B;
+@blueDarker:            darken(@blueDark, 30%);
+@blue:									lighten(@blueDark, 20%);
+@blueLight:             lighten(@blue, 20%);
+@blueLighter:           lighten(@blue, 30%);
+
+@orange:								#FFCC00;
+@orangeDark:            darken(@orange, 20%);
+@orangeDarker:          darken(@orange, 30%);
+@orangeLight:           lighten(@orange, 20%);
+@orangeLighter:         lighten(@orange, 30%);
+
+@green:                 #46a546;
+@red:                   #F72400;
+@yellow:                rgb(255,255,98);
+@yellowDark:						darken(@yellow, 20%);
+
+// Grays
+@black:                 #000;
+@white:                 #FFF;
+@grayLight:             #CCC;
+@gray:									darken(@grayLight, 20%);
+@grayDark:              darken(@gray, 20%);
+@grayDarker:            darken(@grayDark, 20%);
+@grayLighter:           lighten(@grayLight, 20%);
+
+// Links
+@linkColor:             @blue;
+@linkColorHover:        @blueDark;
+@linkColorVisited:      @orangeDark;
+
 // Typography
 @baseFontSize:          13px;
-@baseFontFamily:        Arial, "Helvetica Neue", Helvetica, sans-serif;
+@baseFontFamily:        Calibri, Arial, "Helvetica Neue", Helvetica, sans-serif;
 @baseLineHeight:        18px;
 @textColor:             @grayDark;
 

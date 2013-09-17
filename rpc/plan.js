@@ -1679,8 +1679,8 @@ exports.plan = {
 				ticket.save(function(err) {
 					if (err) {
 						data.success = 0;
-						data.dbError = 'unable to save ticketGroup';
-						callback();
+						data.dbError = 'unable to save ticketGroup: '+err;
+						return me(null,data);
 					}
 
 					/* now add the ticket to the plan */
@@ -1689,7 +1689,7 @@ exports.plan = {
 							console.log(err);
 							data.success = 0;
 							data.dbError = 'unable to add ticketGroup ' + ticket.id;
-							return callback();
+							return me(null,data);
 						}
 						console.log('added ticketGroup to plan: ' + req.session.plan.guid);
 						data.ticketGroup = ticket;

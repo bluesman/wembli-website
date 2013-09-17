@@ -15,8 +15,8 @@
 				span.dollar-sign(ng-class="{true:'orange'}[priceRange.high]") $$$
 		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-hide="backToPlan",href="{{eventOptionsLink}}",direction="1") Continue to Invite Friends
 		a.btn.btn-primary.btn-large.wembli-sequence-link.pull-left(ng-show="backToPlan",href="/plan",direction="1") Back To The Plan
-#group-hotels-list-header-container.hotels-list-header-container.list-header-container
-	#group-hotels-list-header.list-header
+#hotels-list-header-container.hotels-list-header-container.list-header-container
+	#hotels-list-header.list-header
 		h4.pull-left Preview hotels options in your price range
 		.popover-container.pull-left
 			i.icon-question-sign.display-popover(placement="bottom",trigger="hover",animation="true",title="Preview hotels",content="Get a sneak peak at the kind of hotels your price range will get you. Once you know how many people are coming, you'll be able to reserve hotels.")
@@ -25,7 +25,7 @@
 	a.qty-header(href="#",ng-click="sortByQty()") Spots Available
 	a.distance-header(href="#",ng-click="sortByDistance()") Distance
 	a.price-header(href="#",ng-click="sortByPrice()") Price
-ul#group-hotels-list-container.hotels-list-container.list-container
+ul#hotels-list-container.hotels-list-container.list-container
 	li.hotels-row.row.bounce-map-marker(lat="{{hotels.lat}}",lng="{{hotels.lng}}",ng-repeat="hotels in hotelsReservations.hotels_listings",ng-hide="hotels.hide")
 		.hotels-range
 			.dollar-sign {{determineRange(hotels.price)}}
