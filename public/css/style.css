@@ -230,12 +230,12 @@ body {
   background-color: #ffffff;
 }
 a {
-  color: #0993ed;
+  color: #4380b8;
   text-decoration: none;
 }
 a:hover,
 a:focus {
-  color: #05568b;
+  color: #426799;
   text-decoration: underline;
 }
 .img-rounded {
@@ -2687,14 +2687,14 @@ table th[class*="span"],
 .dropdown-submenu:focus > a {
   text-decoration: none;
   color: #ffffff;
-  background-color: #088de4;
-  background-image: -moz-linear-gradient(top, #0993ed, #0884d5);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0993ed), to(#0884d5));
-  background-image: -webkit-linear-gradient(top, #0993ed, #0884d5);
-  background-image: -o-linear-gradient(top, #0993ed, #0884d5);
-  background-image: linear-gradient(to bottom, #0993ed, #0884d5);
+  background-color: #407bb1;
+  background-image: -moz-linear-gradient(top, #4380b8, #3c73a5);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4380b8), to(#3c73a5));
+  background-image: -webkit-linear-gradient(top, #4380b8, #3c73a5);
+  background-image: -o-linear-gradient(top, #4380b8, #3c73a5);
+  background-image: linear-gradient(to bottom, #4380b8, #3c73a5);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0993ed', endColorstr='#ff0884d5', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4380b8', endColorstr='#ff3c73a5', GradientType=0);
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
@@ -2702,14 +2702,14 @@ table th[class*="span"],
   color: #ffffff;
   text-decoration: none;
   outline: 0;
-  background-color: #088de4;
-  background-image: -moz-linear-gradient(top, #0993ed, #0884d5);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0993ed), to(#0884d5));
-  background-image: -webkit-linear-gradient(top, #0993ed, #0884d5);
-  background-image: -o-linear-gradient(top, #0993ed, #0884d5);
-  background-image: linear-gradient(to bottom, #0993ed, #0884d5);
+  background-color: #407bb1;
+  background-image: -moz-linear-gradient(top, #4380b8, #3c73a5);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4380b8), to(#3c73a5));
+  background-image: -webkit-linear-gradient(top, #4380b8, #3c73a5);
+  background-image: -o-linear-gradient(top, #4380b8, #3c73a5);
+  background-image: linear-gradient(to bottom, #4380b8, #3c73a5);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0993ed', endColorstr='#ff0884d5', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4380b8', endColorstr='#ff3c73a5', GradientType=0);
 }
 .dropdown-menu > .disabled > a,
 .dropdown-menu > .disabled > a:hover,
@@ -3034,17 +3034,17 @@ input[type="button"].btn-block {
 .btn-primary {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #097ced;
-  background-image: -moz-linear-gradient(top, #0993ed, #095aed);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0993ed), to(#095aed));
-  background-image: -webkit-linear-gradient(top, #0993ed, #095aed);
-  background-image: -o-linear-gradient(top, #0993ed, #095aed);
-  background-image: linear-gradient(to bottom, #0993ed, #095aed);
+  background-color: #4374b8;
+  background-image: -moz-linear-gradient(top, #4380b8, #4363b8);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4380b8), to(#4363b8));
+  background-image: -webkit-linear-gradient(top, #4380b8, #4363b8);
+  background-image: -o-linear-gradient(top, #4380b8, #4363b8);
+  background-image: linear-gradient(to bottom, #4380b8, #4363b8);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0993ed', endColorstr='#ff095aed', GradientType=0);
-  border-color: #095aed #095aed #063ea4;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4380b8', endColorstr='#ff4363b8', GradientType=0);
+  border-color: #4363b8 #4363b8 #2f4580;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #095aed;
+  *background-color: #4363b8;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
@@ -3056,12 +3056,12 @@ input[type="button"].btn-block {
 .btn-primary.disabled,
 .btn-primary[disabled] {
   color: #ffffff;
-  background-color: #095aed;
-  *background-color: #0850d5;
+  background-color: #4363b8;
+  *background-color: #3c59a5;
 }
 .btn-primary:active,
 .btn-primary.active {
-  background-color: #0747bc \9;
+  background-color: #354f93 \9;
 }
 .btn-warning {
   color: #ffffff;
@@ -3260,14 +3260,14 @@ input[type="submit"].btn.btn-mini {
 .btn-link {
   border-color: transparent;
   cursor: pointer;
-  color: #0993ed;
+  color: #4380b8;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
 }
 .btn-link:hover,
 .btn-link:focus {
-  color: #05568b;
+  color: #426799;
   text-decoration: underline;
   background-color: transparent;
 }
@@ -3408,7 +3408,7 @@ input[type="submit"].btn.btn-mini {
   background-color: #e6e6e6;
 }
 .btn-group.open .btn-primary.dropdown-toggle {
-  background-color: #095aed;
+  background-color: #4363b8;
 }
 .btn-group.open .btn-warning.dropdown-toggle {
   background-color: #ffcc00;
@@ -3603,7 +3603,7 @@ input[type="submit"].btn.btn-mini {
 .nav-list > .active > a:focus {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-  background-color: #0993ed;
+  background-color: #4380b8;
 }
 .nav-list [class^="icon-"],
 .nav-list [class*=" icon-"] {
@@ -3698,7 +3698,7 @@ input[type="submit"].btn.btn-mini {
 .nav-pills > .active > a:hover,
 .nav-pills > .active > a:focus {
   color: #ffffff;
-  background-color: #0993ed;
+  background-color: #4380b8;
 }
 .nav-stacked > li {
   float: none;
@@ -3753,14 +3753,14 @@ input[type="submit"].btn.btn-mini {
   border-radius: 6px;
 }
 .nav .dropdown-toggle .caret {
-  border-top-color: #0993ed;
-  border-bottom-color: #0993ed;
+  border-top-color: #4380b8;
+  border-bottom-color: #4380b8;
   margin-top: 6px;
 }
 .nav .dropdown-toggle:hover .caret,
 .nav .dropdown-toggle:focus .caret {
-  border-top-color: #05568b;
-  border-bottom-color: #05568b;
+  border-top-color: #426799;
+  border-bottom-color: #426799;
 }
 /* move down carets for tabs */
 .nav-tabs .dropdown-toggle .caret {
@@ -5019,7 +5019,7 @@ input[type="submit"].btn.btn-mini {
 }
 a.thumbnail:hover,
 a.thumbnail:focus {
-  border-color: #0993ed;
+  border-color: #4380b8;
   -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
@@ -5530,11 +5530,6 @@ a.badge:focus {
   position: fixed;
 }
 /* old colors
-@blue:                  #4380B8;
-@blueDark:              #426799;
-@blueDarker:            #214478;
-@blueLight:             #6DA1B7;
-@blueLighter:						#F7FEFE;
 @green:                 #46a546;
 @red:                   #F72400;
 @yellow:                rgb(255,255,98);
@@ -5566,14 +5561,14 @@ form {
 }
 h1 {
   font-family: "SegoePrint";
-  color: #05568b;
+  color: #426799;
   margin: 6px;
 }
 h2 {
   /* font-family: "architects_daughterregular"; */
 
   font-family: "SegoePrint";
-  color: #05568b;
+  color: #426799;
   font-size: 16px;
 }
 h3 {
@@ -5586,17 +5581,17 @@ h3 {
 .btn-primary {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #077bc6;
-  background-image: -moz-linear-gradient(top, #0993ed, #05568b);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0993ed), to(#05568b));
-  background-image: -webkit-linear-gradient(top, #0993ed, #05568b);
-  background-image: -o-linear-gradient(top, #0993ed, #05568b);
-  background-image: linear-gradient(to bottom, #0993ed, #05568b);
+  background-color: #4376ac;
+  background-image: -moz-linear-gradient(top, #4380b8, #426799);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4380b8), to(#426799));
+  background-image: -webkit-linear-gradient(top, #4380b8, #426799);
+  background-image: -o-linear-gradient(top, #4380b8, #426799);
+  background-image: linear-gradient(to bottom, #4380b8, #426799);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0993ed', endColorstr='#ff05568b', GradientType=0);
-  border-color: #05568b #05568b #022841;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4380b8', endColorstr='#ff426799', GradientType=0);
+  border-color: #426799 #426799 #2b4364;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #05568b;
+  *background-color: #426799;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
@@ -5609,27 +5604,27 @@ h3 {
 .btn-primary.disabled,
 .btn-primary[disabled] {
   color: #ffffff;
-  background-color: #05568b;
-  *background-color: #044772;
+  background-color: #426799;
+  *background-color: #3a5b87;
 }
 .btn-primary:active,
 .btn-primary.active {
-  background-color: #03385a \9;
+  background-color: #334f75 \9;
 }
 .btn-primary:hover {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #d6ab00;
-  background-image: -moz-linear-gradient(top, #ffcc00, #997a00);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffcc00), to(#997a00));
-  background-image: -webkit-linear-gradient(top, #ffcc00, #997a00);
-  background-image: -o-linear-gradient(top, #ffcc00, #997a00);
-  background-image: linear-gradient(to bottom, #ffcc00, #997a00);
+  background-color: #f5c400;
+  background-image: -moz-linear-gradient(top, #ffcc00, #e6b800);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffcc00), to(#e6b800));
+  background-image: -webkit-linear-gradient(top, #ffcc00, #e6b800);
+  background-image: -o-linear-gradient(top, #ffcc00, #e6b800);
+  background-image: linear-gradient(to bottom, #ffcc00, #e6b800);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffcc00', endColorstr='#ff997a00', GradientType=0);
-  border-color: #997a00 #997a00 #4d3d00;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffcc00', endColorstr='#ffe6b800', GradientType=0);
+  border-color: #e6b800 #e6b800 #997a00;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #997a00;
+  *background-color: #e6b800;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
@@ -5641,27 +5636,27 @@ h3 {
 .btn-primary:hover.disabled,
 .btn-primary:hover[disabled] {
   color: #ffffff;
-  background-color: #997a00;
-  *background-color: #806600;
+  background-color: #e6b800;
+  *background-color: #cca300;
 }
 .btn-primary:hover:active,
 .btn-primary:hover.active {
-  background-color: #665200 \9;
+  background-color: #b38f00 \9;
 }
 .btn-orange {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #d6ab00;
-  background-image: -moz-linear-gradient(top, #ffcc00, #997a00);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffcc00), to(#997a00));
-  background-image: -webkit-linear-gradient(top, #ffcc00, #997a00);
-  background-image: -o-linear-gradient(top, #ffcc00, #997a00);
-  background-image: linear-gradient(to bottom, #ffcc00, #997a00);
+  background-color: #f5c400;
+  background-image: -moz-linear-gradient(top, #ffcc00, #e6b800);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffcc00), to(#e6b800));
+  background-image: -webkit-linear-gradient(top, #ffcc00, #e6b800);
+  background-image: -o-linear-gradient(top, #ffcc00, #e6b800);
+  background-image: linear-gradient(to bottom, #ffcc00, #e6b800);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffcc00', endColorstr='#ff997a00', GradientType=0);
-  border-color: #997a00 #997a00 #4d3d00;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffcc00', endColorstr='#ffe6b800', GradientType=0);
+  border-color: #e6b800 #e6b800 #997a00;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #997a00;
+  *background-color: #e6b800;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
@@ -5673,12 +5668,12 @@ h3 {
 .btn-orange.disabled,
 .btn-orange[disabled] {
   color: #ffffff;
-  background-color: #997a00;
-  *background-color: #806600;
+  background-color: #e6b800;
+  *background-color: #cca300;
 }
 .btn-orange:active,
 .btn-orange.active {
-  background-color: #665200 \9;
+  background-color: #b38f00 \9;
 }
 .wembli-logo {
   background: transparent url("/images/layout/wembli-logo-50.png") no-repeat center center;
@@ -5718,7 +5713,7 @@ a:focus {
   box-shadow: 0 1px 3px #ffcc00 inset;
 }
 .pika-button:hover {
-  background: none repeat scroll 0 0 #0993ed !important;
+  background: none repeat scroll 0 0 #4380b8 !important;
 }
 .clearfix {
   *zoom: 1;
@@ -5740,6 +5735,9 @@ a:focus {
 }
 .orange {
   color: #ffcc00;
+}
+.blue {
+  color: #426799;
 }
 .arrow {
   border: none;
@@ -5807,7 +5805,7 @@ a:focus {
   -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
-  background-color: #63bef9;
+  background-color: #8cb2d5;
   padding: 0px 19px;
   border-bottom: thin solid #cccccc;
 }
@@ -7797,7 +7795,7 @@ body {
 }
 .dashboard-plan:hover,
 .event-wrapper:hover {
-  background-color: #63bef9;
+  background-color: #6da1b7;
   cursor: pointer;
 }
 .dashboard-plan,
@@ -7872,7 +7870,7 @@ body {
 }
 .event-data {
   *zoom: 1;
-  background-color: #0991ec;
+  background-color: #427fb8;
 }
 .event-data .info {
   color: #cccccc;
@@ -7969,10 +7967,10 @@ body {
   padding: 10px;
 }
 #payment-type-modal form label.radio .option-content h3 {
-  color: #63bef9;
+  color: #6da1b7;
 }
 #payment-type-modal form label.radio:hover {
-  background-color: rgba(9, 145, 236, 0.25);
+  background-color: rgba(66, 127, 184, 0.25);
 }
 #content #index-frame {
   *zoom: 1;
@@ -8002,7 +8000,7 @@ body {
   left: 360px;
   width: 510px;
   font-size: 28px;
-  color: #05568b;
+  color: #426799;
   text-shadow: #000 1px 2px 1px;
   top: 80px;
 }
@@ -8021,7 +8019,7 @@ body {
 #content #index-frame #how-it-works {
   margin: 130px auto 0;
   width: 600px;
-  color: #000000;
+  color: #214478;
   font-size: 20px;
   text-align: center;
 }
@@ -8082,7 +8080,7 @@ body {
 }
 #content #index-frame #circles .circle-text {
   font-size: 16px;
-  color: #000000;
+  color: #214478;
   position: relative;
   top: 70px;
 }
@@ -8370,7 +8368,7 @@ body {
   width: 60px;
   height: 48px;
   margin: 10px 0 0 10px;
-  background-color: #0993ed;
+  background-color: #4380b8;
   border: none;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -8645,7 +8643,7 @@ body {
 #restaurants-login-modal .modal-body .bottom .qty,
 #tickets-login-modal .modal-body .bottom .discount,
 #restaurants-login-modal .modal-body .bottom .discount {
-  background-color: #63bef9;
+  background-color: #426799;
 }
 #restaurants-info-modal .modal-body .left {
   width: 150px;
@@ -8671,7 +8669,7 @@ body {
   font-size: 24px;
 }
 #restaurants-info-modal .modal-body .left .discount {
-  background-color: #63bef9;
+  background-color: #6da1b7;
 }
 #restaurants-info-modal .modal-body .right {
   width: 350px;
@@ -8768,10 +8766,10 @@ body {
   color: #000;
 }
 .addons-list a {
-  color: #000000;
+  color: #214478;
 }
 .addons-list a:hover {
-  color: #05568b;
+  color: #426799;
 }
 .addons-list a.btn {
   color: #ffffff;
@@ -8782,7 +8780,7 @@ body {
 .addons-list .continue-controls {
   text-align: center;
   padding: 20px;
-  background-color: #0991ec;
+  background-color: #427fb8;
 }
 .addons-list .continue-controls a {
   color: #ffffff;
@@ -8855,7 +8853,7 @@ body {
 }
 .addons-list .filter-container .price-filter p input {
   border: 0;
-  color: #05568b;
+  color: #426799;
   font-weight: bold;
   background: transparent;
   width: 100px;
@@ -9056,7 +9054,7 @@ body {
 }
 .addons-list .list-container .row .bottom .qty,
 .addons-list .list-container .row .bottom .discount {
-  background-color: #63bef9;
+  background-color: #426799;
 }
 .addons-list .list-container .row .bottom .qty select {
   width: 50px;
@@ -9185,7 +9183,7 @@ body {
   color: #666666;
 }
 .addons-list .price-range .price-range-form fieldset label.checkbox:hover {
-  background-color: rgba(9, 145, 236, 0.9);
+  background-color: rgba(66, 127, 184, 0.9);
   color: #ffcc00;
 }
 .addons-list .price-range .price-range-form a {
@@ -9265,7 +9263,7 @@ body {
 #parking-login-modal form label.radio .option-content h3,
 #rsvp-login-modal form label.radio .option-content h3,
 #tickets-login-modal form label.radio .option-content h3 {
-  color: #63bef9;
+  color: #6da1b7;
 }
 #hotels-login-modal form label.radio .option-content .first-name,
 #restaurants-login-modal form label.radio .option-content .first-name,
@@ -9318,7 +9316,7 @@ body {
 #parking-login-modal form label.radio:hover,
 #rsvp-login-modal form label.radio:hover,
 #tickets-login-modal form label.radio:hover {
-  background-color: rgba(9, 145, 236, 0.25);
+  background-color: rgba(66, 127, 184, 0.25);
 }
 #hotels-offsite-modal form,
 #restaurants-offsite-modal form,
@@ -9348,7 +9346,7 @@ body {
 #restaurants-offsite-modal form label.radio .option-content h3,
 #parking-offsite-modal form label.radio .option-content h3,
 #tickets-offsite-modal form label.radio .option-content h3 {
-  color: #63bef9;
+  color: #6da1b7;
 }
 #hotels-offsite-modal form label.radio.selected,
 #restaurants-offsite-modal form label.radio.selected,
@@ -9358,7 +9356,7 @@ body {
 #restaurants-offsite-modal form label.radio:hover,
 #parking-offsite-modal form label.radio:hover,
 #tickets-offsite-modal form label.radio:hover {
-  background-color: rgba(9, 145, 236, 0.25);
+  background-color: rgba(66, 127, 184, 0.25);
 }
 #hotels-offsite-modal form #qty,
 #restaurants-offsite-modal form #qty,
@@ -9420,7 +9418,7 @@ body {
 #tickets-frame section .header h1 {
   width: 100%;
   padding: 10px 0 4px;
-  border-bottom: 6px solid #05568b;
+  border-bottom: 6px solid #426799;
   text-transform: uppercase;
   margin: 10px 0;
   font-weight: bold;
@@ -9550,6 +9548,17 @@ body {
   margin: 0 20px;
   text-align: center;
 }
+#tickets-frame .price-slider {
+  width: 200px;
+  height: 6px;
+}
+#tickets-frame .price-slider .ui-slider-range {
+  background-color: #426799;
+}
+#tickets-frame .price-slider .ui-slider-handle {
+  height: 12px;
+  width: 12px;
+}
 #tickets-frame #tickets-off {
   position: absolute;
   right: 0;
@@ -9623,7 +9632,7 @@ body {
 }
 #tickets-frame #tickets-off .filter-container .price-filter p input {
   border: 0;
-  color: #0993ed;
+  color: #4380b8;
   font-weight: bold;
   background: transparent;
   width: 100px;
@@ -9637,6 +9646,9 @@ body {
 #tickets-frame #tickets-off .filter-container .price-filter .price-slider {
   width: 200px;
   height: 6px;
+}
+#tickets-frame #tickets-off .filter-container .price-filter .price-slider .ui-slider-range {
+  background-color: #426799;
 }
 #tickets-frame #tickets-off .filter-container .price-filter .price-slider .ui-slider-handle {
   height: 12px;
@@ -9682,7 +9694,7 @@ body {
   color: #000000;
 }
 #tickets-frame #tickets-off .ticket-list-container .ticket-row:hover {
-  background-color: rgba(9, 145, 236, 0.25);
+  background-color: rgba(66, 127, 184, 0.25);
 }
 #tickets-frame #tickets-off .ticket-list-container .ticket-row {
   *zoom: 1;
@@ -9802,7 +9814,7 @@ body {
   color: #666666;
 }
 #tickets-frame #tickets-off #read-only-filters #price-range-form fieldset label.checkbox:hover {
-  background-color: rgba(9, 145, 236, 0.25);
+  background-color: rgba(66, 127, 184, 0.25);
   color: #ffcc00;
 }
 #tickets-frame #tickets-off #read-only-filters #price-range-form a {
@@ -10076,7 +10088,7 @@ a#facebook-login-button {
   color: #ffcc00;
 }
 .hero #confirm-hero-right #confirm-right .white-box #error .success-text {
-  color: #0993ed;
+  color: #4380b8;
 }
 .hero #confirm-hero-right #confirm-right .white-box .copy {
   margin: 0 20px 20px;
@@ -10195,7 +10207,7 @@ a#facebook-login-button {
   width: 110px;
 }
 .price-slider .ui-slider-range {
-  background: #0993ed;
+  background: #4380b8;
 }
 #rsvp-login-modal .not-friend {
   width: 100%;
@@ -10319,7 +10331,7 @@ a#facebook-login-button {
 #plan-frame #left #plan-nav a:hover,
 #plan-frame #left #plan-nav a.active {
   color: #ffffff;
-  background-color: #63bef9;
+  background-color: #6da1b7;
 }
 #plan-frame #middle {
   width: 82%;
@@ -10366,7 +10378,7 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .header h1 {
   width: 100%;
   padding: 10px 0 4px;
-  border-bottom: 6px solid #05568b;
+  border-bottom: 6px solid #426799;
   text-transform: uppercase;
   margin: 10px 0;
   font-weight: bold;
@@ -10404,7 +10416,7 @@ a#facebook-login-button {
   width: 90%;
 }
 #plan-frame #middle #plan-dashboard .plan-section .body > h3 {
-  color: #000000;
+  color: #214478;
 }
 #plan-frame #middle #plan-dashboard .plan-section .body {
   *zoom: 1;
@@ -11188,7 +11200,7 @@ a#facebook-login-button {
   width: 40px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .header label h3 {
-  color: #05568b;
+  color: #426799;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .body {
   width: 450px;
@@ -11199,7 +11211,7 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .body .button-container .buy-now {
   margin: 10px 10px 10px 200px;
   display: block;
-  color: #0993ed;
+  color: #4380b8;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-info,
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .ticket-container .ticket-payment {
@@ -11285,7 +11297,7 @@ a#facebook-login-button {
   width: 80%;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container label.suggested-amounts-label:hover {
-  background-color: #f6fbff;
+  background-color: #d3e3ea;
   cursor: pointer;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label {
@@ -11366,7 +11378,7 @@ a#facebook-login-button {
   width: 75%;
   margin-left: 85px;
   padding: 6px;
-  background-color: #f6fbff;
+  background-color: #d3e3ea;
   border: 2px dashed #666666;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history-label {
@@ -11544,7 +11556,7 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #left a:hover,
 #invitation-modal.modal #invite-friends-wizard .modal-body #left a.active {
   color: #ffffff;
-  background-color: #63bef9;
+  background-color: #6da1b7;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right {
   height: 450px;
@@ -11627,7 +11639,7 @@ a#facebook-login-button {
   margin-right: 20px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right #step5-friends-list .friend-controls {
-  color: #63bef9;
+  color: #6da1b7;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .spinner {
   height: 30px;
@@ -11641,7 +11653,7 @@ a#facebook-login-button {
   margin-left: 2px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:hover {
-  background-color: #f6fbff;
+  background-color: #d3e3ea;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend {
   *zoom: 1;
@@ -11714,7 +11726,7 @@ a#facebook-login-button {
   text-align: right;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-question-sign {
-  color: #0993ed;
+  color: #4380b8;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-ok-circle {
   color: #46a546;
