@@ -957,7 +957,25 @@ factory('googleMap', ['$rootScope',
 					infoWindow: infoWindow,
 					open: false
 				}
-				if (typeof marker !== "undefined") {
+
+				if (typeof infoWindow === "undefined") {
+					return;
+				}
+
+				if (typeof marker === "undefined") {
+					return;
+				}
+
+				if (typeof infoWindow.getPosition() === "undefined") {
+					return;
+				}
+
+				if (typeof marker.getPosition() === "undefined") {
+					return;
+				}
+
+
+				if ((typeof marker !== "undefined") && (typeof marker.getPosition())) {
 					win.lat = marker.getPosition().lat();
 					win.lng = marker.getPosition().lng();
 				} else {
@@ -999,8 +1017,10 @@ factory('googleMap', ['$rootScope',
 				var lat = marker.getPosition().lat();
 				var lng = marker.getPosition().lng();
 				var win = this._findInfoWindow(lat, lng);
-				win.open = true;
-				win.infoWindow.open(self._map, marker);
+				if (win) {
+					win.open = true;
+					win.infoWindow.open(self._map, marker);
+				}
 			}
 
 		};

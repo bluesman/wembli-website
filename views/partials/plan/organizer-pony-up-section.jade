@@ -8,6 +8,8 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 				i.icon-check-empty.icon-2x.pull-left(ng-hide="ponyUp.selectAll")
 				input.pull-left.hide(type="checkbox",ng-model="ponyUp.selectAll")
 				h3 Send pony up request for all friends
+		#no-rsvps(ng-hide="friendsComing")
+			p no one has rsvp'd yet
 		#no-invitees(ng-hide="friends[0]")
 			p You haven't invited anyone yet - who should Pony Up?
 			button.btn.btn-orange.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
@@ -185,8 +187,8 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 								td.history-header(colspan="5") Total Paid:
 								td.amount {{friend.payment.received | currency}}
 							tr.balance
-								td.history-header.orange(colspan="5") Balance:
-								td.amount.orange {{friend.payment.balance | currency}}
+								td.history-header(colspan="5") Balance:
+								td.amount {{friend.payment.balance | currency}}
 			.send-pony-up-button-container.clearfix
 				button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(href="#section4",type="submit",ng-hide="sendPonyUpInProgress")
 					.icon.icon-envelope-alt.pull-left

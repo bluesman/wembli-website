@@ -11444,9 +11444,7 @@ a#facebook-login-button {
   vertical-align: middle;
   width: 72px;
   padding: 4px 6px;
-}
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .invitee .history-container .history table tr.balance > td {
-  color: #ffcc00;
+  margin-right: 4px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-pony-up-section .invitees-container .pony-up-alert {
   margin: 34px;
@@ -11733,6 +11731,54 @@ a#facebook-login-button {
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-remove-circle {
   color: #ffcc00;
+}
+#create-account-modal {
+  width: 750px;
+  height: 630px;
+}
+#create-account-modal .modal-body {
+  height: 530px;
+}
+#create-account-modal #new-merchant-account .alert {
+  margin-top: 10px;
+}
+#create-account-modal #new-merchant-account h3 {
+  border-bottom: thin solid #666666;
+}
+#create-account-modal #new-merchant-account .container {
+  width: 710px;
+  margin-top: 20px;
+}
+#create-account-modal #new-merchant-account .container fieldset input {
+  margin: 0;
+}
+#create-account-modal #new-merchant-account .container .security-message {
+  background-color: #d3e3ea;
+  padding: 20px;
+  width: 400px;
+  margin-left: 30px;
+}
+#create-account-modal #new-merchant-account .container .security-message .header h4 {
+  line-height: 30px;
+  vertical-align: middle;
+  font-size: 20px;
+  font-weight: bold;
+}
+#create-account-modal #new-merchant-account .container .security-logos {
+  width: 400px;
+  padding: 0 20px;
+}
+#create-account-modal #new-merchant-account .container .security-logos .positive-ssl {
+  margin: 20px;
+  height: 96px;
+  width: 96px;
+  background: transparent url('/images/PositiveSSL.gif') no-repeat center top;
+}
+#create-account-modal #new-merchant-account .container .security-logos .balanced-logo {
+  margin: 10px 6px;
+  height: 115px;
+  width: 250px;
+  background: transparent url('/images/balanced-logo.jpg') no-repeat center top;
 }
 #planning-modal .no-plans,
 #invited-modal .no-plans,

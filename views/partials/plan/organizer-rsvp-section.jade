@@ -35,7 +35,7 @@ section#section2.organizer-rsvp-section.rsvp-section.plan-section.even
 						h3 RSVP IS COMPLETE
 					.row(ng-hide="plan.rsvpComplete")
 						h3(ng-show="plan.rsvpDate") RSVP BY: {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
-						.rsvp-days.orange(ng-show="rsvpDays") {{rsvpDays}}
+						.rsvp-days.blue(ng-show="rsvpDays") {{rsvpDays}}
 					.row.clearfix
 						h3.pull-left(ng-hide="plan.rsvpDate")
 							span RSVP Date:

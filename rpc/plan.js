@@ -1304,7 +1304,7 @@ exports.plan = {
 			/* delete the restaurant id from the plan and save it */
 			var newRestaurants = [];
 			for (var i = 0; i < req.session.plan.restaurants.length; i++) {
-				if (req.session.plan.restaurants[i]._id != args.restaurantId) {
+				if (req.session.plan.restaurants[i] != args.restaurantId) {
 					newRestaurants.push(req.session.plan.restaurants[i]);
 				}
 			};
@@ -1373,13 +1373,13 @@ exports.plan = {
 				/* check if any of these are not yet purchased and remove them */
 				if (!item.purchased) {
 					item.remove(function(err) {
-						console.log('removed unpaidfor ticket');
+						console.log('removed unpaidfor parking');
 						/* now remove the ticket from the plan */
 						req.session.plan.removeParking(item.id, function(err) {
 							if (err) {
 								console.log(err);
 								data.success = 0;
-								data.dbError = 'unable to add ticketGroup ' + item.id;
+								data.dbError = 'unable to remove parking ' + item.id;
 								return callback();
 							}
 							console.log('removed parking from plan: ' + req.session.plan.guid);
@@ -1530,8 +1530,6 @@ exports.plan = {
 		});
 	},
 
-
-
 	removeParking: function(args, req, res) {
 		var me = this;
 
@@ -1561,11 +1559,14 @@ exports.plan = {
 			/* delete the parking id from the plan and save it */
 			var newParking = [];
 			for (var i = 0; i < req.session.plan.parking.length; i++) {
-				if (req.session.plan.parking[i]._id != args.parkingId) {
+				console.log('checking parking for removal');
+				console.log('existing: '+req.session.plan.parking[i]+' - '+ args.parkingId);
+				if (req.session.plan.parking[i] != args.parkingId) {
 					newParking.push(req.session.plan.parking[i]);
 				}
 			};
 			console.log('removing parking from plan');
+			console.log(newParking);
 			req.session.plan.parking = newParking;
 			req.session.plan.save(function(err, results) {
 				console.log('saved plan after removing parking - err is:' + err);

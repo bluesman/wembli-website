@@ -21,6 +21,11 @@
 					.parking-location.pull-left
 						strong LOCATION:&nbsp;
 						span {{p.parking.address}}, {{p.parking.city}}, {{p.parking.state}} {{p.parking.zip}}
+				.parking-payment.clearfix
+					.per-person.pull-left
+						strong Total cost for {{p.payment.receipt.qty}} parking {{p.payment.receipt.qty | pluralize:'spot'}}:&nbsp;
+					.parking-total.pull-left
+						{{p.payment.receipt.amountPaid | currency}}
 
 			.controls.clearfix
 				a.view-parking-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") View parking On Map

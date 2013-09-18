@@ -132,6 +132,13 @@ directive('createAccountModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
             } else {
               scope.createMerchantAccount.errorPhoneNumber = false;
             }
+
+            if (scope.createMerchantAccount.errorPhoneNumber || scope.createMerchantAccount.errorDob) {
+              scope.createMerchantAccount.accountHolderError = true;
+            } else {
+              scope.createMerchantAccount.accountHolderError = false;
+            }
+
             /* validate routing number */
             if (!balanced.bankAccount.validateRoutingNumber(scope.createMerchantAccount.routingNumber)) {
               scope.createMerchantAccount.errorRoutingNumber = true;
@@ -904,6 +911,28 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan',
 
           };
 
+          scope.$watch('restaurants', function(restaurants) {
+            if (typeof restaurants === "undefined") {
+              return;
+            }
+            generateTotals({
+              label: 'Restaurant Deals ',
+              list: restaurants
+            });
+          });
+
+
+          scope.$watch('hotels', function(hotels) {
+            if (typeof hotels === "undefined") {
+              return;
+            }
+            generateTotals({
+              label: 'Hotel Rooms ',
+              list: hotels
+            });
+          });
+
+
           scope.$watch('parking', function(parking) {
             if (typeof parking === "undefined") {
               return;
@@ -1297,13 +1326,16 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
 
             /* marker for the parking if there is parking chosen */
             var parking = plan.getParking();
+            console.log('mapping parking');
+            console.log(parking);
             if (typeof parking[0] !== "undefined") {
               console.log(parking);
               if (parking[0].service === "google") {
+                var ll = new google.maps.LatLng(parking[0].parking.geometry.location.ob,parking[0].parking.geometry.location.pb);
                 mapMarker.create(googleMap, {
                   icon: "/images/icons/map-icons/transportation/parkinggarage.png",
-                  lat: parking[0].parking.geometry.location.pb,
-                  lng: parking[0].parking.geometry.location.qb,
+                  lat: ll.lat(),
+                  lng: ll.lng(),
                   name: parking[0].parking.name,
                   body: parking[0].parking.vicinity
                 });
@@ -1328,8 +1360,8 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
               if (restaurants[0].service === "google") {
                 mapMarker.create(googleMap, {
                   icon: "/images/icons/map-icons/entertainment/restaurant.png",
-                  lat: restaurants[0].restaurant.geometry.location.pb,
-                  lng: restaurants[0].restaurant.geometry.location.qb,
+                  lat: restaurants[0].restaurant.geometry.location.lat(),
+                  lng: restaurants[0].restaurant.geometry.location.lng(),
                   name: restaurants[0].restaurant.name,
                   body: restaurants[0].restaurant.vicinity
                 });
