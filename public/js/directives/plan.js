@@ -339,11 +339,14 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
               deliverySplitBy++;
             }
             deliverySplitBy += friends.length;
+
+
             /* this should probably be in its own function */
             var groupTotal = 0;
             var groupCount = 0;
             var groups = [];
             var groupTotalEach = {};
+
             var tickets = plan.getTickets();
 
             for (var i = 0; i < tickets.length; i++) {
@@ -374,20 +377,72 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
             tickets.groups = groups;
             tickets.groupTotalEach = groupTotalEach;
 
+            groupTotal = 0;
+            groupCount = 0;
+            groups = [];
+            groupTotalEach = {};
+
+            var parking = plan.getParking();
+
+            for (var i = 0; i < parking.length; i++) {
+              var p = parking[i]
+              var groupNumber = i + 1;
+              var cb = {};
+              cb.parkingPrice = parseFloat((p.payment.amount/100)/deliverySplitBy);
+              cb.totalEach = cb.parkingPrice;
+              cb.total = parseFloat(p.payment.amount/100);
+
+              groupTotal += cb.total;
+              groupCount += parseInt(p.payment.qty);
+              groups.push({
+                value: i,
+                label: 'Parking Spot #' + groupNumber
+              });
+              groupTotalEach[i] = cb.totalEach;
+              p.parking.costBreakdown = cb;
+            };
+
+            parking.total = groupTotal;
+            parking.totalQty = groupCount;
+            parking.groups = groups;
+            parking.groupTotalEach = groupTotalEach;
+
             /* assuming there's only 1 ticketGroup for now */
             /* kim and ash say guests don't count for a delivery fee */
             var totalPoniedUp = 0;
             for (var i = 0; i < friends.length; i++) {
+              friends[i].suggestedPonyUpAmount = 0;
               if (typeof tickets[0] !== "undefined") {
                 if (typeof friends[i].tickets == "undefined") {
                   friends[i].tickets = {};
                 }
                 friends[i].tickets.group = tickets[0].ticketGroup;
                 var suggested = friends[i].tickets.group.costBreakdown.totalEach * friends[i].rsvp.guestCount + friends[i].tickets.group.costBreakdown.deliveryFeeEach;
+                console.log('suggested tickets');
+                console.log(suggested);
                 friends[i].tickets.suggestedPonyUpAmount = suggested.toFixed(2);
+                friends[i].suggestedPonyUpAmount += parseFloat(suggested);
               } else {
                 friends[i].tickets = [];
               }
+              console.log('suggested amount');
+              console.log(friends[i].suggestedPonyUpAmount);
+              if (typeof parking[0] !== "undefined") {
+                if (typeof friends[i].parking == "undefined") {
+                  friends[i].parking = {};
+                }
+                friends[i].parking.group = parking[0].parking;
+                var suggested = friends[i].parking.group.costBreakdown.totalEach * friends[i].rsvp.guestCount;
+                console.log('suggested parking');
+                console.log(suggested);
+                friends[i].parking.suggestedPonyUpAmount = suggested.toFixed(2);
+                friends[i].suggestedPonyUpAmount += parseFloat(suggested);
+              } else {
+                friends[i].parking = [];
+              }
+              console.log(friends[i].suggestedPonyUpAmount);
+
+              friends[i].suggestedPonyUpAmount = parseFloat(friends[i].suggestedPonyUpAmount).toFixed(2);
             };
             return friends;
           };
@@ -484,10 +539,10 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                 $scope.plan = p;
                 $scope.organizer = plan.getOrganizer();
                 $scope.tickets = plan.getTickets();
-                $scope.friends = friendsPonyUp(plan.getFriends());
                 $scope.parking = plan.getParking();
                 $scope.hotels = plan.getHotels();
                 $scope.restaurants = plan.getRestaurants();
+                $scope.friends = friendsPonyUp(plan.getFriends());
 
                 /* debug stuff */
                 console.log('GETTING PLAN INFO:');
@@ -519,7 +574,6 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                 };
                 $scope.calcTotalComing();
               }, 0);
-
 
             });
           });
@@ -884,12 +938,12 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan',
                 var cb = {};
                 var groupNumber = i + 1;
 
-                cb.price = parseFloat(item.payment.receipt.amountPaid) || 0;
+                cb.price = parseFloat(item.payment.amount/100)|| 0;
                 cb.serviceFee = cb.price * fee;
                 cb.deliveryFee = deliveryFee;
                 cb.deliveryFeeEach = (deliverySplitBy > 0) ? cb.deliveryFee / deliverySplitBy : 0;
                 cb.totalEach = cb.price + cb.serviceFee;
-                var qty = item.payment.receipt.qty || 0;
+                var qty = item.payment.qty || 0;
                 cb.total = cb.totalEach * qty + cb.deliveryFee;
 
                 groupTotal += cb.total;

@@ -18,6 +18,7 @@ this.Model = function(mongoose) {
 			organizer:{type:Boolean,default:false},
 			transactionToken:{type:String,index:true,required:true},
 			receipt:{},
+			manual:{},
 			customerId:String,
 			amount: Number,
 			qty: Number

@@ -1252,7 +1252,13 @@ exports.plan = {
 					item.purchased = true;
 					console.log('adding receipt for:');
 					console.log(item);
-					item.payment.receipt = args.receipt;
+					item.payment.manual = args.receipt;
+					if (args.receipt.qty) {
+						item.payment.qty = args.receipt.qty;
+					}
+					if (args.receipt.amountPaid) {
+						item.payment.amount = args.receipt.amountPaid;
+					}
 					item.save(function(err) {
 						if (err) {
 							data.success = 0;
@@ -1508,7 +1514,14 @@ exports.plan = {
 					item.purchased = true;
 					console.log('adding receipt for:');
 					console.log(item);
-					item.payment.receipt = args.receipt;
+					item.payment.manual = args.receipt;
+					if (args.receipt.qty) {
+						item.payment.qty = args.receipt.qty;
+					}
+					if (args.receipt.amountPaid) {
+						item.payment.amount = args.receipt.amountPaid;
+					}
+
 					item.save(function(err) {
 						if (err) {
 							data.success = 0;
@@ -1746,6 +1759,95 @@ exports.plan = {
 			});
 		});
 	},
+
+addTicketGroupReceipt: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add tickets receipt to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		if (typeof args.ticketId === "undefined") {
+			console.log('no ticket');
+			data.noTicket = true;
+			return me(null, data);
+		}
+
+		console.log('add ticket receipt to tickets:');
+		console.log(args);
+
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+			'service': args.service
+		};
+
+		/* find all the existing parking for this plan and remove them if payment is not complete */
+		Ticket.find(query, function(err, ticket) {
+			console.log('found ticket');
+			console.log(ticket);
+			if (err) {
+				data.success = 0;
+				data.dbError = 'unable to find parking';
+				return me(null, data);
+			}
+
+			var notFound = true;
+			/* TODO: to actually support an array of parking, this needs to change */
+			for (var i = 0; i < ticket.length; i++) {
+				var item = ticket[i];
+				console.log('existing ticket to add receipt to');
+				console.log(item);
+
+				/* find the parking that matches args.parkingId */
+				if (args.ticketId == item.id) {
+					notFound = false;
+					item.purchased = true;
+					console.log('adding receipt for:');
+					console.log(item);
+					item.payment.manual = args.receipt;
+					if (args.receipt.qty) {
+						item.payment.qty = args.receipt.qty;
+					}
+					if (args.receipt.amountPaid) {
+						item.payment.amount = args.receipt.amountPaid;
+					}
+
+					item.save(function(err) {
+						if (err) {
+							data.success = 0;
+							data.dbError = 'unable to save ticket';
+							return me(null, data);
+						}
+
+						data.ticket = item;
+						return me(null, data);
+					});
+					break;
+				}
+			};
+			if (notFound) {
+				console.log('ticket not found for add receipt');
+				data.notFound = notFound;
+				me(null, data);
+			}
+		});
+	},
+
+
 
 	savePreferences: function(args, req, res) {
 		var me = this;

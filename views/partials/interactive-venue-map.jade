@@ -54,12 +54,13 @@
 		.no-results
 			.notify-email(ng-show="notFound",type="tickets")
 				.collect-email(ng-hide="emailCollected")
-					p Aww shucks! We haven't got any parking listings to show you.  Enter your email below if you'd like to be notified when parking becomes available.
+					p Aww shucks! We haven't got any ticket listings to show you.  Enter your email below if you'd like to be notified when tickets become available.
 					fieldset
 						input#email
 					button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
 				.collected-email(ng-show="emailCollected")
 					p OK! We'll let you know if any parking spots become available!	#tickets.addons-list.pull-right
-
+				.back-to-search
+					a(href="/search") << Perform a new search
 
 

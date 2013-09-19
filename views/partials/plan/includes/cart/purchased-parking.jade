@@ -1,5 +1,5 @@
 //- have parking and purchased
-.body.add-on-included(ng-show="parking[0] && parking[0].payment && parking[0].payment.receipt")
+.body.add-on-included(ng-show="parking[0] && parking[0].payment && parking[0].purchased")
 	ul.parking-list-container.add-on-container
 		li.parking-row.add-on-row(ng-repeat="p in parking")
 
@@ -14,6 +14,9 @@
 
 			//- TODO: show a parkwhiz logo? add notes field to keep track of order info from parkwhiz?
 			.parking-container.add-on-container(ng-show="{'pw':true}[p.service]")
+				a.parkwiz-link.add-on-offsite-link.clearfix(target="_blank",href="{{p.parking.parkwhiz_url}}")
+					img.pull-left(src="/images/parkwhiz-logo.png")
+					.text.pull-left Go to ParkWhiz.com
 				.parking-info.add-on-info.clearfix
 					.parking-name.pull-left
 						strong NAME:&nbsp;
@@ -21,13 +24,13 @@
 					.parking-location.pull-left
 						strong LOCATION:&nbsp;
 						span {{p.parking.address}}, {{p.parking.city}}, {{p.parking.state}} {{p.parking.zip}}
-				.parking-payment.clearfix
+				.parking-payment.add-on-info.clearfix
 					.per-person.pull-left
-						strong Total cost for {{p.payment.receipt.qty}} parking {{p.payment.receipt.qty | pluralize:'spot'}}:&nbsp;
+						strong Total cost for {{p.payment.qty}} parking {{p.payment.qty | pluralize:'spot'}}:&nbsp;
 					.parking-total.pull-left
-						{{p.payment.receipt.amountPaid | currency}}
-
+						{{p.payment.amount | currency}}
 			.controls.clearfix
 				a.view-parking-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") View parking On Map
 				- if (req.session.plan.preferences.parking.payment !== 'no-split')
 					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-hide="p.payment.receipt['not-available']", ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+

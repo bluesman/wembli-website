@@ -60,8 +60,28 @@ module.exports = function(app) {
 	});
 
 	app.get(/^\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
+
 		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
+		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.parking.payment     = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.restaurants.payment = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.hotels.payment      = req.params[0] ? req.params[0] : 'split-first';
+
+
+		console.log('creating new plan in search controller as: '+req.session.plan.preferences.payment);
+		if(req.param('next')) {
+			res.setHeader('x-wembli-location',req.param('next'));
+			res.redirect(req.param('next'));
+		} else {
+			searchView(req,res);
+		}
+	});
+
+	app.get(/^\/update-plan\/(split-first|split-after|no-split)?/,function(req,res) {
+
+		/* set payment pref to indicate how this person wants pay */
 		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-first';
 		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-first';
 		req.session.plan.preferences.parking.payment     = req.params[0] ? req.params[0] : 'split-first';

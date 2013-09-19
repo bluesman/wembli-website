@@ -28,7 +28,7 @@ module.exports = function(app) {
 				'eventId': req.param('event_id')
 			};
 
-			/* receipt is everything ticketnetwork sents over */
+			/* receipt is everything ticketnetwork sends over */
 			var receipt = {
 				request_id: req.param('request_id'),
 				request_datetime: req.param('request_datetime'),

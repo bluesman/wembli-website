@@ -4,7 +4,7 @@ ul#buy-now-container.ticket-list-container.hide
 		.seat-row.hide {{ticket.Row}}
 		.actual-price ${{ticket.ActualPrice}}
 		.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
-#tickets-invite-friends
+#tickets-invite-friends(ng-hide="notFound")
 	h2 Look Before You Invite
 	p You opted to have friends pony up before you buy so you won't pick tickets until they vote on their preferences.
 	p What you CAN do is mouse over the map to make sure there are enough tickets for the number of people you want to join before you send out invites.
@@ -13,4 +13,4 @@ ul#buy-now-container.ticket-list-container.hide
 	.controls.clearfix
 		a.invite-friends-button.btn.btn-orange.btn-large.pull-left(ng-show="plan.friends[0]", href="/plan") Back To Plan
 		a.invite-friends-button.btn.btn-orange.btn-large.pull-left(ng-hide="plan.friends[0]", href="/event-options/{{plan.event.eventId}}/{{plan.event.eventName}}") Invite Friends
-		a.change-payment-preference.pull-left(target="_self",href="/start-plan/split-after?next=/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I hate waiting - I want to buy tickets now.  Friends can pony up later.
+		a.change-payment-preference.pull-left(target="_self",href="/update-plan/split-after?next=/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I hate waiting - I want to buy tickets now.  Friends can pony up later.

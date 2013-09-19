@@ -43,6 +43,9 @@ module.exports = function(app) {
 				venueId = results.event[0].VenueID;
 			}
 
+			console.log('create new plan?');
+			console.log(req.session.plan);
+
 			/* TODO: convert this to call planRpc.startPlan() */
 
 			/* get the venue data for this event - why do this if i already did? */

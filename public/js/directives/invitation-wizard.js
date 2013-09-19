@@ -257,7 +257,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                 console.log('customer signed up:');
                 console.log(customer);
                 console.log(result);
-                console.log('LOGGEDIN: '+loggedIn.check());
+                console.log('LOGGEDIN: ' + loggedIn.check());
 
                 $scope.signup.success = true;
                 $scope.showForm('showSignupView', 'showSignupForm');
@@ -681,17 +681,20 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
           };
 
           /* set up the wemblimail friends array with friends in the plan */
-          if (typeof plan.getFriends() !== "undefined") {
-            for (var i = plan.getFriends().length - 1; i >= 0; i--) {
-              var friend = plan.getFriends()[i];
-              friend.checked = friend.inviteStatus;
-              if (friend.contactInfo.service === 'wemblimail') {
-                $scope.wemblimail.friends.push(friend);
-                $scope.selectedFriends[friend.contactInfo.serviceId] = friend.inviteStatus;
-              }
-            };
-          }
-
+          plan.get(function(p) {
+            console.log('plan frineds for wemblimail');
+            console.log(plan.getFriends());
+            if (typeof plan.getFriends() !== "undefined") {
+              for (var i = plan.getFriends().length - 1; i >= 0; i--) {
+                var friend = plan.getFriends()[i];
+                friend.checked = friend.inviteStatus;
+                if (friend.contactInfo.service === 'wemblimail') {
+                  $scope.wemblimail.friends.push(friend);
+                  $scope.selectedFriends[friend.contactInfo.serviceId] = friend.inviteStatus;
+                }
+              };
+            }
+          });
           $scope.sendWemblimail = function() {
             if (!$scope.wemblimailForm.$valid) {
               return;

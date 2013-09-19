@@ -20,7 +20,7 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 		//- show the pony up form if they have invited friends and have chosen at least one of tickets, parking, restaurants or hotel
 		form.invitees-container(ng-submit="sendPonyUpEmail()",ng-show="friends[0] && (plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])")
 			h3 Make sure the checkbox is green next to the people you want to pony up then click the pony up button to send
-			.row.invitee.clearfix(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{'rsvp.decision':true}")
+			.row.invitee.clearfix(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} ")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
@@ -68,7 +68,7 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 									.value.pull-right
 										a.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Tickets Not Chosen
 
-							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",content="content<br/>more content",trigger="hover")
+							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",content="content<br/>more content",trigger="click")
 								.header.pull-left PARKING
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
@@ -116,7 +116,7 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 							.header.pull-left SEND PONY UP REQUEST FOR:
 						.pull-right.input-prepend(ng-class="{true:'muted'}[friend.ponyUp.open]")
 							span.add-on $
-							input.friend-pony-up-amount(type="text",ng-init="friend.ponyUp.amount=friend.tickets.suggestedPonyUpAmount",ng-model="friend.ponyUp.amount")
+							input.friend-pony-up-amount(type="text",ng-init="friend.ponyUp.amount=friend.suggestedPonyUpAmount",ng-model="friend.ponyUp.amount")
 				.history-container.pull-left
 					label.history-label.info-slide-down-label.clearfix(friend-id="{{friend._id}}",key="history")
 						i.icon.icon-caret-right.history-caret.icon-2x.pull-left

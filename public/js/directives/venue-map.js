@@ -12,7 +12,6 @@ directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '
         return function(scope, element, attr) {
           attr.$observe('ticket', function(val) {
             var ticket = JSON.parse(val);
-
             var displayTicketsLoginModal = function(e) {
               $rootScope.$broadcast('tickets-login-clicked', {
                 ticket: ticket
@@ -170,9 +169,10 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
                 if (typeof result.tickets[0] === "undefined") {
                   loadingModal.hide();
-                  $('#no-tickets').modal("show");
+                  //$('#no-tickets').modal("show");
                   scope.noTickets = true;
-                  return;
+                  scope.notFound = true;
+                  //return;
                 }
 
                 scope.event = result.event;

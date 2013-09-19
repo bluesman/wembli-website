@@ -9192,24 +9192,31 @@ body {
 .addons-list .no-results {
   margin-bottom: 60px;
 }
+.addons-list .no-results .back-to-search,
 .addons-list .no-results .collected-email,
 .addons-list .no-results .collect-email {
   background-color: rgba(153, 153, 153, 0.9);
   padding: 20px 40px 80px 40px;
 }
+.addons-list .no-results .back-to-search p,
 .addons-list .no-results .collected-email p,
 .addons-list .no-results .collect-email p {
   padding: 20px;
 }
+.addons-list .no-results .back-to-search #email,
 .addons-list .no-results .collected-email #email,
 .addons-list .no-results .collect-email #email {
   height: 25px;
   width: 300px;
 }
+.addons-list .no-results .back-to-search button,
 .addons-list .no-results .collected-email button,
 .addons-list .no-results .collect-email button {
   font-size: 12px;
   margin: 10px 34px;
+}
+.addons-list .no-results .back-to-search {
+  text-align: left;
 }
 #no-tickets .modal-body .btn {
   margin: 30px auto;
@@ -11244,6 +11251,9 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .controls .change-tickets-link {
   margin: 10px 50px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .add-on-container .add-on-offsite-link .text {
+  margin-top: 15px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .add-on-container .add-on-info,
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .add-on-container .add-on-payment {
