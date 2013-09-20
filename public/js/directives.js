@@ -651,7 +651,7 @@ directive('eventWrapper', ['wembliRpc', '$window',
                   if (result.ticketPricingInfo.ticketsAvailable === '0') {
                     summaryContent = "Click for ticket information";
                   } else {
-                    summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketPricingInfo.ticketsAvailable + " ticket choice" : result.ticketPricingInfo.ticketsAvailable + " ticket choices";
+                    summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketsAvailable + " ticket choice" : result.ticketPricingInfo.ticketsAvailable + " ticket choices";
                     if (parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
                       summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
                     } else {

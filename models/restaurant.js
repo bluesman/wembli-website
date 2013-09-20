@@ -36,6 +36,7 @@ this.Model = function(mongoose) {
 	Restaurant.pre('save', function(next) {
 		/* convert payment.amount to cents */
 		/* convert total to cents */
+		/* have the client do this
 		if (typeof this.total !== "undefined") {
 			console.log('convert total to cents:'+this.total);
 			this.total = parseFloat(this.total) * 100;
@@ -44,7 +45,7 @@ this.Model = function(mongoose) {
 		if (typeof this.payment !== "undefined") {
 			this.payment.amount = parseFloat(this.payment.amount) * 100;
 		}
-
+		*/
 		this.updated = new Date();
 		next();
 	});
@@ -52,6 +53,7 @@ this.Model = function(mongoose) {
 	Restaurant.post('save', function(doc) {
 		/* convert payment.amount to cents */
 		/* convert total to cents */
+		/* have the client do this
 		if (typeof this.total !== "undefined") {
 			console.log('convert total to $:'+this.total);
 			this.total = parseFloat(this.total) / 100;
@@ -60,6 +62,7 @@ this.Model = function(mongoose) {
 		if (typeof this.payment !== "undefined") {
 				this.payment.amount = parseFloat(this.payment.amount) / 100;
 		}
+		*/
 	});
 
 

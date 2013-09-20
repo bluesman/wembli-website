@@ -7,13 +7,13 @@
 					strong Wembli Order ID:&nbsp;
 					span {{ticket._id}}
 				.ticket-info.clearfix
-					.ticket-section.pull-left
+					.ticket-section
 						strong SECTION/AISLE:
 						span {{ticket.ticketGroup.Section}}&nbsp;
-					.ticket-row.pull-left
+					.ticket-row
 						strong ROW/BOX:
 						span {{ticket.ticketGroup.Row}}
-					.ticket-seat.pull-left
+					.ticket-seat
 						strong SEATS:
 						span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
 						span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
@@ -22,7 +22,7 @@
 					span {{ticket.ticketGroup.Notes}}
 				.ticket-payment.clearfix
 					.per-person.pull-left
-						strong Total cost for {{ticket.payment.receipt.request_tickets}} {{ticket.payment.receipt.request_tickets | pluralize:'ticket'}}:
+						strong Total cost for {{ticket.payment.qty}} {{ticket.payment.amount | pluralize:'ticket'}}:
 					.ticket-total.pull-left
 						{{ticket.payment.sale_total | currency}}
 			.controls.clearfix

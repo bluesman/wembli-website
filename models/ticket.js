@@ -16,7 +16,7 @@ this.Model = function(mongoose) {
 		ticketGroup: {},
 		payment: 	{
 			organizer:{type:Boolean,default:false},
-			transactionToken:{type:String,index:true,required:true},
+			transactionToken:{type:String,index:true},
 			receipt:{},
 			manual:{},
 			customerId:String,
@@ -36,6 +36,7 @@ this.Model = function(mongoose) {
 	Ticket.pre('save', function(next) {
 		/* convert payment.amount to cents */
 		/* convert total to cents */
+		/* have the client do this
 		if (typeof this.total !== "undefined") {
 			console.log('convert total to cents:'+this.total);
 			this.total = parseFloat(this.total) * 100;
@@ -44,7 +45,7 @@ this.Model = function(mongoose) {
 		if (typeof this.payment !== "undefined") {
 			this.payment.amount = parseFloat(this.payment.amount) * 100;
 		}
-
+		/* have the client do this
 		this.updated = new Date();
 		next();
 	});
@@ -52,6 +53,7 @@ this.Model = function(mongoose) {
 	Ticket.post('save', function(doc) {
 		/* convert payment.amount to cents */
 		/* convert total to cents */
+		/* have the client do this
 		if (typeof this.total !== "undefined") {
 			console.log('convert total to $:'+this.total);
 			this.total = parseFloat(this.total) / 100;
@@ -60,6 +62,7 @@ this.Model = function(mongoose) {
 		if (typeof this.payment !== "undefined") {
 				this.payment.amount = parseFloat(this.payment.amount) / 100;
 		}
+		*/
 	});
 
 	try {

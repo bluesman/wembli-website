@@ -21,6 +21,11 @@ section#section1(class="#{sectionClass} itinerary-section plan-section")
 					.alert.alert-warning.clearfix(ng-show="ticketCountMismatch")
 						.icon-warning-sign.icon-2x.pull-left
 						.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
+					.alert.alert-warning.clearfix(ng-show="tickets[0] && !tickets[0].purchased")
+						.icon-warning-sign.icon-2x.pull-left
+						.text.pull-left
+							span These tickets are not on hold. To guarantee these seats, please&nbsp;
+							a#purchase-3.scroll-to(href="#") purchase your tickets.
 					.row
 						.info.clearfix
 							.event-name

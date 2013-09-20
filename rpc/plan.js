@@ -1667,7 +1667,7 @@ exports.plan = {
 					planId: req.session.plan.id,
 					planGuid: req.session.plan.guid,
 					service: 'tn',
-					eventId: args.eventId,
+					eventId: args.ticketGroup.EventID,
 					ticketGroup: args.ticketGroup,
 					qty: args.qty,
 					total: args.total,
@@ -1694,6 +1694,8 @@ exports.plan = {
 					if (err) {
 						data.success = 0;
 						data.dbError = 'unable to save ticketGroup: '+err;
+						console.log('error adding ticket to plan:');
+						console.log(data);
 						return me(null,data);
 					}
 

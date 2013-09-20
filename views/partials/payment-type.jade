@@ -21,6 +21,10 @@
 						h3 I'm Footing The Entire Bill
 						p No need to get paid back?  No problem.  Just buy your tickets, make a plan and send it out to your friends.  They'll get the itinerary and you'll get all the love!
 		.modal-footer
-			button.btn.btn-primary.btn-large(ng-click="startPlan()")
+			button.btn.btn-primary.btn-large(ng-hide="submitInProgress", ng-click="startPlan()")
+				span Let's Do This!&nbsp;
+				i.icon-double-angle-right
+			button.btn.btn-primary.btn-large.mute(ng-disabled="submitInProgress", ng-show="submitInProgress",ng-click="startPlan()")
+				.icon.icon-cog.icon-spin.pull-left
 				span Let's Do This!&nbsp;
 				i.icon-double-angle-right

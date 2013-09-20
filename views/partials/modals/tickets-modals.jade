@@ -5,34 +5,7 @@
 		p There aren't any tickets available for this event.
 		a.btn.btn-large.btn-orange.wembli-sequence-link(href="/search") Start A New Plan
 	.modal-footer
-#tickets-offsite-modal.modal.hide(ng-controller="TicketsOffsiteCtrl")
-	#tickets-offsite
-		.modal-header
-			h2 How'd It Go?
-		.modal-body
-			p Before we take you to your planning dashboard we need to know:
-			form#tickets-offsite-form(name="tickets-offsite-form")
-				label.radio
-					input#option-group-bought(ng-model="ticketsOffsite",type="radio",name="tickets_offsite",value="bought",ng-init="ticketsOffsite='bought'")
-					.option-content
-						h3 I Got My Tix!
-						p
-							span I just bought
-							input#qty.focus-on-click(name="qty",ng-model="qty",type="text")
-							span tix for a total of
-							span#amount-paid-prepend.input-prepend
-								span.add-on $
-								input#amount-paid.focus-on-click(type="text",name="amount_paid",ng-model="amountPaid")
-								span .&nbsp;&nbsp;
-								span.orange &nbsp;<--- is this correct?
-				label.radio
-					input#option-group-skip(ng-model="ticketsOffsite",type="radio",name="tickets_offsite",value="skip")
-					.option-content
-						h3 Show Me Somethin' Else
-						p I decided not to buy those stinkin' tickets. Show me other options.
-		.modal-footer
-			a.btn.btn-primary.btn-large(ng-show="showButton()",ng-click="submitForm()",href="/event-options/{{eventId}}/{{eventName}}") Continue
-			a.btn.btn-cancel.btn-large(ng-hide="showButton()",ng-click="cancelForm()") See More Tickets
+include tickets/offsite
 #tickets-login-modal.modal.hide(ng-controller="TicketsLoginCtrl")
 	.confirm(ng-show="customer")
 		.modal-header

@@ -11,7 +11,7 @@
 		- if (typeof dealsPurchased[0] !== "undefined")
 			include restaurants/purchased-deals
 		- else
-			- if (req.session.plan.preferences.payment === 'split-first')
+			- if (req.session.plan.preferences.payment === 'split-first' && !req.session.plan.rsvpComplete)
 				- if (req.session.plan.preferences.restaurants.payment === 'split-first')
 					include restaurants/read-only
 				- else

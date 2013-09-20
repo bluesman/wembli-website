@@ -6,8 +6,8 @@
 		.event-social-links
 		- console.log('plan prefs in hotels list');
 		- console.log(req.session.plan.preferences);
-		- if (req.session.plan.preferences.payment === 'split-first')
-			include hotels/read-only
+		- if (req.session.plan.preferences.payment === 'split-first' && !req.session.plan.rsvpComplete)
+			//- include hotels/read-only
 		- else
 			//- include hotels/buy-now
 		.no-results

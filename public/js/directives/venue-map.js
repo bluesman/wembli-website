@@ -63,6 +63,7 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
               var amountPaid = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
               amountPaid = amountPaid.toFixed(2);
               console.log(ticket);
+              var backToPlan = (typeof attr.backToPlan === "undefined") ? false : (attr.backToPlan === "true");
               /* add this ticket group - it will be removed if they later say they did not buy it */
               plan.addTicketGroup({
                 service: 'tn',
@@ -84,8 +85,11 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
                   eventId: p.event.eventId,
                   eventName: p.event.eventName,
                   sessionId: ticket.sessionId,
-                  ticketId: results.ticketGroup._id
+                  ticketId: results.ticketGroup._id,
+                  backToPlan: backToPlan
                 });
+
+
                 var Promise = $timeout(function() {
                   $('#tickets-login-modal').modal('hide');
                   $('#tickets-offsite-modal').modal('show');
@@ -222,7 +226,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
                       el.ticketsInPlan = true;
                       el._id = t[i]._id;
                     } else {
-                      console.log('session: '+el.sessionId);
+                      console.log('session: ' + el.sessionId);
                     }
                   };
                   newT.push(el);
@@ -381,6 +385,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
               },
               /* transformRequest */
+
               function(data, headersGetter) {
                 $rootScope.genericLoadingModal.header = 'Finding Tickets...';
                 loadingModal.show('Finding Tickets...', 'We\'re scouring the internet for ' + p.event.eventName + ' tickets!');
@@ -388,6 +393,7 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
               },
 
               /* transformResponse */
+
               function(data, headersGetter) {
                 return JSON.parse(data);
               });

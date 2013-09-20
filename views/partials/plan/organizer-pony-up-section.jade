@@ -1,4 +1,4 @@
-section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
+section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 	.header
 		h1.pull-left Pony Up!
 	.body
@@ -8,19 +8,26 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 				i.icon-check-empty.icon-2x.pull-left(ng-hide="ponyUp.selectAll")
 				input.pull-left.hide(type="checkbox",ng-model="ponyUp.selectAll")
 				h3 Send pony up request for all friends
-		#no-rsvps(ng-hide="friendsComing")
-			p no one has rsvp'd yet
-		#no-invitees(ng-hide="friends[0]")
-			p You haven't invited anyone yet - who should Pony Up?
-			button.btn.btn-orange.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
-				span Invite People&nbsp;
-				i.icon-double-angle-right
-		.invitees-container(ng-show="friends[0] && !(plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])") no tickets or add-ons chosen yet
 
+		//-
+		#no-rsvps(ng-hide="friendsComing")
+			h3 Find Out What It Means To Pony Up
+			.pony-up
+				.content.pull-left
+					p.calibri So you're interested to hear all about the Pony Up process?  I like your style.  Here's how this process goes down:
+					i.icon-circle
+						span.calibri You need to RSVP for the event first (the quicker the better).
+					i.icon-circle
+						span.calibri When the RSVP due date comes around your organizer will use the votes to pick tickets.
+					i.icon-circle
+						span.calibri Before your organizer shells out any cash, you'll get a Pony Up email to put in your share for your tickets and chosen add-ons.
+					p.note.calibri NOTE:  You'll have 24 hrs from the time you get your pony up email to deposit your share because tickets can't be put on hold.
+				.img.pull-right
+					img(src="/images/cartoon-man-money-left.png")
 		//- show the pony up form if they have invited friends and have chosen at least one of tickets, parking, restaurants or hotel
-		form.invitees-container(ng-submit="sendPonyUpEmail()",ng-show="friends[0] && (plan.tickets[0] || plan.parking[0] || plan.restaurants[0] || plan.hotels[0])")
+		form.invitees-container(ng-submit="sendPonyUpEmail()",ng-show="friendsComing")
 			h3 Make sure the checkbox is green next to the people you want to pony up then click the pony up button to send
-			.row.invitee.clearfix(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} ")
+			.row.invitee.clearfix(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true} | filter:{rsvp.decision:true}")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 					img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
@@ -32,7 +39,7 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 					.suggested-amounts-container
 						label.suggested-amounts-label.info-slide-down-label.clearfix(friend-id="{{friend._id}}",key="suggested-amounts")
 							i.icon-caret-right.suggested-amounts-caret.icon-2x.pull-left
-							.suggested-amount-header.pull-left WEMbli Suggested Pony Up Amount:
+							.suggested-amount-header.pull-left Wembli Suggested Pony Up Amount:
 							.value.pull-right {{friend.tickets.suggestedPonyUpAmount | currency}}
 						.suggested-amounts.hide
 							.suggested-amount.suggested-ticket-amount.display-popover.clearfix(ng-show="plan.tickets[0]",title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{friend._id}}-tickets-popover-content",trigger="hover")
@@ -66,7 +73,7 @@ section#section4.organizer-pony-up-section.ponyup-section.plan-section.even
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
 									.value.pull-right
-										a.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Tickets Not Chosen
+										a.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Tickets
 
 							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",content="content<br/>more content",trigger="click")
 								.header.pull-left PARKING

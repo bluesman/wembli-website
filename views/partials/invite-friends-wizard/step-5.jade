@@ -1,13 +1,17 @@
 form#invite-wizard-step5-form(name="wemblimailForm")
 	fieldset()
 		h2 Go old skool and send an eMail
-		#error.alert.alert-block.fade.in(ng-show="error")
+		.alert.alert-block.fade.in.clearfix(ng-show="error")
+			i.icon-info-sign.icon-2x
 			.error-text(ng-show="formError") All fields are required.
-		#error.alert.alert-block.fade.in(ng-show="isOrganizer")
+		.alert.alert-block.fade.in.clearfix(ng-show="isOrganizer")
+			i.icon-info-sign.icon-2x
 			.error-text You don't have to invite yourself :)
-		#error.alert.alert-info.alert-block.fade.in(ng-show="successConfirmed")
+		.alert.alert-info.alert-block.fade.in.clearfix(ng-show="successConfirmed")
+			i.icon-info-sign.icon-2x
 			.error-text Invitation email successfully sent to {{wemblimail.lastSentEmail}}!
-		#error.alert.alert-info.alert-block.fade.in(ng-show="successUnconfirmed")
+		.alert.alert-info.alert-block.fade.in.clearfix(ng-show="successUnconfirmed")
+			i.icon-info-sign.icon-2x
 			.error-text Invitation email to {{wemblimail.lastSentEmail}} will be sent as soon as you confirm your email address (hint: check your email!).
 		p Email friends to let them know they're invited.  Supply a name, email address and a note and we'll send out an email for you.
 		.name-group.control-group.pull-left

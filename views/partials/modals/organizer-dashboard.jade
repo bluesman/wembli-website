@@ -70,7 +70,6 @@
 			.control-group
 				.controls
 					button.btn.btn-primary.btn-large(ng-disabled="createMerchantAccountForm.$invalid",type="submit") Create Account
-
 #rsvp-complete-modal.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")
@@ -79,9 +78,10 @@
 		p summarize the rsvp list
 #rsvp-for-modal.rsvp-for-modal.modal.hide
 	.modal-header
-	.modal-body
+		i.close.icon-remove(data-dismiss="modal")
+		h2 Is {{friend.contactInfo.name}} going?
+	.modal-body.clearfix
 		.collect-rsvp-container.pull-left
-			h4 Is {{friend.contactInfo.name}} going?
 			.collect-rsvp
 				a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[friend.rsvp.decision]") Yes!
 				a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[friend.rsvp.decision]") No.
@@ -90,14 +90,30 @@
 					input#guest-count.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="friend.rsvp.guestCount",placeholder="1")
 					span(ng-show="guestCountPlural") people&nbsp;
 					span(ng-hide="guestCountPlural") person&nbsp;
-					span (including yourself).
-				label(ng-show="plan.preferences.addOns.parking")
-					input#parking-rsvp(type="checkbox",ng-model="friend.rsvp.parking.decision")
-					span Include {{friend.contactInfo.name}} in parking plans?
-				label(ng-show="plan.preferences.addOns.restaurants")
-					input#restaurant-rsvp(type="checkbox",ng-model="friend.rsvp.restaurant.decision")
-					span Include {{friend.contactInfo.name}} in restaurant plans?
-				label(ng-show="plan.preferences.addOns.hotels")
-					input#hotel-rsvp(type="checkbox",ng-model="friend.rsvp.hotel.decision")
-					span Include {{friend.contactInfo.name}} in hotel plans?
-			a.btn.btn-primary.btn-large(href="#",ng-click="saveRsvp()",data-dismiss="modal") Save RSVP
+					span (including {{friend.contactInfo.name}}).
+			fieldset.add-ons
+				.control-group
+					label(ng-show="plan.preferences.addOns.parking")
+						input#parking-rsvp.hide(type="checkbox",ng-model="friend.rsvp.parking.decision")
+						i.icon-check.icon-2x.pull-left.green(ng-show="friend.rsvp.parking.decision")
+						i.icon-check-empty.icon-2x.pull-left(ng-hide="friend.rsvp.parking.decision")
+						span Include {{friend.contactInfo.name}} in parking plans?
+				.control-group
+					label(ng-show="plan.preferences.addOns.restaurants")
+						input#restaurant-rsvp.hide(type="checkbox",ng-model="friend.rsvp.restaurant.decision")
+						i.icon-check.icon-2x.pull-left.green(ng-show="friend.rsvp.restaurant.decision")
+						i.icon-check-empty.icon-2x.pull-left(ng-hide="friend.rsvp.restaurant.decision")
+						span Include {{friend.contactInfo.name}} in restaurant plans?
+				.control-group
+					label(ng-show="plan.preferences.addOns.hotels")
+						input#hotel-rsvp.hide(type="checkbox",ng-model="friend.rsvp.hotel.decision")
+						i.icon-check.icon-2x.pull-left.green(ng-show="friend.rsvp.hotel.decision")
+						i.icon-check-empty.icon-2x.pull-left(ng-hide="friend.rsvp.hotel.decision")
+						span Include {{friend.contactInfo.name}} in hotel plans?
+		.where-to-go.pull-left
+			img(src="/images/where-to-go.png")
+	.modal-footer
+		a.btn.btn-primary.btn-large(href="#",ng-click="saveRsvp()",data-dismiss="modal") Save RSVP
+include tickets/offsite
+include parking/offsite
+include restaurants/offsite

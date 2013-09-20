@@ -1,7 +1,10 @@
-#add-to-plan-filters.filter-container
+.back-to-plan-container
+	a(href="/plan#section3",direction="1") Back To The Plan >>
+#tickets-add-to-plan-list-header.list-header-container(ng-show="{'split-after':true}[plan.preferences.payment]")
 	.popover-container.pull-left
 		i#help1.icon-question-sign.display-popover(placement="right",trigger="hover",animation="true",title="Choose Tickets",content="Add the tickets you want to purchase to your plan so you can let your friends know how much they'll need to pony up.")
 	h3.pull-left Choose Tickets To Add To Your Plan:
+#tickets-add-to-plan-filters.filter-container
 	.qty-filter
 		strong Qty:
 		select.quantity-filter
@@ -15,24 +18,42 @@
 		p
 			label(for="amount") Price range:
 			input.amount(type="text")
-		#add-to-plan-price-slider.price-slider
-#add-to-plan-header-container.ticket-list-header-container
+		#tickets-add-to-plan-price-slider.price-slider
+#tickets-add-to-plan-header-container.ticket-list-header-container.list-header-container
 	a.price-header(href="#",ng-click="sortByPrice()") Price
 	a.section-header(href="#",ng-click="sortBySection()") Section
 	a.qty-header(href="#",ng-click="sortByQty()") Qty
-ul#add-to-plan-container.ticket-list-container
-	li.ticket-row(ng-repeat="ticket in tickets")
+ul#tickets-add-to-plan-container.ticket-list-container.list-container
+	li.ticket-row.row(ng-repeat="ticket in tickets")
+		.ticket-price.hide
+			.actual-price ${{ticket.ActualPrice}}
 		.ticket-section.hide {{ticket.Section}}
 		.seat-row.hide {{ticket.Row}}
-		.ticket-price
-			.actual-price ${{ticket.ActualPrice}}
-			.each (each)
-		.ticket-info
-			.ticket-section-name Section: {{ticket.Section}}
-			.seat-row-name Row: {{ticket.Row}}
-		.qty-container
-			strong Qty:
-			select(id="qty-{{ticket.ID}}",ng-model="ticket.selectedQty",name="qty-{{ticket.ID}}",ng-options="q for q in ticket.ValidSplits.int")
-			.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
-		a.btn.btn-primary.btn-large.add-tickets-to-plan(ticket="{{ticket}}",quantity="{{ticket.selectedQty}}",ng-href="/plan",ng-hide="ticket.ticketsInPlan") Add
-		a.btn.btn-orange.btn-large(ng-click="removeTicketGroup(ticket._id)",ng-href="/plan",ng-show="ticket.ticketsInPlan") Remove
+		.top.clearfix
+			.icon.pull-left
+				i.icon-ticket.icon-2x
+			.title.pull-left {{ticket.TicketGroupType}}
+		.bottom.clearfix
+			.price.pull-left
+				.header price
+				.value ${{ticket.ActualPrice}}
+			.ticket-info.pull-left
+				.seats
+					div
+						strong Section:&nbsp;
+						span {{ticket.Section}}&nbsp;
+					div
+						strong Row:&nbsp;
+						span {{ticket.Row}}&nbsp;
+					div
+						strong Seats:&nbsp;
+						span(ng-show="{'\*':true}[ticket.LowSeat]") *
+						span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
+			.qty.pull-right
+				select(id="qty-{{ticket.ID}}",ng-model="ticket.selectedQty",name="qty-{{ticket.ID}}",ng-options="q for q in ticket.ValidSplits.int")
+				.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+				.header qty
+			.controls.pull-right
+				.actions
+					a.btn.btn-primary.btn-large.add-tickets-to-plan(ticket="{{ticket}}",quantity="{{ticket.selectedQty}}",ng-href="/plan",ng-hide="ticket.ticketsInPlan") Add
+					a.btn.btn-orange.btn-large(ng-click="removeTicketGroup(ticket._id)",ng-href="/plan",ng-show="ticket.ticketsInPlan") Remove

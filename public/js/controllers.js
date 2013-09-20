@@ -45,6 +45,7 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchMo
 	$scope.addOnsError = false;
 	$scope.inviteOptionsError = false;
 	$scope.guestListOptionsError = false;
+	$scope.submitInProgress = false;
 
 	wembliRpc.fetch('event-options.init', {},
 
@@ -71,11 +72,11 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchMo
 
 	//put fetchModals in the scope so we can call fetch from the view when they hit continue
 	$scope.fetchModals = fetchModals;
-	$scope.
-	continue = function() {
+	$scope.continue = function() {
 		//fetchModals.fetch('/invitation');
 		console.log('next: ' + $scope.next);
-		$location.path($scope.next);
+		$scope.submitInProgress = true;
+		//$location.path($scope.next);
 	}
 };
 
@@ -1109,12 +1110,12 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 				$scope.nextLink = args.nextLink;
 			});
 		});
-
+		$scope.submitInProgress = false;
 		$scope.startPlan = function() {
 			console.log('call start plan');
 			console.log('paymentType: ' + $scope.paymentType);
 			console.log('nextLink: ' + $scope.nextLink);
-
+			$scope.submitInProgress = true;
 			/* start the plan */
 			wembliRpc.fetch('plan.startPlan', {
 				payment: $scope.paymentType,
@@ -1126,8 +1127,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 				plan.fetch(function() {
 					$location.path($scope.nextLink);
 				});
-
-
 			})
 		};
 	};
@@ -1884,7 +1883,7 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 		};
 	};
 
-	function TicketsOffsiteCtrl($scope, plan, $http) {
+	function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 		plan.get(function(p) {
 			console.log('plan in tickets tickets-offsite');
 			console.log(p);
@@ -1901,6 +1900,12 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 			$scope.sessionId = args.sessionId,
 			$scope.ticketGroup = args.ticketGroup,
 			$scope.ticketId = args.ticketId
+      $scope.backToPlan = (typeof args.backToPlan === "undefined") ? false : args.backToPlan;
+      if ($scope.backToPlan) {
+        $scope.continueLink = '/plan';
+      } else {
+        $scope.continueLink = '/event-options/' + args.eventId + '/' + args.eventName;
+      }
 		})
 
 		$scope.showButton = function() {
@@ -1908,8 +1913,31 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 		};
 
 		$scope.submitForm = function() {
-			/* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
-			$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+
+			console.log('adding manual ticket receipt for:');
+			console.log($scope.ticketId);
+			/* update the tickets to have a receipt */
+			plan.addTicketGroupReceipt({
+				ticketId: $scope.ticketId,
+				service: $scope.ticketGroup.service,
+				receipt: {
+					qty: $scope.qty,
+					amountPaid: $scope.amountPaid
+				}
+			}, function(err, result) {
+				console.log('added ticket receipt:');
+				console.log(err);
+				console.log(result);
+
+				$('#tickets-offsite-modal').modal('hide');
+
+				/* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
+				//$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+
+				/* have to back to plan so they don't have a chance to buy more */
+				$location.path("/plan");
+			});
+
 		};
 
 		$scope.cancelForm = function() {
@@ -2159,7 +2187,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 			$scope.priceRange.low = p.preferences.tickets.priceRange.low || true;
 			$scope.priceRange.med = p.preferences.tickets.priceRange.med || true;
 			$scope.priceRange.high = p.preferences.tickets.priceRange.high || true;
-			//$scope.rsvpComplete = plan.rsvpComplete();
 		});
 
 		$scope.determineRange = function(price) {
