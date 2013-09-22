@@ -418,6 +418,30 @@ factory('hotels', ['wembliRpc', 'googlePlaces',
 	}
 ]).
 
+factory('header', [
+	function() {
+		self.prevScroll = angular.element('#content').scrollTop();
+		return {
+			init: function() {
+				angular.element('#header').show();
+				angular.element('#content').on('scroll', function() {
+					/* are we scrolling up or down? */
+					if (angular.element('#content').scrollTop() > prevScroll) {
+						if (angular.element('#header').is(':visible')) {
+							angular.element('#header').fadeOut(250);
+						}
+					} else {
+						if (!angular.element('#header').is(':visible')) {
+							angular.element('#header').fadeIn(250);
+						}
+					}
+					prevScroll = angular.element('#content').scrollTop();
+				});
+			}
+		}
+	}
+]).
+
 factory('cart', ['plan',
 	function(plan) {
 		var self = this;
@@ -608,12 +632,6 @@ factory('cart', ['plan',
 						cb.deliveryFee = deliveryFee;
 						/* delivery fee each */
 						cb.deliveryFeeEach = (deliverySplitBy > 0) ? cb.deliveryFee / deliverySplitBy : 0;
-						/* total each - this is funky but should work
-							the organizer must make sure to get the quantities right
-							because this will divy up the total items bought and divide by the total people coming
-							for parking this works because many people can share 1 spot
-							for tickets this doesn't work because people can't share tickets
-						*/
 						cb.totalEach = funcs.totalEach(cb.price, cb.serviceFee, qty, splitBy);
 
 						cb.total = cb.totalEach * splitBy + cb.deliveryFee;
@@ -1818,68 +1836,13 @@ factory('wembliRpc', ['$rootScope', '$http', 'customer', 'loggedIn',
 	}
 ]).
 
-//this is the order of the frames so sequence knows which direction to slide the frame
-factory('footer', ['initRootScope', '$rootScope', '$location',
-	function(initRootScope, $scope, $location) {
-		var footer = {};
-		//get the class names of the li elements in the #nav
-		footer.framesMap = {};
-		angular.element('#nav').children().each(function(i, e) {
-			//hack for index
-			if (e.id == 'index') {
-				footer.framesMap['/'] = i;
-			} else {
-				footer.framesMap['/' + e.id] = i;
-			}
-		});
-
-		footer.slideNavArrow = function() {
-			footer.currentPath = $location.path();
-			//append a fake element to #footer to get the left css property of end
-			var startClass = 'center-' + $scope.currentPath.split('/')[1];
-			var endClass = 'center-' + $location.path().split('/')[1];
-			if (startClass == endClass) {
-				startClass = 'center-';
-			}
-
-			//activate/deactivate the search button
-			if ($location.path() === '/search') {
-				$('#nav-search').addClass('active');
-			} else {
-				$('#nav-search').removeClass('active');
-			}
-
-			//if there already is a footer-left-position element, just update the class, else make a new hidden div
-			if ($('#footer #footer-left-position').length > 0) {
-				$('#footer #footer-left-position').attr('class', endClass);
-			} else {
-				$('#footer').append('<div id="footer-left-position" class="' + endClass + '"" style="display:none;position:absolute;height:0;width:0;"/>');
-			}
-			var moveTo = $('#footer #footer-left-position').css('left');
-
-			if (moveTo == 'auto') {
-				//hide the nav arrow
-				$('#nav-arrow').hide();
-			} else {
-				$('#nav-arrow').show();
-				$('#nav-arrow').animate({
-					left: moveTo
-				}, 750, function() {
-					$('#nav-arrow').removeClass(startClass)
-					$('#nav-arrow').addClass(endClass);
-				});
-			}
-		}
-		return footer;
-	}
-]).
-
-factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc', 'loadingModal',
-	function($document, $rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc, loadingModal) {
+factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'sequence', 'fetchModals', 'plan', 'wembliRpc', 'header', 'loadingModal',
+	function($document, $rootScope, $window, $templateCache, $timeout, $location, $http, $compile, sequence, fetchModals, plan, wembliRpc, header, loadingModal) {
 		return {
-			direction: -1,
+			direction: 1,
 			frame: 1,
 			loadingDuration: 500,
+			directionOverride: 0,
 			getDirection: function() {
 				return this.direction;
 			},
@@ -1902,6 +1865,15 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 				/* if either new or old has a hash tag and the urls are otherwise the same the gtfo */
 				if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
 					if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
+						console.log('new and old are the same');
+						return;
+					}
+					if ((newUrl.split('#')[0] === '/') && (oldUrl.split('#')[0] === "/index")) {
+						console.log('new is / and old is index');
+						return;
+					}
+					if ((newUrl.split('#')[0] === '/index') && (oldUrl.split('#')[0] === "/")) {
+						console.log('new is index and old is /');
 						return;
 					}
 				}
@@ -1911,6 +1883,7 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 
 				var me = this;
 				var path = $location.path();
+
 				/* clear out the search args from the path */
 				$rootScope.sequenceCompleted = false;
 
@@ -1960,42 +1933,8 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 						var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
 						me.setFrame(nextFrameID);
 
-						/*
-                split location path on '/' to get the right framesMap key
-                this is so we know where to slide the footer arrow to
-              */
-						var nextPath = '/' + $location.path().split('/')[1];
-						var currentPath = '/' + $rootScope.currentPath.split('/')[1];
-
-						/*
-                if footer.framesMap[$location.path()] (where they are going) is undefined
-                then don't move the arrow and slide to the right
-                if footer.framesMap[$rootScope.currentPath] (where they are coming from) is undefined
-                then move the arrow, but still slide to the right
-              */
-
-						/* if where they are coming from doesn't have an arrow location */
-						if (typeof footer.framesMap[currentPath] === "undefined") {
-							currentPath = nextPath;
-							/* slide the arrow only if where they are coming from is undefined */
-							footer.slideNavArrow();
-						}
-
-						/*
-                if both are defined
-                then move the arrow and figure out which way to slide
-              */
-						var direction = me.getDirection();
-						if ((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[currentPath] !== "undefined")) {
-							var currNavIndex = footer.framesMap[currentPath];
-							var nextNavIndex = footer.framesMap[nextPath];
-							direction = (currNavIndex < nextNavIndex) ? 1 : -1;
-							me.setDirection(direction);
-							/* slide the nav arrow - this should be async with using sequence to transition to the next frame */
-							footer.slideNavArrow();
-						}
-
 						/* find out what direction to go to we sliding in this element */
+						var direction = me.getDirection();
 						direction = parseInt($rootScope.direction) || direction;
 						me.setDirection(direction);
 
@@ -2035,6 +1974,8 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 						sequence.ready(function() {
 							$timeout(function() {
 								loadingModal.hide();
+								/* init the header on scroll function */
+								header.init();
 							}, me.getLoadingDuration());
 						});
 
@@ -2053,8 +1994,8 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 ]).
 
 //wrap the jquery sequence plugin
-factory('sequence', ['initRootScope', '$rootScope', '$window', 'footer',
-	function(initRootScope, $scope, $window, footer) {
+factory('sequence', ['initRootScope', '$rootScope', '$window',
+	function(initRootScope, $scope, $window) {
 		var options = {
 			startingFrameID: 1,
 			preloader: false,
@@ -2071,8 +2012,6 @@ factory('sequence', ['initRootScope', '$rootScope', '$window', 'footer',
 			options.animateStartingFrameIn = true;
 			options.startingFrameID = 2;
 		}
-
-		footer.slideNavArrow();
 
 		var sequence = angular.element("#content").sequence(options).data("sequence");
 

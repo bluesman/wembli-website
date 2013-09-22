@@ -1,70 +1,61 @@
 #index-frame(ng-controller="IndexCtrl")
-	.wembli-logo
-	.copy.segoe Plan an Outing, Split the Cost!
-	a#start-now(href="/search")
-	section#how-it-works.helvetica How It Works
-	section#circles
-		#circle-left.circle
-			i.icon-calendar.icon-3x
-			.circle-text.segoe Choose an event
-		#first-arrow.alligator.pull-left
-			i.icon-chevron-right.icon-2x
-		#circle-middle.circle
-			i.icon-comments.icon-3x
-			.circle-text.segoe Vote on details
-		#second-arrow.alligator.pull-left
-			i.icon-chevron-right.icon-2x
-		#circle-right.circle
-			i.icon-money.icon-3x
-			.circle-text.segoe Split the cost
-	section#feeds
-		#feed-left.feed
-			.header.segoe
-				span Upcoming Events&nbsp;
-				i.icon-star
-			.body
-				- var btnText = 'Plan It';
-				if ((typeof events == "undefined") || (typeof events[0] === "undefined"))
-					#event-list-wrapper
-						h3 Uh Oh!
-						.no-results One of the hamsters that powers our site must be on a break!  Check back in a minute.
-				else
-					#event-list-wrapper()
-						ul
-							each event in events
-								li.event-wrapper.start-plan(no-popover="true",name="#{event.Name}",id="#{event.ID}-wrapper")
-									include event
-							li.event-wrapper.start-plan(no-popover="true",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
-								include ../partials/includes/event
-		#feed-middle.feed
-			.header.segoe
-				i.icon-twitter
-				span &nbsp;Tweet Feed
-			.body.twitter-widget
-				a.twitter-timeline(href="//twitter.com/search?q=%40wembli",data-link-color="#0088CC", data-theme="dark",data-widget-id="318018385696915459", data-chrome="nofooter noborders noheader", height="536px" ,width="288px").segoe
-		#feed-right.feed
-			.header.segoe
-				span People Are Talking&nbsp;
-				i.icon-comment-alt
-			.body
-				.quote
-					.text
-						i.icon-quote-left.icon-2x
-						span Wembli is the expedia.com of live events. You get tickets, parking, restaurants and even hotels - all in one place!
-					.name.pull-right - Jim L., OH
-				.quote
-					.text
-						i.icon-quote-left.icon-2x
-						span Wembli saved me so much hassle! No more hunting my friends down to get paid back...
-					.name.pull-right - Katie R., WA
-				.quote
-					.text
-						i.icon-quote-left.icon-2x
-						span Plan it. Split it. Love it!
-					.name.pull-right - Gina T., CA
-				.quote
-					.text
-						i.icon-quote-left.icon-2x
-						span So easy to invite my friends on facebook...and they loved getting to vote on the plan.
-					.name.pull-right - Caleb O., FL
-	section#directory
+	section.section1.carousel-container
+		#carousel.carousel.slide
+			ol.carousel-indicators
+				li.active(data-target="#carousel",data-slide-to="0")
+				li(data-target="#carousel",data-slide-to="1")
+				li(data-target="#carousel",data-slide-to="2")
+			.carousel-inner
+				.item.active
+					img(src="/images/carousel/carousel-1.jpg")
+				.item
+					img(src="/images/carousel/carousel-2.jpg")
+				.item
+					img(src="/images/carousel/test-image.jpg")
+			//- a.carousel-control.left.icon-chevron-sign-left.icon-3x(href="#carousel",data-slide="prev")
+			//- a.carousel-control.right.icon-chevron-sign-right.icon-3x(href="#carousel",data-slide="next")
+	section.section2
+		.container
+			.tag-line
+				p GOING TO LIVE EVENTS WITH FRIENDS IS AMAZING
+				p GETTING STUCK WITH THE BILL IS NOT.
+				a.meet-wembli(href="/search") MEET WEMBLI.
+			.click
+				.click-text.segoe Click!
+			.video-container.clearfix
+				.video-text.pull-left
+					p Love going to live events with friends but hate to plan it lest you end up getting stuck with the bill...AGAIN?
+					p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
+				.video.pull-left
+					iframe(width="480",height="360",src="//www.youtube.com/embed/kgtNax8p5og",frameborder="0",allowfullscreen)
+	section.section3
+		h1.calibri TOP SELLING EVENTS THIS WEEK
+		.container.clearfix
+			.top-events-arrow
+			.left.pull-left
+				h2 Top 10 Concerts:
+				.list
+			.middle.pull-left
+				h2 Top 10 Sporting Events:
+				.list
+			.right.pull-left
+				h2 Top 10 Theater Events:
+				.list
+	section.section4
+		.container.clearfix
+			.left.pull-left
+			.right.pull-left
+	section.section5
+		.container
+			.footer-column.pull-left
+				h4 TICKETS
+				.list
+			.footer-column.pull-left
+				h4 IN YOUR AREA
+				.list
+			.footer-column.pull-left
+				h4 TRENDING NOW
+				.list
+			.footer-column.pull-left
+				h4 ABOUT WEMBLI
+				.list

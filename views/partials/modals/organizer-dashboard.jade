@@ -73,9 +73,14 @@
 #rsvp-complete-modal.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")
-		h2 Time for rsvp is over!
+		h2 Congratulations!
 	.modal-body
-		p summarize the rsvp list
+		.pull-left.icon.icon-ok-circle.icon-3x.green
+		.rsvp-complete-text.pull-left
+			p You're 1 step closer to finishing this thing - your RSVP is complete!
+			p Now you know how many people are coming so you can choose your tickets, parking, restaurant deals, and hotel - then get your friends to pony up for their part of the bill!
+	.modal-footer
+		a.btn.btn-primary(href="#",data-dismiss="modal") Sweet!
 #rsvp-for-modal.rsvp-for-modal.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")

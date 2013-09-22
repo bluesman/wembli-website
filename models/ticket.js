@@ -45,7 +45,7 @@ this.Model = function(mongoose) {
 		if (typeof this.payment !== "undefined") {
 			this.payment.amount = parseFloat(this.payment.amount) * 100;
 		}
-		/* have the client do this
+		*/
 		this.updated = new Date();
 		next();
 	});

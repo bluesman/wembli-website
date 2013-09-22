@@ -1,3 +1,22 @@
 block header
-	header#header
-		//- #logo
+	#slidepanel.cb_slide_panel
+		.wrapper
+			i.icon-remove.icon-2x.close(href="#")
+			.foo FOO
+
+	header#header.clearfix
+		a.slidepanel.left-container.pull-left.clearfix(href="#",data-slidepanel="panel")
+			.icon.icon-reorder.pull-left
+			.menu-text.pull-left menu
+		.middle-container.pull-left.clearfix(ng-hide="loggedIn")
+			.login.pull-left
+				a(href="/login") login
+			.signup.pull-left
+				a(href="/signup") signup
+		.middle-container.pull-left.clearfix(ng-show="loggedIn")
+			.search.pull-left
+				a(href="/search") search
+			//- .login.pull-left
+				a(href="/logout") logout
+		.right-container.pull-right
+			a.logo-35(href="/index")

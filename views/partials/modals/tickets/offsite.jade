@@ -25,4 +25,4 @@
 						p I decided not to buy those stinkin' tickets. Show me other options.
 		.modal-footer
 			a.btn.btn-primary.btn-large(ng-show="showButton()",ng-click="submitForm()",href="{{continueLink}}") Continue
-			a.btn.btn-cancel.btn-large(ng-hide="showButton()",ng-click="cancelForm()") See More Tickets
+			button.btn.btn-cancel.btn-large(data-dismiss="modal", ng-hide="showButton()",ng-click="cancelForm()") See More Tickets

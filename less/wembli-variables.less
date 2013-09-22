@@ -38,16 +38,21 @@
 @blueLight:             #6DA1B7;
 @blueLighter:						#F7FEFE;
 
-@orange:								#FFCC00;
-@orangeDark:            darken(@orange, 5%);
-@orangeDarker:          darken(@orange, 10%);
-@orangeLight:           lighten(@orange, 5%);
-@orangeLighter:         lighten(@orange, 10%);
+/* yellow is the new orange */
+@yellow:								#FFCC00;
+@yellowDark:            darken(@yellow, 5%);
+@yellowDarker:          darken(@yellow, 10%);
+@yellowLight:           lighten(@yellow, 5%);
+@yellowLighter:         lighten(@yellow, 10%);
+
+@orange:								@yellow;
+@orangeDark:            @yellowDark;
+@orangeDarker:          @yellowDarker;
+@orangeLight:           @yellowLight;
+@orangeLighter:         @yellowLighter;
 
 @green:                 #46a546;
 @red:                   #F72400;
-@yellow:                rgb(255,255,98);
-@yellowDark:						darken(@yellow, 20%);
 
 // Grays
 @black:                 #000;

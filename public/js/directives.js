@@ -125,8 +125,8 @@ directive('formatPhoneNumber', [
           element.bind('keydown', function(evt) {
             if (document.activeElement.name === 'phoneNumber') {
               if (evt.keyCode != 8 &&
-                  evt.keyCode != 9 &&
-                  (evt.keyCode < 48 ||
+                evt.keyCode != 9 &&
+                (evt.keyCode < 48 ||
                   evt.keyCode > 57)) {
                 /* cancel the event */
                 evt.preventDefault();
@@ -148,9 +148,9 @@ directive('formatPostalCode', [
           element.bind('keydown', function(evt) {
             if (document.activeElement.name === 'postalCode') {
               if (evt.keyCode != 8 &&
-                  evt.keyCode != 9 &&
-                  evt.keyCode != 173 &&
-                  (evt.keyCode < 48 ||
+                evt.keyCode != 9 &&
+                evt.keyCode != 173 &&
+                (evt.keyCode < 48 ||
                   evt.keyCode > 57)) {
                 /* cancel the event */
                 evt.preventDefault();
@@ -525,6 +525,74 @@ directive('leafletMap', ['plan',
 ]).
  */
 
+directive('carousel', [
+  function() {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          $('#carousel').carousel({
+            interval: 5000,
+            pause: "hover"
+          });
+        }
+      }
+    }
+  }
+]).
+
+directive('slidepanel', [
+  function() {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          var sp = $('[data-slidepanel]').slidepanel({
+            "static": true,
+            "mode": 'overlay'
+          });
+
+          $('#empty-modal').modal({show:false});
+          $('#empty-modal').on('hidden', function() {
+            console.log('hiding modal');
+            if (angular.element('#slidepanel').is(':visible')) {
+              angular.element('#slidepanel .close').click();
+            }
+          });
+
+          $('#slidepanel .close').click(function() {
+            if ($('#empty-modal').is(':visible')) {
+              $('#empty-modal').modal('hide');
+            }
+          });
+
+          element.click(function() {
+            console.log('clicked slide panel');
+
+            $('#empty-modal').modal('toggle');
+          });
+        }
+      }
+    }
+  }
+]).
+
+directive('header', ['header',
+  function(header) {
+    return {
+      restrict: 'E',
+      replace: false,
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          header.init();
+        }
+      }
+    }
+  }
+]).
+
+
+
 directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence',
   function($rootScope, $filter, wembliRpc, plan, sequence) {
     return {
@@ -564,9 +632,12 @@ directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequenc
           scope.notifyEmail = '';
 
           scope.collectEmail = function() {
-            console.log('email:'+scope.notifyEmail);
+            console.log('email:' + scope.notifyEmail);
 
-            wembliRpc.fetch('customer.notify',{addOn:attr.addOn,email:scope.notifyEmail}, function(err, result) {
+            wembliRpc.fetch('customer.notify', {
+              addOn: attr.addOn,
+              email: scope.notifyEmail
+            }, function(err, result) {
 
             });
             scope.emailCollected = true;
@@ -840,8 +911,8 @@ directive('startPlan', ['$rootScope', 'fetchModals',
 ]).
 
 //directive to cause link click to go to next frame rather than fetch a new page
-directive('wembliSequenceLinkOff', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'footer', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
-  function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, footer, sequence, fetchModals, plan, wembliRpc) {
+directive('wembliSequenceLinkOff', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
+  function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, sequence, fetchModals, plan, wembliRpc) {
 
     return {
       restrict: 'EAC',
@@ -966,42 +1037,8 @@ directive('wembliSequenceLinkOff', ['$rootScope', '$window', '$templateCache', '
                 /* not on the same page so we're gonna slide to the other frame */
                 var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
 
-                /*
-                split location path on '/' to get the right framesMap key
-                this is so we know where to slide the footer arrow to
-              */
-                var nextPath = '/' + $location.path().split('/')[1];
-                var currentPath = '/' + $rootScope.currentPath.split('/')[1];
-
-                /*
-                if footer.framesMap[$location.path()] (where they are going) is undefined
-                then don't move the arrow and slide to the right
-                if footer.framesMap[$rootScope.currentPath] (where they are coming from) is undefined
-                then move the arrow, but still slide to the right
-              */
-
-                /* if where they are coming from doesn't have an arrow location */
-                if (typeof footer.framesMap[currentPath] === "undefined") {
-                  currentPath = nextPath;
-                  direction = 1;
-                  /* slide the arrow only if where they are coming from is undefined */
-                  footer.slideNavArrow();
-                }
-
-                /*
-                if both are defined
-                then move the arrow and figure out which way to slide
-              */
-                if ((typeof footer.framesMap[nextPath] !== "undefined") && (typeof footer.framesMap[currentPath] !== "undefined")) {
-                  var currNavIndex = footer.framesMap[currentPath];
-                  var nextNavIndex = footer.framesMap[nextPath];
-                  direction = (currNavIndex < nextNavIndex) ? 1 : -1;
-                  /* slide the nav arrow - this should be async with using sequence to transition to the next frame */
-                  footer.slideNavArrow();
-                }
-
                 /* find out what direction to go to we sliding in this element */
-                direction = parseInt(attr.direction) || parseInt(scope.direction) || direction;
+                direction = parseInt(attr.direction) || parseInt(scope.direction) || direction || 1;
 
                 /* compile the page we just fetched and link the scope */
                 angular.element('#frame' + nextFrameID).html($compile(data)($rootScope));

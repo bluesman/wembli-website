@@ -2,7 +2,7 @@
  * Main Controller
  */
 
-function MainCtrl($scope, $location, $window, footer, plan) {
+function MainCtrl($scope, $location, $window, plan) {
 
 };
 
@@ -72,7 +72,8 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchMo
 
 	//put fetchModals in the scope so we can call fetch from the view when they hit continue
 	$scope.fetchModals = fetchModals;
-	$scope.continue = function() {
+	$scope.
+	continue = function() {
 		//fetchModals.fetch('/invitation');
 		console.log('next: ' + $scope.next);
 		$scope.submitInProgress = true;
@@ -1032,340 +1033,239 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 			if (purchasedParking[0].service === 'google') {
 				var ll = new google.maps.LatLng(purchasedParking[0].parking.geometry.location.ob, purchasedParking[0].parking.geometry.location.pb);
 
-					mapMarker.create(googleMap, {
-						icon: "/images/icons/map-icons/transportation/parkinggarage.png",
-						lat: ll.lat(),
-						lng: ll.lng(),
-						name: purchasedParking[0].parking.name,
-						body: purchasedParking[0].parking.vicinity
-					});
-
-				}
-				loadingModal.hide();
-			} else {
-				getParking(p, {
-					lat: lat,
-					lng: lng
+				mapMarker.create(googleMap, {
+					icon: "/images/icons/map-icons/transportation/parkinggarage.png",
+					lat: ll.lat(),
+					lng: ll.lng(),
+					name: purchasedParking[0].parking.name,
+					body: purchasedParking[0].parking.vicinity
 				});
+
 			}
-		};
-
-		$scope.removeParking = function(parkingId) {
-			/* remove the parking and close the modal */
-			console.log('removingparking: ' + parkingId);
-			plan.removeParking({
-				parkingId: parkingId
-			}, function(err, results) {
-				console.log('removed parking from plan:');
-				console.log(results);
-				$rootScope.$broadcast('parking-changed', {
-					parking: []
-				});
+			loadingModal.hide();
+		} else {
+			getParking(p, {
+				lat: lat,
+				lng: lng
 			});
-		};
+		}
 
-		/* display a modal when they click to go off and buy tickets */
-		fetchModals.fetch('/partials/modals/parking-modals', function(err) {
-			if (err) {
-				return console.log('no modal for buy tickets offsite');
+	};
+
+	$scope.removeParking = function(parkingId) {
+		/* remove the parking and close the modal */
+		console.log('removingparking: ' + parkingId);
+		plan.removeParking({
+			parkingId: parkingId
+		}, function(err, results) {
+			console.log('removed parking from plan:');
+			console.log(results);
+			$rootScope.$broadcast('parking-changed', {
+				parking: []
+			});
+		});
+	};
+
+	/* display a modal when they click to go off and buy tickets */
+	fetchModals.fetch('/partials/modals/parking-modals', function(err) {
+		if (err) {
+			return console.log('no modal for buy tickets offsite');
+		}
+
+		plan.get(function(p) {
+			$scope.parking = plan.getParking();
+			console.log('parking from plan: ');
+			console.log($scope.parking);
+			$scope.context = plan.getContext() || 'visitor';
+
+			$scope.backToPlan = true;
+			if (plan.getFriends().length == 0) {
+				$scope.backToPlan = false;
 			}
-
-			plan.get(function(p) {
-				$scope.parking = plan.getParking();
-				console.log('parking from plan: ');
-				console.log($scope.parking);
-				$scope.context = plan.getContext() || 'visitor';
-
+			if ($scope.context === 'friend') {
 				$scope.backToPlan = true;
-				if (plan.getFriends().length == 0) {
-					$scope.backToPlan = false;
-				}
-				if ($scope.context === 'friend') {
-					$scope.backToPlan = true;
-				}
-
-				if (googleMap.isDrawn()) {
-					console.log('google map is drawn');
-					initMap(p);
-				} else {
-					console.log('google map is not drawn');
-					var dereg = $rootScope.$on('google-map-drawn', function() {
-						console.log('google map is drawn now');
-						initMap(p);
-						dereg();
-					});
-				}
-			});
-		});
-	};
-
-	function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
-		$scope.$on('payment-type-modal-clicked', function(e, args) {
-			$scope.$apply(function() {
-				console.log('payment modal clicked');
-				console.log(args);
-				$scope.name = args.name;
-				$scope.eventId = args.eventId;
-				$scope.eventName = args.eventName;
-				$scope.nextLink = args.nextLink;
-			});
-		});
-		$scope.submitInProgress = false;
-		$scope.startPlan = function() {
-			console.log('call start plan');
-			console.log('paymentType: ' + $scope.paymentType);
-			console.log('nextLink: ' + $scope.nextLink);
-			$scope.submitInProgress = true;
-			/* start the plan */
-			wembliRpc.fetch('plan.startPlan', {
-				payment: $scope.paymentType,
-				eventId: $scope.eventId,
-				eventName: $scope.eventName
-			}, function(err, result) {
-				console.log('result from start plan');
-				console.log(result);
-				plan.fetch(function() {
-					$location.path($scope.nextLink);
-				});
-			})
-		};
-	};
-
-	function SearchCtrl($scope) {};
-
-	function SignupCtrl($scope, $http, wembliRpc) {
-		//init login vars
-		var args = {};
-		$scope.error = false;
-
-		wembliRpc.fetch('signup.init', {},
-			//response
-
-			function(err, result) {
-				$scope.firstName = result.firstName;
-				$scope.lastName = result.lastName;
-				$scope.email = result.email;
-				$scope.error = result.formError ? result.formError : false;
-				$scope.exists = result.exists ? result.exists : false;
-			});
-
-
-		$('#signup-form').submit(function(e) {
-			//don't allow submit unless all fields are supplied and passwords match
-			if (typeof $scope.firstName === "undefined") {
-				return false;
 			}
-			if (typeof $scope.lastName === "undefined") {
-				return false;
-			}
-			if (typeof $scope.email === "undefined") {
-				return false;
-			}
-		});
-	};
 
-	function LoginCtrl($scope, $http, wembliRpc) {
-		//init login vars
-		var args = {};
-		$scope.error = false;
-
-		wembliRpc.fetch('login.init', {},
-			//response
-
-			function(err, result) {
-				$scope.remember = result.remember;
-				$scope.email = result.email;
-				$scope.error = result.formError ? result.formError : false;
-				$scope.redirectUrl = result.redirectUrl;
-			});
-
-		$scope.forgotPassword = function() {
-			$http.get('/partials/forgot-password', {
-				cache: true
-			}).success(function(data, status, headers, config) {
-				$('#login-form fieldset').fadeOut(function() {
-					$('#login-form fieldset').html(data);
-					$('#login-form fieldset').fadeIn();
-					$('#arrow .arrow-text').html('Reset');
-					$('#login-form').attr('action', '/forgot-password');
-				});
-			}).error();
-
-		}
-	};
-
-	function SupplyPasswordCtrl($scope) {
-		$('#confirm-password-form').submit(function(e) {
-			if ((typeof $scope.password == "undefined") || ($scope.password !== $scope.password2)) {
-				$('#error .error-text').show();
-				return false;
-			}
-		});
-	};
-
-	function FooterCtrl($scope, $location, $window, facebook, plan) {
-
-		//this is how high they can drag it
-		var y = $("#footer").offset().top - $("#footer").height() + ($("#nav").offset().top - $("#footer").offset().top) + $("#nav").height();
-		$('#footer').draggable({
-			snap: "#footerContainer",
-			snapTolerance: 30,
-			snapMode: "inner",
-			cursor: "move",
-			axis: "y",
-			containment: [0, y, 0, $("#footer").offset().top],
-			handle: "#help"
-		});
-
-		$scope.slide = function() {
-			if ($('#footer').css('bottom') === '-300px') {
-				$('#footer').animate({
-					bottom: '0px'
-				});
+			if (googleMap.isDrawn()) {
+				console.log('google map is drawn');
+				initMap(p);
 			} else {
-				$('#footer').animate({
-					bottom: '-300px'
+				console.log('google map is not drawn');
+				var dereg = $rootScope.$on('google-map-drawn', function() {
+					console.log('google map is drawn now');
+					initMap(p);
+					dereg();
 				});
+			}
+		});
+	});
+};
+
+function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
+	$scope.$on('payment-type-modal-clicked', function(e, args) {
+		$scope.$apply(function() {
+			console.log('payment modal clicked');
+			console.log(args);
+			$scope.name = args.name;
+			$scope.eventId = args.eventId;
+			$scope.eventName = args.eventName;
+			$scope.nextLink = args.nextLink;
+		});
+	});
+	$scope.submitInProgress = false;
+	$scope.startPlan = function() {
+		console.log('call start plan');
+		console.log('paymentType: ' + $scope.paymentType);
+		console.log('nextLink: ' + $scope.nextLink);
+		$scope.submitInProgress = true;
+		/* start the plan */
+		wembliRpc.fetch('plan.startPlan', {
+			payment: $scope.paymentType,
+			eventId: $scope.eventId,
+			eventName: $scope.eventName
+		}, function(err, result) {
+			console.log('result from start plan');
+			console.log(result);
+			plan.fetch(function() {
+				$location.path($scope.nextLink);
+			});
+		})
+	};
+};
+
+function SearchCtrl($scope) {};
+
+function SignupCtrl($scope, $http, wembliRpc) {
+	//init login vars
+	var args = {};
+	$scope.error = false;
+
+	wembliRpc.fetch('signup.init', {},
+		//response
+
+		function(err, result) {
+			$scope.firstName = result.firstName;
+			$scope.lastName = result.lastName;
+			$scope.email = result.email;
+			$scope.error = result.formError ? result.formError : false;
+			$scope.exists = result.exists ? result.exists : false;
+		});
+
+
+	$('#signup-form').submit(function(e) {
+		//don't allow submit unless all fields are supplied and passwords match
+		if (typeof $scope.firstName === "undefined") {
+			return false;
+		}
+		if (typeof $scope.lastName === "undefined") {
+			return false;
+		}
+		if (typeof $scope.email === "undefined") {
+			return false;
+		}
+	});
+};
+
+function LoginCtrl($scope, $http, wembliRpc) {
+	//init login vars
+	var args = {};
+	$scope.error = false;
+
+	wembliRpc.fetch('login.init', {},
+		//response
+
+		function(err, result) {
+			$scope.remember = result.remember;
+			$scope.email = result.email;
+			$scope.error = result.formError ? result.formError : false;
+			$scope.redirectUrl = result.redirectUrl;
+		});
+
+	$scope.forgotPassword = function() {
+		$http.get('/partials/forgot-password', {
+			cache: true
+		}).success(function(data, status, headers, config) {
+			$('#login-form fieldset').fadeOut(function() {
+				$('#login-form fieldset').html(data);
+				$('#login-form fieldset').fadeIn();
+				$('#arrow .arrow-text').html('Reset');
+				$('#login-form').attr('action', '/forgot-password');
+			});
+		}).error();
+
+	}
+};
+
+function SupplyPasswordCtrl($scope) {
+	$('#confirm-password-form').submit(function(e) {
+		if ((typeof $scope.password == "undefined") || ($scope.password !== $scope.password2)) {
+			$('#error .error-text').show();
+			return false;
+		}
+	});
+};
+
+function HeaderCtrl($scope) {
+
+}
+
+function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal) {
+	$scope.plan = plan.get();
+	console.log('rsvp login ctrl');
+	$scope.guid = rsvpLoginModal.get('guid');
+	$scope.service = rsvpLoginModal.get('service');
+	$scope.token = rsvpLoginModal.get('token');
+	$scope.friend = rsvpLoginModal.get('friend');
+	$scope.event = JSON.parse(rsvpLoginModal.get('event'));
+
+	console.log('service is: ' + $scope.service);
+	if ($scope.service === 'wemblimail') {
+		$scope.email = rsvpLoginModal.get('serviceId');
+		console.log('serviceId = ' + $scope.email);
+	}
+
+
+	console.log($scope.event);
+	$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
+	$scope.next = '/rsvp/' + $scope.guid + '/' + $scope.token + '/' + $scope.service;
+
+	$scope.confirm = function(social) {
+		if (typeof social === "undefined") {
+			if ($scope.customer && ($scope.service !== 'twitter') && ($scope.service !== 'facebook')) {
+				return true;
+			} else {
+				return false;
 			}
 		}
 
-		$scope.facebook = facebook;
+		/* ghetto - bools become strings */
+		if ($scope.confirmSocial === 'false') {
+			return false;
+		}
+		return (social === $scope.service) ? true : false;
+	}
 
-		var updateLinks = function() {
-			$scope.eventLink = plan.get() ? '/' + plan.get().event.eventId + '/' + plan.get().event.eventName : '';
-		};
-
-		$scope.$on('plan-fetched', updateLinks);
-		plan.get(function(plan) {
-			console.log('get plan in footer');
-			updateLinks();
-		});
-	};
-
-	function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal) {
-		$scope.plan = plan.get();
-		console.log('rsvp login ctrl');
+	$scope.$on('rsvp-login-modal-init', function(e, args) {
+		console.log('rsvp-login-modal-init happened');
 		$scope.guid = rsvpLoginModal.get('guid');
 		$scope.service = rsvpLoginModal.get('service');
 		$scope.token = rsvpLoginModal.get('token');
-		$scope.friend = rsvpLoginModal.get('friend');
-		$scope.event = JSON.parse(rsvpLoginModal.get('event'));
-
-		console.log('service is: ' + $scope.service);
-		if ($scope.service === 'wemblimail') {
-			$scope.email = rsvpLoginModal.get('serviceId');
-			console.log('serviceId = ' + $scope.email);
-		}
-
-
-		console.log($scope.event);
 		$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
-		$scope.next = '/rsvp/' + $scope.guid + '/' + $scope.token + '/' + $scope.service;
-
-		$scope.confirm = function(social) {
-			if (typeof social === "undefined") {
-				if ($scope.customer && ($scope.service !== 'twitter') && ($scope.service !== 'facebook')) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-			/* ghetto - bools become strings */
-			if ($scope.confirmSocial === 'false') {
-				return false;
-			}
-			return (social === $scope.service) ? true : false;
-		}
-
-		$scope.$on('rsvp-login-modal-init', function(e, args) {
-			console.log('rsvp-login-modal-init happened');
-			$scope.guid = rsvpLoginModal.get('guid');
-			$scope.service = rsvpLoginModal.get('service');
-			$scope.token = rsvpLoginModal.get('token');
-			$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
-		});
+	});
 
 
-		$scope.authActions = {
-			signup: function() {
-				wembliRpc.fetch('customer.signup', {
-						firstName: $scope.firstName,
-						lastName: $scope.lastName,
-						email: $scope.email,
-						next: $scope.next
-					}, function(err, result) {
-						console.log(result);
-
-						if (result.customer) {
-							console.log('returned a customer - im logged in!');
-							/* hide this modal and display the tickets offsite modal */
-							$scope.customer = result.customer;
-						}
-
-						if (result.loggedIn) {
-							$rootScope.loggedIn = result.loggedIn;
-						}
-
-						if (result.exists) {
-							$scope.formError = false;
-							$scope.signupError = true;
-							$scope.accountExists = result.exists;
-							return;
-						}
-
-						if (result.formError) {
-							$scope.signupError = true;
-							$scope.formError = true;
-							$scope.accountExists = false;
-							return;
-						}
-						$scope.signupError = false;
-						$scope.formError = false;
-						$scope.accountExists = false;
-
-						var confirmSocialMap = {
-							facebook: true,
-							twitter: true
-						};
-						/* if the service is facebook or twitter they need to confirm social */
-						if ((typeof confirmSocialMap[$scope.service] !== "undefined") && confirmSocialMap[$scope.service]) {
-							$scope.confirmSocial = 'true';
-						}
-
-					},
-					/* transformRequest */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = true;
-						return data;
-					},
-
-					/* transformResponse */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = false;
-						return JSON.parse(data);
-					});
-			},
-			login: function() {
-				wembliRpc.fetch('customer.login', {
+	$scope.authActions = {
+		signup: function() {
+			wembliRpc.fetch('customer.signup', {
+					firstName: $scope.firstName,
+					lastName: $scope.lastName,
 					email: $scope.email,
-					password: $scope.password,
 					next: $scope.next
 				}, function(err, result) {
 					console.log(result);
-					if (result.error) {
-						$scope.loginError = result.error;
 
-						if (typeof result.noPassword !== "undefined") {
-							$scope.noPassword = result.noPassword;
-						} else if (result.invalidCredentials) {
-							$scope.invalidCredentials = result.invalidCredentials;
-						}
-					}
 					if (result.customer) {
-						console.log('returned a customer im logged in!');
+						console.log('returned a customer - im logged in!');
 						/* hide this modal and display the tickets offsite modal */
 						$scope.customer = result.customer;
 					}
@@ -1374,858 +1274,922 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 						$rootScope.loggedIn = result.loggedIn;
 					}
 
-				})
-			}
-		};
-	};
+					if (result.exists) {
+						$scope.formError = false;
+						$scope.signupError = true;
+						$scope.accountExists = result.exists;
+						return;
+					}
 
+					if (result.formError) {
+						$scope.signupError = true;
+						$scope.formError = true;
+						$scope.accountExists = false;
+						return;
+					}
+					$scope.signupError = false;
+					$scope.formError = false;
+					$scope.accountExists = false;
 
+					var confirmSocialMap = {
+						facebook: true,
+						twitter: true
+					};
+					/* if the service is facebook or twitter they need to confirm social */
+					if ((typeof confirmSocialMap[$scope.service] !== "undefined") && confirmSocialMap[$scope.service]) {
+						$scope.confirmSocial = 'true';
+					}
 
-	function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurchaseUrls) {
-		$scope.tnUrl = ticketPurchaseUrls.tn;
+				},
+				/* transformRequest */
 
-		/* display a modal when they click to go off and buy tickets */
-		fetchModals.fetch('/partials/modals/tickets-modals', function(err) {
-			if (err) {
-				return console.log('no modal for buy tickets offsite');
-			}
-			plan.get(function(p) {
-				$scope.plan = p;
-				$scope.organizer = plan.getOrganizer();
-
-				/* todo find out if this person is a friend invited to the plan */
-				$scope.context = plan.getContext() || 'visitor';
-
-				$scope.backToPlan = true;
-				if (plan.getFriends().length == 0) {
-					$scope.backToPlan = false;
-				}
-				if ($scope.context === 'friend') {
-					$scope.backToPlan = true;
-				}
-			});
-		});
-
-		$scope.handlePriceRange = function() {
-			/* post the updated preferences to the server */
-			wembliRpc.fetch('plan.setTicketsPriceRange', {
-					"low": $scope.priceRange.low,
-					"med": $scope.priceRange.med,
-					"high": $scope.priceRange.high,
+				function(data, headersGetter) {
+					$scope.continueSpinner = true;
+					return data;
 				},
 
-				function(err, res) {
-					console.log('back from setting price range');
-					console.log(res);
+				/* transformResponse */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = false;
+					return JSON.parse(data);
 				});
-
-
-			/* hide the tix they don't want to see */
-			angular.forEach($scope.tickets, function(t) {
-				/* if the price is <= 100 and priceRange.low filter is not checked then hide it*/
-				t.hide = false;
-				if ((parseInt(t.ActualPrice) <= 100)) {
-					return t.hide = !$scope.priceRange.low;
-				}
-				/* if the price is <= 300 and > 100 and priceRange.med filter is not checked then hide it*/
-				if ((parseInt(t.ActualPrice) > 100) && (parseInt(t.ActualPrice) <= 300)) {
-					return t.hide = !$scope.priceRange.med;
-				}
-				/* if the price is > 300 and priceRange.high filter is not checked then hide it*/
-				if (parseInt(t.ActualPrice) > 300) {
-					return t.hide = !$scope.priceRange.high;
-				}
-			});
-		};
-
-		$scope.sortByPrice = function() {
-			if (typeof $scope.ticketSort === "undefined") {
-				$scope.ticketSort = 1;
-			}
-
-			$scope.tickets.sort(function(a, b) {
-				if ($scope.ticketSort) {
-					return a.ActualPrice - b.ActualPrice;
-				} else {
-					return b.ActualPrice - a.ActualPrice;
-				}
-			});
-
-			$scope.ticketSort = ($scope.ticketSort) ? 0 : 1;
-		}
-
-		$scope.sortBySection = function() {
-			if (typeof $scope.sectionSort === "undefined") {
-				$scope.sectionSort = 1;
-			}
-
-			$scope.tickets.sort(function(a, b) {
-				if ($scope.sectionSort) {
-					return a.Section.localeCompare(b.Section);
-				} else {
-					return b.Section.localeCompare(a.Section);
-				}
-			});
-
-			$scope.sectionSort = ($scope.sectionSort) ? 0 : 1;
-		}
-
-		$scope.sortByQty = function() {
-			if (typeof $scope.qtySort === "undefined") {
-				$scope.qtySort = 1;
-			}
-
-			$scope.tickets.sort(function(a, b) {
-				var cmpA = '';
-				var cmpB = '';
-
-				if (typeof a.ValidSplits.int === 'string') {
-					cmpA = a.ValidSplits.int;
-				} else {
-
-					a.ValidSplits.int.sort();
-					cmpA = a.ValidSplits.int[a.ValidSplits.int.length - 1];
-				}
-
-
-				if (typeof b.ValidSplits.int === 'string') {
-					cmpB = b.ValidSplits.int;
-				} else {
-
-					b.ValidSplits.int.sort();
-					cmpB = b.ValidSplits.int[b.ValidSplits.int.length - 1];
-				}
-
-				if ($scope.qtySort) {
-					return parseInt(cmpA) - parseInt(cmpB);
-				} else {
-					return parseInt(cmpB) - parseInt(cmpA);
-				}
-			});
-
-			$scope.qtySort = ($scope.qtySort) ? 0 : 1;
-		}
-
-	};
-
-	function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
-		$scope.tnUrl = ticketPurchaseUrls.tn;
-
-		plan.get(function(p) {
-			$scope.$on('tickets-login-clicked', function(e, args) {
-				$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
-				$scope.ticket = args.ticket;
-			});
-		});
-
-		$scope.authActions = {
-			signup: function() {
-				wembliRpc.fetch('customer.signup', {
-						firstName: $scope.firstName,
-						lastName: $scope.lastName,
-						email: $scope.email
-					}, function(err, result) {
-						if (result.customer) {
-							/* hide this modal and display the tickets offsite modal */
-							//$scope.customer = result.customer;
-							customer.set(result.customer);
-						}
-
-						if (result.loggedIn) {
-							$rootScope.loggedIn = result.loggedIn;
-						}
-
-						if (result.exists) {
-							$scope.formError = false;
-							$scope.signupError = true;
-							$scope.accountExists = result.exists;
-							return;
-						}
-
-						if (result.formError) {
-							$scope.signupError = true;
-							$scope.formError = true;
-							$scope.accountExists = false;
-							return;
-						}
-						$scope.signupError = false;
-						$scope.formError = false;
-						$scope.accountExists = false;
-
-					},
-					/* transformRequest */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = true;
-						return data;
-					},
-
-					/* transformResponse */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = false;
-						return JSON.parse(data);
-					});
-			},
-			login: function() {
-				wembliRpc.fetch('customer.login', {
-					email: $scope.email,
-					password: $scope.password
-				}, function(err, result) {
-					if (result.error) {
-						$scope.loginError = result.error;
-
-						if (typeof result.noPassword !== "undefined") {
-							$scope.noPassword = result.noPassword;
-						} else if (result.invalidCredentials) {
-							$scope.invalidCredentials = result.invalidCredentials;
-						}
-					}
-					if (result.customer) {
-						/* hide this modal and display the tickets offsite modal */
-						customer.set(result.customer);
-					}
-
-					if (result.loggedIn) {
-						$rootScope.loggedIn = result.loggedIn;
-					}
-
-				})
-			}
-		};
-	};
-
-	function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc) {
-		plan.get(function(p) {
-			$scope.$on('parking-login-clicked', function(e, args) {
-				$scope.redirectUrl = '/parking/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
-				console.log('parking login clicked');
-				console.log(args);
-				if (args.parking.service === 'google') {
-					$scope.redirectUrl += 'google/' + args.parking.id;
-				} else {
-					$scope.redirectUrl += 'pw/' + args.parking.listing_id;
-				}
-				$scope.parking = args.parking;
-				//$scope.googleParking = args.googleParking;
-				//$scope.parkingReservations = args.parkingReservations;
-			});
-		});
-
-		$scope.closeLoginModal = function() {
-			$location.hash('');
-			angular.element('#parking-login-modal').modal('hide');
-		};
-
-
-		$scope.authActions = {
-			signup: function() {
-				wembliRpc.fetch('customer.signup', {
-						firstName: $scope.firstName,
-						lastName: $scope.lastName,
-						email: $scope.email
-					}, function(err, result) {
-						if (result.customer) {
-							/* hide this modal and display the tickets offsite modal */
-							//$scope.customer = result.customer;
-							customer.set(result.customer);
-						}
-
-						if (result.loggedIn) {
-							$rootScope.loggedIn = result.loggedIn;
-						}
-
-						if (result.exists) {
-							$scope.formError = false;
-							$scope.signupError = true;
-							$scope.accountExists = result.exists;
-							return;
-						}
-
-						if (result.formError) {
-							$scope.signupError = true;
-							$scope.formError = true;
-							$scope.accountExists = false;
-							return;
-						}
-						$scope.signupError = false;
-						$scope.formError = false;
-						$scope.accountExists = false;
-
-					},
-					/* transformRequest */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = true;
-						return data;
-					},
-
-					/* transformResponse */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = false;
-						return JSON.parse(data);
-					});
-			},
-			login: function() {
-				wembliRpc.fetch('customer.login', {
-					email: $scope.email,
-					password: $scope.password
-				}, function(err, result) {
-					if (result.error) {
-						$scope.loginError = result.error;
-
-						if (typeof result.noPassword !== "undefined") {
-							$scope.noPassword = result.noPassword;
-						} else if (result.invalidCredentials) {
-							$scope.invalidCredentials = result.invalidCredentials;
-						}
-					}
-					if (result.customer) {
-						/* hide this modal and display the tickets offsite modal */
-						customer.set(result.customer);
-					}
-
-					if (result.loggedIn) {
-						$rootScope.loggedIn = result.loggedIn;
-					}
-
-				})
-			}
-		};
-	};
-
-	function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
-		plan.get(function(p) {
-			$scope.$on('restaurants-login-clicked', function(e, args) {
-				$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
-				console.log('restaurants login clicked');
-				console.log(args);
-				if (args.restaurant.service === 'google') {
-					$scope.redirectUrl += 'google/' + args.restaurant.id;
-				} else {
-					$scope.redirectUrl += 'yipit/' + args.restaurant.id;
-				}
-				$scope.restaurant = args.restaurant;
-				//$scope.googleParking = args.googleParking;
-				//$scope.parkingReservations = args.parkingReservations;
-			});
-		});
-
-		plan.get(function(p) {
-			$scope.$on('tickets-login-clicked', function(e, args) {
-				$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
-				$scope.ticket = args.ticket;
-			});
-		});
-
-		$scope.authActions = {
-			signup: function() {
-				wembliRpc.fetch('customer.signup', {
-						firstName: $scope.firstName,
-						lastName: $scope.lastName,
-						email: $scope.email
-					}, function(err, result) {
-						if (result.customer) {
-							/* hide this modal and display the tickets offsite modal */
-							//$scope.customer = result.customer;
-							customer.set(result.customer);
-						}
-
-						if (result.loggedIn) {
-							$rootScope.loggedIn = result.loggedIn;
-						}
-
-						if (result.exists) {
-							$scope.formError = false;
-							$scope.signupError = true;
-							$scope.accountExists = result.exists;
-							return;
-						}
-
-						if (result.formError) {
-							$scope.signupError = true;
-							$scope.formError = true;
-							$scope.accountExists = false;
-							return;
-						}
-						$scope.signupError = false;
-						$scope.formError = false;
-						$scope.accountExists = false;
-
-					},
-					/* transformRequest */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = true;
-						return data;
-					},
-
-					/* transformResponse */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = false;
-						return JSON.parse(data);
-					});
-			},
-			login: function() {
-				wembliRpc.fetch('customer.login', {
-					email: $scope.email,
-					password: $scope.password
-				}, function(err, result) {
-					if (result.error) {
-						$scope.loginError = result.error;
-
-						if (typeof result.noPassword !== "undefined") {
-							$scope.noPassword = result.noPassword;
-						} else if (result.invalidCredentials) {
-							$scope.invalidCredentials = result.invalidCredentials;
-						}
-					}
-					if (result.customer) {
-						/* hide this modal and display the tickets offsite modal */
-						customer.set(result.customer);
-					}
-
-					if (result.loggedIn) {
-						$rootScope.loggedIn = result.loggedIn;
-					}
-
-				})
-			}
-		};
-	};
-
-	function HotelsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
-		$scope.tnUrl = ticketPurchaseUrls.tn;
-
-		plan.get(function(p) {
-			$scope.$on('tickets-login-clicked', function(e, args) {
-				$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
-				$scope.ticket = args.ticket;
-			});
-		});
-
-		$scope.authActions = {
-			signup: function() {
-				wembliRpc.fetch('customer.signup', {
-						firstName: $scope.firstName,
-						lastName: $scope.lastName,
-						email: $scope.email
-					}, function(err, result) {
-						if (result.customer) {
-							/* hide this modal and display the tickets offsite modal */
-							//$scope.customer = result.customer;
-							customer.set(result.customer);
-						}
-
-						if (result.loggedIn) {
-							$rootScope.loggedIn = result.loggedIn;
-						}
-
-						if (result.exists) {
-							$scope.formError = false;
-							$scope.signupError = true;
-							$scope.accountExists = result.exists;
-							return;
-						}
-
-						if (result.formError) {
-							$scope.signupError = true;
-							$scope.formError = true;
-							$scope.accountExists = false;
-							return;
-						}
-						$scope.signupError = false;
-						$scope.formError = false;
-						$scope.accountExists = false;
-
-					},
-					/* transformRequest */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = true;
-						return data;
-					},
-
-					/* transformResponse */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = false;
-						return JSON.parse(data);
-					});
-			},
-			login: function() {
-				wembliRpc.fetch('customer.login', {
-					email: $scope.email,
-					password: $scope.password
-				}, function(err, result) {
-					if (result.error) {
-						$scope.loginError = result.error;
-
-						if (typeof result.noPassword !== "undefined") {
-							$scope.noPassword = result.noPassword;
-						} else if (result.invalidCredentials) {
-							$scope.invalidCredentials = result.invalidCredentials;
-						}
-					}
-					if (result.customer) {
-						/* hide this modal and display the tickets offsite modal */
-						customer.set(result.customer);
-					}
-
-					if (result.loggedIn) {
-						$rootScope.loggedIn = result.loggedIn;
-					}
-
-				})
-			}
-		};
-	};
-
-	function TicketsOffsiteCtrl($scope, plan, $http, $location) {
-		plan.get(function(p) {
-			console.log('plan in tickets tickets-offsite');
-			console.log(p);
-			$scope.plan = p;
-		});
-
-		$scope.$on('tickets-offsite-clicked', function(e, args) {
-			console.log('handle tickets-offsite-clicked');
-			console.log(args);
-			$scope.qty = args.qty;
-			$scope.amountPaid = args.amountPaid;
-			$scope.eventId = args.eventId,
-			$scope.eventName = args.eventName,
-			$scope.sessionId = args.sessionId,
-			$scope.ticketGroup = args.ticketGroup,
-			$scope.ticketId = args.ticketId
-      $scope.backToPlan = (typeof args.backToPlan === "undefined") ? false : args.backToPlan;
-      if ($scope.backToPlan) {
-        $scope.continueLink = '/plan';
-      } else {
-        $scope.continueLink = '/event-options/' + args.eventId + '/' + args.eventName;
-      }
-		})
-
-		$scope.showButton = function() {
-			return ($scope.ticketsOffsite === 'bought');
-		};
-
-		$scope.submitForm = function() {
-
-			console.log('adding manual ticket receipt for:');
-			console.log($scope.ticketId);
-			/* update the tickets to have a receipt */
-			plan.addTicketGroupReceipt({
-				ticketId: $scope.ticketId,
-				service: $scope.ticketGroup.service,
-				receipt: {
-					qty: $scope.qty,
-					amountPaid: $scope.amountPaid
-				}
+		},
+		login: function() {
+			wembliRpc.fetch('customer.login', {
+				email: $scope.email,
+				password: $scope.password,
+				next: $scope.next
 			}, function(err, result) {
-				console.log('added ticket receipt:');
-				console.log(err);
 				console.log(result);
+				if (result.error) {
+					$scope.loginError = result.error;
 
-				$('#tickets-offsite-modal').modal('hide');
+					if (typeof result.noPassword !== "undefined") {
+						$scope.noPassword = result.noPassword;
+					} else if (result.invalidCredentials) {
+						$scope.invalidCredentials = result.invalidCredentials;
+					}
+				}
+				if (result.customer) {
+					console.log('returned a customer im logged in!');
+					/* hide this modal and display the tickets offsite modal */
+					$scope.customer = result.customer;
+				}
 
-				/* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
-				//$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
 
-				/* have to back to plan so they don't have a chance to buy more */
-				$location.path("/plan");
+			})
+		}
+	};
+};
+
+function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurchaseUrls) {
+	$scope.tnUrl = ticketPurchaseUrls.tn;
+
+	/* display a modal when they click to go off and buy tickets */
+	fetchModals.fetch('/partials/modals/tickets-modals', function(err) {
+		if (err) {
+			return console.log('no modal for buy tickets offsite');
+		}
+		plan.get(function(p) {
+			$scope.plan = p;
+			$scope.organizer = plan.getOrganizer();
+
+			/* todo find out if this person is a friend invited to the plan */
+			$scope.context = plan.getContext() || 'visitor';
+
+			$scope.backToPlan = true;
+			if (plan.getFriends().length == 0) {
+				$scope.backToPlan = false;
+			}
+			if ($scope.context === 'friend') {
+				$scope.backToPlan = true;
+			}
+		});
+	});
+
+	$scope.handlePriceRange = function() {
+		/* post the updated preferences to the server */
+		wembliRpc.fetch('plan.setTicketsPriceRange', {
+				"low": $scope.priceRange.low,
+				"med": $scope.priceRange.med,
+				"high": $scope.priceRange.high,
+			},
+
+			function(err, res) {
+				console.log('back from setting price range');
+				console.log(res);
 			});
 
-		};
 
-		$scope.cancelForm = function() {
-			/* remove the ticketgroup and close the modal */
-			plan.removeTicketGroup({
-				ticketId: $scope.ticketId
-			}, function(err, results) {
-				console.log('removed ticketgroup from plan:');
-				console.log(results);
-				$('#tickets-offsite-modal').modal('hide');
-			});
-
-		};
-
+		/* hide the tix they don't want to see */
+		angular.forEach($scope.tickets, function(t) {
+			/* if the price is <= 100 and priceRange.low filter is not checked then hide it*/
+			t.hide = false;
+			if ((parseInt(t.ActualPrice) <= 100)) {
+				return t.hide = !$scope.priceRange.low;
+			}
+			/* if the price is <= 300 and > 100 and priceRange.med filter is not checked then hide it*/
+			if ((parseInt(t.ActualPrice) > 100) && (parseInt(t.ActualPrice) <= 300)) {
+				return t.hide = !$scope.priceRange.med;
+			}
+			/* if the price is > 300 and priceRange.high filter is not checked then hide it*/
+			if (parseInt(t.ActualPrice) > 300) {
+				return t.hide = !$scope.priceRange.high;
+			}
+		});
 	};
 
-	function ParkingOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
-		plan.get(function(p) {
-			console.log('plan in parking-offsite');
-			console.log(p);
-			$scope.plan = p;
+	$scope.sortByPrice = function() {
+		if (typeof $scope.ticketSort === "undefined") {
+			$scope.ticketSort = 1;
+		}
+
+		$scope.tickets.sort(function(a, b) {
+			if ($scope.ticketSort) {
+				return a.ActualPrice - b.ActualPrice;
+			} else {
+				return b.ActualPrice - a.ActualPrice;
+			}
 		});
 
+		$scope.ticketSort = ($scope.ticketSort) ? 0 : 1;
+	}
 
-		$scope.$on('parking-offsite-clicked', function(e, args) {
-			console.log('handle parking-offsite-clicked');
+	$scope.sortBySection = function() {
+		if (typeof $scope.sectionSort === "undefined") {
+			$scope.sectionSort = 1;
+		}
+
+		$scope.tickets.sort(function(a, b) {
+			if ($scope.sectionSort) {
+				return a.Section.localeCompare(b.Section);
+			} else {
+				return b.Section.localeCompare(a.Section);
+			}
+		});
+
+		$scope.sectionSort = ($scope.sectionSort) ? 0 : 1;
+	}
+
+	$scope.sortByQty = function() {
+		if (typeof $scope.qtySort === "undefined") {
+			$scope.qtySort = 1;
+		}
+
+		$scope.tickets.sort(function(a, b) {
+			var cmpA = '';
+			var cmpB = '';
+
+			if (typeof a.ValidSplits.int === 'string') {
+				cmpA = a.ValidSplits.int;
+			} else {
+
+				a.ValidSplits.int.sort();
+				cmpA = a.ValidSplits.int[a.ValidSplits.int.length - 1];
+			}
+
+
+			if (typeof b.ValidSplits.int === 'string') {
+				cmpB = b.ValidSplits.int;
+			} else {
+
+				b.ValidSplits.int.sort();
+				cmpB = b.ValidSplits.int[b.ValidSplits.int.length - 1];
+			}
+
+			if ($scope.qtySort) {
+				return parseInt(cmpA) - parseInt(cmpB);
+			} else {
+				return parseInt(cmpB) - parseInt(cmpA);
+			}
+		});
+
+		$scope.qtySort = ($scope.qtySort) ? 0 : 1;
+	}
+
+};
+
+function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+	$scope.tnUrl = ticketPurchaseUrls.tn;
+
+	plan.get(function(p) {
+		$scope.$on('tickets-login-clicked', function(e, args) {
+			$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
+			$scope.ticket = args.ticket;
+		});
+	});
+
+	$scope.authActions = {
+		signup: function() {
+			wembliRpc.fetch('customer.signup', {
+					firstName: $scope.firstName,
+					lastName: $scope.lastName,
+					email: $scope.email
+				}, function(err, result) {
+					if (result.customer) {
+						/* hide this modal and display the tickets offsite modal */
+						//$scope.customer = result.customer;
+						customer.set(result.customer);
+					}
+
+					if (result.loggedIn) {
+						$rootScope.loggedIn = result.loggedIn;
+					}
+
+					if (result.exists) {
+						$scope.formError = false;
+						$scope.signupError = true;
+						$scope.accountExists = result.exists;
+						return;
+					}
+
+					if (result.formError) {
+						$scope.signupError = true;
+						$scope.formError = true;
+						$scope.accountExists = false;
+						return;
+					}
+					$scope.signupError = false;
+					$scope.formError = false;
+					$scope.accountExists = false;
+
+				},
+				/* transformRequest */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = true;
+					return data;
+				},
+
+				/* transformResponse */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = false;
+					return JSON.parse(data);
+				});
+		},
+		login: function() {
+			wembliRpc.fetch('customer.login', {
+				email: $scope.email,
+				password: $scope.password
+			}, function(err, result) {
+				if (result.error) {
+					$scope.loginError = result.error;
+
+					if (typeof result.noPassword !== "undefined") {
+						$scope.noPassword = result.noPassword;
+					} else if (result.invalidCredentials) {
+						$scope.invalidCredentials = result.invalidCredentials;
+					}
+				}
+				if (result.customer) {
+					/* hide this modal and display the tickets offsite modal */
+					customer.set(result.customer);
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+			})
+		}
+	};
+};
+
+function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc) {
+	plan.get(function(p) {
+		$scope.$on('parking-login-clicked', function(e, args) {
+			$scope.redirectUrl = '/parking/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
+			console.log('parking login clicked');
 			console.log(args);
-			$scope.amountPaid = args.amountPaid;
-			$scope.eventId = args.eventId,
-			$scope.eventName = args.eventName,
-			$scope.parkingId = args.parkingId,
+			if (args.parking.service === 'google') {
+				$scope.redirectUrl += 'google/' + args.parking.id;
+			} else {
+				$scope.redirectUrl += 'pw/' + args.parking.listing_id;
+			}
 			$scope.parking = args.parking;
-			$scope.qty = args.qty;
+			//$scope.googleParking = args.googleParking;
+			//$scope.parkingReservations = args.parkingReservations;
+		});
+	});
+
+	$scope.closeLoginModal = function() {
+		$location.hash('');
+		angular.element('#parking-login-modal').modal('hide');
+	};
+
+
+	$scope.authActions = {
+		signup: function() {
+			wembliRpc.fetch('customer.signup', {
+					firstName: $scope.firstName,
+					lastName: $scope.lastName,
+					email: $scope.email
+				}, function(err, result) {
+					if (result.customer) {
+						/* hide this modal and display the tickets offsite modal */
+						//$scope.customer = result.customer;
+						customer.set(result.customer);
+					}
+
+					if (result.loggedIn) {
+						$rootScope.loggedIn = result.loggedIn;
+					}
+
+					if (result.exists) {
+						$scope.formError = false;
+						$scope.signupError = true;
+						$scope.accountExists = result.exists;
+						return;
+					}
+
+					if (result.formError) {
+						$scope.signupError = true;
+						$scope.formError = true;
+						$scope.accountExists = false;
+						return;
+					}
+					$scope.signupError = false;
+					$scope.formError = false;
+					$scope.accountExists = false;
+
+				},
+				/* transformRequest */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = true;
+					return data;
+				},
+
+				/* transformResponse */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = false;
+					return JSON.parse(data);
+				});
+		},
+		login: function() {
+			wembliRpc.fetch('customer.login', {
+				email: $scope.email,
+				password: $scope.password
+			}, function(err, result) {
+				if (result.error) {
+					$scope.loginError = result.error;
+
+					if (typeof result.noPassword !== "undefined") {
+						$scope.noPassword = result.noPassword;
+					} else if (result.invalidCredentials) {
+						$scope.invalidCredentials = result.invalidCredentials;
+					}
+				}
+				if (result.customer) {
+					/* hide this modal and display the tickets offsite modal */
+					customer.set(result.customer);
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+			})
+		}
+	};
+};
+
+function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+	plan.get(function(p) {
+		$scope.$on('restaurants-login-clicked', function(e, args) {
+			$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
+			console.log('restaurants login clicked');
+			console.log(args);
+			if (args.restaurant.service === 'google') {
+				$scope.redirectUrl += 'google/' + args.restaurant.id;
+			} else {
+				$scope.redirectUrl += 'yipit/' + args.restaurant.id;
+			}
+			$scope.restaurant = args.restaurant;
+			//$scope.googleParking = args.googleParking;
+			//$scope.parkingReservations = args.parkingReservations;
+		});
+	});
+
+	plan.get(function(p) {
+		$scope.$on('tickets-login-clicked', function(e, args) {
+			$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
+			$scope.ticket = args.ticket;
+		});
+	});
+
+	$scope.authActions = {
+		signup: function() {
+			wembliRpc.fetch('customer.signup', {
+					firstName: $scope.firstName,
+					lastName: $scope.lastName,
+					email: $scope.email
+				}, function(err, result) {
+					if (result.customer) {
+						/* hide this modal and display the tickets offsite modal */
+						//$scope.customer = result.customer;
+						customer.set(result.customer);
+					}
+
+					if (result.loggedIn) {
+						$rootScope.loggedIn = result.loggedIn;
+					}
+
+					if (result.exists) {
+						$scope.formError = false;
+						$scope.signupError = true;
+						$scope.accountExists = result.exists;
+						return;
+					}
+
+					if (result.formError) {
+						$scope.signupError = true;
+						$scope.formError = true;
+						$scope.accountExists = false;
+						return;
+					}
+					$scope.signupError = false;
+					$scope.formError = false;
+					$scope.accountExists = false;
+
+				},
+				/* transformRequest */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = true;
+					return data;
+				},
+
+				/* transformResponse */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = false;
+					return JSON.parse(data);
+				});
+		},
+		login: function() {
+			wembliRpc.fetch('customer.login', {
+				email: $scope.email,
+				password: $scope.password
+			}, function(err, result) {
+				if (result.error) {
+					$scope.loginError = result.error;
+
+					if (typeof result.noPassword !== "undefined") {
+						$scope.noPassword = result.noPassword;
+					} else if (result.invalidCredentials) {
+						$scope.invalidCredentials = result.invalidCredentials;
+					}
+				}
+				if (result.customer) {
+					/* hide this modal and display the tickets offsite modal */
+					customer.set(result.customer);
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+			})
+		}
+	};
+};
+
+function HotelsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+	$scope.tnUrl = ticketPurchaseUrls.tn;
+
+	plan.get(function(p) {
+		$scope.$on('tickets-login-clicked', function(e, args) {
+			$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
+			$scope.ticket = args.ticket;
+		});
+	});
+
+	$scope.authActions = {
+		signup: function() {
+			wembliRpc.fetch('customer.signup', {
+					firstName: $scope.firstName,
+					lastName: $scope.lastName,
+					email: $scope.email
+				}, function(err, result) {
+					if (result.customer) {
+						/* hide this modal and display the tickets offsite modal */
+						//$scope.customer = result.customer;
+						customer.set(result.customer);
+					}
+
+					if (result.loggedIn) {
+						$rootScope.loggedIn = result.loggedIn;
+					}
+
+					if (result.exists) {
+						$scope.formError = false;
+						$scope.signupError = true;
+						$scope.accountExists = result.exists;
+						return;
+					}
+
+					if (result.formError) {
+						$scope.signupError = true;
+						$scope.formError = true;
+						$scope.accountExists = false;
+						return;
+					}
+					$scope.signupError = false;
+					$scope.formError = false;
+					$scope.accountExists = false;
+
+				},
+				/* transformRequest */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = true;
+					return data;
+				},
+
+				/* transformResponse */
+
+				function(data, headersGetter) {
+					$scope.continueSpinner = false;
+					return JSON.parse(data);
+				});
+		},
+		login: function() {
+			wembliRpc.fetch('customer.login', {
+				email: $scope.email,
+				password: $scope.password
+			}, function(err, result) {
+				if (result.error) {
+					$scope.loginError = result.error;
+
+					if (typeof result.noPassword !== "undefined") {
+						$scope.noPassword = result.noPassword;
+					} else if (result.invalidCredentials) {
+						$scope.invalidCredentials = result.invalidCredentials;
+					}
+				}
+				if (result.customer) {
+					/* hide this modal and display the tickets offsite modal */
+					customer.set(result.customer);
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+			})
+		}
+	};
+};
+
+function TicketsOffsiteCtrl($scope, plan, $http, $location) {
+	plan.get(function(p) {
+		console.log('plan in tickets tickets-offsite');
+		console.log(p);
+		$scope.plan = p;
+	});
+
+	$scope.$on('tickets-offsite-clicked', function(e, args) {
+		console.log('handle tickets-offsite-clicked');
+		console.log(args);
+		$scope.qty = args.qty;
+		$scope.amountPaid = args.amountPaid;
+		$scope.eventId = args.eventId,
+		$scope.eventName = args.eventName,
+		$scope.sessionId = args.sessionId,
+		$scope.ticketGroup = args.ticketGroup,
+		$scope.ticketId = args.ticketId
+		$scope.backToPlan = (typeof args.backToPlan === "undefined") ? false : args.backToPlan;
+		if ($scope.backToPlan) {
+			$scope.continueLink = '/plan';
+		} else {
+			$scope.continueLink = '/event-options/' + args.eventId + '/' + args.eventName;
+		}
+	})
+
+	$scope.showButton = function() {
+		return ($scope.ticketsOffsite === 'bought');
+	};
+
+	$scope.submitForm = function() {
+
+		console.log('adding manual ticket receipt for:');
+		console.log($scope.ticketId);
+		/* update the tickets to have a receipt */
+		plan.addTicketGroupReceipt({
+			ticketId: $scope.ticketId,
+			service: $scope.ticketGroup.service,
+			receipt: {
+				qty: $scope.qty,
+				amountPaid: $scope.amountPaid
+			}
+		}, function(err, result) {
+			console.log('added ticket receipt:');
+			console.log(err);
+			console.log(result);
+
+			$('#tickets-offsite-modal').modal('hide');
+
+			/* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
+			//$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+
+			/* have to back to plan so they don't have a chance to buy more */
+			$location.path("/plan");
 		});
 
-		$scope.showButton = function() {
-			return ($scope.parkingOffsite === 'bought');
-		};
+	};
 
-		$scope.submitForm = function() {
-			console.log('adding parking receipt for:');
-			console.log($scope.parkingId);
-			/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
-			plan.addParkingReceipt({
-				parkingId: $scope.parkingId,
-				service: $scope.parking.service,
-				receipt: {
-					qty: $scope.qty,
-					amountPaid: $scope.amountPaid
-				}
-			}, function(err, result) {
-				console.log('added parking receipt:');
-				console.log(err);
-				console.log(result);
+	$scope.cancelForm = function() {
+		/* remove the ticketgroup and close the modal */
+		plan.removeTicketGroup({
+			ticketId: $scope.ticketId
+		}, function(err, results) {
+			console.log('removed ticketgroup from plan:');
+			console.log(results);
+			$('#tickets-offsite-modal').modal('hide');
+		});
 
-				$('#parking-offsite-modal').modal('hide');
-				/* have to back to plan so they don't have a chance to buy more */
-				$location.path("/plan");
-				/* uncomment if we end up supporting multiple parking in a plan
+	};
+
+};
+
+function ParkingOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
+	plan.get(function(p) {
+		console.log('plan in parking-offsite');
+		console.log(p);
+		$scope.plan = p;
+	});
+
+
+	$scope.$on('parking-offsite-clicked', function(e, args) {
+		console.log('handle parking-offsite-clicked');
+		console.log(args);
+		$scope.amountPaid = args.amountPaid;
+		$scope.eventId = args.eventId,
+		$scope.eventName = args.eventName,
+		$scope.parkingId = args.parkingId,
+		$scope.parking = args.parking;
+		$scope.qty = args.qty;
+	});
+
+	$scope.showButton = function() {
+		return ($scope.parkingOffsite === 'bought');
+	};
+
+	$scope.submitForm = function() {
+		console.log('adding parking receipt for:');
+		console.log($scope.parkingId);
+		/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
+		plan.addParkingReceipt({
+			parkingId: $scope.parkingId,
+			service: $scope.parking.service,
+			receipt: {
+				qty: $scope.qty,
+				amountPaid: $scope.amountPaid
+			}
+		}, function(err, result) {
+			console.log('added parking receipt:');
+			console.log(err);
+			console.log(result);
+
+			$('#parking-offsite-modal').modal('hide');
+			/* have to back to plan so they don't have a chance to buy more */
+			$location.path("/plan");
+			/* uncomment if we end up supporting multiple parking in a plan
 			$rootScope.$broadcast('parking-changed', {
 				parking: [result.parking]
 			});
 			*/
-			});
-		};
+		});
+	};
 
-		$scope.cancelForm = function() {
-			/* remove the parking and close the modal */
-			plan.removeParking({
-				parkingId: $scope.parkingId
-			}, function(err, results) {
-				console.log('removed parking from plan:');
-				console.log(results);
-				$('#parking-offsite-modal').modal('hide');
-				$rootScope.$broadcast('parking-changed', {
-					parking: results.parking
+	$scope.cancelForm = function() {
+		/* remove the parking and close the modal */
+		plan.removeParking({
+			parkingId: $scope.parkingId
+		}, function(err, results) {
+			console.log('removed parking from plan:');
+			console.log(results);
+			$('#parking-offsite-modal').modal('hide');
+			$rootScope.$broadcast('parking-changed', {
+				parking: results.parking
+			});
+
+		});
+
+	};
+
+};
+
+function ParkingInfoCtrl($scope, plan, googlePlaces) {
+
+	plan.get(function(p) {
+		console.log('plan in parking-info');
+		console.log(p);
+		$scope.plan = p;
+	});
+
+
+	$scope.$on('parking-info-clicked', function(e, args) {
+		console.log('handle parking-info-clicked');
+		console.log(args);
+		$scope.parking = args.parking;
+
+		/* get the place details */
+		googlePlaces.getDetails(args.parking.reference, function(place, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				$scope.$apply(function() {
+					$scope.details = place;
+					console.log(place);
 				});
+			}
+		});
+	});
 
-			});
+};
 
-		};
+function RestaurantsInfoCtrl($scope, plan) {
 
+	plan.get(function(p) {
+		console.log('plan in restaurants-offsite');
+		console.log(p);
+		$scope.plan = p;
+	});
+
+
+	$scope.$on('restaurants-info-clicked', function(e, args) {
+		console.log('handle restaurants-info-clicked');
+		console.log(args);
+		$scope.restaurant = args.restaurant;
+	});
+
+};
+
+function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
+
+	plan.get(function(p) {
+		console.log('plan in restaurants-offsite');
+		console.log(p);
+		$scope.plan = p;
+	});
+
+
+	$scope.$on('restaurants-offsite-clicked', function(e, args) {
+		console.log('handle restaurants-offsite-clicked');
+		console.log(args);
+		$scope.amountPaid = args.amountPaid;
+		$scope.eventId = args.eventId,
+		$scope.eventName = args.eventName,
+		$scope.restaurantId = args.restaurantId,
+		$scope.restaurant = args.restaurant;
+		$scope.qty = args.qty;
+	});
+
+	$scope.showButton = function() {
+		return ($scope.restaurantsOffsite === 'bought');
 	};
 
-	function ParkingInfoCtrl($scope, plan, googlePlaces) {
+	$scope.submitForm = function() {
+		console.log('adding restaurant receipt for:');
+		console.log($scope.restaurantId);
+		/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
+		plan.addRestaurantReceipt({
+			restaurantId: $scope.restaurantId,
+			service: $scope.restaurant.service,
+			receipt: {
+				qty: $scope.qty,
+				amountPaid: $scope.amountPaid
+			}
+		}, function(err, result) {
+			console.log('added restaurant receipt:');
+			console.log(err);
+			console.log(result);
 
-		plan.get(function(p) {
-			console.log('plan in parking-info');
-			console.log(p);
-			$scope.plan = p;
-		});
-
-
-		$scope.$on('parking-info-clicked', function(e, args) {
-			console.log('handle parking-info-clicked');
-			console.log(args);
-			$scope.parking = args.parking;
-
-			/* get the place details */
-			googlePlaces.getDetails(args.parking.reference, function(place, status) {
-				if (status == google.maps.places.PlacesServiceStatus.OK) {
-					$scope.$apply(function() {
-						$scope.details = place;
-						console.log(place);
-					});
-				}
-			});
-		});
-
-	};
-
-
-	function RestaurantsInfoCtrl($scope, plan) {
-
-		plan.get(function(p) {
-			console.log('plan in restaurants-offsite');
-			console.log(p);
-			$scope.plan = p;
-		});
-
-
-		$scope.$on('restaurants-info-clicked', function(e, args) {
-			console.log('handle restaurants-info-clicked');
-			console.log(args);
-			$scope.restaurant = args.restaurant;
-		});
-
-	};
-
-	function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
-
-		plan.get(function(p) {
-			console.log('plan in restaurants-offsite');
-			console.log(p);
-			$scope.plan = p;
-		});
-
-
-		$scope.$on('restaurants-offsite-clicked', function(e, args) {
-			console.log('handle restaurants-offsite-clicked');
-			console.log(args);
-			$scope.amountPaid = args.amountPaid;
-			$scope.eventId = args.eventId,
-			$scope.eventName = args.eventName,
-			$scope.restaurantId = args.restaurantId,
-			$scope.restaurant = args.restaurant;
-			$scope.qty = args.qty;
-		});
-
-		$scope.showButton = function() {
-			return ($scope.restaurantsOffsite === 'bought');
-		};
-
-		$scope.submitForm = function() {
-			console.log('adding restaurant receipt for:');
-			console.log($scope.restaurantId);
-			/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
-			plan.addRestaurantReceipt({
-				restaurantId: $scope.restaurantId,
-				service: $scope.restaurant.service,
-				receipt: {
-					qty: $scope.qty,
-					amountPaid: $scope.amountPaid
-				}
-			}, function(err, result) {
-				console.log('added restaurant receipt:');
-				console.log(err);
-				console.log(result);
-
-				$('#restaurants-offsite-modal').modal('hide');
-				/* have to back to plan so they don't have a chance to buy more */
-				$location.path("/plan");
-				/* uncomment if we end up supporting multiple parking in a plan
+			$('#restaurants-offsite-modal').modal('hide');
+			/* have to back to plan so they don't have a chance to buy more */
+			$location.path("/plan");
+			/* uncomment if we end up supporting multiple parking in a plan
 			$rootScope.$broadcast('parking-changed', {
 				parking: [result.parking]
 			});
 			*/
-			});
-		};
-
-		$scope.cancelForm = function() {
-			/* remove the parking and close the modal */
-			plan.removeRestaurant({
-				restaurantId: $scope.restaurantId
-			}, function(err, results) {
-				console.log('removed restaurant from plan:');
-				console.log(results);
-				$('#restaurants-offsite-modal').modal('hide');
-				$rootScope.$broadcast('restaurants-changed', {
-					restaurants: results.restaurants
-				});
-
-			});
-
-		};
-
+		});
 	};
 
-	function HotelsOffsiteCtrl($scope, plan, $http) {
-		plan.get(function(p) {
-			console.log('plan in tickets tickets-offsite');
-			console.log(p);
-			$scope.plan = p;
+	$scope.cancelForm = function() {
+		/* remove the parking and close the modal */
+		plan.removeRestaurant({
+			restaurantId: $scope.restaurantId
+		}, function(err, results) {
+			console.log('removed restaurant from plan:');
+			console.log(results);
+			$('#restaurants-offsite-modal').modal('hide');
+			$rootScope.$broadcast('restaurants-changed', {
+				restaurants: results.restaurants
+			});
+
 		});
 
-		$scope.$on('tickets-offsite-clicked', function(e, args) {
-			console.log('handle tickets-offsite-clicked');
-			console.log(args);
-			$scope.qty = args.qty;
-			$scope.amountPaid = args.amountPaid;
-			$scope.eventId = args.eventId,
-			$scope.eventName = args.eventName,
-			$scope.sessionId = args.sessionId,
-			$scope.ticketGroup = args.ticketGroup,
-			$scope.ticketId = args.ticketId
-		})
-
-		$scope.showButton = function() {
-			return ($scope.ticketsOffsite === 'bought');
-		};
-
-		$scope.submitForm = function() {
-			/* for testing, fire the ticketnetwork pixel */
-			$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
-		};
-
-		$scope.cancelForm = function() {
-			/* remove the ticketgroup and close the modal */
-			plan.removeTicketGroup({
-				ticketId: $scope.ticketId
-			}, function(err, results) {
-				console.log('removed ticketgroup from plan:');
-				console.log(results);
-				$('#tickets-offsite-modal').modal('hide');
-			});
-
-		};
-
 	};
 
-	function VenueMapCtrl($rootScope, $scope, interactiveMapDefaults, plan, $filter, customer, wembliRpc) {
-		plan.get(function(p) {
-			//var p = result.plan;
-			$scope.plan = p;
-			$scope.priceRange = {};
-			$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;
-			$scope.priceRange.low = p.preferences.tickets.priceRange.low || true;
-			$scope.priceRange.med = p.preferences.tickets.priceRange.med || true;
-			$scope.priceRange.high = p.preferences.tickets.priceRange.high || true;
+};
+
+function HotelsOffsiteCtrl($scope, plan, $http) {
+	plan.get(function(p) {
+		console.log('plan in tickets tickets-offsite');
+		console.log(p);
+		$scope.plan = p;
+	});
+
+	$scope.$on('tickets-offsite-clicked', function(e, args) {
+		console.log('handle tickets-offsite-clicked');
+		console.log(args);
+		$scope.qty = args.qty;
+		$scope.amountPaid = args.amountPaid;
+		$scope.eventId = args.eventId,
+		$scope.eventName = args.eventName,
+		$scope.sessionId = args.sessionId,
+		$scope.ticketGroup = args.ticketGroup,
+		$scope.ticketId = args.ticketId
+	})
+
+	$scope.showButton = function() {
+		return ($scope.ticketsOffsite === 'bought');
+	};
+
+	$scope.submitForm = function() {
+		/* for testing, fire the ticketnetwork pixel */
+		$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+	};
+
+	$scope.cancelForm = function() {
+		/* remove the ticketgroup and close the modal */
+		plan.removeTicketGroup({
+			ticketId: $scope.ticketId
+		}, function(err, results) {
+			console.log('removed ticketgroup from plan:');
+			console.log(results);
+			$('#tickets-offsite-modal').modal('hide');
 		});
 
-		$scope.determineRange = function(price) {
-			/* hard coded price range for now */
-			var i = parseInt(price);
-			if (i <= 100) {
-				return '$';
-			}
-			if (i > 100 && i <= 300) {
-				return '$$';
-			}
-			if (i > 300) {
-				return '$$$';
-			}
+	};
+
+};
+
+function VenueMapCtrl($rootScope, $scope, interactiveMapDefaults, plan, $filter, customer, wembliRpc) {
+	plan.get(function(p) {
+		//var p = result.plan;
+		$scope.plan = p;
+		$scope.priceRange = {};
+		$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;
+		$scope.priceRange.low = p.preferences.tickets.priceRange.low || true;
+		$scope.priceRange.med = p.preferences.tickets.priceRange.med || true;
+		$scope.priceRange.high = p.preferences.tickets.priceRange.high || true;
+	});
+
+	$scope.determineRange = function(price) {
+		/* hard coded price range for now */
+		var i = parseInt(price);
+		if (i <= 100) {
+			return '$';
 		}
-
-		$scope.removeTicketGroup = function(ticketId) {
-			wembliRpc.fetch('plan.removeTicketGroup', {
-				ticketId: ticketId
-			}, function(err, result) {
-				console.log(result);
-				plan.setTickets(result.tickets);
-			});
-
-		};
-
-
-		$scope.determineTixAvailable = function(tix) {
-			if (typeof tix[0] === "undefined") {
-				tix = [tix];
-			}
-			var highest = tix[0];
-			angular.forEach(tix, function(el) {
-				if (el > highest) {
-					highest = el;
-				}
-			});
-			var str = 'up to ' + highest + ' tix available';
-			return str;
+		if (i > 100 && i <= 300) {
+			return '$$';
 		}
+		if (i > 300) {
+			return '$$$';
+		}
+	}
+
+	$scope.removeTicketGroup = function(ticketId) {
+		wembliRpc.fetch('plan.removeTicketGroup', {
+			ticketId: ticketId
+		}, function(err, result) {
+			console.log(result);
+			plan.setTickets(result.tickets);
+		});
 
 	};
+
+
+	$scope.determineTixAvailable = function(tix) {
+		if (typeof tix[0] === "undefined") {
+			tix = [tix];
+		}
+		var highest = tix[0];
+		angular.forEach(tix, function(el) {
+			if (el > highest) {
+				highest = el;
+			}
+		});
+		var str = 'up to ' + highest + ' tix available';
+		return str;
+	}
+
+};

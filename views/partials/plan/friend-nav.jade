@@ -1,7 +1,8 @@
 - var nav = planNav(req.session.visitor.context, req.session.plan.preferences.payment)
 #plan-nav.affix
-	.wembli-logo
-	.spacer
+	//- .wembli-logo
+	//- .spacer
+	a.logo-35(href="/dashboard")
 	each navItem in nav
 		a(class="plan-section-nav scroll-to",href="#{navItem.href}",id="#{navItem.id}")
 			i(class="#{navItem.icon}").icon-2x

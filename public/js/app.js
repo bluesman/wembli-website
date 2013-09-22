@@ -21,11 +21,40 @@ angular.module('wembliApp', [
     /* just fetch the plan right away */
     plan.fetch(function() {});
 
+    if ($location.path() === '/') {
+      $location.path('/index');
+    }
+
+   $scope.$on('$locationChangeSuccess', function() {
+        $scope.actualLocation = $location.path();
+    });
+
+   /* check if back button was pressed */
+   $scope.$watch(function () {return $location.path()}, function (newLocation, oldLocation) {
+        if($scope.actualLocation === newLocation) {
+          console.log('back button pressed');
+          slidePage.setDirection(-1);
+        } else {
+          if (slidePage.directionOverride !== 0) {
+            slidePage.setDirection(slidePage.directionOverride);
+            slidePage.directionOverride = 0;
+          } else {
+            slidePage.setDirection(1);
+          }
+        }
+    });
+
     /* slide pages using sequence when location changes */
     $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
+      $scope.actualLocation = $location.path();
+      if (oldUrl.split('/')[4] === '') {
+        console.log('oldurl split is empty string');
+        return;
+      }
       if (newUrl === oldUrl) {
         return;
       }
+
       if ($location.hash() === 'no-slide') {
         $location.hash('');
         return;

@@ -13,6 +13,7 @@
 @import url('/css/plugins/pikaday.css');
 @import url('/css/plugins/jquery.multiselect.css');
 @import url('/css/plugins/jquery.multiselect.filter.css');
+@import url('/css/plugins/jquery.slidepanel.css');
 
 @import "bootstrap/bootstrap.less";
 @import "wembli-variables.less"; // Modify this for custom colors, font-sizes, etc
@@ -52,21 +53,14 @@ h3 {
 
 .btn-primary:hover {
   .buttonBackground(@orange,@orangeDark);
-
 }
 
-.btn-orange {
+.btn-secondary, .btn-orange {
   .buttonBackground(@orange, @orangeDark);
 }
 
-.wembli-logo {
-  background: transparent url("/images/layout/wembli-logo-50.png") no-repeat center center;
-  height:50px;
-  width:122px;
-  position:absolute;
-  top:18px;
-  left:60px;
-  z-index: 2;
+a.btn, button, a.btn:hover, button:hover, a:focus, button:focus {
+  color:@black;
 }
 
 .modal {
@@ -98,8 +92,8 @@ a, a:hover, a:focus {
 }
 
 .is-selected .pika-button {
-  background:none repeat scroll 0 0 @orange;
-  box-shadow: 0 1px 3px @orange inset;
+  background:none repeat scroll 0 0 @yellow;
+  box-shadow: 0 1px 3px @yellow inset;
 }
 
 .pika-button:hover {
@@ -113,6 +107,7 @@ a, a:hover, a:focus {
 .green {color:#64C832;}
 .red { color:red !important; }
 .orange {color:@orange;}
+.yellow {color:@yellow;}
 .blue {color:@blueDark;}
 .arrow {
   border:none;
@@ -243,6 +238,14 @@ a, a:hover, a:focus {
   img { max-width : none }
 }
 
+a {
+  color:@blue;
+}
+
+a:hover {
+  color:@yellowDark;
+}
+
 a, button {
   .icon {
     width:20px;
@@ -265,7 +268,19 @@ a, button {
   background-color:@yellow,
 }
 
+.carousel {
+  .carousel-inner {
+    .item {
+      img {
 
+      }
+    }
+  }
+  .carousel-control {
+    border:none;
+    background: transparent;
+  }
+}
 
 @import "/font-awesome/font-awesome.less";
 @import "fonts.less";

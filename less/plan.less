@@ -11,6 +11,12 @@
 	}
 }
 
+#rsvp-complete-modal {
+	.rsvp-complete-text {
+		width:480px;
+	}
+}
+
 #rsvp-for-modal {
 	.collect-rsvp-container {
 		padding:0px;
@@ -120,6 +126,19 @@
 			font-size:18px;
 			width:18%;
 			background-color: @grayLight;
+
+			.logo-35 {
+				display: block;
+				position: absolute;
+				top: -46px;
+				width: 100%;
+				text-align: center;
+				margin-left: -10px;
+			}
+
+			a:hover.logo-35 {
+				background-color:transparent;
+			}
 
 			.container {
 				width:100%;
@@ -877,7 +896,7 @@
 								}
 
 								h3 {
-									color:@black;
+									color:@grayDark;
 									font-size:28px;
 									line-height: 42px;
 									vertical-align: middle;

@@ -330,14 +330,15 @@ directive('infoSlideDownLabel', [
   }
 ]).
 
-directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav',
-  function($timeout, $rootScope, $window, $location, wembliRpc, plan, customer, pluralize, fetchModals, planNav) {
+directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav', 'slidePage',
+  function($timeout, $rootScope, $window, $location, wembliRpc, plan, customer, pluralize, fetchModals, planNav, slidePage) {
     return {
       restrict: 'C',
       replace: true,
       scope: false, //this has to be false so that the plan is shared among all the child directives
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+          slidePage.directionOverride = -1;
 
           function friendsPonyUp(friends) {
             var fee = 0.15;
