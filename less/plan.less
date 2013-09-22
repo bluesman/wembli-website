@@ -126,6 +126,7 @@
 			font-size:18px;
 			width:18%;
 			background-color: @grayLight;
+			top:0;
 
 			.logo-35 {
 				display: block;
@@ -150,6 +151,10 @@
 			}
 			.line {
 				border-top:thin solid lighten(@grayLighter, 60%);
+			}
+
+			#section1 {
+				margin-top:-56px;
 			}
 
 			a.plan-section-nav {
@@ -866,7 +871,12 @@
 		#plan-dashboard.organizer-plan-dashboard {
 
 			.organizer-rsvp-section {
-
+				.confirmed-alert, .not-confirmed-warning {
+					width:540px;
+					a:hover {
+						color:@blueDark;
+					}
+				}
 			}
 
 			.organizer-cart-section {

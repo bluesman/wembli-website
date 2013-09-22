@@ -631,8 +631,150 @@ exports.customer = {
 		}, false);
 	},
 
-	sendForgotPasswordEmail: function(args, req, res) {
+	sendConfirmationEmail: function(args, req, res) {
 		var me = this;
+		var data = {
+			success: 1
+		};
+
+		if (!req.session.customer.email) {
+			data.error = true;
+			data.success = 0;
+			data.noEmail = true;
+			return me(null, data);
+		}
+
+		//fetch the customer by email
+		Customer.findOne({
+			email: req.session.customer.email
+		}, function(err, c) {
+			//error happened
+			if (err) {
+				data.success = 0;
+				console.log(err);
+				return me(err, data);
+			}
+
+			//customer exists
+			if (c !== null) {
+				//they've already signed up
+				data.exists = true;
+				console.log('customer signup - customer exists - what is password');
+				if (typeof c.password === "undefined") {
+					/* send forgot password email */
+					data.noPassword = true;
+					data.error = true;
+					/* send forgot password email */
+					var noToken = true;
+
+					/* have a c, make a forgot password token (or if there is already one in the db that is not expired, use it) */
+					if (typeof c.forgotPassword[0] != "undefined") {
+						/* check if this token is expired */
+						var dbTimestamp = c.forgotPassword[0].timestamp;
+						var currentTimestamp = new Date().getTime();
+						var timePassed = (currentTimestamp - dbTimestamp) / 1000;
+						//has it been more than 2 days?
+						var noToken = (timePassed < 172800) ? false : true;
+					}
+
+					if (noToken) {
+						//make a new token
+						var tokenTimestamp = new Date().getTime().toString();
+						var tokenHash = wembliUtils.digest(req.session.customer.email + tokenTimestamp);
+					} else {
+						//use the existing token
+						var tokenHash = c.forgotPassword[0].token;
+						var tokenTimestamp = c.forgotPassword[0].timestamp;
+					}
+
+					var forgotPassword = [{
+						timestamp: tokenTimestamp,
+						token: tokenHash
+					}];
+
+					c.update({
+						forgotPassword: forgotPassword
+					}, function(err) {
+						if (err) {
+							console.log('error updating forgot password token');
+							return me('dbError: error updating forgotPassword Token');
+						}
+
+						var mailArgs = {
+							res: res,
+							tokenHash: tokenHash,
+							customer: c,
+							next: args.next
+						}
+
+						console.log('sending forgotpassword email in customer.login');
+						wembliMail.sendForgotPasswordEmail(mailArgs, function() {
+							console.log(data);
+							return me(null, data);
+						});
+					});
+				} else {
+					/* there is a password, so just send the confirmation email again... */
+					if (typeof c.confirmation[0] != "undefined") {
+
+						/* check if this token is expired */
+						var dbTimestamp = c.confirmation[0].timestamp;
+						var currentTimestamp = new Date().getTime();
+						var timePassed = (currentTimestamp - dbTimestamp) / 1000;
+						//has it been more than 2 days?
+						var noToken = (timePassed < 172800) ? false : true;
+					}
+
+					if (noToken) {
+						//make a new token
+						var tokenTimestamp = new Date().getTime().toString();
+						var tokenHash = wembliUtils.digest(req.session.customer.email + tokenTimestamp);
+					} else {
+						//use the existing token
+						var tokenHash = c.confirmation[0].token;
+						var tokenTimestamp = c.confirmation[0].timestamp;
+					}
+
+					c.confirmation[0] = {
+						timestamp: tokenTimestamp,
+						token: tokenHash
+					};
+
+
+					c.save(function(err) {
+						if (err) {
+							data.success = 0;
+							return me(err, data);
+						}
+
+						req.session.loggedIn = true;
+						req.session.customer = c;
+
+						/* send signup email async */
+						wembliMail.sendSignupEmail({
+							res: res,
+							confirmationToken: tokenHash,
+							customer: c,
+							next: args.next
+						}, function() {
+							return me(null, data);
+						});
+					});
+				}
+			} else {
+				/* no customer to send confirmation email to */
+				data.success = 0;
+				data.error = true;
+				data.noCustomer = true;
+				return me(null, data);
+			}
+
+		});
+
+	},
+
+	sendForgotPasswordEmail: function(args, req, res) {
+
 		var data = {
 			success: 1
 		};
@@ -728,7 +870,7 @@ exports.customer = {
 		if (args.email && req.session.plan) {
 			var newNotify = {
 				email: args.email,
-				addOn:args.addOn,
+				addOn: args.addOn,
 				event: req.session.plan.event.data
 			};
 			var notify = new Notify(newNotify);

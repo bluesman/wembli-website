@@ -552,7 +552,9 @@ directive('slidepanel', [
             "mode": 'overlay'
           });
 
-          $('#empty-modal').modal({show:false});
+          $('#empty-modal').modal({
+            show: false
+          });
           $('#empty-modal').on('hidden', function() {
             console.log('hiding modal');
             if (angular.element('#slidepanel').is(':visible')) {
@@ -819,6 +821,41 @@ directive('rsvpLoginModal', ['fetchModals', 'rsvpLoginModal',
     };
   }
 ]).
+
+directive('sendConfirmationEmail', ['wembliRpc',
+  function(wembliRpc) {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          scope.confirmationEmailSent = false;
+          scope.confirmationEmailInProgress = false;
+
+          attr.$observe('next', function() {
+            element.click(function(e) {
+              scope.confirmationEmailInProgress = true;
+              var rpcArgs = {};
+              if (attr.next) {
+                rpcArgs.next = attr.next;
+              }
+              console.log('clicked to send confirmation email');
+              wembliRpc.fetch('customer.sendConfirmationEmail', rpcArgs, function(err, result) {
+                console.log('sent confirmation email');
+                console.log(err);
+                /* display an email sent message */
+                scope.confirmationEmailSent = true;
+                scope.confirmationEmailInProgress = false;
+                scope.$broadcast('confirmation-email-sent');
+              });
+            });
+          });
+        };
+      }
+    };
+  }
+]).
+
+
 
 directive('sendForgotPasswordEmail', ['wembliRpc',
   function(wembliRpc) {

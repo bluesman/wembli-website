@@ -45,22 +45,14 @@ h3 {
   width:24px !important;
 }
 
-.btn-primary {
-  //.buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 1px 1px rgba(255,255,255,.75));
-  .buttonBackground(@blue,@blueDark);
-  font-size:16px;
+/* buttons */
+.btn-primary, .btn-primary:hover {
+  .buttonBackground(@blue,@blueDarker, @white);
 }
 
-.btn-primary:hover {
-  .buttonBackground(@orange,@orangeDark);
-}
-
-.btn-secondary, .btn-orange {
-  .buttonBackground(@orange, @orangeDark);
-}
-
-a.btn, button, a.btn:hover, button:hover, a:focus, button:focus {
-  color:@black;
+//.buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 1px 1px rgba(255,255,255,.75));
+.btn-secondary, .btn-orange, .btn-secondary:hover, .btn-orange:hover {
+  .buttonBackground(@orange, @orangeDarker, @black);
 }
 
 .modal {
@@ -287,7 +279,6 @@ a, button {
 @import "type.less";
 @import "layout.less";
 @import "header.less";
-@import "footer.less";
 
 @import "stars.less";
 @import "event-list.less";

@@ -40,26 +40,26 @@ section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 						label.suggested-amounts-label.info-slide-down-label.clearfix(friend-id="{{friend._id}}",key="suggested-amounts")
 							i.icon-caret-right.suggested-amounts-caret.icon-2x.pull-left
 							.suggested-amount-header.pull-left Wembli Suggested Pony Up Amount:
-							.value.pull-right {{friend.tickets.suggestedPonyUpAmount | currency}}
+							.value.pull-right {{friend.suggestedPonyUpAmount | currency}}
 						.suggested-amounts.hide
-							.suggested-amount.suggested-ticket-amount.display-popover.clearfix(ng-show="plan.tickets[0]",title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{friend._id}}-tickets-popover-content",trigger="hover")
+							.suggested-amount.suggested-ticket-amount.display-popover.clearfix(ng-show="plan.tickets[0]",title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{friend._id}}-tickets-pony-up-popover-content",trigger="hover")
 								.header.pull-left TICKETS
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
 									.value.pull-right {{friend.tickets.suggestedPonyUpAmount | currency}}
-								div(id="{{friend._id}}-tickets-popover-content").hide
+								div(id="{{friend._id}}-tickets-pony-up-popover-content").hide
 									.row
 										strong.pull-left  Ticket Price
-										.pull-right {{friend.tickets.group.costBreakdown.ticketPrice | currency}}
+										.pull-right {{friend.tickets.costBreakdown.price | currency}}
 									.row.border-bottom
 										strong.pull-left  Ticketnetwork Service Fee&nbsp;
-										.pull-right {{friend.tickets.group.costBreakdown.serviceFee | currency}}
+										.pull-right {{friend.tickets.costBreakdown.serviceFee | currency}}
 									.row
 										strong.pull-left Cost Per Person&nbsp;
-										.pull-right {{friend.tickets.group.costBreakdown.totalEach | currency}}
+										.pull-right {{friend.tickets.costBreakdown.totalEach | currency}}
 									.row
 										strong.pull-left Est. Delivery Fee*&nbsp;
-										.pull-right {{friend.tickets.group.costBreakdown.deliveryFeeEach | currency}}
+										.pull-right {{friend.tickets.costBreakdown.deliveryFeeEach | currency}}
 									.row
 										strong.pull-left Total (x{{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'ticket'}}):&nbsp;
 										strong.pull-right {{friend.tickets.suggestedPonyUpAmount | currency}}
@@ -67,19 +67,29 @@ section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 										small
 											strong *
 											span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
-
 							.suggested-amount.suggested-ticket-amount.clearfix(ng-hide="plan.tickets[0]")
 								.header.pull-left TICKETS
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
 									.value.pull-right
-										a.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Tickets
+										a(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Tickets
 
-							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",content="content<br/>more content",trigger="click")
+							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",content-id="{{friend._id}}-parking-pony-up-popover-content",trigger="hover")
 								.header.pull-left PARKING
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
 									.value.pull-right {{friend.parking.suggestedPonyUpAmount | currency}}
+								div(id="{{friend._id}}-parking-pony-up-popover-content").hide
+									.row.clearfix.border-bottom
+										strong.pull-left  Parking Price
+										.pull-right {{friend.parking.costBreakdown.price | currency}}
+									.row.clearfix
+										strong.pull-left  Cost Per Person&nbsp;
+										.pull-right {{friend.parking.costBreakdown.totalEach | currency}}
+									.row.clearfix
+										strong.pull-left  Total (x{{friend.parking.totalQty}} parking {{friend.parking.totalQty | pluralize:'spot'}}):&nbsp;
+										strong.pull-right {{friend.parking.costBreakdown.total | currency}}
+
 							.suggested-amount.suggested-parking-amount.clearfix(ng-show="plan.preferences.addOns.parking && !plan.parking[0]")
 								.header.pull-left PARKING
 								.suggested-amount-body.pull-left.clearfix

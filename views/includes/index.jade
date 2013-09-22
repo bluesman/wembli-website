@@ -5,13 +5,20 @@
 				li.active(data-target="#carousel",data-slide-to="0")
 				li(data-target="#carousel",data-slide-to="1")
 				li(data-target="#carousel",data-slide-to="2")
+				//- li(data-target="#carousel",data-slide-to="3")
+				//- li(data-target="#carousel",data-slide-to="4")
 			.carousel-inner
+				//-
+					.item.active
+						img(src="/images/carousel/carousel-1.jpg")
+					.item.active
+						img(src="/images/carousel/carousel-2.jpg")
 				.item.active
-					img(src="/images/carousel/carousel-1.jpg")
+					img(src="/images/carousel/carousel-3.jpg")
 				.item
-					img(src="/images/carousel/carousel-2.jpg")
+					img(src="/images/carousel/carousel-4.jpg")
 				.item
-					img(src="/images/carousel/test-image.jpg")
+					img(src="/images/carousel/carousel-5.jpg")
 			//- a.carousel-control.left.icon-chevron-sign-left.icon-3x(href="#carousel",data-slide="prev")
 			//- a.carousel-control.right.icon-chevron-sign-right.icon-3x(href="#carousel",data-slide="next")
 	section.section2
@@ -19,7 +26,8 @@
 			.tag-line
 				p GOING TO LIVE EVENTS WITH FRIENDS IS AMAZING
 				p GETTING STUCK WITH THE BILL IS NOT.
-				a.meet-wembli(href="/search") MEET WEMBLI.
+				a(href="/search").clearfix
+					.meet-wembli.pull-right MEET WEMBLI.
 			.click
 				.click-text.segoe Click!
 			.video-container.clearfix
