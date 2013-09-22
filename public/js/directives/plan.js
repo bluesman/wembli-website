@@ -369,9 +369,8 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
               console.log(friends[i].suggestedPonyUpAmount);
 
               if ((typeof parking[0] !== "undefined") && (typeof parking[0].costBreakdown !== "undefined")) {
-                if (typeof friends[i].parking == "undefined") {
-                  friends[i].parking = {};
-                }
+                console.log('getting suggested amount for parking');
+                console.log(parking[0]);
                 friends[i].parking = parking[0];
                 var suggested = friends[i].parking.costBreakdown.totalEach * friends[i].rsvp.guestCount;
                 console.log('suggested parking');

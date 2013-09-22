@@ -16,6 +16,7 @@
 		- if (visitor.context === 'organizer')
 			- if (split === 'split-first')
 				- if (!plan.rsvpComplete)
+					//- TODO - if they have friends invited - give them a read only list of tix
 					- include = 'invite-friends'
 					- header = "See What's Available Then Invite Friends";
 				- else

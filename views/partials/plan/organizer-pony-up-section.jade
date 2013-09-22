@@ -74,7 +74,7 @@ section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 									.value.pull-right
 										a(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Tickets
 
-							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",content-id="{{friend._id}}-parking-pony-up-popover-content",trigger="hover")
+							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",html="true",content-id="{{friend._id}}-parking-pony-up-popover-content",trigger="hover")
 								.header.pull-left PARKING
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}

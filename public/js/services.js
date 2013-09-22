@@ -618,6 +618,9 @@ factory('cart', ['plan',
 						var item = items[i];
 						var amount = funcs.getAmount(item);
 						var qty = funcs.getQty(item);
+						if (typeof qty === "undefined") {
+							qty = 0;
+						}
 						console.log('amount: ' + amount);
 						console.log('qty: ' + qty);
 
@@ -1207,7 +1210,9 @@ factory('googleMap', ['$rootScope',
 					infoWindow: infoWindow,
 					open: false
 				}
-
+				console.log('adding info window');
+				console.log(win);
+				console.log(marker);
 				if (typeof infoWindow === "undefined") {
 					return;
 				}
@@ -1217,15 +1222,17 @@ factory('googleMap', ['$rootScope',
 				}
 
 				if (typeof infoWindow.getPosition() === "undefined") {
+					console.log('no position for infowindow');
 					return;
 				}
 
 				if (typeof marker.getPosition() === "undefined") {
+					console.log('no position for marker');
 					return;
 				}
 
 
-				if ((typeof marker !== "undefined") && (typeof marker.getPosition())) {
+				if ((typeof marker !== "undefined") && (typeof marker.getPosition() !== "undefined")) {
 					win.lat = marker.getPosition().lat();
 					win.lng = marker.getPosition().lng();
 				} else {
@@ -1236,6 +1243,8 @@ factory('googleMap', ['$rootScope',
 				return win;
 			},
 			_findInfoWindow: function(lat, lng) {
+				console.log('infowindows');
+				console.log(self._infoWindows);
 				for (var i = 0; i < self._infoWindows.length; i++) {
 					var winLat = self._infoWindows[i].lat;
 					var winLng = self._infoWindows[i].lng;
@@ -1267,6 +1276,8 @@ factory('googleMap', ['$rootScope',
 				var lat = marker.getPosition().lat();
 				var lng = marker.getPosition().lng();
 				var win = this._findInfoWindow(lat, lng);
+				console.log('open win');
+				console.log(win);
 				if (win) {
 					win.open = true;
 					win.infoWindow.open(self._map, marker);
@@ -1339,25 +1350,30 @@ factory('mapMarker', ['mapInfoWindowContent',
 		return {
 			create: function(googleMap, args) {
 
+
 				var markerArgs = {
 					map: googleMap.getMap()
 				};
 
+				var position;
 				if (typeof args.position !== "undefined") {
-					markerArgs.position = args.position;
+					position = args.position;
 				}
 
 				if ((typeof args.lat !== "undefined") && (typeof args.lng !== "undefined")) {
-					markerArgs.position = new google.maps.LatLng(args.lat, args.lng);
+					position = new google.maps.LatLng(args.lat, args.lng);
 				}
 
-				/* make a marker for the venue */
+				markerArgs.position = position;
+
+				/* make a marker */
 				var marker = new google.maps.Marker(markerArgs);
 				marker.setIcon(args.icon);
 				marker.setAnimation(google.maps.Animation.DROP);
 
-				/* infoWindow for the venue marker */
+				/* infoWindow for the marker */
 				var win = new google.maps.InfoWindow({
+					position: position,
 					content: mapInfoWindowContent.create({
 						header: args.name,
 						body: args.body
@@ -1375,6 +1391,7 @@ factory('mapMarker', ['mapInfoWindowContent',
 
 				if (typeof args.click !== "undefined") {
 					google.maps.event.addListener(marker, 'click', function() {
+						console.log(marker);
 						if (googleMap.isInfoWindowOpen(marker)) {
 							args.click.on();
 						} else {
@@ -1386,6 +1403,8 @@ factory('mapMarker', ['mapInfoWindowContent',
 				/* put the marker on the map */
 				googleMap.addMarker(marker);
 				/* put the infoWindow on the map */
+				console.log('add infowindow to marker');
+				console.log(win);
 				googleMap.addInfoWindow(win, marker);
 
 			}
@@ -1399,16 +1418,26 @@ factory('mapVenue', ['mapInfoWindowContent',
 		return {
 			create: function(googleMap, args) {
 
+				var position;
+				if (typeof args.position !== "undefined") {
+					position = args.position;
+				}
+
+				if ((typeof args.lat !== "undefined") && (typeof args.lng !== "undefined")) {
+					position = new google.maps.LatLng(args.lat, args.lng);
+				}
+
 				/* make a marker for the venue */
 				var marker = new google.maps.Marker({
 					map: googleMap.getMap(),
-					position: new google.maps.LatLng(args.lat, args.lng),
+					position: position
 				});
 				marker.setIcon("/images/icons/map-icons/sports/stadium.png");
 				marker.setAnimation(google.maps.Animation.DROP);
 
 				/* infoWindow for the venue marker */
 				var win = new google.maps.InfoWindow({
+					position: position,
 					content: mapInfoWindowContent.create({
 						header: args.name,
 						body: args.street + ', ' + args.city + ', ' + args.state

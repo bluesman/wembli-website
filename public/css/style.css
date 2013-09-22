@@ -8773,19 +8773,10 @@ header .right-container .logo-45 {
   overflow-x: hidden;
   color: #000;
 }
-.addons-list a {
-  color: #214478;
-}
-.addons-list a:hover {
-  color: #426799;
-}
 .addons-list .continue-controls {
   text-align: center;
   padding: 20px;
   background-color: #427fb8;
-}
-.addons-list .continue-controls a {
-  color: #ffffff;
 }
 .addons-list .filter-container,
 .addons-list .list-header-container {
@@ -10393,17 +10384,6 @@ a#facebook-login-button {
   width: 18%;
   background-color: #cccccc;
   top: 0;
-}
-#plan-frame #left #plan-nav .logo-35 {
-  display: block;
-  position: absolute;
-  top: -46px;
-  width: 100%;
-  text-align: center;
-  margin-left: -10px;
-}
-#plan-frame #left #plan-nav a:hover.logo-35 {
-  background-color: transparent;
 }
 #plan-frame #left #plan-nav .container {
   width: 100%;
