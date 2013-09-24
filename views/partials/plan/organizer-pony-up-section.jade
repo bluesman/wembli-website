@@ -165,7 +165,7 @@ section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 								td.history-header(ng-show="{'outside':true}[history.type]") Amt Received:
 								td.history-header(ng-show="{'request':true}[history.type]") Amt Requested:
 								td.history-header(ng-show="{'response':true}[history.type]") Amt Received:
-								td.amount {{history.amount | currency}}
+								td.amount {{history.amount/100 | currency}}
 								td.actions(ng-show="{'request':true}[history.type] && history.open")
 									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-hide="history.error || history.resent || history.resendPonyUpInProgress", ng-click="resendPonyUp(friend._id, history._id)")
 										i.icon.icon-envelope.pull-left
@@ -199,13 +199,13 @@ section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 								td(colspan="7")
 							tr.total-requested
 								td.history-header(colspan="5") Total Requested:
-								td.amount {{friend.payment.requested | currency}}
+								td.amount {{friend.payment.requested/100 | currency}}
 							tr.total-requested
 								td.history-header(colspan="5") Total Paid:
-								td.amount {{friend.payment.received | currency}}
+								td.amount {{friend.payment.received/100 | currency}}
 							tr.balance
 								td.history-header(colspan="5") Balance:
-								td.amount {{friend.payment.balance | currency}}
+								td.amount {{friend.payment.balance/100 | currency}}
 			.send-pony-up-button-container.clearfix
 				button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(href="#section4",type="submit",ng-hide="sendPonyUpInProgress")
 					.icon.icon-envelope-alt.pull-left

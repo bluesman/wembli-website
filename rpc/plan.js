@@ -491,7 +491,6 @@ exports.plan = {
 			});
 	},
 
-
 	/*
 	 * args:
 	 *  [{friendId: amount }]
@@ -571,8 +570,17 @@ exports.plan = {
 		console.log('sendPonyUp for');
 		console.log(args);
 
+		/* this is the total to charge the card (includes the fee) */
+		var total = parseInt(args.total);
+		console.log('total: ' + total);
+
+		/* this is the pony up amount without the fee */
 		var amount = parseInt(args.amount);
 		console.log('amount: ' + amount);
+
+		/* this is the pony up fee */
+		var transactionFee = parseInt(args.transactionFee);
+		console.log('fee: ' + transactionFee);
 
 		var creditCard = {
 			card_number: args.creditCardNumber,
@@ -650,6 +658,8 @@ exports.plan = {
 						data.friend = friend;
 						var payment = {
 							amount: amount,
+							total: total,
+							transactionFee: transactionFee,
 							status: 'completed',
 							method: 'creditcard',
 							open: false,
@@ -690,18 +700,60 @@ exports.plan = {
 				if (req.session.customer.balancedAPI.creditCards) {
 					console.log('balanced credit cards exist');
 					/* they already have cards, check if the one they are using is one of them */
+					var foundCard = false;
 					for (var i = 0; i < req.session.customer.balancedAPI.creditCards.items.length; i++) {
 						var card = req.session.customer.balancedAPI.creditCards.items[i];
 						var lastFour = args.creditCardNumber.substr(args.creditCardNumber.length - 4);
 						if ((lastFour == card.last_four) && card.is_valid) {
-							/* use it */
-							/* charge the card */
+							foundCard = true;
+						}
+					};
+
+					if (foundCard) {
+						/* use it */
+						/* charge the card */
+						var bCustomers = new balanced.customers();
+						bCustomers.setContext(card.customer);
+						bCustomers.debit({
+							customer_uri: card.customer.uri,
+							on_behalf_of_uri: onBehalfOf,
+							amount: total
+						}, function(err, res, transaction) {
+							console.log(err);
+							console.log('debited credit card');
+							console.log(transaction)
+
+							/* if there's an error gtfo */
+							if (err) {
+								data.success = 0;
+								data.error = 'unable to debit card: ' + err;
+								return me(null, data);
+							}
+							return successfulDebit(transaction, data);
+						});
+					} else {
+						/* this is a new card */
+						var bCards = new balanced.cards();
+						bCards.create(creditCard, function(err, res, card) {
+							console.log('created a new card: ');
+							console.log(card);
+
+							if (card.status_code == '400') {
+								data.body = card;
+								data.success = 0;
+								if (card.category_code == 'card-number-not-valid') {
+									data.error = 'The credit card number is not valid.';
+								}
+								return me(null, data);
+							}
+
+							/* now debit the card */
 							var bCustomers = new balanced.customers();
 							bCustomers.setContext(card.customer);
 							bCustomers.debit({
 								customer_uri: card.customer.uri,
 								on_behalf_of_uri: onBehalfOf,
-								amount: amount
+								amount: total
 							}, function(err, res, transaction) {
 								console.log(err);
 								console.log('debited credit card');
@@ -716,8 +768,9 @@ exports.plan = {
 								return successfulDebit(transaction, data);
 							});
 
-						}
-					};
+						});
+					}
+
 				}
 			} else {
 				/* no customer in balanced yet...add the card and the customer */
@@ -727,6 +780,15 @@ exports.plan = {
 					if (err) {
 						data.success = 0;
 						data.error = 'unable to create balanced customer: ' + err;
+						return me(null, data);
+					}
+
+					if (body.status_code == '409') {
+						data.body = body;
+						data.success = 0;
+						if (body.category_code == 'card-not-validated') {
+							data.error = 'Card could not be validated.';
+						}
 						return me(null, data);
 					}
 
@@ -755,7 +817,7 @@ exports.plan = {
 							bCustomers.debit({
 								customer_uri: body.uri,
 								on_behalf_of_uri: onBehalfOf,
-								amount: amount
+								amount: total
 							}, function(err, res, transaction) {
 								console.log(err);
 								console.log('debited credit card');
@@ -1573,7 +1635,7 @@ exports.plan = {
 			var newParking = [];
 			for (var i = 0; i < req.session.plan.parking.length; i++) {
 				console.log('checking parking for removal');
-				console.log('existing: '+req.session.plan.parking[i]+' - '+ args.parkingId);
+				console.log('existing: ' + req.session.plan.parking[i] + ' - ' + args.parkingId);
 				if (req.session.plan.parking[i] != args.parkingId) {
 					newParking.push(req.session.plan.parking[i]);
 				}
@@ -1693,10 +1755,10 @@ exports.plan = {
 				ticket.save(function(err) {
 					if (err) {
 						data.success = 0;
-						data.dbError = 'unable to save ticketGroup: '+err;
+						data.dbError = 'unable to save ticketGroup: ' + err;
 						console.log('error adding ticket to plan:');
 						console.log(data);
-						return me(null,data);
+						return me(null, data);
 					}
 
 					/* now add the ticket to the plan */
@@ -1705,7 +1767,7 @@ exports.plan = {
 							console.log(err);
 							data.success = 0;
 							data.dbError = 'unable to add ticketGroup ' + ticket.id;
-							return me(null,data);
+							return me(null, data);
 						}
 						console.log('added ticketGroup to plan: ' + req.session.plan.guid);
 						data.ticketGroup = ticket;
@@ -1762,7 +1824,7 @@ exports.plan = {
 		});
 	},
 
-addTicketGroupReceipt: function(args, req, res) {
+	addTicketGroupReceipt: function(args, req, res) {
 		var me = this;
 
 		var data = {

@@ -18,7 +18,7 @@ section#section5.me-pony-up-section.pony-up-section.plan-section.even
 	.body(ng-show="ponyUpRequest")
 		h3 It's Time To Pony Up For Your Part Of The Bill
 		.invitees-container
-			.invitee.clearfix(id="{{me._id}}")
+			.row.invitee.clearfix(id="{{me._id}}")
 				.img-container.pull-left
 					img.img-polaroid(ng-hide="me.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 					img.img-polaroid(ng-show="me.contactInfo.imageUrl",ng-src="{{me.contactInfo.imageUrl}}")
@@ -27,85 +27,20 @@ section#section5.me-pony-up-section.pony-up-section.plan-section.even
 						.invitee-name-container
 							span.name.orange {{me.contactInfo.name}}&nbsp;
 							span.guests(ng-show="me.rsvp.decision") + {{me.rsvp.guestCount-1}} {{me.rsvp.guestCount-1 | pluralize:'guest'}}
-					.suggested-amounts-container
-						label.suggested-amounts-label.info-slide-down-label.clearfix(friend-id="{{me._id}}",key="suggested-amounts")
-							i.icon-caret-right.suggested-amounts-caret.icon-2x.pull-left
-							.suggested-amount-header.pull-left WEMbli Suggested Pony Up Amount:
-							.value.pull-right {{me.tickets.suggestedPonyUpAmount | currency}}
-						.suggested-amounts.hide
-							.suggested-amount.suggested-ticket-amount.display-popover.clearfix(ng-show="plan.tickets[0]",title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{me._id}}-tickets-popover-content",trigger="hover")
-								.header.pull-left TICKETS
-								.suggested-amount-body.pull-left.clearfix
-									.key.pull-left Estimated total for {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right {{me.tickets.suggestedPonyUpAmount | currency}}
-								div(id="{{me._id}}-tickets-popover-content").hide
-									.row
-										strong.pull-left  Ticket Price
-										.pull-right {{me.tickets.group.costBreakdown.ticketPrice | currency}}
-									.row.border-bottom
-										strong.pull-left  Ticketnetwork Service Fee&nbsp;
-										.pull-right {{me.tickets.group.costBreakdown.serviceFee | currency}}
-									.row
-										strong.pull-left Cost Per Person&nbsp;
-										.pull-right {{me.tickets.group.costBreakdown.totalEach | currency}}
-									.row
-										strong.pull-left Est. Delivery Fee*&nbsp;
-										.pull-right {{me.tickets.group.costBreakdown.deliveryFeeEach | currency}}
-									.row
-										strong.pull-left Total (x{{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'ticket'}}):&nbsp;
-										strong.pull-right {{me.tickets.suggestedPonyUpAmount | currency}}
-									.row.disclaimer
-										small
-											strong *
-											span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
-
-							.suggested-amount.suggested-ticket-amount.clearfix(ng-hide="plan.tickets[0]")
-								.header.pull-left TICKETS
-								.suggested-amount-body.pull-left.clearfix
-									.key.pull-left Estimated total for {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right
-										a.wembli-sequence-link(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Tickets Not Chosen
-
-							.suggested-amount.suggested-parking-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.parking && plan.parking[0]",title="Parking Cost Breakdown",placement="right",content="content<br/>more content",trigger="hover")
-								.header.pull-left PARKING
-								.suggested-amount-body.pull-left.clearfix
-									.key.pull-left Estimated total for {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right {{me.parking.suggestedPonyUpAmount | currency}}
-							.suggested-amount.suggested-parking-amount.clearfix(ng-show="plan.preferences.addOns.parking && !plan.parking[0]")
-								.header.pull-left PARKING
-								.suggested-amount-body.pull-left.clearfix
-									.key.pull-left Estimated total for {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right
-										a.wembli-sequence-link(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Parking
-
-							.suggested-amount.suggested-restaurant-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.restaurants && plan.restaurants[0]",title="Restaurant Cost Breakdown",placement="right",content="content",trigger="hover")
-								.header.pull-left RESTAURANT
-								.suggested-amount-body.pull-left.clearfix
-									.key.pull-left Estimated total for {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right {{me.restaurant.suggestedPonyUpAmount | currency}}
-							.suggested-amount.suggested-restaurant-amount.clearfix(ng-show="plan.preferences.addOns.restaurants && !plan.restaurants[0]")
-								.header.pull-left RESTAURANT
-								.suggested-amount-body.pull-left.clearfix
-									.key.pull-left Estimated total for {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right
-										a.wembli-sequence-link(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
-
-							.suggested-amount.suggested-hotel-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.hotels && plan.hotels[0]",title="Hotel Cost Breakdown",placement="right",content="content",trigger="hover")
-								.header.pull-left HOTEL
-								.suggested-amount-body.pull-left.clearfix
-									.key.pull-left Estimated total for {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right {{me.hotel.suggestedPonyUpAmount | currency}}
-							.suggested-amount.suggested-hotel-amount.clearfix(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0]")
-								.header.pull-left HOTEL
-								.suggested-amount-body.pull-left.clearfix
-									.key.pull-left Estimated total for {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right
-										a.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
+					.requested-amounts-container
+						label.requested-amounts-label.clearfix
+							.requested-amount-header.pull-left Requested Pony Up Amount:
+							.pull-right.input-prepend(ng-class="{false:'muted'}[ponyUpRequest.open]")
+								span.add-on $
+								input.me-pony-up-amount(type="text",ng-model="ponyUp.amountFormatted")
+					.transaction-fee-container.display-popover.clearfix(title="Explanation of Costs",placement="right",,content="Hey - we gotta keep the lights on and the servers running somehow?!  Wembli charges $2.50 plus 2.9% of the amount you pony up.",trigger="hover")
+						label.transaction-fee-label.clearfix
+							.transaction-fee-header.pull-left Wembli Pony Up Transaction Cost:
+							.value.pull-right {{ponyUp.transactionFee/100 | currency}}
 					.send-pony-up-control.clearfix
-						.header.pull-left SEND PONY UP REQUEST FOR:
-						.pull-right.input-prepend(ng-class="{false:'muted'}[ponyUpRequest.open]")
-							span.add-on $
-							input.me-pony-up-amount(type="text",ng-model="ponyUp.amount")
+						label.send-pony-up-label.clearfix
+							.header.pull-left TOTAL AMOUNT:
+							.total.pull-right {{ponyUp.total/100 | currency}}
 				.history-container.pull-left
 					label.history-label.info-slide-down-label.clearfix(friend-id="{{me._id}}",key="history")
 						i.icon.icon-caret-right.history-caret.icon-2x.pull-left
@@ -122,49 +57,20 @@ section#section5.me-pony-up-section.pony-up-section.plan-section.even
 								td.history-header(ng-show="{'outside':true}[history.type]") Amt Received:
 								td.history-header(ng-show="{'request':true}[history.type]") Amt Requested:
 								td.history-header(ng-show="{'response':true}[history.type]") Amt Received:
-								td.amount {{history.amount | currency}}
-								td.actions(ng-show="{'request':true}[history.type] && history.open")
-									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-hide="history.error || history.resent || history.resendPonyUpInProgress", ng-click="resendPonyUp(me._id, history._id)")
-										i.icon.icon-envelope.pull-left
-										.text.pull-left Resend
-									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-show="!history.error && !history.resent && history.resendPonyUpInProgress", disabled)
-										i.icon.icon-cog.icon-spin.pull-left
-										.text.pull-left Resend
-									a.btn.btn-tiny.btn-orange.clearfix(href="#",ng-show="history.resent", disabled)
-										i.icon.icon-envelope.pull-left
-										.text.pull-left Sent
-									a.btn.btn-tiny.btn-orange.clearfix(href="#",ng-show="history.error", disabled)
-										i.icon.icon-envelope.pull-left
-										.text.pull-left Error
-									a.btn.btn-tiny.btn-danger.clearfix(href="#section4", ,ng-hide="history.error || history.cancelPonyUpRequestInProgress", ng-click="cancelPonyUpRequest(me._id, history._id)")
-										i.icon.icon-remove-sign.pull-left
-										.text.pull-left Cancel
-									a.btn.btn-tiny.btn-danger.clearfix(href="#section4",ng-show="!history.error && history.cancelPonyUpRequestInProgress", disabled)
-										i.icon.icon-cog.icon-spin.pull-left
-										.text.pull-left Cancel
-								td.actions(ng-show="{'outside':true}[history.type]")
-									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-hide="history.error || history.removeOutsidePaymentInProgress", ng-click="removeOutsidePayment(me._id, history._id)")
-										i.icon.icon-remove-sign.pull-left
-										.text.pull-left Remove
-									a.btn.btn-tiny.btn-orange.clearfix(href="#section4",ng-show="!history.error && history.removeOutsidePaymentInProgress", disabled)
-										i.icon.icon-cog.icon-spin.pull-left
-										.text.pull-left Remove
-									a.btn.btn-tiny.btn-orange.clearfix(href="#",ng-show="history.error", disabled)
-										i.icon.icon-envelope.pull-left
-										.text.pull-left Error
+								td.amount {{history.amount/100 | currency}}
 							tr.border-bottom
 								td(colspan="7")
 							tr.total-requested
 								td.history-header(colspan="5") Total Requested:
-								td.amount {{me.payment.requested | currency}}
+								td.amount {{me.payment.requested/100 | currency}}
 							tr.total-requested
 								td.history-header(colspan="5") Total Paid:
-								td.amount {{me.payment.received | currency}}
+								td.amount {{me.payment.received/100 | currency}}
 							tr.balance
 								td.history-header.orange(colspan="5") Balance:
-								td.amount.orange {{me.payment.balance | currency}}
+								td.amount.orange {{me.payment.balance/100 | currency}}
 			.send-pony-up-button-container.clearfix
-				button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(ng-click="showPonyUpModal()",ng-hide="sendPonyUpInProgress")
+				button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(ng-disabled="{false:true}[ponyUpRequest.open]", ng-click="showPonyUpModal()",ng-hide="sendPonyUpInProgress")
 					.icon.icon-money.pull-left
 					span &nbsp;Send Pony Up!
 

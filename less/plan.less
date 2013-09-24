@@ -94,16 +94,134 @@
 	}
 }
 
-#create-account-modal {
-	width:650px;
-	height:600px;
-	margin:-345px 0 0 -375px;
+
+#pony-up-modal, #create-account-modal {
+	width:750px;
+	height:630px;
 
 	.modal-body {
-		padding:20px;
-		max-height:600px;
+		height:530px;
+	}
+
+	.modal-footer {
+		background-color:@white;
+	}
+
+	.security-logos {
+		width:400px;
+		padding:0 20px;
+	}
+
+	.positive-ssl {
+		margin:20px;
+		height:96px;
+		width:96px;
+		background: transparent url('/images/PositiveSSL.gif') no-repeat center top;
+	}
+
+	.balanced-logo {
+		margin:10px 6px;
+		height:115px;
+		width:250px;
+		background: transparent url('/images/balanced-logo.jpg') no-repeat center top;
+	}
+
+	.balanced-credit-card-logos {
+		height:100px;
+		width:320px;
+		background: @white url('/images/balanced-credit-card-logos.png') no-repeat center center;
+	}
+
+	#pony-up-payment, #new-merchant-account {
+
+		.alert {
+			margin-top:10px;
+		}
+
+		h3 {
+			border-bottom:thin solid @grayDark;
+		}
+
+		.container {
+			width:710px;
+			margin-top:20px;
+
+			fieldset {
+				input {
+					margin:0;
+				}
+
+				.amount-to-pony-up {
+					font-size:16px;
+					border:2px solid @grayDark;
+					padding:10px;
+					margin-bottom:20px;
+				}
+
+				.me-pony-up-amount {
+					width:180px;
+				}
+
+				select {
+					width:100px;
+				}
+				select.month {
+					margin-right:20px;
+				}
+			}
+
+			.security-codes {
+				width:300px;
+				height:186px;
+				padding:10px 20px;
+				background: @white url('/images/security-codes.png') no-repeat center center;
+			}
+
+			.security-message {
+				background-color:lighten(@blueLight,30%);
+				padding:20px;
+				width:400px;
+				margin-left:30px;
+
+				.header {
+					h4 {
+						line-height: 30px;
+						vertical-align: middle;
+						font-size:20px;
+						font-weight:bold;
+					}
+				}
+				.message {
+
+				}
+			}
+		}
 	}
 }
+
+#pony-up-modal {
+	height:600px;
+
+	.modal-body {
+		max-height:500px;
+	}
+
+	.security-logos {
+		width:510px;
+		padding:0 10px;
+
+		.balanced-credit-card-logos {
+			margin: 15px 0 0 10px;
+		}
+	}
+
+	.modal-footer {
+		.control-group {
+			margin:50px 10px;
+		}
+	}
+}
+
 
 #plan-frame {
 	.clearfix();
@@ -395,10 +513,205 @@
 								font-weight:bold;
 							}
 						}
-					}
-				}
-			}
+						.requested-amounts-container, .transaction-fee-container, .suggested-amounts-container {
+							width:465px;
 
+							.me-pony-up-amount {
+								width:60px;
+								text-align:right;
+								margin-bottom:0px;
+							}
+
+							label.transaction-fee-label:hover, label.suggested-amounts-label:hover {
+								background-color:lighten(@blueLight,30%);
+								cursor:pointer;
+							}
+							.transaction-fee-label, .requested-amounts-label, .suggested-amounts-label {
+								width:444px;
+								padding:6px;
+
+								line-height: 24px;
+								vertical-align: middle;
+
+								i {width:15px;}
+								.transaction-fee-header, .requested-amounts-header, .suggested-amount-header {
+									font-size: 1em;
+									line-height: 24px;
+									vertical-align: middle;
+
+								}
+								.header {
+									font-size: 1.25em;
+									font-weight: bold;
+									line-height: 24px;
+									vertical-align: middle;
+								}
+								.value {
+									font-size: 1em;
+									line-height: 24px;
+									vertical-align: middle;
+								}
+							}
+							.transaction-fee-container, .suggested-amounts {
+								.popover-content {
+									width:250px;
+
+									.disclaimer {
+										small {
+											padding:10px 0;
+										}
+									}
+									h4 {
+										font-size: 0.75em;
+										display:block;
+										width:100%;
+									}
+								}
+								.suggested-amount {
+									width: 426px;
+									height:18px;
+									margin:0 10px 10px 30px;
+
+									.header {
+										font-weight: bold;
+										width:100px;
+									}
+									.suggested-amount-body {
+										margin:0 0 0 30px;
+										width:290px;
+										.key {
+											color:@grayLight;
+											font-style: italic;
+										}
+
+									}
+								}
+							}
+						}
+
+						.send-pony-up-control {
+							width: 450px;
+							margin:6px;
+							label {
+								height:30px;
+								padding:6px;
+								line-height:30px;
+								vertical-align: middle;
+
+								.header {
+									font-weight: bold;
+									font-style: italic;
+									font-size:1.5em;
+									line-height: 24px;
+									vertical-align: middle;
+								}
+
+								i {
+									width:26px;
+								}
+							}
+							input[type=text] {
+								width:75px;
+								font-size:18px;
+								text-align: right;
+							}
+							.total {
+								font-size:18px;
+								text-align: right;
+							}
+						}
+					}
+
+					.history-container {
+						width:75%;
+						margin-left:85px;
+						padding:6px;
+						background-color:lighten(@blueLight,30%);
+						border:2px dashed @grayDark;
+						.history-label {
+							cursor: pointer;
+							.header {
+								font-weight: bold;
+								font-size:16px;
+								font-style: italic;
+								line-height:26px;
+								vertical-align: middle;
+							}
+							.icon {
+								width:20px;
+							}
+						}
+						.history {
+							margin-left:24px;
+							.outside-payment-form {
+								padding: 20px 6px;
+								label {
+									font-weight: bold;
+									font-style: italic;
+								}
+
+								select {
+									width:75px;
+									margin:0 40px;
+								}
+
+								input[type=text] {
+									width:50px;
+								}
+
+								a {margin-left:40px;}
+							}
+							table {
+								width:100%;
+								td {
+									color: @grayDark;
+									text-transform: uppercase;
+									font-style: italic;
+									font-weight: bold;
+									text-align: center;
+									padding:6px;
+								}
+								td.type {
+									width:175px;
+									text-align: left;
+								}
+								td.history-header {
+									color:@gray;
+									text-align: right;
+									font-size:.8em;
+								}
+
+								td.date, td.status, td.amount {
+									text-align:left;
+								}
+								td.actions {
+									a {
+										line-height: 14px;
+										vertical-align: middle;
+										width:72px;
+										padding:4px 6px;
+										margin-right:4px;
+									}
+								}
+								tr.balance > td {
+
+								}
+							}
+						}
+					}
+
+				}
+
+				.pony-up-alert {
+					margin:34px;
+					width:450px;
+				}
+
+				.send-pony-up-button {
+					margin:40px 0 0 86px;
+				}
+
+			}
 
 			/* section specific global css */
 			.itinerary-section {
@@ -1043,190 +1356,7 @@
 			}
 
 			.organizer-pony-up-section {
-				.invitees-container {
-					.invitee {
-						margin:40px 0 0 0;
-						.invitee-info {
-							width:80%;
 
-							.suggested-amounts-container {
-								label.suggested-amounts-label:hover {
-									background-color:lighten(@blueLight,30%);
-									cursor:pointer;
-								}
-								.suggested-amounts-label {
-									width:444px;
-									padding:6px;
-									height:24px;
-
-									i {width:15px;}
-									.suggested-amount-header {
-										font-size: 1em;
-										line-height: 24px;
-										vertical-align: middle;
-
-									}
-									.header {
-										font-size: 1.25em;
-										font-weight: bold;
-										line-height: 24px;
-										vertical-align: middle;
-									}
-									.value {
-										font-size: 1em;
-										line-height: 24px;
-										vertical-align: middle;
-									}
-								}
-								.suggested-amounts {
-									.popover-content {
-										width:250px;
-
-										.disclaimer {
-											small {
-												padding:10px 0;
-											}
-										}
-										h4 {
-											font-size: 0.75em;
-											display:block;
-											width:100%;
-										}
-									}
-									.suggested-amount {
-										width: 426px;
-										height:18px;
-										margin:0 10px 10px 30px;
-
-										.header {
-											font-weight: bold;
-											width:100px;
-										}
-										.suggested-amount-body {
-											margin:0 0 0 30px;
-											width:290px;
-											.key {
-												color:@grayLight;
-												font-style: italic;
-											}
-
-										}
-									}
-								}
-							}
-							.send-pony-up-control {
-								width: 450px;
-								margin:6px;
-
-								label {
-									height:30px;
-
-									.header {
-										font-weight: bold;
-										font-style: italic;
-										font-size:1.5em;
-										line-height: 24px;
-										vertical-align: middle;
-									}
-
-									i {
-										width:26px;
-									}
-								}
-								input[type=text] {
-									width:75px;
-									font-size:18px;
-									text-align: right;
-								}
-							}
-						}
-						.history-container {
-							width:75%;
-							margin-left:85px;
-							padding:6px;
-							background-color:lighten(@blueLight,30%);
-							border:2px dashed @grayDark;
-							.history-label {
-								cursor: pointer;
-								.header {
-									font-weight: bold;
-									font-size:16px;
-									font-style: italic;
-									line-height:26px;
-									vertical-align: middle;
-								}
-								.icon {
-									width:20px;
-								}
-							}
-							.history {
-								margin-left:24px;
-								.outside-payment-form {
-									padding: 20px 6px;
-									label {
-										font-weight: bold;
-										font-style: italic;
-									}
-
-									select {
-										width:75px;
-										margin:0 40px;
-									}
-
-									input[type=text] {
-										width:50px;
-									}
-
-									a {margin-left:40px;}
-								}
-								table {
-									width:100%;
-									td {
-										color: @grayDark;
-										text-transform: uppercase;
-										font-style: italic;
-										font-weight: bold;
-										text-align: center;
-										padding:6px;
-									}
-									td.type {
-										width:175px;
-										text-align: left;
-									}
-									td.history-header {
-										color:@gray;
-										text-align: right;
-										font-size:.8em;
-									}
-
-									td.date, td.status, td.amount {
-										text-align:left;
-									}
-									td.actions {
-										a {
-											line-height: 14px;
-											vertical-align: middle;
-											width:72px;
-											padding:4px 6px;
-											margin-right:4px;
-										}
-									}
-									tr.balance > td {
-
-									}
-								}
-							}
-						}
-					}
-					.pony-up-alert {
-						margin:34px;
-						width:450px;
-					}
-
-					.send-pony-up-button {
-						margin:40px 0 0 86px;
-					}
-				}
 			}
 
 		}

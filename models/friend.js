@@ -13,10 +13,14 @@ this.Model = function(mongoose) {
 	 * payment.open means the transaction has not been completed.
 	 *  for a type: request, it means there is no response yet or the request is not canceled
 	 *  for a type: response, it means the response has not cleared yet
-	 *
+	 * payment.amount is the amount the organizer is requesting
+	 * payment.transactionFee is the fee wembli charges to collect a pony up from a friend
+	 * payment.total is the fee + amount (i.e. total that the friend gets charged)
 	 */
 	var Payment = new Schema({
 		amount:Number,
+		total:Number,
+		transactionFee:Number,
 		date:{type:Date,default:Date.now()},
 		method:String,
 		type:String,

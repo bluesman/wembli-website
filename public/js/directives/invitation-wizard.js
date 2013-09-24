@@ -209,7 +209,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
 
           $scope.initSignupForm = function() {
             plan.get(function(p) {
-              $scope.next = '/plan/' + p.event.eventId + '/' + p.event.eventName;
+              $scope.next = '/plan/' + p.guid + '/' + '2';
             });
 
             /* check if there's a customer already - if so just display the customer info */

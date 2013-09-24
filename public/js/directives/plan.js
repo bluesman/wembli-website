@@ -103,7 +103,6 @@ directive('rsvpFor', ['$rootScope',
           var d = scope.$watch('friend', function() {
             element.click(function() {
               var f = JSON.parse(attr.friend);
-              console.log(f);
               f.rsvp.decision = true;
               $rootScope.$broadcast('rsvp-for-clicked', f);
               $('#rsvp-for-modal').modal('show');
@@ -330,7 +329,7 @@ directive('infoSlideDownLabel', [
   }
 ]).
 
-directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'wembliRpc','cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav', 'slidePage',
+directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav', 'slidePage',
   function($timeout, $rootScope, $window, $location, wembliRpc, cart, plan, customer, pluralize, fetchModals, planNav, slidePage) {
     return {
       restrict: 'C',
@@ -358,30 +357,20 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                 }
                 friends[i].tickets = tickets[0];
                 var suggested = friends[i].tickets.costBreakdown.totalEach * friends[i].rsvp.guestCount + friends[i].tickets.costBreakdown.deliveryFeeEach;
-                console.log('suggested tickets');
-                console.log(suggested);
                 friends[i].tickets.suggestedPonyUpAmount = suggested.toFixed(2);
                 friends[i].suggestedPonyUpAmount += parseFloat(suggested);
               } else {
                 friends[i].tickets = [];
               }
-              console.log('suggested amount');
-              console.log(friends[i].suggestedPonyUpAmount);
 
               if ((typeof parking[0] !== "undefined") && (typeof parking[0].costBreakdown !== "undefined")) {
-                console.log('getting suggested amount for parking');
-                console.log(parking[0]);
                 friends[i].parking = parking[0];
                 var suggested = friends[i].parking.costBreakdown.totalEach * friends[i].rsvp.guestCount;
-                console.log('suggested parking');
-                console.log(suggested);
                 friends[i].parking.suggestedPonyUpAmount = suggested.toFixed(2);
                 friends[i].suggestedPonyUpAmount += parseFloat(suggested);
               } else {
                 friends[i].parking = [];
               }
-              console.log(friends[i].suggestedPonyUpAmount);
-
               friends[i].suggestedPonyUpAmount = parseFloat(friends[i].suggestedPonyUpAmount).toFixed(2);
             };
             return friends;
@@ -483,6 +472,7 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                 $scope.hotels = plan.getHotels();
                 $scope.restaurants = plan.getRestaurants();
                 $scope.friends = plan.getFriends();
+                $scope.context = plan.getContext();
 
                 /* debug stuff */
                 console.log('GETTING PLAN INFO:');
@@ -500,6 +490,8 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                 console.log($scope.restaurants);
                 console.log('hotels');
                 console.log($scope.hotels);
+                console.log('context');
+                console.log($scope.context);
 
                 /* get the friend that is this customer */
                 for (var i = 0; i < $scope.friends.length; i++) {
@@ -565,7 +557,6 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
             if (oldVal === newVal) {
               return;
             }
-            console.log('cart totals for parking');
             scope.friendsPonyUp(scope.friends);
             cart.totals('parking');
           });
@@ -579,7 +570,6 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
             }
             cart.totals('tickets');
             scope.friendsPonyUp(scope.friends);
-            console.log(newVal);
           });
 
 
@@ -616,7 +606,7 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
   }
 ]).
 
-directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wembliRpc', 'cart','plan', 'customer', 'pluralize', 'fetchModals', 'planNav',
+directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wembliRpc', 'cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav',
   function($rootScope, $window, $location, wembliRpc, cart, plan, customer, pluralize, fetchModals, planNav) {
     return {
       restrict: 'C',
@@ -773,8 +763,6 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
                     }, function(err, result) {
                       plan.set(result.plan);
                       scope.plan = result.plan;
-                      console.log('handleRsvpComplete');
-                      console.log(scope.plan);
                       $rootScope.$broadcast('plan-changed', {});
                       $rootScope.$broadcast('rsvp-complete', {});
                     });
@@ -895,7 +883,6 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan', '
           $rootScope.$broadcast('section-loaded');
 
           var d = scope.$on('rsvp-complete', function() {
-            console.log('handle rsvp complete broadcast');
             scope.plan.rsvpComplete = true;
             scope.rsvpComplete = true;
             d();
@@ -1099,8 +1086,6 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
                   };
                   ponyUpRequests.push(d);
                 } else {
-                  console.log('error');
-                  console.log(f);
                   $scope.error = false;
                   $scope.success = false;
                   $scope.formError = true;
@@ -1179,19 +1164,19 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
                   }
                   if (p.status !== 'canceled') {
                     requested += parseInt(p.amount);
-                    p.amount = parseFloat(parseInt(p.amount) / 100).toFixed(2);
+                    p.amount = parseInt(p.amount);
 
                   }
                 } else {
                   received += parseInt(p.amount);
                 }
               }
-              var reqFloat = parseFloat(requested) / 100;
-              var recFloat = parseFloat(received) / 100;
-              var balFloat = parseFloat((requested - received)) / 100;
-              f.payment.requested = parseFloat(reqFloat).toFixed(2);
-              f.payment.received = parseFloat(recFloat).toFixed(2);
-              f.payment.balance = parseFloat(balFloat).toFixed(2);
+              var reqFloat = requested;
+              var recFloat = received;
+              var balFloat = requested - received;
+              f.payment.requested = requested;
+              f.payment.received = received;
+              f.payment.balance = balance;
 
             }
           }
@@ -1273,10 +1258,7 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
 
             /* marker for the parking if there is parking chosen */
             var parking = plan.getParking();
-            console.log('mapping parking');
-            console.log(parking);
             if (typeof parking[0] !== "undefined") {
-              console.log(parking);
               if (parking[0].service === "google") {
                 var ll = new google.maps.LatLng(parking[0].parking.geometry.location.ob, parking[0].parking.geometry.location.pb);
                 mapMarker.create(googleMap, {
@@ -1302,8 +1284,6 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
             /* marker for the restaurant if there is a deal chosen */
             var restaurants = plan.getRestaurants();
             if (typeof restaurants[0] !== "undefined") {
-              console.log('mapping restaurant');
-              console.log(restaurants);
               if (restaurants[0].service === "google") {
                 mapMarker.create(googleMap, {
                   icon: "/images/icons/map-icons/entertainment/restaurant.png",
@@ -1835,63 +1815,83 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
 
+          $scope.$watch('ponyUp.amountFormatted', function(newVal) {
+            if (typeof newVal !== "undefined") {
+              var amount = parseInt(parseFloat(newVal) * 100);
+              $scope.ponyUp.transactionFee = .029 * parseFloat(amount) + 250;
+              $scope.ponyUp.total = $scope.ponyUp.transactionFee + amount;
+            }
+          });
+
+
+          function handlePonyUp(newValue) {
+            if (typeof newValue !== "undefined") {
+              var requested = 0;
+              var received = 0;
+              var balance = 0;
+
+              /* evaluate what phase the pony-up section is in */
+              /* check for any pony up requets from the organizer and grab the most recent one */
+              for (var i = 0; i < newValue.payment.length; i++) {
+
+                var p = newValue.payment[i];
+
+                if (p.type === 'request' && p.open) {
+                  /* found a pony up request */
+                  $scope.ponyUpRequest = p;
+                  if (!$scope.ponyUp || !$scope.ponyUp.amount) {
+                    $scope.ponyUp = {
+                      expirationDateMonth: '01',
+                      expirationDateYear: '2014'
+                    };
+                    $scope.ponyUp.amount = parseInt(p.amount);
+                    $scope.ponyUp.amountFormatted = parseFloat($scope.ponyUp.amount / 100).toFixed(2);
+
+                    $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
+                    $scope.ponyUp.organizerFirstName = $scope.organizer.firstName;
+
+                  }
+                }
+
+                if (p.type == 'request') {
+
+                  if (p.status !== 'canceled') {
+                    requested += parseInt(p.amount);
+                    p.amount = parseInt(p.amount);
+                  }
+                } else {
+                  received += parseInt(p.amount);
+                }
+
+
+
+              };
+              newValue.payment.requested = parseFloat(requested);
+              newValue.payment.received = parseFloat(received);
+              newValue.payment.balance = parseFloat((requested - received));
+            }
+          }
+
+          handlePonyUp($scope.me);
+
           $rootScope.$on('pony-up-success', function(e, friend) {
             //$scope.me = JSON.parse(friend);
             $scope.me = friend;
             $scope.paymentTotals();
           });
 
-          $scope.$watch('me', function(scope, newValue, oldValue) {
-            if (typeof newValue !== "undefined") {
-              /* evaluate what phase the pony-up section is in */
-              /* check for any pony up requets from the organizer and grab the most recent one */
-              for (var i = 0; i < newValue.payment.length; i++) {
-                var p = newValue.payment[i];
-                if (p.type === 'request' && p.open) {
-                  /* found a pony up request */
-                  $scope.ponyUpRequest = p;
-                  if (!$scope.ponyUp || !$scope.ponyUp.amount) {
-                    $scope.ponyUp = {};
-                    $scope.ponyUp.amount = parseFloat(p.amount / 100).toFixed(2);
-                    $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
-                  }
-                }
-              };
-            }
+          $scope.$watch('me', function(newValue, oldValue) {
+            console.log('me changed');
+
+            console.log(newValue);
+
+            handlePonyUp(newValue);
           });
 
           $scope.showPonyUpModal = function() {
             $('#pony-up-modal').modal('show');
             $rootScope.$broadcast('pony-up-clicked', $scope.ponyUp);
           }
-
-          /*
-            sum all the type: requests
-            sum all the others
-            subtract requests from others and get balance
-          */
-          $scope.paymentTotals = function() {
-            var requested = 0;
-            var received = 0;
-            var balance = 0;
-            var me = $scope.me;
-            for (var j = 0; j < me.payment.length; j++) {
-              var p = me.payment[j];
-              if (p.type == 'request') {
-                if (p.status !== 'canceled') {
-                  requested += parseInt(p.amount);
-                  p.amount = parseFloat(parseInt(p.amount) / 100).toFixed(2);
-                }
-              } else {
-                paid += parseInt(p.amount);
-              }
-
-            }
-            me.payment.requested = parseFloat(requested / 100).toFixed(2);
-            me.payment.received = parseFloat(received / 100).toFixed(2);
-            me.payment.balance = parseFloat((requested - received) / 100).toFixed(2);
-          }
-
         }
       ],
       compile: function(element, attr, transclude) {
@@ -1919,7 +1919,9 @@ directive('ponyUpModal', ['$rootScope', 'wembliRpc', 'plan',
             scope.sendPonyUpInProgress = true;
             scope.error = scope.formError = scope.success = false;
             var args = {};
-            args.amount = scope.ponyUp.amount * 100;
+            args.total = scope.ponyUp.total;
+            args.amount = parseInt(parseFloat(scope.ponyUp.amountFormatted) * 100);
+            args.transactionFee = parseInt(scope.ponyUp.transactionFee);
             args.cardHolderName = scope.ponyUp.cardHolderName;
             args.creditCardNumber = scope.ponyUp.creditCardNumber;
             args.expirationDateMonth = scope.ponyUp.expirationDateMonth;
@@ -1981,17 +1983,16 @@ directive('jquerySlider', [
               max: parseInt(attr.max),
               step: parseFloat(attr.step),
               create: function(event, ui) {
-                if (typeof attr.disable !== "undefined") {
-                  if (attr.disable === "true") {
-                    element.slider("disable");
-                  }
-                } else {
-                  attr.$observe('disable', function(disable) {
-                    if (attr.disable === "true") {
-                      element.slider("disable");
+                if (typeof attr.enable !== "undefined") {
+                  scope.$watch(attr.enable, function(newVal) {
+                    if (typeof newVal !== "undefined") {
+                      if (newVal) {
+                        element.slider("enable");
+                      } else {
+                        element.slider("disable");
+                      }
                     }
                   });
-
                 }
               },
               slide: function(event, ui) {

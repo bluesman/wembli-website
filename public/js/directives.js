@@ -41,7 +41,10 @@ directive('toggleSelected', [
 
 /*
  * Generic Directives
+ *
  */
+
+/* multiselect: http://www.erichynds.com/blog/jquery-ui-multiselect-widget */
 directive('multiselect', [
   function() {
     return {
@@ -72,9 +75,16 @@ directive('multiselect', [
             }
           });
 
-          attr.$observe('disable', function(disable) {
-            if (attr.disable === "true") {
-              ms.multiselect("disable");
+          scope.$watch(attr.enable, function(newVal) {
+            console.log('watching ' + attr.enable);
+            console.log('newVal is ' + newVal);
+            if (typeof newVal !== "undefined") {
+              if (newVal) {
+                console.log('disabled multiselect');
+                ms.multiselect("enable");
+              } else {
+                ms.multiselect("disable");
+              }
             }
           });
 
@@ -213,7 +223,7 @@ directive('addEvent', ['wembliRpc',
 ]).
 
 /*
- * Display a twitter bootstrap popover
+ * Display a twitter bootstrap nver
  * Class Directive
  *
  * foo.display-popover(placement="",trigger="",animation="",title="",content="")

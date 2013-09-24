@@ -46,11 +46,22 @@ angular.module('wembliApp', [
 
     /* slide pages using sequence when location changes */
     $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
+      //http://www/
+      console.log(oldUrl.split('/')[0]);
+      console.log(oldUrl.split('/')[1]);
+      console.log(oldUrl.split('/')[2]);
+      console.log(oldUrl.split('/')[3]);
+      console.log(oldUrl.split('/')[4]);
+
       $scope.actualLocation = $location.path();
-      if (oldUrl.split('/')[4] === '') {
-        console.log('oldurl split is empty string');
+      if ((oldUrl.split('/')[3] === '') && (newUrl.split('/')[3] === 'index')) {
         return;
       }
+
+      if ((oldUrl.split('/')[3] === 'index') && (newUrl.split('/')[3] === '')) {
+        return;
+      }
+
       if (newUrl === oldUrl) {
         return;
       }
