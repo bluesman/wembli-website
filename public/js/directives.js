@@ -957,6 +957,24 @@ directive('startPlan', ['$rootScope', 'fetchModals',
   }
 ]).
 
+directive('highSalesPerformers', ['wembliRpc',
+  function(wembliRpc) {
+    return {
+      restrict: 'E',
+      compile: function(element, attr, transclude) {
+        //get the tix and make the ticket list
+        wembliRpc.fetch('index.getHighSalesPerformers', {
+          parentCategoryID: attr.parentCategoryId,
+          numReturned: attr.numReturned
+        }, function(err, result) {
+          console.log(results);
+        });
+      }
+    }
+  }
+]).
+
+
 //directive to cause link click to go to next frame rather than fetch a new page
 directive('wembliSequenceLinkOff', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
   function($rootScope, $window, $templateCache, $timeout, $location, $http, $compile, sequence, fetchModals, plan, wembliRpc) {

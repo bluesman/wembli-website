@@ -1,3 +1,5 @@
+var ticketNetwork = require('../lib/wembli/ticketnetwork');
+
 exports.index = {
 	init: function(args,req,res) {
 		var me = this;
@@ -8,7 +10,19 @@ exports.index = {
 	},
 
 	getHighSalesPerformers: function(args, req, res) {
+		var me = this;
+		ticketNetwork.GetHighSalesPerformers(args, function(err, results) {
+			if (err) {
+				return me(err);
+			}
 
+			console.log(results);
+
+			return me(null, {
+				success: 1,
+				performers: results.PerformerPercent
+			});
+		});
 	}
 
 }
