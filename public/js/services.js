@@ -1546,7 +1546,7 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 							method: 'feed',
 							display: 'iframe',
 							link: actionLink,
-							picture: 'http://www2.wembli.com/images/layout/wembli-button-90x90.png',
+							picture: 'http://www2.wembli.com/images/layout/wembli-button-222x200.png',
 							name: 'Click Here To Check Out The Details & RSVP',
 							caption: 'Wembli lets friends plan, vote and split the cost of going to live events.',
 							to: args.to,
