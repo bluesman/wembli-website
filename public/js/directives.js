@@ -962,6 +962,7 @@ directive('highSalesPerformers', ['wembliRpc',
     return {
       restrict: 'E',
       compile: function(element, attr, transclude) {
+        var lookup = {1:'sports',2:'concert',3:'theater'};
         return function(scope, element, attr) {
           //get the tix and make the ticket list
           wembliRpc.fetch('index.getHighSalesPerformers', {
@@ -970,7 +971,8 @@ directive('highSalesPerformers', ['wembliRpc',
           }, function(err, result) {
             console.log(err);
             console.log(result);
-            scope.performers = result.performers
+            var key = lookup[attr.parentCategoryId]+'Performers';
+            scope[key] = result.performers;
           });
         }
       }
