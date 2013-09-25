@@ -1546,7 +1546,7 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 							method: 'feed',
 							display: 'iframe',
 							link: actionLink,
-							picture: 'http://www2.wembli.com/images/layout/wembli-orange-beta-small.png',
+							picture: 'http://www2.wembli.com/images/layout/wembli-logo-90x42.png',
 							name: 'Click Here To Check Out The Details & RSVP',
 							caption: 'Wembli lets friends plan, vote and split the cost of going to live events.',
 							to: args.to,
@@ -1891,6 +1891,9 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 				return this.loadingDuration;
 			},
 			slide: function(e, newUrl, oldUrl, callback) {
+				/* check for / -> /index rewrite */
+				if (newUrl.split('/'))
+
 				/* if either new or old has a hash tag and the urls are otherwise the same the gtfo */
 				if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
 					if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
