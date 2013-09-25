@@ -5,5 +5,10 @@ exports.index = {
 			success:1,
 		};
 		me(null,data);
+	},
+
+	getHighSalesPerformers: function(args, req, res) {
+
 	}
+
 }

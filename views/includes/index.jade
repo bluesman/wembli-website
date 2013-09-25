@@ -41,18 +41,18 @@
 				.video.pull-left
 					iframe(width="480",height="360",src="//www.youtube.com/embed/kgtNax8p5og",frameborder="0",allowfullscreen)
 	section.section3
-		h1.calibri TOP SELLING EVENTS THIS WEEK
+		h1.calibri TOP SELLING PERFORMERS THIS WEEK
 		.container.clearfix
 			.top-events-arrow
 			.left.pull-left
 				h2 Top 10 Concerts:
-				.list
+				high-sales-performers(parent-category-id="2",num-returned="10")
 			.middle.pull-left
-				h2 Top 10 Sporting Events:
-				.list
+				h2 Top 10 Sports Teams:
+				high-sales-performers(parent-category-id="1",num-returned="10")
 			.right.pull-left
-				h2 Top 10 Theater Events:
-				.list
+				h2 Top 10 Theater Shows:
+				high-sales-performers(parent-category-id="3",num-returned="10")
 	section.section4
 		.container.clearfix
 			.left.pull-left
