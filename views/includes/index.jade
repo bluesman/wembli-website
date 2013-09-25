@@ -48,17 +48,17 @@
 				h2 Top 10 Concerts:
 				high-sales-performers(parent-category-id="2",num-returned="10")
 					.performers(ng-repeat="performer in concertPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
+						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
 			.middle.pull-left
 				h2 Top 10 Sports Teams:
 				high-sales-performers(parent-category-id="1",num-returned="10")
 					.performers(ng-repeat="performer in sportsPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
+						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
 			.right.pull-left
 				h2 Top 10 Theater Shows:
 				high-sales-performers(parent-category-id="3",num-returned="10")
 					.performers(ng-repeat="performer in theaterPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
+						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
 	section.section4
 		.container.clearfix
 			.left.pull-left

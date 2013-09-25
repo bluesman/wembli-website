@@ -5725,6 +5725,12 @@ a:focus {
 .clearfix:after {
   clear: both;
 }
+.white {
+  color: #ffffff;
+}
+.black {
+  colort: #000000;
+}
 .green {
   color: #64C832;
 }
