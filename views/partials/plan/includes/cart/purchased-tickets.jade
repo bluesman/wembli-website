@@ -1,8 +1,28 @@
 //- have tickets and purchased
-.body.add-on-included(ng-show="tickets[0] && tickets[0].payment && tickets[0].payment.receipt")
+.body.add-on-included(ng-show="tickets[0] && tickets[0].purchased")
 	ul.ticket-list-container.add-on-container
 		li.ticket-row.add-on-row(ng-repeat="ticket in tickets")
-			.ticket-container
+			.ticket-container.display-popover(title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{ticket._id}}-tickets-popover-content",trigger="hover")
+				div(id="{{ticket._id}}-tickets-popover-content").hide
+					.row.clearfix
+						strong.pull-left  Ticket Price (ea.)&nbsp;
+						.pull-right {{ticket.costBreakdown.price | currency}}
+					.row.clearfix.border-bottom
+						strong.pull-left  Ticketnetwork Service Fee (ea.)&nbsp;
+						.pull-right {{ticket.costBreakdown.serviceFee | currency}}
+					.row.clearfix
+						strong.pull-left  Cost Per Person&nbsp;
+						.pull-right {{ticket.costBreakdown.totalEach | currency}}
+					.row.clearfix
+						strong.pull-left  Est. Delivery Fee* Per Invitee&nbsp;
+						.pull-right {{ticket.costBreakdown.deliveryFeeEach | currency}}
+					.row.clearfix
+						strong.pull-left  Total (x{{ticket.ticketGroup.selectedQty}} {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}):&nbsp;
+						strong.pull-right {{ticket.costBreakdown.total | currency}}
+					.row.disclaimer
+						small
+							strong *
+							span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
 				.ticket-info
 					strong Wembli Order ID:&nbsp;
 					span {{ticket._id}}
@@ -24,7 +44,7 @@
 					.per-person.pull-left
 						strong Total cost for {{ticket.payment.qty}} {{ticket.payment.amount | pluralize:'ticket'}}:
 					.ticket-total.pull-left
-						{{ticket.payment.sale_total | currency}}
+						{{ticket.payment.amount | currency}}
 			.controls.clearfix
 				a.view-tickets-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") View Tickets On Map
 				- if (req.session.plan.preferences.payment === 'split-after')

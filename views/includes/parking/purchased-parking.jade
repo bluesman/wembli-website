@@ -7,7 +7,9 @@
 		a.distance-header(href="#",ng-click="sortByDistance()") Distance
 
 ul#purchased-parking-container.parking-list-container.list-container
+
 	li(ng-repeat="item in parking")
+
 		.parking-row.row.bounce-map-marker(lat="{{parking.lat}}",lng="{{parking.lng}}",ng-show="{'pw':true}[item.service]")
 			.top.clearfix
 				.icon.pull-left
@@ -26,6 +28,7 @@ ul#purchased-parking-container.parking-list-container.list-container
 				.discount.pull-right
 					.value {{item.parking.available_spots}}
 					.header spots
+
 		.parking-row.row.bounce-map-marker(lat="{{item.parking.geometry.location.pb}}",lng="{{item.parking.geometry.location.qb}}",ng-show="{'google':true}[item.service]")
 			.top.clearfix
 				.icon.pull-left

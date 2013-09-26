@@ -2,6 +2,7 @@
 .body.add-on-included(ng-show="parking[0] && parking[0].payment && parking[0].purchased")
 	ul.parking-list-container.add-on-container
 		li.parking-row.add-on-row(ng-repeat="p in parking")
+
 			.parking-container.add-on-container(ng-show="{'google':true}[p.service]")
 				.parking-info.add-on-info.clearfix
 					.parking-name
@@ -38,7 +39,7 @@
 					.per-person.pull-left
 						strong Total cost for {{p.payment.qty}} parking {{p.payment.qty | pluralize:'spot'}}:&nbsp;
 					.parking-total.pull-left
-						{{p.payment.amount/100 | currency}}
+						{{p.payment.amount | currency}}
 			.controls.clearfix
 				a.view-parking-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") View parking On Map
 				- if (req.session.plan.preferences.parking.payment !== 'no-split')

@@ -1,8 +1,7 @@
 //- have restaurants and purchased
-.body.add-on-included(ng-show="restaurants[0] && restaurants[0].payment && restaurants[0].payment.receipt")
+.body.add-on-included(ng-show="restaurants[0] && restaurants[0].purchased")
 	ul.restaurants-list-container.add-on-container
 		li.restaurants-row.add-on-row(ng-repeat="r in restaurants")
-
 
 			.restaurants-container.add-on-container(ng-show="{'google':true}[r.service]")
 				.restaurants-info.add-on-info.clearfix
@@ -14,7 +13,21 @@
 						span {{r.restaurant.vicinity}}
 
 			//- TODO: show a parkwhiz logo? add notes field to keep track of order info from parkwhiz?
-			.restaurants-container.add-on-container(ng-show="{'yipit':true}[r.service]")
+			.restaurants-container.add-on-container.display-popover(ng-show="{'yipit':true}[r.service]",title="Deal Cost Breakdown",placement="right",html="true",content-id="{{r._id}}-restaurant-popover-content",trigger="hover")
+				div(id="{{r._id}}-restaurant-popover-content").hide
+					.row.clearfix.border-bottom
+						strong.pull-left  Deal Price
+						.pull-right {{r.costBreakdown.price | currency}}
+					.row.clearfix
+						strong.pull-left  Cost Per Person&nbsp;
+						.pull-right {{r.costBreakdown.totalEach | currency}}
+					.row.clearfix
+						strong.pull-left  Total:&nbsp;
+						strong.pull-right {{r.costBreakdown.total | currency}}
+
+				a.yipit-link.add-on-offsite-link.clearfix(target="_blank",href="{{r.restaurant.url}}")
+					img.pull-left(src="/images/yipit-logo.png")
+					.text.pull-left Go to Yipit.com
 				.restaurants-info.add-on-info.clearfix
 					.restaurants-deal-name.pull-left
 						strong {{r.restaurant.title}}&nbsp;

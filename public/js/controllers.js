@@ -1865,7 +1865,7 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 		$scope.sessionId = args.sessionId,
 		$scope.ticketGroup = args.ticketGroup,
 		$scope.ticketId = args.ticketId
-		$scope.backToPlan = (typeof args.backToPlan === "undefined") ? false : args.backToPlan;
+		$scope.backToPlan = (typeof args.backToPlan === "undefined" || args.backToPlan == 'false') ? false : args.backToPlan;
 		if ($scope.backToPlan) {
 			$scope.continueLink = '/plan';
 		} else {
@@ -1878,13 +1878,13 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 	};
 
 	$scope.submitForm = function() {
-
+		console.log($scope.ticketGroup);
 		console.log('adding manual ticket receipt for:');
 		console.log($scope.ticketId);
 		/* update the tickets to have a receipt */
 		plan.addTicketGroupReceipt({
 			ticketId: $scope.ticketId,
-			service: $scope.ticketGroup.service,
+			service: 'tn',
 			receipt: {
 				qty: $scope.qty,
 				amountPaid: $scope.amountPaid
@@ -1900,7 +1900,12 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 			//$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
 
 			/* have to back to plan so they don't have a chance to buy more */
-			$location.path("/plan");
+			if ($scope.continueLink) {
+				$location.path($scope.continueLink);
+			} else {
+				$location.path("/plan");
+			}
+
 		});
 
 	};

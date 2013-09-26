@@ -1859,13 +1859,15 @@ exports.plan = {
 			'service': args.service
 		};
 
+		console.log('args for tickets querry');
+		console.log(query);
 		/* find all the existing parking for this plan and remove them if payment is not complete */
 		Ticket.find(query, function(err, ticket) {
 			console.log('found ticket');
 			console.log(ticket);
 			if (err) {
 				data.success = 0;
-				data.dbError = 'unable to find parking';
+				data.dbError = 'unable to find ticket';
 				return me(null, data);
 			}
 

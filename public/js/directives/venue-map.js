@@ -291,11 +291,13 @@ directive('interactiveVenueMap', ['$rootScope', 'interactiveMapDefaults', 'wembl
 
                 options.OnError = function(e, Error) {
                   if (Error.Code === 1) {
-                    if (typeof scope.event.MapUrl === "undefined") {
-                      scope.event.MapUrl = "/images/no-seating-chart.jpg";
+                    console.log(scope.event);
+                    console.log(scope.tnMapUrl);
+                    if (typeof scope.event.MapURL === "undefined") {
+                      scope.event.MapURL = "/images/no-seating-chart.jpg";
                     }
                     /* chart not found - display the tn chart */
-                    $('#venue-map-container').css("background", 'url(' + scope.event.MapUrl + ') no-repeat center center');
+                    $('#venue-map-container').css("background", 'url(' + scope.event.MapURL + ') no-repeat center center');
                     loadingModal.hide()
                   }
                 };

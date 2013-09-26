@@ -95,31 +95,32 @@ section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
 									.value.pull-right
-										a.wembli-sequence-link(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Parking
+										a(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Parking
 
+							//- restaurant pony up suggestion
 							.suggested-amount.suggested-restaurant-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.restaurants && plan.restaurants[0]",title="Restaurant Cost Breakdown",placement="right",content="content",trigger="hover")
 								.header.pull-left RESTAURANT
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right {{friend.restaurant.suggestedPonyUpAmount | currency}}
+									.value.pull-right {{friend.restaurants.suggestedPonyUpAmount | currency}}
 							.suggested-amount.suggested-restaurant-amount.clearfix(ng-show="plan.preferences.addOns.restaurants && !plan.restaurants[0]")
 								.header.pull-left RESTAURANT
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
 									.value.pull-right
-										a.wembli-sequence-link(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
+										a(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
 
 							.suggested-amount.suggested-hotel-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.hotels && plan.hotels[0]",title="Hotel Cost Breakdown",placement="right",content="content",trigger="hover")
 								.header.pull-left HOTEL
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
-									.value.pull-right {{friend.hotel.suggestedPonyUpAmount | currency}}
+									.value.pull-right {{friend.hotels.suggestedPonyUpAmount | currency}}
 							.suggested-amount.suggested-hotel-amount.clearfix(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0]")
 								.header.pull-left HOTEL
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
 									.value.pull-right
-										a.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
+										a(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
 					.send-pony-up-control.clearfix
 						label.send-pony-up-label.pull-left.clearfix(ng-hide="friend.ponyUp.open", ng-click="friend.ponyUp.amount={false:'0.00',true:friend.tickets.suggestedPonyUpAmount}[friend.ponyUp.request]")
 							input.friend-pony-up-checkbox.pull-left.hide(ng-class="{true:'muted'}[friend.ponyUp.open]", type="checkbox",ng-model="friend.ponyUp.request")

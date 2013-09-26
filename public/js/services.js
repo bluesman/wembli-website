@@ -482,13 +482,14 @@ factory('cart', ['plan',
 								return self.tickets;
 							},
 							"getAmount": function(item) {
-								return (item.purchased) ? (item.payment.amount / item.payment.qty) / 100 : item.ticketGroup.ActualPrice;
+								return (item.purchased) ? (item.payment.amount / item.payment.qty) : item.ticketGroup.ActualPrice;
 							},
 							"getQty": function(item) {
 								return (item.purchased) ? item.payment.qty : item.ticketGroup.selectedQty;
 							},
 							"totalEach": function(price, fee, qty, splitBy) {
-								return price + fee;
+								//return price + fee;
+								return ((price * qty) + fee) / splitBy;
 							},
 
 						},
@@ -501,7 +502,7 @@ factory('cart', ['plan',
 							},
 							"getAmount": function(item) {
 								if (item.purchased) {
-									return (item.payment.amount / item.payment.qty) / 100;
+									return (item.payment.amount / item.payment.qty);
 								} else {
 									if (item.service === 'pw') {
 										return item.parking.price;
@@ -536,7 +537,7 @@ factory('cart', ['plan',
 
 							"getAmount": function(item) {
 								if (item.purchased) {
-									return (item.payment.amount / item.payment.qty) / 100;
+									return (item.payment.amount / item.payment.qty);
 								} else {
 									if (item.service === 'yipit') {
 										return item.restaurant.price.raw;

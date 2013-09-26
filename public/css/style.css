@@ -9222,6 +9222,14 @@ header .right-container .logo-45 {
   width: 130px;
   display: block;
 }
+#hotels-login-modal .modal-body,
+#restaurants-login-modal .modal-body,
+#parking-login-modal .modal-body,
+#rsvp-login-modal .modal-body,
+#tickets-login-modal .modal-body {
+  max-height: 450px;
+  color: #000000;
+}
 #hotels-login-modal .not-friend,
 #restaurants-login-modal .not-friend,
 #parking-login-modal .not-friend,
@@ -12157,7 +12165,7 @@ a#facebook-login-button {
   margin-top: 12px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .add-on-container .add-on-offsite-link .text {
-  margin-top: 15px;
+  margin: 15px 0 0 15px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .add-on-container .add-on-info,
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .add-on-container .add-on-payment {
