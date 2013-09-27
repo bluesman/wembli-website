@@ -98,11 +98,23 @@ section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 										a(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}",direction="-1") Choose Parking
 
 							//- restaurant pony up suggestion
-							.suggested-amount.suggested-restaurant-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.restaurants && plan.restaurants[0]",title="Restaurant Cost Breakdown",placement="right",content="content",trigger="hover")
+							.suggested-amount.suggested-restaurant-amount.display-popover.clearfix(ng-show="plan.preferences.addOns.restaurants && plan.restaurants[0]",title="Restaurant Cost Breakdown",placement="right",html="true",content-id="{{friend._id}}-restaurants-pony-up-popover-content",trigger="hover")
 								.header.pull-left RESTAURANT
 								.suggested-amount-body.pull-left.clearfix
 									.key.pull-left Estimated total for {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'person'}}
 									.value.pull-right {{friend.restaurants.suggestedPonyUpAmount | currency}}
+								div(id="{{friend._id}}-restaurants-pony-up-popover-content").hide
+									.row.clearfix.border-bottom
+										strong.pull-left  Restaurant Deal Price
+										.pull-right {{friend.restaurants.costBreakdown.price | currency}}
+									.row.clearfix
+										strong.pull-left  Cost Per Person&nbsp;
+										.pull-right {{friend.restaurants.costBreakdown.totalEach | currency}}
+									.row.clearfix
+										strong.pull-left  Total:&nbsp;
+										strong.pull-right {{friend.restaurants.costBreakdown.total | currency}}
+
+
 							.suggested-amount.suggested-restaurant-amount.clearfix(ng-show="plan.preferences.addOns.restaurants && !plan.restaurants[0]")
 								.header.pull-left RESTAURANT
 								.suggested-amount-body.pull-left.clearfix

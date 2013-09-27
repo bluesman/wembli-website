@@ -1886,20 +1886,26 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
 
                 var p = newValue.payment[i];
 
+                $scope.ponyUp = {
+                  expirationDateMonth: '01',
+                  expirationDateYear: '2014',
+                  amount: 0,
+                  amountFormatted: 0.00,
+                  transactionFee:0,
+                  total:0
+                };
+
                 if (p.type === 'request' && p.open) {
                   /* found a pony up request */
                   $scope.ponyUpRequest = p;
                   if (!$scope.ponyUp || !$scope.ponyUp.amount) {
-                    $scope.ponyUp = {
-                      expirationDateMonth: '01',
-                      expirationDateYear: '2014'
-                    };
-                    $scope.ponyUp.amount = parseInt(p.amount);
+                    $scope.ponyUp.amount = parseInt(p.amount) || 0;
                     $scope.ponyUp.amountFormatted = parseFloat($scope.ponyUp.amount / 100).toFixed(2);
 
                     $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
                     $scope.ponyUp.organizerFirstName = $scope.organizer.firstName;
-
+                    console.log('ponyUp');
+                    console.log($scope.ponyUp);
                   }
                 }
 
