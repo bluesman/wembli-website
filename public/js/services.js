@@ -505,7 +505,7 @@ factory('cart', ['plan',
 									return (item.payment.amount / item.payment.qty);
 								} else {
 									if (item.service === 'pw') {
-										return item.parking.price;
+										return item.parking.price || 0;
 									} else {
 										0
 									}
@@ -540,7 +540,7 @@ factory('cart', ['plan',
 									return (item.payment.amount / item.payment.qty);
 								} else {
 									if (item.service === 'yipit') {
-										return item.restaurant.price.raw;
+										return item.restaurant.price.raw || 0;
 									} else {
 										0
 									}
