@@ -1,4 +1,4 @@
 .totals.pull-left
 	.total-bill(ng-class="{'no-split':'orange'}[plan.preferences.payment]") Total Bill = {{tickets.total + parking.total + restaurants.total + hotels.total | currency}}
-	.total-ponied-up(ng-hide="{'no-split':true}[plan.preferences.payment]") Total Ponied Up = {{totalPoniedUp | currency}}
-	.balance.orange(ng-hide="{'no-split':true}[plan.preferences.payment]") Balance = {{tickets.total + parking.total + restaurants.total + hotels.total - totalPoniedUp | currency}}
+	.total-ponied-up(ng-hide="{'no-split':true}[plan.preferences.payment]") Total Ponied Up = {{totalPoniedUp/100 | currency}}
+	.balance.orange(ng-hide="{'no-split':true}[plan.preferences.payment]") Balance = {{tickets.total + parking.total + restaurants.total + hotels.total - (totalPoniedUp/100) | currency}}

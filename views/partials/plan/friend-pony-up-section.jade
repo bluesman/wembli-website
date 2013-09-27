@@ -1,7 +1,7 @@
 section#section5.me-pony-up-section.pony-up-section.plan-section.even
 	.header
 		h1.pull-left Pony Up!
-	.body(ng-hide="ponyUpRequest")
+	.body(ng-hide="me.payment[0]")
 		h3 Find Out What It Means To Pony Up
 		.pony-up
 			.content.pull-left
@@ -15,7 +15,7 @@ section#section5.me-pony-up-section.pony-up-section.plan-section.even
 				p.note.calibri NOTE:  You'll have 24 hrs from the time you get your pony up email to deposit your share because tickets can't be put on hold.
 			.img.pull-right
 				img(src="/images/cartoon-man-money-left.png")
-	.body(ng-show="ponyUpRequest")
+	.body(ng-show="me.payment[0]")
 		h3 It's Time To Pony Up For Your Part Of The Bill
 		.invitees-container
 			.row.invitee.clearfix(id="{{me._id}}")
@@ -70,7 +70,7 @@ section#section5.me-pony-up-section.pony-up-section.plan-section.even
 								td.history-header.orange(colspan="5") Balance:
 								td.amount.orange {{me.payment.balance/100 | currency}}
 			.send-pony-up-button-container.clearfix
-				button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(ng-disabled="{false:true}[ponyUpRequest.open]", ng-click="showPonyUpModal()",ng-hide="sendPonyUpInProgress")
+				button.btn.btn-orange.btn-large.send-pony-up-button.pull-left(ng-disabled="{false:true}[ponyUpRequest.open] || !ponyUp.amountFormatted", ng-click="showPonyUpModal()",ng-hide="sendPonyUpInProgress")
 					.icon.icon-money.pull-left
 					span &nbsp;Send Pony Up!
 

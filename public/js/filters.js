@@ -126,6 +126,54 @@ filter('facebookFriends', [
 	}
 ]).
 
+filter('filterInvitees', ['plan',
+	function(plan) {
+		return function(friends) {
+			if (typeof friends === "undefined") {
+				return friends;
+			}
+
+			var newList = [];
+			var p = plan.get();
+
+			/* check plan preferences to figure out which friends show up
+			 * p.preferences.guestList can be: full, rsvp, private
+			*/
+
+			/* grab the organizer and add to the top of the list */
+			var o = plan.getOrganizer();
+			var organizer = {
+				'contactInfo': {
+					'name': o.firstName + ' ' + o.lastName
+				},
+				'rsvp': p.organizer.rsvp,
+			};
+
+			//newList.push(organizer);
+
+			if (p.preferences.guestList === 'private') {
+				return newList;
+			}
+
+			for (var i = 0; i < friends.length; i++) {
+				var f = friends[i];
+
+				/* rsvp means only show those guests that have rsvp'd */
+				if (p.preferences.guestList === 'rsvp') {
+					if (f.rsvp.decision !== null) {
+						newList.push(f);
+					}
+				}
+
+				if (p.preferences.guestList === 'full') {
+					newList.push(f);
+				}
+			};
+			return newList;
+		}
+	}
+]).
+
 filter('interpolate', ['version',
 	function(version) {
 		return function(text) {

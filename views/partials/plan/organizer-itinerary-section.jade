@@ -92,11 +92,46 @@ section#section1(class="#{sectionClass} itinerary-section plan-section")
 			.hotel-container
 				h2 Hotel
 				.row
-					.info.clearfix
+					.info.clearfix(ng-hide="hotels[0].hotel")
+						.hotels-name
+							strong NAME:
+							span TBD&nbsp;
+						.hotels-location
+							strong LOCATION:
+							span TBD
+
 			.restaurant-container
 				h2 Restaurant
 				.row
-					.info.clearfix
+					.info.clearfix(ng-hide="restaurants[0].restaurant")
+						.restaurants-name
+							strong NAME:
+							span TBD&nbsp;
+						.restaurants-location
+							strong LOCATION:
+							span TBD
+
+					.info.clearfix(ng-show="restaurants[0].restaurant && {'google':true}[restaurants[0].service]")
+						.restaurants-name
+							strong NAME:
+							span {{restaurants[0].restaurant.name}}&nbsp;
+						.restaurants-location
+							strong LOCATION:
+							span {{restaurants[0].restaurant.vicinity}}
+
+					.info.clearfix(ng-show="restaurants[0].restaurant && {'yipit':true}[restaurants[0].service]")
+						.restaurants-deal-name
+							strong {{restaurants[0].restaurant.title}}&nbsp;
+						.restaurants-name
+							strong RESTAURANT:&nbsp;
+							span {{restaurants[0].restaurant.business.name}}
+						.restaurants-location
+							strong LOCATION:&nbsp;
+							span {{restaurants[0].restaurant.business.locations[0].address}}, {{restaurants[0].restaurant.business.locations[0].locality}}, {{restaurants[0].restaurant.business.locations[0].state}} {{restaurants[0].restaurant.business.locations[0].zip_code}}
+						.restaurants-location
+							strong PHONE:&nbsp;
+							span {{restaurants[0].restaurant.business.locations[0].phone}}
+
 			.google-map-container
 				h2 Map
 				#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")

@@ -3,32 +3,48 @@
 //- hide change rsvp functionality
 //- make the invitees list respect the preferences for the friend plan
 .invitees-container.clearfix
-	//- if this is the friend page include a row for the organizer
-	.row.invitee.clearfix(ng-show="me")
+	//- show the organizer
+	.invitee.clearfix
+		.img-container.pull-left
+			img.img-polaroid(ng-hide="organizer.imageUrl",src="/images/cartoon-man-head.png")
+			img.img-polaroid(ng-show="organizer.imageUrl",ng-src="{{organizer.imageUrl}}")
+
+		.invitee-info.pull-left
+			.invitee-name.clearfix
+				.invitee-name-container.pull-left
+					span.name.orange {{organizer.firstName}} {{organizer.lastName}} (organizer)&nbsp;
+					span.guests(ng-show="plan.organizer.rsvp.decision") + {{plan.organizer.rsvp.guestCount-1}} {{plan.organizer.rsvp.guestCount-1 | pluralize:'guest'}}
+			.invitee-prefs-container
+				.invitee-pref.first.pull-left
+					.invitee-pref-header RSVP STATUS
+					.invitee-pref-value
+						i.icon-check.icon-3x.green.invitee-rsvp-decision(ng-show="{true:true}[plan.organizer.rsvp.decision]")
+						i.icon-remove.icon-3x.invitee-rsvp-decision(ng-show="{false:true}[plan.organizer.rsvp.decision]")
+						i.icon-question.icon-3x.invitee-rsvp-decision(ng-show="{null:true}[plan.organizer.rsvp.decision]")
+
+	.invitee.clearfix(ng-repeat="friend in friends | filter:{inviteStatus:true} | filterInvitees")
 		.img-container.pull-left
 			img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 			img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
-	.row.invitee.clearfix(ng-repeat="friend in friends | filter:!{_id:customer._id} | filter:{inviteStatus:true}")
-		.img-container.pull-left
-			img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
-			img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
-			a.rsvp-for(href="#",friend="{{friend}}") change rsvp for {{friend.contactInfo.name}}
+			a.rsvp-for(ng-show="{'organizer':true}[context]",href="#",friend="{{friend}}") change rsvp for {{friend.contactInfo.name}}
 		.invitee-info.pull-left
 			.invitee-name.clearfix
 				.invitee-name-container.pull-left
 					span.name.orange {{friend.contactInfo.name}}&nbsp;
-					span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} {{friend.rsvp.guestCount | pluralize:'guest'}}
+					span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount-1}} {{friend.rsvp.guestCount-1 | pluralize:'guest'}}
 				//- make sure this is appropriate for friend plan view
-				.message-status-container.pull-right
+				.message-status-container.pull-right(ng-show="{'organizer':true}[context]")
 					.message-status
 						.rsvp-email(ng-hide="rsvpComplete")
-							label.rsvp-email-label
+							label.rsvp-email-label(ng-show="friend.email")
 								span RSVP Email:&nbsp;
 								span.label.label-info(title="Delivered on {{friend.email.rsvp.deliveredLastDate | date:'short'}}",ng-show="friend.email.rsvp.delivered") &nbsp;delivered({{friend.email.rsvp.delivered}})
 								span &nbsp;
 								span.label.label-info(title="Opened on {{friend.email.rsvp.openLastDate | date:'short'}}", ng-show="friend.email.rsvp.open") &nbsp;opened ({{friend.email.rsvp.open}})
 								span &nbsp;
-								a.resend-rsvp-email(href="#",friendId="{{friend._id}}") Resend
+								a.resend-rsvp-email(ng-hide="rsvpEmailSent || rsvpEmailInProgress", href="#",friend-id="{{friend._id}}") Resend
+								i.icon-cog.icon-spin(ng-show="rsvpEmailInProgress")
+								span(ng-show="rsvpEmailSent") Sent
 						.ponyup-email(ng-show="rsvpComplete")
 			.invitee-prefs-container
 				.invitee-pref.first.pull-left
@@ -37,7 +53,7 @@
 						i.icon-check.icon-3x.green.invitee-rsvp-decision(ng-show="{true:true}[friend.rsvp.decision]")
 						i.icon-remove.icon-3x.invitee-rsvp-decision(ng-show="{false:true}[friend.rsvp.decision]")
 						i.icon-question.icon-3x.invitee-rsvp-decision(ng-show="{null:true}[friend.rsvp.decision]")
-				.invitee-pref.pull-left
+				.invitee-pref.pull-left(ng-show="friend.rsvp.tickets")
 					.invitee-pref-header Ticket Vote
 					.invitee-pref-value(ng-show="friend.rsvp.decision")
 						.icon(ng-hide="friend.rsvp.tickets.decision")
@@ -46,7 +62,7 @@
 							span(ng-show="friend.rsvp.tickets.priceGroup.low") $
 							span(ng-show="friend.rsvp.tickets.priceGroup.med") $
 							span(ng-show="friend.rsvp.tickets.priceGroup.high") $
-				.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.parking]")
+				.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.parking]", ng-show="friend.rsvp.parking")
 					.invitee-pref-header Parking Vote
 					.invitee-pref-value(ng-show="friend.rsvp.decision")
 						.icon(ng-hide="friend.rsvp.parking.decision")
@@ -55,7 +71,7 @@
 							span(ng-show="friend.rsvp.parking.priceGroup.low") $
 							span(ng-show="friend.rsvp.parking.priceGroup.med") $
 							span(ng-show="friend.rsvp.parking.priceGroup.high") $
-				.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.restaurants]")
+				.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.restaurants]", ng-show="friend.rsvp.restaurant")
 					.invitee-pref-header Restaurant Votes
 					.invitee-pref-value(ng-show="friend.rsvp.decision")
 						.icon(ng-hide="friend.rsvp.restaurant.decision")
@@ -69,7 +85,7 @@
 								strong cuisine:&nbsp;
 								span {{friend.rsvp.restaurant.preference.join(', ').substring(0,30)}}
 								span(ng-show="showEllipses(friend.rsvp.restaurant.preference,30)") ...
-				.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.hotels]")
+				.invitee-pref.pull-left(ng-class="{false:'muted'}[plan.preferences.addOns.hotels]", ng-show="friend.rsvp.hotel")
 					.invitee-pref-header Hotel Votes
 					.invitee-pref-value(ng-show="friend.rsvp.decision")
 						.icon(ng-hide="friend.rsvp.hotel.decision")

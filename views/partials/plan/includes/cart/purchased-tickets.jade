@@ -42,9 +42,9 @@
 					span {{ticket.ticketGroup.Notes}}
 				.ticket-payment.clearfix
 					.per-person.pull-left
-						strong Total cost for {{ticket.payment.qty}} {{ticket.payment.amount | pluralize:'ticket'}}:
+						strong Total cost for {{ticket.payment.qty}} {{ticket.payment.qty | pluralize:'ticket'}}:
 					.ticket-total.pull-left
-						{{ticket.payment.amount | currency}}
+						{{ticket.costBreakdown.total | currency}}
 			.controls.clearfix
 				a.view-tickets-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") View Tickets On Map
 				- if (req.session.plan.preferences.payment === 'split-after')

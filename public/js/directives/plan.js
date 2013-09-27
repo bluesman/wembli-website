@@ -116,6 +116,41 @@ directive('rsvpFor', ['$rootScope',
   }
 ]).
 
+directive('resendRsvpEmail', ['wembliRpc',
+  function(wembliRpc) {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          scope.rsvpEmailSent = false;
+          scope.rsvpEmailInProgress = false;
+
+          attr.$observe('friendId', function() {
+
+            element.click(function(e) {
+              scope.rsvpEmailInProgress = true;
+              var rpcArgs = {
+                friendId: attr.friendId
+              };
+              console.log('clicked to resend rsvp email');
+              console.log(rpcArgs);
+              wembliRpc.fetch('plan.resendRsvpEmail', rpcArgs, function(err, result) {
+                console.log('sent rsvp email');
+                console.log(err);
+                /* display an email sent message */
+                scope.rsvpEmailSent = true;
+                scope.rsvpEmailInProgress = false;
+                scope.$broadcast('rsvp-email-sent');
+              });
+            });
+          });
+
+        };
+      }
+    };
+  }
+]).
+
 directive('createAccountModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
   function($rootScope, pluralize, wembliRpc, plan) {
     return {

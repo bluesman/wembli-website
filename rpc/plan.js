@@ -668,8 +668,11 @@ exports.plan = {
 								debit: transaction,
 								credit: credit
 							},
-							requestId: ponyUpRequest._id
 						};
+
+						if (typeof ponyUpRequest !== "undefined") {
+							payment.requestId = ponyUpRequest._id;
+						}
 
 						var p = friend.payment.create(payment);
 
@@ -923,6 +926,57 @@ exports.plan = {
 				});
 			});
 	},
+
+	resendRsvpEmail: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		if (!req.session.customer.email) {
+			data.error = true;
+			data.success = 0;
+			data.noEmail = true;
+			return me(null, data);
+		}
+
+		/* you must be logged in as the organizer to do this */
+		if (req.session.customer._id != req.session.plan.organizer.customerId) {
+			console.log(req.session.customer._id);
+			console.log(req.session.plan.organizer.customerId);
+			data.success = 0;
+			data.error = 'Not Authorized';
+			return me(null, data);
+		}
+
+		console.log('resend rsvp email to ' + args.friendId);
+		/* we can't send the email until the organizer confirms their email address */
+		if (req.session.customer.confirmed) {
+			Friend.findOne()
+				.where('planGuid').equals(req.session.plan.guid)
+				.where('_id').equals(args.friendId)
+				.exec(function(err, friend) {
+
+					/* now that we have added the friend to the plan and have a token, send the wembli email */
+					var rsvpLink = "http://" + app.settings.host + ".wembli.com/rsvp/" + req.session.plan.guid + "/" + friend.rsvp.token + "/wemblimail";
+					wembliMail.sendRSVPEmail({
+						res: res,
+						req: req,
+						rsvpDate: friend.rsvp.date,
+						rsvpLink: rsvpLink,
+						email: friend.contactInfo.serviceId,
+						message: args.message,
+						friendId: friend._id,
+						planGuid: req.session.plan.guid
+					}, function() {
+						me(null, data);
+					});
+				});
+		}
+
+	},
+
+
 
 	removeOutsidePayment: function(args, req, res) {
 		var me = this;
