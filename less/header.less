@@ -17,10 +17,60 @@ a.logo-35 {
   background: @white;
 	@shadow:inset -2px 2px 6px 0px rgba(0,0,0,.25);
 	.box-shadow(@shadow);
+	.wrapper {
+		.controls {
+			margin: 10px 10px 0 0;
+			color:@blueDark;
 
-	i.close {
+			i.close {
 
+			}
+		}
 	}
+
+	.log-out, .sign-up {
+		width:100%;
+		text-align:center;
+		a {
+			margin:20px;
+			width:180px;
+		}
+	}
+
+	ul {
+		padding:20px 0px;
+		li {
+			a {
+				padding: 10px 20px 10px 40px;
+				display:block;
+				color:@blueDark;
+				font-size: 22px;
+				line-height: 24px;
+			}
+			a:hover {
+				background-color:@blue;
+				color:@yellow;
+			}
+		}
+	}
+
+	ul.side-nav {
+		li {
+			a {
+				border-bottom: 2px solid #CCC;
+			}
+		}
+	}
+
+	ul.links {
+		li {
+			a {
+				display:block;
+				padding:10px 0 10px 40px;
+			}
+		}
+	}
+
 }
 
 

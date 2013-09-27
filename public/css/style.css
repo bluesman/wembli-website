@@ -7583,6 +7583,41 @@ a.logo-35 {
   -moz-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.25);
   box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.25);
 }
+.cb_slide_panel .wrapper .controls {
+  margin: 10px 10px 0 0;
+  color: #426799;
+}
+.cb_slide_panel .log-out,
+.cb_slide_panel .sign-up {
+  width: 100%;
+  text-align: center;
+}
+.cb_slide_panel .log-out a,
+.cb_slide_panel .sign-up a {
+  margin: 20px;
+  width: 180px;
+}
+.cb_slide_panel ul {
+  padding: 20px 0px;
+}
+.cb_slide_panel ul li a {
+  padding: 10px 20px 10px 40px;
+  display: block;
+  color: #426799;
+  font-size: 22px;
+  line-height: 24px;
+}
+.cb_slide_panel ul li a:hover {
+  background-color: #4380b8;
+  color: #ffcc00;
+}
+.cb_slide_panel ul.side-nav li a {
+  border-bottom: 2px solid #CCC;
+}
+.cb_slide_panel ul.links li a {
+  display: block;
+  padding: 10px 0 10px 40px;
+}
 header {
   background-color: #ffffff;
   position: fixed;

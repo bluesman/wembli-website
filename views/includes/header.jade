@@ -1,8 +1,48 @@
 block header
 	#slidepanel.cb_slide_panel
-		.wrapper
-			i.icon-remove.icon-2x.close(href="#")
-			.foo FOO
+		.wrapper.clearfix
+			.controls.pull-right.close
+				i.icon-chevron-left
+				i.icon-chevron-left
+		.sign-up(ng-hide="loggedIn")
+			a.btn.btn-secondary.btn-large(href="/signup")
+				strong sign up
+		.log-out(ng-show="loggedIn")
+			a.btn.btn-secondary.btn-large(href="/logout")
+				strong log out
+		ul.side-nav
+			li(ng-hide="loggedIn")
+				a(href="/login") login
+			li
+				a(href="/search") search
+			li
+				a(ng-href="/tickets{{eventLink}}") tickets
+			li
+				a(ng-href="/invitation{{eventLink}}") invite
+			li
+				a(ng-href="/parking{{eventLink}}") parking
+			li
+				a(ng-href="/restaurants{{eventLink}}") restaurant deals
+			li
+				a(ng-href="/hotels{{eventLink}}") hotels
+			li(ng-show="loggedIn")
+				a(href="/dashboard") dashboard
+			li(ng-show="loggedIn && plan")
+				a(href="/plan") current plan
+			li
+				a(href="/index") home
+
+		ul.links
+			li.hide
+				a(href="/about-us") about us
+			li.hide
+				a(href="/press") press
+			li
+				a(href="http://blog.wembli.com/", target="_self") VenueMaster blog
+			li.hide
+				a(href="/jobs") career opps
+			li.hide
+				a(href="/contact-us") contact us
 
 	header#header.clearfix
 		a.slidepanel.left-container.pull-left.clearfix(href="#",data-slidepanel="panel")
