@@ -8,7 +8,7 @@ block header
 			a.btn.btn-secondary.btn-large(href="/signup")
 				strong sign up
 		.log-out(ng-show="loggedIn")
-			a.btn.btn-secondary.btn-large(href="/logout")
+			a.btn.btn-secondary.btn-large(href="/logout", target="_self")
 				strong log out
 		ul.side-nav
 			li(ng-hide="loggedIn")
