@@ -617,7 +617,7 @@ factory('cart', ['plan',
 					/* loop through the list of add-ons and generate totals */
 					for (var i = 0; i < items.length; i++) {
 						var item = items[i];
-						var amount = funcs.getAmount(item);
+						var amount = parseFloat(funcs.getAmount(item));
 						var qty = funcs.getQty(item);
 						if (typeof qty === "undefined") {
 							qty = 0;
