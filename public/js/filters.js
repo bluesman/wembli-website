@@ -133,6 +133,10 @@ filter('filterInvitees', ['plan',
 				return friends;
 			}
 
+			if (plan.getContext() === 'organizer') {
+				return friends;
+			}
+
 			var newList = [];
 			var p = plan.get();
 
@@ -140,16 +144,6 @@ filter('filterInvitees', ['plan',
 			 * p.preferences.guestList can be: full, rsvp, private
 			*/
 
-			/* grab the organizer and add to the top of the list */
-			var o = plan.getOrganizer();
-			var organizer = {
-				'contactInfo': {
-					'name': o.firstName + ' ' + o.lastName
-				},
-				'rsvp': p.organizer.rsvp,
-			};
-
-			//newList.push(organizer);
 
 			if (p.preferences.guestList === 'private') {
 				return newList;
