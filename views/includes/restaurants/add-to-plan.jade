@@ -1,0 +1,61 @@
+#restaurants-list-header-container.restaurants-list-header-container.list-header-container
+	#restaurants-list-header.list-header
+		h4.pull-left Get a deal at nearby restaurants
+		.popover-container.pull-left
+			i.icon-question-sign.display-popover(placement="bottom",trigger="hover",animation="true",title="Buy A Restaurant Deal",content="If you're gonna eat anyway, you might was well save some dough!")
+ul#restaurants-list-container.restaurants-list-container.list-container
+	//- yipit
+	li.restaurants-row.row.bounce-map-marker(lat="{{deal.business.locations[0].lat}}",lng="{{deal.business.locations[0].lon}}",ng-repeat="deal in deals | filter:{hide:false}",ng-hide="deals.hide")
+		.top.clearfix
+			.icon.pull-left
+				i.icon-food.icon-2x
+			.title.pull-left {{deal.title}}
+		.bottom.clearfix
+			.price.pull-left
+				.header price
+				.value {{deal.price.formatted}}
+			.contact.pull-left.clearfix
+				.business.pull-left
+					.name {{deal.business.name}}
+					.address
+						div {{deal.business.locations[0].address}}
+						div {{deal.business.locations[0].locality}}, {{deal.business.locations[0].state}} {{deal.business.locations[0].zip_code}}
+				.details
+					a.btn.btn-small.restaurants-more-info(restaurant="{{deal}}",href="#restaurants-info-modal") view details
+			.discount.pull-right
+				.value {{deal.discount.formatted}}
+				.header discount
+			.controls.pull-right
+				.actions
+					a.btn.btn-primary.btn-large.add-deal-to-plan(ng-show="customer && backToPlan && !deal.restaurantInPlan", service="yipit", restaurant="{{deal}}", ng-href="/plan") Add
+					button.btn.btn-primary.btn-large.add-deal-to-plan(restaurant="{{deal}}", service="pw", ng-hide="!customer || backToPlan || deal.restaurantInPlan") Add
+					a.btn.btn-orange.btn-large(ng-click="removeRestaurant(deal._id)",ng-href="/plan",ng-show="backToPlan && deal.restaurantInPlan") Remove
+					button.btn.btn-orange.btn-large(ng-click="removeRestaurant(deal._id)",ng-show="!backToPlan && deal.restaurantInPlan") Remove
+
+	//- TODO: google restaurants
+		li.restaurants-row.row.bounce-map-marker(lat="{{restaurant.geometry.location.lat()}}",lng="{{restaurant.geometry.location.lng()}}",ng-repeat="restaurant in googleRestaurants",ng-hide="restaurants.hide")
+		.top.clearfix
+			.icon.pull-left
+				i.icon-food.icon-2x
+			.title.pull-left {{restaurant.name}}
+		.bottom.clearfix
+			.price.pull-left
+				.header price
+				.value N/A
+			.contact.pull-left.clearfix
+				.business.pull-left
+					.address
+						div {{restaurant.vicinity}}
+				.message Online reservations are not available.
+				.details
+					a.btn.btn-small.restaurants-more-info(restaurant="{{restaurant}}",href="#restaurants-info-modal") view details
+			.controls.pull-right
+				.actions
+					a.btn.btn-primary.btn-large.add-restaurants-to-plan(ng-show="customer && backToPlan && !restaurant.restaurantInPlan", service="google", restaurant="{{restaurant}}", ng-href="/plan") Add
+					button.btn.btn-primary.btn-large.add-restaurants-to-plan(restaurant="{{restaurant}}", service="pw", ng-hide="!customer || backToPlan || restaurant.restaurantInPlan") Add
+					a.btn.btn-orange.btn-large(ng-click="removeRestaurant(restaurant._id)",ng-href="/plan",ng-show="backToPlan && restaurant.restaurantInPlan") Remove
+					button.btn.btn-orange.btn-large(ng-click="removeRestaurant(restaurant._id)",ng-show="!backToPlan && restaurant.restaurantInPlan") Remove
+
+
+
+
