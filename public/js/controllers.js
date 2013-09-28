@@ -1812,7 +1812,7 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
 					}
 				};
 			}
-			plan.setTicket(newT);
+			plan.setTickets(newT);
 			$rootScope.$broadcast('tickets-changed', {
 				restaurants: newT
 			});
