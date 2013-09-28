@@ -71,20 +71,17 @@ app.set('twitAppSecret', wembliEveryauth.conf.twit.appSecret);
 
 //redirect to https if not development
 app.use(function(req, res, next) {
-	if (0) {
 	if (process.env.NODE_ENV != 'development') {
-		var proto = req.headers["x-forwarded-proto"];
+	    var proto = (req.headers["x-forwarded-port"] == 80) ? 'http' : 'https';
 		// --- Do nothing if schema is already https
 		if (proto === "https") return next();
 
 		// --- Redirect to https
-		var host = 'www.wembli.com'; //use req.headers.host eventually
+		var host = req.headers['host']; //use req.headers.host eventually
 		res.redirect("https://" + host + req.url);
 	} else {
 		next();
 	}
-	}
-	next();
 });
 
 
