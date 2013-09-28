@@ -22,11 +22,15 @@ app.locals = require('./static-helpers.js');
 app.set('host', 'www2');
 app.set('secure', false);
 app.set('autoIndex', false); //tell mongoose not to do autoIndex in produciton
+app.set('dbhost','mongo01.wembli.com');
+app.set('redishost','redis01.wembli.com');
 
 var port = 8001;
 
 if (process.env.NODE_ENV == 'development') {
 	app.set('host', 'tom');
+	app.set('dbhost','localhost');
+	app.set('redishost','localhost');
 }
 
 if (process.env.NODE_ENV == 'www2') {
@@ -100,7 +104,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.session({
 	key: 'wembli.sid',
 	secret: '@$!#SCDFdsa',
-	store: new redis,
+	store: new redis({host:app.settings.redishost}),
 	cookie: {
 		expires: new Date(Date.now() + 86400000 * 7)
 	}
