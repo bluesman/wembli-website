@@ -19,29 +19,20 @@ app = module.exports = express();
 app.locals = require('./static-helpers.js');
 
 /* app.settings */
-app.set('host', 'www2');
+app.set('host', 'www');
 app.set('secure', false);
 app.set('autoIndex', false); //tell mongoose not to do autoIndex in produciton
 app.set('dbhost','mongo01.wembli.com');
 app.set('redishost','redis01.wembli.com');
 
-var port = 8001;
-
-if (process.env.NODE_ENV == 'development') {
-	app.set('host', 'tom');
-	app.set('dbhost','localhost');
-	app.set('redishost','localhost');
-}
-
-if (process.env.NODE_ENV == 'www2') {
-	app.set('host', 'www2');
-
-	/* temporarily set env to development */
-	process.env.NODE_ENV = 'development';
-}
+var port = 8000;
 
 if (process.env.NODE_ENV == 'development') {
 	port = 8000;
+	app.set('host', 'tom');
+	app.set('dbhost','localhost');
+	app.set('redishost','localhost');
+
 	//tom.wembli.com fb app
 	app.set('fbAppId', '364157406939543');
 	app.set('fbAppSecret', 'ce9779873babc764c3e07efb24a34e69');
@@ -57,10 +48,10 @@ if (process.env.NODE_ENV == 'development') {
 	app.set('balancedMarketplaceUri', '/v1/marketplaces/TEST-MP3rlrmmGqQLEknYFMbRFJJe');
 }
 
-if (process.env.NODE_ENV == 'secure-www2') {
-	port = 8001;
+if (process.env.NODE_ENV == 'production') {
+	port = 8000;
 	app.set('secure', true);
-	app.set('host', 'www2');
+	app.set('host', 'www');
 	app.set('tnUrl', 'tn.wembli.com');
 	app.set('balancedSecret', '42e01b00b15e11e29523026ba7c1aba6');
 	app.set('balancedMarketplace', 'MP22BmXshSp7Q8DjgBYnKJmi');
@@ -68,7 +59,7 @@ if (process.env.NODE_ENV == 'secure-www2') {
 
 }
 
-//console.log(app.settings);
+console.log(app.settings);
 
 /* init the openauth thing */
 var wembliEveryauth = require('./lib/wembli/everyauth.js');
@@ -80,17 +71,20 @@ app.set('twitAppSecret', wembliEveryauth.conf.twit.appSecret);
 
 //redirect to https if not development
 app.use(function(req, res, next) {
+	if (0) {
 	if (process.env.NODE_ENV != 'development') {
 		var proto = req.headers["x-forwarded-proto"];
 		// --- Do nothing if schema is already https
 		if (proto === "https") return next();
 
 		// --- Redirect to https
-		var host = 'www2.wembli.com'; //use req.headers.host eventually
+		var host = 'www.wembli.com'; //use req.headers.host eventually
 		res.redirect("https://" + host + req.url);
 	} else {
 		next();
 	}
+	}
+	next();
 });
 
 
@@ -109,8 +103,12 @@ app.use(express.session({
 		expires: new Date(Date.now() + 86400000 * 7)
 	}
 }));
+
+console.log('here2');
 app.use(express.bodyParser());
+console.log('here2');
 app.use(require('./lib/wembli/visitor'));
+console.log('here2');
 app.use(require('./lib/wembli/customer'));
 app.use(require('./lib/wembli/plan'));
 app.use(everyauth.middleware());
@@ -134,12 +132,12 @@ app.use(function(req, res, next) {
 });
 app.use(app.router);
 
-if (process.env.NODE_ENV === 'development') {
+// if (process.env.NODE_ENV === 'development') {
 	app.use(express.errorHandler({
 		dumpExceptions: true,
 		showStack: true
 	}));
-}
+// }
 
 // Controllers
 require('./controllers/index')(app);
