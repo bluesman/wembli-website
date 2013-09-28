@@ -45,7 +45,7 @@ factory('loadingModal', ['$rootScope',
 factory('environment', ['$location',
 	function($location) {
 		var env = 'development';
-		if (/www|www2/.test($location.host())) {
+		if (/www/.test($location.host())) {
 			env = 'production';
 		}
 		return env;
@@ -1537,7 +1537,7 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 							method: 'feed',
 							display: 'iframe',
 							link: actionLink,
-							picture: 'http://www2.wembli.com/images/layout/wembli-button-222x200.png',
+							picture: 'http://www.wembli.com/images/layout/wembli-button-222x200.png',
 							name: 'Click Here To Check Out The Details & RSVP',
 							caption: 'Wembli lets friends plan, vote and split the cost of going to live events.',
 							to: args.to,
