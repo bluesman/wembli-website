@@ -132,11 +132,7 @@ directive('resendRsvpEmail', ['wembliRpc',
               var rpcArgs = {
                 friendId: attr.friendId
               };
-              console.log('clicked to resend rsvp email');
-              console.log(rpcArgs);
               wembliRpc.fetch('plan.resendRsvpEmail', rpcArgs, function(err, result) {
-                console.log('sent rsvp email');
-                console.log(err);
                 /* display an email sent message */
                 scope.rsvpEmailSent = true;
                 scope.rsvpEmailInProgress = false;
@@ -220,6 +216,9 @@ directive('createAccountModal', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
               if (err) {
                 alert('something bad happened contact help@wembli.com');
               }
+
+              console.log('created bank account');
+              console.log(result);
               /* back from creating merchant account */
 
               $('#generic-loading-modal').modal("hide");
@@ -346,7 +345,9 @@ directive('infoSlideDownLabel', [
               return;
             }
             element.click(function() {
-              scope.toggle = !scope.toggle;
+              scope.$apply(function() {
+                scope.toggle = !scope.toggle;
+              });
               var slideKey = '#' + friendId + ' .' + attr.key;
               var caretKey = '#' + friendId + ' .' + attr.key + '-caret';
               if (scope.toggle) {
@@ -356,6 +357,8 @@ directive('infoSlideDownLabel', [
                 $(slideKey).slideUp(100);
                 $(caretKey).addClass('icon-caret-right').removeClass('icon-caret-down');
               }
+              console.log('toggle: '+scope.toggle);
+
             });
           });
         };
@@ -408,8 +411,6 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                 friends[i].parking = [];
               }
 
-              console.log('RESTAURANTS PONYUP');
-              console.log(restaurants);
               if ((typeof restaurants[0] !== "undefined") && (typeof restaurants[0].costBreakdown !== "undefined")) {
                 friends[i].restaurants = restaurants[0];
                 var suggested = friends[i].restaurants.costBreakdown.totalEach * friends[i].rsvp.guestCount;
@@ -418,7 +419,6 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
               } else {
                 friends[i].restaurants = [];
               }
-              console.log(friends[i]);
               friends[i].suggestedPonyUpAmount = parseFloat(friends[i].suggestedPonyUpAmount).toFixed(2);
             };
             return friends;
@@ -428,7 +428,7 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
           $scope.calcTotalComing = function() {
             $scope.totalComing = 0;
             $scope.friendsComing = [];
-            $scope.totalPoniedUp = 0;
+            $scope.totalPoniedUp = 0.00;
             if (!$scope.friends) {
               return;
             }
@@ -455,9 +455,11 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
                     $scope.friends[i].totalPoniedUp += p.amount;
                   }
                 };
-                $scope.totalPoniedUp += parseFloat($scope.friends[i].totalPoniedUp).toFixed(2);
+                $scope.totalPoniedUp += parseInt($scope.friends[i].totalPoniedUp);
               }
             };
+
+
 
             /* count the organizer */
             if ($scope.plan.organizer.rsvp.decision) {
@@ -499,13 +501,17 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
             $scope.plan.rsvpDate = rsvpDate;
           });
 
-          /*
-          $scope.$on('plan-tickets-changed', function(e, ticketGroup) {
-            plan.fetch(function(result) {
-              $rootScope.$broadcast('foo-test');
-            });
+          $scope.$on('tickets-changed', function(e, data) {
+            $scope.tickets = data.tickets;
           });
-          */
+
+          $scope.$on('restaurants-changed', function(e, data) {
+            $scope.restaurants = data.restaurants;
+          });
+
+          $scope.$on('parking-changed', function(e, data) {
+            $scope.parking = data.parking;
+          });
 
           /* get the plan */
           plan.fetch(function(results) {
@@ -583,7 +589,6 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
             if (oldVal === newVal) {
               return;
             }
-            console.log('calc totals for restaurants');
             cart.totals('restaurants');
             scope.friendsPonyUp(scope.friends);
           });
@@ -1114,10 +1119,15 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
           };
 
           $scope.sendPonyUpEmail = function() {
-
+            console.log('sending pony up email');
             /* check if they have an account - if not throw a modal to collect account info */
             if ((typeof customer.get().balancedAPI === "undefined") || (typeof customer.get().balancedAPI.bankAccounts === "undefined")) {
+              console.log('no bank account');
               $('#create-account-modal').modal('show');
+              return;
+            }
+
+            if ($scope.sendPonyUpInProgress) {
               return;
             }
 
@@ -1143,6 +1153,7 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
                 }
               }
             };
+
             if (!ponyUpRequests[0]) {
               $scope.error = false;
               $scope.success = false;
@@ -1150,6 +1161,9 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
               $scope.sendPonyUpInProgress = false;
               return;
             }
+
+            console.log('sending pony up request:');
+            console.log(ponyUpRequests);
 
             wembliRpc.fetch('plan.sendPonyUpEmail', {
               ponyUpRequests: ponyUpRequests
@@ -1185,6 +1199,7 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
           };
 
           var dereg = $scope.$on('bank-account-created', function(e) {
+            console.log('bank account created event');
             $scope.sendPonyUpEmail();
             dereg();
           });
@@ -1891,8 +1906,8 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
                   expirationDateYear: '2014',
                   amount: 0,
                   amountFormatted: 0.00,
-                  transactionFee:0,
-                  total:0
+                  transactionFee: 0,
+                  total: 0
                 };
 
                 if (p.type === 'request' && p.open) {
@@ -1904,8 +1919,6 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
 
                     $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
                     $scope.ponyUp.organizerFirstName = $scope.organizer.firstName;
-                    console.log('ponyUp');
-                    console.log($scope.ponyUp);
                   }
                 }
 
@@ -1937,10 +1950,6 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
           });
 
           $scope.$watch('me', function(newValue, oldValue) {
-            console.log('me changed');
-
-            console.log(newValue);
-
             handlePonyUp(newValue);
           });
 

@@ -157,45 +157,45 @@ directive('addDealToPlan', ['$rootScope', '$window', '$location', '$http', '$tim
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           element.click(function(e) {
-            var parkingToAdd = JSON.parse(attr.parking);
+            var restaurantToAdd = JSON.parse(attr.restaurant);
             var payment = {};
 
             /*
-              if service is not pw then its not something the will ever have a receipt for
+              if service is not yipit then its not something the will ever have a receipt for
               still need to set a receipt though cause many views depend on the receipt to know
               if this is the end of the process or not
             */
-            if (attr.service !== 'pw') {
+            if (attr.service !== 'yipit') {
               payment.receipt = {
                 "not-available": true
               };
             }
 
-            wembliRpc.fetch('plan.addParking', {
+            wembliRpc.fetch('plan.addRestaurant', {
               service: attr.service,
               eventId: plan.get().event.eventId,
-              parking: parkingToAdd,
+              restaurant: restaurantToAdd,
               total: 0,
               payment: JSON.stringify(payment)
             }, function(err, result) {
-              var p = plan.getParking();
+              var r = plan.getRestaurants();
 
-              var newP = [];
+              var newR = [];
 
-              if (typeof p[0] === "undefined") {
-                newP.push(result.parking);
+              if (typeof r[0] === "undefined") {
+                newR.push(result.restaurant);
               } else {
-                for (var i = 0; i < p.length; i++) {
-                  if (p[i]._id = result.parking._id) {
-                    newP.push(result.parking);
+                for (var i = 0; i < r.length; i++) {
+                  if (r[i]._id = result.restaurant._id) {
+                    newR.push(result.restaurant);
                   } else {
-                    newP.push(p[i]);
+                    newR.push(r[i]);
                   }
                 };
               }
-              plan.setParking(newP);
-              $rootScope.$broadcast('parking-changed', {
-                parking: newP
+              plan.setRestaurants(newR);
+              $rootScope.$broadcast('restaurants-changed', {
+                restaurants: newR
               });
             });
           });

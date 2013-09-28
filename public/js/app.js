@@ -32,7 +32,6 @@ angular.module('wembliApp', [
    /* check if back button was pressed */
    $scope.$watch(function () {return $location.path()}, function (newLocation, oldLocation) {
         if($scope.actualLocation === newLocation) {
-          console.log('back button pressed');
           slidePage.setDirection(-1);
         } else {
           if (slidePage.directionOverride !== 0) {
@@ -46,13 +45,6 @@ angular.module('wembliApp', [
 
     /* slide pages using sequence when location changes */
     $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
-      //http://www/
-      console.log(oldUrl.split('/')[0]);
-      console.log(oldUrl.split('/')[1]);
-      console.log(oldUrl.split('/')[2]);
-      console.log(oldUrl.split('/')[3]);
-      console.log(oldUrl.split('/')[4]);
-
       $scope.actualLocation = $location.path();
       if ((oldUrl.split('/')[3] === '') && (newUrl.split('/')[3] === 'index')) {
         return;

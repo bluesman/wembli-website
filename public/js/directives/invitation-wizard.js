@@ -79,8 +79,6 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
               $scope.signup.noContinue = true;
               return $scope.gotoStep('step1');
             }
-            console.log('email: ');
-            console.log($scope.customer.email);
             $location.hash('#no-slide');
             $location.path('/plan');
             $('#invitation-modal').modal("hide");
@@ -162,12 +160,9 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
             var defaultDate = new Date(now + 86400000 * 3);
             /* if there's an rsvp date, set it in the datepicker */
             if (typeof p.rsvpDate !== "undefined") {
-              console.log('scope.planm already has a date');
-              console.log(p.rsvpDate);
               /* init the date picker */
               defaultDate = new Date(p.rsvpDate);
             }
-            console.log('initializing date');
             wembliRpc.fetch('invite-friends.submit-rsvp', {
               rsvpDate: defaultDate
             }, function(err, res) {
@@ -254,10 +249,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                   return;
                 }
                 $scope.customer = customer.get();
-                console.log('customer signed up:');
-                console.log(customer);
-                console.log(result);
-                console.log('LOGGEDIN: ' + loggedIn.check());
 
                 $scope.signup.success = true;
                 $scope.showForm('showSignupView', 'showSignupForm');
@@ -682,8 +673,6 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
 
           /* set up the wemblimail friends array with friends in the plan */
           plan.get(function(p) {
-            console.log('plan frineds for wemblimail');
-            console.log(plan.getFriends());
             if (typeof plan.getFriends() !== "undefined") {
               for (var i = plan.getFriends().length - 1; i >= 0; i--) {
                 var friend = plan.getFriends()[i];

@@ -75,7 +75,6 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchMo
 	$scope.
 	continue = function() {
 		//fetchModals.fetch('/invitation');
-		console.log('next: ' + $scope.next);
 		$scope.submitInProgress = true;
 		//$location.path($scope.next);
 	}
@@ -122,7 +121,6 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			//response callback
 
 			function(err, result) {
-				console.log('back from ' + method);
 				if (err) {
 					//handle err
 					alert('error happened - contact help@wembli.com');
@@ -182,8 +180,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 	/*
 	var markers = new L.MarkerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false });
 	markers.addLayer(new L.marker([30.269218,-97.735557]));
-	console.log('setting markers in ctrl');
-	console.log(markers);
 	$scope.markers = markers;
 	*/
 
@@ -207,8 +203,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 
 	$scope.notFound = true;
 
-	console.log('setting watch for hotels');
-
 	$scope.$watch('hotels', function(hotels) {
 		/* make markers & infoWindows for these and add them to the map */
 		if (!hotels) {
@@ -219,8 +213,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 
 		$timeout(function() {
 			angular.forEach(hotels.listing, function(v, i) {
-				console.log('hotels listing:');
-				console.log(v);
 
 				if (!googleMap.hasMarker(v.lat, v.lng)) {
 					var marker = new google.maps.Marker({
@@ -238,7 +230,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 						pixelOffset: new google.maps.Size(10, 0),
 					});
 					google.maps.event.addListener(marker, 'click', function() {
-						console.log('clicked infowindow')
 						if (googleMap.isInfoWindowOpen(marker)) {
 							googleMap.closeInfoWindow(marker);
 						} else {
@@ -255,27 +246,17 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 		});
 	});
 
-	console.log('setting watch for google hotels');
 	var deregGP = $scope.$watch('googleHotels', function(hotels) {
-		console.log('googleHotels changed: ');
-		console.log(hotels);
 		/* make markers & infoWindows for these and add them to the map */
 		if (!hotels) {
-			console.log('google hotels outa here');
 			return;
 		};
 
-		console.log('notfound is false');
-		//$scope.notFound = false;
-
 		$timeout(function() {
 			angular.forEach(hotels, function(place, i) {
-				console.log('google hotels item:');
-				console.log(place);
-
 
 				//if (!googleMap.hasMarker(place.geometry.location.lat(), place.geometry.location.lng())) {
-				console.log(place);
+
 				var marker = new google.maps.Marker({
 					map: googleMap.getMap(),
 					position: place.geometry.location,
@@ -292,7 +273,7 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 				});
 
 				google.maps.event.addListener(marker, 'click', function() {
-					console.log('clicked infowindow')
+
 					if (googleMap.isInfoWindowOpen(marker)) {
 						googleMap.closeInfoWindow(marker);
 					} else {
@@ -313,8 +294,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 	});
 
 	function getHotels(p) {
-		console.log('plan');
-		console.log(p);
 
 		/* reset the map */
 		googleMap.isDrawn(false);
@@ -340,7 +319,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 		});
 
 		google.maps.event.addListener(marker, 'click', function() {
-			console.log('clicked infowindow')
 			if (googleMap.isInfoWindowOpen(marker)) {
 				googleMap.closeInfoWindow(marker);
 			} else {
@@ -364,8 +342,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 		var service = new google.maps.places.PlacesService(googleMap.getMap());
 		service.nearbySearch(request, function(results, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				console.log('got googleParking results');
-				console.log(results);
 				$scope.$apply(function() {
 					$scope.googleHotels = results;
 				});
@@ -386,7 +362,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 					return;
 				}
 
-				console.log('results from event.getHotels');
 				$timeout(function() {
 					$scope.$apply(function() {
 						$scope.hotels = result.hotels;
@@ -410,7 +385,6 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 					var priceRange = $("#price-slider").slider("option", "values");
 
 					/* hide parking locations that are out of range */
-					console.log('filtering hotel');
 				};
 
 				//set the height of the map-container to the window height
@@ -468,12 +442,9 @@ function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, ma
 		}
 
 		if (googleMap.isDrawn()) {
-			console.log('google map is drawn');
 			getHotels(p);
 		} else {
-			console.log('google map is not drawn');
 			var dereg = $rootScope.$on('google-map-drawn', function() {
-				console.log('google map is draen now');
 				getHotels(p);
 				dereg();
 			});
@@ -515,7 +486,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 	}
 
 	var filterDealsById = function(id) {
-		console.log('filtering: ' + id);
 		if (typeof id === "undefined") {
 			return filterNone();
 		}
@@ -532,8 +502,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 		$scope.notFound = false;
 
 		angular.forEach(deals, function(d, i) {
-			console.log('deals listing:');
-			console.log(d);
 			d.service = 'yipit';
 			d.hide = (typeof d.hide === "undefined") ? false : d.hide;
 
@@ -577,7 +545,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 
 	updateGoogleRestaurants = function(googleRestaurants) {
 		$scope.notFound = false;
-		console.log('updating google restaurants');
 		angular.forEach(googleRestaurants, function(place, i) {
 			place.service = 'google';
 			if (typeof $scope.restaurants !== "undefined") {
@@ -587,8 +554,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 				} else {
 					for (var i = 0; i < $scope.restaurants.length; i++) {
 						var r = $scope.restaurants[i];
-						console.log('RESTAURANT ');
-						console.log(r);
 						if ((r.restaurant.service === 'google') && (r.restaurant.id == place.id)) {
 							place._id = r._id;
 							place.restaurantInPlan = true;
@@ -610,9 +575,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 	};
 
 	$scope.$on('restaurants-changed', function(e, args) {
-		console.log('caught restaurants-changed');
-		console.log(args.restaurants);
-
 		$scope.restaurants = args.restaurants;
 		$timeout(function() {
 			return updateDeals($scope.deals);
@@ -624,7 +586,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 
 	/* watch for parkingReservations (right now its just parkwhiz) */
 	$scope.$watch('deals', function(deals) {
-		console.log('deals changed');
 		/* make markers & infoWindows for these and add them to the map */
 		if (!deals) {
 			return;
@@ -637,11 +598,9 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 	$scope.$watch('googleRestaurants', function(googleRestaurants) {
 		/* make markers & infoWindows for these and add them to the map */
 		if (!googleRestaurants) {
-			console.log('googleRestaurants outa here');
 			return;
 		};
 		$timeout(function() {
-			console.log('updated google restaurants');
 			return updateGoogleRestaurants(googleRestaurants);
 		})
 	});
@@ -651,15 +610,11 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 		/*
 		restaurants.fetchGoogleRestaurants(args, function(err, r) {
 			$scope.$apply(function() {
-				console.log('updating googleRestaurants');
 				$scope.googleRestaurants = r;
 			});
 		});
 		*/
-		console.log('getRestaurants');
 		restaurants.fetchDeals(args, function(err, r) {
-			console.log('FETCHED RESTAURANT DEALS');
-			console.log(r);
 			$timeout(function() {
 				$scope.$apply(function() {
 					$scope.deals = r;
@@ -673,8 +628,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 		var lat = p.venue.data.geocode.geometry.location.lat;
 		var lng = p.venue.data.geocode.geometry.location.lng;
 
-		console.log('PLAN in init restaurants map');
-		console.log(p);
 		$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;
 
 		mapVenue.create(googleMap, {
@@ -688,7 +641,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 
 		var purchasedRestaurants = plan.getRestaurants();
 		if ((typeof purchasedRestaurants[0] !== "undefined") && purchasedRestaurants[0].purchased) {
-			console.log('setting scope restaurants');
 			$scope.restaurants = purchasedRestaurants;
 			if (purchasedRestaurants[0].service === 'yipit') {
 				if (!googleMap.hasMarker(purchasedRestaurants[0].restaurant.business.locations[0].lat, purchasedRestaurants[0].restaurant.business.locations[0].lon)) {
@@ -715,7 +667,6 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 			}
 			loadingModal.hide();
 		} else {
-			console.log('getting restaurants');
 			getRestaurants(p, {
 				lat: lat,
 				lng: lng
@@ -725,12 +676,9 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 
 	$scope.removeRestaurant = function(restaurantId) {
 		/* remove the restaurant and close the modal */
-		console.log('removingrestaurant: ' + restaurantId);
 		plan.removeRestaurant({
 			restaurantId: restaurantId
 		}, function(err, results) {
-			console.log('removed restaurant from plan:');
-			console.log(results);
 			$rootScope.$broadcast('restaurants-changed', {
 				parking: []
 			});
@@ -740,13 +688,11 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 	/* display a modal when they click to go off and buy tickets */
 	fetchModals.fetch('/partials/modals/restaurants-modals', function(err) {
 		if (err) {
-			return console.log('no modal for restaurants offsite');
+			return;
 		}
 
 		plan.get(function(p) {
 			$scope.restaurants = plan.getRestaurants();
-			console.log('restaurants from plan: ');
-			console.log($scope.restaurants);
 			$scope.context = plan.getContext() || 'visitor';
 
 			$scope.backToPlan = true;
@@ -758,12 +704,9 @@ function RestaurantsCtrl($rootScope, $scope, $timeout, plan, restaurants, wembli
 			}
 
 			if (googleMap.isDrawn()) {
-				console.log('google map is drawn');
 				initMap(p);
 			} else {
-				console.log('google map is not drawn');
 				var dereg = $rootScope.$on('google-map-drawn', function() {
-					console.log('google map is drawn now');
 					initMap(p);
 					dereg();
 				});
@@ -810,7 +753,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 	}
 
 	var filterGoogleParkingById = function(id) {
-		console.log('filtering: ' + id);
 		if (typeof id === "undefined") {
 			return filterNone();
 		}
@@ -825,7 +767,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 	};
 
 	var filterParkingReservationsById = function(id) {
-		console.log('filtering: ' + id);
 		if (typeof id === "undefined") {
 			return filterNone();
 		}
@@ -847,7 +788,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 			return;
 		}
 		angular.forEach(parkingReservations.parking_listings, function(v, i) {
-			console.log('each parking reservation');
 			/* this will have to be set serverside once we aggregate */
 			v.service = 'pw';
 			v.hide = (typeof v.hide === "undefined") ? false : v.hide;
@@ -896,9 +836,7 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 			return;
 		}
 		$scope.notFound = false;
-		console.log('updating google parking');
 		angular.forEach(googleParking, function(place, i) {
-			console.log(place);
 			place.service = 'google';
 			place.hide = (typeof place.hide === "undefined") ? false : place.hide;
 			if (typeof $scope.parking !== "undefined") {
@@ -940,8 +878,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 	};
 
 	$scope.$on('parking-changed', function(e, args) {
-		console.log('caught parking-changed');
-		console.log(args.parking);
 
 		$scope.parking = args.parking;
 		$timeout(function() {
@@ -966,11 +902,9 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 	$scope.$watch('googleParking', function(googleParking) {
 		/* make markers & infoWindows for these and add them to the map */
 		if (!googleParking) {
-			console.log('googleParking outa here');
 			return;
 		};
 		$timeout(function() {
-			console.log('updated google parking');
 			return updateGoogleParking(googleParking);
 		})
 	});
@@ -978,14 +912,11 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 	function getParking(p, args) {
 		parking.fetchGoogleParking(args, function(err, p) {
 			$scope.$apply(function() {
-				console.log('updating googleParking');
 				$scope.googleParking = p;
 			});
 		});
 
 		parking.fetchParkingReservations(args, function(err, p) {
-			console.log('FETCHED PARKING RESERVATIONS');
-			console.log(p);
 			$timeout(function() {
 				$scope.$apply(function() {
 					$scope.parkingReservations = p;
@@ -999,8 +930,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 		var lat = p.venue.data.geocode.geometry.location.lat;
 		var lng = p.venue.data.geocode.geometry.location.lng;
 
-		console.log('PLAN in init parking map');
-		console.log(p);
 		$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;
 
 		mapVenue.create(googleMap, {
@@ -1054,14 +983,11 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 
 	$scope.removeParking = function(parkingId) {
 		/* remove the parking and close the modal */
-		console.log('removingparking: ' + parkingId);
 		plan.removeParking({
 			parkingId: parkingId
 		}, function(err, results) {
-			console.log('removed parking from plan:');
-			console.log(results);
 			$rootScope.$broadcast('parking-changed', {
-				parking: []
+				parking: results.parking
 			});
 		});
 	};
@@ -1069,13 +995,11 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 	/* display a modal when they click to go off and buy tickets */
 	fetchModals.fetch('/partials/modals/parking-modals', function(err) {
 		if (err) {
-			return console.log('no modal for buy tickets offsite');
+			return;
 		}
 
 		plan.get(function(p) {
 			$scope.parking = plan.getParking();
-			console.log('parking from plan: ');
-			console.log($scope.parking);
 			$scope.context = plan.getContext() || 'visitor';
 
 			$scope.backToPlan = true;
@@ -1087,12 +1011,9 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 			}
 
 			if (googleMap.isDrawn()) {
-				console.log('google map is drawn');
 				initMap(p);
 			} else {
-				console.log('google map is not drawn');
 				var dereg = $rootScope.$on('google-map-drawn', function() {
-					console.log('google map is drawn now');
 					initMap(p);
 					dereg();
 				});
@@ -1104,8 +1025,6 @@ function ParkingCtrl($rootScope, $scope, $timeout, plan, parking, wembliRpc, fet
 function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 	$scope.$on('payment-type-modal-clicked', function(e, args) {
 		$scope.$apply(function() {
-			console.log('payment modal clicked');
-			console.log(args);
 			$scope.name = args.name;
 			$scope.eventId = args.eventId;
 			$scope.eventName = args.eventName;
@@ -1114,9 +1033,6 @@ function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 	});
 	$scope.submitInProgress = false;
 	$scope.startPlan = function() {
-		console.log('call start plan');
-		console.log('paymentType: ' + $scope.paymentType);
-		console.log('nextLink: ' + $scope.nextLink);
 		$scope.submitInProgress = true;
 		/* start the plan */
 		wembliRpc.fetch('plan.startPlan', {
@@ -1124,8 +1040,7 @@ function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 			eventId: $scope.eventId,
 			eventName: $scope.eventName
 		}, function(err, result) {
-			console.log('result from start plan');
-			console.log(result);
+
 			plan.fetch(function() {
 				$location.path($scope.nextLink);
 			});
@@ -1211,21 +1126,17 @@ function HeaderCtrl($scope) {
 
 function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal) {
 	$scope.plan = plan.get();
-	console.log('rsvp login ctrl');
 	$scope.guid = rsvpLoginModal.get('guid');
 	$scope.service = rsvpLoginModal.get('service');
 	$scope.token = rsvpLoginModal.get('token');
 	$scope.friend = rsvpLoginModal.get('friend');
 	$scope.event = JSON.parse(rsvpLoginModal.get('event'));
 
-	console.log('service is: ' + $scope.service);
 	if ($scope.service === 'wemblimail') {
 		$scope.email = rsvpLoginModal.get('serviceId');
-		console.log('serviceId = ' + $scope.email);
 	}
 
 
-	console.log($scope.event);
 	$scope.confirmSocial = rsvpLoginModal.get('confirmSocial');
 	$scope.next = '/rsvp/' + $scope.guid + '/' + $scope.token + '/' + $scope.service;
 
@@ -1246,7 +1157,6 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 	}
 
 	$scope.$on('rsvp-login-modal-init', function(e, args) {
-		console.log('rsvp-login-modal-init happened');
 		$scope.guid = rsvpLoginModal.get('guid');
 		$scope.service = rsvpLoginModal.get('service');
 		$scope.token = rsvpLoginModal.get('token');
@@ -1262,10 +1172,8 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 					email: $scope.email,
 					next: $scope.next
 				}, function(err, result) {
-					console.log(result);
 
 					if (result.customer) {
-						console.log('returned a customer - im logged in!');
 						/* hide this modal and display the tickets offsite modal */
 						$scope.customer = result.customer;
 					}
@@ -1321,7 +1229,6 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 				password: $scope.password,
 				next: $scope.next
 			}, function(err, result) {
-				console.log(result);
 				if (result.error) {
 					$scope.loginError = result.error;
 
@@ -1332,7 +1239,6 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 					}
 				}
 				if (result.customer) {
-					console.log('returned a customer im logged in!');
 					/* hide this modal and display the tickets offsite modal */
 					$scope.customer = result.customer;
 				}
@@ -1352,7 +1258,7 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurch
 	/* display a modal when they click to go off and buy tickets */
 	fetchModals.fetch('/partials/modals/tickets-modals', function(err) {
 		if (err) {
-			return console.log('no modal for buy tickets offsite');
+			return;
 		}
 		plan.get(function(p) {
 			$scope.plan = p;
@@ -1380,8 +1286,7 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurch
 			},
 
 			function(err, res) {
-				console.log('back from setting price range');
-				console.log(res);
+
 			});
 
 
@@ -1564,8 +1469,7 @@ function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 	plan.get(function(p) {
 		$scope.$on('parking-login-clicked', function(e, args) {
 			$scope.redirectUrl = '/parking/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
-			console.log('parking login clicked');
-			console.log(args);
+
 			if (args.parking.service === 'google') {
 				$scope.redirectUrl += 'google/' + args.parking.id;
 			} else {
@@ -1664,8 +1568,6 @@ function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wem
 	plan.get(function(p) {
 		$scope.$on('restaurants-login-clicked', function(e, args) {
 			$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
-			console.log('restaurants login clicked');
-			console.log(args);
 			if (args.restaurant.service === 'google') {
 				$scope.redirectUrl += 'google/' + args.restaurant.id;
 			} else {
@@ -1848,16 +1750,12 @@ function HotelsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRp
 	};
 };
 
-function TicketsOffsiteCtrl($scope, plan, $http, $location) {
+function TicketsOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
 	plan.get(function(p) {
-		console.log('plan in tickets tickets-offsite');
-		console.log(p);
 		$scope.plan = p;
 	});
 
 	$scope.$on('tickets-offsite-clicked', function(e, args) {
-		console.log('handle tickets-offsite-clicked');
-		console.log(args);
 		$scope.qty = args.qty;
 		$scope.amountPaid = args.amountPaid;
 		$scope.eventId = args.eventId,
@@ -1878,9 +1776,6 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 	};
 
 	$scope.submitForm = function() {
-		console.log($scope.ticketGroup);
-		console.log('adding manual ticket receipt for:');
-		console.log($scope.ticketId);
 		/* update the tickets to have a receipt */
 		plan.addTicketGroupReceipt({
 			ticketId: $scope.ticketId,
@@ -1890,10 +1785,6 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 				amountPaid: $scope.amountPaid
 			}
 		}, function(err, result) {
-			console.log('added ticket receipt:');
-			console.log(err);
-			console.log(result);
-
 			$('#tickets-offsite-modal').modal('hide');
 
 			/* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
@@ -1906,6 +1797,28 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 				$location.path("/plan");
 			}
 
+			var t = plan.getTickets();
+
+			var newT = [];
+
+			if (typeof t[0] === "undefined") {
+				newT.push(result.ticket);
+			} else {
+				for (var i = 0; i < t.length; i++) {
+					if (t[i]._id = result.ticket._id) {
+						newT.push(result.ticket);
+					} else {
+						newT.push(t[i]);
+					}
+				};
+			}
+			plan.setTicket(newT);
+			$rootScope.$broadcast('tickets-changed', {
+				restaurants: newT
+			});
+
+
+
 		});
 
 	};
@@ -1915,9 +1828,11 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 		plan.removeTicketGroup({
 			ticketId: $scope.ticketId
 		}, function(err, results) {
-			console.log('removed ticketgroup from plan:');
-			console.log(results);
 			$('#tickets-offsite-modal').modal('hide');
+			$rootScope.$broadcast('tickets-changed', {
+				tickets: results.tickets
+			});
+
 		});
 
 	};
@@ -1926,15 +1841,12 @@ function TicketsOffsiteCtrl($scope, plan, $http, $location) {
 
 function ParkingOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
 	plan.get(function(p) {
-		console.log('plan in parking-offsite');
-		console.log(p);
 		$scope.plan = p;
 	});
 
 
 	$scope.$on('parking-offsite-clicked', function(e, args) {
-		console.log('handle parking-offsite-clicked');
-		console.log(args);
+
 		$scope.amountPaid = args.amountPaid;
 		$scope.eventId = args.eventId,
 		$scope.eventName = args.eventName,
@@ -1948,8 +1860,6 @@ function ParkingOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
 	};
 
 	$scope.submitForm = function() {
-		console.log('adding parking receipt for:');
-		console.log($scope.parkingId);
 		/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
 		plan.addParkingReceipt({
 			parkingId: $scope.parkingId,
@@ -1959,13 +1869,30 @@ function ParkingOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
 				amountPaid: $scope.amountPaid
 			}
 		}, function(err, result) {
-			console.log('added parking receipt:');
-			console.log(err);
-			console.log(result);
-
 			$('#parking-offsite-modal').modal('hide');
 			/* have to back to plan so they don't have a chance to buy more */
 			$location.path("/plan");
+			var p = plan.getParking();
+
+			var newP = [];
+
+			if (typeof p[0] === "undefined") {
+				newP.push(result.parking);
+			} else {
+				for (var i = 0; i < p.length; i++) {
+					if (p[i]._id = result.parking._id) {
+						newP.push(result.parking);
+					} else {
+						newP.push(p[i]);
+					}
+				};
+			}
+			plan.setParking(newP);
+			$rootScope.$broadcast('parking-changed', {
+				parking: newP
+			});
+
+
 			/* uncomment if we end up supporting multiple parking in a plan
 			$rootScope.$broadcast('parking-changed', {
 				parking: [result.parking]
@@ -1979,9 +1906,8 @@ function ParkingOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
 		plan.removeParking({
 			parkingId: $scope.parkingId
 		}, function(err, results) {
-			console.log('removed parking from plan:');
-			console.log(results);
 			$('#parking-offsite-modal').modal('hide');
+
 			$rootScope.$broadcast('parking-changed', {
 				parking: results.parking
 			});
@@ -1995,15 +1921,11 @@ function ParkingOffsiteCtrl($scope, plan, $http, $location, $rootScope) {
 function ParkingInfoCtrl($scope, plan, googlePlaces) {
 
 	plan.get(function(p) {
-		console.log('plan in parking-info');
-		console.log(p);
 		$scope.plan = p;
 	});
 
 
 	$scope.$on('parking-info-clicked', function(e, args) {
-		console.log('handle parking-info-clicked');
-		console.log(args);
 		$scope.parking = args.parking;
 
 		/* get the place details */
@@ -2011,7 +1933,6 @@ function ParkingInfoCtrl($scope, plan, googlePlaces) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				$scope.$apply(function() {
 					$scope.details = place;
-					console.log(place);
 				});
 			}
 		});
@@ -2022,15 +1943,11 @@ function ParkingInfoCtrl($scope, plan, googlePlaces) {
 function RestaurantsInfoCtrl($scope, plan) {
 
 	plan.get(function(p) {
-		console.log('plan in restaurants-offsite');
-		console.log(p);
 		$scope.plan = p;
 	});
 
 
 	$scope.$on('restaurants-info-clicked', function(e, args) {
-		console.log('handle restaurants-info-clicked');
-		console.log(args);
 		$scope.restaurant = args.restaurant;
 	});
 
@@ -2039,15 +1956,11 @@ function RestaurantsInfoCtrl($scope, plan) {
 function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
 
 	plan.get(function(p) {
-		console.log('plan in restaurants-offsite');
-		console.log(p);
 		$scope.plan = p;
 	});
 
 
 	$scope.$on('restaurants-offsite-clicked', function(e, args) {
-		console.log('handle restaurants-offsite-clicked');
-		console.log(args);
 		$scope.amountPaid = args.amountPaid;
 		$scope.eventId = args.eventId,
 		$scope.eventName = args.eventName,
@@ -2061,8 +1974,6 @@ function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
 	};
 
 	$scope.submitForm = function() {
-		console.log('adding restaurant receipt for:');
-		console.log($scope.restaurantId);
 		/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
 		plan.addRestaurantReceipt({
 			restaurantId: $scope.restaurantId,
@@ -2072,13 +1983,30 @@ function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
 				amountPaid: $scope.amountPaid
 			}
 		}, function(err, result) {
-			console.log('added restaurant receipt:');
-			console.log(err);
-			console.log(result);
-
 			$('#restaurants-offsite-modal').modal('hide');
 			/* have to back to plan so they don't have a chance to buy more */
 			$location.path("/plan");
+
+			var r = plan.getRestaurants();
+
+			var newR = [];
+
+			if (typeof r[0] === "undefined") {
+				newR.push(result.restaurant);
+			} else {
+				for (var i = 0; i < r.length; i++) {
+					if (r[i]._id = result.restaurant._id) {
+						newR.push(result.restaurant);
+					} else {
+						newR.push(r[i]);
+					}
+				};
+			}
+			plan.setRestaurants(newR);
+			$rootScope.$broadcast('restaurants-changed', {
+				restaurants: newR
+			});
+
 			/* uncomment if we end up supporting multiple parking in a plan
 			$rootScope.$broadcast('parking-changed', {
 				parking: [result.parking]
@@ -2092,9 +2020,11 @@ function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
 		plan.removeRestaurant({
 			restaurantId: $scope.restaurantId
 		}, function(err, results) {
-			console.log('removed restaurant from plan:');
+			console.log('canceled form');
 			console.log(results);
+
 			$('#restaurants-offsite-modal').modal('hide');
+
 			$rootScope.$broadcast('restaurants-changed', {
 				restaurants: results.restaurants
 			});
@@ -2107,14 +2037,11 @@ function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
 
 function HotelsOffsiteCtrl($scope, plan, $http) {
 	plan.get(function(p) {
-		console.log('plan in tickets tickets-offsite');
-		console.log(p);
 		$scope.plan = p;
 	});
 
 	$scope.$on('tickets-offsite-clicked', function(e, args) {
-		console.log('handle tickets-offsite-clicked');
-		console.log(args);
+
 		$scope.qty = args.qty;
 		$scope.amountPaid = args.amountPaid;
 		$scope.eventId = args.eventId,
@@ -2138,8 +2065,6 @@ function HotelsOffsiteCtrl($scope, plan, $http) {
 		plan.removeTicketGroup({
 			ticketId: $scope.ticketId
 		}, function(err, results) {
-			console.log('removed ticketgroup from plan:');
-			console.log(results);
 			$('#tickets-offsite-modal').modal('hide');
 		});
 
@@ -2176,7 +2101,6 @@ function VenueMapCtrl($rootScope, $scope, interactiveMapDefaults, plan, $filter,
 		wembliRpc.fetch('plan.removeTicketGroup', {
 			ticketId: ticketId
 		}, function(err, result) {
-			console.log(result);
 			plan.setTickets(result.tickets);
 		});
 

@@ -150,7 +150,9 @@ section#section4.organizer-pony-up-section.pony-up-section.plan-section.even
 				.history-container.pull-left
 					label.history-label.info-slide-down-label.clearfix(friend-id="{{friend._id}}",key="history")
 						i.icon.icon-caret-right.history-caret.icon-2x.pull-left
-						.header.pull-left HISTORY
+						.header.pull-left
+							span HISTORY&nbsp;
+							span(ng-hide="toggle") (click to expand)
 					.history.hide
 						.outside-payment-form.form-inline.clearfix
 							label LOG A PAYMENT MADE THROUGH OUTSIDE SOURCE

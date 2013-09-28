@@ -22,11 +22,11 @@
 						strong.pull-left  Cost Per Person&nbsp;
 						.pull-right {{p.costBreakdown.totalEach | currency}}
 					.row.clearfix
-						strong.pull-left  Total (x{{parking.totalQty}} parking {{parking.totalQty | pluralize:'spot'}}):&nbsp;
+						strong.pull-left  Total (x{{parking.reservation}} parking {{parking.reservation | pluralize:'spot'}}):&nbsp;
 						strong.pull-right {{p.costBreakdown.total | currency}}
 
 				a.parkwiz-link.add-on-offsite-link.clearfix(target="_blank",href="{{p.parking.parkwhiz_url}}")
-					img.pull-left(src="/images/parkwhiz-logo.png")
+					//- img.pull-left(src="/images/parkwhiz-logo.png")
 					.text.pull-left Go to ParkWhiz.com
 				.parking-info.add-on-info.clearfix
 					.parking-name.pull-left

@@ -26,7 +26,10 @@
 		.img-container.pull-left
 			img.img-polaroid(ng-hide="friend.contactInfo.imageUrl",src="/images/cartoon-man-head.png")
 			img.img-polaroid(ng-show="friend.contactInfo.imageUrl",ng-src="{{friend.contactInfo.imageUrl}}")
-			a.rsvp-for(ng-show="{'organizer':true}[context]",href="#",friend="{{friend}}") change rsvp for {{friend.contactInfo.name}}
+			//- taking this out for now because if the organizer rsvp's for a friend that came in through facebook or twitter
+			//- we will never have that person's email address and not be able to send pony up requests...
+			//- we should collect email for friend if organizer is rsvping for them and actually create a customer account for them
+			//- a.rsvp-for(ng-show="{'organizer':true}[context]",href="#",friend="{{friend}}") change rsvp for {{friend.contactInfo.name}}
 		.invitee-info.pull-left
 			.invitee-name.clearfix
 				.invitee-name-container.pull-left

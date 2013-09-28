@@ -26,7 +26,7 @@
 						strong.pull-right {{r.costBreakdown.total | currency}}
 
 				a.yipit-link.add-on-offsite-link.clearfix(target="_blank",href="{{r.restaurant.url}}")
-					img.pull-left(src="/images/yipit-logo.png")
+					//- img.pull-left(src="/images/yipit-logo.png")
 					.text.pull-left Go to Yipit.com
 				.restaurants-info.add-on-info.clearfix
 					.restaurants-deal-name.pull-left
@@ -40,11 +40,12 @@
 					.restaurants-location.pull-left
 						strong PHONE:&nbsp;
 						span {{r.restaurant.business.locations[0].phone}}
-				.restaurants-payment.clearfix
+
+				.restaurants-payment.add-on-info.clearfix
 					.per-person.pull-left
-						strong Total cost for {{r.payment.receipt.qty}} restaurant {{r.payment.receipt.qty | pluralize:'deal'}}:&nbsp;
+						strong Total cost for {{r.payment.qty}} restaurant {{r.payment.qty | pluralize:'deal'}}:&nbsp;
 					.restaurants-total.pull-left
-						{{r.payment.receipt.amountPaid | currency}}
+						{{r.payment.amount | currency}}
 			.controls.clearfix
 				a.view-restaurants-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") View restaurants On Map
 				- if (req.session.plan.preferences.restaurants.payment !== 'no-split')

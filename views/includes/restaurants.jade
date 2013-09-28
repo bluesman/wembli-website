@@ -11,10 +11,30 @@
 		- if (typeof dealsPurchased[0] !== "undefined")
 			include restaurants/purchased-deals
 		- else
-			- if (req.session.plan.preferences.payment === 'split-first' && !req.session.plan.rsvpComplete)
-				- if (req.session.plan.preferences.restaurants.payment === 'split-first')
-					include restaurants/read-only
+			//- plan says split first
+			- if (req.session.plan.preferences.payment === 'split-first')
+				//- plan says split first but parking is split after (override)
+				- if (req.session.plan.preferences.restaurants.payment === 'split-after')
+					include restaurants/buy-now
 				- else
+					//- supposed to split first check if rsvp is complete
+					- if (req.session.plan.rsvpComplete)
+						//- add to plan but don't buy
+						include restaurants/add-to-plan
+					- else
+						//- split first and rsvp is not complete
+						include restaurants/read-only
+			- else if (req.session.plan.preferences.payment === 'split-after')
+				//- plan says split first but parking is split after (override)
+				- if (req.session.plan.preferences.restaurants.payment === 'split-first')
+					//- supposed to split first check if rsvp is complete
+					- if (req.session.plan.rsvpComplete)
+						//- add to plan but don't buy
+						include restaurants/add-to-plan
+					- else
+						//- split first and rsvp is not complete
+						include restaurants/read-only
+				- else if (req.session.plan.preferences.restaurants.payment === 'split-after')
 					include restaurants/buy-now
 			- else
 				include restaurants/buy-now

@@ -347,7 +347,6 @@ factory('restaurants', ['wembliRpc', 'googlePlaces',
 				}, function(err, result) {
 
 					if (err) {
-						console.log('error fetching deals');
 						//handle err
 						alert('error happened - contact help@wembli.com');
 						return;
@@ -626,8 +625,6 @@ factory('cart', ['plan',
 						if (typeof qty === "undefined") {
 							qty = 0;
 						}
-						console.log('amount: ' + amount);
-						console.log('qty: ' + qty);
 
 						var cb = {};
 						var groupNumber = i + 1;
@@ -643,7 +640,6 @@ factory('cart', ['plan',
 						cb.totalEach = funcs.totalEach(cb.price, cb.serviceFee, qty, splitBy);
 
 						cb.total = cb.totalEach * splitBy + cb.deliveryFee;
-						console.log(cb);
 						groupTotal += cb.total;
 						groupCount += qty;
 						groups.push({
@@ -1215,9 +1211,6 @@ factory('googleMap', ['$rootScope',
 					infoWindow: infoWindow,
 					open: false
 				}
-				console.log('adding info window');
-				console.log(win);
-				console.log(marker);
 				if (typeof infoWindow === "undefined") {
 					return;
 				}
@@ -1248,8 +1241,6 @@ factory('googleMap', ['$rootScope',
 				return win;
 			},
 			_findInfoWindow: function(lat, lng) {
-				console.log('infowindows');
-				console.log(self._infoWindows);
 				for (var i = 0; i < self._infoWindows.length; i++) {
 					var winLat = self._infoWindows[i].lat;
 					var winLng = self._infoWindows[i].lng;
@@ -1281,8 +1272,6 @@ factory('googleMap', ['$rootScope',
 				var lat = marker.getPosition().lat();
 				var lng = marker.getPosition().lng();
 				var win = this._findInfoWindow(lat, lng);
-				console.log('open win');
-				console.log(win);
 				if (win) {
 					win.open = true;
 					win.infoWindow.open(self._map, marker);
@@ -1396,7 +1385,6 @@ factory('mapMarker', ['mapInfoWindowContent',
 
 				if (typeof args.click !== "undefined") {
 					google.maps.event.addListener(marker, 'click', function() {
-						console.log(marker);
 						if (googleMap.isInfoWindowOpen(marker)) {
 							args.click.on();
 						} else {
@@ -1408,8 +1396,6 @@ factory('mapMarker', ['mapInfoWindowContent',
 				/* put the marker on the map */
 				googleMap.addMarker(marker);
 				/* put the infoWindow on the map */
-				console.log('add infowindow to marker');
-				console.log(win);
 				googleMap.addInfoWindow(win, marker);
 
 			}
@@ -1902,21 +1888,15 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 				/* if either new or old has a hash tag and the urls are otherwise the same the gtfo */
 				if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
 					if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
-						console.log('new and old are the same');
 						return;
 					}
 					if ((newUrl.split('#')[0] === '/') && (oldUrl.split('#')[0] === "/index")) {
-						console.log('new is / and old is index');
 						return;
 					}
 					if ((newUrl.split('#')[0] === '/index') && (oldUrl.split('#')[0] === "/")) {
-						console.log('new is index and old is /');
 						return;
 					}
 				}
-				console.log('sliding page');
-				console.log(newUrl);
-				console.log(oldUrl);
 
 				var me = this;
 				var path = $location.path();
@@ -2020,7 +2000,6 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 					});
 
 				}).error(function() {
-					console.log('error getting: ' + args.url);
 					//send to a 404 page
 					$location.path('/');
 				});

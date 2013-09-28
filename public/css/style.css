@@ -12209,9 +12209,6 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .controls {
   margin: 20px 0;
 }
-#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .ticket-row .controls .change-tickets-link {
-  margin-top: 12px;
-}
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .add-on-container .add-on-offsite-link .text {
   margin: 15px 0 0 15px;
 }
@@ -12245,7 +12242,7 @@ a#facebook-login-button {
   margin: 20px 0;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .controls .change-add-on-link {
-  margin: 10px 50px;
+  margin: 10px 0px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .controls .view-add-on-link {
   margin-right: 20px;
