@@ -104,7 +104,7 @@
 
 	.section3 {
 		background-color:@blueDark;
-		height:610px;
+		min-height:610px;
 
 		h1 {
 			display:block;
@@ -142,7 +142,14 @@
 					font-size: 20px;
 					margin-top: 60px;
 				}
-
+				.performers {
+					padding:6px;
+					max-width:250px;
+				}
+				.performer {
+					font-size:18px;
+					text-decoration: underline;
+				}
 			}
 		}
 	}
@@ -150,15 +157,75 @@
 	.section4 {
 		background: transparent url("/images/index-car.png") no-repeat left bottom;
 
+		.container {
+			margin-top:80px;
+			.left {
+				width:60%;
+				.body {
+					color:@white;
+				}
+			}
+			.right {
+				width:40%;
+				.body {
+					.row {
+						a {
+							display:block;
+							height:85px;
+							width:101px;
+							margin:20px 0 0 60px;
+						}
+
+						.blog-link {
+							background: transparent url("/images/index-social-icons.png") no-repeat 0px 0px
+						}
+						.gplus-link {
+							background: transparent url("/images/index-social-icons.png") no-repeat 0px -85px;
+						}
+						.twitter-link {
+							background: transparent url("/images/index-social-icons.png") no-repeat 0px -170px;
+						}
+						.facebook-link {
+							background: transparent url("/images/index-social-icons.png") no-repeat 0px -255px;
+						}
+					}
+					.message {
+						margin:40px;
+						text-align:left;
+
+						text {
+							font-size:14px;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	.section5 {
-		padding-top:60px;
-		min-height:300px;
+		min-height:30px;
+		border-top:2px solid #AAA;
+		padding:20px;
 		background-color:@grayLight;
 		.container {
 			text-align: left;
 			color:@black;
+
+			.footer-social-button {
+				margin-left:20px;
+			}
+
+			.links {
+				margin-top:20px;
+
+				.footer-link {
+					padding:5px 20px;
+					color:@white;
+				}
+				a:hover {
+					color:@yellowDark;
+				}
+			}
 
 			.footer-column {
 				width:25%;

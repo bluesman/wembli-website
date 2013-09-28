@@ -44,38 +44,59 @@
 		h1.calibri TOP SELLING PERFORMERS THIS WEEK
 		.container.clearfix
 			.top-events-arrow
-			.left.pull-left
+			ul.left.pull-left
 				h2 Top 10 Concerts:
 				high-sales-performers(parent-category-id="2",num-returned="10")
-					.performers(ng-repeat="performer in concertPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
-			.middle.pull-left
+					li.performers(ng-repeat="performer in concertPerformers | filter:orderBy:'-Percent'")
+						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
+			ul.middle.pull-left
 				h2 Top 10 Sports Teams:
 				high-sales-performers(parent-category-id="1",num-returned="10")
-					.performers(ng-repeat="performer in sportsPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
-			.right.pull-left
+					li.performers(ng-repeat="performer in sportsPerformers | filter:orderBy:'-Percent'")
+						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
+			ul.right.pull-left
 				h2 Top 10 Theater Shows:
 				high-sales-performers(parent-category-id="3",num-returned="10")
-					.performers(ng-repeat="performer in theaterPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{performer.Description}}
+					li.performers(ng-repeat="performer in theaterPerformers | filter:orderBy:'-Percent'")
+						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
 	section.section4
 		.container.clearfix
 			.left.pull-left
 				.body.twitter-widget
-					a.twitter-timeline(href="//twitter.com/search?q=%40wembli",data-link-color="#0088CC", data-theme="dark",data-widget-id="318018385696915459", data-chrome="nofooter noborders noheader", height="536px" ,width="288px").segoe
+					a.twitter-timeline(href="//twitter.com/search?q=%40wembli",data-link-color="#0088CC", data-theme="dark",data-widget-id="318018385696915459", data-chrome="noborders", height="400px" ,width="500px").segoe
 			.right.pull-left
+				.body
+					.row.clearfix
+						a.facebook-link.pull-left(href="//www.facebook.com/wemblifan")
+						a.blog-link.pull-left(href="//blog.wembli.com/")
+					.row.clearfix
+						a.twitter-link.pull-left(href="//twitter.com/wembli")
+						a.gplus-link.pull-left(href="//plus.google.com/102053515859174299215/posts")
+					.row.message
+						h2 Promos & Insider Info
+						.text Here at Wembli we love social networking and connecting with our favorite people – our beloved Wemblizens! That’s why we are all over Facebook, Twitter and Google+.
+
 	section.section5
-		.container
-			.footer-column.pull-left
-				h4 TICKETS
-				.list
-			.footer-column.pull-left
-				h4 IN YOUR AREA
-				.list
-			.footer-column.pull-left
-				h4 TRENDING NOW
-				.list
-			.footer-column.pull-left
-				h4 ABOUT WEMBLI
-				.list
+		//-
+			.container
+				.footer-column.pull-left
+					h4 TICKETS
+					.list
+				.footer-column.pull-left
+					h4 IN YOUR AREA
+					.list
+				.footer-column.pull-left
+					h4 TRENDING NOW
+					.list
+				.footer-column.pull-left
+					h4 ABOUT WEMBLI
+					.list
+		.container.clearfix
+			//-
+				.footer-social-button.twitter-button.pull-left
+					a(href="//twitter.com/wembli", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow @wembli
+			.footer-social-button.facebook-like-button.pull-left
+				.fb-like(data-href="http://wembli.com", data-width="450",data-show-faces="true", data-send="true")
+			.links.clearfix.pull-left
+				a.footer-link(href="/about-us") About Us
+				a.footer-link(href="/terms-policies") Terms Of Service & Privacy Policy

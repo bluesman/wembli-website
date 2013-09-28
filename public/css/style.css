@@ -5572,11 +5572,11 @@ h2 {
 
   font-family: "SegoePrint";
   color: #426799;
-  font-size: 18px;
+  font-size: 16px;
 }
 h3 {
   font-family: "Helveticaneueltstd-ex";
-  font-size: 16px;
+  font-size: 14px;
 }
 .icon-check-empty {
   width: 24px !important;
@@ -5763,7 +5763,7 @@ a:focus {
   background-image: url('/images/orange-arrow.png');
 }
 .dollar-sign {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
 }
 .module {
@@ -7633,7 +7633,7 @@ header .search,
 header .login,
 header .signup,
 header .menu-text {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 13px;
   vertical-align: middle;
   padding: 0 6px;
@@ -7658,6 +7658,10 @@ header .right-container {
 header .right-container .logo-35,
 header .right-container .logo-45 {
   margin: auto;
+}
+header .right-container .logo-35 h1,
+header .right-container .logo-45 h1 {
+  text-indent: 1000%;
 }
 /* below this is the old header */
 #header-old {
@@ -7964,7 +7968,7 @@ header .right-container .logo-45 {
 }
 #index-frame .section3 {
   background-color: #426799;
-  height: 610px;
+  min-height: 610px;
 }
 #index-frame .section3 h1 {
   display: block;
@@ -8005,17 +8009,80 @@ header .right-container .logo-45 {
   font-size: 20px;
   margin-top: 60px;
 }
+#index-frame .section3 .container .left .performers,
+#index-frame .section3 .container .middle .performers,
+#index-frame .section3 .container .right .performers {
+  padding: 6px;
+  max-width: 250px;
+}
+#index-frame .section3 .container .left .performer,
+#index-frame .section3 .container .middle .performer,
+#index-frame .section3 .container .right .performer {
+  font-size: 18px;
+  text-decoration: underline;
+}
 #index-frame .section4 {
   background: transparent url("/images/index-car.png") no-repeat left bottom;
 }
+#index-frame .section4 .container {
+  margin-top: 80px;
+}
+#index-frame .section4 .container .left {
+  width: 60%;
+}
+#index-frame .section4 .container .left .body {
+  color: #ffffff;
+}
+#index-frame .section4 .container .right {
+  width: 40%;
+}
+#index-frame .section4 .container .right .body .row a {
+  display: block;
+  height: 85px;
+  width: 101px;
+  margin: 20px 0 0 60px;
+}
+#index-frame .section4 .container .right .body .row .blog-link {
+  background: transparent url("/images/index-social-icons.png") no-repeat 0px 0px;
+}
+#index-frame .section4 .container .right .body .row .gplus-link {
+  background: transparent url("/images/index-social-icons.png") no-repeat 0px -85px;
+}
+#index-frame .section4 .container .right .body .row .twitter-link {
+  background: transparent url("/images/index-social-icons.png") no-repeat 0px -170px;
+}
+#index-frame .section4 .container .right .body .row .facebook-link {
+  background: transparent url("/images/index-social-icons.png") no-repeat 0px -255px;
+}
+#index-frame .section4 .container .right .body .message {
+  margin: 40px;
+  text-align: left;
+}
+#index-frame .section4 .container .right .body .message text {
+  font-size: 14px;
+}
 #index-frame .section5 {
-  padding-top: 60px;
-  min-height: 300px;
+  min-height: 30px;
+  border-top: 2px solid #AAA;
+  padding: 20px;
   background-color: #cccccc;
 }
 #index-frame .section5 .container {
   text-align: left;
   color: #000000;
+}
+#index-frame .section5 .container .footer-social-button {
+  margin-left: 20px;
+}
+#index-frame .section5 .container .links {
+  margin-top: 20px;
+}
+#index-frame .section5 .container .links .footer-link {
+  padding: 5px 20px;
+  color: #ffffff;
+}
+#index-frame .section5 .container .links a:hover {
+  color: #e6b800;
 }
 #index-frame .section5 .container .footer-column {
   width: 25%;
