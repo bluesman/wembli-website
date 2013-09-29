@@ -33,7 +33,7 @@ block header
 				a(href="/index") home
 
 		ul.links
-			li.hide
+			li
 				a(href="/about-us") about us
 			li.hide
 				a(href="/press") press
@@ -46,8 +46,7 @@ block header
 
 	header#header.clearfix
 		a.slidepanel.left-container.pull-left.clearfix(href="#",data-slidepanel="panel")
-			.icon.icon-reorder.pull-left
-			.menu-text.pull-left menu
+			i.icon-reorder &nbsp;menu
 		.middle-container.pull-left.clearfix(ng-hide="loggedIn")
 			.login.pull-left
 				a(href="/login") login
@@ -55,7 +54,8 @@ block header
 				a(href="/signup") signup
 		.middle-container.pull-left.clearfix(ng-show="loggedIn")
 			.search.pull-left
-				a(href="/search") search
+				a(href="/search")
+					i.icon-search &nbsp;search
 			//- .login.pull-left
 				a(href="/logout") logout
 		.right-container.pull-right

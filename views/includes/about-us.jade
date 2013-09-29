@@ -4,10 +4,10 @@
 			label.kim(ng-class="{'kim':'active'}[content]")
 				input.pic(type="radio", name="content", value="kim", ng-model="content")
 		.middle.pull-left
-			label.tom.pull-left(ng-class="{'tom':'active'}[content]")
+			label.tom(ng-class="{'tom':'active'}[content]")
 				input.pic(type="radio", name="content", value="tom", ng-model="content")
 		.right.pull-left
-			label.ash.pull-left(ng-class="{'ash':'active'}[content]")
+			label.ash(ng-class="{'ash':'active'}[content]")
 				input.pic(type="radio", name="content", value="ash", ng-model="content")
 	section.content.container.clearfix(ng-show="{'kim':true}[content]")
 		.left.pull-left
