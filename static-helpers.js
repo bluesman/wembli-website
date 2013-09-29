@@ -85,7 +85,7 @@ module.exports = {
 			'text': "Twitter",
 		}, {
 			'icon': "icon-envelope",
-			'text': "Wembli Mail",
+			'text': "Send Email",
 		}];
 
 		for (var i = 0; i < 5; i++) {

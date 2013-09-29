@@ -6,11 +6,9 @@ block body
 				td Hi #{req.session.customer.firstName},
 			tr
 				td(height="80")
-					span #{req.session.customer.firstName} #{req.session.customer.lastName} has finalized the plan for #{req.session.plan.event.eventName}.
-					br
-					span Please&nbsp;
-					a(href="#{payLink}") Click here&nbsp;
-					span to pony up.
+					span We’re doing the happy dance because you chose to join #{req.session.customer.firstName} #{req.session.customer.lastName} for the #{req.session.plan.event.eventName} event. Now It’s time to&nbsp;
+					a(href="#{payLink}") click here&nbsp;
+					span  and pony up for your part of the outing so that they can lock in your tickets.
 			tr
 				td(height="80")
 					include includes/signature

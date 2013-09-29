@@ -13,7 +13,9 @@
 			- split = plan.preferences.tickets.payment;
 		- else
 			- split = plan.preferences.payment;
+
 		- if (visitor.context === 'organizer')
+			- console.log('SPLIT: '+split);
 			- if (split === 'split-first')
 				- if (!plan.rsvpComplete)
 					//- TODO - if they have friends invited - give them a read only list of tix
@@ -26,9 +28,11 @@
 				- include = 'buy-now'
 				- header = "Choose Tickets To Buy"
 		- else if(visitor.context === 'friend')
+			- console.log('visitor context is friend - SPLIT: '+split);
 			- header = "See What Tickets Are Available";
 			- include = 'read-only'
 		- else
+			- console.log('visitor context is not friend or organizer - SPLIT: '+split);
 			- header = "See What Tickets Are Available";
 			- include = 'invite-friends'
 	section

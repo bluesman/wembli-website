@@ -678,18 +678,23 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
             $scope.reconcileTicketQty();
           })
 
-          $scope.savePrefs = function() {
+          $scope.savePrefs = function(cb) {
             plan.savePreferences({
               preferences: $scope.plan.preferences
             }, function(err, result) {
               $scope.plan = result.plan;
               $scope.calcTotalComing();
+              cb();
             });
           };
 
           $scope.setPayment = function(addOn, value) {
             $scope.plan.preferences[addOn].payment = value;
-            $scope.savePrefs();
+            $scope.savePrefs(function() {
+              var path = '/'+addOn+'/'+$scope.plan.event.eventId+'/'+$scope.plan.event.eventName;
+              $location.path(path);
+            });
+
           }
 
           /* key bindings for up and down arrows for guestCount */

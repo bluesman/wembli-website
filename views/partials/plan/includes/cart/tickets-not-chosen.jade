@@ -5,7 +5,7 @@
 		p It's tough to pick tickets until you know how many people are going but feel free to preview what's available during the voting process so you have an idea of what you'll want when it's time to add them to your shopping cart.
 		.button-container.clearfix
 			a.pull-left.btn.btn-orange.btn-large(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Tickets
-			a.buy-now(ng-click="setPayment('tickets','split-after')",href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I don't want to wait, I want to buy now
+			a.buy-now(ng-click="setPayment('tickets','split-after')",href="#") I don't want to wait, I want to buy now
 
 	//- no tickets, rsvp is complete and split-first
 	.body.add-on-included(ng-show="!tickets[0] && plan.rsvpComplete")

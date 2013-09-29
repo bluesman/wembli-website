@@ -5579,7 +5579,7 @@ h3 {
   font-size: 14px;
 }
 .icon-check-empty {
-  width: 24px !important;
+  margin-right: 11px !important;
 }
 /* buttons */
 .btn-primary,
@@ -5681,6 +5681,9 @@ h3 {
 .btn-secondary:hover.active,
 .btn-orange:hover.active {
   background-color: #997a00 \9;
+}
+.btn-large {
+  font-size: 16px;
 }
 .modal {
   top: 40%;
@@ -7798,7 +7801,7 @@ header .right-container .logo-45 h1 {
   background-color: #427fb8;
 }
 .event-data .info {
-  color: #cccccc;
+  color: #ffffff;
 }
 .event-data:before,
 .event-data:after {
@@ -8032,6 +8035,14 @@ header .right-container .logo-45 h1 {
 }
 #index-frame .section4 .container .left .body {
   color: #ffffff;
+}
+#index-frame .section4 .container .left .body .twitter-right-arrow {
+  border-top: 30px solid transparent;
+  border-bottom: 30px solid transparent;
+  border-left: 40px solid #333333;
+  position: absolute;
+  top: 136px;
+  right: 430px;
 }
 #index-frame .section4 .container .right {
   width: 40%;
