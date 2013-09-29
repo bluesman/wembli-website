@@ -442,6 +442,7 @@ exports.customer = {
 
 						var mailArgs = {
 							res: res,
+							req: req,
 							tokenHash: tokenHash,
 							customer: c,
 							next: args.next
@@ -496,6 +497,7 @@ exports.customer = {
 				/* send signup email async */
 				wembliMail.sendSignupEmail({
 					res: res,
+					req: req,
 					confirmationToken: confirmationToken,
 					customer: customer,
 					next: args.next
@@ -600,6 +602,7 @@ exports.customer = {
 
 						var mailArgs = {
 							res: res,
+							req: req,
 							tokenHash: tokenHash,
 							customer: c,
 							next: args.next
@@ -702,6 +705,7 @@ exports.customer = {
 
 						var mailArgs = {
 							res: res,
+							req: req,
 							tokenHash: tokenHash,
 							customer: c,
 							next: args.next
@@ -753,6 +757,7 @@ exports.customer = {
 						/* send signup email async */
 						wembliMail.sendSignupEmail({
 							res: res,
+							req: req,
 							confirmationToken: tokenHash,
 							customer: c,
 							next: args.next
@@ -831,6 +836,7 @@ exports.customer = {
 
 				var mailArgs = {
 					res: res,
+					req: req,
 					tokenHash: tokenHash,
 					customer: c,
 					next: args.next

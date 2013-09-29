@@ -1561,6 +1561,8 @@ exports.plan = {
 							data.dbError = 'unable to add Parking ' + p.id;
 							return me(null, data);
 						}
+
+
 						console.log('added parking to plan: ' + req.session.plan.guid);
 						data.parking = p;
 						return me(null, data);

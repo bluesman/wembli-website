@@ -1,44 +1,15 @@
 extends layout
 block body
-	table(style="background:#{white}",align="center", border="0", cellpadding="0", cellspacing="0", width="736")
+	table(style="background:#{white};font-size:16px;",align="center", border="0", cellpadding="0", cellspacing="0", width="100%")
 		tbody
 			tr
-				- var text = "You're Invited!";
-				td(width="736")
-					include includes/heading
+				td Hi #{req.session.customer.firstName},
 			tr
-				td(width="736")
-					table(align="left" ,border="0" ,cellpadding="0", cellspacing="0", width="736")
-						tbody
-							tr
-								td(width="736")
-									table(border="0" ,cellpadding="0", cellspacing="0", width="736")
-										tbody
-											tr
-												td(bgcolor="#{white}",width="686")
-													table(style="border-top:2px dashed #{grayDark}", align="center", border="0", cellpadding="0", cellspacing="0", width="686")
-														tbody
-															tr
-																td(height="15")
-															tr
-																td(style="font-family:Arial,Helvetica,sans-serif;color:#{grayDark};line-height:1.7;font-size:14px", width="686")
-											tr
-												td(bgcolor="#{white}",width="686")
-													table(height="50",align="center",border="0",cellpadding="0",cellspacing="0",width="686")
-														tbody
-															tr
-																td(style="font-family:Helvetica,sans-serif;color:#{grayDark};line-height:1.7;font-size:16px")!= req.session.customer.firstName+' '+req.session.customer.lastName+ ' has invited you to ' + req.session.plan.event.eventName +':'
-																	p
-																		span "
-																		i= message
-																		span "
-																	- if (rsvpDate != null)
-																		p!= 'Please RSVP before: '+rsvpDate+ ' so that '+req.session.customer.firstName+ ' can finalize the plan!'
-											tr
-												td(bgcolor="#{white}",width="686")
-													table(height="50",align="center", border="0", cellpadding="0", cellspacing="0", width="686")
-														tbody
-															tr
-																td
-																	a(href="#{rsvpLink}",style="font-size:16px;color:#{orange};text-decoration:none;") Click here to RSVP.
+				td(height="80")
+					span #{req.session.customer.firstName} #{req.session.customer.lastName} wants you to go to #{req.session.plan.event.eventName}. RSVP before #{rsvpDate}, otherwise we’re takin' your spot! ;)&nbsp;
+					a(href="#{rsvpLink}") Rsvp here&nbsp;
+					span to claim your spot and vote for your favorite options.
+			tr
+				td(height="80")
+					include includes/signature
 

@@ -71,6 +71,9 @@ module.exports = function(app) {
 
 	app.get('/email/:template', function(req,res) {
 		var argsMap = {
+			'forgot-password': {
+				resetLink:'#',
+			},
 			'welcome': {
 
 			},
