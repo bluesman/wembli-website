@@ -1,0 +1,79 @@
+#about-us-frame {
+	.pics > div {
+		width:33%;
+	}
+
+	.pics {
+		margin-top:20px;
+		width:100%;
+		background-color:@black;
+		padding:20px;
+
+		label {
+			padding:20px;
+			margin:auto;
+
+			input {
+				visibility:hidden;
+			}
+		}
+
+		label.active {
+			background-color:@blue !important;
+		}
+
+		label.kim {
+			background: transparent url("/images/kim-about-me.png") no-repeat center center;
+			height:211px;
+			width:208px;
+		}
+
+		label.tom {
+			background: transparent url("/images/tom-about-me.png") no-repeat center center;
+			height:211px;
+			width:271px;
+		}
+
+		label.ash {
+			background: transparent url("/images/ash-about-me.png") no-repeat center center;
+			height:210px;
+			width:210px;
+		}
+
+
+	}
+
+	.content {
+		margin:50px auto 0;
+		text-align:left;
+		color:@black;
+
+		h2, h1 {
+			color:@black;
+		}
+
+		h2 {
+			font-size: 1.2em;
+		}
+		.left {
+			font-size: 1.1em;
+			background: transparent url("/images/about-us-arrow.png") no-repeat right bottom;
+			width:580px;
+			height:320px;
+			margin-top:20px;
+		}
+		.left > div {
+			margin-top:10px;
+		}
+
+		.right {
+			width:400px;
+			font-size: 1.2em;
+
+			.info {
+				margin:10px;
+				line-height:22px;
+			}
+		}
+	}
+}

@@ -1,0 +1,69 @@
+#about-us-frame(ng-controller="AboutusCtrl", ng-init="content='kim'")
+	section.pics.container.xlearfix
+		.left.pull-left
+			label.kim(ng-class="{'kim':'active'}[content]")
+				input.pic(type="radio", name="content", value="kim", ng-model="content")
+		.middle.pull-left
+			label.tom.pull-left(ng-class="{'tom':'active'}[content]")
+				input.pic(type="radio", name="content", value="tom", ng-model="content")
+		.right.pull-left
+			label.ash.pull-left(ng-class="{'ash':'active'}[content]")
+				input.pic(type="radio", name="content", value="ash", ng-model="content")
+	section.content.container.clearfix(ng-show="{'kim':true}[content]")
+		.left.pull-left
+			h1.name.calibri Kim Walpole
+			h2.title.calibri Co-Founder & CEO
+			.clearfix
+				strong.key.pull-left Twitter:&nbsp;
+				.value.pull-left
+					a(href="https://twitter.com/kimbeela") @kimbeela
+			.clearfix
+				strong.key.pull-left Best live event ever attended:&nbsp;
+				.value.pull-left Needtobreathe at Birch Aquarium, La Jolla
+			.clearfix
+				strong.key.pull-left Favorite sports team:&nbsp;
+				.value.pull-left Washington Redskins
+			.clearfix
+				strong.key.pull-left Random fact about me:&nbsp;
+				.value.pull-left I have made 3 citizens arrests
+		.right.pull-left
+			p.info Kim’s love of business began early when she turned a profit selling home-made ice pops to kids on the block from her grandmother’s stoop in the Bronx.   It progressed from there to making Karate Kid headbands out of her mom's white sheets and selling them at school.  A native New Yorker, the faster Kim walks, the faster she talks.  After launching and running a national management training & consulting company for over 9 years,  she and her husband, Tom decided it was time to tap rings and pull a “wonder twin powers, activate! - form of Wembli!”.  Kim is a  focused ball of energy that can cast vision & talk strategy in one breathe, and get the whole team laughing like a pack of crazed hyenas in the next.
+	section.content.container.clearfix(ng-show="{'tom':true}[content]")
+		.left.pull-left
+			h1.name.calibri Tom Walpole
+			h2.title.calibri Co-Founder & CTO
+			.clearfix
+				strong.key.pull-left Twitter:&nbsp;
+				.value.pull-left
+					a(href="https://twitter.com/walpolet") @walpolet
+			.clearfix
+				strong.key.pull-left Best live event ever attended:&nbsp;
+				.value.pull-left Pearl Jam in Hawaii circa 1992
+			.clearfix
+				strong.key.pull-left Favorite sports team:&nbsp;
+				.value.pull-left San Diego Padres
+			.clearfix
+				strong.key.pull-left Random fact about me:&nbsp;
+				.value.pull-left I secretly want to be a gold-miner
+		.right.pull-left
+			p.info A keyboard cowboy, Tom brings over 15 years of web development experience  and leadership to the team.  When he’s not blazing new technical trails, or dreaming in code, you can find him guitar in hand singing the blues.  A haole who hails from the oldest of the Hawaiian Islands he’s one of those rare geeks with stellar people skills. Toms new mission in life is to gentrify the term ‘code monkey’ so that no geek will ever hang their head again.  In our book that makes him a modern day activist.  For the win.
+
+	section.content.container.clearfix(ng-show="{'ash':true}[content]")
+		.left.pull-left
+			h1.name.calibri Ashley Stanley
+			h2.title.calibri Digital Buzz-Crafter
+			.clearfix
+				strong.key.pull-left Twitter:&nbsp;
+				.value.pull-left
+					a(href="https://twitter.com/ashleymstanley") @AshleyMStanley
+			.clearfix
+				strong.key.pull-left Best live event ever attended:&nbsp;
+				.value.pull-left John Mayer @ SPAC in Syracuse, NY
+			.clearfix
+				strong.key.pull-left Favorite sports team:&nbsp;
+				.value.pull-left Is texting a sport?
+			.clearfix
+				strong.key.pull-left Random fact about me:&nbsp;
+				.value.pull-left I started talking at 9 months old
+		.right.pull-left
+			p.info After growing up in a tiny, picturesque town in the Adirondacks, NY, Ashley knew she was ready to fly the coop and make her mark on the world. She eventually landed in San Diego and basked in the glory of the sun while quickly diving into the local startup culture. A lover of all things people, gadget & tech - she began to carve her own niche in the land of social media and with Klout perks abounding she realized that she was a natural at engaging an audience.  Her claim to fame is ‘breaking’ G+ when one of her posts reached 500 comments. When she’s not cleverly crafting ways to get people talking, she can usually be found with a group of friends engaging in a not-so-quiet game of Mafia.
