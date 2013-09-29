@@ -608,7 +608,7 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
                 if (res === null) {
                   $scope.handleFriendsFetch();
                 } else {
-                  friend.rsvp.decision = null;
+                  //friend.rsvp.decision = null;
                   friend.checked = true;
                   $http.get('/callback/twitter/rsvp/' + $scope.plan.guid + '/' + $scope.twitter.token)
                     .success(function(data, status, headers, config) {

@@ -10237,6 +10237,9 @@ a#facebook-login-button {
   color: #ffffff;
   background-image: url('/images/orange-arrow.png');
 }
+.hero {
+  margin: 20px auto 0;
+}
 .hero #event-options-hero-left #copy {
   top: 230px;
 }
@@ -10309,7 +10312,6 @@ a#facebook-login-button {
   margin-left: 20px;
 }
 .hero #event-options-hero-right fieldset .control-group label span {
-  font-size: 1.25em;
   line-height: 25px;
   vertical-align: middle;
 }

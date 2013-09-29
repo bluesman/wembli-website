@@ -6,7 +6,7 @@
   "dependencies": {
     "express": "3.x",
     "connect-redis": "1.4.x",
-    "everyauth": "0.3.x",
+    "everyauth": "0.4.x",
     "mongoose": "3.x",
     "async": "0.1.x",
     "nodemailer": "0.3.x",
@@ -23,7 +23,7 @@
     "ntwitter": "0.5.x",
     "twitter-text": "1.6.x",
     "keen.io": "0.0.x",
-    "yamlparser": "0.0.2",
+    "yamlparser": "0.0.2"
   },
   "repository": {
     "type": "git",
