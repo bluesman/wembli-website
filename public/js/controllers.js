@@ -7,6 +7,11 @@ function MainCtrl($scope, $location, $window, plan) {
 };
 
 
+function AboutusCtrl($scope) {
+
+};
+
+
 function InviteFriendsWizardCtrl($scope) {
 
 };

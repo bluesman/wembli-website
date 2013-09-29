@@ -7221,7 +7221,7 @@ ul.icons-ul > li .icon-li {
   font-family: "Helveticaneueltstd-ex";
 }
 .calibri {
-  font-family: "calibri";
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 }
 h1,
 h2,
@@ -7298,7 +7298,7 @@ html {
 body {
   height: 100%;
   overflow-x: hidden;
-  font-family: "Calibri", "Helvetica", "Arial";
+  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
   font-size: 14px;
 }
 * {
@@ -8389,6 +8389,69 @@ header .right-container .logo-45 h1 {
 }
 #content-old #index-frame #directory {
   height: 60px;
+}
+#about-us-frame .pics > div {
+  width: 33%;
+}
+#about-us-frame .pics {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #000000;
+  padding: 20px;
+}
+#about-us-frame .pics label {
+  padding: 20px;
+  margin: auto;
+}
+#about-us-frame .pics label input {
+  visibility: hidden;
+}
+#about-us-frame .pics label.active {
+  background-color: #4380b8 !important;
+}
+#about-us-frame .pics label.kim {
+  background: transparent url("/images/kim-about-me.png") no-repeat center center;
+  height: 211px;
+  width: 208px;
+}
+#about-us-frame .pics label.tom {
+  background: transparent url("/images/tom-about-me.png") no-repeat center center;
+  height: 211px;
+  width: 271px;
+}
+#about-us-frame .pics label.ash {
+  background: transparent url("/images/ash-about-me.png") no-repeat center center;
+  height: 210px;
+  width: 210px;
+}
+#about-us-frame .content {
+  margin: 50px auto 0;
+  text-align: left;
+  color: #000000;
+}
+#about-us-frame .content h2,
+#about-us-frame .content h1 {
+  color: #000000;
+}
+#about-us-frame .content h2 {
+  font-size: 1.2em;
+}
+#about-us-frame .content .left {
+  font-size: 1.1em;
+  background: transparent url("/images/about-us-arrow.png") no-repeat right bottom;
+  width: 580px;
+  height: 320px;
+  margin-top: 20px;
+}
+#about-us-frame .content .left > div {
+  margin-top: 10px;
+}
+#about-us-frame .content .right {
+  width: 400px;
+  font-size: 1.2em;
+}
+#about-us-frame .content .right .info {
+  margin: 10px;
 }
 #search-box {
   margin: auto;
