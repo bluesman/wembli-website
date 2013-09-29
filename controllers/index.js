@@ -51,6 +51,13 @@ module.exports = function(app) {
 
 	});
 
+	app.get('/about-us', function(req, res) {
+		res.render('about-us.jade', {
+			title: 'wembli.com - About Us.'
+		});
+
+	});
+
 	app.get('/terms-policies', function(req, res) {
 		res.render('terms-policies.jade', {
 			title: 'wembli.com - Terms & Policies.'
