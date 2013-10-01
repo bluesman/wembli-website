@@ -279,9 +279,13 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
 
 
           function initStaticMap() {
+            if (!scope.event.MapURL) {
+              scope.event.MapURL = "/images/no-seating-chart.jpg";
+            }
             /* TODO: check if this is split first */
             var img = new Image();
             img.src = scope.event.MapURL;
+
             img.onload = function() {
 
               var w = img.width;

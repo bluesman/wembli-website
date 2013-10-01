@@ -128,6 +128,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			function(err, result) {
 				if (err) {
 					//handle err
+					console.log(err);
 					alert('error happened - contact help@wembli.com');
 					return;
 				}
