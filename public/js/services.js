@@ -35,7 +35,9 @@ factory('loadingModal', ['$rootScope',
 				if (stack < 1) {
 					stack = 0;
 					/* hide only the generic loading modal */
-					$('#generic-loading-modal').modal("hide");
+					if (typeof $('#generic-loading-modal').modal !== "undefined") {
+						$('#generic-loading-modal').modal("hide");
+					}
 				}
 			}
 		}

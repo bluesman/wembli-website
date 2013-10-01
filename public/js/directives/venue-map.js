@@ -135,8 +135,6 @@ directive('ticketsPopover', ['plan', 'wembliRpc',
             if (typeof tix === "undefined") {
               return;
             }
-            console.log('tickets');
-            console.log(scope.tickets);
           });
         }
       }
@@ -288,10 +286,11 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
             img.onload = function() {
 
               var w = img.width;
-              $('#venue-map-container').empty().prepend('<div id="static-map-image" style="float:right;background:transparent url(' + scope.event.MapURL + ') no-repeat center center;height:100%;width:' + w + 'px"/>');
+              var h = img.height;
 
-              $('ul#tickets-popover-container').height($('#venue-map-container').height() - 220);
+              $('#venue-map-container').empty().css('overflow-y', 'auto').prepend('<div id="static-map-image" style="float:right;background:transparent url(' + scope.event.MapURL + ') no-repeat center center;height:' + h + 'px;width:' + w + 'px"/>');
 
+              $('ul#tickets-popover-container').height($('#venue-map-container').height() - 120);
               $('#static-map-image').popover({
                 placement: 'left',
                 trigger: 'hover',
@@ -311,6 +310,59 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
                 html: true
 
               });
+              /*
+              $('#static-map-image').mouseover(function() {
+                setTimeout(function() {
+                  console.log($('.popover').css('top'));
+                  if ($('.popover').css('top') != '0px') {
+                    $('.popover').animate({
+                      top: '0px'
+                    });
+                  }
+                }, 500);
+              });
+              */
+              var originalPlacement = $.fn.popover.Constructor.prototype.applyPlacement;
+              $.fn.popover.Constructor.prototype.applyPlacement = function(offset, placement) {
+                offset.top = 200;
+                var $tip = this.tip(),
+                  width = $tip[0].offsetWidth,
+                  height = $tip[0].offsetHeight,
+                  actualWidth, actualHeight, delta, replace
+
+                  $tip
+                    .offset(offset)
+                    .addClass(placement)
+                    .addClass('in')
+
+                  actualWidth = $tip[0].offsetWidth
+                  actualHeight = $tip[0].offsetHeight
+
+                if (placement == 'top' && actualHeight != height) {
+                  offset.top = offset.top + height - actualHeight
+                  replace = true
+                }
+
+                if (placement == 'bottom' || placement == 'top') {
+                  delta = 0
+
+                  if (offset.left < 0) {
+                    delta = offset.left * -2
+                    offset.left = 0
+                    $tip.offset(offset)
+                    actualWidth = $tip[0].offsetWidth
+                    actualHeight = $tip[0].offsetHeight
+                  }
+
+                  this.replaceArrow(delta - width + actualWidth, actualWidth, 'left')
+                } else {
+                  this.replaceArrow(actualHeight - height, actualHeight, 'top')
+                }
+
+                if (replace) $tip.offset(offset)
+              };
+
+
 
               var originalLeave = $.fn.popover.Constructor.prototype.leave;
               $.fn.popover.Constructor.prototype.leave = function(obj) {
