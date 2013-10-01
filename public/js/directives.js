@@ -76,11 +76,8 @@ directive('multiselect', [
           });
 
           scope.$watch(attr.enable, function(newVal) {
-            console.log('watching ' + attr.enable);
-            console.log('newVal is ' + newVal);
             if (typeof newVal !== "undefined") {
               if (newVal) {
-                console.log('disabled multiselect');
                 ms.multiselect("enable");
               } else {
                 ms.multiselect("disable");
@@ -566,7 +563,6 @@ directive('slidepanel', [
             show: false
           });
           $('#empty-modal').on('hidden', function() {
-            console.log('hiding modal');
             if (angular.element('#slidepanel').is(':visible')) {
               angular.element('#slidepanel .close').click();
             }
@@ -579,8 +575,6 @@ directive('slidepanel', [
           });
 
           element.click(function() {
-            console.log('clicked slide panel');
-
             $('#empty-modal').modal('toggle');
           });
         }
@@ -644,8 +638,6 @@ directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequenc
           scope.notifyEmail = '';
 
           scope.collectEmail = function() {
-            console.log('email:' + scope.notifyEmail);
-
             wembliRpc.fetch('customer.notify', {
               addOn: attr.addOn,
               email: scope.notifyEmail
@@ -728,8 +720,6 @@ directive('eventWrapper', ['wembliRpc', '$window',
                 scope.ticketSummaryData.locked = false;
                 /* init the popover */
                 var summaryContent = "";
-                console.log('summary content result');
-                console.log(result);
                 if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
                   if (result.ticketPricingInfo.ticketsAvailable === '0') {
                     summaryContent = "Click for ticket information";
@@ -848,10 +838,7 @@ directive('sendConfirmationEmail', ['wembliRpc',
               if (attr.next) {
                 rpcArgs.next = attr.next;
               }
-              console.log('clicked to send confirmation email');
               wembliRpc.fetch('customer.sendConfirmationEmail', rpcArgs, function(err, result) {
-                console.log('sent confirmation email');
-                console.log(err);
                 /* display an email sent message */
                 scope.confirmationEmailSent = true;
                 scope.confirmationEmailInProgress = false;
@@ -917,7 +904,6 @@ directive('preventDefault', [
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
           element.click(function(event) {
-            console.log('prevent default & stop propagation')
             event.preventDefault();
             event.stopPropagation();
           });
@@ -969,8 +955,6 @@ directive('highSalesPerformers', ['wembliRpc',
             parentCategoryID: attr.parentCategoryId,
             numReturned: attr.numReturned
           }, function(err, result) {
-            console.log(err);
-            console.log(result);
             var key = lookup[attr.parentCategoryId]+'Performers';
             scope[key] = result.performers;
           });

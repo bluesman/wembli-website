@@ -15,11 +15,9 @@ var options = {'host':'tn.wembli.com',
 var XML = new xml2js.Parser(xml2js.defaults["0.1"]);
 XML.addListener('end', function(err,result) {
     if (err) {
-	console.log(err);
     } else {
 
     }
-    console.log('Done.');
 });
 
 http.get(options,function (res) {

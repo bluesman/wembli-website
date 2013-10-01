@@ -37,7 +37,6 @@ this.Model = function(mongoose) {
 		/* convert total to cents */
 		/* have the client do this
 		if (typeof this.total !== "undefined") {
-			console.log('convert total to cents:'+this.total);
 			this.total = parseFloat(this.total) * 100;
 		}
 
@@ -54,9 +53,7 @@ this.Model = function(mongoose) {
 		/* convert total to cents */
 		/*
 		if (typeof this.total !== "undefined") {
-			console.log('convert total to $:'+this.total);
 			this.total = parseFloat(this.total) / 100;
-			console.log('total:'+this.total);
 		}
 		if (typeof this.payment !== "undefined") {
 				this.payment.amount = parseFloat(this.payment.amount) / 100;

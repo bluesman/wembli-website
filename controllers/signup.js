@@ -13,9 +13,6 @@ module.exports = function(app) {
 		customerRpc['signup'].apply(function(err,results) {
 			if (err) {	return res.redirect('/signup');	}
 
-			console.log('results from customerRpc signup');
-			console.log(results);
-
 			if (results.exists) {
 				return res.redirect('/signup');
 			}

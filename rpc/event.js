@@ -45,8 +45,6 @@ exports.event = {
 	get: function(args, req, res) {
 		var me = this;
 		args.cnt = (args.cnt) ? args.cnt : 15;
-		console.log('args for get event');
-		console.log(args);
 		if (args.nearZip == "undefined") {
 			//get more top events
 			delete args.nearZip;
@@ -103,21 +101,15 @@ exports.event = {
 			eventID: args.eventID
 		}, function(err, results) {
 			if (err) {
-				console.log('ERROR');
-				console.log(err);
 				return me(err);
 			}
 			var ret = {
 				success: 1,
 				event: results.Event
 			};
-			console.log('args for get tickets');
-			console.log(args);
 			ticketNetwork.GetTickets(args, function(err, results) {
 
 				if (err) {
-					console.log('ERROR GETTING TIX');
-					console.log(err);
 					return me(err);
 				}
 				ret.tickets = [];
@@ -179,8 +171,6 @@ exports.event = {
 			if (err) {
 				return me(err);
 			}
-			console.log('DEALS:');
-			console.log(results);
 			me(null,{success:1,deals:results.response.deals});
 		});
 	},

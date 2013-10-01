@@ -19,9 +19,6 @@ exports.customer = {
 			success: 1
 		};
 
-		console.log('update account holder info');
-		console.log(args);
-
 		/* make sure there is a customer */
 		if (!req.session.customer) {
 			data.success = 0;
@@ -29,26 +26,19 @@ exports.customer = {
 			data.errorMessage = 'customer must be logged in';
 			return me(null, data);
 		}
-		console.log(args);
-		console.log(req.session.customer);
 
 		var customer = new balanced.customers();
 		customer.update(req.session.customer.balancedAPI.customerAccount.uri, args, function(err, bRes, bCustomer) {
 			/* get bank accounts for this customer */
 			customer.setContext(bCustomer);
 			customer.listBankAccounts(function(err, bRes, bankAccounts) {
-				console.log(bankAccounts);
 				data.accountHolderInfo = bCustomer;
 				data.bankAccounts = bankAccounts;
-				console.log('req.session.customer');
-				console.log(req.session);
 				req.session.customer.balancedAPI.customerAccount = bCustomer;
 				req.session.customer.balancedAPI.bankAccounts = bankAccounts;
 
 				req.session.customer.markModified('balancedAPI');
 				req.session.customer.save(function(err) {
-					console.log('saved customer after update customer info');
-					console.log(err);
 					return me(null, data);
 				});
 			});
@@ -61,9 +51,6 @@ exports.customer = {
 		var data = {
 			success: 1
 		};
-
-		console.log('addBankAccount');
-		console.log(args);
 
 		/* make sure there is a customer */
 		if (!req.session.customer) {
@@ -90,8 +77,6 @@ exports.customer = {
 
 		var bAccount = new balanced.accounts();
 		bAccount.update(req.session.customer.balancedAPI.merchantAccount.uri, accountInfo, function(err, bRes, result) {
-			console.log('added bank account');
-			console.log(result);
 			if (bRes.statusCode !== 200) {
 				data.success = 0;
 				data.error = result;
@@ -104,14 +89,11 @@ exports.customer = {
 				limit: 100,
 				offset: 0
 			}, function(err, bRes, bankAccounts) {
-				console.log(bankAccounts);
 				data.bankAccount = result;
 				data.bankAccounts = bankAccounts;
 				req.session.customer.balancedAPI.customerAccount.bank_accounts = bankAccounts;
 				req.session.customer.markModified('balancedAPI.customerAccount');
 				req.session.customer.save(function(err) {
-					console.log('saved customer after bank account added');
-					console.log(err);
 					return me(null, data);
 				});
 			});
@@ -137,8 +119,6 @@ exports.customer = {
 			return me(null, data);
 		}
 
-		console.log(args);
-
 		/* get a list of bank accounts for this merchant */
 		var bAccount = new balanced.accounts();
 		bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {}, function(err, bRes, bankAccounts) {
@@ -146,7 +126,6 @@ exports.customer = {
 			var items = [];
 			var deleted = false;
 			bankAccounts.items.forEach(function(bank) {
-				console.log(bank.uri);
 				if (bank.uri == args.uri) {
 					deleted = true;
 					/* safe to delete this bank account */
@@ -157,8 +136,6 @@ exports.customer = {
 							req.session.customer.balancedAPI.customerAccount.bank_accounts = bankAccounts;
 							req.session.customer.markModified('balancedAPI.customerAccount');
 							req.session.customer.save(function(err) {
-								console.log('saved customer after bank account added');
-								console.log(err);
 								return me(null, data);
 							});
 						});
@@ -178,8 +155,6 @@ exports.customer = {
 		var data = {
 			success: 1
 		};
-		console.log('customer.listBankAccounts');
-		console.log(args);
 
 		/* make sure there is a customer */
 		if (!req.session.customer) {
@@ -202,12 +177,8 @@ exports.customer = {
 		});
 
 		api.Customers.get(req.session.customer.balancedAPI.merchantAccount.customer_uri, function(err, customer) {
-			console.log('get customer for merchant account');
-			console.log(customer);
 			var custApi = api.Customers.nbalanced(customer);
 			custApi.BankAccounts.list(args, function(err, ba) {
-				console.log('list of bank accounts for customer');
-				console.log(ba);
 				data.bankAccounts = ba;
 				return me(null, data);
 			});
@@ -219,17 +190,11 @@ exports.customer = {
 		var data = {
 			success: 1
 		};
-		console.log('customer.createMerchantAccount');
-		console.log(args);
 
 		/* save the customer and respond when all is done */
 		var saveCustomer = function(bCustomer) {
-			console.log('created customer account');
-			console.log(bCustomer);
 			var customer = new balanced.customers(bCustomer);
 			customer.listBankAccounts(function(err, bRes, bankAccounts) {
-				console.log('bank accounts');
-				console.log(bankAccounts);
 				data.accountHolderInfo = bCustomer;
 				data.bankAccounts = bankAccounts;
 				req.session.customer.balancedAPI.customerAccount = bCustomer;
@@ -238,8 +203,6 @@ exports.customer = {
 				req.session.customer.markModified('balancedAPI.customerAccount');
 				req.session.customer.markModified('balancedAPI.bankAccounts');
 				req.session.customer.save(function(err) {
-					console.log('saved customer after update customer info');
-					console.log(err);
 					return me(null, data);
 				});
 			});
@@ -277,24 +240,18 @@ exports.customer = {
 			person.address.country_code = args.country_code;
 		}
 
-		console.log(person);
-
 		var customers = new balanced.customers();
 		customers.create(person, function(err, bRes, bCustomer) {
 			if (bRes.statusCode != 201) {
-				console.log(bCustomer);
 				switch (bCustomer.status_code) {
 					case 300:
 						break;
 					case 400:
 						break;
 					case 409:
-						console.log('account exists...getting it');
 						/* get account data by account_uri */
 						/* update account data */
 						customers.update(bCustomer.extras.account_uri, person, function(err, bRes, updateResponse) {
-							console.log('update to customer account');
-							console.log(updateResponse);
 							return saveCustomer(updatedResponse);
 						});
 						break;
@@ -348,8 +305,6 @@ exports.customer = {
 
 	signup: function(args, req, res) {
 		var me = this;
-		console.log('customer.signup args');
-		console.log(args);
 
 		if (typeof req.session.signupForm === "undefined") {
 			req.session.signupForm = {};
@@ -374,8 +329,6 @@ exports.customer = {
 			req.session.signupForm.redirectUrl = data.redirectUrl || req.session.redirectUrl;
 			req.session.signupForm.noPassword = data.noPassword;
 
-			console.log('responding customer.signup');
-			console.log(req.session.signupForm);
 			me(null, req.session.signupForm);
 		};
 
@@ -391,7 +344,6 @@ exports.customer = {
 			//error happened
 			if (err) {
 				data.success = 0;
-				console.log(err);
 				return respond(data);
 			}
 
@@ -399,7 +351,6 @@ exports.customer = {
 			if (c !== null) {
 				//they've already signed up
 				data.exists = true;
-				console.log('customer signup - customer exists - what is password');
 				if (typeof c.password === "undefined") {
 					/* send forgot password email */
 					data.noPassword = true;
@@ -436,7 +387,6 @@ exports.customer = {
 						forgotPassword: forgotPassword
 					}, function(err) {
 						if (err) {
-							console.log('error updating forgot password token');
 							return me('dbError: error updating forgotPassword Token');
 						}
 
@@ -448,11 +398,9 @@ exports.customer = {
 							next: args.next
 						}
 
-						console.log('sending forgotpassword email in customer.login');
 						wembliMail.sendForgotPasswordEmail(mailArgs)
 					});
 				}
-				console.log(data);
 				return respond(data);
 			}
 
@@ -475,7 +423,6 @@ exports.customer = {
 
 			var customer = new Customer(newC);
 
-			//console.log(customer);
 			var confirmationTimestamp = new Date().getTime().toString();
 			var digestKey = args.email + confirmationTimestamp;
 			var confirmationToken = wembliUtils.digest(digestKey);
@@ -503,8 +450,6 @@ exports.customer = {
 					next: args.next
 				});
 
-				console.log('saved customer: ' + customer.id);
-
 				if (typeof req.session.plan !== "undefined") {
 					/* sanity check - make sure this plan does not have an organizer */
 					if (req.session.plan.organizer.customerId) {
@@ -515,13 +460,9 @@ exports.customer = {
 					req.session.plan.organizer.customerId = customer.id;
 					req.session.visitor.context = 'organizer';
 
-					console.log('plan.organizer: ');
-					console.log(req.session.plan);
+
 					req.session.plan.save(function(err) {
-						console.log('saved plan: ' + req.session.plan.id);
-						console.log('add plan to customer')
 						customer.addPlan(req.session.plan.guid, function(err) {
-							console.log('added a plan to customer..');
 							return respond(data);
 						});
 					});
@@ -534,8 +475,6 @@ exports.customer = {
 
 	login: function(args, req, res) {
 		var me = this;
-		console.log('customer.login args');
-		console.log(args);
 		var data = {
 			success: 1
 		};
@@ -596,7 +535,6 @@ exports.customer = {
 						forgotPassword: forgotPassword
 					}, function(err) {
 						if (err) {
-							console.log('error updating forgot password token');
 							return me('dbError: error updating forgotPassword Token');
 						}
 
@@ -608,15 +546,11 @@ exports.customer = {
 							next: args.next
 						}
 
-						console.log('sending forgotpassword email in customer.login');
 						wembliMail.sendForgotPasswordEmail(mailArgs)
-						console.log('returning data from customer.login');
-						console.log(data);
 						return me(null, data);
 					});
 				} else {
 					if (c.password != digest) {
-						console.log('password is not digest');
 						return me(null, {
 							success: 1,
 							error: true,
@@ -654,7 +588,6 @@ exports.customer = {
 			//error happened
 			if (err) {
 				data.success = 0;
-				console.log(err);
 				return me(err, data);
 			}
 
@@ -662,7 +595,6 @@ exports.customer = {
 			if (c !== null) {
 				//they've already signed up
 				data.exists = true;
-				console.log('customer signup - customer exists - what is password');
 				if (typeof c.password === "undefined") {
 					/* send forgot password email */
 					data.noPassword = true;
@@ -699,7 +631,6 @@ exports.customer = {
 						forgotPassword: forgotPassword
 					}, function(err) {
 						if (err) {
-							console.log('error updating forgot password token');
 							return me('dbError: error updating forgotPassword Token');
 						}
 
@@ -711,9 +642,7 @@ exports.customer = {
 							next: args.next
 						}
 
-						console.log('sending forgotpassword email in customer.login');
 						wembliMail.sendForgotPasswordEmail(mailArgs, function() {
-							console.log(data);
 							return me(null, data);
 						});
 					});
@@ -784,8 +713,6 @@ exports.customer = {
 			success: 1
 		};
 
-		console.log('sending forgotPassword email');
-		console.log(args);
 		/* check the forgot password token for this email */
 		Customer.findOne({
 			email: args.email
@@ -830,7 +757,6 @@ exports.customer = {
 				forgotPassword: forgotPassword
 			}, function(err) {
 				if (err) {
-					console.log('error updating forgot password token');
 					return me('dbError: error updating forgotPassword Token');
 				}
 
@@ -841,8 +767,6 @@ exports.customer = {
 					customer: c,
 					next: args.next
 				}
-				console.log('forgot password mail args');
-				console.log(mailArgs);
 				wembliMail.sendForgotPasswordEmail(mailArgs)
 				return me(null, data);
 			});
@@ -870,8 +794,6 @@ exports.customer = {
 		var data = {
 			success: 1
 		};
-		console.log('args in notify: ');
-		console.log(args);
 
 		if (args.email && req.session.plan) {
 			var newNotify = {
@@ -881,8 +803,6 @@ exports.customer = {
 			};
 			var notify = new Notify(newNotify);
 			notify.save(function(err) {
-				console.log('err');
-				console.log(err);
 				return me(null, data);
 			});
 
@@ -894,7 +814,6 @@ exports.customer = {
 	/* do i need this? 20120917
 	ezxxists: function(email) {
 		var me = this;
-		console.log(email);
 
 		Customer.findOne({
 			email: email

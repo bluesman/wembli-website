@@ -5,8 +5,6 @@ var payPal        = require('../../lib/wembli/paypal');
 module.exports = function(app) {
     //callback from paypal when payment is received by receiver
     app.all("/callback/paypal/:action/:guid/:token",function(req,res) {
-	console.log(req.url+' called');
-	console.log(req.params);
 
 	///get the plan for this guid and mark payment completed for this token
 
@@ -38,14 +36,12 @@ module.exports = function(app) {
 			    payPal.Pay(params,function(err,results) {
 				if (err) {
 				}
-				
-				console.log('paymentDetails');
-				console.log(results);
+
 			    });
 			    */
 
 			    //add a timestamp and completed = true to the friend in the plan
-			    c.eventplan[i].friends[idx].payment[req.param('action')] = 1;	
+			    c.eventplan[i].friends[idx].payment[req.param('action')] = 1;
 			    var dateKey = req.param('action')+'LastDate';
 			    c.eventplan[i].friends[idx].payment[dateKey] = new Date().format("m/d/yy h:MM TT Z");
 			    c.markModified('eventplan');

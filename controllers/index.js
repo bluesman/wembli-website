@@ -19,9 +19,6 @@ module.exports = function(app) {
 		if (typeof req.session.visitor.tracking.postalCode != "undefined") {
 			args.nearZip = req.session.visitor.tracking.postalCode;
 		}
-		console.log(req.session.visitor.tracking);
-		console.log('event.rpc args:');
-		console.log(args);
 
 		//get nearby events:
 		eventRpc['get'].apply(function(err,results) {

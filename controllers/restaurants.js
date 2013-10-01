@@ -47,8 +47,6 @@ module.exports = function(app) {
 					callback();
 				},
 				function() {
-					console.log('deals purchased:');
-					console.log(dealsPurchased);
 					locals.dealsPurchased = dealsPurchased;
 					/* if there already is a venue - don't need to get one */
 

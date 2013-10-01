@@ -6,9 +6,7 @@ exports.search = {
 
 	search: function(q, date, postalCode) {
 		var me = this;
-		console.log(q);
-		console.log(date);
-		console.log(postalCode);
+
 		var args = {
 			searchTerms: q
 		};
@@ -24,7 +22,6 @@ exports.search = {
 		dateFmt = d.format("isoDateTime")
 		args.whereClause = "Date > DateTime(\"" + dateFmt + "\")";
 		args.orderByClause = 'Date';
-		console.log(dateFmt);
 		//if there's a postal code, get the city for it
 		if(typeof postalCode != "undefined" && postalCode != '') {
 			googleMaps.getAddressByZip({

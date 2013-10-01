@@ -13,8 +13,6 @@ exports.performer = {
 
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.GetEventPerformers(args, function(err, results) {
-			console.log('performer.get');
-			console.log(results);
 			if (err) {
 				return me(err);
 			}

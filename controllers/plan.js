@@ -71,14 +71,12 @@ module.exports = function(app) {
 	});
 
 	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|vote-section|invitees-section|pony-up-section|rsvp-section|cart-section)$/, function(req, res) {
-		console.log(req.session.plan.venue);
 
 		/* last minute check for geometry */
 		if (typeof req.session.plan.venue.data.geocode === "undefined") {
 			var address = req.session.plan.venue.data.Street1 + ', ' + req.session.plan.event.eventCity + ', ' + req.session.plan.event.eventState;
 			gg.geocode(address, function(err, geocode) {
 				req.session.plan.venue.data.geocode = geocode[0];
-				console.log(geocode);
 				req.session.plan.save(function() {
 					return res.render('partials/plan/' + req.session.visitor.context + '-' + req.url.split('/')[3], {
 						lat: req.session.plan.venue.data.geocode.geometry.location.lat,
@@ -108,9 +106,7 @@ module.exports = function(app) {
 
 		/* must make sure that this customer is allowed to view this plan */
 		var foundPlan = function(err, p) {
-			console.log("FOUND PLAN");
 			if (!p) {
-				console.log('REDIRECTING TO DASHBOARD because there is no plan for ' + req.param('guid'))
 				return res.redirect('/dashboard');
 			};
 			req.session.plan = p;
@@ -139,7 +135,6 @@ module.exports = function(app) {
 				customerId: req.session.customer.id
 			}, function(err, f) {
 				if (!f) {
-					console.log('REDIRECTING TO DASHBOARD because this customer is not invited to this plan')
 					return res.redirect('/dashboard');
 				};
 				Plan.findOne({

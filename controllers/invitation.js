@@ -24,13 +24,10 @@ module.exports = function(app) {
 			plan: req.session.plan
 		}
 		if (req.session.loggedIn) {
-			console.log('they are logged in');
 			/* if they are logged in but have no plan, send them to dashboard */
 			if (typeof req.session.plan === "undefined") {
 				return res.redirect('/dashboard');
 			} else {
-				console.log('they have a plan');
-				console.log(req.session.plan);
 				/* let them load the invitation page */
 				delete req.session.redirectUrl;
 				req.session.loginRedirect = false;
@@ -49,8 +46,7 @@ module.exports = function(app) {
 				}
 			}
 		}
-		console.log(req.session.redirectUrl);
-		console.log('render view: ' + view);
+
 		return res.render(view, viewData);
 	};
 

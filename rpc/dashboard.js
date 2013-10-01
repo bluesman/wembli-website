@@ -63,8 +63,6 @@ exports.dashboard = {
 			data.archived.concat(results[1][1]);
 			data.friends = results[2];
 
-			console.log('get All Plans:');
-			console.log(data);
 			me(null, data);
 		};
 

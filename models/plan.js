@@ -159,7 +159,6 @@ this.Model = function(mongoose) {
 	}
 
 	Plan.methods.addItem = function(key,item,callback) {
-		console.log('add '+item+ 'to plan['+key+'] '+ this.guid);
 		var id = (typeof item === "string") ? item : item.id;
 		if (!id) {
 			return callback('no id to add to plan '+key);
@@ -171,11 +170,8 @@ this.Model = function(mongoose) {
 			 return cb((id === el));
 		}, function(result) {
 			if (typeof result === "undefined") {
-				console.log('this id '+id+' was not already in plan.'+key+' so adding it');
 				p[key].push(id);
 				p.markModified(key);
-				console.log('about to save plan--------------');
-				console.log(p);
 				p.save(callback);
 			} else {
 				callback();
@@ -204,7 +200,6 @@ this.Model = function(mongoose) {
 	}
 
 	Plan.methods.removeItem = function(key,item,callback) {
-		console.log('remove '+item+ 'from plan['+key+'] '+ this.guid);
 		var id = (typeof item === "string") ? item : item.id;
 		if (!id) {
 			return callback('no id to remove from plan '+key);
@@ -233,7 +228,6 @@ this.Model = function(mongoose) {
 	};
 
 	Plan.statics.findByGuid = function(guid, callback) {
-		console.log('find by guid: '+guid);
 		this.findOne({guid: guid}, callback);
 	};
 

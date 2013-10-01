@@ -286,7 +286,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
 
               });
             } else {
-              console.log('form not valid');
             }
           };
 

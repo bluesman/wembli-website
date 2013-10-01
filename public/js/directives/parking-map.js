@@ -16,8 +16,6 @@ directive('parkingMoreInfo', ['$rootScope', '$window', '$location', '$http', '$t
             var parking = JSON.parse(val);
 
             element.click(function() {
-              console.log('clicked parking more info');
-              console.log(parking);
               $rootScope.$broadcast('parking-info-clicked', {
                 parking: parking
               });

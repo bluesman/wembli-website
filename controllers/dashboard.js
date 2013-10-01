@@ -14,7 +14,6 @@ module.exports = function(app) {
 		var view = /partial/.test(req.url) ? 'partials/dashboard-wrapper' : 'dashboard-wrapper';
 		res.setHeader('x-wembli-overflow','hidden');
 
-		console.log('dashboard:'+req.url);
 		//not logged in? send to login page
 		if (!req.session.loggedIn) {
 			//this wont work for a partial
@@ -23,7 +22,6 @@ module.exports = function(app) {
 
 		//they need to confirm their email before they can use the dashboard
 		if (req.session.customer.confirmed === false) {
-			console.log('not confirmed');
 			//need email confirmation
 			view = /partial/.test(req.url) ? 'partials/confirm-email-sent' : 'confirm-email-sent';
 			return res.render(view, {
@@ -65,7 +63,6 @@ module.exports = function(app) {
 
 		//clear the updateEvent session so searches start over
 		delete req.session.updateEvent;
-		console.log('here in dashboard');
 		/*
 			ok how does this work?
 			1. get all the plans this customer is planning

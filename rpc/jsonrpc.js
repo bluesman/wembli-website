@@ -89,7 +89,6 @@ function jsonrpc(rpcDispatchHooks) {
             }
 
             if(typeof method === 'function') {
-                console.log('json rpc '+rpc.method);
                 var params = [];
                 if(Array.isArray(rpc.params)) {
                     params = rpc.params;

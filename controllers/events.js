@@ -7,7 +7,6 @@ module.exports = function(app) {
 
 	/* use case: visitor.context = 'visitor' trying to view the event details */
 	app.get('/event/:eventId/:eventName', function(req, res) {
-		console.log('render event detail');
 		res.render('event-detail');
 	});
 
@@ -48,11 +47,9 @@ module.exports = function(app) {
 
 		/* if its visitor context but plan.organizer is undefined this is a new customer planning right now */
 		if ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer.customerId === "undefined")) {
-			console.log('showing options form');
 			/* show them the options page too */
 			return showOptionsForm();
 		}
-		console.log('redirect');
 		/* if its any other condition they should not be here so redirect them to the /event/ page for this event */
 		var redirect = '/event/' + req.param('eventId') + '/' + req.param('eventName');
 		return res.redirect(redirect);
@@ -82,8 +79,6 @@ module.exports = function(app) {
 			and it is the same eventId as req.session.eventId
 			then override only the preferences */
 		if ((req.session.visitor.context === "organizer") || ((req.session.visitor.context === 'visitor') && (typeof req.session.plan.organizer.customerId === "undefined"))) {
-			console.log('params in event options submit')
-
 			//set the form data in the session so the angular app can read any errors
 			req.session.eventOptionsForm = {
 				parking: req.param('parking') ? true : false,
@@ -95,7 +90,6 @@ module.exports = function(app) {
 				guestList: req.param('guest_list'),
 				errors: {}
 			};
-			console.log(req.session.eventOptionsForm);
 			//add-ons
 			//parking, restaurant or hotel
 			req.session.plan.preferences.addOns = {
@@ -110,8 +104,6 @@ module.exports = function(app) {
 			if (typeof req.param('restaurant') !== "undefined") {
 				req.session.plan.preferences.addOns.restaurants = req.session.eventOptionsForm.restaurant;
 			}
-			console.log('hotel param');
-			console.log(req.param('hotel'));
 			if (typeof req.param('hotel') !== "undefined") {
 				req.session.plan.preferences.addOns.hotels = req.session.eventOptionsForm.hotel;
 			}
@@ -152,8 +144,6 @@ module.exports = function(app) {
 
 			/* actually save this in the db if they are logged in */
 			if (req.session.loggedIn) {
-				console.log('saving plan in event optiosn');
-				console.log(req.session.plan);
 				req.session.plan.save(function(err, result) {
 					return res.redirect('/invitation/'+req.param('eventId')+'/'+req.param('eventName'));
 				});

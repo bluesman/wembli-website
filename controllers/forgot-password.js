@@ -28,13 +28,11 @@ module.exports = function(app) {
 		}, function(err, c) {
 			if (c == null) {
 				//TODO: wonky
-				console.log('no customer');
 				return res.redirect('/');
 			}
 
 			if (typeof c.forgotPassword[0] == "undefined") {
 				//no crystal
-				console.log('no forgot password token');
 				var r = req.param('next') ? decodeURIComponent( req.param('next') ): '/dashboard';
 				return res.redirect(r);
 			}
@@ -46,7 +44,6 @@ module.exports = function(app) {
 			//has it been more than 2 days?
 			if (timePassed > 172800) {
 				//token is expired - handle this better someday
-				console.log('expired');
 				return res.redirect('/');
 			}
 
@@ -70,20 +67,16 @@ module.exports = function(app) {
 				next: decodeURIComponent(req.param('next'))
 			});
 		}
-		console.log('next in reset password:');
-		console.log('next:'+req.param('next'));
 
 		//validate email and token again
 		Customer.findOne({email: req.param('email')}, function(err, c) {
 			if (c == null) {
-				console.log('no customer in reset password!');
 				//TODO: wonky
 				return res.redirect('/');
 			}
 
 			if (typeof c.forgotPassword == "undefined") {
 				//no crystal
-				console.log('no forgot password token in reset password')
 				return res.redirect('/');
 			}
 
@@ -93,16 +86,12 @@ module.exports = function(app) {
 			var timePassed = (currentTimestamp - dbTimestamp) / 1000;
 			//has it been more than 2 days?
 			if (timePassed > 172800) {
-				console.log('forgot password token expired');
 				//token is expired - handle this better someday
 				return res.redirect('/');
 			}
 
 			//make sure the passed in token matches the db token
 			if (req.param('token') != c.forgotPassword[0].token) {
-				console.log('tokens donot match in reset password');
-				console.log(req.param('token'));
-				console.log(c.forgotPassword[0].token);
 				return res.redirect('/');
 			}
 
@@ -111,7 +100,6 @@ module.exports = function(app) {
 			var confirmed = true;
 			c.update({forgotPassword: [], password:password, confirmed: confirmed}, function(err) {
 				//log em in
-				console.log('logging you in cause you just updated your password');
 				req.session.loggedIn = true;
 				req.session.customer = c;
 				var next = req.param('next') ? decodeURIComponent(req.param('next')) : '/dashboard';

@@ -14,19 +14,16 @@ Server = require('mongodb').Server;
 //return result back to client after updating the cache
 var _respond = function(error,data,req,me) {
     if (error) {
-	console.log('error: '+ error);
 	me(error,{success:0});
     } else {
 	//TODO: save data for customer if logged in
 	if (req.session.loggedIn && req.session.isOrganizer && (data != null) && (typeof data.config != "undefined")) {
-	    //console.log(data);
 	    if (req.session.customer && !data.config.organizer) {
-		console.log('setting organizer for plan to '+req.session.customer.email);
 		data.config.organizer = req.session.customer.email;
 	    }
 	    req.session.customer.saveCurrentPlan(data,function() {
 		me(null,{success:1,
-			 eventplan:data});		
+			 eventplan:data});
 	    });
 	} else {
 	    me(null,{success:1,
@@ -37,14 +34,12 @@ var _respond = function(error,data,req,me) {
 
 var _initEventplan = function(req,callback) {
     if (req.session.loggedIn) {
-	console.log('initEventplan - logged in');
 	if (typeof req.session.customer == 'string') {
 	    req.session.customer = JSON.parse(req.session.customer);
 	}
 	//refresh customer from the db
 	Customer.findOne({email:req.session.customer.email},function(err,customer) {
 	    if (err != null || customer == null) {
-		//console.log('error finding customer for session!: '+err);
 		delete req.session.customer;
 		req.session.loggedIn = false;
 		return callback('Authentication error');
@@ -59,7 +54,6 @@ var _initEventplan = function(req,callback) {
 	    return callback(null,e);
 	});
     } else {
-	console.log('not logged in');
 	//make sure we have an event plan
 	if (typeof req.session.currentPlan == "undefined") {
 	    return callback('no eventplan available');
@@ -74,8 +68,6 @@ exports.eventplan = {
     getCurrentPlan: function(req,res) {
 	var me = this;
 	_initEventplan(req,function(err,e) {
-	    console.log('getcurrentplan error:');	    
-	    console.log(err);
 	    if (err) { return _respond(err,null,null,me); }
 	    return _respond(null,e,req,me);
 	});
@@ -91,7 +83,6 @@ exports.eventplan = {
 	    //refresh customer from the db
 	    Customer.findOne({email:req.session.customer.email},function(err,customer) {
 		if (err != null || customer == null) {
-		    //console.log('error finding customer for session!: '+err);
 		    delete req.session.customer;
 		    req.session.loggedIn = false;
 		    return callback('Authentication error');
@@ -106,7 +97,6 @@ exports.eventplan = {
 		    if (customer.eventplan[idx].config.guid == guid) {
 			var plan = customer.eventplan[idx];
 			good = true;
-			console.log('match');
 			customer.eventplan[idx].config.deleted = true;
 			customer.markModified('eventplan');
 			customer.save(function(err) {
@@ -147,7 +137,7 @@ exports.eventplan = {
 		return callback('no eventplan available');
 	    }
 	}
-	
+
     },
 
     removeFriend: function(friendId,req,res) {
@@ -161,7 +151,6 @@ exports.eventplan = {
 	    if (typeof e.friends !== "undefined") {
 		for (var idx in e.friends) {
 		    var id = ((typeof e.friends[idx].addMethod != "undefined") && (e.friends[idx].addMethod == "facebook")) ? e.friends[idx].fbId : e.friends[idx].email;
-		    console.log('comparing: '+friendId+' to '+id);
 		    if (id != friendId) {
 			newFriends.push(e.friends[idx]);
 		    }
@@ -197,7 +186,7 @@ exports.eventplan = {
 		e.friendIds.push(id);
 		e.friends.push(friends[idx]);
 	    }
-	    
+
 	    return _respond(err,e,req,me);
 	});
     },
@@ -212,11 +201,11 @@ exports.eventplan = {
 	    if ((typeof qty == "undefined") || (parseInt(qty) < 1)) {
 		return _respond('no qty provided',null,me);
 	    }
-	    
+
 	    if (typeof ticketId == "undefined") {
 		return _respond('no ticketId provided',null,me);
 	    }
-	    
+
 	    if (typeof e.tickets == "undefined") {
 		e.tickets = {};
 	    }
@@ -240,7 +229,7 @@ exports.eventplan = {
 		if (!replaced) {
 		    e.tickets[ticketId] = ticketGroup;
 		}
-		
+
 		return _respond(err,e,req,me);
 	    };
 
@@ -258,11 +247,11 @@ exports.eventplan = {
 	    if (typeof ticketId == "undefined") {
 		return _respond('no ticketId provided',null,me);
 	    }
-	    
+
 	    if (typeof e.tickets == "undefined") {
 		e.tickets = {};
 	    }
-	    
+
 	    //remove the tickets from the eventplan and respond to client
 	    if (typeof e.tickets[ticketId] != "undefined") {
 		delete e.tickets[ticketId];
@@ -279,11 +268,11 @@ exports.eventplan = {
 	    if (typeof ticketId == "undefined") {
 		return _respond('no ticketId provided',null,me);
 	    }
-	    
+
 	    if (typeof e.tickets == "undefined") {
 		e.tickets = {};
 	    }
-	    
+
 	    //remove the tickets from the eventplan and respond to client
 	    if (typeof e.tickets[ticketId] != "undefined") {
 		var payment = {};
@@ -300,7 +289,7 @@ exports.eventplan = {
 	    return _respond(err,e,req,me);
 	});
     },
-    
+
     rsvp: function(rsvp,req,res) {
 	var me = this;
 
@@ -371,11 +360,11 @@ exports.eventplan = {
 			    } else {
 				tally[k][organizer.eventplan[idx].friends[idx3].votes[k]]++;
 			    }
-			    
+
 			    if (typeof tally[k]['total'] == "undefined") {
 				tally[k]['total'] = 1;
 			    } else {
-				tally[k]['total']++;				
+				tally[k]['total']++;
 			    }
 			}
 		    }

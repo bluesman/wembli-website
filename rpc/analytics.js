@@ -7,12 +7,8 @@ exports.analytics = {
 			delete args.collection;
 			keen.addEvent(collection, args, req, res, function(err, result) {
 				if (err) {
-					console.log('error logging keenio event');
-					console.log(err);
 					return me(err);
 				} else {
-					console.log('logged event in keenio:');
-					console.log(result);
 					return me(null,result);
 				}
 			});

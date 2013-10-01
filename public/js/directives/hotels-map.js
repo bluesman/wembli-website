@@ -11,7 +11,6 @@ directive('hotelsMap', ['$rootScope', 'googleMap',
       replace: true,
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          console.log('link hbotels map!');
 
           var mapTypeId = (attr.mapTypeId) ? google.maps.MapTypeId[attr.mapTypeId] : google.maps.MapTypeId.ROADMAP;
 
@@ -27,8 +26,6 @@ directive('hotelsMap', ['$rootScope', 'googleMap',
           if (attr.draggable) {
             mapOpts.draggable = attr.draggable;
           }
-          console.log('mapopts');
-          console.log(mapOpts);
           if (scope.sequenceCompleted) {
             googleMap.draw(element, mapOpts);
           } else {

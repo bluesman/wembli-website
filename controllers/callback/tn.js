@@ -8,7 +8,6 @@ var fs = require('fs');
 
 module.exports = function(app) {
 	app.all("/callback/tn/checkout", function(req, res) {
-			console.log('tn checkout callback');
 
 			var respond = function() {
 
@@ -53,11 +52,7 @@ module.exports = function(app) {
 				customer_altphone: req.param('customer_altphone')
 			};
 
-			console.log(receipt);
-
 			Ticket.find(query, function(err, tickets) {
-				console.log('tickets');
-				console.log(tickets);
 				if (err || !tickets || !tickets[0]) {
 					return respond();
 				}
@@ -65,6 +60,7 @@ module.exports = function(app) {
 					var t = tickets[i];
 					t.purchased = true;
 					t.payment.receipt = receipt;
+					t.qty =
 					t.save(function(err) {
 						return respond();
 					});

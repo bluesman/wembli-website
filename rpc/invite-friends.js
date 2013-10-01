@@ -23,8 +23,6 @@ exports["invite-friends"] = {
 				req.session.loginRedirect = true;
 				req.session.redirectUrl = '/invitation';
 			}
-			console.log('signup results');
-			console.log(results);
 
 			me(null, results);
 		}, [args, req, res]);
@@ -32,7 +30,6 @@ exports["invite-friends"] = {
 
 
 	"submit-loginUnconfirmed": function(args, req, res) {
-		console.log(args);
 		/* make sure we have email */
 		if (!args.customerId) {
 			return me(null, {
@@ -42,8 +39,6 @@ exports["invite-friends"] = {
 		}
 
 		/* fetch it from the db and potentially update firstName, lastName and/or email */
-		console.log('updating customer:');
-		console.log(args);
 
 		Customer.findById(args.customerId, function(err, c) {
 			if (err) {
@@ -73,8 +68,6 @@ exports["invite-friends"] = {
 			c.firstName = args.firstName;
 			c.lastName = args.lastName;
 			c.email = args.email;
-			console.log('customer');
-			console.log(c);
 			c.save(function(err) {
 				if (err) {
 					return me(err);
@@ -102,8 +95,7 @@ exports["invite-friends"] = {
 		var me = this;
 		customerRpc['login'].apply(function(err, results) {
 			/* set the login redirect url if the cust already exists */
-			console.log('login results');
-			console.log(results);
+
 			if (results.error) {
 				results.formError = true;
 				results.exists = true;
@@ -121,13 +113,10 @@ exports["invite-friends"] = {
 
 		/* must have a customer to send invite */
 		if (!req.session.customer) {
-			console.log('no customer..back to step 1 please');
 			data.noCustomer = true;
 			return me(null, data);
 		}
 
-		console.log('saving rsvp date');
-		console.log(args);
 
 		if (typeof args.next !== "undefined") {
 			data.next = args.next;
@@ -141,7 +130,6 @@ exports["invite-friends"] = {
 				data.dbError = 'unable to save plan';
 				return me(null, data);
 			}
-			console.log('saved rsvp date for plan - plan id is:' + req.session.plan.id);
 			return me(null, data);
 		});
 	},
@@ -153,8 +141,6 @@ exports["invite-friends"] = {
 			success: 1
 		};
 
-		console.log('step5 args:');
-		console.log(args);
 
 		var rpcArgs = {
 			service: args.service,
@@ -166,7 +152,6 @@ exports["invite-friends"] = {
 
 		/* must have a customer to create a plan in the db */
 		if (!req.session.customer) {
-			console.log('no customer..back to step 1 please');
 			data.noCustomer = true;
 			return me(null, data);
 		}
@@ -175,13 +160,9 @@ exports["invite-friends"] = {
 		planRpc['addFriend'].apply(function(err, results) {
 			/* must have a customer to create a plan in the db */
 			if (results.noCustomer) {
-				console.log('no customer..back to step 1 please');
 				data.noCustomer = true;
 				return me(null, data);
 			}
-
-			console.log('added friend to plan');
-			console.log(results);
 
 			if (results.isOrganizer) {
 				data.isOrganizer = true;

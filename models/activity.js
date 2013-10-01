@@ -62,12 +62,10 @@ this.Model = function(mongoose) {
 
     Customer.pre('save',function(next) {
 	this.last_modified = new Date();
-	console.log('pre save');
 	next();
     });
 
     Customer.methods.test = function() {
-	console.log('test');
     };
 
     Customer.methods.saveCurrentPlan = function(plan,callback) {
@@ -97,7 +95,6 @@ this.Model = function(mongoose) {
 	this.markModified('eventplan');
 	this.save(function(err) {
 	    if (err) {
-		console.log('error saving customer: '+err);
 	    }
 
 	    if (typeof callback != "undefined") {
@@ -191,7 +188,7 @@ this.Model = function(mongoose) {
 	} else {
 	    callback(null,attending);
 	}
-	
+
     };
 
     Customer.statics.findPlanByGuid = function(guid,callback) {
@@ -205,8 +202,8 @@ this.Model = function(mongoose) {
     };
 
 
-    Customer.methods.full_name = function(){ 
-	return this.first_name + ' ' + this.last_name 
+    Customer.methods.full_name = function(){
+	return this.first_name + ' ' + this.last_name
     };
 
     Customer.statics.findByEmail = function(email,callback){

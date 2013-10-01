@@ -66,31 +66,23 @@ this.Model = function(mongoose) {
 
 	/* pre func */
 	Customer.pre('remove', function(next) {
-		console.log('post remove');
-		console.log('plans:');
-		console.log(this.plans);
 
 		/* remove customer.plans */
 		async.forEach(this.plans, function(guid, callback) {
-			console.log('removing plan for customer with guid: ' + guid);
 
 			Plan.findByGuid(guid, function(err, p) {
-				console.log('got plan by guid:' + err);
-				console.log(p);
-				console.log('removing it..');
+
 				p.remove(function() {
 					callback();
 				});
 			});
 
 		}, function(err) {
-			console.log('deleted plans for customer');
 			next();
 		});
 	});
 
 	Customer.pre('save', function(next) {
-		console.log('customer email is: ' + this.email);
 		this.updated = new Date();
 
 		next();
@@ -98,7 +90,6 @@ this.Model = function(mongoose) {
 	/* done prefunk */
 
 	Customer.methods.addPlan = function(plan, callback) {
-		console.log('add plan: ' + plan + 'to customer ' + this.email);
 		var guid = (typeof plan === "string") ? plan : plan.guid;
 		if (!guid) {
 			return callback('no guid');
@@ -110,7 +101,6 @@ this.Model = function(mongoose) {
 			return cb((guid === el));
 		}, function(result) {
 			if (typeof result === "undefined") {
-				console.log('this guid was not already in customer.plans so adding it');
 				c.plans.push(guid);
 				c.markModified('plans');
 				c.save(callback);
@@ -123,7 +113,6 @@ this.Model = function(mongoose) {
 	/* get all the plans this customer is organizing */
 	Customer.methods.getPlans = function(callback) {
 		var c = this;
-		console.log('getting customer plans where customer id: ' + c.id);
 		Plan.find().where('organizer.customerId').equals(c.id).sort('event.eventDate').exec(function(err, plans) {
 			if (err) {
 				return callback(err);
@@ -131,14 +120,12 @@ this.Model = function(mongoose) {
 			var current = [];
 			var archive = [];
 			var now = new Date().getTime();
-			console.log('now' + now);
 
 			async.forEachSeries(
 			plans,
 
 			function(plan, cb) {
 				var eventTime = new Date(plan.event.eventDate).getTime();
-				console.log('plan time: ' + eventTime);
 				if (eventTime > now) {
 					current.push(plan);
 				} else {
@@ -151,10 +138,7 @@ this.Model = function(mongoose) {
 				if (err) {
 					return callback(err);
 				};
-				console.log('current');
-				console.log(current);
-				console.log('archive');
-				console.log(archive);
+
 				callback(null, [current, archive]);
 			});
 		});
@@ -163,18 +147,15 @@ this.Model = function(mongoose) {
 	/* get all the plans this customer is invited to */
 	Customer.methods.getInvitedPlans = function(callback) {
 		var c = this;
-		console.log('getting plans this customer was invited to: ' + c.id);
 		/* get the guids where this customer is a friend */
 		Friend.find().select({
 			'planGuid': 1
 		}).where('customerId').equals(c.id).exec(function(err, friends) {
-			console.log('plan guids this customer was invited to');
 			async.map(friends, function(item, callback) {
 				callback(null, item.planGuid);
 			},
 
 			function(err, guids) {
-				console.log(guids);
 				/* get all the plans for these guids */
 				Plan.find().where('guid').in(guids).sort('event.eventDate').exec(function(err, plans) {
 					if (err) {
@@ -183,7 +164,6 @@ this.Model = function(mongoose) {
 					var current = [];
 					var archive = [];
 					var now = new Date().getTime();
-					console.log('now' + now);
 
 					async.forEachSeries(
 
@@ -191,7 +171,6 @@ this.Model = function(mongoose) {
 
 					function(plan, cb) {
 						var eventTime = new Date(plan.event.eventDate).getTime();
-						console.log('plan time: ' + eventTime);
 						if (eventTime > now) {
 							current.push(plan);
 						} else {
@@ -204,10 +183,6 @@ this.Model = function(mongoose) {
 						if (err) {
 							return callback(err);
 						};
-						console.log('current');
-						console.log(current);
-						console.log('archive');
-						console.log(archive);
 						callback(null, [current, archive]);
 					});
 				});
@@ -309,7 +284,6 @@ this.Model = function(mongoose) {
 			var getByEmail = function(cb2) {
 				//if there's a fbId for this customer get all the friends that have this as an id
 				var query = Customer.find();
-				console.log(',atching for: ' + friend.email);
 				query.where('eventplan.friends').elemMatch(function(elem) {
 					elem.where('email', new RegExp('^' + friend.email + '$', "i"));
 				});
@@ -326,11 +300,9 @@ this.Model = function(mongoose) {
 								for (var idx2 in plan.friends) {
 									var f = plan.friends[idx2];
 									if (f.email) {
-										console.log('is f ' + friend.email.toUpperCase());
 									}
 									if ((typeof f.email != "undefined") && (f.email.toUpperCase() == friend.email.toUpperCase())) {
-										console.log('yes');
-										console.log(f);
+
 										plan.friends[idx2].me = true;
 										plans.push(plan);
 										break;

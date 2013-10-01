@@ -46,8 +46,6 @@ module.exports = function(app) {
 					callback();
 				},
 				function() {
-					console.log('parking purchased:');
-					console.log(parkingPurchased);
 					locals.parkingPurchased = parkingPurchased;
 					/* if there already is a venue - don't need to get one */
 					var args = {

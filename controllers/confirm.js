@@ -32,7 +32,6 @@ module.exports = function(app) {
 		var handleCustomer = function(err, c) {
 			/* no customer to handle */
 			if (c === null) {
-				console.log('no customer');
 				/* token is expired - make them resend confirmation */
 				req.session.confirmEmailSent = {};
 				req.session.confirmEmailSent.expiredToken = true;
@@ -43,7 +42,6 @@ module.exports = function(app) {
 			/* validate the token */
 			var dbToken = c.confirmation[0].token;
 			if (dbToken == req.param('token')) {
-				console.log('dbToken matches params token');
 				/* its valid, is it expired? */
 				var expired = true;
 				var dbTimestamp = c.confirmation[0].timestamp;
@@ -54,7 +52,6 @@ module.exports = function(app) {
 				var expired = (timePassed > 604800) ? true : false;
 
 				if (expired) {
-					console.log('token is expired');
 					/* token is expired - make them resend confirmation */
 					req.session.confirmEmailSent = {};
 					req.session.confirmEmailSent.expiredToken = true;
@@ -67,13 +64,9 @@ module.exports = function(app) {
 				req.session.customer = c;
 				req.session.customer.confirmed = true;
 				req.session.customer.save(function(err) {
-					console.log('saved customer');
 
 					/* find friends that have rsvp.status of queued for any plans this customer is organizing */
 					req.session.customer.getInvitedFriends(function(err, friends) {
-						console.log('got all invited friends - send rsvp for those that have rsvp.status === queued');
-						console.log(friends);
-
 						async.forEach(friends,
 
 						function(friend, callback) {
@@ -82,7 +75,6 @@ module.exports = function(app) {
 
 								/* now that we have added the friend to the plan and have a token, send the wembli email */
 								var rsvpLink = "http://" + app.settings.host + ".wembli.com/rsvp/" + friend.planGuid + "/" + friend.rsvp.token + "/wemblimail";
-								console.log('rsvpLink is: ' + rsvpLink);
 								wembliEmail.sendRSVPEmail({
 									res: res,
 									req: req,
@@ -125,8 +117,6 @@ module.exports = function(app) {
 							};
 
 							locals.next = req.param('next') ? decodeURIComponent(req.param('next')) : '/dashboard';
-							console.log('locals are:');
-							console.log(locals);
 
 							if (typeof c.password === "undefined") {
 								/* they need to give us a new password */
@@ -164,23 +154,17 @@ module.exports = function(app) {
 									forgotPassword: forgotPassword
 								}, function(err) {
 									if (err) {
-										console.log('error updating forgot password token');
 										res.redirect('/');
 									}
-									console.log('locals for supply password');
-									console.log(locals);
 									locals.token = tokenHash;
 									return res.render('supply-password', locals);
 								});
 							} else {
 								if (!req.session.loggedIn) {
 									/* render password page */
-									console.log('confirm need password');
-									console.log(locals);
 									return res.render('confirm-need-password', locals);
 								} else {
 									var r = req.param('next') ? decodeURIComponent(req.param('next')) : '/dashboard';
-									console.log('after successful confirm - redirecting to ' + r);
 									res.redirect(r);
 									return;
 								}
@@ -191,7 +175,6 @@ module.exports = function(app) {
 				});
 
 			} else {
-				console.log('there is no confirmation token');
 				/* some sort of hackery is going down - gtfo */
 				req.session.confirmEmailSent = {};
 				req.session.confirmEmailSent.expiredToken = true;
@@ -220,17 +203,11 @@ module.exports = function(app) {
 		//set the input params into a session form variable
 		//validate password and log them in then redirect to GET confirm
 		var digest = wembliUtils.digest(req.param('password'));
-		console.log('validate password for email');
-		console.log(req.param('email'));
 
 		//validate email/password against the db
 		Customer.findOne({
 			email: req.param('email')
 		}, function(err, c) {
-			console.log('err');
-			console.log(err);
-			console.log('c:');
-			console.log(c);
 			if (c === null) {
 				return res.redirect('/logout');
 			}
@@ -308,11 +285,9 @@ module.exports = function(app) {
 			}];
 			req.session.customer.save();
 		} else {
-			console.log('token was not expired, using existing');
 		}
 
 		//send the email
-		console.log('sending email...');
 		//send a confirmation email
 		/* TODO:
                - make the readfile async
@@ -348,7 +323,6 @@ module.exports = function(app) {
 			mail.text = 'Click here to confirm your email address: http://' + app.settings.host + '.wembli.com/confirm/' + encodeURIComponent(req.session.customer.email) + '/' + encodeURIComponent(req.session.customer.confirmation[0].token);
 			mail.html = htmlStr;
 			mailer.sendMail(mail, function(error, success) {
-				console.log("Message " + (success ? "sent" : "failed:" + error));
 
 				req.session.confirmEmailSent = {};
 				if (error) {

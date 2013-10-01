@@ -17,8 +17,7 @@ directive('restaurantsMoreInfo', ['$rootScope', '$window', '$location', '$http',
             var restaurant = JSON.parse(val);
 
             element.click(function() {
-              console.log('clicked restaurants more info');
-              console.log(restaurant);
+
               $rootScope.$broadcast('restaurants-info-clicked', {
                 restaurant: restaurant
               });
@@ -105,9 +104,6 @@ directive('buyRestaurantsOffsite', ['$rootScope', '$window', '$location', '$http
                 amount: amountPaid,
               })
             }, function(err, results) {
-              console.log('err from buy restaurants offsite add restaurant');
-              console.log(err);
-              console.log(results);
 
               var restaurants = plan.getRestaurants();
 
@@ -213,8 +209,6 @@ directive('restaurantsMap', ['$rootScope', 'googleMap',
       replace: true,
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          console.log('link restaurants map!');
-
           var mapTypeId = (attr.mapTypeId) ? google.maps.MapTypeId[attr.mapTypeId] : google.maps.MapTypeId.ROADMAP;
 
           /* draw the map */
@@ -229,8 +223,7 @@ directive('restaurantsMap', ['$rootScope', 'googleMap',
           if (attr.draggable) {
             mapOpts.draggable = attr.draggable;
           }
-          console.log('mapopts');
-          console.log(mapOpts);
+
           if (scope.sequenceCompleted) {
             googleMap.draw(element, mapOpts);
           } else {

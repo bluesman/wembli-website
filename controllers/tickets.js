@@ -43,9 +43,6 @@ module.exports = function(app) {
 				venueId = results.event[0].VenueID;
 			}
 
-			console.log('create new plan?');
-			console.log(req.session.plan);
-
 			/* TODO: convert this to call planRpc.startPlan() */
 
 			/* get the venue data for this event - why do this if i already did? */
@@ -195,8 +192,6 @@ module.exports = function(app) {
 					callback();
 				},
 				function() {
-					console.log('tickets purchased:');
-					console.log(ticketsPurchased);
 					return res.render('partials/interactive-venue-map',{ticketsPurchased:ticketsPurchased});
 				});
 		});

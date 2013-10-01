@@ -102,7 +102,6 @@ module.exports = {
 		credentials.appId = app.settings.fbAppId;
 		credentials.appSecret = app.settings.fbAppSecret;
 		credentials.host = app.settings.host;
-		//console.log(credentials);
 		return credentials;
 	},
 
@@ -140,7 +139,6 @@ module.exports = {
 			var sString = (s == 1) ? '' : 's';
 			dateStr = parseInt(s) + ' second' + sString + ' ago.';
 		}
-		console.log('feed: ' + f.action.name);
 		switch (f.action.name) {
 		case 'initPlan':
 			return 'created a new plan ' + dateStr;

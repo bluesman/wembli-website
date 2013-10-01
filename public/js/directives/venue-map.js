@@ -208,7 +208,6 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
           };
 
           scope.sortByPrice = function() {
-            console.log('sorting tickets by price');
             if (typeof scope.ticketSort === "undefined") {
               scope.ticketSort = 1;
             }
@@ -307,7 +306,6 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
                   var html = $('#static-popover-content').html();
                   /* this doesnt work.. */
                   var r = $compile(html)(scope);
-                  console.log(r);
                   return html;
                 },
                 html: true
@@ -460,7 +458,6 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
 
                 options.OnInit = function(e, MapType) {
                   $(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
-                  console.log('MAPTYPE: ' + MapType);
                   if (MapType == 'Interactive') {
                     /* check if the ticket utils url is general admission */
                     if (/ga_venue_tn/.test(scope.event.MapUrl)) {

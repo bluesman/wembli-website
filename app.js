@@ -1,5 +1,3 @@
-console.log('started in ' + process.env.NODE_ENV + ' mode...');
-
 var date = require('./public/js/lib/date.format');
 var express = require('express');
 var redis = require('connect-redis')(express);
@@ -59,8 +57,6 @@ if (process.env.NODE_ENV == 'production') {
 
 }
 
-console.log(app.settings);
-
 /* init the openauth thing */
 var wembliEveryauth = require('./lib/wembli/everyauth.js');
 wembliEveryauth.init(everyauth);
@@ -101,11 +97,8 @@ app.use(express.session({
 	}
 }));
 
-console.log('here2');
 app.use(express.bodyParser());
-console.log('here2');
 app.use(require('./lib/wembli/visitor'));
-console.log('here2');
 app.use(require('./lib/wembli/customer'));
 app.use(require('./lib/wembli/plan'));
 app.use(everyauth.middleware());
@@ -164,7 +157,6 @@ require('./controllers/partials')(app);
 
 /* catch all */
 app.get(/(\/.*)/, function(req, res) {
-	console.log('CATCHALL: '+req.params[0]);
 	var str = req.params[0].replace(/^\//,'');
 	var q = str.replace(/-/gi,' ');
 	res.redirect("/search/events?search="+q);
@@ -172,5 +164,4 @@ app.get(/(\/.*)/, function(req, res) {
 
 
 
-console.log('listening on port: ' + port);
 if (!module.parent) app.listen(port);

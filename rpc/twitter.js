@@ -20,11 +20,8 @@ exports.twitter = {
 			return me(null,{success:0});
 		}
 		var twit = getTwit(req,me);
-		console.log('tweeting!');
-		console.log(args);
 		twit.verifyCredentials(function(err,result) {
-			console.log('credentials');
-			console.log(result);
+
 			if (err) {
 				return me(null,{success:0,error:err});
 			}
@@ -55,29 +52,21 @@ exports.twitter = {
 	},
 
 	searchUsers: function(args,req,res) {
-		console.log('searching users: ');
-		console.log(args);
 		var me = this;
 		var twit = getTwit(req,me);
 		if (typeof twit === "undefined") {
-			console.log('twit is undefined..returning');
 			return me(null,{success:1});
 		}
-		console.log(args);
 		twit.searchUsers(args.q,args.args,function(err,results) {
-			console.log('results for searchUsers')
-			console.log(results);
-			console.log(err);
+
 			return me(null,{success:1,friends:results});
 		});
 	},
 
 	getFriends: function(args,req,res) {
-		console.log('calling gettwitter friends');
 		var me = this;
 		var twit = getTwit(req,me);
 		if (typeof twit === "undefined") {
-			console.log('twit is undefined..returning');
 			return me(null,{success:1});
 		}
 
@@ -89,7 +78,6 @@ exports.twitter = {
 		}
 	  /* this works it just gets rate limited too fast */
 	  twit._getUsingCursor('/friends/list.json',params,function(err,results) {
-	  	console.log(results);
 	  	return me(null,{
 	  		success:1,
 	  		friends:results

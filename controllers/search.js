@@ -39,7 +39,6 @@ module.exports = function(app) {
 	app.get(/^\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
-		console.log('creating new plan in search partial controller '+req.params[0]);
 
 		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-first';
 		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-first';
@@ -50,11 +49,9 @@ module.exports = function(app) {
 		req.session.visitor.context = 'organizer';
 
 		if(req.param('next')) {
-			console.log('redirect to next:'+req.param('next'));
 			/* tell app to update the location using this header */
 			res.redirect('partials'+req.param('next'));
 		} else {
-			console.log('render partials/start-plan');
 			res.render('partials/start-plan',{partial:true});
 		}
 	});
@@ -70,7 +67,6 @@ module.exports = function(app) {
 		req.session.plan.preferences.hotels.payment      = req.params[0] ? req.params[0] : 'split-first';
 
 
-		console.log('creating new plan in search controller as: '+req.session.plan.preferences.payment);
 		if(req.param('next')) {
 			res.setHeader('x-wembli-location',req.param('next'));
 			res.redirect(req.param('next'));
@@ -89,7 +85,6 @@ module.exports = function(app) {
 		req.session.plan.preferences.hotels.payment      = req.params[0] ? req.params[0] : 'split-first';
 
 
-		console.log('creating new plan in search controller as: '+req.session.plan.preferences.payment);
 		if(req.param('next')) {
 			res.setHeader('x-wembli-location',req.param('next'));
 			res.redirect(req.param('next'));
@@ -125,11 +120,9 @@ module.exports = function(app) {
 
 
 	app.get(/^\/search(\/events\/(.+)$)?/, function(req, res) {
-		console.log('get: '+req.url);
 		var title = 'Wembli Search';
 
 		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];
-		console.log('search query:'+query);
 		if (!query) {
 			res.setHeader('x-wembli-location','/search');
 			return searchView(req,res);

@@ -577,7 +577,6 @@ factory('cart', ['plan',
 								return self.hotels;
 							},
 							"getAmount": function(item) {
-								console.log('services line 535 - not implemented - fix this tom!!');
 								return 0;
 							},
 							"getQty": function(item) {
@@ -1223,12 +1222,10 @@ factory('googleMap', ['$rootScope',
 				}
 
 				if (typeof infoWindow.getPosition() === "undefined") {
-					console.log('no position for infowindow');
 					return;
 				}
 
 				if (typeof marker.getPosition() === "undefined") {
-					console.log('no position for marker');
 					return;
 				}
 
