@@ -162,5 +162,15 @@ require('./controllers/confirm')(app);
 //this is last so individual controllers can override
 require('./controllers/partials')(app);
 
+/* catch all */
+app.get(/(\/.*)/, function(req, res) {
+	console.log('CATCHALL: '+req.params[0]);
+	var str = req.params[0].replace(/^\//,'');
+	var q = str.replace(/-/gi,' ');
+	res.redirect("/search/events?search="+q);
+});
+
+
+
 console.log('listening on port: ' + port);
 if (!module.parent) app.listen(port);
