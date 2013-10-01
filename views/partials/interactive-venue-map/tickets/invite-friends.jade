@@ -14,3 +14,53 @@ ul#buy-now-container.ticket-list-container.hide
 		a.invite-friends-button.btn.btn-orange.btn-large.pull-left(ng-show="plan.friends[0]", href="/plan") Back To Plan
 		a.invite-friends-button.btn.btn-orange.btn-large.pull-left(ng-hide="plan.friends[0]", href="/event-options/{{plan.event.eventId}}/{{plan.event.eventName}}") Invite Friends
 		a.change-payment-preference.pull-left(target="_self",href="/update-plan/split-after?next=/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I hate waiting - I want to buy tickets now.  Friends can pony up later.
+#static-popover-content.hide
+	//-
+		#tickets-popover-filters.filter-container.clearfix
+		.qty-filter.pull-left
+			strong Qty:
+			select.quantity-filter
+				option --
+				option(value="1") 1
+				option(value="2") 2
+				option(value="3") 3
+				option(value="4") 4
+				option(value="5") 5+
+		.price-filter.pull-right
+			p
+				label(for="amount") Price range:
+				input.amount(type="text")
+			#tickets-popover-price-slider.price-slider
+	//-
+		#tickets-popover-header-container.ticket-list-header-container.list-header-container
+		a.qty-header(href="#",ng-click="sortByQty()") Qty
+		a.section-header(href="#",ng-click="sortBySection()") Section
+		a.price-header(href="#",ng-click="sortByPrice()") Price
+	ul#tickets-popover-container.ticket-list-container.list-container
+		li.ticket-row.row(ng-repeat="ticket in tickets")
+			.ticket-price.hide
+				.actual-price ${{ticket.ActualPrice}}
+			.ticket-section.hide {{ticket.Section}}
+			.seat-row.hide {{ticket.Row}}
+			.bottom.clearfix
+				.qty.pull-left
+					strong
+						span.max-seats-together up to {{ticket.maxSplit}}&nbsp;
+						br
+						span.end {{ticket.maxSplit | pluralize:'seat'}} together
+					.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+				.ticket-info.pull-left
+					.seats
+						div
+							strong Section:&nbsp;
+							span {{ticket.Section}}&nbsp;
+						div
+							strong Row:&nbsp;
+							span {{ticket.Row}}&nbsp;
+						div
+							strong Seats:&nbsp;
+							span(ng-show="{'\*':true}[ticket.LowSeat]") *
+							span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
+				.price.pull-left
+					.value ${{ticket.ActualPrice}}
+					.header per ticket

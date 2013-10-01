@@ -1045,8 +1045,8 @@ function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 			eventId: $scope.eventId,
 			eventName: $scope.eventName
 		}, function(err, result) {
-
 			plan.fetch(function() {
+				$scope.submitInProgress = false;
 				$location.path($scope.nextLink);
 			});
 		})
@@ -1259,7 +1259,7 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 
 function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurchaseUrls) {
 	$scope.tnUrl = ticketPurchaseUrls.tn;
-
+	console.log('run tix ctrl');
 	/* display a modal when they click to go off and buy tickets */
 	fetchModals.fetch('/partials/modals/tickets-modals', function(err) {
 		if (err) {
@@ -1281,105 +1281,6 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurch
 			}
 		});
 	});
-
-	$scope.handlePriceRange = function() {
-		/* post the updated preferences to the server */
-		wembliRpc.fetch('plan.setTicketsPriceRange', {
-				"low": $scope.priceRange.low,
-				"med": $scope.priceRange.med,
-				"high": $scope.priceRange.high,
-			},
-
-			function(err, res) {
-
-			});
-
-
-		/* hide the tix they don't want to see */
-		angular.forEach($scope.tickets, function(t) {
-			/* if the price is <= 100 and priceRange.low filter is not checked then hide it*/
-			t.hide = false;
-			if ((parseInt(t.ActualPrice) <= 100)) {
-				return t.hide = !$scope.priceRange.low;
-			}
-			/* if the price is <= 300 and > 100 and priceRange.med filter is not checked then hide it*/
-			if ((parseInt(t.ActualPrice) > 100) && (parseInt(t.ActualPrice) <= 300)) {
-				return t.hide = !$scope.priceRange.med;
-			}
-			/* if the price is > 300 and priceRange.high filter is not checked then hide it*/
-			if (parseInt(t.ActualPrice) > 300) {
-				return t.hide = !$scope.priceRange.high;
-			}
-		});
-	};
-
-	$scope.sortByPrice = function() {
-		if (typeof $scope.ticketSort === "undefined") {
-			$scope.ticketSort = 1;
-		}
-
-		$scope.tickets.sort(function(a, b) {
-			if ($scope.ticketSort) {
-				return a.ActualPrice - b.ActualPrice;
-			} else {
-				return b.ActualPrice - a.ActualPrice;
-			}
-		});
-
-		$scope.ticketSort = ($scope.ticketSort) ? 0 : 1;
-	}
-
-	$scope.sortBySection = function() {
-		if (typeof $scope.sectionSort === "undefined") {
-			$scope.sectionSort = 1;
-		}
-
-		$scope.tickets.sort(function(a, b) {
-			if ($scope.sectionSort) {
-				return a.Section.localeCompare(b.Section);
-			} else {
-				return b.Section.localeCompare(a.Section);
-			}
-		});
-
-		$scope.sectionSort = ($scope.sectionSort) ? 0 : 1;
-	}
-
-	$scope.sortByQty = function() {
-		if (typeof $scope.qtySort === "undefined") {
-			$scope.qtySort = 1;
-		}
-
-		$scope.tickets.sort(function(a, b) {
-			var cmpA = '';
-			var cmpB = '';
-
-			if (typeof a.ValidSplits.int === 'string') {
-				cmpA = a.ValidSplits.int;
-			} else {
-
-				a.ValidSplits.int.sort();
-				cmpA = a.ValidSplits.int[a.ValidSplits.int.length - 1];
-			}
-
-
-			if (typeof b.ValidSplits.int === 'string') {
-				cmpB = b.ValidSplits.int;
-			} else {
-
-				b.ValidSplits.int.sort();
-				cmpB = b.ValidSplits.int[b.ValidSplits.int.length - 1];
-			}
-
-			if ($scope.qtySort) {
-				return parseInt(cmpA) - parseInt(cmpB);
-			} else {
-				return parseInt(cmpB) - parseInt(cmpA);
-			}
-		});
-
-		$scope.qtySort = ($scope.qtySort) ? 0 : 1;
-	}
 
 };
 

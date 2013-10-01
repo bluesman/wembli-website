@@ -158,6 +158,9 @@ factory('pluralizeWords', [
 			'hotel': function(number) {
 				return (number == 1) ? 'hotel' : 'hotels';
 			},
+			'seat': function(number) {
+				return (number == 1) ? 'seat' : 'seats';
+			},
 			'guest': function(number) {
 				return (number == 1) ? 'guest' : 'guests';
 			}
