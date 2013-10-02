@@ -288,7 +288,7 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
               var w = img.width;
               var h = img.height;
 
-              $('#venue-map-container').empty().css('overflow-y', 'auto').prepend('<div id="static-map-image" style="float:right;background:transparent url(' + scope.event.MapURL + ') no-repeat center center;height:' + h + 'px;width:' + w + 'px"/>');
+              $('#venue-map-container').empty().css('overflow-y', 'auto').prepend('<div id="static-map-image" style="float:right;background:transparent url(\'' + scope.event.MapURL + '\') no-repeat center center;height:' + h + 'px;width:' + w + 'px"/>');
 
               $('ul#tickets-popover-container').height($('#venue-map-container').height() - 120);
               $('#static-map-image').popover({
