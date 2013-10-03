@@ -31,6 +31,7 @@ angular.module('wembliApp', [
 
    /* check if back button was pressed */
    $scope.$watch(function () {return $location.path()}, function (newLocation, oldLocation) {
+      console.log('back button clicked');
         if($scope.actualLocation === newLocation) {
           slidePage.setDirection(-1);
         } else {
@@ -66,6 +67,8 @@ angular.module('wembliApp', [
       /* slide the page in if necessary */
       $timeout(function() {
         slidePage.slide(e, newUrl, oldUrl, function() {
+          /* log in googleanalytics */
+          _gaq.push(['_trackPageview',newUrl]);
           /* log this click in keen.io */
           wembliRpc.fetch('analytics.addEvent', {
             collection: 'view',
