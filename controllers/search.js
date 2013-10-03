@@ -127,7 +127,7 @@ module.exports = function(app) {
 			res.setHeader('x-wembli-location','/search');
 			return searchView(req,res);
 		}
-		query.replace('+',' ');
+		query = query.replace(/\+/i,' ');
 		req.session.lastSearch = query;
 
 		/* TODO: try to parse out a date from the search string */
@@ -145,6 +145,33 @@ module.exports = function(app) {
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 			});
 		},[req.session.visitor.lastSearch,req,res]);
+	});
+
+
+	app.get(/^\/partials\/search(\/events\/(.+)$)?/, function(req, res) {
+		var title = 'Wembli Search';
+
+		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];
+		if (!query) {
+			res.setHeader('x-wembli-location','/search');
+			return searchView(req,res);
+		}
+		query = query.replace(/\+/i,' ');
+		req.session.lastSearch = query;
+
+		/* TODO: try to parse out a date from the search string */
+		req.session.visitor.lastSearch = {
+			searchTerms: query,
+			orderByClause: 'Date'
+		};
+
+		query.beginDate = getBeginDate();
+
+		return res.render('partials/search', {
+			partial:true,
+			search: query,
+			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+		});
 	});
 
 };

@@ -122,10 +122,17 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			var method = 'event.get';
 		}
 
+		console.log('more events');
+		console.log(method);
+		console.log(args);
+
 		wembliRpc.fetch(method, args,
 			//response callback
 
 			function(err, result) {
+				console.log('back from searching');
+				console.log(err);
+				console.log(result);
 				if (err) {
 					//handle err
 					console.log(err);
@@ -136,7 +143,10 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 				if (!$scope.events) {
 					$scope.events = [];
 				}
+
 				$scope.events = $scope.events.concat(result['event']);
+				console.log('events');
+				console.log($scope.events);
 				var d = new Date($scope.events[$scope.events.length - 1].Date);
 				$scope.lastEventDate = $filter('date')(d, "MM-dd-yy");
 				$scope.lastEventId = $scope.events[$scope.events.length - 1].ID;
@@ -158,7 +168,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 
 	if ($rootScope.partial) {
 		if ($location.search().search) {
-			$scope.search = $location.search().search;
+			$scope.search = $location.search().search.replace(/\+/g,' ');
 		}
 		//begin date for event list
 		var daysPadding = 4; //how many days from today for the beginDate

@@ -1928,6 +1928,7 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 
 				/* fetch the partial */
 				$http(args).success(function(data, status, headers, config) {
+
 					var headerFunc = headers;
 					/* fetch the plan once we have the html */
 					plan.get(function(p) {
