@@ -793,8 +793,8 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
           /* fetch the invitation wizard modal */
           fetchModals.fetch('/partials/invite-friends-wizard', function() {
             var options = {
-              'backdrop': 'static',
-              'keyboard': false,
+              //'backdrop': 'static',
+              //'keyboard': false,
             };
             /* if the url is the invitation url then show the modal */
             if (/^\/invitation/.test($location.path())) {

@@ -123,27 +123,72 @@ directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$
     };
   }
 ]).
-/*
-directive('ticketsPopover', ['plan', 'wembliRpc',
-  function(plan, wembliRpc) {
+
+directive('ticketsPopover', ['plan', 'wembliRpc', '$compile',
+  function(plan, wembliRpc, $compile) {
     return {
-      scope:false,
+      scope: false,
       restrict: 'EAC',
       compile: function(element, attr, transclude) {
+        var html = $('#static-popover-content').html();
+
         return function(scope, element, attr) {
-          scope.$watch('tickets', function(tix) {
-            if (typeof tix === "undefined") {
-              return;
+          console.log(scope.tickets);
+
+          var originalLeave = $.fn.popover.Constructor.prototype.leave;
+          $.fn.popover.Constructor.prototype.leave = function(obj) {
+            var self, container, timeout;
+            if (obj instanceof this.constructor) {
+              self = obj;
+            } else {
+              self = $(obj.currentTarget)[this.type](this._options).data(this.type);
             }
+            originalLeave.call(this, obj);
+
+            if (obj.currentTarget) {
+              container = $(obj.currentTarget).siblings('.popover')
+              timeout = self.timeout;
+              container.one('mouseenter', function() {
+                //We entered the actual popover – call off the dogs
+                clearTimeout(timeout);
+                //Let's monitor popover content instead
+                container.one('mouseleave', function() {
+                  $.fn.popover.Constructor.prototype.leave.call(self, obj);
+                });
+              })
+            }
+          };
+
+          scope.$on('load-static-map', function() {
+
+            var content = $compile(html)(scope);
+
+            $('#static-map-image').popover({
+              placement: 'left',
+              trigger: 'hover',
+              container: '#venue-map-container',
+              delay: {
+                show: 100,
+                hide: 400
+              },
+              animation: false,
+              content: function() {
+                return content;
+              },
+              html: true
+            });
+
+
+
           });
         }
       }
     };
   }
 ]).
-*/
-directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', '$location', 'loadingModal',
-  function($rootScope, $compile, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan, $location, loadingModal) {
+
+directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', '$location', 'loadingModal',
+  function($timeout, $rootScope, $compile, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan, $location, loadingModal) {
     return {
       restrict: 'E',
       replace: true,
@@ -155,6 +200,7 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
         }
       ],
       compile: function(element, attr, transclude) {
+
         var generateTnSessionId = function() {
           var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
           var sid_length = 5;
@@ -165,9 +211,14 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
           }
           return sid;
         };
+
         return function(scope, element, attr) {
           /* don't cache this partial - cache:false doesn't do it */
           $templateCache.remove("/partials/interactive-venue-map");
+          scope.predicate = 'ActualPrice';
+          scope.reverse = false;
+          scope.showTicketsPopover = false;
+
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
               $('#venue-map-container').tuMap("Refresh", "Reset");
@@ -209,7 +260,6 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
             if (typeof scope.ticketSort === "undefined") {
               scope.ticketSort = 1;
             }
-
             scope.tickets.sort(function(a, b) {
               if (scope.ticketSort) {
                 return a.ActualPrice - b.ActualPrice;
@@ -217,7 +267,6 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
                 return b.ActualPrice - a.ActualPrice;
               }
             });
-
             scope.ticketSort = (scope.ticketSort) ? 0 : 1;
           }
 
@@ -273,55 +322,51 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
             scope.qtySort = (scope.qtySort) ? 0 : 1;
           }
 
-
+          scope.$watch('showTicketsPopover', function(newVal) {
+            console.log('showTicketsPopover is '+newVal);
+            if (typeof newVal !== "undefined") {
+              if (newVal) {
+                angular.element('#static-popover-content').show();
+              } else {
+                angular.element('#static-popover-content').hide();
+              }
+            }
+          });
 
           function initStaticMap() {
             if (!scope.event.MapURL) {
               scope.event.MapURL = "/images/no-seating-chart.jpg";
             }
             /* TODO: check if this is split first */
+            console.log('payment:');
+            console.log(scope.plan.preferences.payment);
+            console.log(scope.plan.preferences.tickets.payment);
+
             var img = new Image();
             img.src = scope.event.MapURL;
-
             img.onload = function() {
 
               var w = img.width;
               var h = img.height;
-
-              $('#venue-map-container').empty().css('overflow-y', 'auto').prepend('<div id="static-map-image" style="float:right;background:transparent url(\'' + scope.event.MapURL + '\') no-repeat center center;height:' + h + 'px;width:' + w + 'px"/>');
-
-              $('ul#tickets-popover-container').height($('#venue-map-container').height() - 120);
-              $('#static-map-image').popover({
-                placement: 'left',
-                trigger: 'hover',
-                container: '#venue-map-container',
-                delay: {
-                  show: 10,
-                  hide: 400
-                },
-                animation: false,
-                content: function() {
-                  $('static-popover-content').show();
-                  var html = $('#static-popover-content').html();
-                  /* this doesnt work.. */
-                  var r = $compile(html)(scope);
-                  return html;
-                },
-                html: true
-
+              $('#venue-map-container').css("width", $($window).width() - 680);
+              $('#venue-map-container').css("position","relative");
+              $('#venue-map-container').empty().css('overflow-y', 'auto').css('float','right').prepend('<div id="static-map-image" style="overflow-y:auto;background:transparent url(\''+scope.event.MapURL+'\') no-repeat center center;margin:auto;padding:20px;height:'+h+'px;width:'+w+'px;" />');
+              var h2 = $('#venue-map-container').height() - 220;
+              $('.ticket-list-container').height(h2);
+              $('#static-map-image').mouseenter(function() {
+                console.log('enter mouse');
+                scope.$apply(function(){
+                  scope.showTicketsPopover = true;
+                });
               });
-              /*
-              $('#static-map-image').mouseover(function() {
-                setTimeout(function() {
-                  console.log($('.popover').css('top'));
-                  if ($('.popover').css('top') != '0px') {
-                    $('.popover').animate({
-                      top: '0px'
-                    });
-                  }
-                }, 500);
+              $('#static-map-image').mouseleave(function() {
+                console.log('enter mouse');
+                scope.$apply(function(){
+                  scope.showTicketsPopover = false;
+                });
               });
-              */
+
+
               var originalPlacement = $.fn.popover.Constructor.prototype.applyPlacement;
               $.fn.popover.Constructor.prototype.applyPlacement = function(offset, placement) {
                 offset.top = 200;
@@ -360,40 +405,17 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
                 }
 
                 if (replace) $tip.offset(offset)
+                $('.ticket-list-container').height(h);
               };
 
 
-
-              var originalLeave = $.fn.popover.Constructor.prototype.leave;
-              $.fn.popover.Constructor.prototype.leave = function(obj) {
-                var self, container, timeout;
-                if (obj instanceof this.constructor) {
-                  self = obj;
-                } else {
-                  self = $(obj.currentTarget)[this.type](this._options).data(this.type);
-                }
-                originalLeave.call(this, obj);
-
-                if (obj.currentTarget) {
-                  container = $(obj.currentTarget).siblings('.popover')
-                  timeout = self.timeout;
-                  container.one('mouseenter', function() {
-                    //We entered the actual popover – call off the dogs
-                    clearTimeout(timeout);
-                    //Let's monitor popover content instead
-                    container.one('mouseleave', function() {
-                      $.fn.popover.Constructor.prototype.leave.call(self, obj);
-                    });
-                  })
-                }
-              };
             };
 
           };
 
 
-          plan.get(function(p) {
 
+          plan.get(function(p) {
             //get the tix and make the ticket list
             wembliRpc.fetch('event.getTickets', {
                 eventID: p.event.eventId
@@ -418,7 +440,6 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
                 scope.minTixPrice = 0;
                 scope.maxTixPrice = 200;
                 var newT = [];
-
                 /* loop through tickets */
                 angular.forEach(scope.tickets, function(el) {
                   /* filter out parking for now and TODO: add to parking page */
@@ -567,8 +588,9 @@ directive('interactiveVenueMap', ['$rootScope', '$compile', 'interactiveMapDefau
                 };
 
                 //set the height of the map-container to the window height 174 is the header + the footer
-                $('#venue-map-container').css("height", $($window).height() - 174);
-                $('#tickets').css("height", $($window).height() - 174);
+                $('#venue-map-container').css("height", $($window).height() - 114);
+                $('#tickets').css("height", $($window).height() - 114);
+                //width of the venue map container
                 $('#venue-map-container').css("width", $($window).width() - 480);
                 $('#venue-map-container').tuMap(options);
 

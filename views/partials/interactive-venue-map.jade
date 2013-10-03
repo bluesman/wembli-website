@@ -44,6 +44,60 @@
 			span &nbsp;at {{plan.event.eventVenue}}&nbsp;
 	#map-background
 		#venue-map-container
+			#static-map-image.hide(ng-mouseover="showTicketsPopover=true") Foo
+		- if (include == 'invite-friends')
+			#static-popover-content.hide(ng-mouseover="showTicketsPopover=true")
+				.tickets-popover-arrow
+				#tickets-popover-filters.filter-container.clearfix
+					.qty-filter.pull-left
+						strong Qty:
+						select.quantity-filter
+							option --
+							option(value="1") 1
+							option(value="2") 2
+							option(value="3") 3
+							option(value="4") 4
+							option(value="5") 5+
+					.price-filter.pull-right
+						p
+							label(for="amount") Price range:
+							input.amount(type="text")
+						#tickets-popover-price-slider.price-slider
+				#tickets-popover-header-container.ticket-list-header-container.list-header-container
+					a.qty-header(href="#",ng-click="predicate='maxSplit';reverse=!reverse;") Qty
+					a.section-header(href="#",ng-click="predicate='Section';reverse=!reverse;") Section
+					a.price-header(href="#",ng-click="predicate='ActualPrice';reverse=!reverse;") Price
+				ul#tickets-popover-container.ticket-list-container.list-container
+					li.ticket-row.row(ng-repeat="ticket in tickets | sortNumeric:predicate:reverse")
+						.ticket-price.hide
+							.actual-price ${{ticket.ActualPrice}}
+						.ticket-section.hide {{ticket.Section}}
+						.seat-row.hide {{ticket.Row}}
+						.bottom.clearfix
+							.qty.pull-left
+								strong
+									span.max-seats-together up to {{ticket.maxSplit}}&nbsp;
+									br
+									span.end {{ticket.maxSplit | pluralize:'seat'}} together
+								.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
+							.ticket-info.pull-left
+								.seats
+									div
+										strong Section:&nbsp;
+										span {{ticket.Section}}&nbsp;
+									div
+										strong Row:&nbsp;
+										span {{ticket.Row}}&nbsp;
+									div
+										strong Seats:&nbsp;
+										span(ng-show="{'\*':true}[ticket.LowSeat]") *
+										span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
+							.price.pull-left
+								.value ${{ticket.ActualPrice}}
+								.header per ticket
+
+
+
 		//- #groups-container
 	#tickets.addons-list.pull-right
 		- if (include == 'purchased-tickets')

@@ -9716,42 +9716,61 @@ header .right-container .logo-45 h1 {
   width: 68%;
   height: 100%;
 }
-#tickets-frame #map-background #venue-map-container .popover {
+#tickets-frame #map-background #groups-container {
+  position: absolute;
+  bottom: 120px;
+  left: 20px;
+}
+#tickets-frame #map-background #static-popover-content {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 0;
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   max-width: 350px;
   background-color: #efe4b0;
   color: #000000;
 }
-#tickets-frame #map-background #venue-map-container .popover .arrow:after {
-  border-left-color: #efe4b0;
+#tickets-frame #map-background #static-popover-content .tickets-popover-arrow {
+  position: absolute;
+  top: 118px;
+  left: 342px;
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 20px solid #efe4b0;
 }
-#tickets-frame #map-background #venue-map-container .popover-content {
-  padding: 0;
-}
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container {
+#tickets-frame #map-background #static-popover-content .filter-container {
   position: relative;
   text-align: left;
   border-bottom: 2px solid #ffffff;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container .qty-filter {
+#tickets-frame #map-background #static-popover-content .filter-container .qty-filter {
   margin: 10px 10px 5px 25px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container .qty-filter strong {
+#tickets-frame #map-background #static-popover-content .filter-container .qty-filter strong {
   margin-right: 4px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container .qty-filter select {
+#tickets-frame #map-background #static-popover-content .filter-container .qty-filter select {
   margin-top: 6px;
   width: 50px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container .price-filter {
+#tickets-frame #map-background #static-popover-content .filter-container .price-filter {
   margin: 5px;
   width: 200px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container .price-filter p label {
+#tickets-frame #map-background #static-popover-content .filter-container .price-filter p label {
   float: left;
   font-size: 11px;
   margin: 4px 0 0 15px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container .price-filter p input {
+#tickets-frame #map-background #static-popover-content .filter-container .price-filter p input {
   border: 0;
   color: #426799;
   font-weight: bold;
@@ -9764,39 +9783,39 @@ header .right-container .logo-45 h1 {
   -moz-border-radius: 0;
   border-radius: 0;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container .price-filter .price-slider {
+#tickets-frame #map-background #static-popover-content .filter-container .price-filter .price-slider {
   width: 180px;
   height: 6px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .filter-container .price-filter .price-slider .ui-slider-handle {
+#tickets-frame #map-background #static-popover-content .filter-container .price-filter .price-slider .ui-slider-handle {
   height: 12px;
   width: 12px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container {
+#tickets-frame #map-background #static-popover-content .list-header-container {
   padding: 10px;
   margin-top: 2px;
   border-bottom: 2px solid #ffffff;
   *zoom: 1;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container:before,
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container:after {
+#tickets-frame #map-background #static-popover-content .list-header-container:before,
+#tickets-frame #map-background #static-popover-content .list-header-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container:after {
+#tickets-frame #map-background #static-popover-content .list-header-container:after {
   clear: both;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container:before,
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container:after {
+#tickets-frame #map-background #static-popover-content .list-header-container:before,
+#tickets-frame #map-background #static-popover-content .list-header-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container:after {
+#tickets-frame #map-background #static-popover-content .list-header-container:after {
   clear: both;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container a {
+#tickets-frame #map-background #static-popover-content .list-header-container a {
   display: block;
   float: left;
   color: #333333;
@@ -9806,39 +9825,39 @@ header .right-container .logo-45 h1 {
   width: 80px;
   padding: 0 15px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container a:hover {
+#tickets-frame #map-background #static-popover-content .list-header-container a:hover {
   color: #000000;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container a.section-header {
+#tickets-frame #map-background #static-popover-content .list-header-container a.section-header {
   width: 105px;
   padding-left: 24px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container a.qty-header {
+#tickets-frame #map-background #static-popover-content .list-header-container a.qty-header {
   width: 64px;
   text-align: center;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-header-container a.price-header {
+#tickets-frame #map-background #static-popover-content .list-header-container a.price-header {
   text-align: center;
   padding: 0;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container {
+#tickets-frame #map-background #static-popover-content .list-container {
   overflow-y: auto;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row:hover {
+#tickets-frame #map-background #static-popover-content .list-container .row:hover {
   background-color: rgba(153, 153, 153, 0.9);
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row {
+#tickets-frame #map-background #static-popover-content .list-container .row {
   padding: 0;
   margin: 2px 0 0 0;
   text-align: left;
   border-bottom: 2px solid #ffffff;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom {
   width: 100%;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .qty,
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .ticket-info,
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .price {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .qty,
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .ticket-info,
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .price {
   font-weight: bold;
   width: 100px;
   text-align: left;
@@ -9848,44 +9867,39 @@ header .right-container .logo-45 h1 {
   height: 60px;
   font-size: 12px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .qty .header,
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .ticket-info .header,
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .price .header {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .qty .header,
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .ticket-info .header,
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .price .header {
   line-height: 20px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .qty .value,
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .ticket-info .value,
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .price .value {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .qty .value,
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .ticket-info .value,
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .price .value {
   line-height: 14px;
   vertical-align: middle;
   font-size: 16px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .qty,
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .price {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .qty,
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .price {
   text-align: center;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .ticket-info {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .ticket-info {
   padding: 0 10px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .ticket-info .seats {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .ticket-info .seats {
   font-size: 14px;
   line-height: 16px;
   margin-top: 12px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .qty {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .qty {
   background-color: #e2ce76;
   text-align: center;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row .bottom .qty strong .max-seats-together {
+#tickets-frame #map-background #static-popover-content .list-container .row .bottom .qty strong .max-seats-together {
   font-size: 16px;
 }
-#tickets-frame #map-background #venue-map-container .popover-content .list-container .row a {
+#tickets-frame #map-background #static-popover-content .list-container .row a {
   margin-top: 6px;
-}
-#tickets-frame #map-background #groups-container {
-  position: absolute;
-  bottom: 120px;
-  left: 20px;
 }
 #tickets-frame #tickets-invite-friends {
   margin-top: 100px;

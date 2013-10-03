@@ -56,11 +56,11 @@ filter('historyStatus', [
 				return 'logged';
 			}
 			var historyStatusFilter = {
-				'queued' : 'Sending Email',
-				'delivered' : 'Email Sent',
-				'opened' : 'Email Opened',
-				'responded' : 'Payment Posted',
-				'received' : 'Payment Received',
+				'queued': 'Sending Email',
+				'delivered': 'Email Sent',
+				'opened': 'Email Opened',
+				'responded': 'Payment Posted',
+				'received': 'Payment Received',
 			}
 
 			return (typeof historyStatusFilter[historyStatus] !== "undefined") ? historyStatusFilter[historyStatus] : historyStatus;
@@ -116,7 +116,7 @@ filter('facebookFriends', [
 
 			for (var i = 0; i < friends.length; i++) {
 				var f = friends[i];
-				var r = new RegExp(match,'im');
+				var r = new RegExp(match, 'im');
 				if (r.test(f.name)) {
 					newList.push(f);
 				}
@@ -142,7 +142,7 @@ filter('filterInvitees', ['plan',
 
 			/* check plan preferences to figure out which friends show up
 			 * p.preferences.guestList can be: full, rsvp, private
-			*/
+			 */
 
 
 			if (p.preferences.guestList === 'private') {
@@ -164,6 +164,24 @@ filter('filterInvitees', ['plan',
 				}
 			};
 			return newList;
+		}
+	}
+]).
+
+filter('sortNumeric', ['plan',
+	function(plan) {
+		return function(elements, predicate, reverse) {
+			if (typeof elements === 'undefined') {
+				return;
+			}
+			elements.sort(function(a, b) {
+				if (reverse) {
+					return a[predicate] - b[predicate];
+				} else {
+					return b[predicate] - a[predicate];
+				}
+			});
+			return elements;
 		}
 	}
 ]).

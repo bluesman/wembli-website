@@ -189,177 +189,9 @@
 		}
 
 		#venue-map-container {
-			@bgColor: #EFE4B0;
-			@boxColor: #E2CE76;
 
 			width:68%;
 			height:100%;
-			.popover {
-
-				max-width:350px;
-				background-color:@bgColor;
-				color:@black;
-
-				.arrow:after {
-					border-left-color:@bgColor;
-
-				}
-			}
-
-			.popover-content {
-				padding:0;
-
-				.filter-container {
-					position:relative;
-					text-align:left;
-					border-bottom:2px solid @white;
-
-					.qty-filter {
-						margin: 10px 10px 5px 25px;
-						strong {
-							margin-right:4px;
-						}
-						select {
-							margin-top:6px;
-							width:50px;
-						}
-					}
-					.price-filter {
-						margin:5px;
-						width:200px;
-						p {
-							label {
-								float:left;
-								font-size: 11px;
-								margin: 4px 0 0 15px;
-							}
-
-							input {
-								border:0;
-								color:@blueDark;
-								font-weight:bold;
-								background:transparent;
-								width:100px;
-								.box-shadow(0 0 0 0);
-								.border-radius(0);
-							}
-						}
-
-						.price-slider {
-							width:180px;
-							height:6px;
-
-							.ui-slider-handle {
-								height:12px;
-								width:12px;
-							}
-						}
-					}
-				}
-
-
-				.list-header-container {
-					padding:10px;
-					margin-top:2px;
-					border-bottom: 2px solid @white;
-
-					.clearfix();
-					a {
-						display:block;
-						float:left;
-						color:@grayDarker;
-						font-weight:bold;
-						text-decoration:underline;
-						text-align:left;
-						width:80px;
-						padding:0 15px;
-					}
-					a:hover {
-						color:@black;
-					}
-					a.section-header {
-						width:105px;
-						padding-left: 24px;
-					}
-
-					a.qty-header {
-						width:64px;
-						text-align: center;
-					}
-					a.price-header {
-						text-align:center;
-						padding:0;
-					}
-				}
-				.list-container {
-					overflow-y: auto;
-
-					.row:hover {
-						#translucent > .background(@gray,.9);
-					}
-
-					.row {
-						padding:0;
-						margin:2px 0 0 0;
-						text-align:left;
-						border-bottom: 2px solid @white;
-
-						.bottom {
-							width:100%;
-
-							.qty, .ticket-info, .price {
-								font-weight:bold;
-								width:100px;
-								text-align:left;
-								padding:20px 6px 6px;
-								line-height:14px;
-								vertical-align: middle;
-								height:60px;
-								font-size:12px;
-
-								.header {
-									line-height:20px;
-								}
-								.value {
-									line-height:14px;
-									vertical-align: middle;
-									font-size:16px;
-
-								}
-
-							}
-
-							.qty, .price {
-								text-align:center;
-							}
-
-							.ticket-info {
-								padding:0 10px;
-
-								.seats {
-									font-size: 14px;
-									line-height: 16px;
-									margin-top: 12px;
-								}
-							}
-
-							.qty {
-								background-color: @boxColor;
-								text-align:center;
-								strong {
-									.max-seats-together {
-										font-size:16px;
-									}
-								}
-							}
-						}
-
-						a {
-							margin-top:6px;
-						}
-					}
-				}
-			}
 		}
 
 		#groups-container {
@@ -367,6 +199,184 @@
 			bottom:120px;
 			left:20px;
 		}
+
+
+		@bgColor: #EFE4B0;
+		@boxColor: #E2CE76;
+
+		#static-popover-content {
+			position:absolute;
+			top:20px;
+			left:20px;
+			padding:0;
+			.box-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
+			.border-radius(5px);
+			max-width:350px;
+			background-color:@bgColor;
+			color:@black;
+
+			.tickets-popover-arrow {
+				position:absolute;
+				top:118px;
+				left:342px;
+				width: 0;
+				height: 0;
+				border-top: 20px solid transparent;
+				border-bottom: 20px solid transparent;
+				border-left: 20px solid @bgColor;
+			}
+
+			.filter-container {
+				position:relative;
+				text-align:left;
+				border-bottom:2px solid @white;
+
+				.qty-filter {
+					margin: 10px 10px 5px 25px;
+					strong {
+						margin-right:4px;
+					}
+					select {
+						margin-top:6px;
+						width:50px;
+					}
+				}
+				.price-filter {
+					margin:5px;
+					width:200px;
+					p {
+						label {
+							float:left;
+							font-size: 11px;
+							margin: 4px 0 0 15px;
+						}
+
+						input {
+							border:0;
+							color:@blueDark;
+							font-weight:bold;
+							background:transparent;
+							width:100px;
+							.box-shadow(0 0 0 0);
+							.border-radius(0);
+						}
+					}
+
+					.price-slider {
+						width:180px;
+						height:6px;
+
+						.ui-slider-handle {
+							height:12px;
+							width:12px;
+						}
+					}
+				}
+			}
+			.list-header-container {
+				padding:10px;
+				margin-top:2px;
+				border-bottom: 2px solid @white;
+
+				.clearfix();
+				a {
+					display:block;
+					float:left;
+					color:@grayDarker;
+					font-weight:bold;
+					text-decoration:underline;
+					text-align:left;
+					width:80px;
+					padding:0 15px;
+				}
+				a:hover {
+					color:@black;
+				}
+				a.section-header {
+					width:105px;
+					padding-left: 24px;
+				}
+
+				a.qty-header {
+					width:64px;
+					text-align: center;
+				}
+				a.price-header {
+					text-align:center;
+					padding:0;
+				}
+			}
+			.list-container {
+				overflow-y: auto;
+
+				.row:hover {
+					#translucent > .background(@gray,.9);
+				}
+
+				.row {
+					padding:0;
+					margin:2px 0 0 0;
+					text-align:left;
+					border-bottom: 2px solid @white;
+
+					.bottom {
+						width:100%;
+
+						.qty, .ticket-info, .price {
+							font-weight:bold;
+							width:100px;
+							text-align:left;
+							padding:20px 6px 6px;
+							line-height:14px;
+							vertical-align: middle;
+							height:60px;
+							font-size:12px;
+
+							.header {
+								line-height:20px;
+							}
+							.value {
+								line-height:14px;
+								vertical-align: middle;
+								font-size:16px;
+
+							}
+
+						}
+
+						.qty, .price {
+							text-align:center;
+						}
+
+						.ticket-info {
+							padding:0 10px;
+
+							.seats {
+								font-size: 14px;
+								line-height: 16px;
+								margin-top: 12px;
+							}
+						}
+
+						.qty {
+							background-color: @boxColor;
+							text-align:center;
+							strong {
+								.max-seats-together {
+									font-size:16px;
+								}
+							}
+						}
+					}
+
+					a {
+						margin-top:6px;
+					}
+				}
+			}
+		}
+
+
 	}
 
 	#tickets-invite-friends {
