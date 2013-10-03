@@ -68,7 +68,7 @@ angular.module('wembliApp', [
       $timeout(function() {
         slidePage.slide(e, newUrl, oldUrl, function() {
           /* log in googleanalytics */
-          _gaq.push(['_trackPageview',newUrl]);
+          //_gaq.push(['_trackPageview',newUrl]);
           /* log this click in keen.io */
           wembliRpc.fetch('analytics.addEvent', {
             collection: 'view',
