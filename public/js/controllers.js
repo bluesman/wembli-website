@@ -122,20 +122,14 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			var method = 'event.get';
 		}
 
-		console.log('more events');
-		console.log(method);
-		console.log(args);
 
 		wembliRpc.fetch(method, args,
 			//response callback
 
 			function(err, result) {
-				console.log('back from searching');
-				console.log(err);
-				console.log(result);
+
 				if (err) {
 					//handle err
-					console.log(err);
 					alert('error happened - contact help@wembli.com');
 					return;
 				}
@@ -145,8 +139,6 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 				}
 
 				$scope.events = $scope.events.concat(result['event']);
-				console.log('events');
-				console.log($scope.events);
 				var d = new Date($scope.events[$scope.events.length - 1].Date);
 				$scope.lastEventDate = $filter('date')(d, "MM-dd-yy");
 				$scope.lastEventId = $scope.events[$scope.events.length - 1].ID;
@@ -1270,7 +1262,6 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 
 function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurchaseUrls) {
 	$scope.tnUrl = ticketPurchaseUrls.tn;
-	console.log('run tix ctrl');
 	/* display a modal when they click to go off and buy tickets */
 	fetchModals.fetch('/partials/modals/tickets-modals', function(err) {
 		if (err) {
@@ -1937,8 +1928,6 @@ function RestaurantsOffsiteCtrl($scope, plan, $http, $rootScope, $location) {
 		plan.removeRestaurant({
 			restaurantId: $scope.restaurantId
 		}, function(err, results) {
-			console.log('canceled form');
-			console.log(results);
 
 			$('#restaurants-offsite-modal').modal('hide');
 

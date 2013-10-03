@@ -1922,13 +1922,11 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 				if (args.url === "/partials/") {
 					args.url = args.url + "index";
 				}
-
 				/* if newUrl === oldUrl then its the same page */
 				var samePage = (newUrl === oldUrl);
 
 				/* fetch the partial */
 				$http(args).success(function(data, status, headers, config) {
-
 					var headerFunc = headers;
 					/* fetch the plan once we have the html */
 					plan.get(function(p) {

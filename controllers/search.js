@@ -149,24 +149,22 @@ module.exports = function(app) {
 
 
 	app.get(/^\/partials\/search(\/events\/(.+)$)?/, function(req, res) {
+		console.log('partials search');
 		var title = 'Wembli Search';
 
 		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];
-		if (!query) {
-			res.setHeader('x-wembli-location','/search');
-			return searchView(req,res);
+		if (query) {
+			query = query.replace(/\+/i,' ');
+			req.session.lastSearch = query;
+
+			/* TODO: try to parse out a date from the search string */
+			req.session.visitor.lastSearch = {
+				searchTerms: query,
+				orderByClause: 'Date'
+			};
 		}
-		query = query.replace(/\+/i,' ');
-		req.session.lastSearch = query;
 
-		/* TODO: try to parse out a date from the search string */
-		req.session.visitor.lastSearch = {
-			searchTerms: query,
-			orderByClause: 'Date'
-		};
-
-		query.beginDate = getBeginDate();
-
+		console.log('RENDER SEARCH');
 		return res.render('partials/search', {
 			partial:true,
 			search: query,
