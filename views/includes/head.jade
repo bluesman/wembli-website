@@ -86,7 +86,6 @@ script(type="text/javascript", src="//maps.googleapis.com/maps/api/js?v=3.exp&se
 - if ("development" !== environment())
   script(type = "text/javascript", src = "/js/wembli.min.js")
 
-
 - if ("undefined" !== typeof cssIncludes)
   - each file in cssIncludes
     link(rel = "stylesheet", href = file)
@@ -106,31 +105,20 @@ script(type="text/javascript", src="//maps.googleapis.com/maps/api/js?v=3.exp&se
       }
       _kms('//i.kissmetrics.com/i.js');
       _kms('//doug1izaerwt3.cloudfront.net/93a0d344c13e76907f623cee3af3723ce56f020b.1.js');
-  script(type = "text/javascript")
-    var _gaq = _gaq || [];
-    var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
-    _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
-    _gaq.push(['_setAccount', 'UA-28081425-1']);
-    _gaq.push(['_setDomainName', 'wembli.com']);
-    _gaq.push(['_trackPageview']);
-    (function() {
-      var ga = document.createElement('script');
-      ga.type = 'text/javascript';
-      ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(ga, s);
-    })();
-//-
-  script(type = "text/javascript")
-    var _sgq = _sgq || [];
-    _sgq.push(['setSgAccount', 'yjqkdzlt']);
-    setTimeout(function() {
-      var sg = document.createElement('script');
-      sg.type = 'text/javascript';
-      sg.async = true;
-      sg.src = ("https: " == document.location.protocol ? "https: //dc" : "http://cdn0") + ".skyglue.com/sgtracker.js";
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(sg, s);
-    }, 1);
+script(type = "text/javascript")
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-28081425-1']);
+  _gaq.push(['_setDomainName', 'wembli.com']);
+  _gaq.push(['_trackPageview']);
+  console.log('tracked page load');
+  (function() {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+  })();
 - var pageId = (typeof page == "undefined") ? 'none' : page;
