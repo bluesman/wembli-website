@@ -20,10 +20,11 @@ function InviteFriendsWizardCtrl($scope) {
  * Index Controller
  */
 
-function IndexCtrl($scope, $templateCache) {
+function IndexCtrl($scope, $templateCache, $rootScope) {
 	/* clear the cache when the home page loads to make sure we start fresh */
 	/* taking this out for now - i'd like to be able to cache some things */
 	/* $templateCache.removeAll(); */
+	$rootScope.$broadcast('search-page-loaded', {});
 };
 
 /*
@@ -1059,8 +1060,8 @@ function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 	};
 };
 
-function SearchCtrl($scope) {
-	$scope.$broadcast('search-page-loaded', {});
+function SearchCtrl($scope, $rootScope) {
+	$rootScope.$broadcast('search-page-loaded', {});
 };
 
 function SignupCtrl($scope, $http, wembliRpc) {
@@ -1135,11 +1136,13 @@ function SupplyPasswordCtrl($scope) {
 
 function HeaderCtrl($scope) {
 	$scope.searchInProgress = false;
+	$scope.hideHeaderSearch = false;
 	$scope.$on('search-page-loaded', function() {
 		$scope.searchInProgress = false;
+		$scope.hideHeaderSearch = true;
 	});
+
 	$scope.submitSearch = function() {
-		console.log('SUBMIT SEARCH');
 		$scope.searchInProgress = true;
 	}
 }

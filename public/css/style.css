@@ -7928,9 +7928,10 @@ header .right-container .logo-45 h1 {
   background-color: rgba(66, 127, 184, 0.25);
 }
 #index-frame section h2 {
-  font-size: 38px;
+  font-size: 30px;
   color: #000000;
   font-weight: bold;
+  padding: 38px 0;
 }
 #index-frame .section2 {
   position: absolute;
@@ -8039,7 +8040,7 @@ header .right-container .logo-45 h1 {
 }
 #index-frame .section3 {
   position: relative;
-  padding: 40px 0 100px 0;
+  padding: 0 0 100px 0;
 }
 #index-frame .section3 h2 {
   margin-top: 20px;
@@ -8053,7 +8054,7 @@ header .right-container .logo-45 h1 {
   left: 0;
 }
 #index-frame .section3 .info-boxes {
-  margin-top: 160px;
+  margin-top: 90px;
 }
 #index-frame .section3 .info-boxes .box {
   color: #000000;
@@ -8079,6 +8080,9 @@ header .right-container .logo-45 h1 {
 #index-frame .section4 {
   background-color: #999999;
 }
+#index-frame .section4 h2 {
+  padding: 0;
+}
 #index-frame .section4 .video-container {
   margin: 0 auto;
   padding: 100px 0;
@@ -8087,6 +8091,7 @@ header .right-container .logo-45 h1 {
   text-align: left;
 }
 #index-frame .section4 .video-container .video-text {
+  margin-top: 50px;
   width: 500px;
   font-size: 22px;
   line-height: 22px;
@@ -8103,8 +8108,8 @@ header .right-container .logo-45 h1 {
 }
 #index-frame .section5 {
   background-color: #426799;
-  min-height: 610px;
   padding-bottom: 60px;
+  min-height: 490px;
 }
 #index-frame .section5 h1 {
   display: block;
@@ -8143,7 +8148,7 @@ header .right-container .logo-45 h1 {
 #index-frame .section5 .container .right h2 {
   color: #000000;
   font-size: 20px;
-  margin-top: 60px;
+  margin-top: 20px;
 }
 #index-frame .section5 .container .left .performers,
 #index-frame .section5 .container .middle .performers,
@@ -8161,6 +8166,7 @@ header .right-container .logo-45 h1 {
 }
 #index-frame .section6 {
   background: transparent url("/images/index-car.png") no-repeat left bottom;
+  padding-bottom: 100px;
 }
 #index-frame .section6 .container {
   margin-top: 80px;
@@ -8178,9 +8184,6 @@ header .right-container .logo-45 h1 {
   position: absolute;
   top: 136px;
   right: 430px;
-}
-#index-frame .section6 .container .left .body .row h2 {
-  font-size: 22px;
 }
 #index-frame .section6 .container .right {
   width: 40%;
@@ -8202,6 +8205,10 @@ header .right-container .logo-45 h1 {
 }
 #index-frame .section6 .container .right .body .row .facebook-link {
   background: transparent url("/images/index-social-icons.png") no-repeat 0px -255px;
+}
+#index-frame .section6 .container .right .body .row h2 {
+  font-size: 22px;
+  padding: 0px;
 }
 #index-frame .section6 .container .right .body .message {
   margin: 40px;

@@ -77,7 +77,7 @@
 			.video.pull-right
 				iframe(width="480",height="360",src="//www.youtube.com/embed/kgtNax8p5og",frameborder="0",allowfullscreen)
 	section.section5
-		h1.calibri UPCOMING EVENTS IN YOUR AREA
+		h2.calibri UPCOMING EVENTS IN YOUR AREA
 		.container.clearfix
 			.top-events-arrow
 			ul.left.pull-left
@@ -93,7 +93,7 @@
 				h2 Sporting Events:
 				- each s, i in sports
 					li.performers
-						a.performer.white(target="_self", ng-href="/search/events/#{s.Name}") #{i+1}) #{s.Name}
+						a.performer.white.show-ellipses(start="0", characters="40", target="_self", ng-href="/search/events/#{s.Name}") #{i+1}) #{s.Name}
 			ul.right.pull-left
 				h2 Theater:
 				- each t, i in theater

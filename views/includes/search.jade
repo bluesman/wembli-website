@@ -21,7 +21,7 @@ lastEventId   = undefined;
 	- var search = "";
 	- var placeholder = 'Enter an event, team or venue...'
 - url += Date.today().format("mm-dd-yy")
-#search-frame()
+#search-frame(ng-controller="SearchCtrl")
 	input(type="hidden", name="search", value="#{search}", ng-init="search='#{search}'")
 	input(type="hidden", name="city", value="#{req.session.visitor.tracking.city}", ng-init="city='#{req.session.visitor.tracking.city}'")
 	input(type="hidden", name="postalCode", value="#{req.session.visitor.tracking.postalCode}", ng-init="postalCode='#{req.session.visitor.tracking.postalCode}'")

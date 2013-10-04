@@ -948,14 +948,18 @@ directive('highSalesPerformers', ['wembliRpc',
     return {
       restrict: 'E',
       compile: function(element, attr, transclude) {
-        var lookup = {1:'sports',2:'concert',3:'theater'};
+        var lookup = {
+          1: 'sports',
+          2: 'concert',
+          3: 'theater'
+        };
         return function(scope, element, attr) {
           //get the tix and make the ticket list
           wembliRpc.fetch('index.getHighSalesPerformers', {
             parentCategoryID: attr.parentCategoryId,
             numReturned: attr.numReturned
           }, function(err, result) {
-            var key = lookup[attr.parentCategoryId]+'Performers';
+            var key = lookup[attr.parentCategoryId] + 'Performers';
             scope[key] = result.performers;
           });
         }
@@ -964,6 +968,23 @@ directive('highSalesPerformers', ['wembliRpc',
   }
 ]).
 
+directive('showEllipses', [
+  function() {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, elm, attrs) {
+          var t = elm.text();
+          if (t.length > attrs.characters) {
+            var shortened = t.substr(attrs.start, attrs.characters);
+            var shortened = shortened +'...';
+            elm.text(shortened);
+          }
+        };
+      }
+    };
+  }
+]).
 
 //directive to cause link click to go to next frame rather than fetch a new page
 directive('wembliSequenceLinkOff', ['$rootScope', '$window', '$templateCache', '$timeout', '$location', '$http', '$compile', 'sequence', 'fetchModals', 'plan', 'wembliRpc',
