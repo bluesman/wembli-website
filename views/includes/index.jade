@@ -31,8 +31,10 @@
 				p FIND TICKETS TO CONCERTS, THEATER & SPORTING EVENTS
 				p INVITE FRIENDS WITHOUT GETTING STUCK WITH THE BILL
 			.search
-				form#index-search-form.form-search.clearfix(method="GET", action="/search/events")
-					i.icon-search.icon-2x.pull-left
+				form#index-search-form.form-search.clearfix(method="GET", action="/search/events", ng-submit="submitSearch()")
+					i.icon-search.icon-2x.pull-left(ng-hide="searchInProgress")
+					i.icon-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
+
 					input.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
 					button.btn.btn-secondary.segoe.pull-left(href="#") search
 	section.section3

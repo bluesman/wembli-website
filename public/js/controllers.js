@@ -25,6 +25,17 @@ function IndexCtrl($scope, $templateCache, $rootScope) {
 	/* taking this out for now - i'd like to be able to cache some things */
 	/* $templateCache.removeAll(); */
 	$rootScope.$broadcast('search-page-loaded', {});
+
+	$scope.searchInProgress = false;
+
+	$scope.$on('search-page-loaded', function() {
+		$scope.searchInProgress = false;
+	});
+
+	$scope.submitSearch = function() {
+		$scope.searchInProgress = true;
+	}
+
 };
 
 /*
