@@ -22,8 +22,6 @@ exports['event-options'] = {
 		if (typeof req.session.eventOptionsForm !== "undefined") {
 			data = req.session.eventOptionsForm;
 		}
-		console.log('event options:');
-		console.log(data);
 		me(null,data);
 	}
 };

@@ -8,12 +8,11 @@ exports.beta = {
 	var betaObj = new Beta();
 	betaObj.upsertByEmail({email:email},function(error,betaCustomer) {
 	    if (error) {
-	//	console.log(error);
 		me(error);
 	    } else {
 		//send an email
 		var postalgone = http.createClient(80, 'www.postalgone.com');
-		
+
 		var emailBody = 'Thank you for your interest in phatseat.com.  Beta testing is closed at the moment but as soon as we\'re ready for another round, we\'ll let you know!  If you have any questions feel free to email info@phatseat.com.  Thanks!';
 		var postBody = 'to='+email+'&subject=Phatseat.com Beta List&body='+emailBody;
 

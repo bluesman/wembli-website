@@ -149,7 +149,6 @@ module.exports = function(app) {
 
 
 	app.get(/^\/partials\/search(\/events\/(.+)$)?/, function(req, res) {
-		console.log('partials search');
 		var title = 'Wembli Search';
 
 		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];
@@ -164,7 +163,6 @@ module.exports = function(app) {
 			};
 		}
 
-		console.log('RENDER SEARCH');
 		return res.render('partials/search', {
 			partial:true,
 			search: query,

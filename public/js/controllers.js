@@ -1042,6 +1042,9 @@ function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 	$scope.submitInProgress = false;
 	$scope.startPlan = function() {
 		$scope.submitInProgress = true;
+		if ($scope.paymentType === 'split-first') {
+			$scope.nextLink = '/event-options/'+$scope.eventId+'/'+$scope.eventName;
+		}
 		/* start the plan */
 		wembliRpc.fetch('plan.startPlan', {
 			payment: $scope.paymentType,

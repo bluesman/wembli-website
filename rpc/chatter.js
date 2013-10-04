@@ -20,8 +20,6 @@ exports.chatter = {
 		.where('planGuid').equals(req.session.plan.guid)
 		.sort('-created')
 		.exec(function(err, chatter) {
-			console.log('chatter');
-			console.log(chatter);
 			if (err) { return me(err);	}
 			data.chatters = chatter;
 			me(null,data);
@@ -124,8 +122,6 @@ exports.chatter = {
 			.where('planGuid').equals(req.session.plan.guid)
 			.sort('-created')
 			.exec(function(err, chatters) {
-				console.log('chatter');
-				console.log(chatter);
 				if (err) { return me(err);	}
 				data.chatters = chatters;
 				return me(null,data);

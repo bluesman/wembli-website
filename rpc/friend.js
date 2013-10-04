@@ -59,10 +59,6 @@ exports.friend = {
 
 			friend.save(function(err, result) {
 				data.friend = result;
-				console.log('submitRsvp');
-				console.log(data.friend);
-				console.log(result);
-				console.log(err);
 				me(null, data);
 			});
 		});
@@ -81,7 +77,6 @@ exports.friend = {
 		.where('planGuid').equals(req.session.plan.guid)
 		.where('customerId').equals(req.session.customer._id)
 		.exec(function(err, friend) {
-			console.log(args);
 
 			if (typeof args.tickets !== "undefined") {
 				friend.rsvp.tickets.number = parseInt(args.tickets.number);
@@ -119,10 +114,7 @@ exports.friend = {
 
 			friend.save(function(err, result) {
 				data.friend = result;
-				console.log('submitVote');
-				console.log(data.friend);
-				console.log(result);
-				console.log(err);
+
 				me(null, data);
 			});
 		});

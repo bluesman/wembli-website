@@ -11,42 +11,25 @@ block header
 			a.btn.btn-secondary.btn-large(href="/logout", target="_self")
 				strong log out
 		ul.side-nav
-			li(ng-hide="loggedIn")
-				a(href="/login") login
 			li
-				a(href="/search") search
-			li
-				a(ng-href="/tickets{{eventLink}}") tickets
-			li
-				a(ng-href="/invitation{{eventLink}}") invite
-			li
-				a(ng-href="/parking{{eventLink}}") parking
-			li
-				a(ng-href="/restaurants{{eventLink}}") restaurant deals
-			li
-				a(ng-href="/hotels{{eventLink}}") hotels
-			li(ng-show="loggedIn")
-				a(href="/dashboard") dashboard
+				a(href="/index") home
 			li(ng-show="loggedIn && plan")
 				a(href="/plan") current plan
 			li
-				a(href="/index") home
-
-		ul.links
-			li
 				a(href="/about-us") about us
+			li
+				a(href="http://blog.wembli.com/", target="_self") blog
+			li
+				a(href="mailto:team@wembli.com") contact us
 			li.hide
 				a(href="/press") press
-			li
-				a(href="http://blog.wembli.com/", target="_self") VenueMaster blog
 			li.hide
-				a(href="/jobs") career opps
-			li.hide
-				a(href="/contact-us") contact us
+				a(href="/jobs") jobs
 
 	header#header.clearfix
 		a.slidepanel.left-container.pull-left.clearfix(href="#",data-slidepanel="panel")
-			i.icon-reorder &nbsp;menu
+			i.icon-reorder
+			span &nbsp;menu
 		.middle-container.pull-left.clearfix(ng-hide="loggedIn")
 			.login.pull-left
 				a(href="/login") login

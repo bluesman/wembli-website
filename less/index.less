@@ -23,79 +23,84 @@
 	section {
 		min-height:500px;
 	}
+
 	.section2 {
-		text-align:left;
+		position:relative;
+		top:-275px;
+		width:1024px;
+		margin:auto;
 
 		.container {
 
 			.tag-line {
 				text-transform: uppercase;
 				text-shadow: #000 2px 2px 6px;
-				font-size: 40px;
+				font-size: 38px;
 				line-height: 48px;
 				font-weight: bold;
-				text-align:right;
+				text-align:center;
 				color:@white;
-				position:absolute;
-				top:-280px;
-				width:1024px;
-				margin:auto;
-
-				p {
-
-				}
-				a {
-					margin-top:100px;
-					display:block;
-
-					.meet-wembli {
-						width:530px;
-						height:200px;
-						text-align: right;
-						font-size: 36px;
-						z-index:7;
-						position:relative;
-					}
-				}
 			}
 
-			.click {
-				width:773px;
-				height:276px;
-				background: transparent url("/images/index-click2.png") no-repeat left center;
-				position:absolute;
-				z-index:6;
-				top:-110px;
+			.search {
+				margin:40px 0;
 
-				.click-text {
-					.rotate(-20deg);
-					font-size: 48px;
-					position: absolute;
-					left:550px;
-					top:95px;
-				}
-
-			}
-
-			.video-container {
-				margin:230px auto 140px;
-
-				.video, .video-text {
+				form {
+					background-color:@yellow;
+					width:675px;
+					margin:auto;
 					padding:6px;
-					width: 500px;
-				}
-
-				.video-text {
-					font-size: 22px;
-					line-height: 22px;
-					p {
-						margin-top:20px;
-					}
-				}
-				.video {
-					iframe {
+					.border-radius(3px);
+					i {
+						.border-top-left-radius(3px);
+						.border-bottom-left-radius(3px);
+						position:absolute;;
+						color:@grayLight;
 						display: block;
-						margin:auto;
+						background-color: transparent;
+						width: 50px;
+						height: 50px;
+						line-height:50px;
+						margin:0px;
+					}
+
+					input {
+						.border-top-left-radius(3px);
+						.border-bottom-left-radius(3px);
+
+						height: 30px;
+						border: none;
+						padding: 10px 10px 10px 50px;
+						margin: 0px;
+						width:500px;
+						color:@grayDarker;
+						font-size: 22px;
+						line-height: 26px;
+						vertical-align: middle;
+						font-style: italic;
+					}
+
+					input:focus {
+						border:none;
+					}
+					button:hover {
+						#gradient > .vertical(lighten(@yellow, 20%), @yellow);
+					}
+
+					button {
+						font-size:22px;
+						color:@black;
+						.border-top-right-radius(3px);
+						.border-bottom-right-radius(3px);
+						.border-top-left-radius(0px);
+						.border-bottom-left-radius(0px);
+  					#gradient > .vertical(@yellow, @yellow);
+						.box-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+						width:105px;
+						height:50px;
+						border:none;
+						padding:0px;
+						margin:0px;
 					}
 				}
 			}
@@ -103,9 +108,34 @@
 	}
 
 	.section3 {
+		.video-container {
+			margin:230px auto 140px;
+
+			.video, .video-text {
+				padding:6px;
+				width: 500px;
+			}
+
+			.video-text {
+				font-size: 22px;
+				line-height: 22px;
+				p {
+					margin-top:20px;
+				}
+			}
+			.video {
+				iframe {
+					display: block;
+					margin:auto;
+				}
+			}
+		}
+	}
+
+	.section4 {
 		background-color:@blueDark;
 		min-height:610px;
-
+		padding-bottom: 60px;
 		h1 {
 			display:block;
 			width:100%;
@@ -144,17 +174,22 @@
 				}
 				.performers {
 					padding:6px;
-					max-width:250px;
+					max-width:300px;
 				}
 				.performer {
-					font-size:18px;
-					text-decoration: underline;
+					font-size:16px;
+				}
+			}
+
+			.left {
+				.performers {
+					max-width:250px;
 				}
 			}
 		}
 	}
 
-	.section4 {
+	.section5 {
 		background: transparent url("/images/index-car.png") no-repeat left bottom;
 
 		.container {
@@ -210,7 +245,7 @@
 		}
 	}
 
-	.section5 {
+	.section6 {
 		min-height:30px;
 		border-top:2px solid #AAA;
 		padding:20px;
@@ -243,227 +278,4 @@
 
 }
 
-
-
-/* below this is the old homepage */
-#content-old {
-	#index-frame {
-		.clearfix();
-		background: transparent url('/images/home-background-top.jpg') no-repeat center top ;
-		min-height:300px;
-
-		.copy {
-			position:relative;
-			left:360px;
-			width:510px;
-			font-size:28px;
-			color:@blueDark;
-			text-shadow: #000 1px 2px 1px;
-			top:80px;
-		}
-
-		a#start-now {
-			background:transparent url('/images/layout/start-now-button.png') no-repeat center center;
-			height:130px;
-			width:202px;
-			display:block;
-			position:relative;
-			left:840px;
-			margin:40px 0;
-		}
-		a#start-now:hover {
-			background:transparent url('/images/layout/start-now-button-yellow.png') no-repeat center center;
-		}
-
-		#how-it-works {
-			margin:130px auto 0;
-			width:600px;
-			color:@blueDarker;
-			font-size: 20px;
-			text-align:center;
-		}
-
-		#circles {
-			width:600px;
-			.clearfix();
-			margin:15px auto;
-
-			.circle {
-				.clearfix();
-				background:transparent url('/images/home-circle.png') no-repeat center center;
-				height:109px;
-				width:140px;
-				float:left;
-
-				i {
-					position:relative;
-					top:35px;
-				}
-			}
-
-			.alligator {
-				margin:40px 22px;
-			}
-
-			.circle-text {
-				font-size:16px;
-				color:@blueDarker;
-				position:relative;
-				top:70px;
-			}
-
-			#circle-left {
-				margin-left:10px;
-			}
-			#circle-middle {
-				margin:0;
-			}
-			#circle-right {
-				margin-right:10px;
-			}
-
-		}
-
-		#feeds {
-			width: 1024px;
-			margin:60px auto 0;
-			.clearfix();
-
-			.feed {
-
-				float:left;
-				font-family: "Calibri";
-
-				.header {
-					text-align:center;
-					color:#FFF;
-					font-size: 18px;
-					line-height: 64px;
-					vertical-align: middle;
-				}
-
-				.body {
-					.clearfix();
-					height:550px;
-					overflow: auto;
-					padding-top:20px;
-				}
-			}
-			#feed-left {
-				.header {
-					margin-top:11px;
-					background:transparent url('/images/upcoming-events.png') no-repeat center top;
-					height:83px;
-					width:356px;
-					line-height:94px;
-					position:relative;
-					z-index: 1;
-				}
-				.body {
-					background-color:#CCC;
-					margin:-30px 1px 0;
-
-					.event-wrapper {
-
-						.event-date-box {
-							background: @grayLighter;
-							width:50px;
-							height:50px;
-							margin:10px;
-
-							.day,.time {
-								margin-top:2px;
-								text-transform: uppercase;
-								font-size:10px;
-								line-height:14px;
-							}
-
-							.event-date {
-								margin:0 0 2px;
-								font-size:11px;
-								font-weight:bold;
-								line-height:14px;
-							}
-						}
-
-						.info {
-							margin-left:20px;
-							margin-top:4px;
-
-							.cta {
-								margin:4px;
-								.clearfix();
-
-								.choose-event {
-									font-size:14px;
-									padding: 2px 5px;
-								}
-							}
-
-							.name, .venue,.location {
-								width:190px;
-								font-size:14px;
-							}
-						}
-					}
-				}
-			}
-
-			#feed-middle {
-				.header {
-					margin:10px 8px;
-					background:transparent url('/images/twitter-feed.png') no-repeat center top;
-					height:84px;
-					width:267px;
-					line-height:95px;
-					position:relative;
-					z-index: 1;
-				}
-				.body {
-					background-color:#333;
-					margin:-40px 10px;
-					padding:40px 0px 0px;
-					height:541px;
-				}
-
-			}
-
-			#feed-right {
-				.header {
-					margin-top:23px;
-					background:transparent url('/images/recent-posts.png') no-repeat center top;
-					height:70px;
-					width:360px;
-					position:relative;
-					z-index: 1;
-				}
-				.body {
-					background-color:#808080;
-					margin:-30px 1px 0;
-					font-size:18px;
-					height:551px;
-					.quote {
-						width:298px;
-						margin:0px 30px 65px;
-						text-align:left;
-						i {
-							margin:10px;
-						}
-					}
-
-					.name {
-						font-style: italic;
-						margin:12px;
-					}
-				}
-
-			}
-
-		}
-
-		#directory {
-			height:60px;
-		}
-	}
-}
 

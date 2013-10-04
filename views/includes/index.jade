@@ -28,38 +28,44 @@
 	section.section2
 		.container
 			.tag-line
-				p GOING TO LIVE EVENTS WITH FRIENDS IS AMAZING
-				p GETTING STUCK WITH THE BILL IS NOT.
-				a(href="/search").clearfix
-					.meet-wembli.pull-right MEET WEMBLI.
-			.click
-				.click-text.segoe Click!
-			.video-container.clearfix
-				.video-text.pull-left
-					p Love going to live events with friends but hate to plan it lest you end up getting stuck with the bill...AGAIN?
-					p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
-				.video.pull-left
-					iframe(width="480",height="360",src="//www.youtube.com/embed/kgtNax8p5og",frameborder="0",allowfullscreen)
+				p FIND TICKETS TO CONCERTS, THEATER & SPORTING EVENTS
+				p INVITE FRIENDS WITHOUT GETTING STUCK WITH THE BILL
+			.search
+				form#index-search-form.form-search.clearfix(method="GET", action="/search/events")
+					i.icon-search.icon-2x.pull-left
+					input.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
+					button.btn.btn-secondary.segoe.pull-left(href="#") search
 	section.section3
-		h1.calibri TOP SELLING PERFORMERS THIS WEEK
+		.video-container.clearfix
+			.video-text.pull-left
+				p Love going to live events with friends but hate to plan it lest you end up getting stuck with the bill...AGAIN?
+				p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
+			.video.pull-left
+				iframe(width="480",height="360",src="//www.youtube.com/embed/kgtNax8p5og",frameborder="0",allowfullscreen)
+	section.section4
+		h1.calibri UPCOMING EVENTS IN YOUR AREA
 		.container.clearfix
 			.top-events-arrow
 			ul.left.pull-left
-				h2 Top 10 Concerts:
-				high-sales-performers(parent-category-id="2",num-returned="10")
-					li.performers(ng-repeat="performer in concertPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
+				h2 Concerts:
+				//- keeping this cause it was cool
+					high-sales-performers(parent-category-id="2",num-returned="10")
+						li.performers(ng-repeat="performer in concertPerformers | filter:orderBy:'-Percent'")
+							a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
+				- each c, i in concerts
+					li.performers
+						a.performer.white(target="_self", ng-href="/search/events/#{c.Name}") #{i+1}. #{c.Name}
 			ul.middle.pull-left
-				h2 Top 10 Sports Teams:
-				high-sales-performers(parent-category-id="1",num-returned="10")
-					li.performers(ng-repeat="performer in sportsPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
+				h2 Sporting Events:
+				- each s, i in sports
+					li.performers
+						a.performer.white(target="_self", ng-href="/search/events/#{s.Name}") #{i+1}. #{s.Name}
 			ul.right.pull-left
-				h2 Top 10 Theater Shows:
-				high-sales-performers(parent-category-id="3",num-returned="10")
-					li.performers(ng-repeat="performer in theaterPerformers | filter:orderBy:'-Percent'")
-						a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
-	section.section4
+				h2 Theater:
+				- each t, i in theater
+					li.performers
+						a.performer.white(target="_self", ng-href="/search/events/#{t.Name}") #{i+1}. #{t.Name}
+	section.section5
 		.container.clearfix
 			.left.pull-left
 				.body.twitter-widget
@@ -76,8 +82,7 @@
 					.row.message
 						h2 Promos & Insider Info
 						.text Here at Wembli we love social networking and connecting with our favorite people – our beloved Wemblizens! That’s why we are all over Facebook, Twitter and Google+.
-
-	section.section5
+	section.section6
 		//-
 			.container
 				.footer-column.pull-left

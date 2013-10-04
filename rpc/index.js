@@ -16,8 +16,6 @@ exports.index = {
 				return me(err);
 			}
 
-			console.log(results);
-
 			return me(null, {
 				success: 1,
 				performers: results.PerformerPercent

@@ -61,13 +61,10 @@ exports.feed = {
 					planGuid: req.session.plan.guid,
 					activity: [activity]
 				});
-				console.log('CREATING FEED');
 				f.save(function(err) {
-					console.log('ERROR CREATING FEED: '+err);
 					me(null,data);
 				});
 			} else {
-				console.log('LOG ACTIVITY FOR FEED');
 				/* push on to the activity */
 				feed.activity.push(activity);
 				feed.markModified('activity');

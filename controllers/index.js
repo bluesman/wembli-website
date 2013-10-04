@@ -1,51 +1,79 @@
-var ticketNetwork = require('../lib/wembli/ticketnetwork');
-var async         = require('async');
-var eventRpc      = require('../rpc/event').event;
-var dateUtils     = require('date-utils');
-var ua            = require('useragent');
-//ua(true); //sync with remote server to make sure we have the latest and greatest
-var querystring = require('querystring');
-var wembliModel = require('wembli-model'),
-    Customer    = wembliModel.load('customer'),
-    Plan        = wembliModel.load('plan');
+var eventRpc = require('../rpc/event').event;
+var wembliUtils = require('../lib/wembli/utils');
+var async = require('async');
 
 module.exports = function(app) {
 
-	app.get(/^\/(index)?$/, function(req, res) {
-		var args = {};
-		args.beginDate     = getBeginDate();
-		args.orderByClause = 'Date'; //order by date
+	function indexView(req, res, callback) {
+		var defaults = {
+			beginDate: wembliUtils.searchBeginDate(),
+			orderByClause: 'Date',
+			numberOfEvents: 10
+		};
 
 		if (typeof req.session.visitor.tracking.postalCode != "undefined") {
-			args.nearZip = req.session.visitor.tracking.postalCode;
+			defaults.nearZip = req.session.visitor.tracking.postalCode;
 		}
 
-		//get nearby events:
-		eventRpc['get'].apply(function(err,results) {
+		var view = {};
+		/* get concerts, sport and theater events in parallel */
+		async.parallel([
+			/* get 10 concerts nearby (categoryId: 2) */
+			function(cb) {
+				var args = defaults;
+				args.parentCategoryID = 2;
+				eventRpc['get'].apply(function(err, results) {
+					view.concerts = (typeof results.event !== "undefined") ? results.event : [];
+					cb();
+				}, [args, req, res]);
+			},
+
+			/* get 10 sports nearby (categoryId: 1) */
+			function(cb) {
+				var args = defaults;
+				args.parentCategoryID = 1;
+				eventRpc['get'].apply(function(err, results) {
+					view.sports = (typeof results.event !== "undefined") ? results.event : [];
+					cb();
+				}, [args, req, res]);
+			},
+
+			/* get 10 theater nearby (categoryId: 3) */
+			function(cb) {
+				var args = defaults;
+				args.parentCategoryID = 3;
+				eventRpc['get'].apply(function(err, results) {
+					view.theater = (typeof results.event !== "undefined") ? results.event : [];
+					cb();
+				}, [args, req, res]);
+			},
+
+		], function(err, results) {
+			callback(null, view);
+		});
+	};
+
+
+	app.get(/^\/(index)?$/, function(req, res) {
+		indexView(req, res, function(err, view) {
 			res.render('index', {
-				events: results.event,
-				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+				concerts: view.concerts,
+				sports: view.sports,
+				theater: view.theater,
+
 			});
-		},[args,req,res]);
+		});
 	});
 
+
 	app.get('/partials/index', function(req, res) {
-		var args = {};
-		args.beginDate     = getBeginDate();
-		args.orderByClause = 'Date'; //order by date
-
-		if (typeof req.session.visitor.tracking.postalCode != "undefined") {
-			args.nearZip = req.session.visitor.tracking.postalCode;
-		}
-
-		//get nearby events:
-		eventRpc['get'].apply(function(err,results) {
+		indexView(req, res, function(err, view) {
 			res.render('partials/index', {
-				events: results.event,
-				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+				concerts: view.concerts,
+				sports: view.sports,
+				theater: view.theater
 			});
-		},[args,req,res]);
-
+		});
 	});
 
 	app.get('/about-us', function(req, res) {
@@ -73,36 +101,27 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/email/:template', function(req,res) {
+	app.get('/email/:template', function(req, res) {
 		var argsMap = {
 			'forgot-password': {
-				resetLink:'#',
+				resetLink: '#',
 			},
 			'welcome': {
 
 			},
-			'signup' : {
-				confirmLink:'#',
+			'signup': {
+				confirmLink: '#',
 			},
 			'rsvp': {
 				rsvpDate: Date.today(),
-				rsvpLink:'#',
+				rsvpLink: '#',
 				message: "hey man come join me at this event - it'll be a blast",
 			}
 
 		};
 
-		return res.render('email-templates/'+req.param('template'),argsMap[req.param('template')]);
+		return res.render('email-templates/' + req.param('template'), argsMap[req.param('template')]);
 
 	});
 
 };
-
-function getBeginDate() {
-	var daysPadding = 4; //how many days from today for the beginDate
-	var d = Date.today();
-	d2 = new Date(d);
-	d2.setDate(d.getDate() + daysPadding);
-	//format the beginDate for the tn query
-	return d2.format("shortDate");
-}
