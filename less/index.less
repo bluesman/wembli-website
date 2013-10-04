@@ -21,14 +21,21 @@
 
 #index-frame {
 	section {
-		min-height:500px;
+
+		h2 {
+			font-size:38px;
+			color:@black;
+			font-weight:bold;
+		}
+
+
 	}
 
 	.section2 {
-		position:relative;
-		top:-275px;
-		width:1024px;
-		margin:auto;
+		position:absolute;
+		top:275px;
+		width:100%;
+
 
 		.container {
 
@@ -54,7 +61,7 @@
 					i {
 						.border-top-left-radius(3px);
 						.border-bottom-left-radius(3px);
-						position:absolute;;
+						position:absolute;
 						color:@grayLight;
 						display: block;
 						background-color: transparent;
@@ -108,15 +115,66 @@
 	}
 
 	.section3 {
-		.video-container {
-			margin:230px auto 140px;
+		position:relative;
+		padding:40px 0 100px 0;
 
-			.video, .video-text {
-				padding:6px;
-				width: 500px;
+		h2 {
+			margin-top:20px;
+		}
+
+		.wembli-man-arrow {
+			background: transparent url("/images/index-wembli-man-arrow.png") no-repeat center center;
+			height:230px;
+			width:965px;
+			position:absolute;
+			top:0;
+			left:0;
+		}
+
+		.info-boxes {
+			margin-top:160px;
+
+			.box {
+				color:@black;
+				width:215px;
+				padding:0 20px;
+
+				h3 {
+					font-weight:bold;
+					font-size:26px
+				}
+
+				.header {
+					i {
+						font-size:22px;
+					}
+					h4 {
+						font-size:24px;
+						font-weight:bold;
+						line-height:24px;
+					}
+				}
+
+				.body {
+					padding:10px;
+					text-align:left;
+				}
 			}
+		}
+	}
+
+	.section4 {
+		background-color:@gray;
+
+		.video-container {
+			margin:0 auto;
+			padding:100px 0;
+			width:1024px;
+			color:@black;
+			text-align:left;
 
 			.video-text {
+				width:500px;
 				font-size: 22px;
 				line-height: 22px;
 				p {
@@ -124,6 +182,7 @@
 				}
 			}
 			.video {
+				width:480px;
 				iframe {
 					display: block;
 					margin:auto;
@@ -132,7 +191,7 @@
 		}
 	}
 
-	.section4 {
+	.section5 {
 		background-color:@blueDark;
 		min-height:610px;
 		padding-bottom: 60px;
@@ -189,7 +248,7 @@
 		}
 	}
 
-	.section5 {
+	.section6 {
 		background: transparent url("/images/index-car.png") no-repeat left bottom;
 
 		.container {
@@ -205,6 +264,11 @@
 						position:absolute;
 						top:136px;
 						right:430px;
+					}
+					.row {
+						h2 {
+							font-size:22px;
+						}
 					}
 				}
 			}
@@ -245,7 +309,7 @@
 		}
 	}
 
-	.section6 {
+	.section7 {
 		min-height:30px;
 		border-top:2px solid #AAA;
 		padding:20px;

@@ -1059,7 +1059,9 @@ function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 	};
 };
 
-function SearchCtrl($scope) {};
+function SearchCtrl($scope) {
+	$scope.$broadcast('search-page-loaded', {});
+};
 
 function SignupCtrl($scope, $http, wembliRpc) {
 	//init login vars
@@ -1132,7 +1134,14 @@ function SupplyPasswordCtrl($scope) {
 };
 
 function HeaderCtrl($scope) {
-
+	$scope.searchInProgress = false;
+	$scope.$on('search-page-loaded', function() {
+		$scope.searchInProgress = false;
+	});
+	$scope.submitSearch = function() {
+		console.log('SUBMIT SEARCH');
+		$scope.searchInProgress = true;
+	}
 }
 
 function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal) {

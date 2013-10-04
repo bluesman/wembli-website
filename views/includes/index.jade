@@ -36,13 +36,47 @@
 					input.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
 					button.btn.btn-secondary.segoe.pull-left(href="#") search
 	section.section3
+		.container
+			h2.calibri HOW IT WORKS
+			.wembli-man-arrow
+			.info-boxes
+				.box.one.pull-left.clearfix
+					h3.number 1.
+					.header.clearfix
+						i.icon-search.icon-2x.pull-left
+						h4.pull-left You pick an event
+					.body
+						p Whether you have an event in mind, or you want some ideas of what’s available in your area, use Wembli to search for events throughout the U.S.
+				.box.two.pull-left.clearfix
+					h3.number 2.
+					.header.clearfix
+						i.icon-group.icon-2x.pull-left
+						h4.pull-left Invite friends
+					.body
+						p They get to vote on things like ticket prices and any add ons you choose for your outing i.e.: parking, restaurant deals & hotel
+				.box.three.pull-left.clearfix
+					h3.number 3.
+					.header.clearfix
+						i.icon-credit-card.icon-2x.pull-left
+						h4.pull-left Everyone pays
+					.body
+						p Gone are the days of you getting stuck footing the bill.  Using Wembli, you can have your friends pay up front or you can collect after.  You choose.
+				.box.four.pull-left.clearfix
+					h3.number 4.
+					.header.clearfix
+						i.icon-ticket.icon-2x.pull-left
+						h4.pull-left Tickets are bought
+					.body
+						p We aggregate tickets from across the web - so you don’t waste precious time bouncing from site to site.  We even know how many seats you can get together.
+	section.section4
 		.video-container.clearfix
 			.video-text.pull-left
+				h2.calibri ONE STOP SHOP FOR EVENTS
 				p Love going to live events with friends but hate to plan it lest you end up getting stuck with the bill...AGAIN?
 				p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
-			.video.pull-left
+			.video.pull-right
 				iframe(width="480",height="360",src="//www.youtube.com/embed/kgtNax8p5og",frameborder="0",allowfullscreen)
-	section.section4
+	section.section5
 		h1.calibri UPCOMING EVENTS IN YOUR AREA
 		.container.clearfix
 			.top-events-arrow
@@ -54,18 +88,18 @@
 							a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
 				- each c, i in concerts
 					li.performers
-						a.performer.white(target="_self", ng-href="/search/events/#{c.Name}") #{i+1}. #{c.Name}
+						a.performer.white(target="_self", ng-href="/search/events/#{c.Name}") #{i+1}) #{c.Name}
 			ul.middle.pull-left
 				h2 Sporting Events:
 				- each s, i in sports
 					li.performers
-						a.performer.white(target="_self", ng-href="/search/events/#{s.Name}") #{i+1}. #{s.Name}
+						a.performer.white(target="_self", ng-href="/search/events/#{s.Name}") #{i+1}) #{s.Name}
 			ul.right.pull-left
 				h2 Theater:
 				- each t, i in theater
 					li.performers
-						a.performer.white(target="_self", ng-href="/search/events/#{t.Name}") #{i+1}. #{t.Name}
-	section.section5
+						a.performer.white(target="_self", ng-href="/search/events/#{t.Name}") #{i+1}) #{t.Name}
+	section.section6
 		.container.clearfix
 			.left.pull-left
 				.body.twitter-widget
@@ -82,7 +116,7 @@
 					.row.message
 						h2 Promos & Insider Info
 						.text Here at Wembli we love social networking and connecting with our favorite people – our beloved Wemblizens! That’s why we are all over Facebook, Twitter and Google+.
-	section.section6
+	section.section7
 		//-
 			.container
 				.footer-column.pull-left

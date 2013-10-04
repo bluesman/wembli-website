@@ -26,7 +26,7 @@ block header
 			li.hide
 				a(href="/jobs") jobs
 
-	header#header.clearfix
+	header#header.clearfix(ng-controller="HeaderCtrl")
 		a.slidepanel.left-container.pull-left.clearfix(href="#",data-slidepanel="panel")
 			i.icon-reorder
 			span &nbsp;menu
@@ -36,9 +36,11 @@ block header
 			.signup.pull-left
 				a(href="/signup") signup
 		.middle-container.pull-left.clearfix(ng-show="loggedIn")
-			.search.pull-left
-				a(href="/search")
-					i.icon-search &nbsp;search
+			.header-search.pull-left
+				form#header-search-form.form-search.clearfix(ng-submit="submitSearch()", method="GET", action="/search/events")
+					i.icon-search.pull-left(ng-hide="searchInProgress")
+					i.icon-cog.icon-spin.pull-left(ng-show="searchInProgress")
+					input.pull-left(type="text", ng-model="search", name="search", placeholder="")
 			//- .login.pull-left
 				a(href="/logout") logout
 		.right-container.pull-right

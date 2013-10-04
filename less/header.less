@@ -83,12 +83,56 @@ header {
 	left:0;
 	@shadow:0 1px 30px 0px rgba(0,0,0,.25);
 	.box-shadow(@shadow);
-	font-size:22px;
+	font-size:18px;
 
-	.search, .login, .signup, .menu-text {
+	.login, .signup, .menu-text {
 		line-height:18px;
 		vertical-align: middle;
 		padding:0 6px;
+		margin:7px 0 ;
+	}
+
+	.header-search {
+		margin:0;
+
+		form {
+			background-color:@grayLight;
+			color:@grayLight;
+			width:300px;
+			margin:auto;
+			padding:2px;
+			.border-radius(10px);
+			i {
+				.border-top-left-radius(8px);
+				.border-bottom-left-radius(8px);
+				position:absolute;
+				display: block;
+				background-color: transparent;
+				line-height:28px;
+				margin:0px 0px 0px 3px;
+				font-size:18px;
+			}
+
+			input {
+				.border-radius(8px);
+
+				height: 20px;
+				border: none;
+				padding: 4px 4px 4px 30px;
+				margin: 0px;
+				width:266px;
+
+				font-size: 14px;
+				line-height: 18px;
+				vertical-align: middle;
+				font-style: italic;
+			}
+
+			input:focus {
+
+			}
+		}
+
 	}
 
 
@@ -97,13 +141,13 @@ header {
 		margin:20px;
 
 		i {
-			font-size:18px;
+			font-size:14px;
 			text-align: right;
 		}
 	}
 
 	.middle-container {
-		margin:20px 0;
+		margin:13px 0;
 
 		.login, .signup {
 
@@ -126,22 +170,5 @@ header {
 			}
 
 		}
-	}
-}
-
-
-/* below this is the old header */
-#header-old {
-	position:fixed;
-	z-index:4000;
-	top:0;
-	left:0;
-
-	#logo {
-    display:block;
-    margin:20px;
-    height:85px;
-    width:200px;
-    background: url('/images/layout/wembli-orange-beta-small.png') @white center center no-repeat;
 	}
 }
