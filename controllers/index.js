@@ -55,6 +55,7 @@ module.exports = function(app) {
 
 
 	app.get(/^\/(index)?$/, function(req, res) {
+		req.syslog.notice('loaded index');
 		indexView(req, res, function(err, view) {
 			res.render('index', {
 				concerts: view.concerts,

@@ -3,6 +3,7 @@ var express = require('express');
 var redis = require('connect-redis')(express);
 var everyauth = require('everyauth');
 var wemblirpc = require('./lib/wembli/jsonrpc');
+var syslog = require('./lib/wembli/syslog');
 var fs = require('fs');
 
 /* init the log file - there is already an nginx access log */
@@ -98,6 +99,7 @@ app.use(express.session({
 }));
 
 app.use(express.bodyParser());
+app.use(require('./lib/wembli/syslog'));
 app.use(require('./lib/wembli/visitor'));
 app.use(require('./lib/wembli/customer'));
 app.use(require('./lib/wembli/plan'));

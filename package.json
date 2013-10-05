@@ -23,7 +23,8 @@
     "ntwitter": "0.5.x",
     "twitter-text": "1.6.x",
     "keen.io": "0.0.x",
-    "yamlparser": "0.0.2"
+    "yamlparser": "0.0.2",
+    "node-syslog":"1.1.x"
   },
   "repository": {
     "type": "git",
