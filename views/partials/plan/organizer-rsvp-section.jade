@@ -67,6 +67,6 @@ section#section2.organizer-rsvp-section.rsvp-section.plan-section.even
 			.icon-warning-sign.icon-2x.pull-left
 			.text.pull-left
 				span Your account email address is not confirmed.  Wembli will not send emails out to your guests until your email address is confirmed.&nbsp;
-				a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Need another confirmation email?
+				a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Click here to get another confirmation email?
 				i.icon-cog.icon-spin(ng-show="confirmationEmailInProgress")
 		include ../includes/invitees-list

@@ -5770,6 +5770,16 @@ a:focus {
   font-size: 20px;
   font-weight: bold;
 }
+.alert-danger {
+  background-color: #FF0000;
+  color: #ffffff !important;
+}
+.alert-danger a {
+  color: #060F80 !important;
+}
+.alert-danger a:hover {
+  color: #000 !important;
+}
 .module {
   *zoom: 1;
   -webkit-border-radius: 4px;
@@ -12317,7 +12327,7 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .confirmed-alert,
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .not-confirmed-warning {
-  width: 540px;
+  max-width: t600px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .confirmed-alert a:hover,
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .not-confirmed-warning a:hover {
@@ -12424,7 +12434,7 @@ a#facebook-login-button {
   margin: 20px 0;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .controls .change-add-on-link {
-  margin: 10px 0px;
+  margin: 10px dire0px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .add-on-row .controls .view-add-on-link {
   margin-right: 20px;
