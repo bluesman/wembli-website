@@ -12623,7 +12623,7 @@ a#facebook-login-button {
   right: 30px;
   width: 485px;
   text-align: right;
-  border-top: thin solid #999999;
+  border-top: thin solid #cccccc;
   padding: 10px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .form-controls .skip-step {
