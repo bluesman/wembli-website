@@ -1,128 +1,117 @@
-#search-box {
-	margin:auto;
-	width:510px;
-	height:70px;
-	background: @white url('/images/search-box.png') no-repeat center top;
-	form#search-form {
-		.clearfix();
-		.formFieldState(@grayLight,@gray);
-
-		#query {
-			height:40px;
-			width:400px;
-			float:left;
-			font-size:18px;
-			margin:10px 0 0 10px;
-			padding-left:10px;
-		}
-
-		button#submit {
-			float:left;
-			display:block;
-			width:60px;
-			height:48px;
-			margin:10px 0 0 10px;
-			background-color:@blue;
-			border:none;
-			.border-radius(2px);
-
-			#magnifying-glass {
-				.transition-duration(0s);
-				width:25px;
-				height:50px;
-				margin:auto;
-				background:transparent url('/images/magnifying-glass.png') no-repeat 0 center;
-			}
-		}
-
-		button#submit:hover {
-			#magnifying-glass {
-				background:transparent url('/images/magnifying-glass.png') no-repeat -24px center;
-			}
-		}
-	}
-}
-
 #content {
 	#search-frame {
-		background: @white url('/images/home.png') no-repeat 100px 40px;
-		.clearfix();
 
-		#left {
-			float:left;
-			min-width:400px;
-			.clearfix();
-			position:relative;
-			margin-left:100px;
-
-			#copy {
+		.container {
+			#search-left.left {
 				position:relative;
-				.rotate(-4deg);
-				width:220px;
-				top:250px;
-				left:60px;
-				text-align:center;
-				font-size:16px;
+				min-width:330px;
+
+				.search-arrow {
+					background: transparent url('/images/search-arrow.png') no-repeat center right;
+					width:100%;
+					height:250px;
+				}
+
+				.copy {
+					.rotate(-4deg);
+					width:220px;
+					text-align:center;
+					font-size:16px;
+					margin:auto;
+					height:50px;
+				}
+
+				.wembliman {
+					background: transparent url('/images/question.png') no-repeat center center;
+					height: 175px;
+					width:272px;
+				}
 			}
-		}
 
-		#right {
-			margin-left:350px;
-			.clearfix();
-			#search-wrapper {
-				background-color:@white;
-				float:right;
-				position:relative;
-				max-width:800px;
-				min-width:650px;
-				padding-right: 20px;
-				.clearfix();
+			#search-right.right {
 
-				#arrow {
-					position:absolute;
-					top:0px;
-					left:-60px;
-					float:left;
-					background: transparent url('/images/orange-arrow.png') no-repeat center center;
-					width:112px;
-					height:84px;
-					margin-top:20px;
+				.search {
+					margin:40px 0 20px 0;
 
-					.arrow-text {
-						color:@white;
-						.rotate(6deg);
-						text-transform:uppercase;
-						position:absolute;
-						top:21px;
-						left:15px;
+					form {
+						background-color:@yellow;
+						width:675px;
+						margin:auto;
+						padding:6px;
+						.border-radius(3px);
+						i {
+							.border-top-left-radius(3px);
+							.border-bottom-left-radius(3px);
+							position:absolute;
+							color:@grayLight;
+							display: block;
+							background-color: transparent;
+							width: 50px;
+							height: 50px;
+							line-height:50px;
+							margin:0px;
+						}
+
+						input {
+							.border-top-left-radius(3px);
+							.border-bottom-left-radius(3px);
+
+							height: 30px;
+							border: none;
+							padding: 10px 10px 10px 50px;
+							margin: 0px;
+							width:500px;
+							color:@grayDarker;
+							font-size: 22px;
+							line-height: 26px;
+							vertical-align: middle;
+							font-style: italic;
+						}
+
+						input:focus {
+							border:none;
+						}
+						button:hover {
+							#gradient > .vertical(lighten(@yellow, 20%), @yellow);
+						}
+
+						button {
+							font-size:22px;
+							color:@black;
+							.border-top-right-radius(3px);
+							.border-bottom-right-radius(3px);
+							.border-top-left-radius(0px);
+							.border-bottom-left-radius(0px);
+	  					#gradient > .vertical(@yellow, @yellow);
+							.box-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+							width:105px;
+							height:50px;
+							border:none;
+							padding:0px;
+							margin:0px;
+						}
 					}
 				}
 
-				#search {
-					background-color: @white;
-					text-align:left;
-					padding-bottom:90px;
-					#search-results {
-						background:@grayLighter;
-						padding-top:40px;
-						min-height:600px;
+				.results {
+					background:@grayLighter;
 
-						.loading {
-							padding: 4px;
-							text-align:center;
-						}
+					.loading {
+						padding: 4px;
+						text-align:center;
+					}
 
-						a#more-events {
-							display:block;
-							background-color: @grayLight;
-							text-align:center;
-							height:30px;
-							line-height: 30px;
-							vertical-align: middle;
 
-							i {
-								margin:1px 0px 0px 8px;
-							}
+					a#more-events {
+						display:block;
+						background-color: @grayLight;
+						text-align:center;
+						height:30px;
+						line-height: 30px;
+						vertical-align: middle;
+
+						i {
+							margin:1px 0px 0px 8px;
 						}
 					}
 				}

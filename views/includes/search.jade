@@ -27,29 +27,30 @@ lastEventId   = undefined;
 	input(type="hidden", name="postalCode", value="#{req.session.visitor.tracking.postalCode}", ng-init="postalCode='#{req.session.visitor.tracking.postalCode}'")
 	input(type="hidden", name="lastEventDate", ng-init="lastEventDate='#{lastEventDate}'", value="#{lastEventDate}")
 	input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'", value="#{lastEventId}")
-	#left
-		#copy.segoe Search for the event you want to go to...
-	#right
-		#search-wrapper
-			#search
-				#search-results(ng-controller="EventListCtrl")
-					#search-box
-						form#search-form.form-search(method="GET", action="/search/events")
-							input#query(ng-model="search",name="search",placeholder="#{placeholder}",value="#{search}")
-							button#submit(href="#")
-								#magnifying-glass
-					if (typeof partial != "undefined")
-						include ../partials/includes/event-list
+	.container.clearfix
+		#search-left.left.pull-left
+			.search-arrow
+			.copy.segoe Choose for the event you want to go to...
+			.wembliman
+		#search-right.right.pull-left
+			.search
+				form#index-search-form.form-search.clearfix(method="GET", action="/search/events", ng-submit="submitSearch()")
+					i.icon-search.icon-2x.pull-left(ng-hide="searchInProgress")
+					i.icon-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
+					input#query.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
+					button.btn.btn-secondary.segoe.pull-left(href="#") search
+			.results(ng-controller="EventListCtrl")
+				if (typeof partial != "undefined")
+					include ../partials/includes/event-list
+				else
+					if ((typeof events == "undefined") || (typeof events[0] === "undefined"))
+						#event-list-wrapper
+							h3= heading
+							.no-results Aww man! We didn't find any matching events...
 					else
-						if ((typeof events == "undefined") || (typeof events[0] === "undefined"))
-							#event-list-wrapper
-								h3= heading
-								.no-results Aww man! We didn't find any matching events...
-						else
-							include event-list
-					a#more-events(ng-click="moreEvents()")
-						span= seeMore
-						i.icon-chevron-down
-				#arrow
-					h2.arrow-text Search
+						include event-list
+				a#more-events(ng-click="moreEvents()")
+					span= seeMore
+					i.icon-chevron-down
+
 
