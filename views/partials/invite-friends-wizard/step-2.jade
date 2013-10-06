@@ -1,6 +1,7 @@
 form#invite-wizard-rsvp-form.invite-wizard-rsvp-form(name="rsvp")
 	h2 Choose The RSVP Date:
-	p OK! Your plan is to go to {{plan.event.eventVenue}} in {{plan.event.eventCity}} on {{plan.event.eventDate| date:'MMM d, yyyy'}}.  When should your guests RSVP?
+	//-
+		p OK! Your plan is to go to {{plan.event.eventVenue}} in {{plan.event.eventCity}} on {{plan.event.eventDate| date:'MMM d, yyyy'}}.  When should your guests RSVP?
 	.alert.alert-info(ng-show="{'split-first':true}[plan.preferences.payment]")
 		strong Note:&nbsp;
 		span The sooner your friends rsvp, the sooner you'll be able to lock-in and purchase your tickets.

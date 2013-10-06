@@ -12491,7 +12491,7 @@ a#facebook-login-button {
 }
 #invitation-modal.modal {
   width: 775px;
-  margin: -345px 0 0 -375px;
+  margin: -200px 0 0 -375px !important;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body {
   *zoom: 1;
@@ -12519,7 +12519,7 @@ a#facebook-login-button {
 #invitation-modal.modal #invite-friends-wizard .modal-body #left {
   background-color: #cccccc;
   width: 30%;
-  height: 550px;
+  height: 450px;
   font-size: 16px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #left a.wizard-step-nav {
@@ -12546,7 +12546,7 @@ a#facebook-login-button {
   background-color: #6da1b7;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right {
-  height: 450px;
+  height: 350px;
   width: 500px;
   overflow-y: auto;
   padding: 5px 20px;
@@ -12563,7 +12563,7 @@ a#facebook-login-button {
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-rsvp-form .datepicker-container {
   position: relative;
-  margin: 40px auto;
+  margin: 20px auto;
   width: 260px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .wizard-step {
@@ -12619,8 +12619,12 @@ a#facebook-login-button {
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .form-controls {
   position: absolute;
-  bottom: 30px;
+  bottom: 26px;
   right: 30px;
+  width: 485px;
+  text-align: right;
+  border-top: thin solid #999999;
+  padding: 10px;
 }
 #invitation-modal.modal #invite-friends-wizard .modal-body #right .form-controls .skip-step {
   margin-right: 20px;
