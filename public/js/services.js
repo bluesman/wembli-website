@@ -121,6 +121,22 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 
 		//templates can't make a date for some reason
 		$rootScope.getDate = function(d) {
+			/* get current timezone offset for this browser */
+			var tmpDate = new Date()
+			var h = '0' + tmpDate.getTimezoneOffset()/60;
+			h = h.substr(-2);
+			var m = '0' + tmpDate.getTimezoneOffset()%60;
+			m = m.substr(-2);
+			var offset = h + ':' + m;
+
+			console.log('offset is: '+offset);
+			var operator = (tmpDate.getTimezoneOffset() > 0 ) ? '-' : '+';
+
+			if (/Z$/.test(d)) {
+				d = d.substring(0, s.length - 1);
+			}
+			d+offset;
+			console.log('DATE: '+d);
 			return new Date(d);
 			//return $filter('date')(d, "MM-dd-yy");
 		}

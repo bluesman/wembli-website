@@ -8,7 +8,7 @@
 .event-date-box
 	span.day {{getDate(event.Date)| date:'EEE'}}
 	span.event-date {{getDate(event.Date)| date:'MMM d'}}
-	span.time {{getDate(event.Date+'-07:00')| date:'h:mm a'}}
+	span.time {{getDate(event.Date)| date:'h:mm a'}}
 .info
 	.pull-left
 		span.name.block {{event.Name}}
