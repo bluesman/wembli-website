@@ -53,7 +53,7 @@ form#invite-wizard-login-form.invite-wizard-step1-form(name="login",ng-show="sho
 		.or(ng-hide="customer.id || facebook.service.getAuth()")
 			span OR
 		.facebook-login(ng-hide="customer.id || facebook.service.getAuth()")
-			a#facebook-login-button.btn.btn-primary(target="_self",href="/auth/facebook")
+			a#facebook-login-button.btn.btn-primary(target="_self",href="/auth/facebook?redirectUrl=/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}")
 				i.icon-facebook.icon-2x.pull-left
 				span Login with Facebook
 		.switch-login
