@@ -116,7 +116,7 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
               $scope.signup.noContinue = true;
               return $scope.gotoStep('step1');
             }
-            $location.hash('');
+            $location.hash('#step2');
             $location.path('/plan');
           };
 
