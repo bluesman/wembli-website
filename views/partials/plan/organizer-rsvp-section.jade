@@ -25,7 +25,7 @@ section#section2.organizer-rsvp-section.rsvp-section.plan-section.even
 							strong Please be aware that tickets are NOT locked in until they are paid for.
 					span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;You have chosen to foot the bill for this plan - w00t!
 					span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, you will lock in the tickets then send a link for everyone to pay for their portion of the outing.
-				button.btn.btn-orange.btn-large.invite-friends-wizard-button(href="#step3",ng-click="gotoStep('step3')")
+				button.btn.btn-orange.btn-large.invite-friends-wizard-button(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#step3")
 					span Invite More People&nbsp;
 					i.icon-double-angle-right
 
