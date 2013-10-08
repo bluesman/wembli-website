@@ -708,7 +708,7 @@ exports.customer = {
 	},
 
 	sendForgotPasswordEmail: function(args, req, res) {
-
+		var me = this;
 		var data = {
 			success: 1
 		};
@@ -723,6 +723,7 @@ exports.customer = {
 			if (c === null) {
 				data.error = true;
 				data.noCustomer = true;
+
 				return me(null, data);
 			}
 			/* send forgot password email */

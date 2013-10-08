@@ -8349,6 +8349,9 @@ header .right-container .logo-45 h1 {
   height: 175px;
   width: 272px;
 }
+#content #search-frame .container #search-right.right {
+  max-width: 690px;
+}
 #content #search-frame .container #search-right.right .search {
   margin: 40px 0 20px 0;
 }
@@ -12338,11 +12341,14 @@ a#facebook-login-button {
 #plan-frame #right #plan-feed .feed i {
   margin: 5px;
 }
-.modal textarea {
+#invitation-frame .container {
+  margin-top: 20px;
+}
+#invitation-frame .container textarea {
   width: 520px;
   height: 80px;
 }
-.modal .char-count {
+#invitation-frame .container .char-count {
   display: inline-block;
   vertical-align: middle;
   background: none repeat scroll 0 0 #F5F5F5;
@@ -12353,251 +12359,283 @@ a#facebook-login-button {
   width: 2em;
   font-size: 12px;
 }
-#invitation-modal.modal {
-  width: 775px;
-  margin: -200px 0 0 -375px !important;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body {
-  *zoom: 1;
-  padding: 0;
-  max-height: 650px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body:after {
-  clear: both;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body:after {
-  clear: both;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #left {
-  background-color: #cccccc;
-  width: 30%;
-  height: 450px;
-  font-size: 16px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #left a.wizard-step-nav {
-  display: block;
-  color: #666666;
-  line-height: 30px;
-  height: 30px;
-  vertical-align: center;
-  padding: 6px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #left a.wizard-step-nav div {
-  margin-left: 40px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #left a.wizard-step-nav div i {
-  float: right;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #left a.wizard-step-nav i {
-  float: left;
-  margin: 6px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #left a:hover,
-#invitation-modal.modal #invite-friends-wizard .modal-body #left a.active {
+#invitation-frame #invite-friends-wizard .box {
+  margin: 10px;
+  background-color: #4380b8;
   color: #ffffff;
-  background-color: #6da1b7;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right {
-  height: 350px;
-  width: 500px;
-  overflow-y: auto;
-  padding: 5px 20px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .invite-wizard-step1-form .switch-login,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .invite-wizard-step1-form .or,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .invite-wizard-step1-form .facebook-login {
-  width: 100%;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  height: 40px;
+  width: 40px;
+  font-size: 24px;
+  line-height: 40px;
+  vertical-align: middle;
   text-align: center;
-  margin-top: 30px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #facebook-login-button {
+#invitation-frame #invite-friends-wizard a.complete > .box-small,
+#invitation-frame #invite-friends-wizard a.active > .box-small,
+#invitation-frame #invite-friends-wizard a:hover > .box-small,
+#invitation-frame #invite-friends-wizard .box:hover,
+#invitation-frame #invite-friends-wizard .box.active,
+#invitation-frame #invite-friends-wizard .box.complete {
+  background-color: #ffcc00;
+  color: #000000;
+}
+#invitation-frame #invite-friends-wizard .box-small {
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0 4px;
+}
+#invitation-frame #invite-friends-wizard .form-controls {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 100%;
+  text-align: right;
+  border-top: thin solid #cccccc;
+  background-color: #ffffff;
+}
+#invitation-frame #invite-friends-wizard .form-controls .wembli-friends {
+  background: transparent url('/images/tickets-preview-wembliman.png') no-repeat center center;
+  position: absolute;
+  top: -82px;
+  left: 10px;
+  height: 80px;
+  width: 150px;
+}
+#invitation-frame #invite-friends-wizard .form-controls a,
+#invitation-frame #invite-friends-wizard .form-controls button {
+  margin: 20px;
+}
+#invitation-frame #invite-friends-wizard .form-controls .skip-step {
+  margin-right: 20px;
+}
+#invitation-frame #invite-friends-wizard .icon-question-sign {
+  color: #4380b8;
+}
+#invitation-frame #invite-friends-wizard .icon-question-sign:before {
+  margin-right: 10px;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-left {
+  white-space: nowrap;
+  width: 300px;
+  font-size: 14px;
+  text-align: left;
+  line-height: 20px;
+  vertical-align: middle;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-left a.wizard-step-nav {
+  display: block;
+  padding: 6px;
+  color: #000000;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-left a.wizard-step-nav .data {
+  color: #4380b8;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-left a:hover {
+  color: #000000;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-left a:hover .data {
+  color: #ffcc00;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-left .invite-wizard-nav {
+  margin-top: 106px;
+  padding: 20px;
+  -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right {
+  width: 660px;
+  padding: 5px 0 0 60px;
+  text-align: left;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress h2 {
+  color: #000000;
+  font-size: 20px;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress .invite-friends-progress-boxes {
+  width: 300px;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress .invite-friends-progress-boxes .box.first {
+  margin: 10px 10px 10px 0;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right .invite-wizard-step1-form .switch-login,
+#invitation-frame #invite-friends-wizard .invite-wizard-right .invite-wizard-step1-form .or,
+#invitation-frame #invite-friends-wizard .invite-wizard-right .invite-wizard-step1-form .facebook-login {
+  width: 100%;
+  text-align: left;
+  margin-top: 15px;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right #facebook-login-button {
   margin: 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-rsvp-form .datepicker-container {
+#invitation-frame #invite-friends-wizard .invite-wizard-right #invite-wizard-rsvp-form {
+  min-height: 490px;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right #invite-wizard-rsvp-form .datepicker-container {
   position: relative;
-  margin: 20px auto;
+  margin: 20px 0 0;
   width: 260px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .wizard-step {
-  width: 485px;
+#invitation-frame #invite-friends-wizard .invite-wizard-right .wizard-step {
+  min-height: 480px;
+  width: 100%;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right p {
+#invitation-frame #invite-friends-wizard .invite-wizard-right #step5.wizard-step {
+  min-height: 490px;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right p {
   margin: 10px 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right textarea {
+#invitation-frame #invite-friends-wizard .invite-wizard-right textarea {
   width: 475px;
   height: 60px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right input[type=text],
-#invitation-modal.modal #invite-friends-wizard .modal-body #right input[type=password] {
+#invitation-frame #invite-friends-wizard .invite-wizard-right input[type=text],
+#invitation-frame #invite-friends-wizard .invite-wizard-right input[type=password] {
   width: 320px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset {
+#invitation-frame #invite-friends-wizard .invite-wizard-right form fieldset {
   *zoom: 1;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
+#invitation-frame #invite-friends-wizard .invite-wizard-right form fieldset:before,
+#invitation-frame #invite-friends-wizard .invite-wizard-right form fieldset:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
+#invitation-frame #invite-friends-wizard .invite-wizard-right form fieldset:after {
   clear: both;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
+#invitation-frame #invite-friends-wizard .invite-wizard-right form fieldset:before,
+#invitation-frame #invite-friends-wizard .invite-wizard-right form fieldset:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right form fieldset:after {
+#invitation-frame #invite-friends-wizard .invite-wizard-right form fieldset:after {
   clear: both;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group input {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .name-group input {
   width: 475px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group input.first-name {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .name-group input.first-name {
   width: 180px;
   margin-right: 6px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .name-group input.last-name {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .name-group input.last-name {
   width: 275px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .form-status {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .name-group button {
+  display: block;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right .form-status {
   color: #46a546;
   width: 145px;
   text-align: center;
   margin-top: 5px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .form-controls {
-  position: absolute;
-  bottom: 26px;
-  right: 30px;
-  width: 485px;
-  text-align: right;
-  border-top: thin solid #cccccc;
-  padding: 10px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .form-controls .skip-step {
-  margin-right: 20px;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step5-form fieldset .alert i {
+#invitation-frame #invite-friends-wizard .invite-wizard-right #invite-wizard-step5-form fieldset .alert i {
   display: block;
   float: left;
   margin-right: 10px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #invite-wizard-step5-form fieldset .alert .error-text {
+#invitation-frame #invite-friends-wizard .invite-wizard-right #invite-wizard-step5-form fieldset .alert .error-text {
   width: 400px;
   float: left;
   font-size: 18px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right #step5-friends-list .friend-controls {
+#invitation-frame #invite-friends-wizard .invite-wizard-right #step5-friends-list .friend-controls {
   color: #6da1b7;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .spinner {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .spinner {
   height: 30px;
   width: 30px;
   margin: 50px auto;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friend-filter {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friend-filter {
   width: 448px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list {
   margin-left: 2px;
+  overflow-y: auto;
+  height: 352px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:hover {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend:hover {
   background-color: #d3e3ea;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend {
-  *zoom: 1;
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend {
   padding: 6px 0;
-  width: 100%;
+  width: 33%;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:after {
-  clear: both;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend:after {
-  clear: both;
-}
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-controls {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-controls {
   text-align: center;
   padding: 5px 10px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img {
   *zoom: 1;
   width: 45px;
   text-align: center;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:after {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img:before,
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:after {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img:after {
   clear: both;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:before,
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:after {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img:before,
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img:after {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img:after {
   clear: both;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img i.icon-user {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img i.icon-user {
   font-size: 29px;
   margin: 0;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-img .picture {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-img .picture {
   float: left;
   width: 30px;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-name .name {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-name {
+  max-width: 60%;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-name .name {
   padding: 4px 0;
   font-size: 14px;
   height: 24px;
   line-height: 24px;
   vertical-align: middle;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-status {
   padding: 5px 10px 5px 5px;
   width: 80px;
   text-align: right;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-question-sign {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-status .icon-question-sign {
   color: #4380b8;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-ok-circle {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-status .icon-ok-circle {
   color: #46a546;
 }
-#invitation-modal.modal #invite-friends-wizard .modal-body #right .friends-list-container .friends-list .friend .friend-status .icon-remove-circle {
+#invitation-frame #invite-friends-wizard .invite-wizard-right .friends-list-container .friends-list .friend .friend-status .icon-remove-circle {
   color: #ffcc00;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right #twitter-friends-list .friends-list {
+  height: 334px;
+}
+#invitation-frame #invite-friends-wizard .invite-wizard-right #twitter-friends-list .friends-list .friend {
+  width: 100%;
 }
 #planning-modal .no-plans,
 #invited-modal .no-plans,

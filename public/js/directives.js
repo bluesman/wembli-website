@@ -860,18 +860,27 @@ directive('sendForgotPasswordEmail', ['wembliRpc',
       restrict: 'C',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          element.click(function(e) {
-            var rpcArgs = {};
-            attr.$observe('email', function() {
+          attr.$observe('email', function(email) {
+            element.click(function(e) {
+              var rpcArgs = {};
               rpcArgs.email = attr.email;
+
               if (attr.next) {
                 rpcArgs.next = attr.next;
               }
-
               wembliRpc.fetch('customer.sendForgotPasswordEmail', rpcArgs, function(err, result) {
                   /* display an email sent message */
                   scope.forgotPasswordEmailSent = true;
-                  scope.$broadcast('forgot-password-email-sent');
+                  if (err) {
+                    scope.$broadcast('forgot-password-email-sent', err);
+                  }
+                  if (result.error === true) {
+                    scope.$broadcast('forgot-password-email-sent', {
+                      error: true
+                    });
+                  } else {
+                    scope.$broadcast('forgot-password-email-sent');
+                  }
                 },
                 /* transformRequest */
 
@@ -974,11 +983,19 @@ directive('showEllipses', [
       restrict: 'C',
       compile: function(element, attr, transclude) {
         return function(scope, elm, attrs) {
-          var t = elm.text();
-          if (t.length > attrs.characters) {
-            var shortened = t.substr(attrs.start, attrs.characters);
-            var shortened = shortened +'...';
-            elm.text(shortened);
+          var shorten = function(t) {
+            if (t.length > attrs.characters) {
+              var shortened = t.substr(attrs.start, attrs.characters);
+              var shortened = shortened + '...';
+              elm.text(shortened);
+            }
+          };
+          if (attrs.interpolate) {
+            attrs.$observe('text', function() {
+              shorten(attrs.text);
+            });
+          } else {
+            shorten(elm.text());
           }
         };
       }

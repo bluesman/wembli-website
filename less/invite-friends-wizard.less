@@ -1,250 +1,320 @@
-.modal {
-	textarea {
-		width:520px;
-		height:80px;
+#invitation-frame {
+	.container {
+		margin-top:20px;
+
+		textarea {
+			width:520px;
+			height:80px;
+		}
+
+		.char-count {
+			display:inline-block;
+			vertical-align:middle;
+			background: none repeat scroll 0 0 #F5F5F5;
+			border: 0 none;
+			color: @grayDark;
+			margin-right: 5px;
+			text-align: center;
+			width: 2em;
+			font-size:12px;
+		}
 	}
 
-	.char-count {
-		display:inline-block;
-		vertical-align:middle;
-		background: none repeat scroll 0 0 #F5F5F5;
-		border: 0 none;
-		color: @grayDark;
-		margin-right: 5px;
-		text-align: center;
-		width: 2em;
-		font-size:12px;
-	}
-}
-
-#invitation-modal.modal {
-	width:775px;
-	margin:-200px 0 0 -375px !important;
 	#invite-friends-wizard {
-		.modal-body {
-			.clearfix();
-			padding:0;
-			max-height:650px;
 
-			#left {
-				background-color:@grayLight;
-				width:30%;
-				height:450px;
-				font-size:16px;
+		.box {
+			margin:10px;
+			background-color: @blue;
+			color:@white;
+			.border-radius(3px);
+			height:40px;
+			width:40px;
+			font-size:24px;
+			line-height: 40px;
+			vertical-align: middle;
+			text-align:center;
+		}
 
-				a.wizard-step-nav {
-					display:block;
-					color:@grayDark;
-					line-height:30px;
-					height:30px;
-					vertical-align:center;
-					padding:6px;
+		a.complete > .box-small, a.active > .box-small, a:hover > .box-small, .box:hover, .box.active, .box.complete {
+			background-color:@yellow;
+			color:@black;
+		}
 
-					div {
-						margin-left:40px;
+		.box-small {
+			width: 20px;
+			height:20px;
+			font-size:14px;
+			line-height:20px;
+			margin:0 4px;
+		}
 
-						i {
-							float:right;
+		.form-controls {
+			position:absolute;
+			bottom:0px;
+			right:0px;
+			width:100%;
+			text-align: right;
+			border-top:thin solid @grayLight;
+			background-color:@white;
 
-						}
-					}
+			.wembli-friends {
+				background: transparent url('/images/tickets-preview-wembliman.png') no-repeat center center;
+				position:absolute;
+				top:-82px;
+				left:10px;
+				height:80px;
+				width:150px;
+			}
 
-					i {
-						float:left;
-						margin:6px;
-					}
+			a, button {
+				margin:20px;
+			}
+
+			.skip-step {
+				margin-right:20px;
+			}
+		}
+
+		.icon-question-sign {
+			color:@blue;
+		}
+
+		.icon-question-sign:before {
+			margin-right:10px;
+		}
+
+		.invite-wizard-left {
+			white-space: nowrap;
+			width:300px;
+			font-size:14px;
+			text-align:left;
+			line-height:20px;
+			vertical-align: middle;
+
+			a.wizard-step-nav {
+				display:block;
+				padding:6px;
+				color:@black;
+				.data {
+					color:@blue;
 				}
 
-				a:hover, a.active {
-					color:@white;
-					background-color:@blueLight;
+			}
+
+			a:hover {
+				color:@black;
+				.data {
+					color:@yellow;
+				}
+			}
+
+			.invite-wizard-nav {
+				margin-top:106px;
+				padding:20px;
+				.box-shadow(2px 2px 5px rgba(0, 0, 0, 0.5));
+			}
+
+		}
+
+
+		.invite-wizard-right {
+			width:660px;
+			padding:5px 0 0 60px;
+			text-align:left;
+
+			.invite-friends-progress {
+
+				h2 {
+					color:@black;
+					font-size:20px;
+				}
+
+				.invite-friends-progress-boxes {
+					width:300px;
+					.box.first {
+						margin: 10px 10px 10px 0;
+					}
+				}
+			}
+
+			.invite-wizard-step1-form {
+
+				.switch-login, .or, .facebook-login {
+					width:100%;
+					text-align:left;
+					margin-top:15px;
+				}
+
+			}
+
+			#facebook-login-button {
+				margin:0;
+			}
+
+			#invite-wizard-rsvp-form {
+				min-height: 490px;
+
+
+				.datepicker-container {
+					position:relative;
+					margin:20px 0 0;
+					width:260px;
+				}
+			}
+
+			.wizard-step {
+				min-height:480px;
+				width:100%;
+			}
+
+			#step5.wizard-step {
+				min-height:490px;
+			}
+
+			p {
+				margin: 10px 0;
+			}
+
+			textarea {
+				width:475px;
+				height:60px;
+			}
+
+			input[type=text],input[type=password] {
+				width:320px;
+			}
+
+			form {
+				fieldset {
+					.clearfix();
+				}
+			}
+
+			.name-group {
+				input {
+					width:475px;
+				}
+				input.first-name {
+					width:180px;
+					margin-right:6px;
+				}
+				input.last-name {
+					width:275px;
+				}
+				button {
+					display:block;
+				}
+			}
+
+			.form-status {
+				color: @green;
+				width:145px;
+				text-align:center;
+				margin-top:5px;
+			}
+
+			#invite-wizard-step5-form {
+				fieldset {
+					.alert {
+						i {
+							display:block;
+							float:left;
+							margin-right:10px;
+						}
+						.error-text {
+							width:400px;
+							float:left;
+							font-size: 18px;
+						}
+					}
 				}
 			}
 
 
-			#right {
-				height:350px;
-				width:500px;
-				overflow-y:auto;
-				padding:5px 20px;
+			#step5-friends-list {
+				.friend-controls {
+					color:@blueLight;
+				}
+			}
 
-				.invite-wizard-step1-form {
+			.friends-list-container {
+				.spinner {
+					height:30px;
+					width:30px;
+					margin:50px auto;
+				}
 
-					.switch-login, .or, .facebook-login {
-						width:100%;
-						text-align:center;
-						margin-top:30px;
+				.friend-filter {
+					width:448px;
+				}
+
+				.friends-list {
+					margin-left:2px;
+					overflow-y:auto;
+					height:352px;
+
+					.friend:hover {
+						background-color:lighten(@blueLight,30%);
 					}
 
-				}
+					.friend {
+						padding:6px 0;
+						width:33%;
 
-				#facebook-login-button {
-					margin:0;
-				}
+						.friend-controls {
+							text-align:center;
+							padding:5px 10px;
 
-				#invite-wizard-rsvp-form {
-					.datepicker-container {
-						position:relative;
-						margin:20px auto;
-						width:260px;
-
-
-					}
-				}
-
-				.wizard-step {
-					width:485px;
-				}
-
-				p {
-					margin: 10px 0;
-				}
-
-				textarea {
-					width:475px;
-					height:60px;
-				}
-
-				input[type=text],input[type=password] {
-					width:320px;
-				}
-
-				form {
-					fieldset {
-						.clearfix();
-					}
-				}
-
-				.name-group {
-					input {
-						width:475px;
-					}
-					input.first-name {
-						width:180px;
-						margin-right:6px;
-					}
-					input.last-name {
-						width:275px;
-					}
-				}
-
-				.form-status {
-					color: @green;
-					width:145px;
-					text-align:center;
-					margin-top:5px;
-				}
-
-				.form-controls {
-					position:absolute;
-					bottom:26px;
-					right:30px;
-					width:485px;
-					text-align: right;
-					border-top:thin solid @grayLight;
-					padding:10px;
-
-					.skip-step {
-						margin-right:20px;
-					}
-				}
-
-				#invite-wizard-step5-form {
-					fieldset {
-						.alert {
-							i {
-								display:block;
-								float:left;
-								margin-right:10px;
-							}
-							.error-text {
-								width:400px;
-								float:left;
-								font-size: 18px;
-							}
-						}
-					}
-				}
-
-
-				#step5-friends-list {
-					.friend-controls {
-						color:@blueLight;
-					}
-				}
-
-				.friends-list-container {
-					.spinner {
-						height:30px;
-						width:30px;
-						margin:50px auto;
-					}
-
-					.friend-filter {
-						width:448px;
-					}
-
-					.friends-list {
-						margin-left:2px;
-
-						.friend:hover {
-							background-color:lighten(@blueLight,30%);
 						}
 
-						.friend {
-
-
+						.friend-img {
 							.clearfix();
-							padding:6px 0;
-							width:100%;
+							width:45px;
+							text-align:center;
 
-							.friend-controls {
-								text-align:center;
-								padding:5px 10px;
-
+							i.icon-user {
+								font-size:29px;
+								margin:0;
 							}
-
-							.friend-img {
-								.clearfix();
-								width:45px;
-								text-align:center;
-
-								i.icon-user {
-									font-size:29px;
-									margin:0;
-								}
-								.picture {
-									float:left;
-									width:30px;
-								}
-							}
-
-							.friend-name {
-
-								.name {
-									padding:4px 0;
-									font-size:14px;
-									height:24px;
-									line-height:24px;
-									vertical-align:middle;
-								}
-							}
-							.friend-status {
-								padding:5px 10px 5px 5px;
-								width:80px;
-								text-align:right;
-
-								.icon-question-sign {
-									color:@blue;
-								}
-								.icon-ok-circle {
-									color:@green;
-								}
-								.icon-remove-circle {
-									color:@orange;
-								}
+							.picture {
+								float:left;
+								width:30px;
 							}
 						}
+
+						.friend-name {
+							max-width:60%;
+							.name {
+								padding:4px 0;
+								font-size:14px;
+								height:24px;
+								line-height:24px;
+								vertical-align:middle;
+							}
+						}
+						.friend-status {
+							padding:5px 10px 5px 5px;
+							width:80px;
+							text-align:right;
+
+							.icon-question-sign {
+								color:@blue;
+							}
+							.icon-ok-circle {
+								color:@green;
+							}
+							.icon-remove-circle {
+								color:@orange;
+							}
+						}
+					}
+				}
+			}
+			#twitter-friends-list {
+				.friends-list {
+					height:334px;
+					.friend {
+						width:100%;
 					}
 				}
 			}

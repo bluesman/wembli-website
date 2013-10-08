@@ -31,7 +31,7 @@
 				p FIND TICKETS TO CONCERTS, THEATER & SPORTING EVENTS
 				p INVITE FRIENDS WITHOUT GETTING STUCK WITH THE BILL
 			.search
-				form#index-search-form.form-search.clearfix(method="GET", action="/search/events", ng-submit="submitSearch()")
+				form#index-search-form.form-search.clearfix(ng-submit="submitSearch()")
 					i.icon-search.icon-2x.pull-left(ng-hide="searchInProgress")
 					i.icon-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
 
@@ -90,17 +90,17 @@
 							a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
 				- each c, i in concerts
 					li.performers
-						a.performer.white.show-ellipses(start="0", characters="30", target="_self", ng-href="/search/events/#{c.Name}") #{i+1}) #{c.Name}
+						a.performer.white.show-ellipses(start="0", characters="30", ng-href="/search/events/#{c.Name}") #{i+1}) #{c.Name}
 			ul.middle.pull-left
 				h2 Sporting Events:
 				- each s, i in sports
 					li.performers
-						a.performer.white.show-ellipses(start="0", characters="40", target="_self", ng-href="/search/events/#{s.Name}") #{i+1}) #{s.Name}
+						a.performer.white.show-ellipses(start="0", characters="40", ng-href="/search/events/#{s.Name}") #{i+1}) #{s.Name}
 			ul.right.pull-left
 				h2 Theater:
 				- each t, i in theater
 					li.performers
-						a.performer.white.show-ellipses(start="0", characters="40", target="_self", ng-href="/search/events/#{t.Name}") #{i+1}) #{t.Name}
+						a.performer.white.show-ellipses(start="0", characters="40", ng-href="/search/events/#{t.Name}") #{i+1}) #{t.Name}
 	section.section6
 		.container.clearfix
 			.left.pull-left

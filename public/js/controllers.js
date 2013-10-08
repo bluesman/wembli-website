@@ -20,7 +20,7 @@ function InviteFriendsWizardCtrl($scope) {
  * Index Controller
  */
 
-function IndexCtrl($scope, $templateCache, $rootScope) {
+function IndexCtrl($scope, $templateCache, $rootScope, $location) {
 	/* clear the cache when the home page loads to make sure we start fresh */
 	/* taking this out for now - i'd like to be able to cache some things */
 	/* $templateCache.removeAll(); */
@@ -34,6 +34,7 @@ function IndexCtrl($scope, $templateCache, $rootScope) {
 
 	$scope.submitSearch = function() {
 		$scope.searchInProgress = true;
+		$location.path('/search/events/'+$scope.search);
 	}
 
 };
@@ -55,7 +56,7 @@ function ConfirmCtrl($scope, wembliRpc) {
  * Event Options Controller
  */
 
-function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchModals) {
+function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, plan) {
 	//init login vars
 	var args = {};
 	//$scope.paymentOptionsError = false;
@@ -64,9 +65,16 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchMo
 	$scope.guestListOptionsError = false;
 	$scope.submitInProgress = false;
 
-	wembliRpc.fetch('event-options.init', {},
+	plan.get(function(p) {
 
-		function(err, result) {
+
+		if (typeof $scope.next === "undefined") {
+			$scope.next = '/invitation/' + p.event.eventId + '/' + p.event.eventName;
+		}
+
+		console.log($scope.next);
+
+		wembliRpc.fetch('event-options.init', {}, function(err, result) {
 
 			//$scope.payment = result.payment;
 			$scope.parking = result.parking;
@@ -84,16 +92,29 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, fetchMo
 				$scope.guestListOptionsError = (result.errors.guestList) ? true : false;
 			}
 		});
+	});
 
-	//putting an action in the form causes angular to post the form
+	$scope.submitForm = function() {
+		var eventOptions = {};
+		eventOptions.parking = $scope.parking;
+		eventOptions.restaurant = $scope.restaurant;
+		eventOptions.hotel = $scope.hotel;
+		eventOptions.guest_friends = $scope.guest_friends;
+		eventOptions.organizer_not_attending = $scope.organizer_not_attending;
+		eventOptions.guest_list = $scope.guest_list;
+		eventOptions.over_21 = $scope.over_21;
 
-	//put fetchModals in the scope so we can call fetch from the view when they hit continue
-	$scope.fetchModals = fetchModals;
-	$scope.
-	continue = function() {
+		console.log('submit event-options form');
 		//fetchModals.fetch('/invitation');
 		$scope.submitInProgress = true;
-		//$location.path($scope.next);
+		wembliRpc.fetch('event-options.submit', eventOptions,
+			function(err, result) {
+				console.log('back from event-options submit');
+				console.log(result);
+				$scope.submitInProgress = false;
+			});
+
+		$location.path($scope.next);
 	}
 };
 
@@ -172,7 +193,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 
 	if ($rootScope.partial) {
 		if ($location.search().search) {
-			$scope.search = $location.search().search.replace(/\+/g,' ');
+			$scope.search = $location.search().search.replace(/\+/g, ' ');
 		}
 		//begin date for event list
 		var daysPadding = 4; //how many days from today for the beginDate
@@ -192,7 +213,6 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
  */
 
 function EventCtrl($scope) {};
-
 
 function HotelsCtrl($rootScope, $scope, $timeout, plan, wembliRpc, googleMap, mapInfoWindowContent, loadingModal) {
 	loadingModal.show('Finding hotels...', null);
@@ -1055,7 +1075,7 @@ function PaymentTypeModalCtrl($scope, $location, plan, wembliRpc, $rootScope) {
 	$scope.startPlan = function() {
 		$scope.submitInProgress = true;
 		if ($scope.paymentType === 'split-first') {
-			$scope.nextLink = '/event-options/'+$scope.eventId+'/'+$scope.eventName;
+			$scope.nextLink = '/event-options/' + $scope.eventId + '/' + $scope.eventName;
 		}
 		/* start the plan */
 		wembliRpc.fetch('plan.startPlan', {

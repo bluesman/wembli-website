@@ -35,8 +35,10 @@ module.exports = function(app) {
 		} else {
 			/* not logged in - load the invitation page as a visitor */
 			if (typeof req.session.plan === "undefined") {
+
 				return res.redirect('/event/' + req.param('eventId') + '/' + req.param('eventName'));
 			} else {
+
 				/* load the invitation for the plan if the plan matches their session and they are organizer */
 				if (req.session.visitor.context !== 'organizer') {
 					return res.redirect('/event/' + req.param('eventId') + '/' + req.param('eventName'));
@@ -46,15 +48,15 @@ module.exports = function(app) {
 				}
 			}
 		}
-
 		return res.render(view, viewData);
 	};
 
 	app.get('/invitation/:eventId/:eventName', function(req, res) {
-		invitationView(req, res, 'plan');
+		invitationView(req, res, 'invitation');
 	});
+
 	app.get('/partials/invitation/:eventId/:eventName', function(req, res) {
-		invitationView(req, res, 'partials/plan');
+		invitationView(req, res, 'partials/invitation');
 	});
 
 	app.get('/partials/invite-friends-wizard', function(req, res) {

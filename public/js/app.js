@@ -2,16 +2,16 @@
 
 // Declare app level module which depends on filters, and services
 angular.module('wembliApp', [
-    'wembliApp.filters',
-    'wembliApp.services',
-    'wembliApp.directives',
-    'wembliApp.directives.dashboard',
-    'wembliApp.directives.plan',
-    'wembliApp.directives.invitationWizard',
-    'wembliApp.directives.parkingMap',
-    'wembliApp.directives.restaurantsMap',
-    'wembliApp.directives.hotelsMap',
-    'wembliApp.directives.venueMap',
+  'wembliApp.filters',
+  'wembliApp.services',
+  'wembliApp.directives',
+  'wembliApp.directives.dashboard',
+  'wembliApp.directives.plan',
+  'wembliApp.directives.invitationWizard',
+  'wembliApp.directives.parkingMap',
+  'wembliApp.directives.restaurantsMap',
+  'wembliApp.directives.hotelsMap',
+  'wembliApp.directives.venueMap',
 ]).config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
@@ -25,27 +25,30 @@ angular.module('wembliApp', [
       $location.path('/index');
     }
 
-   $scope.$on('$locationChangeSuccess', function() {
-        $scope.actualLocation = $location.path();
+    $scope.$on('$locationChangeSuccess', function() {
+      $scope.actualLocation = $location.path();
     });
 
-   /* check if back button was pressed */
-   $scope.$watch(function () {return $location.path()}, function (newLocation, oldLocation) {
-        if($scope.actualLocation === newLocation) {
-          slidePage.setDirection(-1);
+    /* check if back button was pressed */
+    $scope.$watch(function() {
+      return $location.path()
+    }, function(newLocation, oldLocation) {
+      if ($scope.actualLocation === newLocation) {
+        slidePage.setDirection(-1);
+      } else {
+        if (slidePage.directionOverride !== 0) {
+          slidePage.setDirection(slidePage.directionOverride);
+          slidePage.directionOverride = 0;
         } else {
-          if (slidePage.directionOverride !== 0) {
-            slidePage.setDirection(slidePage.directionOverride);
-            slidePage.directionOverride = 0;
-          } else {
-            slidePage.setDirection(1);
-          }
+          slidePage.setDirection(1);
         }
+      }
     });
 
     /* slide pages using sequence when location changes */
     $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
       $scope.actualLocation = $location.path();
+      /* if they're just going from 1 index url to another */
       if ((oldUrl.split('/')[3] === '') && (newUrl.split('/')[3] === 'index')) {
         return;
       }
@@ -67,7 +70,7 @@ angular.module('wembliApp', [
       $timeout(function() {
         slidePage.slide(e, newUrl, oldUrl, function() {
           /* log in googleanalytics */
-          _gaq.push(['_trackPageview',$location.path()]);
+          _gaq.push(['_trackPageview', $location.path()]);
           /* log this click in keen.io */
           wembliRpc.fetch('analytics.addEvent', {
             collection: 'view',

@@ -79,13 +79,13 @@ module.exports = {
 			'text': "Choose RSVP Date",
 		}, {
 			'icon': "icon-facebook",
-			'text': "Facebook",
+			'text': "Invite Facebook Friends",
 		}, {
 			'icon': "icon-twitter",
-			'text': "Twitter",
+			'text': "Invite Twitter Friends",
 		}, {
 			'icon': "icon-envelope",
-			'text': "Send Email",
+			'text': "Invite Friends Via Email",
 		}];
 
 		for (var i = 0; i < 5; i++) {

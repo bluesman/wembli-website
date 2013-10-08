@@ -18,7 +18,7 @@ form#invite-wizard-step5-form(name="wemblimailForm")
 			input#step5-name.name(ng-model="wemblimail.name", placeholder="GUEST'S FULL NAME",type="text",name="name",required)
 			input#step5-email(ng-model="wemblimail.email",placeholder="GUEST'S EMAIL ADDRESS",type="email",name="email",required)
 			textarea#step5-message-text(placeholder="Include a personalized message...",ng-model="wemblimail.messageText", name="step5_message_text", required)
-			button.btn.btn-primary.pull-right(ng-click="sendWemblimail()") Send Email Now
+			button.btn.btn-primary(ng-click="sendWemblimail()") Send Email Now
 		#step5-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
 			.friends-list(ng-show="wemblimail.friends[0]")
 				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends")
@@ -32,6 +32,4 @@ form#invite-wizard-step5-form(name="wemblimailForm")
 						span.label.label-success accepted
 					.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
 						span.label.label-important declined
-	.form-controls()
-		a.skip-step(data-dismiss="modal",ng-show="loggedIn", ng-click="finished()") Skip this step
-		button.submit-step.btn.btn-secondary.btn-large(ng-disabled="{true:'disabled'}[!loggedIn]",ng-click="finished()") Finished!
+

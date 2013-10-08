@@ -1,32 +1,56 @@
 //- see dynamic-view-helpers helpers for wizardNav var
 - var wizardNav = initInviteFriendsWizard();
 - wizardNav[0]['active'] = 'active';
-#invitation-modal.invite-friends-wizard.modal.hide(ng-controller="InviteFriendsWizardCtrl")
-	#invite-friends-wizard
-		.modal-header
-			h2 Invite Friends To {{plan.event.eventName}}
-		.modal-body
-			#left.pull-left
+#invite-friends-wizard.clearfix(ng-controller="InviteFriendsWizardCtrl")
+	.invite-wizard-left.pull-left
+		.invite-wizard-nav
+			- var cnt = 0
+			each navItem in wizardNav
+				- cnt++
+				a.clearfix(ng-class="{'#{navItem.id}':'active'}[currentStep] + ' ' + {true:'complete'}[stepCompleted['#{navItem.id}']]", href="#{navItem.href}",id="#{navItem.id}",class="wizard-step-nav")
+					//- i(class="#{navItem.icon}")
+					.box.box-small.pull-left #{cnt}
+					span #{navItem.text}
+					span.data.show-ellipses(title="{{navData['#{navItem.id}']}}", start="0", characters="20", interpolate="true", text=": {{navData['#{navItem.id}']}}", ng-show="navData['#{navItem.id}']") : {{navData['#{navItem.id}']}}
+	.invite-wizard-right.pull-left
+		.invite-friends-progress
+			h2.calibri Invite Friends Progress Bar
+			.invite-friends-progress-boxes.clearfix
+				- cnt = 0
 				each navItem in wizardNav
-					a(ng-class="{'#{navItem.id}':'active'}[currentStep]",ng-click="gotoStep('#{navItem.step}')",href="#{navItem.href}",id="#{navItem.id}",class="wizard-step-nav")
-						i(class="#{navItem.icon}")
-						div
-							span #{navItem.text}
-							i.icon-double-angle-right.pull-right
-			#right.pull-left
-				#step1.wizard-step(ng-show="{'step1':true}[showStep]")
-					invitation-wizard-step1
-						include invite-friends-wizard/step-1
-				#step2.wizard-step(ng-show="{'step2':true}[showStep]")
-					invitation-wizard-step2
-						include invite-friends-wizard/step-2
-				#step3.wizard-step(ng-show="{'step3':true}[showStep]")
-					invitation-wizard-step3
-						include invite-friends-wizard/step-3
-				#step4.wizard-step(ng-show="{'step4':true}[showStep]")
-					invitation-wizard-step4
-						include invite-friends-wizard/step-4
-				#step5.wizard-step(ng-show="{'step5':true}[showStep]")
-					invitation-wizard-step5
-						include invite-friends-wizard/step-5
+					- cnt++
+					a.box.pull-left(ng-class="{'nav-step1':'first'}['nav-step#{cnt}'] + ' ' + {'#{navItem.id}':'active'}[currentStep] + ' ' + {true:'complete'}[stepCompleted['#{navItem.id}']]", href="#{navItem.href}",id="#{navItem.id}",class="wizard-step-nav") #{cnt}
+		#step1.wizard-step(ng-show="{'step1':true}[showStep]")
+			invitation-wizard-step1
+				include invite-friends-wizard/step-1
+		#step2.wizard-step(ng-show="{'step2':true}[showStep]")
+			invitation-wizard-step2
+				include invite-friends-wizard/step-2
+		#step3.wizard-step(ng-show="{'step3':true}[showStep]")
+			invitation-wizard-step3
+				include invite-friends-wizard/step-3
+		#step4.wizard-step(ng-show="{'step4':true}[showStep]")
+			invitation-wizard-step4
+				include invite-friends-wizard/step-4
+		#step5.wizard-step(ng-show="{'step5':true}[showStep]")
+			invitation-wizard-step5
+				include invite-friends-wizard/step-5
+	//- step-1
+	.form-controls()
+		.wembli-friends
+		//- step-1
+		button.submit-step.btn.btn-secondary.btn-large(ng-disabled="!customer.id",ng-show="{'nav-step1':true}[currentStep] && showSignupForm", ng-click="submitSignup()") Go to next step
+		button.submit-step.btn.btn-secondary.btn-large(ng-disabled="!customer.id",ng-show="{'nav-step1':true}[currentStep] && showSignupView", ng-click="gotoStep('step2')") Go to next step
+		button.submit-step.btn.btn-secondary.btn-large(ng-disabled="!customer.id",ng-show="{'nav-step1':true}[currentStep] && showLoginForm", ng-click="submitLogin()") Go to next step
+		//- step-2
+		a.submit-step.btn.btn-secondary.btn-large(href="#step3",ng-show="{'nav-step2':true}[currentStep]", ng-click="submitRsvp()") Go to next step
+		//- step-3
+		a.skip-step(href="#step4", ng-show="{'nav-step3':true}[currentStep]", ng-click="skipStep('step3','step3')") Skip this step
+		a.submit-step.btn.btn-secondary.btn-large(href="#step4",ng-show="{'nav-step3':true}[currentStep]",ng-click="skipStep('step3','step3')") Go to next step
+		//- step-4
+		a.skip-step(ng-href="#step5",ng-show="{'nav-step4':true}[currentStep]", ng-click="skipStep('step4', 'step4')") Skip this step
+		a.submit-step.btn.btn-secondary.btn-large(href="#step5",ng-show="{'nav-step4':true}[currentStep]",ng-click="skipStep('step4', 'step4')") Go to next step
+		//- step-5
+		a.skip-step(ng-show="loggedIn && {'nav-step5':true}[currentStep]", ng-click="finished()") Skip this step
+		button.submit-step.btn.btn-secondary.btn-large(ng-show="{'nav-step5':true}[currentStep]", ng-disabled="{true:'disabled'}[!loggedIn]",ng-click="finished()") Finished!
 

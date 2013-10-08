@@ -6,9 +6,42 @@ angular.module('wembliApp.directives.invitationWizard', []).
 directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '$timeout', 'sequence', 'fetchModals', 'plan', '$location', 'wembliRpc', 'customer', 'facebook', 'twitter', 'loggedIn',
   function($rootScope, $http, $filter, $window, $timeout, sequence, fetchModals, plan, $location, wembliRpc, customer, facebook, twitter, loggedIn) {
     return {
+      templateUrl: '/partials/invite-friends-wizard',
+      cache: false,
       restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+
+          $scope.stepCompleted = {
+            "nav-step1": false,
+            "nav-step2": false,
+            "nav-step3": false,
+            "nav-step4": false,
+            "nav-step5": false
+          };
+
+          $scope.navData = {
+            "nav-step1": null,
+            "nav-step2": null,
+            "nav-step3": null,
+            "nav-step4": null,
+            "nav-step5": null
+          };
+
+          $scope.$watch('showStep', function(e, val) {
+            if (val) {
+              $scope.stepCompleted['nav-' + val];
+            }
+          });
+
+          /* set showStep when location hash changes */
+          $scope.$on('$locationChangeSuccess', function() {
+            if (/^\/invitation/.test($location.path())) {
+              $scope.showStep = $location.hash() || 'step1';
+              $scope.currentStep = 'nav-' + $scope.showStep;
+            }
+          });
+
 
           $scope.$watch('customer', function(newVal) {
             $scope.loggedIn = loggedIn.check();
@@ -34,7 +67,11 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
             $scope.showStep = step;
           };
 
-          $scope.skipStep = function(step) {
+          $scope.skipStep = function(step, completed) {
+            if (typeof completed !== "undefined") {
+              $scope.stepCompleted['nav-'+completed] = true;
+            }
+
             var nextStep = 'step' + (parseInt(step.charAt(step.length - 1)) + 1);
             $scope.gotoStep(nextStep);
           };
@@ -96,16 +133,16 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
             }
 
             /* figure out which step to go to */
-            var initialStep = 'step1';
+            var hash = $location.hash();
+            var initialStep = /^step/.test(hash) ? hash : 'step1';
+            /* hack to deal with everyauth weirdness */
+            if (hash === "_=_") {
+              /* it means they logged in */
+              initialStep = 'step2';
+            }
+
             $scope.step1 = {};
             if (customer.get() && Object.keys(customer.get()).length > 0) {
-              var hash = $location.hash();
-              initialStep = /^step/.test(hash) ? hash : 'step2';
-              /* hack to deal with everyauth weirdness */
-              if (initialStep === "_=_") {
-                /* it means they logged in */
-                initialStep = 'step2';
-              }
               $scope.customer = customer.get();
             } else {
               $scope.customer = {};
@@ -198,17 +235,25 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
-          $scope.$on('forgot-password-email-sent', function() {
-            $scope.forgotPasswordEmailSent = true;
+          $scope.$on('forgot-password-email-sent', function(e, err) {
+            if (err) {
+              $scope.forgotPasswordEmailError = true;
+            } else {
+              $scope.forgotPasswordEmailError = false;
+              $scope.forgotPasswordEmailSent = true;
+            }
           });
 
           $scope.initSignupForm = function() {
+
             plan.get(function(p) {
               $scope.next = '/plan/' + p.guid + '/' + '2';
             });
 
             /* check if there's a customer already - if so just display the customer info */
-            if ($scope.customer.email) {
+            if ($scope.customer && $scope.customer.email) {
+              $scope.navData['nav-step1'] = $scope.customer.email;
+              $scope.stepCompleted['nav-step1'] = true;
               $scope.showSignupView = true;
             } else {
               $scope.showSignupForm = true;
@@ -221,6 +266,9 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
           }
 
           $scope.submitSignup = function() {
+            $scope.forgotPasswordEmailError = false;
+            $scope.forgotPasswordEmailSent = false;
+
             if ($scope.signup.$valid) {
               $('#invitation-modal').modal('loading');
 
@@ -249,6 +297,8 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                   return;
                 }
                 $scope.customer = customer.get();
+                $scope.navData['nav-step1'] = $scope.customer.email;
+                $scope.stepCompleted['nav-step1'] = true;
 
                 $scope.signup.success = true;
                 $scope.showForm('showSignupView', 'showSignupForm');
@@ -259,6 +309,9 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
           };
 
           $scope.submitLogin = function() {
+            $scope.forgotPasswordEmailError = false;
+            $scope.forgotPasswordEmailSent = false;
+
             if ($scope.login.$valid) {
               $('#invitation-modal').modal('loading');
 
@@ -279,14 +332,15 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                   $scope.login.invalidCredentials = true;
                   return;
                 }
+                $scope.navData['nav-step1'] = $scope.customer.email;
+                $scope.stepCompleted['nav-step1'] = true;
 
                 $scope.login.success = true;
                 $scope.showForm('showSignupView', 'showLoginForm');
                 return $scope.gotoStep('step2');
 
               });
-            } else {
-            }
+            } else {}
           };
 
           // i htink this is already done in plan.fetch()
@@ -302,12 +356,23 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
   }
 ]).
 
-directive('invitationWizardStep2', ['wembliRpc', '$window',
-  function(wembliRpc, $window) {
+directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter',
+  function(wembliRpc, $window, $filter) {
     return {
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+          if ($scope.plan && $scope.plan.rsvpDate) {
+            $scope.navData['nav-step2'] = $filter('date')($scope.plan.rsvpDate, 'mediumDate');
+            $scope.stepCompleted['nav-step2'] = true;
+          }
+
+          $scope.$on('plan-rsvp-changed', function(e, date) {
+            $scope.plan.rsvpDate = date;
+            $scope.navData['nav-step2'] = $filter('date')($scope.plan.rsvpDate, 'mediumDate');
+            $scope.stepCompleted['nav-step2'] = true;
+          });
+
           $scope.submitRsvp = function() {
             if (!$scope.customer.email) {
               $scope.signup.noContinue = true;
@@ -329,9 +394,7 @@ directive('invitationWizardStep2', ['wembliRpc', '$window',
                 $scope.signup.noContinue = true;
                 return $scope.gotoStep('step1');
               }
-
               return $scope.gotoStep('step3');
-
             });
           };
 
@@ -354,6 +417,9 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
 
+          $scope.navData['nav-step3'] = 0;
+          $scope.stepCompleted['nav-step3'] = false;
+
           $scope.handleFriendsFetch = function(response) {
 
             /* find all the facebook friends that are in the planFriends list and set some attributes */
@@ -368,6 +434,7 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
                     ff.inviteStatus = pf.inviteStatus;
                     ff.checked = pf.inviteStatus;
                     ff.rsvp = pf.rsvp;
+                    $scope.navData['nav-step3']++;
                   }
                 });
               });
@@ -378,6 +445,9 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
               });
 
             };
+
+            /* saying this step is completed if they logged in */
+            $scope.stepCompleted['nav-step3'] = true;
 
             /* get the friends in the plan (if any) to know who is already invited */
             var fbFriends = facebook.getFriends();
@@ -518,6 +588,8 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+          $scope.navData['nav-step4'] = 0;
+          $scope.stepCompleted['nav-step4'] = false;
 
           $scope.handleSearchUsers = function() {
 
@@ -530,12 +602,15 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
                     tf.inviteStatus = pf.inviteStatus;
                     tf.checked = pf.inviteStatus;
                     tf.rsvp = pf.rsvp;
+                    $scope.navData['nav-step4']++;
                   }
                 });
               });
               $scope.twitter.spinner = false;
               $scope.twitter.friends = twitFriends;
             };
+            /* saying this step is done if they did a search */
+            $scope.stepCompleted['nav-step4'] = true;
 
             /* get the friends in the plan (if any) to know who is already invited */
             var twitFriends = twitter.getFriends();
@@ -664,6 +739,8 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+          $scope.navData['nav-step5'] = 0;
+          $scope.stepCompleted['nav-step5'] = false;
 
           $scope.selectedFriends = [];
           $scope.wemblimail = {
@@ -679,14 +756,18 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
                 if (friend.contactInfo.service === 'wemblimail') {
                   $scope.wemblimail.friends.push(friend);
                   $scope.selectedFriends[friend.contactInfo.serviceId] = friend.inviteStatus;
+                  $scope.navData['nav-step5']++;
                 }
               };
             }
           });
+
           $scope.sendWemblimail = function() {
             if (!$scope.wemblimailForm.$valid) {
               return;
             }
+            /* this step is completed if they sent 1 email */
+            $scope.stepCompleted['nav-step5'] = true;
 
             $('#invitation-modal').modal('loading');
 

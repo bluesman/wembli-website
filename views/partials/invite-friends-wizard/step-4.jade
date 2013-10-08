@@ -18,7 +18,7 @@ form#invite-wizard-step3-form.twitter-widget(name="step3",ng-cloak,ng-show="twit
 			.spinner(ng-show="twitter.spinner")
 				i.icon-spinner.icon-spin.icon-2x(ng-show="twitter.spinner")
 			.friends-list(ng-show="twitter.friends",ng-hide="twitter.spinner" )
-				.friend.pull-left(ng-repeat="friend in twitter.friends")
+				.friend.pull-left.clearfix(ng-repeat="friend in twitter.friends")
 					.friend-modal.modal.hide(id="modal-{{friend.screen_name}}",data-backdrop="false",data-focus-on="input:first",tabindex="-1")
 						.modal-header
 							i.icon-remove.close.pull-right(type="button",data-dismiss="modal",aria-hidden="true")
@@ -46,6 +46,3 @@ form#invite-wizard-step3-form.twitter-widget(name="step3",ng-cloak,ng-show="twit
 						a.btn.btn-mini(ng-click="addTwitterFriend(friend,$event)")
 							i.icon-twitter(style="color:#0092BF")
 							strong &nbsp;Tweet to @{{friend.screen_name}}
-	.form-controls
-		a.skip-step(ng-click="skipStep('step4')") Skip this step
-		a.submit-step.btn.btn-primary.btn-large(ng-click="skipStep('step4')") Continue

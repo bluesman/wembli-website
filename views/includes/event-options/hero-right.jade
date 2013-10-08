@@ -1,7 +1,7 @@
 block hero-right
 	#event-options-hero-right.hero-right(ng-controller="EventOptionsCtrl")
 		.event-data(ng-cloak, event-id="#{eventId}",direction="-1")
-		form#event-options-form(name="eventOptionsForm",method="post",action="/event-options/#{eventId}/#{eventName}",enctype="application/x-www-form-urlencoded")
+		form#event-options-form(name="eventOptionsForm", ng-submit="submitForm()",enctype="application/x-www-form-urlencoded")
 			fieldset
 				#add-ons.options-group
 					h2 Add-Ons:
@@ -66,8 +66,8 @@ block hero-right
 							i.icon-check.icon-2x.pull-left.green(ng-show="{'private':true}[guest_list]")
 							i.icon-check-empty.icon-2x.pull-left(ng-show="!{'private':true}[guest_list]")
 							span My guests can not see who else is invited
-				button.btn.btn-primary.btn-large(ng-click="continue()", type="submit", ng-hide="submitInProgress") Continue
+				button.btn.btn-primary.btn-large(type="submit", ng-hide="submitInProgress") Continue
 				button.btn.btn-primary.btn-large.mute(type="submit", ng-show="submitInProgress",ng-disabled="submitInProgress")
 					.icon.icon-cog.icon-spin.pull-left
-					span Continue
+					span Continue To Invite Friends
 
