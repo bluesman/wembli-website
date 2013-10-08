@@ -135,7 +135,7 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 			if (/Z$/.test(d)) {
 				d = d.substring(0, s.length - 1);
 			}
-			d+offset;
+			d = d+offset;
 			console.log('DATE: '+d);
 			return new Date(d);
 			//return $filter('date')(d, "MM-dd-yy");
