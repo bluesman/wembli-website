@@ -790,18 +790,6 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
 
-          /* fetch the invitation wizard modal */
-          fetchModals.fetch('/partials/invite-friends-wizard', function() {
-            var options = {
-              //'backdrop': 'static',
-              //'keyboard': false,
-            };
-            /* if the url is the invitation url then show the modal */
-            if (/^\/invitation/.test($location.path())) {
-              $('#invitation-modal').modal(options);
-            }
-          });
-
           /* fetch the organizer plan modals */
           fetchModals.fetch('/partials/modals/organizer-dashboard', function() {
             plan.get(function(p) {
