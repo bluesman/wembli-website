@@ -12365,14 +12365,14 @@ a#facebook-login-button {
   font-size: 12px;
 }
 #invitation-frame #invite-friends-wizard .box {
-  margin: 10px;
+  margin: 0 10px 10px;
   background-color: #4380b8;
   color: #ffffff;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  height: 40px;
-  width: 40px;
+  height: 35px;
+  width: 35px;
   font-size: 24px;
   line-height: 40px;
   vertical-align: middle;
@@ -12447,7 +12447,7 @@ a#facebook-login-button {
   color: #ffcc00;
 }
 #invitation-frame #invite-friends-wizard .invite-wizard-left .invite-wizard-nav {
-  margin-top: 106px;
+  margin-top: 116px;
   padding: 20px;
   -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
@@ -12466,10 +12466,14 @@ a#facebook-login-button {
   margin-top: 10px;
 }
 #invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress h2 {
-  text-transform: normal;
+  text-transform: none;
   color: #000000;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 20px;
+  width: 255px;
+  text-align: center;
+  color: #666666;
+  padding: 2px;
 }
 #invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress .invite-friends-progress-boxes {
   width: 300px;
@@ -12496,8 +12500,9 @@ a#facebook-login-button {
   width: 260px;
 }
 #invitation-frame #invite-friends-wizard .invite-wizard-right .wizard-step {
-  min-height: 480px;
+  min-height: 490px;
   width: 100%;
+  margin-top: 20px;
 }
 #invitation-frame #invite-friends-wizard .invite-wizard-right #step5.wizard-step {
   min-height: 490px;

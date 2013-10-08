@@ -23,12 +23,12 @@
 	#invite-friends-wizard {
 
 		.box {
-			margin:10px;
+			margin:0 10px 10px;
 			background-color: @blue;
 			color:@white;
 			.border-radius(3px);
-			height:40px;
-			width:40px;
+			height:35px;
+			width:35px;
 			font-size:24px;
 			line-height: 40px;
 			vertical-align: middle;
@@ -109,7 +109,7 @@
 			}
 
 			.invite-wizard-nav {
-				margin-top:106px;
+				margin-top:116px;
 				padding:20px;
 				.box-shadow(2px 2px 5px rgba(0, 0, 0, 0.5));
 			}
@@ -134,10 +134,14 @@
 			.invite-friends-progress {
 				margin-top: 10px;
 				h2 {
-					text-transform: normal;
+					text-transform: none;
 					color:@black;
-					font-size:20px;
+					font-size:16px;
 					line-height:20px;
+					width:255px;
+					text-align:center;
+					color:@grayDark;
+					padding:2px;
 				}
 
 				.invite-friends-progress-boxes {
@@ -173,8 +177,9 @@
 			}
 
 			.wizard-step {
-				min-height:480px;
+				min-height:490px;
 				width:100%;
+				margin-top:20px;
 			}
 
 			#step5.wizard-step {
