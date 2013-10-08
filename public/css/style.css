@@ -7309,7 +7309,7 @@ html {
 body {
   height: 100%;
   overflow-x: hidden;
-  font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  font-family: Calibri, Arial, Candara, Segoe, "Segoe UI", Optima, sans-serif;
   font-size: 14px;
 }
 * {
