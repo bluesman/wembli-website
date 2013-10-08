@@ -7219,6 +7219,11 @@ ul.icons-ul > li .icon-li {
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'CalibriRegular';
+  src: url('/font/calibri.eot');
+  src: url('/font/calibri.eot#iefix') format('embedded-opentype'), url('/font/calibri.woff') format('woff'), url('/font/calibri.ttf') format('truetype'), url('/font/calibri.svg#CalibriRegular') format('svg');
+}
 .myriad {
   font-family: Myriad Pro, Arial, Helvetica, Tahoma, sans-serif;
 }
@@ -7232,7 +7237,7 @@ ul.icons-ul > li .icon-li {
   font-family: "Helveticaneueltstd-ex";
 }
 .calibri {
-  font-family: Calibri, Arial, Candara, Segoe, "Segoe UI", Optima, sans-serif;
+  font-family: "CalibriRegular", Arial, Segoe, "Segoe UI", Optima, sans-serif;
 }
 h1,
 h2,
