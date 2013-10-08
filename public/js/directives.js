@@ -605,22 +605,12 @@ directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence'
       restrict: 'C',
       templateUrl: '/partials/event-data',
       cache: false,
-      scope: {
-        eventId: '@eventId'
-      },
       compile: function(element, attr, transclude) {
-
         return function(scope, element, attr) {
-          /* why is this here?
-        scope.direction = attr.direction;
-        */
-          /* do i need to wait for sequence.ready? */
-          //sequence.ready(function() {
           plan.get(function(plan) {
             scope.event = plan.event;
             scope.venue = plan.venue["data"];
           });
-          //});
         }
       }
     }

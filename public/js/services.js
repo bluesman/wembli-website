@@ -128,15 +128,13 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 			var m = '0' + tmpDate.getTimezoneOffset()%60;
 			m = m.substr(-2);
 
-			console.log('offset is: '+offset);
 			var operator = (tmpDate.getTimezoneOffset() > 0 ) ? '-' : '+';
 			var offset = operator + h + ':' + m;
 
 			if (/Z$/.test(d)) {
-				d = d.substring(0, s.length - 1);
+				d = d.substring(0, d.length - 1);
 			}
 			d = d+offset;
-			console.log('DATE: '+d);
 			return new Date(d);
 			//return $filter('date')(d, "MM-dd-yy");
 		}
