@@ -2,7 +2,7 @@
 .event-date-box.pull-left(ng-cloak)
 	span.day {{event.eventDate| date:'EEE'}}
 	span.event-date {{event.eventDate| date:'MMM d'}}
-	span.time {{event.eventDate+'-07:00'| date:'h:mm a'}}
+	span.time {{getDate(event.eventDate)| date:'h:mm a'}}
 .info(ng-cloak)
 	span.name.block {{event.eventName}}
 	span.venue.block {{ event.eventVenue || event.eventVenue }}
