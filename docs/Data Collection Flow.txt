@@ -1,0 +1,111 @@
+Data Collection Flow:
+
+url: GET /start-plan/(no-split|split-first|split-after)
+- req.session.plan.preferences.payment = req.param[0]
+- this means they want to invite friends and collect money before getting tix
+
+url: GET /tickets/<eventId>/<eventName>
+- req.session.plan.event.eventId = <eventId>
+- req.session.plan.event.eventName = <eventName>
+
+url: POST /event/<eventId>/<eventName>
+- when we successfully submit the event-options form, we make an event plan for this visitor
+- req.session.plan =
+  'event' : {
+    'eventId' : req.session.eventId,
+    'eventName' : req.session.eventName
+  },
+  'preferences' : {
+    'payment' : "no-split|split-first|split-after",
+
+    'addOns' : {'parking' : <bool>,
+                'restaurant' : <bool>,
+	              'hotel': <bool>
+	             },
+
+	  'inviteOptions' : {'guestFriends' : <bool>,
+	                     'over21' : <bool>,
+	                    },
+
+	  'guestList' : "full|rsvp|private"
+	},
+}
+
+url: GET /invitation
+- if (typeof req.session.plan === "undefined") then show no-event.jade
+- if (typeof req.session.plan.organizer !== "undefined") then show invitation/friend-view.jade
+- if (typeof req.session.plan.organizer === "undefined") then show invitation/organizer-view.jade
+
+url: GET /invitation (invite-friends-wizard)
+- view wizard step1: signup/login
+
+  USE CASE 1: brand new customer.  no password box, will create account with a temporary password
+              they will have to go through forgot password to set their password.
+
+  USE CASE 2: returning customer who is not logged in but has an existing wembli account and is not
+              logged in via facebook. they can either 'click here to login'. If they type in an
+              email that exists and they are not logged in - they should be prompted for a password
+
+  USE CASE 3: returning customer is not logged in but is logged in via facebook
+              - send the facebook.accessToken to the server when we getLoginStatus in the facebook service
+              - plan.init rpc call will get called and lib/wembli/customer will run and notice the
+                facebook.accessToken in the session but there's no customer and will try to fetch
+                a customer that has that facebook account.  the customer account should exist because
+                they can't ever allow wembli with out going through the facebook auth process which would
+                create a wembli account (everyauth /auth/facebook)
+
+  USE CASE 4: customer is logged in. default to begin on step2.  step 1 firstName, lastName and email should
+              autofill
+
+- submit wizard step1: this will post form data to invite-friends-step1 rpc.
+  USE CASE 1: brand new customer - run through signup and validate have firstName/lastName and email (!exists)
+              create a temporary password that will have to be supplied later (maybe on the verify email step?)
+              OR use facebook -> authorize app flow which should create a customer document then redirect to
+              view USE CASE 4 (above)
+
+-----
+
+Data Structure of a Session
+
+req.session.plan
+- this is the plan context.
+- if (req.session.plan.organizer.email == req.session.customer.email) then this is the plan you're organizing
+- elseif (req.session.customer.email in req.session.plan.friends) then this is a plan you're invited to
+- else you are not involved in this plan
+
+req.session.visitor = {
+  - context is determined on each page load
+  - visitor means they are not part of the req.session.plan
+  - friend means they are invited to req.session.plan - they have to be logged in
+  - organizer means they are organizing this plan - they don't have to be logged in
+	context = "visitor|friend|organizer",
+
+}
+
+req.session.customer = customer //see data struture of a customer
+req.session.eventId - this is the event
+
+Data Structure of a Customer
+req.session.customer = {
+
+}
+
+Data Structure Of A Plan
+req.session.plan = {
+	guid:"f8bc7850-dc49-11e1-b157-0d164c97ce8c",
+
+  friends : [
+    {
+    planId:'',
+    customerId:'',
+    contactInfo : {
+      service:'facebook|twitter|wembliMail',
+      serviceId:'123455'
+    },
+    rsvp : {
+      status: 'pending'|'queued'|'requested'|'responded'
+      decision: true|false|null
+    }
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+WEMbli RPC API Documentation:
+===============================
+
+## Quick Example
+
+### Call from serverside js
+
+```javascript
+var eventRpc = require('/wembli/website/rpc/event').event;
+var handleResponse = function(err, results) {
+	console.log(results);
+};
+eventRpc['get'].apply(handleResponse,[args,req,res]);
+```
+
+### Call from angularjs wembliRpc Directive
+
+wembliRpc service has 1 method: fetch(). The fetch() method wraps angular's $http service which gives you hooks to transform the request and response.
+
+__Arguments__
+
+* string (required) - remote call name (e.g. 'event.get')
+* object (required) -  arguments from the remote call
+* function(err,response) (required) - response handler
+* function(data, headersGetter) (optional) - transform request - function is called before the request is made. Must return data input.
+* function(data, headersGetter) (optional) - transform response - function is called after the response comes back but before the response handler. Must return: JSON.parse(data);
+
+
+__Example__
+
+```javascript
+wembliRpc.fetch('event.get', {nearZip: 92101},
+
+	/* response handler callback */
+	function(err, response) {
+		console.log(response);
+	},
+
+	/* transformRequest - */
+	function(data, headersGetter) {
+  	$('#more-events .spinner').show();
+  	return data;
+	},
+
+  /* transformResponse */
+  function(data, headersGetter) {
+    //$('#more-events .spinner').hide();
+    return JSON.parse(data);
+  }
+);
+```
+
+#### Broadcasts
+
+
+#### Caching
+
+#### Integration With Other Services
+
+__customer__
+
+__loggedIn__
+
+
+---------------------------------------------------------------
+
+
+## API Methods:
+
+### customer
+
+#### customer.login
+#### customer.sendForgotPasswordEmail
+#### customer.changePassword
+#### customer.signup
+#### customer.get
+#### customer.getPlans
+#### customer.getPlansInvitedTo
+#### customer.createMerchantAccount
+#### customer.listBankAccounts
+#### customer.addBankAccount
+#### customer.deleteBankAccounts
+#### customer.updateAccountHolderInfo
+
+### plan
+
+#### plan.save
+#### plan.update
+#### plan.savePreferences
+#### plan.submitOrganizerRsvp
+#### plan.submitRsvpFor
+#### plan.submitRsvpComplete
+#### plan.submiteOutsidePayment
+#### plan.removeOutsidePayment
+#### plan.submitNotes
+#### plan.sendPonyUpEmail
+#### plan.resendPonyUpEmail
+#### plan.submitTicketsPriceRange
+#### plan.addFriend
+#### plan.addticketGroup
+#### plan.removeTicketGroup
+
+### friend
+
+#### friend.submitVote
+#### friend.submitRsvp
+
+### chatter
+
+#### chatter.create
+#### chatter.update
+#### chatter.get
+#### chatter.addComment
+#### chatter.upVoteComment
+#### chatter.upVoteChatter
+
+### event
+
+#### event.search
+
+__Arguments__
+
+__Response__
+
+__Example__
+
+#### event.get
+#### event.getPricingInfo
+#### event.getTickets
+#### event.getParking
+#### event.getHotels
+
+### venue
+
+### venue.get
+### venue.getConfigurations
+
+### invite-friends
+
+#### invite-friends.submit-rsvp
+
+this should be deprecated and replaced with: invite-friends.setRsvpDate
+
+#### invite-friends.sendWemblimail
+
+### feed
+
+#### feed.get
+#### feed.logActivity
+
+### twitter
+
+#### tweet
+#### getLoginStatus
+#### searchUsers
+#### getFriends
+
+
+

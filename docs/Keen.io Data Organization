@@ -1,0 +1,37 @@
+Keen.io Data Organization
+
+Global Context Data
+--------------------
+
+This data should be in every event.
+
+- domain: domain of the website
+- section: category that describes the page or group of pages where this event occurred (i.e. Home)
+- testId: the id of the split test
+- variationId: the id of the variation the visitor saw
+- visitorId: visitor id
+- visitId: session id
+- mdm
+- src
+- cmp
+- cnt
+- affiliate_id
+- sub_id
+- s1
+- s2
+- s3
+- s4
+- userAgent
+- os
+- device
+- ipAddress
+- geo
+- event
+
+Collections
+------------
+email
+rsvp
+view
+error
+

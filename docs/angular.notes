@@ -1,0 +1,27 @@
+/* Angular.js observed order of execution */
+
+* order in which the js files are loaded doesn't matter except
+* controller functions are global - if you load them in a separate file you should load them first
+* you should also load angular.js and jquery before any of the controllers or modules
+
+Module Loading
+===============
+
+1. directives seem to always load first no matter what order the js is or what order the modules array is
+2. services always seem to be next
+3. then filters
+
+Execution
+===========
+
+1. app.config
+2. modules that are injected
+3. app.run
+4. directive init
+5. directive compile
+6. controllers outermost -> innermost
+	ng-controller happens before directive controller if they are on the same node
+7. linking functions innermost -> outermost
+
+* dependency injection: if any service or filter is used - it is initialized before the thing that uses it runs. if its a directive - the filter or service has to be constructed before the directive init.  scope/model filters seem to get constructed before the controllers run but after all the directives compile
+
