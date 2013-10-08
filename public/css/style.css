@@ -12462,15 +12462,20 @@ a#facebook-login-button {
   line-height: 20px;
   vertical-align: middle;
 }
+#invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress {
+  margin-top: 10px;
+}
 #invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress h2 {
+  text-transform: normal;
   color: #000000;
   font-size: 20px;
+  line-height: 20px;
 }
 #invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress .invite-friends-progress-boxes {
   width: 300px;
 }
 #invitation-frame #invite-friends-wizard .invite-wizard-right .invite-friends-progress .invite-friends-progress-boxes .box.first {
-  margin: 10px 10px 10px 0;
+  margin: 0px 10px 10px 0;
 }
 #invitation-frame #invite-friends-wizard .invite-wizard-right .invite-wizard-step1-form .switch-login,
 #invitation-frame #invite-friends-wizard .invite-wizard-right .invite-wizard-step1-form .or,
