@@ -1,8 +1,7 @@
 - var lastSearch = visitor.lastSearch ? visitor.lastSearch : '/search';
 - lastSearch += '?updateEvent=1';
 //- determine timezone of customer
-- tzOffset = '-07:00';
-- var date = new Date(Date.parse(event.Date+tzOffset));
+- var date = new Date(Date.parse(event.Date));
 - var location = event.City+', '+event.StateProvince;
 - var payment;
 - if (typeof btnText === "undefined")
@@ -21,7 +20,7 @@
 		span.location.block= location
 		- if (typeof changeEvent != "undefined" && changeEvent == true)
 			span.changeEvent.block
-				a#changeEvent.wembli-sequence-link(href="/search/#{lastSearch}") Change Event
+				a#changeEvent(href="/search/#{lastSearch}") Change Event
 	.pull-right
 		.cta
 			case payment
