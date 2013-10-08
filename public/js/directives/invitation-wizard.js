@@ -116,8 +116,8 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
               $scope.signup.noContinue = true;
               return $scope.gotoStep('step1');
             }
+            $location.hash('');
             $location.path('/plan');
-            $('#invitation-modal').modal("hide");
           };
 
 
@@ -173,7 +173,6 @@ directive('inviteFriendsWizardButton', [
               'backdrop': true,
               'keyboard': true,
             };
-            $('#invitation-modal').modal(options);
           });
         };
       }
