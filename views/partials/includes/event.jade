@@ -1,13 +1,14 @@
 - var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 - lastSearch += '?updateEvent=1';
 - var payment;
+- console.log ('PARTIALS EVENT');
 - if ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined"))
 	- payment = plan.preferences.payment;
 //- a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
 .event-date-box
 	span.day {{getDate(event.Date)| date:'EEE'}}
 	span.event-date {{getDate(event.Date)| date:'MMM d'}}
-	span.time {{getDate(event.Date)| date:'h:mm a'}}
+	span.time {{getDate(event.Date+'-07:00')| date:'h:mm a'}}
 .info
 	.pull-left
 		span.name.block {{event.Name}}
@@ -22,9 +23,9 @@
 				when "split-first"
 					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 				when "split-after"
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 				when "no-split"
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 				default
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",name="{{event.Name}}",href="/tickets/{{event.ID}}/{{event.Name}}") See Tickets
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",name="{{event.Name}}",href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 
