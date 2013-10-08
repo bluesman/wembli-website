@@ -127,10 +127,10 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 			h = h.substr(-2);
 			var m = '0' + tmpDate.getTimezoneOffset()%60;
 			m = m.substr(-2);
-			var offset = h + ':' + m;
 
 			console.log('offset is: '+offset);
 			var operator = (tmpDate.getTimezoneOffset() > 0 ) ? '-' : '+';
+			var offset = operator + h + ':' + m;
 
 			if (/Z$/.test(d)) {
 				d = d.substring(0, s.length - 1);
