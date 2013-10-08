@@ -198,19 +198,21 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
               /* init the date picker */
               defaultDate = new Date(p.rsvpDate);
             }
+            /* don't set this be default per kim 20131008 */
+            /*
             wembliRpc.fetch('invite-friends.submit-rsvp', {
               rsvpDate: defaultDate
             }, function(err, res) {
               $rootScope.$broadcast('plan-rsvp-changed', defaultDate);
             });
-
+            */
 
             element.pikaday({
               bound: false,
               minDate: startDate,
               maxDate: endDate,
               defaultDate: defaultDate,
-              setDefaultDate: true,
+              setDefaultDate: false,
               onSelect: function() {
                 scope.plan.rsvpDate = this.getDate();
                 wembliRpc.fetch('invite-friends.submit-rsvp', {
@@ -443,9 +445,6 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
               });
 
             };
-
-            /* saying this step is completed if they logged in */
-            $scope.stepCompleted['nav-step3'] = true;
 
             /* get the friends in the plan (if any) to know who is already invited */
             var fbFriends = facebook.getFriends();

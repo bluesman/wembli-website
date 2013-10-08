@@ -27,7 +27,14 @@ form#invite-wizard-signup-form.invite-wizard-step1-form(name="signup",ng-show="s
 		h2 The Invitation Is From:
 		.alert.alert-info(ng-show="signup.success") Successfully saved your info.
 		.alert.alert-info(ng-show="login.success") Successfully logged you in.
-		p {{customer.firstName}} {{customer.lastName}} ({{customer.email}})
+		p.already-logged-in
+			i.icon-ok-sign.green &nbsp;You are already logged in.  We'll use the following for your contact information as you invite friends:
+		p
+			strong Name:&nbsp;
+			span {{customer.firstName}} {{customer.lastName}}
+		p
+			strong Email:&nbsp;
+			span {{customer.email}}
 
 //- this account exists but they never set a password and did not confirm the email address
 form#invite-wizard-login-unconfirmed-form.invite-wizard-step1-form(name="loginUnconfirmed",ng-show="showLoginUnconfirmedForm")
