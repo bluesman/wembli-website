@@ -230,81 +230,45 @@
 
 
 #plan-frame {
-	.clearfix();
-
 	input {
 		border:thin solid @grayLight;
 	}
 
-
 	#left {
-		width:18%;
+		width:200px;
 		height:100%;
-		position:absolute;
-		top:0;
-		left:0;
-		.clearfix();
 
 		#plan-nav {
 			height:100%;
 			font-size:18px;
-			width:18%;
-			background-color: @grayLight;
-			top:0;
-
-			.container {
-				width:100%;
-			}
-
-			.spacer {
-				height:90px;
-				border-bottom:thin solid darken(@grayLighter,20%);
-			}
-			.line {
-				border-top:thin solid lighten(@grayLighter, 60%);
-			}
-
-			#section1 {
-				margin-top:-56px;
-			}
+			background-color: @blue;
+			padding:10px;
+			margin-top:-56px;
 
 			a.plan-section-nav {
+				color:@white;
 				display:block;
-				color:@grayDark;
-				line-height:60px;
-				height:65px;
-				vertical-align:center;
-
-				.clearfix();
+				.border-radius(5px);
 
 				div {
-					width:100%;
-					text-align:left;
-
-					i {
-						margin-top:23px;
-						float:right;
-					}
+					text-align:center;
 				}
 
 				i {
-					float:left;
-					margin:12px 20px;
+					margin:12px 12px;
 				}
 			}
 
 			a:hover, a.active {
-				color:@white;
+				color:@yellow;
 				background-color:@blueLight;
 			}
 		}
 	}
 
 	#middle {
-		width:82%;
-		float:left;
 		height:100%;
-		margin-left:18%;
+		margin-left:200px;
 		text-align:left;
 
 		#rsvp-for-modal, #plan-dashboard {

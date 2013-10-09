@@ -1,6 +1,6 @@
 - var nav = planNav(req.session.visitor.context, req.session.plan.preferences.payment)
-#plan-frame.init-plan-nav(sections="#{nav.length}")
-	#left
+#plan-frame.init-plan-nav.clearfix(sections="#{nav.length}")
+	#left.affix
 		plan-nav
 	#middle.plan-dashboard
 		- if (req.session.visitor.context === 'organizer')

@@ -240,8 +240,8 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 				});
 
 			},
+
 			setScrollToSection: function(sectionNumber) {
-				console.l
 				self.scrollToSection = sectionNumber;
 			},
 			setSectionsCount: function(cnt) {
@@ -253,8 +253,9 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 				return self.sectionsCount;
 			},
 
+			/* took out scroll functionality for click instead */
 			scrollTo: function(sectionNumber) {
-				/* get the heights of all the sections */
+				/* this is the scroll functionality which is now replaced
 				var height = 20;
 				for (var i = 1; i < sectionNumber; i++) {
 					var h = $('#section' + i).height();
@@ -264,7 +265,15 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 				$('#content').animate({
 					scrollTop: (height - 10)
 				}, 1000, 'easeOutBack');
+				*/
+
+				/* hide all sections & fade in new one */
+				for (var i = 1; i <= self.sectionsCount; i++) {
+					$('#section'+i).hide();
+				};
+				$('#section'+sectionNumber).fadeIn(500);
 			}
+
 		};
 		return planNav;
 	}
