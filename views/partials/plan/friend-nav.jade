@@ -1,13 +1,10 @@
 - var nav = planNav(req.session.visitor.context, req.session.plan.preferences.payment)
-#plan-nav.affix
+#plan-nav
+	.nav-arrow.hide
 	a.plan-section-nav(href="/dashboard",direction="0")
-		i.icon-dashboard.icon-2x
-		div
-			span Back To Dashboard
+		.icon-dashboard.icon-3x
+		div dashboard
 	each navItem in nav
-		a(class="plan-section-nav scroll-to",href="#{navItem.href}",id="#{navItem.id}")
-			i(class="#{navItem.icon}").icon-2x
-			div
-				span #{navItem.text}
-				i.icon-double-angle-right.pull-right
-
+		a(class="plan-section-nav scroll-to",ng-click="gotoSection('#{navItem.section}')",href="#{navItem.href}",id="#{navItem.id}")
+			.icon-3x(class="#{navItem.icon}")
+			div #{navItem.text}

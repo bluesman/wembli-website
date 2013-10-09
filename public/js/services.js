@@ -190,6 +190,9 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 		self.sectionsCount = 0;
 		self.sectionsLoaded = -1;
 		self.scrollToSection = 1;
+		self.arrowTop = -20;
+		self.arrowHeight = 104;
+
 		var planNav = {
 			init: function(sectionsCount) {
 				if (self.sectionsCount == 0) {
@@ -201,34 +204,10 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 						/* all the sections are loaded */
 						self.sectionsLoaded = -1;
 
-						/* setup the scroll handler for each of the sections */
-						angular.element('#content').on('scroll', function() {
-							for (var i = 1; i <= sectionsCount; i++) {
-								/* if the previous section has scrolled halfway
-								 * and this section is not more off the screen than half the height of the section
-								 * then highlight the left nav for this element
-								 */
-								var sectionNum = i;
-								var currentId = '#section' + sectionNum;
-								var prevId = '#section' + sectionNum--;
-								var h = $(currentId).height();
-								var prevHeight = ($(prevId).height() / 2);
-
-								var t = $(currentId).offset().top;
-								if (t <= prevHeight && t > -(h / 2)) {
-									/*
-									 * if the section nav that is active is not the one that should be active
-									 * then make that section in active
-									 */
-									if ($('.plan-section-nav.active').attr('id') !== 'nav-section' + i) {
-										$('.plan-section-nav.active').removeClass('active');
-										$('#nav-section' + i).addClass('active');
-									}
-								}
-							}
-						});
-
 						$('.plan-section-nav').removeClass('active');
+						var top = self.arrowTop + (self.arrowHeight * self.scrollToSection);
+
+						$('.nav-arrow').css('top',top+'px').show();
 						$('#nav-section' + (self.scrollToSection)).addClass('active');
 
 						$timeout(function() {
@@ -240,8 +219,8 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 				});
 
 			},
+
 			setScrollToSection: function(sectionNumber) {
-				console.l
 				self.scrollToSection = sectionNumber;
 			},
 			setSectionsCount: function(cnt) {
@@ -253,8 +232,9 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 				return self.sectionsCount;
 			},
 
+			/* took out scroll functionality for click instead */
 			scrollTo: function(sectionNumber) {
-				/* get the heights of all the sections */
+				/* this is the scroll functionality which is now replaced
 				var height = 20;
 				for (var i = 1; i < sectionNumber; i++) {
 					var h = $('#section' + i).height();
@@ -264,7 +244,20 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 				$('#content').animate({
 					scrollTop: (height - 10)
 				}, 1000, 'easeOutBack');
+				*/
+
+				/* hide all sections & fade in new one */
+				for (var i = 1; i <= self.sectionsCount; i++) {
+					$('#section'+i).hide();
+				};
+
+				$('.plan-section-nav').removeClass('active');
+				$('#nav-section' + sectionNumber).addClass('active');
+				var top = self.arrowTop + (self.arrowHeight * sectionNumber);
+				$('.nav-arrow').css('top',top+'px').show();
+				$('#section'+sectionNumber).fadeIn(500);
 			}
+
 		};
 		return planNav;
 	}

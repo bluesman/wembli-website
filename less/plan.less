@@ -230,81 +230,58 @@
 
 
 #plan-frame {
-	.clearfix();
-
 	input {
 		border:thin solid @grayLight;
 	}
 
-
 	#left {
-		width:18%;
+		width:160px;
 		height:100%;
-		position:absolute;
-		top:0;
-		left:0;
-		.clearfix();
+		padding:10px 0;
 
 		#plan-nav {
 			height:100%;
 			font-size:18px;
-			width:18%;
-			background-color: @grayLight;
-			top:0;
+			background-color: @blueDark;
+			margin-top:-76px;
 
-			.container {
-				width:100%;
-			}
-
-			.spacer {
-				height:90px;
-				border-bottom:thin solid darken(@grayLighter,20%);
-			}
-			.line {
-				border-top:thin solid lighten(@grayLighter, 60%);
-			}
-
-			#section1 {
-				margin-top:-56px;
+			.nav-arrow {
+				position:absolute;
+				top:0px;
+				left:150px;
+				width: 0;
+				height: 0;
+				border-top: 10px solid transparent;
+				border-bottom: 10px solid transparent;
+				border-right: 10px solid @white;
 			}
 
 			a.plan-section-nav {
+				color:@blueDarker;
 				display:block;
-				color:@grayDark;
-				line-height:60px;
-				height:65px;
-				vertical-align:center;
-
-				.clearfix();
-
+				.border-radius(5px);
+				margin:10px auto;
+				padding:10px;
+				width:80px;
 				div {
-					width:100%;
-					text-align:left;
-
-					i {
-						margin-top:23px;
-						float:right;
-					}
+					text-align:center;
 				}
 
 				i {
-					float:left;
-					margin:12px 20px;
+					margin:12px 12px;
 				}
 			}
 
 			a:hover, a.active {
 				color:@white;
-				background-color:@blueLight;
+				background-color:@blue;
 			}
 		}
 	}
 
 	#middle {
-		width:82%;
-		float:left;
 		height:100%;
-		margin-left:18%;
+		margin-left:200px;
 		text-align:left;
 
 		#rsvp-for-modal, #plan-dashboard {

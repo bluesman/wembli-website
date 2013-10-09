@@ -9,48 +9,48 @@ module.exports = {
 			'organizer': [{
 				'name': "itinerary",
 				'icon': "icon-file-alt",
-				'text': "Itinerary",
+				'text': "itinerary",
 			}, {
 				'name': "rsvp",
 				'icon': "icon-envelope",
-				'text': "RSVP's",
+				'text': "rsvp's",
 			}, {
 				'name': "cart",
 				'icon': "icon-shopping-cart",
-				'text': "Cart",
+				'text': "cart",
 			}, {
 				'name': "pony-up",
-				'icon': "icon-money",
-				'text': "Pony Up!",
+				'icon': "icon-credit-card",
+				'text': "pony up",
 			}, {
 				'name': "chatter",
 				'icon': "icon-comments-alt",
-				'text': "Chatter",
+				'text': "chatter",
 			}],
 			'friend': [{
 				'name': "itinerary",
 				'icon': "icon-file-alt",
-				'text': "Itinerary",
+				'text': "itinerary",
 			}, {
 				'name': "rsvp",
 				'icon': "icon-envelope",
-				'text': "RSVP",
+				'text': "rsvp",
 			}, {
 				'name': "vote",
 				'icon': "icon-bar-chart",
-				'text': "Vote",
+				'text': "vote",
 			}, {
 				'name': "invitees",
 				'icon': "icon-group",
-				'text': "Invitees",
+				'text': "invitees",
 			}, {
 				'name': "pony-up",
 				'icon': "icon-money",
-				'text': "Pony Up!",
+				'text': "pony up",
 			}, {
 				'name': "chatter",
 				'icon': "icon-comments-alt",
-				'text': "Chatter",
+				'text': "chatter",
 			}]
 		};
 		var thisNav = nav[mode];

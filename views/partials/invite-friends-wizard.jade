@@ -39,9 +39,9 @@
 	.form-controls()
 		.wembli-friends
 		//- step-1
-		button.submit-step.btn.btn-secondary.btn-large(ng-disabled="!customer.id",ng-show="{'nav-step1':true}[currentStep] && showSignupForm", ng-click="submitSignup()") Go to next step
-		button.submit-step.btn.btn-secondary.btn-large(ng-disabled="!customer.id",ng-show="{'nav-step1':true}[currentStep] && showSignupView", ng-click="gotoStep('step2')") Go to next step
-		button.submit-step.btn.btn-secondary.btn-large(ng-disabled="!customer.id",ng-show="{'nav-step1':true}[currentStep] && showLoginForm", ng-click="submitLogin()") Go to next step
+		button.submit-step.btn.btn-secondary.btn-large(ng-show="{'nav-step1':true}[currentStep] && showSignupForm", ng-click="submitSignup()") Go to next step
+		button.submit-step.btn.btn-secondary.btn-large(ng-show="{'nav-step1':true}[currentStep] && showSignupView", ng-click="gotoStep('step2')") Go to next step
+		button.submit-step.btn.btn-secondary.btn-large(ng-show="{'nav-step1':true}[currentStep] && showLoginForm", ng-click="submitLogin()") Go to next step
 		//- step-2
 		a.submit-step.btn.btn-secondary.btn-large(href="#step3",ng-show="{'nav-step2':true}[currentStep]", ng-click="submitRsvp()") Go to next step
 		//- step-3
