@@ -28,7 +28,7 @@ directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout', 'plan', 
         return function(scope, element, attr, controller) {
           plan.get(function(p) {
 
-            var scrollToSection = 1;
+            var scrollToSection = 2;
             if ($location.hash()) {
               var h = $location.hash();
               scrollToSection = parseInt(h.charAt(h.length - 1));

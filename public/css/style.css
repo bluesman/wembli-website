@@ -10572,21 +10572,35 @@ a#facebook-login-button {
   border: thin solid #cccccc;
 }
 #plan-frame #left {
-  width: 200px;
+  width: 160px;
+  height: 100%;
+  padding: 10px 0;
 }
 #plan-frame #left #plan-nav {
   height: 100%;
   font-size: 18px;
-  background-color: #4380b8;
-  padding: 10px;
-  margin-top: -56px;
+  background-color: #426799;
+  margin-top: -76px;
+}
+#plan-frame #left #plan-nav .nav-arrow {
+  position: absolute;
+  top: 0px;
+  left: 150px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #ffffff;
 }
 #plan-frame #left #plan-nav a.plan-section-nav {
-  color: #ffffff;
+  color: #214478;
   display: block;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  margin: 10px auto;
+  padding: 10px;
+  width: 80px;
 }
 #plan-frame #left #plan-nav a.plan-section-nav div {
   text-align: center;
@@ -10596,8 +10610,8 @@ a#facebook-login-button {
 }
 #plan-frame #left #plan-nav a:hover,
 #plan-frame #left #plan-nav a.active {
-  color: #ffcc00;
-  background-color: #6da1b7;
+  color: #ffffff;
+  background-color: #4380b8;
 }
 #plan-frame #middle {
   height: 100%;
