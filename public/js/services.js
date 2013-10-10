@@ -448,6 +448,11 @@ factory('header', [
 					}
 					prevScroll = angular.element('#content').scrollTop();
 				});
+			},
+			fixed: function() {
+				console.log('turn off scroll');
+				//angular.element('#header').css('position','static');
+				angular.element('#content').off('scroll');
 			}
 		}
 	}
