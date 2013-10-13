@@ -1187,7 +1187,12 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 	$scope.event = JSON.parse(rsvpLoginModal.get('event'));
 
 	if ($scope.service === 'wemblimail') {
-		$scope.email = rsvpLoginModal.get('serviceId');
+		wembliRpc.fetch('friend.getServiceId', {token:$scope.token}, function(err, result) {
+			console.log(result);
+			if (result.serviceId) {
+				$scope.email = result.serviceId;
+			}
+		});
 	}
 
 
