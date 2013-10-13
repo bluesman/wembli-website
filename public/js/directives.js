@@ -798,7 +798,6 @@ directive('rsvpLoginModal', ['fetchModals', 'rsvpLoginModal',
         return function(scope, element, attr) {
           rsvpLoginModal.set('guid', attr.guid);
           rsvpLoginModal.set('service', attr.service);
-          rsvpLoginModal.set('serviceId', attr.serviceId);
           rsvpLoginModal.set('token', attr.token);
           rsvpLoginModal.set('friend', attr.friend);
           rsvpLoginModal.set('event', attr.event);

@@ -1,4 +1,4 @@
 extends layout
 block frame1
 	include includes/event-detail
-	rsvp-login-modal(service-id="#{friend.contactInfo.serviceId}", service="#{service}",guid="#{guid}",token="#{token}",confirm-social="#{confirmSocial}",friend="#{friend.contactInfo.name}",event="#{JSON.stringify(plan.event)}")
+	rsvp-login-modal(service="#{service}",guid="#{guid}",token="#{token}",confirm-social="#{confirmSocial}",friend="#{friend.contactInfo.name}",event="#{JSON.stringify(plan.event)}")
