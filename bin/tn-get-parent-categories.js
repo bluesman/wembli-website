@@ -11,7 +11,13 @@ var url = '/tnwebservice/v3.1/tnwebservicestringinputs.asmx/GetHighSalesPerforme
 var url = '/tnwebservice/v3.1/tnwebservicestringinputs.asmx/GetCategoriesMasterList?WebsiteConfigId=8582&method=GetCategoriesMasterList';
 var url = '/tnwebservice/v3.1/tnwebservicestringinputs.asmx/GetCategories?WebsiteConfigId=8582&method=GetCategories&ParentCategoryID=0';
 //var url = '/tnwebservice/v3.2/tnwebservicestringinputs.asmx/GetHighSalesPerformers?WebsiteConfigId=8582&method=GetHighSalesPerformers&numReturned=10&parentCategoryID=3&childCategoryID=&grandchildCategoryID='
-var url = '/tnwebservice/v3.1/tnwebservicestringinputs.asmx/GetPricingInfo?WebsiteConfigId=8582&method=GetPricingInfo&EventID=2077469';
+//var url = '/tnwebservice/v3.1/tnwebservicestringinputs.asmx/GetPricingInfo?WebsiteConfigId=8582&method=GetPricingInfo&EventID=2077469';
+/* categories:
+ * 1: sports
+ * 2: concerts
+ * 3: theater
+ * 4: other
+ */
 
 var options = {'host':'tn.wembli.com',
                'port':80,
