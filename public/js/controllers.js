@@ -34,7 +34,7 @@ function IndexCtrl($scope, $templateCache, $rootScope, $location) {
 
 	$scope.submitSearch = function() {
 		$scope.searchInProgress = true;
-		$location.path('/search/events/'+$scope.search);
+		$location.path('/search/events/' + $scope.search);
 	}
 
 };
@@ -130,6 +130,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 
 	});
 	*/
+	$scope.noMoreEvents = true;
 
 	plan.get(function(planData) {
 		$scope.plan = planData;
@@ -171,10 +172,16 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 					$scope.events = [];
 				}
 
-				$scope.events = $scope.events.concat(result['event']);
-				var d = new Date($scope.events[$scope.events.length - 1].Date);
-				$scope.lastEventDate = $filter('date')(d, "MM-dd-yy");
-				$scope.lastEventId = $scope.events[$scope.events.length - 1].ID;
+				if (result.event.length < 1) {
+
+					$scope.noMoreEvents = true;
+				} else {
+					$scope.noMoreEvents = false;
+					$scope.events = $scope.events.concat(result['event']);
+					var d = new Date($scope.events[$scope.events.length - 1].Date);
+					$scope.lastEventDate = $filter('date')(d, "MM-dd-yy");
+					$scope.lastEventId = $scope.events[$scope.events.length - 1].ID;
+				}
 				$timeout(function() {
 					loadingModal.hide();
 				}, 500);

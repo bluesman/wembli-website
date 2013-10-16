@@ -18,6 +18,10 @@ exports.event = {
 				return me(err);
 			}
 
+			if (typeof results.Event === "undefined") {
+				return me(null,{success:1,event:[]});
+			}
+
 			//if lastEventId is passed in, determine which element has that Id and start the splice there
 			var beginIdx = 0;
 			if (args.lastEventId) {

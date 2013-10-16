@@ -7236,8 +7236,10 @@ ul.icons-ul > li .icon-li {
 .helvetica {
   font-family: "Helveticaneueltstd-ex";
 }
+/* .calibri {font-family: "CalibriRegular", Arial, Segoe, "Segoe UI", Optima, sans-serif;} */
+/* calibri has no bold and the sizing is jacked up - hack to make calibri resolve to arial */
 .calibri {
-  font-family: "CalibriRegular", Arial, Segoe, "Segoe UI", Optima, sans-serif;
+  font-family: Arial;
 }
 h1,
 h2,
@@ -7314,7 +7316,7 @@ html {
 body {
   height: 100%;
   overflow-x: hidden;
-  font-family: "CalibriRegular", Arial, Candara, Segoe, "Segoe UI", Optima, sans-serif;
+  font-family: Arial;
   font-size: 14px;
 }
 * {
@@ -7945,21 +7947,21 @@ header .right-container .logo-45 h1 {
   background-color: rgba(66, 127, 184, 0.25);
 }
 #index-frame section h2 {
-  font-size: 30px;
+  font-size: 24px;
   color: #000000;
   font-weight: bold;
   padding: 38px 0;
 }
 #index-frame .section2 {
   position: relative;
-  top: -275px;
+  top: -325px;
   width: 100%;
   margin-bottom: -250px;
 }
 #index-frame .section2 .container .tag-line {
   text-transform: uppercase;
   text-shadow: #000 2px 2px 6px;
-  font-size: 38px;
+  font-size: 32px;
   line-height: 48px;
   font-weight: bold;
   text-align: center;
@@ -8081,15 +8083,15 @@ header .right-container .logo-45 h1 {
 }
 #index-frame .section3 .info-boxes .box h3 {
   font-weight: bold;
-  font-size: 26px;
+  font-size: 22px;
 }
 #index-frame .section3 .info-boxes .box .header i {
-  font-size: 22px;
+  font-size: 20px;
 }
 #index-frame .section3 .info-boxes .box .header h4 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
-  line-height: 24px;
+  line-height: 22px;
 }
 #index-frame .section3 .info-boxes .box .body {
   padding: 10px;
@@ -8111,7 +8113,7 @@ header .right-container .logo-45 h1 {
 #index-frame .section4 .video-container .video-text {
   margin-top: 50px;
   width: 500px;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 22px;
 }
 #index-frame .section4 .video-container .video-text p {
@@ -8165,7 +8167,7 @@ header .right-container .logo-45 h1 {
 #index-frame .section5 .container .middle h2,
 #index-frame .section5 .container .right h2 {
   color: #000000;
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 20px;
 }
 #index-frame .section5 .container .left .performers,
@@ -8465,6 +8467,36 @@ header .right-container .logo-45 h1 {
 }
 #content #search-frame .container #search-right.right .results a#more-events i {
   margin: 1px 0px 0px 8px;
+}
+#content #search-frame .container #search-right.right .no-results {
+  margin-bottom: 60px;
+  color: #000000;
+}
+#content #search-frame .container #search-right.right .no-results .collected-email,
+#content #search-frame .container #search-right.right .no-results .collect-email {
+  background-color: rgba(153, 153, 153, 0.9);
+  padding: 20px 40px 80px 40px;
+}
+#content #search-frame .container #search-right.right .no-results .collected-email p,
+#content #search-frame .container #search-right.right .no-results .collect-email p {
+  padding: 20px;
+}
+#content #search-frame .container #search-right.right .no-results .collected-email #email,
+#content #search-frame .container #search-right.right .no-results .collect-email #email {
+  height: 25px;
+  width: 300px;
+}
+#content #search-frame .container #search-right.right .no-results .collected-email button,
+#content #search-frame .container #search-right.right .no-results .collect-email button {
+  font-size: 12px;
+  margin: 10px 34px;
+}
+#content #search-frame .container #search-right.right .no-results .clearfix {
+  padding: 20px;
+  background-color: rgba(153, 153, 153, 0.9);
+}
+#content #search-frame .container #search-right.right .no-results .back-to-search {
+  text-align: left;
 }
 #tickets-login-modal .modal-body,
 #restaurants-login-modal .modal-body {

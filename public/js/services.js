@@ -2058,9 +2058,7 @@ factory('sequence', ['initRootScope', '$rootScope', '$window',
 		sequence.afterNextFrameAnimatesIn = function() {
 			$scope.afterNextFrameAnimatesIn = true;
 			$scope.beforeNextFrameAnimatesIn = false;
-			$scope.$apply(function() {
-				$scope.sequenceCompleted = true;
-			});
+			$scope.sequenceCompleted = true;
 			$scope.$broadcast('sequence-afterNextFrameAnimatesIn');
 		};
 

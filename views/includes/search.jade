@@ -30,7 +30,7 @@ lastEventId   = undefined;
 	.container.clearfix
 		#search-left.left.pull-left
 			.search-arrow
-			.copy.segoe Choose for the event you want to go to...
+			.copy.segoe Search for the event you want to go to...
 			.wembliman
 		#search-right.right.pull-left
 			.search
@@ -43,14 +43,22 @@ lastEventId   = undefined;
 				if (typeof partial != "undefined")
 					include ../partials/includes/event-list
 				else
-					if ((typeof events == "undefined") || (typeof events[0] === "undefined"))
-						#event-list-wrapper
-							h3= heading
-							.no-results Aww man! We didn't find any matching events...
-					else
+					if ((typeof events !== "undefined") && (typeof events[0] !== "undefined"))
 						include event-list
-				a#more-events(ng-click="moreEvents()")
+						.hide(ng-init="noMoreEvents=false")
+				.no-results(ng-show="noMoreEvents")
+					.notify-email(type="search")
+						.collect-email(ng-hide="emailCollected")
+							p Aww shucks! We haven't got any more event listings to show you.  Enter your email below if you'd like to be notified when events become available.
+							fieldset
+								input#email
+						.collected-email(ng-show="emailCollected")
+							p OK! We'll let you know if any events become available!
+						.clearfix
+							.back-to-search.pull-left
+								a(href="/search") << Perform a new search
+							button.btn.btn-primary.pull-right(ng-hide="emailCollected",ng-click="collectEmail()") Notify Me!
+
+				a#more-events(ng-click="moreEvents()",ng-hide="noMoreEvents")
 					span= seeMore
 					i.icon-chevron-down
-
-
