@@ -7954,7 +7954,7 @@ header .right-container .logo-45 h1 {
 }
 #index-frame .section2 {
   position: relative;
-  top: -325px;
+  top: -317px;
   width: 100%;
   margin-bottom: -250px;
 }
@@ -11145,14 +11145,15 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control label .header {
   font-weight: bold;
   font-style: italic;
-  font-size: 1.5em;
-  line-height: 24px;
+  font-size: 1.25em;
+  line-height: 30px;
   vertical-align: middle;
 }
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control label i {
   width: 26px;
 }
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control input[type=text] {
+  margin-top: 5px;
   width: 75px;
   font-size: 18px;
   text-align: right;
@@ -11177,6 +11178,7 @@ a#facebook-login-button {
   font-style: italic;
   line-height: 26px;
   vertical-align: middle;
+  margin-top: 3px;
 }
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history-label .icon {
   width: 20px;
@@ -11232,6 +11234,7 @@ a#facebook-login-button {
   width: 72px;
   padding: 4px 6px;
   margin-right: 4px;
+  font-size: 12px;
 }
 #plan-frame #middle #plan-dashboard .invitees-container .pony-up-alert {
   margin: 34px;

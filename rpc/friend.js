@@ -6,8 +6,7 @@ var Ticket = wembliModel.load('ticket');
 var async = require('async');
 
 exports.friend = {
-
-	submitRsvp: function(args, req, res) {
+ submitRsvp: function(args, req, res) {
 		var me = this;
 		var data = {
 			success: 1
@@ -119,4 +118,22 @@ exports.friend = {
 			});
 		});
 	},
+	getServiceId: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		/* use a token to get the serviceId */
+		if (!args.token) {
+			return me({success:0});
+		}
+
+		Friend.findOne({'rsvp.token':args.token},'contactInfo').exec(function(err, results) {
+			console.log(results);
+			data.serviceId = results.contactInfo.serviceId;
+			return me(null,data);
+		});
+
+	}
 };

@@ -9,6 +9,7 @@ directive('initPlanNav', ['$location', 'planNav', '$rootScope', '$timeout', 'hea
       restrict: 'C',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
+          header.fixed();
           planNav.init(attr.sections);
           header.fixed();
         };
