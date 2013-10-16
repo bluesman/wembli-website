@@ -7375,7 +7375,6 @@ body {
   left: 100%;
   width: 100%;
   height: 100%;
-  margin-top: 56px;
   -webkit-transition-duration: 0.6s;
   -moz-transition-duration: 0.6s;
   -ms-transition-duration: 0.6s;
@@ -7386,6 +7385,7 @@ body {
 #content > ul > li > div > div {
   /* i took this out for the activity feed on the dashboard...need to find another way to handle the footer blockage */
 
+  margin-top: 56px;
 }
 #content > ul > li.animate-in > div {
   left: 0%;
@@ -10612,7 +10612,7 @@ a#facebook-login-button {
   height: 100%;
   font-size: 18px;
   background-color: #426799;
-  margin-top: -76px;
+  margin-top: -18px;
 }
 #plan-frame #left #plan-nav .nav-arrow {
   position: absolute;
@@ -10647,237 +10647,148 @@ a#facebook-login-button {
 }
 #plan-frame #middle {
   height: 100%;
-  margin-left: 200px;
+  margin-left: 160px;
   text-align: left;
   /* organizer specific css */
 
   /* friend specific css */
 
 }
-#plan-frame #middle #rsvp-for-modal,
+#plan-frame #middle section > .header {
+  border-bottom: 6px solid #426799;
+}
 #plan-frame #middle #plan-dashboard {
-  height: 100%;
   /* global invitees lists */
 
   /* section specific global css */
 
 }
-#plan-frame #middle #rsvp-for-modal .border-bottom,
 #plan-frame #middle #plan-dashboard .border-bottom {
   border-bottom: thin solid #666666;
 }
-#plan-frame #middle #rsvp-for-modal .header,
-#plan-frame #middle #plan-dashboard .header {
-  *zoom: 1;
+#plan-frame #middle #plan-dashboard .plan-section {
+  padding: 0 20px;
 }
-#plan-frame #middle #rsvp-for-modal .header:before,
-#plan-frame #middle #plan-dashboard .header:before,
-#plan-frame #middle #rsvp-for-modal .header:after,
-#plan-frame #middle #plan-dashboard .header:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #rsvp-for-modal .header:after,
-#plan-frame #middle #plan-dashboard .header:after {
-  clear: both;
-}
-#plan-frame #middle #rsvp-for-modal .header:before,
-#plan-frame #middle #plan-dashboard .header:before,
-#plan-frame #middle #rsvp-for-modal .header:after,
-#plan-frame #middle #plan-dashboard .header:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #rsvp-for-modal .header:after,
-#plan-frame #middle #plan-dashboard .header:after {
-  clear: both;
-}
-#plan-frame #middle #rsvp-for-modal .header h1,
-#plan-frame #middle #plan-dashboard .header h1 {
-  width: 100%;
+#plan-frame #middle #plan-dashboard .plan-section .header h1 {
   padding: 10px 0 4px;
-  border-bottom: 6px solid #426799;
   text-transform: uppercase;
   margin: 10px 0;
   font-weight: bold;
 }
-#plan-frame #middle #rsvp-for-modal .header .btn,
-#plan-frame #middle #plan-dashboard .header .btn {
+#plan-frame #middle #plan-dashboard .plan-section .header .btn {
   margin: 30px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section,
-#plan-frame #middle #plan-dashboard .plan-section {
-  padding: 0 20px;
-  min-height: 768px;
-  *zoom: 1;
-}
-#plan-frame #middle #rsvp-for-modal .plan-section:before,
-#plan-frame #middle #plan-dashboard .plan-section:before,
-#plan-frame #middle #rsvp-for-modal .plan-section:after,
-#plan-frame #middle #plan-dashboard .plan-section:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #rsvp-for-modal .plan-section:after,
-#plan-frame #middle #plan-dashboard .plan-section:after {
-  clear: both;
-}
-#plan-frame #middle #rsvp-for-modal .plan-section:before,
-#plan-frame #middle #plan-dashboard .plan-section:before,
-#plan-frame #middle #rsvp-for-modal .plan-section:after,
-#plan-frame #middle #plan-dashboard .plan-section:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-#plan-frame #middle #rsvp-for-modal .plan-section:after,
-#plan-frame #middle #plan-dashboard .plan-section:after {
-  clear: both;
-}
-#plan-frame #middle #rsvp-for-modal .plan-section .alert .icon-2x,
 #plan-frame #middle #plan-dashboard .plan-section .alert .icon-2x {
   margin: 4px 10px 0 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .alert .text,
 #plan-frame #middle #plan-dashboard .plan-section .alert .text {
   width: 89%;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body > h3,
+#plan-frame #middle #plan-dashboard .plan-section .event-info {
+  font-size: 16px;
+  color: #4380b8;
+  padding: 10px 0;
+}
 #plan-frame #middle #plan-dashboard .plan-section .body > h3 {
   color: #214478;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body,
 #plan-frame #middle #plan-dashboard .plan-section .body {
   *zoom: 1;
-  margin-bottom: 30px;
+  margin-top: 30px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body:before,
 #plan-frame #middle #plan-dashboard .plan-section .body:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body:after,
 #plan-frame #middle #plan-dashboard .plan-section .body:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body:after,
 #plan-frame #middle #plan-dashboard .plan-section .body:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body:before,
 #plan-frame #middle #plan-dashboard .plan-section .body:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body:after,
 #plan-frame #middle #plan-dashboard .plan-section .body:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body:after,
 #plan-frame #middle #plan-dashboard .plan-section .body:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body h3,
 #plan-frame #middle #plan-dashboard .plan-section .body h3 {
   font-weight: bold;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .block1,
 #plan-frame #middle #plan-dashboard .plan-section .body .block1 {
   *zoom: 1;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .block1:before,
 #plan-frame #middle #plan-dashboard .plan-section .body .block1:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body .block1:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .block1:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .block1:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .block1:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .block1:before,
 #plan-frame #middle #plan-dashboard .plan-section .body .block1:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body .block1:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .block1:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .block1:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .block1:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .block1 .firstRow h3,
 #plan-frame #middle #plan-dashboard .plan-section .body .block1 .firstRow h3 {
   font-size: 1.2em;
   padding: 10px 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row,
 #plan-frame #middle #plan-dashboard .plan-section .body .row {
   margin: 0;
   *zoom: 1;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row:before,
 #plan-frame #middle #plan-dashboard .plan-section .body .row:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row:before,
 #plan-frame #middle #plan-dashboard .plan-section .body .row:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container {
   width: 300px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container .price-range-group-container,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container .price-range-group-container {
   *zoom: 1;
   width: 300px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container .price-range-group-container:before,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container .price-range-group-container:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container .price-range-group-container:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container .price-range-group-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container .price-range-group-container:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container .price-range-group-container:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container .price-range-group-container:before,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container .price-range-group-container:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container .price-range-group-container:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container .price-range-group-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container .price-range-group-container:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container .price-range-group-container:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-slider-container .price-range-group-container .dollar-sign,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-slider-container .price-range-group-container .dollar-sign {
   display: block;
   width: 80px;
@@ -10885,7 +10796,6 @@ a#facebook-login-button {
   text-align: center;
   float: left;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-input-container,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-input-container {
   width: 120px;
   line-height: 45px;
@@ -10894,31 +10804,24 @@ a#facebook-login-button {
   color: #ffcc00;
   *zoom: 1;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-input-container:before,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-input-container:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-input-container:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-input-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-input-container:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-input-container:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-input-container:before,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-input-container:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-input-container:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-input-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-input-container:after,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-input-container:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .body .row .price-input-container input,
 #plan-frame #middle #plan-dashboard .plan-section .body .row .price-input-container input {
   width: 75px;
   border: none;
@@ -10929,41 +10832,32 @@ a#facebook-login-button {
   line-height: 45px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom {
   *zoom: 1;
   margin-top: 30px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom:before,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom:after,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom:after,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom:before,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom:before,
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom:after,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom:after,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom .total-coming,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom .total-coming {
   color: #666666;
   width: 230px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom .total-coming .header,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom .total-coming .header {
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
@@ -10971,74 +10865,61 @@ a#facebook-login-button {
   background-color: #cccccc;
   padding: 10px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom .total-coming .header .rsvp-count,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom .total-coming .header .rsvp-count {
   font-size: 26px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom .total-coming .friend-coming,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom .total-coming .friend-coming {
   margin: 5px 10px;
 }
-#plan-frame #middle #rsvp-for-modal .plan-section .section-bottom .next-wrapper button,
 #plan-frame #middle #plan-dashboard .plan-section .section-bottom .next-wrapper button {
   font-weight: bold;
   width: 200px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee,
+#plan-frame #middle #plan-dashboard .invitees-container {
+  margin-top: 40px;
+}
 #plan-frame #middle #plan-dashboard .invitees-container .invitee {
   margin: 0 30px 40px 0;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .img-container,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .img-container {
   margin-top: 10px;
   width: 75px;
   text-align: center;
   line-height: 12px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .img-container .rsvp-for,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .img-container .rsvp-for {
   font-size: .8em;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info {
   margin-left: 10px;
   width: 80%;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container {
   *zoom: 1;
   width: 100%;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container:after,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container:after,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:before,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container:after,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container:after,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref {
   width: 20%;
   text-align: center;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-header {
   text-transform: uppercase;
   color: #999999;
@@ -11046,352 +10927,221 @@ a#facebook-login-button {
   margin: 10px 5px;
   font-size: 14px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .icon,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .icon {
   height: 45px;
   line-height: 45px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .dollar-sign,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .dollar-sign {
   font-size: 30px;
   height: 45px;
   line-height: 45px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref .invitee-pref-value .prefs-list {
   text-align: left;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-header {
   color: #cccccc;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .icon,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .icon {
   color: #cccccc;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .dollar-sign,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .invitee-pref.muted .invitee-pref-value .dollar-sign {
   color: #cccccc;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .first,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .first {
   text-align: left;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-prefs-container .first i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-prefs-container .first i {
   margin-left: 25px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-name,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name {
   height: 24px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-name .name,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .name {
   font-size: 24px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .invitee-name .guests,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .guests {
   font-weight: bold;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container {
   width: 465px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .me-pony-up-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .me-pony-up-amount,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .me-pony-up-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .me-pony-up-amount,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .me-pony-up-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .me-pony-up-amount {
   width: 60px;
   text-align: right;
   margin-bottom: 0px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container label.transaction-fee-label:hover,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container label.transaction-fee-label:hover,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container label.transaction-fee-label:hover,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container label.transaction-fee-label:hover,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container label.transaction-fee-label:hover,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container label.transaction-fee-label:hover,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container label.suggested-amounts-label:hover,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container label.suggested-amounts-label:hover,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container label.suggested-amounts-label:hover,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container label.suggested-amounts-label:hover,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container label.suggested-amounts-label:hover,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container label.suggested-amounts-label:hover {
   background-color: #d3e3ea;
   cursor: pointer;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label {
   width: 444px;
   padding: 6px;
   line-height: 24px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label i,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label i,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label i,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label i,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label i,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label i,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label i,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label i,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label i {
   width: 15px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .transaction-fee-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .transaction-fee-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .requested-amounts-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .requested-amounts-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .suggested-amount-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .suggested-amount-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .suggested-amount-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .suggested-amount-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .suggested-amount-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .suggested-amount-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .suggested-amount-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .suggested-amount-header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .suggested-amount-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .suggested-amount-header {
   font-size: 1em;
   line-height: 24px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .header {
   font-size: 1.25em;
   font-weight: bold;
   line-height: 24px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-label .value,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-label .value,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-label .value,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .requested-amounts-label .value,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .requested-amounts-label .value,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .requested-amounts-label .value,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts-label .value,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts-label .value,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .value,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts-label .value {
   font-size: 1em;
   line-height: 24px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .popover-content,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .popover-content,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .popover-content,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .popover-content,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .popover-content,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .popover-content,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .popover-content,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .popover-content,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .popover-content,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .popover-content,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content {
   width: 250px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .popover-content .disclaimer small,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .popover-content .disclaimer small,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .popover-content .disclaimer small,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .popover-content .disclaimer small,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .popover-content .disclaimer small,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .popover-content .disclaimer small,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .popover-content .disclaimer small,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .popover-content .disclaimer small,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .popover-content .disclaimer small,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .popover-content .disclaimer small,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content .disclaimer small,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content .disclaimer small {
   padding: 10px 0;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .popover-content h4,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .popover-content h4,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .popover-content h4,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .popover-content h4,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .popover-content h4,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .popover-content h4,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .popover-content h4,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .popover-content h4,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .popover-content h4,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .popover-content h4,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content h4,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .popover-content h4 {
   font-size: 0.75em;
   display: block;
   width: 100%;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .suggested-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .suggested-amount,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .suggested-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .suggested-amount,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .suggested-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .suggested-amount,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .suggested-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .suggested-amount,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .suggested-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .suggested-amount,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount {
   width: 426px;
   height: 18px;
   margin: 0 10px 10px 30px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .suggested-amount .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .suggested-amount .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .suggested-amount .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .suggested-amount .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .suggested-amount .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .suggested-amount .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .suggested-amount .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .suggested-amount .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .suggested-amount .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .suggested-amount .header,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .header {
   font-weight: bold;
   width: 100px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .suggested-amount .suggested-amount-body,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .suggested-amount .suggested-amount-body,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .suggested-amount .suggested-amount-body,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .suggested-amount .suggested-amount-body,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .suggested-amount .suggested-amount-body,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .suggested-amount .suggested-amount-body,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .suggested-amount .suggested-amount-body,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .suggested-amount .suggested-amount-body,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body {
   margin: 0 0 0 30px;
   width: 290px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .suggested-amount .suggested-amount-body .key,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .transaction-fee-container .suggested-amount .suggested-amount-body .key,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .suggested-amount .suggested-amount-body .key,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .transaction-fee-container .suggested-amount .suggested-amount-body .key,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .suggested-amount .suggested-amount-body .key,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .transaction-fee-container .suggested-amount .suggested-amount-body .key,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body .key,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .requested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body .key,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .suggested-amount .suggested-amount-body .key,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .transaction-fee-container .suggested-amounts .suggested-amount .suggested-amount-body .key,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body .key,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .suggested-amounts-container .suggested-amounts .suggested-amount .suggested-amount-body .key {
   color: #cccccc;
   font-style: italic;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .send-pony-up-control,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control {
   width: 450px;
   margin: 6px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .send-pony-up-control label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control label {
   height: 30px;
   padding: 6px;
   line-height: 30px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .send-pony-up-control label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control label .header {
   font-weight: bold;
   font-style: italic;
@@ -11399,22 +11149,18 @@ a#facebook-login-button {
   line-height: 24px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .send-pony-up-control label i,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control label i {
   width: 26px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .send-pony-up-control input[type=text],
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control input[type=text] {
   width: 75px;
   font-size: 18px;
   text-align: right;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .invitee-info .send-pony-up-control .total,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .send-pony-up-control .total {
   font-size: 18px;
   text-align: right;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container {
   width: 75%;
   margin-left: 85px;
@@ -11422,11 +11168,9 @@ a#facebook-login-button {
   background-color: #d3e3ea;
   border: 2px dashed #666666;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history-label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history-label {
   cursor: pointer;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history-label .header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history-label .header {
   font-weight: bold;
   font-size: 16px;
@@ -11434,41 +11178,32 @@ a#facebook-login-button {
   line-height: 26px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history-label .icon,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history-label .icon {
   width: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history {
   margin-left: 24px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history .outside-payment-form,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history .outside-payment-form {
   padding: 20px 6px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history .outside-payment-form label,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history .outside-payment-form label {
   font-weight: bold;
   font-style: italic;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history .outside-payment-form select,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history .outside-payment-form select {
   width: 75px;
   margin: 0 40px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history .outside-payment-form input[type=text],
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history .outside-payment-form input[type=text] {
   width: 50px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history .outside-payment-form a,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history .outside-payment-form a {
   margin-left: 40px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history table,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history table {
   width: 100%;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history table td,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history table td {
   color: #666666;
   text-transform: uppercase;
@@ -11477,26 +11212,20 @@ a#facebook-login-button {
   text-align: center;
   padding: 6px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history table td.type,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history table td.type {
   width: 175px;
   text-align: left;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history table td.history-header,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history table td.history-header {
   color: #999999;
   text-align: right;
   font-size: .8em;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history table td.date,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history table td.date,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history table td.status,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history table td.status,
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history table td.amount,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history table td.amount {
   text-align: left;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .invitee .history-container .history table td.actions a,
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .history-container .history table td.actions a {
   line-height: 14px;
   vertical-align: middle;
@@ -11504,135 +11233,98 @@ a#facebook-login-button {
   padding: 4px 6px;
   margin-right: 4px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .pony-up-alert,
 #plan-frame #middle #plan-dashboard .invitees-container .pony-up-alert {
   margin: 34px;
   width: 450px;
 }
-#plan-frame #middle #rsvp-for-modal .invitees-container .send-pony-up-button,
 #plan-frame #middle #plan-dashboard .invitees-container .send-pony-up-button {
   margin: 40px 0 0 86px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body,
 #plan-frame #middle #plan-dashboard .itinerary-section .body {
   position: relative;
   min-height: 2620px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .background,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .background {
   margin-top: 80px;
   position: absolute;
   min-width: 1160px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data {
   position: absolute;
   width: 100%;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .event-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .event-container {
   margin: 20px 30px 0 300px;
   font-size: 40px;
   line-height: 40px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .event-container .event-info,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .event-container .event-info {
   margin-left: 50px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .event-container .event-info .text,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .event-container .event-info .text {
   padding-right: 10px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .hotel-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .restaurant-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .parking-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .tickets-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container {
   position: absolute;
   width: 350px;
   min-height: 280px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .hotel-container h2,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container h2,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .restaurant-container h2,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container h2,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .parking-container h2,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container h2,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .tickets-container h2,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container h2 {
   font-size: 24px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .hotel-container .row,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container .row,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .restaurant-container .row,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container .row,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .parking-container .row,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container .row,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .tickets-container .row,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container .row {
   padding: 6px;
   font-size: 16px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .hotel-container .row .info,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container .row .info,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .restaurant-container .row .info,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container .row .info,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .parking-container .row .info,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container .row .info,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .tickets-container .row .info,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container .row .info {
   margin-left: 0;
   margin-top: 0;
   margin: 0;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .hotel-container .row .info span,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container .row .info span,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .restaurant-container .row .info span,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container .row .info span,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .parking-container .row .info span,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container .row .info span,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .tickets-container .row .info span,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container .row .info span {
   display: inline;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .hotel-container .row .info > div,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container .row .info > div,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .restaurant-container .row .info > div,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container .row .info > div,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .parking-container .row .info > div,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container .row .info > div,
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .tickets-container .row .info > div,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container .row .info > div {
   padding: 2px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .tickets-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .tickets-container {
   width: 400px;
   top: 450px;
   left: 150px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .parking-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .parking-container {
   top: 375px;
   left: 610px;
   min-height: 280px;
   background-color: #ffffff;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .hotel-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .hotel-container {
   top: 985px;
   left: 160px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .restaurant-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .restaurant-container {
   top: 820px;
   left: 740px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .google-map-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .google-map-container {
   background-color: #ffffff;
   width: 100%;
@@ -11640,16 +11332,13 @@ a#facebook-login-button {
   top: 1275px;
   height: 700px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .google-map-container h2,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .google-map-container h2 {
   font-size: 24px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .google-map-container .itinerary-map,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .google-map-container .itinerary-map {
   width: 100%;
   height: 600px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .notes-container,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .notes-container {
   position: absolute;
   top: 2000px;
@@ -11663,7 +11352,6 @@ a#facebook-login-button {
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.3);
   padding: 10px;
 }
-#plan-frame #middle #rsvp-for-modal .itinerary-section .body .itinerary-data .notes-container textarea,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .notes-container textarea {
   color: #000000;
   width: 100%;
@@ -11675,19 +11363,9 @@ a#facebook-login-button {
   -moz-box-shadow: none;
   box-shadow: none;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body,
-#plan-frame #middle #plan-dashboard .rsvp-section .body {
-  margin: 10px;
-}
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container,
-#plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container {
-  margin: 30px 0;
-}
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container {
   width: 35%;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info {
   *zoom: 1;
   background-color: #cccccc;
@@ -11698,61 +11376,47 @@ a#facebook-login-button {
   margin: 0;
   font-family: "Calibri";
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info:before,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:before,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info:before,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:before,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row {
   *zoom: 1;
   margin: 0;
   padding: 2px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row:before,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:before,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row:before,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:before,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row h3,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row h3 {
   color: #666666;
   font-family: "Calibri";
@@ -11763,47 +11427,37 @@ a#facebook-login-button {
   font-size: 1.25em;
   padding: 3px 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row span,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row span {
   display: inline;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row label,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row label {
   margin-left: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row .data,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row .data {
   line-height: 21px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .row .rsvp-days,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row .rsvp-days {
   margin-bottom: 10px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .first-row .data,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .first-row .data {
   font-size: 1.5em;
   line-height: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .info-container .info .first-row h3,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .first-row h3 {
   font-size: 1.5em;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container {
   padding: 0px;
   width: 50%;
-  margin-left: 30px;
+  margin-left: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container button,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container button {
   margin: 20px 0 40px 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container h3,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container h3 {
   padding: 10px 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp {
   *zoom: 1;
   width: 100%;
@@ -11813,183 +11467,141 @@ a#facebook-login-button {
   margin: 0;
   text-align: center;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:before,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:before,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:before,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a {
   font-size: 40px;
-  margin: 10px;
+  margin: 10px 20px 0 0;
   font-weight: bold;
   color: #cccccc;
   display: block;
   float: left;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a.active,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a.active,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a:hover,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .collect-rsvp a:hover {
   color: #ffcc00;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container .payment-type-note,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container .payment-type-note {
-  margin-top: 30px;
+  margin: 30px 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset {
   width: 290px;
   /* change this to auto to center the rsvp */
 
   margin: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label {
   *zoom: 1;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:before,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:before,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:before,
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label #including-yourself,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label #including-yourself {
   line-height: 30px;
   vertical-align: middle;
   padding-left: 10px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label #guest-count,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .collect-rsvp-container fieldset label #guest-count {
   width: 30px;
   height: 26px;
   text-align: center;
   margin: 0 10px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body #no-invitees,
 #plan-frame #middle #plan-dashboard .rsvp-section .body #no-invitees {
   background-color: #cccccc;
   padding: 50px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body #no-invitees button,
 #plan-frame #middle #plan-dashboard .rsvp-section .body #no-invitees button {
   margin: auto;
   display: block;
   width: 200px;
   height: 60px;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .section-bottom .next-wrapper,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .section-bottom .next-wrapper {
   text-align: right;
 }
-#plan-frame #middle #rsvp-for-modal .rsvp-section .body .section-bottom .next-wrapper button,
 #plan-frame #middle #plan-dashboard .rsvp-section .body .section-bottom .next-wrapper button {
   margin-top: -65px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .row,
 #plan-frame #middle #plan-dashboard .vote-section .row {
   width: 450px;
   margin: 20px 30px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .row .preference-dropdown,
 #plan-frame #middle #plan-dashboard .vote-section .row .preference-dropdown {
   margin: 0 0 20px 0;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .row .checkbox,
 #plan-frame #middle #plan-dashboard .vote-section .row .checkbox {
   font-size: 1.4em;
   font-weight: bold;
   margin: 20px 0;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .right,
 #plan-frame #middle #plan-dashboard .vote-section .right {
   margin: 100px 30px 0;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label {
   display: block;
   *zoom: 1;
   margin-right: 10px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label:before,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label:before,
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label:after,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label:after,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label:before,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label:before,
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label:after,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label:after {
   display: table;
   content: "";
   line-height: 0;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label:after,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label:after {
   clear: both;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label h2,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label h2,
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label h3,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label h3,
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label .orange,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label .orange,
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label input,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label input {
   line-height: 45px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label h2,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label h2,
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label h3,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label h3 {
   margin-right: 30px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom label input,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom label input {
   width: 90px;
   border: none;
@@ -11999,116 +11611,90 @@ a#facebook-login-button {
   line-height: 40px;
   vertical-align: middle;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom #per-person .orange,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom #per-person .orange {
   font-size: 25px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom #per-person input,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom #per-person input {
   font-size: 25px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom #total h2,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom #total h2 {
   font-size: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom #total .orange,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom #total .orange {
   font-size: 40px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom #total input,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom #total input {
   font-size: 40px;
 }
-#plan-frame #middle #rsvp-for-modal .vote-section .section-bottom button,
 #plan-frame #middle #plan-dashboard .vote-section .section-bottom button {
   margin-top: 70px;
 }
-#plan-frame #middle #rsvp-for-modal .pony-up-section .pony-up,
 #plan-frame #middle #plan-dashboard .pony-up-section .pony-up {
   font-size: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .pony-up-section .pony-up .content,
 #plan-frame #middle #plan-dashboard .pony-up-section .pony-up .content {
   margin-left: 30px;
   width: 60%;
 }
-#plan-frame #middle #rsvp-for-modal .pony-up-section .pony-up .content p,
 #plan-frame #middle #plan-dashboard .pony-up-section .pony-up .content p {
   padding: 20px 0;
 }
-#plan-frame #middle #rsvp-for-modal .pony-up-section .pony-up .content .icon-circle,
 #plan-frame #middle #plan-dashboard .pony-up-section .pony-up .content .icon-circle {
   display: block;
   font-size: 10px;
 }
-#plan-frame #middle #rsvp-for-modal .pony-up-section .pony-up .content span,
 #plan-frame #middle #plan-dashboard .pony-up-section .pony-up .content span {
   margin-left: 10px;
   font-size: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .pony-up-section .pony-up .content .note,
 #plan-frame #middle #plan-dashboard .pony-up-section .pony-up .content .note {
   font-style: italic;
 }
-#plan-frame #middle #rsvp-for-modal .pony-up-section .pony-up .img,
 #plan-frame #middle #plan-dashboard .pony-up-section .pony-up .img {
   width: 30%;
 }
-#plan-frame #middle #rsvp-for-modal .pony-up-section .pony-up .img img,
 #plan-frame #middle #plan-dashboard .pony-up-section .pony-up .img img {
   margin: 30px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section .body,
 #plan-frame #middle #plan-dashboard .chatter-section .body {
   margin-bottom: 60px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter {
   margin: 20px 30px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatter #new-chatter,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatter #new-chatter {
   width: 760px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatter #new-chatter textarea,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatter #new-chatter textarea {
   margin: 0 0 0 20px;
   height: 75px;
   width: 650px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatter #new-chatter button,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatter #new-chatter button {
   margin: 10px 0;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters {
   width: 760px;
   margin-top: 20px;
   border-top: thin solid #cccccc;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .upvote,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .upvote {
   display: inline;
   padding: 2px;
   text-align: center;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter {
   margin-top: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container {
   margin-left: 95px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container {
   height: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container .actor-name,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container .actor-name {
   font-weight: bold;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container .actor-name .icon-asterisk,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .actor-name-container .actor-name .icon-asterisk {
   font-weight: normal;
   font-size: .6em;
@@ -12117,50 +11703,55 @@ a#facebook-login-button {
   margin: 0 6px;
   color: #cccccc;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-body,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-body {
   min-height: 45px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment {
   margin-top: 20px;
   width: 665px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment .actor-image-container img,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment .actor-image-container img {
   width: 60%;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment textarea,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment textarea {
   height: 50px;
   width: 575px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment button,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .new-chatter-comment button {
   margin: 10px 0;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments {
   margin-top: 20px 0 20px 95px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment {
   margin-top: 20px;
 }
-#plan-frame #middle #rsvp-for-modal .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment .actor-image-container img,
 #plan-frame #middle #plan-dashboard .chatter-section #plan-chatter #chatters .chatter .chatter-container .chatter-comments .chatter-comment .actor-image-container img {
   max-width: 60%;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .confirmed-alert,
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .not-confirmed-warning {
-  max-width: t600px;
+  margin: 23px 0 0 20px;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .confirmed-alert .text,
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .not-confirmed-warning .text {
+  width: inherit;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .confirmed-alert a:hover,
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .not-confirmed-warning a:hover {
   color: #426799;
 }
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-rsvp-section .invitees-container {
+  margin-left: 95px;
+}
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .btn {
   margin: 0;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body {
+  margin: 0;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .icon-3x {
+  font-size: 2.5em;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container.border-bottom {
   border-bottom: 4px solid #666666;
@@ -12168,11 +11759,15 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container {
   width: 100%;
   margin: 20px 0 0 0;
+  padding: 40px 0;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .cartoon-man {
   width: 100px;
   margin: 0 20px;
   text-align: center;
+}
+#plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .header {
+  border: none;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .header label i {
   width: 40px;
@@ -12269,7 +11864,7 @@ a#facebook-login-button {
   margin-right: 20px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .totals {
-  font-size: 3em;
+  font-size: 2.5em;
   width: 550px;
   text-align: right;
   margin-left: 150px;
@@ -12337,8 +11932,8 @@ a#facebook-login-button {
   border-radius: 3px;
   height: 35px;
   width: 35px;
-  font-size: 24px;
-  line-height: 40px;
+  font-size: 20px;
+  line-height: 36px;
   vertical-align: middle;
   text-align: center;
 }

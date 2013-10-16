@@ -6,13 +6,12 @@
 		- if (req.session.visitor.context === 'organizer')
 			#plan-dashboard.organizer-plan-dashboard
 				//- no split has no pony up
-				- console.log('plan payment preference: '+ req.session.plan.preferences.payment)
 				- if (req.session.plan.preferences.payment === 'no-split')
 					organizer-itinerary-section
 					organizer-rsvp-section
 					organizer-cart-section
 					section#section4.organizer-chatter-section.chatter-section.plan-section
-						.header
+						.header.clearfix
 							h1.pull-left Chatter
 						.body
 							h3 Use this space to comment and share conversations about your upcoming event!
@@ -23,7 +22,7 @@
 					organizer-cart-section
 					organizer-pony-up-section
 					section#section5.organizer-chatter-section.chatter-section.plan-section
-						.header
+						.header.clearfix
 							h1.pull-left Chatter
 						.body
 							h3 Use this space to comment and share conversations about your upcoming event!
@@ -36,7 +35,7 @@
 					friend-vote-section
 					friend-invitees-section
 					section#section5.friend-chatter-section.chatter-section.plan-section.even
-						.header
+						.header.clearfix
 							h1.pull-left Chatter
 						.body
 							h3 Use this space to comment and share conversations about your upcoming event!
@@ -48,7 +47,7 @@
 					friend-invitees-section
 					friend-pony-up-section
 					section#section6.friend-chatter-section.chatter-section.plan-section.even
-						.header
+						.header.clearfix
 							h1.pull-left Chatter
 						.body
 							h3 Use this space to comment and share conversations about your upcoming event!

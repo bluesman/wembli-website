@@ -4,7 +4,6 @@ var wembliModel = require('wembli-model'),
 module.exports = {
 	/* STATIC */
 	planNav: function(mode, payment) {
-		console.log('plan nav for: '+mode);
 		var nav = {
 			'organizer': [{
 				'name': "itinerary",

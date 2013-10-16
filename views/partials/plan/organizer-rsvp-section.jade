@@ -1,16 +1,20 @@
 section#section2.organizer-rsvp-section.rsvp-section.plan-section.even
-	.header
+	.header.clearfix
 		h1.pull-left RSVP
-	.body
 		.confirmed-alert.alert.alert-success.clearfix(ng-show="confirmationEmailSent")
 			.icon-ok-circle.pull-left.green
-			.text.pull-left OK - Your confirmation email has been sent! If you did not set a password yet, you will receive a password reset email which will also serve to confirm your account. Thanks!
-		.not-confirmed-warning.alert.alert-danger.clearfix(ng-show="!customer.confirmed && !confirmationEmailSent")
+			.text.pull-left OK - we resent your confirmation email - follow the instructions!
+		.not-confirmed-warning.alert.alert-danger.pull-left.clearfix(ng-show="!customer.confirmed && !confirmationEmailSent")
 			.icon-warning-sign.pull-left
 			.text.pull-left
-				span Your account email address is not confirmed.  Wembli will not send emails out to your guests until your email address is confirmed.&nbsp;
-				a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Click here to get another confirmation email.
+				span Wembli can't send invites to your friends until you confirm your email address.
+				a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Click here to resend confirmation email.
 				i.icon-cog.icon-spin(ng-show="confirmationEmailInProgress")
+	.event-info
+		span.blue &nbsp;{{plan.event.eventName}}
+		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+		span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+	.body
 		.organizer-rsvp-container.rsvp-container.clearfix
 			.img-container.pull-left
 				img.img-polaroid(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")

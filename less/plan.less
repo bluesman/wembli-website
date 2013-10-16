@@ -230,6 +230,7 @@
 
 
 #plan-frame {
+
 	input {
 		border:thin solid @grayLight;
 	}
@@ -243,7 +244,7 @@
 			height:100%;
 			font-size:18px;
 			background-color: @blueDark;
-			margin-top:-76px;
+			margin-top:-18px;
 
 			.nav-arrow {
 				position:absolute;
@@ -281,45 +282,50 @@
 
 	#middle {
 		height:100%;
-		margin-left:200px;
+		margin-left:160px;
 		text-align:left;
 
-		#rsvp-for-modal, #plan-dashboard {
-			height:100%;
+		section > .header {
+			border-bottom:6px solid @blueDark;
+		}
+
+		#plan-dashboard {
 
 			.border-bottom {
 				border-bottom: thin solid @grayDark;
 			}
 
-			.header {
-				.clearfix();
-				h1 {
-					width:100%;
-					padding:10px 0 4px;
-					border-bottom:6px solid @blueDark;
-					text-transform:uppercase;
-					margin:10px 0;
-					font-weight:bold;
-				}
-				.btn {
-					margin:30px;
-				}
-			}
-
 			.plan-section {
 				padding:0 20px;
-				min-height:768px;
-				.clearfix();
 
+
+				.header {
+
+					h1 {
+						padding:10px 0 4px;
+						text-transform:uppercase;
+						margin:10px 0;
+						font-weight:bold;
+					}
+
+					.btn {
+						margin:30px;
+					}
+				}
 
 				.alert {
-
 					.icon-2x {
 						margin:4px 10px 0 0;
 					}
 					.text {
 						width:89%;
 					}
+				}
+
+				.event-info {
+					font-size:16px;
+					color:@blue;
+					padding:10px 0;
 				}
 
 
@@ -329,7 +335,7 @@
 
 				.body {
 					.clearfix();
-					margin-bottom:30px;
+					margin-top:30px;
 
 					h3 {
 						font-weight:bold;
@@ -419,6 +425,7 @@
 
 			/* global invitees lists */
 			.invitees-container {
+				margin-top: 40px;
 
 				.invitee {
 					margin:0 30px 40px 0;
@@ -815,10 +822,8 @@
 
 			.rsvp-section {
 				.body {
-					margin:10px;
 
 					.rsvp-container {
-						margin:30px 0;
 
 						.info-container {
 							width:35%;
@@ -875,7 +880,7 @@
 						.collect-rsvp-container {
 							padding:0px;
 							width:50%;
-							margin-left:30px;
+							margin-left:20px;
 
 							button {
 								margin:20px 0 40px 0;
@@ -897,7 +902,7 @@
 
 								a {
 									font-size:40px;
-									margin:10px;
+									margin:10px 20px 0 0;
 									font-weight:bold;
 									color:@grayLight;
 									display:block;
@@ -908,7 +913,7 @@
 								}
 							}
 							.payment-type-note {
-								margin-top:30px;
+								margin:30px 0;
 							}
 
 							fieldset {
@@ -1158,10 +1163,17 @@
 
 			.organizer-rsvp-section {
 				.confirmed-alert, .not-confirmed-warning {
-					max-width:t600px;
+					margin:23px 0 0 20px;
+					.text {
+						width:inherit;
+					}
 					a:hover {
 						color:@blueDark;
 					}
+				}
+
+				.invitees-container {
+					margin-left:95px;
 				}
 			}
 
@@ -1171,6 +1183,12 @@
 				}
 
 				.body {
+					margin:0;
+
+					.icon-3x {
+						font-size:2.5em;
+					}
+
 					.container.border-bottom {
 						border-bottom:4px solid @grayDark;
 					}
@@ -1178,6 +1196,7 @@
 					.container {
 						width:100%;
 						margin:20px 0 0 0;
+						padding:40px 0;
 
 						.cartoon-man {
 							width:100px;
@@ -1186,6 +1205,7 @@
 						}
 
 						.header {
+							border:none;
 							label {
 								i {
 									width:40px;
@@ -1326,7 +1346,7 @@
 					}
 
 					.totals {
-						font-size:3em;
+						font-size:2.5em;
 						width:550px;
 						text-align:right;
 						margin-left:150px;

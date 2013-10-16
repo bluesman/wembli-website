@@ -1,10 +1,14 @@
 section#section3.organizer-cart-section.cart-section.plan-section
-	.header
+	.header.clearfix
 		h1.pull-left Shopping Cart
-		-if (req.session.plan.preferences.payment === 'split-first')
-			include includes/cart/split-first
-		-if (req.session.plan.preferences.payment === 'split-after')
-			include includes/cart/split-after
-		-if (req.session.plan.preferences.payment === 'no-split')
-			include includes/cart/no-split
+	.event-info
+		span.blue &nbsp;{{plan.event.eventName}}
+		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+		span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+	-if (req.session.plan.preferences.payment === 'split-first')
+		include includes/cart/split-first
+	-if (req.session.plan.preferences.payment === 'split-after')
+		include includes/cart/split-after
+	-if (req.session.plan.preferences.payment === 'no-split')
+		include includes/cart/no-split
 

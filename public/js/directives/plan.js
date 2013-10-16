@@ -3,13 +3,14 @@
 /* Directives */
 angular.module('wembliApp.directives.plan', []).
 
-directive('initPlanNav', ['$location', 'planNav', '$rootScope', '$timeout',
-  function($location, planNav, $rootScope, $timeout) {
+directive('initPlanNav', ['$location', 'planNav', '$rootScope', '$timeout', 'header',
+  function($location, planNav, $rootScope, $timeout, header) {
     return {
       restrict: 'C',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           planNav.init(attr.sections);
+          header.fixed();
         };
       }
     }

@@ -161,6 +161,8 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			//response callback
 
 			function(err, result) {
+				console.log(err);
+				console.log(result);
 
 				if (err) {
 					//handle err

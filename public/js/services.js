@@ -190,7 +190,7 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 		self.sectionsCount = 0;
 		self.sectionsLoaded = -1;
 		self.scrollToSection = 1;
-		self.arrowTop = -20;
+		self.arrowTop = 40;
 		self.arrowHeight = 104;
 
 		var planNav = {
@@ -213,7 +213,7 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 						$timeout(function() {
 							$('#page-loading-modal').modal("hide");
 							planNav.scrollTo(self.scrollToSection);
-						}, 1000);
+						},200);
 						dereg();
 					}
 				});
@@ -448,6 +448,9 @@ factory('header', [
 					}
 					prevScroll = angular.element('#content').scrollTop();
 				});
+			},
+			fixed: function() {
+				angular.element('#content').off('scroll');
 			}
 		}
 	}
