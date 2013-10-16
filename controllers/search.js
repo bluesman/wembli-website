@@ -175,7 +175,7 @@ module.exports = function(app) {
 //not sure what the best begin date is for the events list on the home page
 //for now we will get events that begin 4 days from today so we have minimal fulfillment issues
 function getBeginDate() {
-	var daysPadding = 4; //how many days from today for the beginDate
+	var daysPadding = 2; //how many days from today for the beginDate
 	var d = Date.today();
 	d2 = new Date(d);
 	d2.setDate(d.getDate() + daysPadding);

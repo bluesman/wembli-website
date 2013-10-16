@@ -12,6 +12,18 @@ exports.event = {
 	search: function(args, req, res) {
 		var me = this;
 		args.cnt = (args.cnt) ? args.cnt : 15;
+
+		/* where clause for search */
+		var daysPadding = 2; //how many days from today for the beginDate
+		var d1 = Date.today();
+		var d = new Date(d1);
+		d.setDate(d1.getDate() + daysPadding);
+
+		dateFmt = d.format("isoDateTime")
+
+		args.whereClause = "Date > DateTime(\"" + dateFmt + "\")";
+		args.orderByClause = 'Date';
+
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.SearchEvents(args, function(err, results) {
 			if (err) {
@@ -20,6 +32,13 @@ exports.event = {
 
 			if (typeof results.Event === "undefined") {
 				return me(null,{success:1,event:[]});
+			}
+
+			if (Object.prototype.toString.call(results.Event) === '[object Array]') {
+				/* filter out events that sart with PARKING */
+				results.Event = results.Event.filter(function(el) {
+					return (/^PARKING/.test(el.Name)) ? false : true;
+				});
 			}
 
 			//if lastEventId is passed in, determine which element has that Id and start the splice there
@@ -38,6 +57,8 @@ exports.event = {
 				//there's only 1 and its not an array
 				var events = [results.Event];
 			}
+
+
 
 			return me(null, {
 				success: 1,
@@ -58,6 +79,16 @@ exports.event = {
 		ticketNetwork.GetEvents(args, function(err, results) {
 			if (err) {
 				return me(err);
+			}
+			if (typeof results.Event === "undefined") {
+				return me(null,{success:1,event:[]});
+			}
+
+			if (Object.prototype.toString.call(results.Event) === '[object Array]') {
+				/* filter out events that sart with PARKING */
+				results.Event = results.Event.filter(function(el) {
+					return (/^PARKING/.test(el.Name)) ? false : true;
+				});
 			}
 
 			//if lastEventId is passed in, determine which element has that Id and start the splice there

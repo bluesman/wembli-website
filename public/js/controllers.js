@@ -72,8 +72,6 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, plan) {
 			$scope.next = '/invitation/' + p.event.eventId + '/' + p.event.eventName;
 		}
 
-		console.log($scope.next);
-
 		wembliRpc.fetch('event-options.init', {}, function(err, result) {
 
 			//$scope.payment = result.payment;
@@ -104,13 +102,10 @@ function EventOptionsCtrl($scope, $http, $compile, $location, wembliRpc, plan) {
 		eventOptions.guest_list = $scope.guest_list;
 		eventOptions.over_21 = $scope.over_21;
 
-		console.log('submit event-options form');
 		//fetchModals.fetch('/invitation');
 		$scope.submitInProgress = true;
 		wembliRpc.fetch('event-options.submit', eventOptions,
 			function(err, result) {
-				console.log('back from event-options submit');
-				console.log(result);
 				$scope.submitInProgress = false;
 			});
 
@@ -161,8 +156,6 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			//response callback
 
 			function(err, result) {
-				console.log(err);
-				console.log(result);
 
 				if (err) {
 					//handle err
@@ -205,7 +198,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			$scope.search = $location.search().search.replace(/\+/g, ' ');
 		}
 		//begin date for event list
-		var daysPadding = 4; //how many days from today for the beginDate
+		var daysPadding = 2; //how many days from today for the beginDate
 		var d = new Date();
 		d2 = new Date(d);
 		d2.setDate(d.getDate() + daysPadding);
@@ -1197,7 +1190,6 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 
 	if ($scope.service === 'wemblimail') {
 		wembliRpc.fetch('friend.getServiceId', {token:$scope.token}, function(err, result) {
-			console.log(result);
 			if (result.serviceId) {
 				$scope.email = result.serviceId;
 			}

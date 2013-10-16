@@ -16,10 +16,9 @@ exports.search = {
 		var d = new Date(d1);
 		d.setDate(d1.getDate() + daysPadding);
 
-		if(typeof date != "undefined" && date != '') {
-			d = new Date(date);
-		}
 		dateFmt = d.format("isoDateTime")
+		req.syslog.notice('search date > '+dateFmt);
+
 		args.whereClause = "Date > DateTime(\"" + dateFmt + "\")";
 		args.orderByClause = 'Date';
 		//if there's a postal code, get the city for it
@@ -38,7 +37,7 @@ exports.search = {
 
 function searchEvents(args, callback) {
 	var searchResults = [];
-
+	console.log(args);
 	var f = function(err, eventResults) {
 			if(typeof eventResults.Event != "undefined") {
 				searchResults = psUtils.sort(eventResults.Event, 'Date', 'asc');

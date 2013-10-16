@@ -232,7 +232,6 @@ exports.plan = {
 				var venueId = '';
 				/* its possible that this event is no longer available - if that is the case, send them to the no-event page */
 				if (err || !results.event[0]) {
-
 					data.noEvent = true;
 					data.success = false;
 					return me(null, data);
