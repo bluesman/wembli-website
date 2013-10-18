@@ -1120,6 +1120,8 @@ function SignupCtrl($scope, $http, wembliRpc, facebook) {
 	$scope.clickSubmit = function() {
     /* fire the facebook signup pixels */
     facebook.firePixel('6012472260371');
+    /* fire the facebook signup pixels */
+    facebook.firePixel('6012473272971');
 	}
 
 };
@@ -1266,6 +1268,8 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 
           /* fire the facebook signup pixels */
           facebook.firePixel('6012472260371');
+			    facebook.firePixel('6012473272971');
+
 				},
 				/* transformRequest */
 
@@ -1382,6 +1386,7 @@ function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 
           /* fire the facebook signup pixels */
           facebook.firePixel('6012472260371');
+			    facebook.firePixel('6012473272971');
 
 				},
 				/* transformRequest */
@@ -1484,6 +1489,7 @@ function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 
           /* fire the facebook signup pixels */
           facebook.firePixel('6012472260371');
+			    facebook.firePixel('6012473272971');
 
 				},
 				/* transformRequest */
@@ -1586,6 +1592,8 @@ function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wem
 
           /* fire the facebook signup pixels */
           facebook.firePixel('6012472260371');
+			    facebook.firePixel('6012473272971');
+
 
 				},
 				/* transformRequest */
@@ -1676,6 +1684,8 @@ function HotelsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRp
 
           /* fire the facebook signup pixels */
           facebook.firePixel('6012472260371');
+			    facebook.firePixel('6012473272971');
+
 
 				},
 				/* transformRequest */

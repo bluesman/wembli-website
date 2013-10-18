@@ -305,6 +305,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
 
                 /* fire the facebook signup pixels */
                 facebook.firePixel('6012472260371');
+                facebook.firePixel('6012473272971');
 
                 return $scope.gotoStep('step2');
 
