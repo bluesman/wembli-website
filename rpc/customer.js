@@ -441,6 +441,9 @@ exports.customer = {
 				req.session.loggedIn = true;
 				req.session.customer = customer;
 
+				/* track a signup conversion */
+				req.conversions.signup = true;
+
 				/* send signup email async */
 				wembliMail.sendSignupEmail({
 					res: res,

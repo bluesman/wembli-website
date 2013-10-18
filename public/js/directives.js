@@ -616,6 +616,19 @@ directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence'
     }
   }
 ]).
+directive('facebookPixel', ['facebook',
+  function(facebook) {
+    return {
+      restrict: 'C',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          /* fire the facebook signup pixels */
+          facebook.firePixel(attr.pixelId);
+        }
+      }
+    }
+  }
+]).
 
 directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence',
   function($rootScope, $filter, wembliRpc, plan, sequence) {

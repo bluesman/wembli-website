@@ -229,8 +229,8 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
   }
 ]).
 
-directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn',
-  function(wembliRpc, $window, customer, plan, loggedIn) {
+directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn', 'facebook',
+  function(wembliRpc, $window, customer, plan, loggedIn, facebook) {
     return {
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
@@ -302,6 +302,10 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
 
                 $scope.signup.success = true;
                 $scope.showForm('showSignupView', 'showSignupForm');
+
+                /* fire the facebook signup pixels */
+                facebook.firePixel('6012472260371');
+
                 return $scope.gotoStep('step2');
 
               });

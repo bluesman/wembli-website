@@ -1097,7 +1097,7 @@ function SearchCtrl($scope, $rootScope) {
 	$rootScope.$broadcast('search-page-loaded', {});
 };
 
-function SignupCtrl($scope, $http, wembliRpc) {
+function SignupCtrl($scope, $http, wembliRpc, facebook) {
 	//init login vars
 	var args = {};
 	$scope.error = false;
@@ -1114,18 +1114,14 @@ function SignupCtrl($scope, $http, wembliRpc) {
 		});
 
 
-	$('#signup-form').submit(function(e) {
-		//don't allow submit unless all fields are supplied and passwords match
-		if (typeof $scope.firstName === "undefined") {
-			return false;
-		}
-		if (typeof $scope.lastName === "undefined") {
-			return false;
-		}
-		if (typeof $scope.email === "undefined") {
-			return false;
-		}
-	});
+	$scope.submitForm = function() {
+	}
+
+	$scope.clickSubmit = function() {
+    /* fire the facebook signup pixels */
+    facebook.firePixel('6012472260371');
+	}
+
 };
 
 function LoginCtrl($scope, $http, wembliRpc) {
@@ -1180,7 +1176,7 @@ function HeaderCtrl($scope) {
 	}
 }
 
-function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal) {
+function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal, facebook) {
 	$scope.plan = plan.get();
 	$scope.guid = rsvpLoginModal.get('guid');
 	$scope.service = rsvpLoginModal.get('service');
@@ -1268,6 +1264,8 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 						$scope.confirmSocial = 'true';
 					}
 
+          /* fire the facebook signup pixels */
+          facebook.firePixel('6012472260371');
 				},
 				/* transformRequest */
 
@@ -1338,7 +1336,7 @@ function TicketsCtrl($scope, wembliRpc, fetchModals, plan, customer, ticketPurch
 
 };
 
-function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
 	$scope.tnUrl = ticketPurchaseUrls.tn;
 
 	plan.get(function(p) {
@@ -1381,6 +1379,9 @@ function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 					$scope.signupError = false;
 					$scope.formError = false;
 					$scope.accountExists = false;
+
+          /* fire the facebook signup pixels */
+          facebook.firePixel('6012472260371');
 
 				},
 				/* transformRequest */
@@ -1425,7 +1426,7 @@ function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 	};
 };
 
-function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc) {
+function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, facebook) {
 	plan.get(function(p) {
 		$scope.$on('parking-login-clicked', function(e, args) {
 			$scope.redirectUrl = '/parking/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
@@ -1481,6 +1482,9 @@ function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 					$scope.formError = false;
 					$scope.accountExists = false;
 
+          /* fire the facebook signup pixels */
+          facebook.firePixel('6012472260371');
+
 				},
 				/* transformRequest */
 
@@ -1524,7 +1528,7 @@ function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 	};
 };
 
-function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
 	plan.get(function(p) {
 		$scope.$on('restaurants-login-clicked', function(e, args) {
 			$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
@@ -1580,6 +1584,9 @@ function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wem
 					$scope.formError = false;
 					$scope.accountExists = false;
 
+          /* fire the facebook signup pixels */
+          facebook.firePixel('6012472260371');
+
 				},
 				/* transformRequest */
 
@@ -1623,7 +1630,7 @@ function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wem
 	};
 };
 
-function HotelsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+function HotelsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
 	$scope.tnUrl = ticketPurchaseUrls.tn;
 
 	plan.get(function(p) {
@@ -1666,6 +1673,9 @@ function HotelsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRp
 					$scope.signupError = false;
 					$scope.formError = false;
 					$scope.accountExists = false;
+
+          /* fire the facebook signup pixels */
+          facebook.firePixel('6012472260371');
 
 				},
 				/* transformRequest */
