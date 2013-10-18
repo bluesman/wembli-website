@@ -23,9 +23,17 @@ exports.event = {
 
 		args.whereClause = "Date > DateTime(\"" + dateFmt + "\")";
 		args.orderByClause = 'Date';
-
+		console.log(args);
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
-		ticketNetwork.SearchEvents(args, function(err, results) {
+		ticketNetwork.SearchEvents(
+		{
+			searchTerms: args.searchTerms,
+			whereClause: args.whereClause,
+			orderByClause: args.orderByClause
+		},
+		function(err, results) {
+			console.log(err);
+			console.log(results);
 			if (err) {
 				return me(err);
 			}

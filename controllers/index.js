@@ -23,7 +23,7 @@ module.exports = function(app) {
 				var args = defaults;
 				args.parentCategoryID = 2;
 				eventRpc['get'].apply(function(err, results) {
-					view.concerts = (typeof results.event !== "undefined") ? results.event : [];
+					view.concerts = ((typeof results !== "undefined") && (typeof results.event !== "undefined")) ? results.event : [];
 					cb();
 				}, [args, req, res]);
 			},
@@ -33,7 +33,7 @@ module.exports = function(app) {
 				var args = defaults;
 				args.parentCategoryID = 1;
 				eventRpc['get'].apply(function(err, results) {
-					view.sports = (typeof results.event !== "undefined") ? results.event : [];
+					view.sports = ((typeof results !== "undefined") && (typeof results.event !== "undefined")) ? results.event : [];
 					cb();
 				}, [args, req, res]);
 			},
@@ -43,7 +43,7 @@ module.exports = function(app) {
 				var args = defaults;
 				args.parentCategoryID = 3;
 				eventRpc['get'].apply(function(err, results) {
-					view.theater = (typeof results.event !== "undefined") ? results.event : [];
+					view.theater = ((typeof results !== "undefined") && (typeof results.event !== "undefined")) ? results.event : [];
 					cb();
 				}, [args, req, res]);
 			},

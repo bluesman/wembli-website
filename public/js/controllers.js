@@ -151,7 +151,7 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 			var method = 'event.get';
 		}
 
-
+		console.log(method);
 		wembliRpc.fetch(method, args,
 			//response callback
 
