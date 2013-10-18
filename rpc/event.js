@@ -26,7 +26,7 @@ exports.event = {
 		ticketNetwork.SearchEvents(
 		{
 			searchTerms: args.searchTerms,
-			whereClause: args.whereClause,
+			//whereClause: args.whereClause,
 			orderByClause: args.orderByClause
 		},
 		function(err, results) {
