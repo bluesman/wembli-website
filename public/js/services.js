@@ -209,11 +209,11 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 
 						$('.nav-arrow').css('top',top+'px').show();
 						$('#nav-section' + (self.scrollToSection)).addClass('active');
+						planNav.scrollTo(self.scrollToSection);
 
 						$timeout(function() {
 							$('#page-loading-modal').modal("hide");
-							planNav.scrollTo(self.scrollToSection);
-						},200);
+						},500);
 						dereg();
 					}
 				});

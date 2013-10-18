@@ -2,6 +2,7 @@
 
 // Declare app level module which depends on filters, and services
 angular.module('wembliApp', [
+  'wembliApp.controllers',
   'wembliApp.filters',
   'wembliApp.services',
   'wembliApp.directives',

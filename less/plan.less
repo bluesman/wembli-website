@@ -711,112 +711,83 @@
 			/* section specific global css */
 			.itinerary-section {
 				.body {
-					position:relative;
-					min-height:2620px;
-					.background {
-						margin-top: 80px;
-						position:absolute;
-						min-width: 1160px;
-					}
+
 					.itinerary-data {
-						position:absolute;
-						width:100%;
-
-						.event-container {
-							margin:20px 30px 0 300px;
-							font-size: 40px;
-							line-height: 40px;
-							vertical-align: middle;
-
-							.event-info {
-								margin-left:50px;
-								.text {
-									padding-right:10px;
-								}
-							}
+						.left {
+							width:200px;
+							height:104px;
+							background: transparent url('/images/cartoon-man-megaphone-150.png') no-repeat center top;
 						}
-						.hotel-container, .restaurant-container, .parking-container, .tickets-container {
-							position:absolute;
-							width:350px;
-							min-height:280px;
-							h2 {
-								font-size:24px;
-							}
-							.row {
-								padding:6px;
-								font-size:16px;
-								.info {
-									margin-left:0;
-									margin-top:0;
-									margin:0;
-									span {
-										display:inline;
+						.right {
+
+
+							.event-container {
+								.event-info {
+									.text {
+										padding-right:10px;
 									}
 								}
+							}
+							.hotel-container, .restaurant-container, .parking-container, .tickets-container {
+								h2 {
+									font-size:24px;
+								}
+								.row {
+									padding:6px;
+									font-size:16px;
+									.info {
+										margin-left:0;
+										margin-top:0;
+										margin:0;
+										span {
+											display:inline;
+										}
+									}
 
-								.info > div {
-									padding:2px;
+									.info > div {
+										padding:2px;
+									}
+								}
+							}
+
+							.tickets-container {
+
+							}
+
+							.parking-container {
+
+							}
+
+							.hotel-container {
+							}
+
+							.restaurant-container {
+
+							}
+
+							.notes-container {
+								padding:10px;
+								textarea {
+									color:@black;
+									width:100%;
+									height:465px;
+									.border-radius(5px);
 								}
 							}
 						}
-
-						.tickets-container {
-							width:400px;
-							top: 450px;
-							left:150px;
+					}
+					.google-map-container {
+						background-color: @white;
+						width:100%;
+						position:absolute;
+						top:1275px;
+						height:700px;
+						h2 {
+							font-size:24px;
 						}
-
-						.parking-container {
-							top:375px;
-							left:610px;
-							min-height:280px;
-							background-color:@white;
-						}
-
-						.hotel-container {
-							top:985px;
-							left:160px;
-						}
-
-						.restaurant-container {
-							top:820px;
-							left:740px;
-						}
-
-						.google-map-container {
-							background-color: @white;
+						.itinerary-map {
 							width:100%;
-							position:absolute;
-							top:1275px;
-							height:700px;
-							h2 {
-								font-size:24px;
-							}
-							.itinerary-map {
-								width:100%;
-								height:600px;
-							}
-						}
-
-						.notes-container {
-							position:absolute;
-							top:2000px;
-							left:50px;
-							width:500px;
-							height:500px;
-							background-color: @yellow;
-							border:thin solid @yellowDark;
-							.box-shadow(2px 4px 4px rgba(0,0,0,.3));
-							padding:10px;
-							textarea {
-								color:@black;
-								width:100%;
-								height:465px;
-								background: transparent;
-								padding:0px;
-								border:none;
-								.box-shadow(none);
-							}
+							height:600px;
 						}
 					}
 				}
