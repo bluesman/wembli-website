@@ -168,7 +168,6 @@ function EventListCtrl($scope, $location, wembliRpc, $filter, $rootScope, plan, 
 				}
 
 				if (result.event.length < 1) {
-
 					$scope.noMoreEvents = true;
 				} else {
 					$scope.noMoreEvents = false;
