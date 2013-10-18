@@ -139,9 +139,13 @@ module.exports = function(app) {
 		query.beginDate = getBeginDate();
 
 		eventRpc['search'].apply(function(err,results) {
+			var events = [];
+			if (typeof results !== "undefined") {
+			    events = results.event;
+			}
 			res.render('search', {
 				search: query,
-				events: results.event,
+				events: events,
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 			});
 		},[req.session.visitor.lastSearch,req,res]);

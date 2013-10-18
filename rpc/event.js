@@ -20,10 +20,8 @@ exports.event = {
 		d.setDate(d1.getDate() + daysPadding);
 
 		dateFmt = d.format("isoDateTime")
-
 		args.whereClause = "Date > DateTime(\"" + dateFmt + "\")";
 		args.orderByClause = 'Date';
-
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.SearchEvents(
 		{
