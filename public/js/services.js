@@ -123,18 +123,18 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 		$rootScope.getDate = function(d) {
 			/* get current timezone offset for this browser */
 			var tmpDate = new Date()
-			var h = '0' + tmpDate.getTimezoneOffset()/60;
+			var h = '0' + tmpDate.getTimezoneOffset() / 60;
 			h = h.substr(-2);
-			var m = '0' + tmpDate.getTimezoneOffset()%60;
+			var m = '0' + tmpDate.getTimezoneOffset() % 60;
 			m = m.substr(-2);
 
-			var operator = (tmpDate.getTimezoneOffset() > 0 ) ? '-' : '+';
+			var operator = (tmpDate.getTimezoneOffset() > 0) ? '-' : '+';
 			var offset = operator + h + ':' + m;
 
 			if (/Z$/.test(d)) {
 				d = d.substring(0, d.length - 1);
 			}
-			d = d+offset;
+			d = d + offset;
 			return new Date(d);
 			//return $filter('date')(d, "MM-dd-yy");
 		}
@@ -207,7 +207,7 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 						$('.plan-section-nav').removeClass('active');
 						var top = self.arrowTop + (self.arrowHeight * self.scrollToSection);
 
-						$('.nav-arrow').css('top',top+'px').show();
+						$('.nav-arrow').css('top', top + 'px').show();
 						$('#nav-section' + (self.scrollToSection)).addClass('active');
 						planNav.scrollTo(self.scrollToSection);
 
@@ -248,14 +248,14 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 
 				/* hide all sections & fade in new one */
 				for (var i = 1; i <= self.sectionsCount; i++) {
-					$('#section'+i).hide();
+					$('#section' + i).hide();
 				};
 
 				$('.plan-section-nav').removeClass('active');
 				$('#nav-section' + sectionNumber).addClass('active');
 				var top = self.arrowTop + (self.arrowHeight * sectionNumber);
-				$('.nav-arrow').css('top',top+'px').show();
-				$('#section'+sectionNumber).fadeIn(500);
+				$('.nav-arrow').css('top', top + 'px').show();
+				$('#section' + sectionNumber).fadeIn(500);
 			}
 
 		};
@@ -1522,6 +1522,7 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 		this.auth = null;
 		this.friends = null;
 		this.allFriends = null;
+		this.pixelsFired = {};
 
 		/* preApi methods here */
 		self.preApi = {};
@@ -1541,6 +1542,24 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 		}
 
 		return {
+			firePixel: function(pixelId, cb) {
+				console.log('fire facebook pixel');
+				if (typeof self.pixelsFired[pixelId] === "undefined") {
+					var fb_param = {};
+					fb_param.pixel_id = pixelId;
+					fb_param.value = '0.00';
+					fb_param.currency = 'USD';
+					(function() {
+						var fpw = document.createElement('script');
+						fpw.async = false;
+						fpw.src = '//connect.facebook.net/en_US/fp.js';
+						var ref = document.getElementsByTagName('script')[0];
+						ref.parentNode.insertBefore(fpw, ref);
+					})();
+					self.pixelsFired[pixelId] = true;
+					console.log('fired facebook conversion pixel for: '+pixelId);
+				}
+			},
 			feedDialog: function(args, cb) {
 				FB.getLoginStatus(function(response) {
 					if (response.authResponse) {

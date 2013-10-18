@@ -16,6 +16,6 @@ block hero-right
 					input#last-name(ng-model="lastName",placeholder="LAST NAME",type="text",name="lastName",required)
 				.control-group
 					input#email(ng-model="email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
-			a#login-link.wembli-sequence-link(href="/login") Already a member? Click here to Log In.
-			button#arrow.arrow
+			a#login-link(href="/login") Already a member? Click here to Log In.
+			button#arrow.arrow(ng-click="clickSubmit()")
 				.arrow-text.architect Sign Up

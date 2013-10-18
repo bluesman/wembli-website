@@ -107,6 +107,39 @@ script(type="text/javascript", src="//maps.googleapis.com/maps/api/js?v=3.exp&se
       }
       _kms('//i.kissmetrics.com/i.js');
       _kms('//doug1izaerwt3.cloudfront.net/93a0d344c13e76907f623cee3af3723ce56f020b.1.js');
+- if (typeof req.session.conversions !== "undefined")
+  - console.log(req.session.conversions)
+  - if (req.session.conversions.signup)
+    - req.session.conversions.signup = false;
+    script(type="text/javascript")
+      var fb_param = {};
+      fb_param.pixel_id = '6012473272971';
+      fb_param.value = '0.00';
+      fb_param.currency = 'USD';
+      (function(){
+        var fpw = document.createElement('script');
+        fpw.async = true;
+        fpw.src = '//connect.facebook.net/en_US/fp.js';
+        var ref = document.getElementsByTagName('script')[0];
+        ref.parentNode.insertBefore(fpw, ref);
+      })();
+    noscript
+      img(height="1",width="1",alt="",style="display:none",src="https://www.facebook.com/offsite_event.php?id=6012473272971&amp;value=0&amp;currency=USD")
+
+    script(type="text/javascript")
+      var fb_param = {};
+      fb_param.pixel_id = '6012472260371';
+      fb_param.value = '0.00';
+      fb_param.currency = 'USD';
+      (function(){
+        var fpw = document.createElement('script');
+        fpw.async = true;
+        fpw.src = '//connect.facebook.net/en_US/fp.js';
+        var ref = document.getElementsByTagName('script')[0];
+        ref.parentNode.insertBefore(fpw, ref);
+      })();
+    noscript
+      img(height="1",width="1",alt="",style="display:none",src="https://www.facebook.com/offsite_event.php?id=6012472260371&amp;value=0&amp;currency=USD")
 script(type = "text/javascript")
   var _gaq = _gaq || [];
   var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';

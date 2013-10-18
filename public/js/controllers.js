@@ -1126,8 +1126,8 @@ controller('SearchCtrl', ['$scope', '$rootScope',
 	}
 ]).
 
-controller('SignupCtrl', ['$scope', '$http', 'wembliRpc',
-	function($scope, $http, wembliRpc) {
+controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'facebook',
+	function($scope, $http, wembliRpc, facebook) {
 		//init login vars
 		var args = {};
 		$scope.error = false;
@@ -1143,19 +1143,14 @@ controller('SignupCtrl', ['$scope', '$http', 'wembliRpc',
 				$scope.exists = result.exists ? result.exists : false;
 			});
 
+		$scope.submitForm = function() {}
 
-		$('#signup-form').submit(function(e) {
-			//don't allow submit unless all fields are supplied and passwords match
-			if (typeof $scope.firstName === "undefined") {
-				return false;
-			}
-			if (typeof $scope.lastName === "undefined") {
-				return false;
-			}
-			if (typeof $scope.email === "undefined") {
-				return false;
-			}
-		});
+		$scope.clickSubmit = function() {
+			/* fire the facebook signup pixels */
+			facebook.firePixel('6012472260371');
+			/* fire the facebook signup pixels */
+			facebook.firePixel('6012473272971');
+		}
 	}
 ]).
 
@@ -1217,8 +1212,8 @@ controller('HeaderCtrl', ['$scope',
 	}
 ]).
 
-controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'rsvpLoginModal',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal) {
+controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'rsvpLoginModal', 'facebook',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal, facebook) {
 		$scope.plan = plan.get();
 		$scope.guid = rsvpLoginModal.get('guid');
 		$scope.service = rsvpLoginModal.get('service');
@@ -1308,6 +1303,10 @@ controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'custo
 							$scope.confirmSocial = 'true';
 						}
 
+						/* fire the facebook signup pixels */
+						facebook.firePixel('6012472260371');
+						facebook.firePixel('6012473272971');
+
 					},
 					/* transformRequest */
 
@@ -1346,8 +1345,7 @@ controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'custo
 					if (result.loggedIn) {
 						$rootScope.loggedIn = result.loggedIn;
 					}
-
-				})
+				});
 			}
 		};
 	}
@@ -1380,8 +1378,8 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'fetchModals', 'plan', 'custom
 
 	}
 ]).
-controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'facebook',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
 
 		plan.get(function(p) {
@@ -1414,7 +1412,6 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 							$scope.accountExists = result.exists;
 							return;
 						}
-
 						if (result.formError) {
 							$scope.signupError = true;
 							$scope.formError = true;
@@ -1424,6 +1421,10 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 						$scope.signupError = false;
 						$scope.formError = false;
 						$scope.accountExists = false;
+
+						/* fire the facebook signup pixels */
+						facebook.firePixel('6012472260371');
+						facebook.firePixel('6012473272971');
 
 					},
 					/* transformRequest */
@@ -1468,9 +1469,8 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 		};
 	}
 ]).
-
-controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc) {
+controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'facebook',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, facebook) {
 		plan.get(function(p) {
 			$scope.$on('parking-login-clicked', function(e, args) {
 				$scope.redirectUrl = '/parking/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
@@ -1481,6 +1481,102 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 					$scope.redirectUrl += 'pw/' + args.parking.listing_id;
 				}
 				$scope.parking = args.parking;
+				//$scope.googleParking = args.googleParking;
+				//$scope.parkingReservations = args.parkingReservations;
+			});
+		});
+
+		$scope.authActions = {
+			signup: function() {
+				wembliRpc.fetch('customer.signup', {
+						firstName: $scope.firstName,
+						lastName: $scope.lastName,
+						email: $scope.email
+					}, function(err, result) {
+						if (result.customer) {
+							/* hide this modal and display the tickets offsite modal */
+							//$scope.customer = result.customer;
+							customer.set(result.customer);
+						}
+
+						if (result.loggedIn) {
+							$rootScope.loggedIn = result.loggedIn;
+						}
+
+						if (result.exists) {
+							$scope.formError = false;
+							$scope.signupError = true;
+							$scope.accountExists = result.exists;
+							return;
+						}
+						if (result.formError) {
+							$scope.signupError = true;
+							$scope.formError = true;
+							$scope.accountExists = false;
+							return;
+						}
+						$scope.signupError = false;
+						$scope.formError = false;
+						$scope.accountExists = false;
+
+						/* fire the facebook signup pixels */
+						facebook.firePixel('6012472260371');
+						facebook.firePixel('6012473272971');
+
+					},
+					/* transformRequest */
+
+					function(data, headersGetter) {
+						$scope.continueSpinner = true;
+						return data;
+					},
+
+					/* transformResponse */
+
+					function(data, headersGetter) {
+						$scope.continueSpinner = false;
+						return JSON.parse(data);
+					});
+			},
+			login: function() {
+				wembliRpc.fetch('customer.login', {
+					email: $scope.email,
+					password: $scope.password
+				}, function(err, result) {
+					if (result.error) {
+						$scope.loginError = result.error;
+
+						if (typeof result.noPassword !== "undefined") {
+							$scope.noPassword = result.noPassword;
+						} else if (result.invalidCredentials) {
+							$scope.invalidCredentials = result.invalidCredentials;
+						}
+					}
+					if (result.customer) {
+						/* hide this modal and display the tickets offsite modal */
+						customer.set(result.customer);
+					}
+
+					if (result.loggedIn) {
+						$rootScope.loggedIn = result.loggedIn;
+					}
+
+				})
+			}
+		};
+	}
+]).
+controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'facebook',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
+		plan.get(function(p) {
+			$scope.$on('restaurants-login-clicked', function(e, args) {
+				$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
+				if (args.restaurant.service === 'google') {
+					$scope.redirectUrl += 'google/' + args.restaurant.id;
+				} else {
+					$scope.redirectUrl += 'yipit/' + args.restaurant.id;
+				}
+				$scope.restaurant = args.restaurant;
 				//$scope.googleParking = args.googleParking;
 				//$scope.parkingReservations = args.parkingReservations;
 			});
@@ -1525,106 +1621,9 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 						$scope.signupError = false;
 						$scope.formError = false;
 						$scope.accountExists = false;
-
-					},
-					/* transformRequest */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = true;
-						return data;
-					},
-
-					/* transformResponse */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = false;
-						return JSON.parse(data);
-					});
-			},
-			login: function() {
-				wembliRpc.fetch('customer.login', {
-					email: $scope.email,
-					password: $scope.password
-				}, function(err, result) {
-					if (result.error) {
-						$scope.loginError = result.error;
-
-						if (typeof result.noPassword !== "undefined") {
-							$scope.noPassword = result.noPassword;
-						} else if (result.invalidCredentials) {
-							$scope.invalidCredentials = result.invalidCredentials;
-						}
-					}
-					if (result.customer) {
-						/* hide this modal and display the tickets offsite modal */
-						customer.set(result.customer);
-					}
-
-					if (result.loggedIn) {
-						$rootScope.loggedIn = result.loggedIn;
-					}
-
-				})
-			}
-		};
-	}
-]).
-controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
-		plan.get(function(p) {
-			$scope.$on('restaurants-login-clicked', function(e, args) {
-				$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
-				if (args.restaurant.service === 'google') {
-					$scope.redirectUrl += 'google/' + args.restaurant.id;
-				} else {
-					$scope.redirectUrl += 'yipit/' + args.restaurant.id;
-				}
-				$scope.restaurant = args.restaurant;
-				//$scope.googleParking = args.googleParking;
-				//$scope.parkingReservations = args.parkingReservations;
-			});
-		});
-
-		plan.get(function(p) {
-			$scope.$on('tickets-login-clicked', function(e, args) {
-				$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
-				$scope.ticket = args.ticket;
-			});
-		});
-
-		$scope.authActions = {
-			signup: function() {
-				wembliRpc.fetch('customer.signup', {
-						firstName: $scope.firstName,
-						lastName: $scope.lastName,
-						email: $scope.email
-					}, function(err, result) {
-						if (result.customer) {
-							/* hide this modal and display the tickets offsite modal */
-							//$scope.customer = result.customer;
-							customer.set(result.customer);
-						}
-
-						if (result.loggedIn) {
-							$rootScope.loggedIn = result.loggedIn;
-						}
-
-						if (result.exists) {
-							$scope.formError = false;
-							$scope.signupError = true;
-							$scope.accountExists = result.exists;
-							return;
-						}
-
-						if (result.formError) {
-							$scope.signupError = true;
-							$scope.formError = true;
-							$scope.accountExists = false;
-							return;
-						}
-						$scope.signupError = false;
-						$scope.formError = false;
-						$scope.accountExists = false;
+						/* fire the facebook signup pixels */
+						facebook.firePixel('6012472260371');
+						facebook.firePixel('6012473272971');
 
 					},
 					/* transformRequest */
@@ -1670,8 +1669,8 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 	}
 ]).
 
-controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls) {
+controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'facebook',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
 
 		plan.get(function(p) {
@@ -1714,6 +1713,9 @@ controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'cust
 						$scope.signupError = false;
 						$scope.formError = false;
 						$scope.accountExists = false;
+						/* fire the facebook signup pixels */
+						facebook.firePixel('6012472260371');
+						facebook.firePixel('6012473272971');
 
 					},
 					/* transformRequest */
@@ -1722,7 +1724,6 @@ controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'cust
 						$scope.continueSpinner = true;
 						return data;
 					},
-
 					/* transformResponse */
 
 					function(data, headersGetter) {
