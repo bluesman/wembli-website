@@ -1,0 +1,31 @@
+extends layout
+block content
+	#dashboard.container
+		h1 Today
+		.metrics.clearfix
+			.metric.pull-left
+				#view-count.keen-metric(event-collection="view", analysis-type="count", timeframe="today", target-property="visitorId")
+				h2 Total Views
+			.metric.pull-left
+				#visitor-count.keen-metric(event-collection="view", analysis-type="count_unique", timeframe="today", target-property="visitorId")
+				h2 Total Visitors
+			.metric.pull-left
+				#rsvp-count.keen-metric(event-collection="rsvp", analysis-type="count", timeframe="today", target-property="friendId")
+				h2 Total RSVP's
+
+		h1 Demographics
+		.demographics.clearfix
+			.demographic.pull-left
+				#browser-family.keen-metric(event-collection="view", analysis-type="count_unique", timeframe="this_year", target-property="visitorId",group-by="userAgentFamily",filter='[{"property_name":"isBot","operator":"eq","property_value":false}]')
+				h2 Browser Family
+			.demographic.pull-left
+				#region.keen-metric(event-collection="view", analysis-type="count_unique", timeframe="this_year", target-property="visitorId",group-by="region",filter='[{"property_name":"isBot","operator":"eq","property_value":false}]')
+				h2 Region
+			.demographic.pull-left
+				#region.keen-metric(event-collection="view", analysis-type="count_unique", timeframe="this_year", target-property="visitorId",group-by="device",filter='[{"property_name":"isBot","operator":"eq","property_value":false}]')
+				h2 Device
+
+		h1 Daily
+		.series
+			#rsvp-count-series.keen-series(event-collection="rsvp", analysis-type="count", timeframe="this_3_months", target-property="friendId", interval="daily")
+
