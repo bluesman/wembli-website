@@ -132,6 +132,7 @@ app.use(app.router);
 // }
 
 // Controllers
+require('./controllers/landing-pages')(app);
 require('./controllers/index')(app);
 require('./controllers/search')(app);
 require('./controllers/events')(app);

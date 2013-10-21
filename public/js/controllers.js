@@ -1113,14 +1113,13 @@ function SignupCtrl($scope, $http, wembliRpc, facebook) {
 		});
 
 
-	$scope.submitForm = function() {
-	}
+	$scope.submitForm = function() {}
 
 	$scope.clickSubmit = function() {
-    /* fire the facebook signup pixels */
-    facebook.firePixel('6012472260371');
-    /* fire the facebook signup pixels */
-    facebook.firePixel('6012473272971');
+		/* fire the facebook signup pixels */
+		facebook.firePixel('6012472260371');
+		/* fire the facebook signup pixels */
+		facebook.firePixel('6012473272971');
 	}
 
 };
@@ -1186,7 +1185,9 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 	$scope.event = JSON.parse(rsvpLoginModal.get('event'));
 
 	if ($scope.service === 'wemblimail') {
-		wembliRpc.fetch('friend.getServiceId', {token:$scope.token}, function(err, result) {
+		wembliRpc.fetch('friend.getServiceId', {
+			token: $scope.token
+		}, function(err, result) {
 			if (result.serviceId) {
 				$scope.email = result.serviceId;
 			}
@@ -1265,9 +1266,9 @@ function RsvpLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRpc,
 						$scope.confirmSocial = 'true';
 					}
 
-          /* fire the facebook signup pixels */
-          facebook.firePixel('6012472260371');
-			    facebook.firePixel('6012473272971');
+					/* fire the facebook signup pixels */
+					facebook.firePixel('6012472260371');
+					facebook.firePixel('6012473272971');
 
 				},
 				/* transformRequest */
@@ -1383,9 +1384,9 @@ function TicketsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 					$scope.formError = false;
 					$scope.accountExists = false;
 
-          /* fire the facebook signup pixels */
-          facebook.firePixel('6012472260371');
-			    facebook.firePixel('6012473272971');
+					/* fire the facebook signup pixels */
+					facebook.firePixel('6012472260371');
+					facebook.firePixel('6012473272971');
 
 				},
 				/* transformRequest */
@@ -1486,9 +1487,9 @@ function ParkingLoginCtrl($rootScope, $scope, $location, plan, customer, wembliR
 					$scope.formError = false;
 					$scope.accountExists = false;
 
-          /* fire the facebook signup pixels */
-          facebook.firePixel('6012472260371');
-			    facebook.firePixel('6012473272971');
+					/* fire the facebook signup pixels */
+					facebook.firePixel('6012472260371');
+					facebook.firePixel('6012473272971');
 
 				},
 				/* transformRequest */
@@ -1589,9 +1590,9 @@ function RestaurantsLoginCtrl($rootScope, $scope, $location, plan, customer, wem
 					$scope.formError = false;
 					$scope.accountExists = false;
 
-          /* fire the facebook signup pixels */
-          facebook.firePixel('6012472260371');
-			    facebook.firePixel('6012473272971');
+					/* fire the facebook signup pixels */
+					facebook.firePixel('6012472260371');
+					facebook.firePixel('6012473272971');
 
 
 				},
@@ -1681,9 +1682,9 @@ function HotelsLoginCtrl($rootScope, $scope, $location, plan, customer, wembliRp
 					$scope.formError = false;
 					$scope.accountExists = false;
 
-          /* fire the facebook signup pixels */
-          facebook.firePixel('6012472260371');
-			    facebook.firePixel('6012473272971');
+					/* fire the facebook signup pixels */
+					facebook.firePixel('6012472260371');
+					facebook.firePixel('6012473272971');
 
 
 				},
@@ -2098,4 +2099,58 @@ function VenueMapCtrl($rootScope, $scope, interactiveMapDefaults, plan, $filter,
 		return str;
 	}
 
+};
+
+
+function LandingPageCtrl($rootScope, $scope, $location, wembliRpc, facebook) {
+	$scope.searchInProgress = false;
+	$scope.signupInProgress = false;
+	$scope.showSearch = false;
+
+	$scope.submitSearch = function() {
+		$scope.searchInProgress = true;
+		$location.path('/search/events/' + $scope.search);
+	}
+
+
+	$scope.submitSignup = function() {
+		$scope.signupInProgress = true;
+
+		if ($scope.landingPageSignupForm.$invalid) {
+			$scope.signupInProgress = false;
+			return;
+		}
+
+		wembliRpc.fetch('customer.signup', {
+			firstName: $scope.firstName,
+			lastName: $scope.lastName,
+			email: $scope.email,
+			promo: $scope.promo
+		}, function(err, result) {
+			console.log($scope.customer);
+			$scope.signupInProgress = false;
+
+			if (result.customer) {
+				$rootScope.customer = result.customer;
+			}
+
+			if (result.loggedIn) {
+				$rootScope.loggedIn = result.loggedIn;
+			}
+
+			$scope.signupError = false;
+			$scope.formError = false;
+			$scope.accountExists = false;
+			$scope.showSearch = true;
+
+			$rootScope.$broadcast('search-page-loaded', {});
+
+			$scope.$on('search-page-loaded', function() {
+				$scope.searchInProgress = false;
+			});
+			/* fire the san diego chargers conversion pixel */
+			facebook.firePixel('6012637058771');
+
+		});
+	}
 };

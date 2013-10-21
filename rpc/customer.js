@@ -447,6 +447,7 @@ exports.customer = {
 					req: req,
 					confirmationToken: confirmationToken,
 					customer: customer,
+					promo: args.promo,
 					next: args.next
 				});
 
