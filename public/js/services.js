@@ -1515,6 +1515,46 @@ factory('loggedIn', [
 	}
 ]).
 
+
+factory('pixel', ['$http',
+	function($http) {
+		var self = this;
+		self.pixelsFired = {};
+
+		return {
+			fire: function(args, cb) {
+				console.log('fire facebook pixel');
+				if (typeof self.pixelsFired[pixelId] === "undefined") {
+
+					/* fetch the facebook conversion snipped and add the pixel id to it - then compile it */
+					var getArgs = {
+						method: 'get',
+						cache: false,
+						url: '/partials/'+args.source+'/' + args.pixelId
+					}; //args for the http request
+
+					/* fetch the partial */
+					$http(args).success(function(data, status, headers, config) {
+						console.log(args.source + ' pixel ' + args.pixelId + ' fired');
+
+						self.pixelsFired[args.pixelId] = true;
+
+						wembliRpc.fetch('analytics.addEvent', {
+							collection: "conversion",
+							source: args.source,
+							medium: args.medium,
+							term: args.term,
+							name: args.name,
+							content: args.pixelId
+						}, function(err, result) {});
+
+					});
+				}
+			}
+		}
+	}
+]).
+
 factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'customer', '$location',
 	function($rootScope, $q, wembliRpc, $window, $filter, customer, $location) {
 
@@ -1542,24 +1582,7 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 		}
 
 		return {
-			firePixel: function(pixelId, cb) {
-				console.log('fire facebook pixel');
-				if (typeof self.pixelsFired[pixelId] === "undefined") {
-					var fb_param = {};
-					fb_param.pixel_id = pixelId;
-					fb_param.value = '0.00';
-					fb_param.currency = 'USD';
-					(function() {
-						var fpw = document.createElement('script');
-						fpw.async = false;
-						fpw.src = '//connect.facebook.net/en_US/fp.js';
-						var ref = document.getElementsByTagName('script')[0];
-						ref.parentNode.insertBefore(fpw, ref);
-					})();
-					self.pixelsFired[pixelId] = true;
-					wembliRpc.fetch('analytics.addEvent', {collection:"signup", source: 'facebook', content:pixelId}, function(err, result) {});
-				}
-			},
+			firePixel: function(eventArgs, cb) {},
 			feedDialog: function(args, cb) {
 				FB.getLoginStatus(function(response) {
 					if (response.authResponse) {

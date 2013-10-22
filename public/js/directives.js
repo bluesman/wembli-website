@@ -616,14 +616,21 @@ directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence'
     }
   }
 ]).
-directive('facebookPixel', ['facebook',
-  function(facebook) {
+directive('facebookPixel', [
+  function() {
     return {
       restrict: 'C',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          /* fire the facebook signup pixels */
-          facebook.firePixel(attr.pixelId);
+          /* fetch the facebook conversion snipped and add the pixel id to it - then compile it */
+          var args = {
+            method: 'get',
+            cache: false,
+            url: '/partials/facebook/' + attr.pixelId
+          }; //args for the http request
+
+          /* fetch the partial */
+          $http(args).success(function(data, status, headers, config) {});
         }
       }
     }
