@@ -1,0 +1,101 @@
+/* GET FONT-AWESOME:
+  cd /wembli/Font-Awesome/
+  git pull;
+  cp /wembli/Font-Awesome/build/assets/font-awesome/less/* /wembli/website/public/less/font-awesome/
+
+  GET TWITTER BOOTSTRAP:
+  cd /wembli/bootstrap/
+  git pull
+  cp -R /wembli/bootstrap/less/* /wembli/website/less/bootstrap/
+*/
+/* @import url('/css/plugins/jquery-ui-1.8.16.custom.css'); */
+@import url('/css/bootstrap-modal.css');
+@import url('/css/plugins/pikaday.css');
+@import url('/css/plugins/jquery.multiselect.css');
+@import url('/css/plugins/jquery.multiselect.filter.css');
+@import url('/css/plugins/jquery.slidepanel.css');
+
+@import "../bootstrap/bootstrap.less";
+/* @import "bootstrap/responsive.less"; */
+@import "../wembli-variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "../wembli-mixins.less"; // Modify this for custom colors, font-sizes, etc
+
+form { margin-bottom:0px; }
+
+/* buttons */
+.btn-primary, .btn-primary:hover {
+  .buttonBackground(@blue,@blueDarker, @white);
+}
+
+//.buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 1px 1px rgba(255,255,255,.75));
+.btn-secondary, .btn-orange, .btn-secondary:hover, .btn-orange:hover {
+  .buttonBackground(@orange, @orangeDarker, @black);
+}
+
+.btn-large {
+  font-size:16px;
+}
+
+a, a:hover, a:focus {
+  text-decoration: none;
+}
+
+.clearfix {
+  .clearfix()
+}
+
+.white {color:@white;}
+.black {colort:@black;}
+.green {color:#64C832;}
+.red { color:red !important; }
+.orange {color:@orange;}
+.yellow {color:@yellow;}
+.blue {color:@blueDark;}
+.alert-danger {
+  background-color: #FF0000;
+  color:@white !important;
+  a {
+    color:#060F80 !important;
+  }
+  a:hover {
+    color:#000 !important;
+  }
+}
+
+a {
+  color:@blue;
+}
+
+a:hover {
+  color:@yellowDark;
+}
+
+a, button {
+  .icon {
+    width:20px;
+  }
+}
+
+.alert {
+  color:@grayDark;
+
+  .text.one-line {
+    line-height:38px;
+    vertical-align: middle;
+  }
+
+}
+
+.alert-warning {
+  background-color:@yellow,
+}
+
+@import "../font-awesome/font-awesome.less";
+@import "../fonts.less";
+@import "../type.less";
+@import "layout.less";
+@import "../header.less";
+
+@import "index.less";
+
+

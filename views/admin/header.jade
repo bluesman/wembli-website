@@ -1,0 +1,16 @@
+block header
+	#slidepanel.cb_slide_panel
+		.wrapper.clearfix
+			.controls.pull-right.close
+				i.icon-chevron-left
+				i.icon-chevron-left
+		ul.side-nav
+			li
+				a(href="/admin") home
+	header#header.clearfix(ng-controller="HeaderCtrl")
+		a.slidepanel.left-container.pull-left.clearfix(href="#",data-slidepanel="panel")
+			i.icon-reorder
+			span &nbsp;menu
+		.right-container.pull-right
+			a.logo-35(href="/index")
+				h1 Wembli

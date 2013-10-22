@@ -1,0 +1,57 @@
+- var title = (typeof title !== "undefined") ? title : 'Wembli Admin';
+title #{title}
+meta(charset = "utf-8")
+meta(name = "description", content = "")
+meta(name = "author", content = "")
+meta(name="viewport",content="width=device-width, initial-scale=1.0")
+
+link(type = "image/x-icon", rel = "icon", href = "/favicon.ico")
+link(type = "image/png", rel = "icon", href = "/favicon.png")
+
+link(rel='stylesheet', href='//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css')
+link(rel='stylesheet', href='/admin/css/style.css')
+
+//- jquery
+script(type = "text/javascript", src = "//code.jquery.com/jquery-1.8.3.js")
+script(type = "text/javascript", src = "//code.jquery.com/ui/1.9.2/jquery-ui.js")
+
+script(type="text/javascript")
+  var Keen=Keen||{configure:function(e){this._cf=e},addEvent:function(e,t,n,i){this._eq=this._eq||[],this._eq.push([e,t,n,i])},setGlobalProperties:function(e){this._gp=e},onChartsReady:function(e){this._ocrq=this._ocrq||[],this._ocrq.push(e)}};(function(){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src=("https:"==document.location.protocol?"https://":"http://")+"dc8na2hxrj29i.cloudfront.net/code/keen-2.1.0-min.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
+  // Configure the Keen object with your Project ID and (optional) access keys.
+  Keen.configure({
+    projectId: "51818c9d897a2c51e2000003",
+    readKey: "b1028a5b11fa349ea9240249145e97cf4ca552c1e03875b955c51f960189b833f566ecf98b4260aa98a2fe1119720477a8614ac44807545eb897a94762dce9ea3bc34a515dcfbd3d2138f15543e47a3e57c07fc2209b77b8dc469cd164117fa6a11907662b2647f4faa1d7d323c70097"    // required for doing analysis
+  });
+
+
+- if ("development" === environment())
+  //if lt IE 9
+    script(type="text/javascript",src="/js/plugins/excanvas.js")
+
+  script(type="text/javascript",src="/js/lib/balanced/v1/balanced.js")
+  script(type="text/javascript",src="/js/plugins/jquery.slidepanel.js")
+  script(type="text/javascript", src="/js/lib/angular/angular.min.js")
+
+  script(type="text/javascript", src="/admin/js/controllers.js")
+  script(type="text/javascript", src="/admin/js/services.js")
+  script(type="text/javascript", src="/admin/js/directives.js")
+  script(type="text/javascript", src="/admin/js/filters.js")
+  script(type="text/javascript", src="/admin/js/app.js")
+
+  script(type = "text/javascript", src = "/js/twitter-bootstrap/bootstrap-alert.js")
+  script(type = "text/javascript", src = "/js/twitter-bootstrap/bootstrap-transition.js")
+  script(type = "text/javascript", src = "/js/twitter-bootstrap/bootstrap-carousel.js")
+  script(type = "text/javascript", src = "/js/twitter-bootstrap/bootstrap-tooltip.js")
+  script(type = "text/javascript", src = "/js/twitter-bootstrap/bootstrap-popover.js")
+  script(type = "text/javascript", src = "/js/twitter-bootstrap/bootstrap-scrollspy.js")
+  script(type = "text/javascript", src = "/js/plugins/pikaday.jquery.js")
+  script(type = "text/javascript",  src = "/js/bootstrap-modal/bootstrap-modalmanager.js")
+  script(type = "text/javascript", src = "/js/bootstrap-modal/bootstrap-modal.js")
+  script(type = "text/javascript", src = "/js/twitter-bootstrap/bootstrap-dropdown.js")
+
+//if lt IE 9
+  script(type="text/javascript",src="/js/plugins/excanvas.js")
+  script(src = "http://html5shim.googlecode.com/svn/trunk/html5.js")
+
+- if ("development" !== environment())
+  script(type = "text/javascript", src = "/admin/js/admin.min.js")
