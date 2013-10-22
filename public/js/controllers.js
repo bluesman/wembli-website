@@ -166,7 +166,6 @@ controller('EventListCtrl', ['$scope', '$location', 'wembliRpc', '$filter', '$ro
 				var method = 'event.get';
 			}
 
-
 			wembliRpc.fetch(method, args,
 				//response callback
 
@@ -1587,7 +1586,6 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 			angular.element('#parking-login-modal').modal('hide');
 		};
 
-
 		$scope.authActions = {
 			signup: function() {
 				wembliRpc.fetch('customer.signup', {
@@ -1753,7 +1751,6 @@ controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'cust
 					if (result.loggedIn) {
 						$rootScope.loggedIn = result.loggedIn;
 					}
-
 				})
 			}
 		};
@@ -2142,5 +2139,60 @@ controller('VenueMapCtrl', ['$rootScope', '$scope', 'interactiveMapDefaults', 'p
 			return str;
 		}
 
+	}
+]).
+
+controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc', 'facebook',
+	function($rootScope, $scope, $location, wembliRpc, facebook) {
+		$scope.searchInProgress = false;
+		$scope.signupInProgress = false;
+		$scope.showSearch = false;
+
+		$scope.submitSearch = function() {
+			$scope.searchInProgress = true;
+			$location.path('/search/events/' + $scope.search);
+		}
+
+
+		$scope.submitSignup = function() {
+			$scope.signupInProgress = true;
+
+			if ($scope.landingPageSignupForm.$invalid) {
+				$scope.signupInProgress = false;
+				return;
+			}
+
+			wembliRpc.fetch('customer.signup', {
+				firstName: $scope.firstName,
+				lastName: $scope.lastName,
+				email: $scope.email,
+				promo: $scope.promo
+			}, function(err, result) {
+				console.log($scope.customer);
+				$scope.signupInProgress = false;
+
+				if (result.customer) {
+					$rootScope.customer = result.customer;
+				}
+
+				if (result.loggedIn) {
+					$rootScope.loggedIn = result.loggedIn;
+				}
+
+				$scope.signupError = false;
+				$scope.formError = false;
+				$scope.accountExists = false;
+				$scope.showSearch = true;
+
+				$rootScope.$broadcast('search-page-loaded', {});
+
+				$scope.$on('search-page-loaded', function() {
+					$scope.searchInProgress = false;
+				});
+				/* fire the san diego chargers conversion pixel */
+				facebook.firePixel('6012637058771');
+
+			});
+		}
 	}
 ]);

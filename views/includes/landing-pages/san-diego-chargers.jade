@@ -1,0 +1,150 @@
+#landing-page-frame(ng-controller="LandingPageCtrl")
+	section.section1.carousel-container
+		#carousel.carousel.slide
+			ol.carousel-indicators
+				li.active(data-target="#carousel",data-slide-to="0")
+			.carousel-inner
+				.item.active
+					img(src="/images/landing-pages/qualcomm-1.jpg")
+	section.section2
+		.container
+			.search(ng-show="showSearch || loggedIn")
+				.tag-line
+					p Thanks! A Coupon was sent to your email address
+					p Now Search and Get Ta Plannin'!
+				form#landing-page-search-form.form-search.clearfix(ng-submit="submitSearch()")
+					i.icon-search.icon-2x.pull-left(ng-hide="searchInProgress")
+					i.icon-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
+
+					input.pull-left(type="text", ng-init="search='San Diego Chargers'", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
+					button.btn.btn-secondary.segoe.pull-left(href="#") search
+
+			.signup(ng-hide="showSearch || loggedIn")
+				form#landing-page-signup-form.form-signup.clearfix(ng-init="promo='CHARGERS10'", name="landingPageSignupForm",ng-submit="submitSignup()", novalidate)
+					.tag-line
+						p JOIN WEMBLI NOW AND SAVE $10 BUCKS NEXT
+						p TIME YOU BUY SAN DIEGO CHARGERS TICKETS
+
+					fieldset
+						.error
+							.error-text(ng-show="error") All fields are required and your passwords need to match.
+							.error-text(ng-show="exists") We've already got an account for that email.
+						.control-group
+							input#first-name(ng-model="firstName",placeholder="FIRST NAME",type="text",name="firstName",required)
+							input#last-name(ng-model="lastName",placeholder="LAST NAME",type="text",name="lastName",required)
+						.control-group
+							input#email(ng-model="email",placeholder="EMAIL ADDRESS",type="text",name="email",required)
+					button.btn.btn-primary.btn-large(type="submit")
+						i.icon-ok(ng-hide="signupInProgress")
+						i.icon-cog.icon-spin(ng-show="signupInProgress")
+						span &nbsp;Join Wembli
+	section.section3
+		.container
+			h2.calibri HOW DOES WEMBLI WORK?
+			.wembli-man-arrow
+			.info-boxes
+				.box.one.pull-left.clearfix
+					h3.number 1.
+					.header.clearfix
+						i.icon-search.icon-2x.pull-left
+						h4.pull-left You pick an event
+					.body
+						p Whether you have an event in mind, or you want some ideas of what’s available in your area, use Wembli to search for events throughout the U.S.
+				.box.two.pull-left.clearfix
+					h3.number 2.
+					.header.clearfix
+						i.icon-group.icon-2x.pull-left
+						h4.pull-left Invite friends
+					.body
+						p They get to vote on things like ticket prices and any add ons you choose for your outing i.e.: parking, restaurant deals & hotel
+				.box.three.pull-left.clearfix
+					h3.number 3.
+					.header.clearfix
+						i.icon-credit-card.icon-2x.pull-left
+						h4.pull-left Everyone pays
+					.body
+						p Gone are the days of you getting stuck footing the bill.  Using Wembli, you can have your friends pay up front or you can collect after.  You choose.
+				.box.four.pull-left.clearfix
+					h3.number 4.
+					.header.clearfix
+						i.icon-ticket.icon-2x.pull-left
+						h4.pull-left Tickets are bought
+					.body
+						p We aggregate tickets from across the web - so you don’t waste precious time bouncing from site to site.  We even know how many seats you can get together.
+	section.section4
+		.video-container.clearfix
+			.video-text.pull-left
+				h2.calibri ONE STOP SHOP FOR EVENTS
+				p Love going to live events with friends but hate to plan it lest you end up getting stuck with the bill...AGAIN?
+				p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
+			.video.pull-right
+				iframe(width="480",height="360",src="//www.youtube.com/embed/_DKAIoIHk5c",frameborder="0",allowfullscreen)
+	section.section5
+		h2.calibri WHAT PEOPLE ARE SAYING
+		.container.clearfix
+			.left.pull-left
+				.polaroid
+					img(src="/images/chargers-fans-2.jpg", title="Getting Pumped Before The Game!")
+					.img-caption.segoe Getting Pumped Before The Game!
+			.right.pull-left
+				.caption
+					i.icon-quote-left
+					span &nbsp;I got the best seats for the cheapest price AND all my friends ponied up for their share. Go Wembli!
+					span &nbsp;~ Carolyn&nbsp;
+					i.icon-quote-right
+				.caption
+					i.icon-quote-left
+					span &nbsp;Just bought my tickets for a group outing. Super easy. Wembli is awesome.
+					span &nbsp;~ Louis&nbsp;
+					i.icon-quote-right
+				.caption
+					i.icon-quote-left
+					span &nbsp;Loving the branding on Wembli and the service feels intuitive. Well done!
+					span &nbsp;~ Victor&nbsp;
+					i.icon-quote-right
+
+	section.section6
+		.container.clearfix
+			.left.pull-left
+				.body.twitter-widget
+					a.twitter-timeline(href="//twitter.com/search?q=%40wembli",data-link-color="#0088CC", data-theme="dark",data-widget-id="318018385696915459", data-tweet-limit="3", data-chrome="noborders noscrollbar", height="400px" ,width="500px").segoe
+					.twitter-right-arrow
+			.right.pull-left
+				.body
+					.row.clearfix
+						a.facebook-link.pull-left(href="//www.facebook.com/wemblifan")
+						a.blog-link.pull-left(href="//blog.wembli.com/")
+					.row.clearfix
+						a.twitter-link.pull-left(href="//twitter.com/wembli")
+						a.gplus-link.pull-left(href="//plus.google.com/102053515859174299215/posts")
+					.row.message
+						h2 Promos & Insider Info
+						.text Here at Wembli we love social networking and connecting with our favorite people – our beloved Wemblizens! That’s why we are all over Facebook, Twitter and Google+.
+	section.section7
+		//-
+			.container
+				.footer-column.pull-left
+					h4 TICKETS
+					.list
+				.footer-column.pull-left
+					h4 IN YOUR AREA
+					.list
+				.footer-column.pull-left
+					h4 TRENDING NOW
+					.list
+				.footer-column.pull-left
+					h4 ABOUT WEMBLI
+					.list
+		.container.clearfix
+			//-
+				.footer-social-button.twitter-button.pull-left
+					a(href="//twitter.com/wembli", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow @wembli
+			.social-links.clearfix
+				.footer-social-button.facebook-like-button.pull-left
+					.fb-like(data-href="https://www.wembli.com", data-width="480",data-show-faces="true", data-send="true")
+				.footer-social-button.gplus-like-button.pull-left
+					.g-plusone(data-href="https://www.wembli.com", data-annotation="inline", data-width="480")
+			.links.clearfix.pull-left
+				a.footer-link(href="/about-us") About Us
+				a.footer-link(href="/terms-policies") Terms Of Service & Privacy Policy
+				a.footer-links(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+

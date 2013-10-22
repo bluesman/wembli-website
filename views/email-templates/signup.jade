@@ -7,6 +7,8 @@ block body
 			tr
 				td(height="80")
 					span Thanks for joining Wembli!&nbsp;
+					- if (promo)
+						span Your discount coupon is: #{promo}. Be sure to use it when you purchase your next set of tickets from Wembli.&nbsp;
 					a(href="#{confirmLink}") Click here&nbsp;
 					span to confirm your email addy so we know you’re the real deal and not Sir Spam-a-lot.
 			tr

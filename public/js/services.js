@@ -1557,7 +1557,7 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 						ref.parentNode.insertBefore(fpw, ref);
 					})();
 					self.pixelsFired[pixelId] = true;
-					console.log('fired facebook conversion pixel for: '+pixelId);
+					wembliRpc.fetch('analytics.addEvent', {collection:"signup", source: 'facebook', content:pixelId}, function(err, result) {});
 				}
 			},
 			feedDialog: function(args, cb) {
