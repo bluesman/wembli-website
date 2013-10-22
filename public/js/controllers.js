@@ -1145,10 +1145,25 @@ controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'facebook',
 		$scope.submitForm = function() {}
 
 		$scope.clickSubmit = function() {
+
 			/* fire the facebook signup pixels */
-			facebook.firePixel('6012472260371');
-			/* fire the facebook signup pixels */
-			facebook.firePixel('6012473272971');
+			pixel.fire({
+				type: 'signup',
+				campaign: 'Conversion Pixel For Music Feed Ad',
+				source: 'facebook',
+				medium: 'cpc',
+				term: '',
+				content: '6012472260371',
+			});
+
+			pixel.fire({
+				type: 'signup',
+				campaign: 'Conversion Pixel For Sports Feed Ad',
+				source: 'facebook',
+				medium: 'cpc',
+				term: '',
+				content: '6012473272971',
+			});
 		}
 	}
 ]).
@@ -1302,9 +1317,25 @@ controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'custo
 							$scope.confirmSocial = 'true';
 						}
 
+
 						/* fire the facebook signup pixels */
-						facebook.firePixel('6012472260371');
-						facebook.firePixel('6012473272971');
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Music Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012472260371',
+						});
+
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Sports Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012473272971',
+						});
 
 					},
 					/* transformRequest */
@@ -1422,8 +1453,23 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 						$scope.accountExists = false;
 
 						/* fire the facebook signup pixels */
-						facebook.firePixel('6012472260371');
-						facebook.firePixel('6012473272971');
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Music Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012472260371',
+						});
+
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Sports Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012473272971',
+						});
 
 					},
 					/* transformRequest */
@@ -1519,8 +1565,23 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 						$scope.accountExists = false;
 
 						/* fire the facebook signup pixels */
-						facebook.firePixel('6012472260371');
-						facebook.firePixel('6012473272971');
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Music Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012472260371',
+						});
+
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Sports Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012473272971',
+						});
 
 					},
 					/* transformRequest */
@@ -1619,9 +1680,25 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 						$scope.signupError = false;
 						$scope.formError = false;
 						$scope.accountExists = false;
+
 						/* fire the facebook signup pixels */
-						facebook.firePixel('6012472260371');
-						facebook.firePixel('6012473272971');
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Music Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012472260371',
+						});
+
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Sports Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012473272971',
+						});
 
 					},
 					/* transformRequest */
@@ -1711,9 +1788,25 @@ controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'cust
 						$scope.signupError = false;
 						$scope.formError = false;
 						$scope.accountExists = false;
+
 						/* fire the facebook signup pixels */
-						facebook.firePixel('6012472260371');
-						facebook.firePixel('6012473272971');
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Music Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012472260371',
+						});
+
+						pixel.fire({
+							type: 'signup',
+							campaign: 'Conversion Pixel For Sports Feed Ad',
+							source: 'facebook',
+							medium: 'cpc',
+							term: '',
+							content: '6012473272971',
+						});
 
 					},
 					/* transformRequest */
@@ -2190,8 +2283,15 @@ controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc',
 					$scope.searchInProgress = false;
 				});
 				/* fire the san diego chargers conversion pixel */
-				facebook.firePixel('6012637058771');
-
+				/* fire the facebook signup pixels */
+				pixel.fire({
+					type: 'signup',
+					campaign: 'Conversion Pixel For Music Feed Ad',
+					source: 'facebook',
+					medium: 'cpc',
+					term: '',
+					content: '6012637058771',
+				});
 			});
 		}
 	}

@@ -69,7 +69,7 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
 
           $scope.skipStep = function(step, completed) {
             if (typeof completed !== "undefined") {
-              $scope.stepCompleted['nav-'+completed] = true;
+              $scope.stepCompleted['nav-' + completed] = true;
             }
 
             var nextStep = 'step' + (parseInt(step.charAt(step.length - 1)) + 1);
@@ -303,9 +303,26 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                 $scope.signup.success = true;
                 $scope.showForm('showSignupView', 'showSignupForm');
                 console.log('submit signup succes - fire pixel');
+
                 /* fire the facebook signup pixels */
-                facebook.firePixel('6012472260371');
-                facebook.firePixel('6012473272971');
+                pixel.fire({
+                  type: 'signup',
+                  campaign: 'Conversion Pixel For Music Feed Ad',
+                  source: 'facebook',
+                  medium: 'cpc',
+                  term: '',
+                  content: '6012472260371',
+                });
+
+                pixel.fire({
+                  type: 'signup',
+                  campaign: 'Conversion Pixel For Sports Feed Ad',
+                  source: 'facebook',
+                  medium: 'cpc',
+                  term: '',
+                  content: '6012473272971',
+                });
+
 
                 return $scope.gotoStep('step2');
 
