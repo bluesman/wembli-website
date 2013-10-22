@@ -90,17 +90,17 @@
 							a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
 				- each c, i in concerts
 					li.performers
-						a.performer.white.show-ellipses(start="0", characters="30", ng-href="/search/events/#{c.Name}") #{i+1}) #{c.Name}
+						a.performer.white.show-ellipses(start="0", title="#{c.Name}", characters="30", ng-href="/search/events/#{c.Name}") #{i+1}) #{c.Name}
 			ul.middle.pull-left
 				h2 Sporting Events:
 				- each s, i in sports
 					li.performers
-						a.performer.white.show-ellipses(start="0", characters="40", ng-href="/search/events/#{s.Name}") #{i+1}) #{s.Name}
+						a.performer.white.show-ellipses(start="0", title="#{s.Name}", characters="40", ng-href="/search/events/#{s.Name}") #{i+1}) #{s.Name}
 			ul.right.pull-left
 				h2 Theater:
 				- each t, i in theater
 					li.performers
-						a.performer.white.show-ellipses(start="0", characters="40", ng-href="/search/events/#{t.Name}") #{i+1}) #{t.Name}
+						a.performer.white.show-ellipses(start="0", title="#{t.Name}", characters="40", ng-href="/search/events/#{t.Name}") #{i+1}) #{t.Name}
 	section.section6
 		.container.clearfix
 			.left.pull-left

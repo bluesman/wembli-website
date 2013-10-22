@@ -7,20 +7,10 @@ section#section1(class="#{sectionClass} itinerary-section plan-section")
 		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
 		span &nbsp;at {{plan.event.eventVenue}}&nbsp;
 	.body
-		.background.clearfix
-			- var images = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
-			- each id in images
-				img.pull-left(src="/images/itinerary/itinerary-background_#{id}.png")
 		.itinerary-data.clearfix
-			.event-container.clearfix
-				.event-name.clearfix.text
-					i.icon-quote-left.blue
-					span.blue &nbsp;{{plan.event.eventName}}
-					span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-					span &nbsp;at {{plan.event.eventVenue}}&nbsp;
-					i.icon-quote-right
-			//- have tickets rsvp complete
-			.tickets-container
+			.left.pull-left
+			.right.pull-left
+				.tickets-container
 					h2 Tickets
 					.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && ticketCountMismatch")
 						.icon-warning-sign.icon-2x.pull-left
@@ -68,80 +58,77 @@ section#section1(class="#{sectionClass} itinerary-section plan-section")
 									strong {{tickets[0].ticketGroup.selectedQty | pluralize:'ticket'}}:&nbsp;
 								.ticket-total.pull-left
 									{{tickets[0].ticketGroup.costBreakdown.total | currency}}
-			.parking-container
-				h2 Parking
-				.row
-					.info.clearfix(ng-hide="parking[0].parking")
-						.parking-name
-							strong NAME:&nbsp;
-							span TBD
-						.parking-location
-							strong LOCATION:&nbsp;
-							span TBD
-					.info.clearfix(ng-show="parking[0].parking && {'pw':true}[parking[0].service]")
-						.parking-name
-							strong NAME:&nbsp;
-							span {{parking[0].parking.location_name}}
-						.parking-location
-							strong LOCATION:&nbsp;
-							span {{parking[0].parking.address}}, {{parking[0].parking.city}}, {{parking[0].parking.state}} {{parking[0].parking.zip}}
-					.info.clearfix(ng-show="parking[0].parking && {'google':true}[parking[0].service]")
-						.parking-name
-							strong NAME:&nbsp;
-							span {{parking[0].parking.name}}
-						.parking-location
-							strong LOCATION:&nbsp;
-							span {{parking[0].parking.vicinity}}
+				.parking-container
+					h2 Parking
+					.row
+						.info.clearfix(ng-hide="parking[0].parking")
+							.parking-name
+								strong NAME:&nbsp;
+								span TBD
+							.parking-location
+								strong LOCATION:&nbsp;
+								span TBD
+						.info.clearfix(ng-show="parking[0].parking && {'pw':true}[parking[0].service]")
+							.parking-name
+								strong NAME:&nbsp;
+								span {{parking[0].parking.location_name}}
+							.parking-location
+								strong LOCATION:&nbsp;
+								span {{parking[0].parking.address}}, {{parking[0].parking.city}}, {{parking[0].parking.state}} {{parking[0].parking.zip}}
+						.info.clearfix(ng-show="parking[0].parking && {'google':true}[parking[0].service]")
+							.parking-name
+								strong NAME:&nbsp;
+								span {{parking[0].parking.name}}
+							.parking-location
+								strong LOCATION:&nbsp;
+								span {{parking[0].parking.vicinity}}
+				.hotel-container
+					h2 Hotel
+					.row
+						.info.clearfix(ng-hide="hotels[0].hotel")
+							.hotels-name
+								strong NAME:
+								span TBD&nbsp;
+							.hotels-location
+								strong LOCATION:
+								span TBD
+				.restaurant-container
+					h2 Restaurant
+					.row
+						.info.clearfix(ng-hide="restaurants[0].restaurant")
+							.restaurants-name
+								strong NAME:
+								span TBD&nbsp;
+							.restaurants-location
+								strong LOCATION:
+								span TBD
 
-			.hotel-container
-				h2 Hotel
-				.row
-					.info.clearfix(ng-hide="hotels[0].hotel")
-						.hotels-name
-							strong NAME:
-							span TBD&nbsp;
-						.hotels-location
-							strong LOCATION:
-							span TBD
+						.info.clearfix(ng-show="restaurants[0].restaurant && {'google':true}[restaurants[0].service]")
+							.restaurants-name
+								strong NAME:
+								span {{restaurants[0].restaurant.name}}&nbsp;
+							.restaurants-location
+								strong LOCATION:
+								span {{restaurants[0].restaurant.vicinity}}
 
-			.restaurant-container
-				h2 Restaurant
-				.row
-					.info.clearfix(ng-hide="restaurants[0].restaurant")
-						.restaurants-name
-							strong NAME:
-							span TBD&nbsp;
-						.restaurants-location
-							strong LOCATION:
-							span TBD
+						.info.clearfix(ng-show="restaurants[0].restaurant && {'yipit':true}[restaurants[0].service]")
+							.restaurants-deal-name
+								strong {{restaurants[0].restaurant.title}}&nbsp;
+							.restaurants-name
+								strong RESTAURANT:&nbsp;
+								span {{restaurants[0].restaurant.business.name}}
+							.restaurants-location
+								strong LOCATION:&nbsp;
+								span {{restaurants[0].restaurant.business.locations[0].address}}, {{restaurants[0].restaurant.business.locations[0].locality}}, {{restaurants[0].restaurant.business.locations[0].state}} {{restaurants[0].restaurant.business.locations[0].zip_code}}
+							.restaurants-location
+								strong PHONE:&nbsp;
+								span {{restaurants[0].restaurant.business.locations[0].phone}}
+				.notes-container
+					- if (visitor.context === 'organizer')
+						textarea.notes(placeholder="Notes", ng-model="plan.notes",on-keyup="submitNotes")
+					- else
+						textarea.notes(placeholder="Notes", ng-model="plan.notes",disabled="disabled")
+		.google-map-container
+			h2 Map
+			#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
 
-					.info.clearfix(ng-show="restaurants[0].restaurant && {'google':true}[restaurants[0].service]")
-						.restaurants-name
-							strong NAME:
-							span {{restaurants[0].restaurant.name}}&nbsp;
-						.restaurants-location
-							strong LOCATION:
-							span {{restaurants[0].restaurant.vicinity}}
-
-					.info.clearfix(ng-show="restaurants[0].restaurant && {'yipit':true}[restaurants[0].service]")
-						.restaurants-deal-name
-							strong {{restaurants[0].restaurant.title}}&nbsp;
-						.restaurants-name
-							strong RESTAURANT:&nbsp;
-							span {{restaurants[0].restaurant.business.name}}
-						.restaurants-location
-							strong LOCATION:&nbsp;
-							span {{restaurants[0].restaurant.business.locations[0].address}}, {{restaurants[0].restaurant.business.locations[0].locality}}, {{restaurants[0].restaurant.business.locations[0].state}} {{restaurants[0].restaurant.business.locations[0].zip_code}}
-						.restaurants-location
-							strong PHONE:&nbsp;
-							span {{restaurants[0].restaurant.business.locations[0].phone}}
-
-			.google-map-container
-				h2 Map
-				#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
-			.notes-container
-				h2 Notes
-				- if (visitor.context === 'organizer')
-					textarea.notes(ng-model="plan.notes",on-keyup="submitNotes")
-				- else
-					textarea.notes(ng-model="plan.notes",disabled="disabled")

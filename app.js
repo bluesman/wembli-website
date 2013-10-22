@@ -154,6 +154,7 @@ require('./controllers/callback/paypal')(app);
 require('./controllers/callback/tn')(app);
 require('./controllers/dashboard')(app);
 require('./controllers/confirm')(app);
+require('./controllers/admin')(app);
 
 //this is last so individual controllers can override
 require('./controllers/partials')(app);
