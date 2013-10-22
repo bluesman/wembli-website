@@ -1125,8 +1125,8 @@ controller('SearchCtrl', ['$scope', '$rootScope',
 	}
 ]).
 
-controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'facebook',
-	function($scope, $http, wembliRpc, facebook) {
+controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'pixel',
+	function($scope, $http, wembliRpc, pixel) {
 		//init login vars
 		var args = {};
 		$scope.error = false;
@@ -1226,8 +1226,8 @@ controller('HeaderCtrl', ['$scope',
 	}
 ]).
 
-controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'rsvpLoginModal', 'facebook',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal, facebook) {
+controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'rsvpLoginModal', 'pixel',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal, pixel) {
 		$scope.plan = plan.get();
 		$scope.guid = rsvpLoginModal.get('guid');
 		$scope.service = rsvpLoginModal.get('service');
@@ -1408,8 +1408,8 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'fetchModals', 'plan', 'custom
 
 	}
 ]).
-controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'facebook',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
+controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
 
 		plan.get(function(p) {
@@ -1514,8 +1514,8 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 		};
 	}
 ]).
-controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'facebook',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, facebook) {
+controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'pixel',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, pixel) {
 		plan.get(function(p) {
 			$scope.$on('parking-login-clicked', function(e, args) {
 				$scope.redirectUrl = '/parking/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
@@ -1626,8 +1626,8 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 		};
 	}
 ]).
-controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'facebook',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
+controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
 		plan.get(function(p) {
 			$scope.$on('restaurants-login-clicked', function(e, args) {
 				$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
@@ -1744,8 +1744,8 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 	}
 ]).
 
-controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'facebook',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, facebook) {
+controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
 
 		plan.get(function(p) {
@@ -2235,8 +2235,8 @@ controller('VenueMapCtrl', ['$rootScope', '$scope', 'interactiveMapDefaults', 'p
 	}
 ]).
 
-controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc', 'facebook',
-	function($rootScope, $scope, $location, wembliRpc, facebook) {
+controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc', 'pixel',
+	function($rootScope, $scope, $location, wembliRpc, pixel) {
 		$scope.searchInProgress = false;
 		$scope.signupInProgress = false;
 		$scope.showSearch = false;
