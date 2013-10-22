@@ -229,8 +229,8 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
   }
 ]).
 
-directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn', 'facebook',
-  function(wembliRpc, $window, customer, plan, loggedIn, facebook) {
+directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn', 'pixel',
+  function(wembliRpc, $window, customer, plan, loggedIn, pixel) {
     return {
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',

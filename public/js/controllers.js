@@ -2286,12 +2286,31 @@ controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc',
 				/* fire the facebook signup pixels */
 				pixel.fire({
 					type: 'signup',
-					campaign: 'Conversion Pixel For Music Feed Ad',
+					campaign: 'Pixel For San Diego Chargers',
 					source: 'facebook',
 					medium: 'cpc',
 					term: '',
 					content: '6012637058771',
 				});
+				/*
+				pixel.fire({
+					type: 'test',
+					campaign: 'Test 01',
+					source: 'facebook',
+					medium: 'cpc',
+					term: '',
+					content: '6012676009971',
+				});
+
+				pixel.fire({
+					type: 'test',
+					campaign: 'Test 02',
+					source: 'facebook',
+					medium: 'cpc',
+					term: '',
+					content: '6012676037771',
+				});
+				*/
 			});
 		}
 	}

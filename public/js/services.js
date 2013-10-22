@@ -195,6 +195,7 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 
 		var planNav = {
 			init: function(sectionsCount) {
+				console.log('planNav.init called');
 				if (self.sectionsCount == 0) {
 					self.sectionsCount = sectionsCount;
 				}
@@ -211,9 +212,29 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 						$('#nav-section' + (self.scrollToSection)).addClass('active');
 						planNav.scrollTo(self.scrollToSection);
 
+						/* check for notifications */
+						$('section').each(function(sectionNumber, section) {
+							var count = 0;
+							var key = '#'+section.id+' .notification';
+							console.log(key);
+							$(key).each(function(idx, el) {
+								if ($(el).css('display') === 'block') {
+									console.log('visible');
+									count++;
+									console.log(sectionNumber);
+								} else {
+									console.log('not visible');
+								}
+							});
+							if (count) {
+								$('#notification-nav-'+section.id).html(count).show();
+							}
+						});
+
+
 						$timeout(function() {
 							$('#page-loading-modal').modal("hide");
-						},500);
+						}, 500);
 						dereg();
 					}
 				});
@@ -1516,8 +1537,8 @@ factory('loggedIn', [
 ]).
 
 
-factory('pixel', ['$http',
-	function($http) {
+factory('pixel', ['$http', 'wembliRpc',
+	function($http, wembliRpc) {
 		var self = this;
 		self.pixelsFired = {};
 
@@ -1546,12 +1567,12 @@ factory('pixel', ['$http',
 					var getArgs = {
 						method: 'get',
 						cache: false,
-						url: '/partials/'+args.source+'/' + args.content
+						url: '/partials/pixel/' + args.source + '/' + args.content
 					}; //args for the http request
 
 					/* fetch the partial */
-					$http(args).success(function(data, status, headers, config) {
-						console.log(args.source + ' pixel ' + args.content + ' fired');
+					$http(getArgs).success(function(data, status, headers, config) {
+						$(data).insertBefore($('script')[0]);
 
 						self.pixelsFired[args.content] = true;
 

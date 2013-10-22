@@ -1,6 +1,4 @@
-var eventRpc = require('../rpc/event').event;
 var wembliUtils = require('../lib/wembli/utils');
-var async = require('async');
 
 module.exports = function(app) {
 
