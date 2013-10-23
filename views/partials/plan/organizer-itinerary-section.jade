@@ -1,5 +1,12 @@
 - var sectionClass = (visitor.context === 'organizer') ? 'organizer-itinerary-section' : 'friend-itinerary-section';
-section#section4.hide(class="#{sectionClass} itinerary-section plan-section")
+
+- var sectionId = 'section4';
+- if (req.session.plan.preferences.payment === 'no-split')
+	- sectionId = (visitor.context === 'organizer') ? 'section3' : 'section4';
+- else
+	- sectionId = (visitor.context === 'organizer') ? 'section4' : 'section5';
+
+section.hide(id="#{sectionId}", class="#{sectionClass} itinerary-section plan-section")
 	.header.clearfix
 		h1.pull-left Itinerary
 	.event-info
