@@ -306,6 +306,10 @@
 		margin-left:160px;
 		text-align:left;
 
+		.alert-danger {
+			text-shadow:none;
+		}
+
 		section > .header {
 			border-bottom:6px solid @blueDark;
 		}
@@ -316,11 +320,14 @@
 				border-bottom: thin solid @grayDark;
 			}
 
+			.plan-section > .header {
+				border-bottom:6px solid @blueDark;
+			}
+
 			.plan-section {
 				padding:0 20px;
 
 				.header {
-					border-bottom:6px solid @blueDark;
 
 					h1 {
 						padding:10px 0 4px;
@@ -340,6 +347,9 @@
 					}
 					.text {
 						width:89%;
+					}
+					.close {
+						top:1px;
 					}
 				}
 
@@ -549,19 +559,19 @@
 								i {width:15px;}
 								.transaction-fee-header, .requested-amounts-header, .suggested-amount-header {
 									font-size: 1em;
-									line-height: 24px;
+									line-height: 30px;
 									vertical-align: middle;
 
 								}
 								.header {
 									font-size: 1.25em;
 									font-weight: bold;
-									line-height: 24px;
+									line-height: 30px;
 									vertical-align: middle;
 								}
 								.value {
 									font-size: 1em;
-									line-height: 24px;
+									line-height: 30px;
 									vertical-align: middle;
 								}
 							}
@@ -614,7 +624,6 @@
 								.header {
 									font-weight: bold;
 									font-style: italic;
-									font-size:1.25em;
 									line-height: 30px;
 									vertical-align: middle;
 								}
@@ -623,8 +632,11 @@
 									width:26px;
 								}
 							}
-							input[type=text] {
+							.input-prepend {
 								margin-top:5px;
+								margin-bottom:0px;
+							}
+							input[type=text] {
 								width:75px;
 								font-size:18px;
 								text-align: right;
@@ -1170,7 +1182,7 @@
 		#plan-dashboard.organizer-plan-dashboard {
 
 			.organizer-rsvp-section {
-				.confirmed-alert, .not-confirmed-warning {
+				.notification {
 					margin:23px 0 0 150px;
 					height:20px;
 					.icon {
@@ -1207,7 +1219,6 @@
 
 					.container {
 						width:100%;
-						margin:20px 0 0 0;
 						padding:40px 0;
 
 						.cartoon-man {
@@ -1291,7 +1302,9 @@
 
 					.add-on-row {
 
-
+						.popover-content {
+							font-size:12px;
+						}
 
 						.add-on-container {
 							.add-on-offsite-link {
@@ -1371,7 +1384,9 @@
 			}
 
 			.organizer-pony-up-section {
-
+				.invitees-container {
+					margin:0;
+				}
 			}
 
 		}

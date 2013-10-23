@@ -323,7 +323,6 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
           }
 
           scope.$watch('showTicketsPopover', function(newVal) {
-            console.log('showTicketsPopover is '+newVal);
             if (typeof newVal !== "undefined") {
               if (newVal) {
                 angular.element('#static-popover-content').show();
@@ -588,8 +587,8 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 };
 
                 //set the height of the map-container to the window height 174 is the header + the footer
-                $('#venue-map-container').css("height", $($window).height() - 114);
-                $('#tickets').css("height", $($window).height() - 114);
+                $('#venue-map-container').css("height", $($window).height() - 172);
+                $('#tickets').css("height", $($window).height() - 172);
                 //width of the venue map container
                 $('#venue-map-container').css("width", $($window).width() - 480);
                 $('#venue-map-container').tuMap(options);

@@ -1,15 +1,9 @@
-section#section3.organizer-cart-section.cart-section.plan-section.hide
+section#section2.organizer-cart-section.cart-section.plan-section.hide
 	.header.clearfix
 		h1.pull-left Shopping Cart
-		.confirmed-alert.alert.alert-success.clearfix(ng-show="confirmationEmailSent")
-			.icon.icon-ok-circle.pull-left.green
-			.text.pull-left OK - we resent your confirmation email. Please follow the instructions to confirm your account.
-		.notification.not-confirmed-warning.alert.alert-danger.clearfix(ng-show="!customer.confirmed && !confirmationEmailSent")
-			.icon.icon-warning-sign.pull-left
-			.text.pull-left
-				span Wembli can't send invites to your friends until you confirm your email address.&nbsp;
-				a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Click here to resend confirmation email.
-				i.icon-cog.icon-spin(ng-show="confirmationEmailInProgress")
+		.notification.alert.alert-danger.clearfix(ng-show="ticketCountMismatch")
+			.icon-warning-sign.icon-2x.pull-left
+			.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
 	.event-info
 		span.blue &nbsp;{{plan.event.eventName}}
 		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}

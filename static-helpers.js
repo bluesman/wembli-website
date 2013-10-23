@@ -5,11 +5,8 @@ module.exports = {
 	/* STATIC */
 	planNav: function(mode, payment) {
 		var nav = {
-			'organizer': [{
-				'name': "itinerary",
-				'icon': "icon-file-alt",
-				'text': "itinerary",
-			}, {
+			'organizer': [
+			{
 				'name': "rsvp",
 				'icon': "icon-envelope",
 				'text': "rsvp's",
@@ -22,15 +19,16 @@ module.exports = {
 				'icon': "icon-credit-card",
 				'text': "pony up",
 			}, {
-				'name': "chatter",
-				'icon': "icon-comments-alt",
-				'text': "chatter",
-			}],
-			'friend': [{
 				'name': "itinerary",
 				'icon': "icon-file-alt",
 				'text': "itinerary",
 			}, {
+				'name': "chatter",
+				'icon': "icon-comments-alt",
+				'text': "chatter",
+			}],
+			'friend': [
+			{
 				'name': "rsvp",
 				'icon': "icon-envelope",
 				'text': "rsvp",
@@ -46,6 +44,10 @@ module.exports = {
 				'name': "pony-up",
 				'icon': "icon-money",
 				'text': "pony up",
+			}, {
+				'name': "itinerary",
+				'icon': "icon-file-alt",
+				'text': "itinerary",
 			}, {
 				'name': "chatter",
 				'icon': "icon-comments-alt",

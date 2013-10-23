@@ -9,7 +9,6 @@ directive('initPlanNav', ['$location', 'planNav', '$rootScope', '$timeout', 'hea
       restrict: 'C',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          header.fixed();
           planNav.init(attr.sections);
         };
       }
@@ -28,7 +27,6 @@ directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout', 'plan', 
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           plan.get(function(p) {
-
             var scrollToSection = 2;
             if ($location.hash()) {
               var h = $location.hash();
@@ -69,7 +67,7 @@ directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout', 'plan', 
             }
             planNav.setScrollToSection(scrollToSection);
             $rootScope.$broadcast('section-loaded');
-          });
+          },'foo');
         };
       }
     }
@@ -87,6 +85,22 @@ directive('scrollTo', ['$window', 'planNav',
             var elId = '#' + element.attr('id').split('-')[1];
             var sectionNumber = parseInt(elId.charAt(elId.length - 1));
             planNav.scrollTo(sectionNumber);
+          });
+        };
+      }
+    }
+  }
+]).
+
+directive('notification', ['$timeout', 'notifications',
+  function($timeout, notifications) {
+    return {
+      restrict: 'EAC',
+      cache: false,
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+          element.click(function() {
+            notifications.update();
           });
         };
       }
@@ -666,12 +680,20 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
         function($scope, $element, $attrs, $transclude, $timeout) {
           /* display a modal when they click to go off and buy tickets */
           fetchModals.fetch('/partials/tickets-offsite', function(err) {
-            if (err) {
-            }
+            if (err) {}
           });
 
           $scope.$watch('plan.tickets[0].ticketGroup.selectedQty', function() {
+            if (typeof newVal === "undefined") {
+              return;
+            }
+            if (oldVal === newVal) {
+              return;
+            }
+            cart.totals('tickets');
+            scope.friendsPonyUp(scope.friends);
             $scope.reconcileTicketQty();
+
           })
 
           $scope.savePrefs = function(cb) {
@@ -687,7 +709,7 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
           $scope.setPayment = function(addOn, value) {
             $scope.plan.preferences[addOn].payment = value;
             $scope.savePrefs(function() {
-              var path = '/'+addOn+'/'+$scope.plan.event.eventId+'/'+$scope.plan.event.eventName;
+              var path = '/' + addOn + '/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName;
               $location.path(path);
             });
 
@@ -800,7 +822,7 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
                   if (p.rsvpComplete) {
 
                   } else {
-                    $('#rsvp-complete-modal').modal('show');
+                    $('#rsvp-complete-notification').show();
                     wembliRpc.fetch('plan.submitRsvpComplete', {
                       rsvpComplete: true,
                     }, function(err, result) {
@@ -923,6 +945,7 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan', '
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           scope.tnUrl = ticketPurchaseUrls.tn;
+
           $rootScope.$broadcast('section-loaded');
 
           var d = scope.$on('rsvp-complete', function() {
@@ -1234,6 +1257,7 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
 
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
+
           $rootScope.$broadcast('section-loaded');
         }
       }
@@ -1888,15 +1912,20 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
                 };
 
                 if (p.type === 'request' && p.open) {
+                  console.log('pony up request is open');
+                  console.log(p);
                   /* found a pony up request */
                   $scope.ponyUpRequest = p;
                   if (!$scope.ponyUp || !$scope.ponyUp.amount) {
                     $scope.ponyUp.amount = parseInt(p.amount) || 0;
                     $scope.ponyUp.amountFormatted = parseFloat($scope.ponyUp.amount / 100).toFixed(2);
+                    $scope.ponyUp.transactionFee = ($scope.ponyUp.amount * .029) + 250; //tx fee %2.9 + 250
+                    $scope.ponyUp.total = $scope.ponyUp.transactionFee + $scope.ponyUp.amount;
 
                     $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
                     $scope.ponyUp.organizerFirstName = $scope.organizer.firstName;
                   }
+                  console.log($scope.ponyUp);
                 }
 
                 if (p.type == 'request') {
@@ -2138,7 +2167,11 @@ directive('planChatter', ['$timeout', 'wembliRpc', '$rootScope',
           wembliRpc.fetch('chatter.get', {}, function(err, results) {
             scope.chatters = results.chatters;
             scope.chatterLoading = false;
-            $rootScope.$broadcast('section-loaded');
+            $timeout(function() {
+
+              $rootScope.$broadcast('section-loaded');
+            }, 500);
+
           });
 
 

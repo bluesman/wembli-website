@@ -7,9 +7,9 @@
 			#plan-dashboard.organizer-plan-dashboard
 				//- no split has no pony up
 				- if (req.session.plan.preferences.payment === 'no-split')
-					organizer-itinerary-section
 					organizer-rsvp-section
 					organizer-cart-section
+					organizer-itinerary-section
 					section#section4.organizer-chatter-section.chatter-section.plan-section
 						.header.clearfix
 							h1.pull-left Chatter
@@ -17,10 +17,10 @@
 							h3 Use this space to comment and share conversations about your upcoming event!
 							plan-chatter
 				- else
-					organizer-itinerary-section
 					organizer-rsvp-section
 					organizer-cart-section
 					organizer-pony-up-section
+					organizer-itinerary-section
 					section#section5.organizer-chatter-section.chatter-section.plan-section.hide
 						.header.clearfix
 							h1.pull-left Chatter
@@ -30,10 +30,10 @@
 		- if (req.session.visitor.context === 'friend')
 			#plan-dashboard.friend-plan-dashboard
 				- if (req.session.plan.preferences.payment === 'no-split')
-					friend-itinerary-section
 					friend-rsvp-section
 					friend-vote-section
 					friend-invitees-section
+					friend-itinerary-section
 					section#section5.friend-chatter-section.chatter-section.plan-section.even
 						.header.clearfix
 							h1.pull-left Chatter
@@ -41,11 +41,11 @@
 							h3 Use this space to comment and share conversations about your upcoming event!
 							plan-chatter
 				- else
-					friend-itinerary-section
 					friend-rsvp-section
 					friend-vote-section
 					friend-invitees-section
 					friend-pony-up-section
+					friend-itinerary-section
 					section#section6.friend-chatter-section.chatter-section.plan-section.even.hide
 						.header.clearfix
 							h1.pull-left Chatter

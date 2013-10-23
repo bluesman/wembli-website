@@ -1194,6 +1194,21 @@ directive('wembliSequenceLinkOff', ['$rootScope', '$window', '$templateCache', '
   }
 ]).
 
+directive('wembliHide', [
+  function() {
+    return {
+      restrict: 'EAC',
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr) {
+          element.click(function(e) {
+            angular.element(attr.wembliHide).hide();
+          });
+        }
+      }
+    }
+  }
+]).
+
 directive('appVersion', ['version',
   function(version) {
     return function(scope, elm, attrs) {

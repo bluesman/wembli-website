@@ -15,9 +15,10 @@ a.logo-35 {
 
 .cb_slide_panel {
   background: @white;
-	@shadow:inset -2px 2px 6px 0px rgba(0,0,0,.25);
-	.box-shadow(@shadow);
+	/* @shadow:inset -2px 2px 6px 0px rgba(0,0,0,.25); */
+	/* .box-shadow(@shadow); */
 	.wrapper {
+		height:40px;
 		.controls {
 			margin: 10px 10px 0 0;
 			color:@blueDark;
@@ -81,7 +82,7 @@ header {
 	width: 100%;
 	top:0;
 	left:0;
-	@shadow:0 1px 30px 0px rgba(0,0,0,.25);
+	@shadow:0 0px 1px 0px rgba(0,0,0,.1);
 	.box-shadow(@shadow);
 	font-size:18px;
 
@@ -139,6 +140,8 @@ header {
 	.left-container {
 		display:block;
 		margin:20px;
+		width:120px;
+		text-align:center;
 
 		i {
 			font-size:14px;
@@ -147,7 +150,7 @@ header {
 	}
 
 	.middle-container {
-		margin:13px 0;
+		margin:13px 20px;
 
 		.login, .signup {
 

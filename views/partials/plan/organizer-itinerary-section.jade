@@ -1,5 +1,5 @@
 - var sectionClass = (visitor.context === 'organizer') ? 'organizer-itinerary-section' : 'friend-itinerary-section';
-section#section1.hide(class="#{sectionClass} itinerary-section plan-section")
+section#section4.hide(class="#{sectionClass} itinerary-section plan-section")
 	.header.clearfix
 		h1.pull-left Itinerary
 	.event-info
@@ -12,10 +12,10 @@ section#section1.hide(class="#{sectionClass} itinerary-section plan-section")
 			.right.pull-left
 				.tickets-container
 					h2 Tickets
-					.notification.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && ticketCountMismatch")
+					.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && ticketCountMismatch")
 						.icon-warning-sign.icon-2x.pull-left
 						.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
-					.notification.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && tickets[0] && !tickets[0].purchased")
+					.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && tickets[0] && !tickets[0].purchased")
 						.icon-warning-sign.icon-2x.pull-left
 						.text.pull-left
 							span These tickets are not on hold. To guarantee these seats, please&nbsp;

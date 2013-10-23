@@ -1,4 +1,4 @@
-section#section2.organizer-rsvp-section.rsvp-section.plan-section.even.hide
+section#section1.organizer-rsvp-section.rsvp-section.plan-section.hide
 	.header.clearfix
 		h1.pull-left RSVP
 		.confirmed-alert.alert.alert-success.clearfix(ng-show="confirmationEmailSent")
@@ -10,6 +10,12 @@ section#section2.organizer-rsvp-section.rsvp-section.plan-section.even.hide
 				span Wembli can't send invites to your friends until you confirm your email address.&nbsp;
 				a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Click here to resend confirmation email.
 				i.icon-cog.icon-spin(ng-show="confirmationEmailInProgress")
+		#rsvp-complete-notification.notification.alert.alert-danger.clearfix.hide
+			.icon.icon-warning-sign.pull-left
+			.text.pull-left
+				span The RSVP period is over :) Now that you know who's coming, you can choose the right number of tickets.&nbsp;
+				a#rsvp-2.scroll-to(href="#", wembli-hide="#rsvp-complete-notification") Click here to get started filling up your cart.
+			a(href="#",class="close",data-dismiss="alert")&times;
 	.event-info
 		span.blue &nbsp;{{plan.event.eventName}}
 		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}

@@ -17,8 +17,8 @@ angular.module('wembliApp', [
   function($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
   }
-]).run(['balancedApiConfig', '$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'fetchModals', 'slidePage', 'facebook', 'twitter', 'plan', 'wembliRpc',
-  function(balancedApiConfig, $timeout, initRootScope, $scope, $location, $route, $window, fetchModals, slidePage, facebook, twitter, plan, wembliRpc) {
+]).run(['sequence','balancedApiConfig', '$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'fetchModals', 'slidePage', 'facebook', 'twitter', 'plan', 'wembliRpc',
+  function(sequence, balancedApiConfig, $timeout, initRootScope, $scope, $location, $route, $window, fetchModals, slidePage, facebook, twitter, plan, wembliRpc) {
     /* just fetch the plan right away */
     plan.fetch(function() {});
 

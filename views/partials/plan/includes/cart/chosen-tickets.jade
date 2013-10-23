@@ -7,9 +7,9 @@
 	ul.ticket-list-container.add-on-container
 		li.ticket-row.add-on-row(ng-repeat="ticket in tickets")
 			.ticket-container.display-popover(title="Tickets Cost Breakdown",placement="right",html="true",content-id="{{ticket._id}}-tickets-popover-content",trigger="hover")
-				div(id="{{ticket._id}}-tickets-popover-content").hide
+				div.popover-content(id="{{ticket._id}}-tickets-popover-content").hide
 					.row.clearfix
-						strong.pull-left  Ticket Price (ea.)&nbsp;
+						strong.pull-left Ticket Price (ea.)&nbsp;
 						.pull-right {{ticket.costBreakdown.price | currency}}
 					.row.clearfix.border-bottom
 						strong.pull-left  Ticketnetwork Service Fee (ea.)&nbsp;

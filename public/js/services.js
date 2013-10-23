@@ -184,8 +184,34 @@ factory('pluralizeWords', [
 	}
 ]).
 
-factory('planNav', ['$timeout', '$rootScope', '$location',
-	function($timeout, $rootScope, $location) {
+factory('notifications', ['$timeout',
+	function($timeout) {
+		return {
+			update: function() {
+				$timeout(function() {
+					/* check for notifications */
+					$('section').each(function(sectionNumber, section) {
+						var count = 0;
+						var key = '#' + section.id + ' .notification';
+						$(key).each(function(idx, el) {
+							if ($(el).css('display') === 'block') {
+								count++;
+							}
+						});
+						if (count) {
+							$('#notification-nav-' + section.id).html(count).show();
+						} else {
+							$('#notification-nav-' + section.id).html(count).hide();
+						}
+					});
+				}, 500);
+			}
+		};
+	}
+]).
+
+factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notifications',
+	function($timeout, $rootScope, $location, header, notifications) {
 		var self = this;
 		self.sectionsCount = 0;
 		self.sectionsLoaded = -1;
@@ -195,7 +221,6 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 
 		var planNav = {
 			init: function(sectionsCount) {
-				console.log('planNav.init called');
 				if (self.sectionsCount == 0) {
 					self.sectionsCount = sectionsCount;
 				}
@@ -212,25 +237,9 @@ factory('planNav', ['$timeout', '$rootScope', '$location',
 						$('#nav-section' + (self.scrollToSection)).addClass('active');
 						planNav.scrollTo(self.scrollToSection);
 
-						/* check for notifications */
-						$('section').each(function(sectionNumber, section) {
-							var count = 0;
-							var key = '#'+section.id+' .notification';
-							console.log(key);
-							$(key).each(function(idx, el) {
-								if ($(el).css('display') === 'block') {
-									console.log('visible');
-									count++;
-									console.log(sectionNumber);
-								} else {
-									console.log('not visible');
-								}
-							});
-							if (count) {
-								$('#notification-nav-'+section.id).html(count).show();
-							}
-						});
+						notifications.update();
 
+						header.fixed();
 
 						$timeout(function() {
 							$('#page-loading-modal').modal("hide");
@@ -706,7 +715,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 		self.getStack = 0;
 		self.fetchStack = 0;
 		return {
-			get: function(callback) {
+			get: function(callback, str) {
 				if (callback) {
 					if (self.plan) {
 						callback(self.plan);
@@ -719,7 +728,11 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 							}
 							callback(self.plan);
 						});
-						this.fetch();
+						if (self.getStack == 1) {
+							this.fetch(function(p) {
+								callback(p.plan);
+							});
+						}
 					}
 				} else {
 					return self.plan;
@@ -876,10 +889,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 
 				if (self.fetchInProgress) {
 					if (callback) {
-						self.fetchStack++;
 						var dereg = $rootScope.$on('plan-fetched', function() {
-							self.fetchStack--;
-							dereg();
 							callback(self);
 						});
 					}
@@ -1560,7 +1570,6 @@ factory('pixel', ['$http', 'wembliRpc',
 
 			*/
 			fire: function(args, cb) {
-				console.log('fire facebook pixel');
 				if (typeof self.pixelsFired[args.content] === "undefined") {
 
 					/* fetch the facebook conversion snipped and add the pixel id to it - then compile it */
@@ -1955,7 +1964,7 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 		return {
 			direction: 1,
 			frame: 1,
-			loadingDuration: 500,
+			loadingDuration: 0,
 			directionOverride: 0,
 			getDirection: function() {
 				return this.direction;
@@ -2042,7 +2051,6 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 						/* not on the same page so we're gonna slide to the other frame */
 						var nextFrameID = ($rootScope.currentFrame === 1) ? 2 : 1;
 						me.setFrame(nextFrameID);
-
 						/* find out what direction to go to we sliding in this element */
 						var direction = me.getDirection();
 						direction = parseInt($rootScope.direction) || direction;
