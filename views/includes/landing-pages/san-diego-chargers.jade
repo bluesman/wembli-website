@@ -1,4 +1,4 @@
-#landing-page-frame(ng-init="pixelId='6012637058771'", ng-controller="LandingPageCtrl")
+#landing-page-frame(ng-init="pixelId='6012637058771';campaign='Pixel For San Diego Chargers';promo='CHARGERS10'", ng-controller="LandingPageCtrl")
 	section.section1.carousel-container
 		#carousel.carousel.slide
 			ol.carousel-indicators
@@ -20,7 +20,7 @@
 					button.btn.btn-secondary.segoe.pull-left(href="#") search
 
 			.signup(ng-hide="showSearch || loggedIn")
-				form#landing-page-signup-form.form-signup.clearfix(ng-init="promo='CHARGERS10'", name="landingPageSignupForm",ng-submit="submitSignup()", novalidate)
+				form#landing-page-signup-form.form-signup.clearfix(name="landingPageSignupForm",ng-submit="submitSignup()", novalidate)
 					.tag-line
 						p JOIN WEMBLI NOW AND SAVE $10 BUCKS NEXT
 						p TIME YOU BUY SAN DIEGO CHARGERS TICKETS

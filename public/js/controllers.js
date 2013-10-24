@@ -2286,7 +2286,7 @@ controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc',
 				/* fire the facebook signup pixels */
 				pixel.fire({
 					type: 'signup',
-					campaign: 'Pixel For San Diego Chargers',
+					campaign: $scope.campaign,
 					source: 'facebook',
 					medium: 'cpc',
 					term: '',

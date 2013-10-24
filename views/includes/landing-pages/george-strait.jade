@@ -1,4 +1,4 @@
-#landing-page-frame(ng-init="pixelId='6012721617771'",ng-controller="LandingPageCtrl")
+#landing-page-frame(ng-init="pixelId='6012721617771';campaign='George Strait';promo='Launch10'",ng-controller="LandingPageCtrl")
 	section.section1.carousel-container
 		#carousel.carousel.slide
 			ol.carousel-indicators
@@ -20,7 +20,7 @@
 					button.btn.btn-secondary.segoe.pull-left(href="#") search
 
 			.signup(ng-hide="showSearch || loggedIn")
-				form#landing-page-signup-form.form-signup.clearfix(ng-init="promo='Launch10'", name="landingPageSignupForm",ng-submit="submitSignup()", novalidate)
+				form#landing-page-signup-form.form-signup.clearfix(name="landingPageSignupForm",ng-submit="submitSignup()", novalidate)
 					.tag-line
 						p JOIN WEMBLI NOW AND SAVE $10 BUCKS
 						p WHEN YOU BUY GEORGE STRAIGHT TICKETS
