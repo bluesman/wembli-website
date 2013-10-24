@@ -1,11 +1,11 @@
-#landing-page-frame(ng-controller="LandingPageCtrl")
+#landing-page-frame(ng-init="pixelId='6012721617771'",ng-controller="LandingPageCtrl")
 	section.section1.carousel-container
 		#carousel.carousel.slide
 			ol.carousel-indicators
 				li.active(data-target="#carousel",data-slide-to="0")
 			.carousel-inner
 				.item.active
-					img(src="/images/landing-pages/qualcomm-1.jpg")
+					img(src="/images/landing-pages/george-strait-1.jpg")
 	section.section2
 		.container
 			.search(ng-show="showSearch || loggedIn")
@@ -16,14 +16,14 @@
 					i.icon-search.icon-2x.pull-left(ng-hide="searchInProgress")
 					i.icon-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
 
-					input.pull-left(type="text", ng-init="search='San Diego Chargers'", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
+					input.pull-left(type="text", ng-init="search='George Strait'", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
 					button.btn.btn-secondary.segoe.pull-left(href="#") search
 
 			.signup(ng-hide="showSearch || loggedIn")
-				form#landing-page-signup-form.form-signup.clearfix(ng-init="promo='CHARGERS10'", name="landingPageSignupForm",ng-submit="submitSignup()", novalidate)
+				form#landing-page-signup-form.form-signup.clearfix(ng-init="promo='Launch10'", name="landingPageSignupForm",ng-submit="submitSignup()", novalidate)
 					.tag-line
-						p JOIN WEMBLI NOW AND SAVE $10 BUCKS NEXT
-						p TIME YOU BUY SAN DIEGO CHARGERS TICKETS
+						p JOIN WEMBLI NOW AND SAVE $10 BUCKS
+						p WHEN YOU BUY GEORGE STRAIGHT TICKETS
 
 					fieldset
 						.error
