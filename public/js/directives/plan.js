@@ -27,7 +27,7 @@ directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout', 'plan', 
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           plan.get(function(p) {
-            var scrollToSection = 2;
+            var scrollToSection = 1;
             if ($location.hash()) {
               var h = $location.hash();
               scrollToSection = parseInt(h.charAt(h.length - 1));
@@ -35,39 +35,39 @@ directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout', 'plan', 
               if ((typeof scope.customer !== "undefined") && (p.organizer.customerId === scope.customer.id)) {
                 /* automatically go to the right section depending on what phase of the plan they are in */
                 if (p && p.rsvpComplete) {
-                  scrollToSection = 4; //cart
+                  scrollToSection = 2; //cart
 
-                  /* if tickets are chosen */
+                  /* if tickets are not chosen */
                   if (!p.tickets[0]) {
-                    scrollToSection = 3;
+                    scrollToSection = 2;
                   }
 
                   /* parking is in plan but parking not chosen */
                   if (p.preferences.addOns.parking && !p.parking[0]) {
-                    scrollToSection = 3;
+                    scrollToSection = 2;
                   }
 
                   /* restaurants in plan but not chosen */
                   if (p.preferences.addOns.restaurants && !p.restaurants[0]) {
-                    scrollToSection = 3;
+                    scrollToSection = 2;
                   }
                   /* hotels are in the plan but not chosen */
                   if (p.preferences.addOns.hotels && !p.hotels[0]) {
-                    scrollToSection = 3;
+                    scrollToSection = 2;
                   }
                 }
               } else {
                 /* i'm not the organizer */
                 if (!p.rsvpComplete) {
-                  scrollToSection = 2;
+                  scrollToSection = 1;
                 } else {
-                  scrollToSection = 5;
+                  scrollToSection = 4;
                 }
               }
             }
             planNav.setScrollToSection(scrollToSection);
             $rootScope.$broadcast('section-loaded');
-          },'foo');
+          });
         };
       }
     }
