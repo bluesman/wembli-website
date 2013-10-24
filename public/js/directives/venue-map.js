@@ -200,6 +200,7 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
         }
       ],
       compile: function(element, attr, transclude) {
+        console.log('compile map');
 
         var generateTnSessionId = function() {
           var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
@@ -213,6 +214,8 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
         };
 
         return function(scope, element, attr) {
+        console.log('link map');
+
           /* don't cache this partial - cache:false doesn't do it */
           $templateCache.remove("/partials/interactive-venue-map");
           scope.predicate = 'ActualPrice';
@@ -221,7 +224,8 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
 
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
-              $('#venue-map-container').tuMap("Refresh", "Reset");
+              console.log('refresh reset map');
+              $('#venue-map-container').tuMap("Refresh", "ProcessTickets");
             }
           });
 
@@ -415,10 +419,12 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
 
 
           plan.get(function(p) {
+            console.log('get plan');
             //get the tix and make the ticket list
             wembliRpc.fetch('event.getTickets', {
                 eventID: p.event.eventId
               }, function(err, result) {
+                console.log('fetched tix');
                 if (err) {
                   //handle err
                   alert('error happened - contact help@wembli.com');
@@ -527,8 +533,8 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 var options = interactiveMapDefaults;
                 options.MapId = scope.event.VenueConfigurationID;
                 options.EventId = scope.event.ID;
-
                 options.OnInit = function(e, MapType) {
+                  console.log(MapType);
                   $(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
                   if (MapType == 'Interactive') {
                     /* check if the ticket utils url is general admission */
@@ -545,6 +551,7 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 };
 
                 options.OnError = function(e, Error) {
+                  console.log(Error);
                   if (Error.Code === 1) {
                     if (typeof scope.event.MapURL === "undefined") {
                       scope.event.MapURL = "/images/no-seating-chart.jpg";
@@ -591,6 +598,8 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 $('#tickets').css("height", $($window).height() - 172);
                 //width of the venue map container
                 $('#venue-map-container').css("width", $($window).width() - 480);
+                console.log('loading tumap with options');
+                console.log(options);
                 $('#venue-map-container').tuMap(options);
 
                 if ($('.price-slider').length) {

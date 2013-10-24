@@ -5567,6 +5567,7 @@ h1 {
   font-family: "SegoePrint";
   color: #426799;
   margin: 6px;
+  font-size: 36px;
 }
 h2 {
   /* font-family: "architects_daughterregular"; */
@@ -9763,7 +9764,7 @@ header .right-container .logo-45 h1 {
 #tickets-frame section .header h1 {
   width: 100%;
   padding: 10px 0 4px;
-  border-bottom: 6px solid #426799;
+  border-bottom: 4px solid #426799;
   text-transform: uppercase;
   margin: 10px 0;
   font-weight: bold;

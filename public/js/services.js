@@ -1829,8 +1829,9 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc',
 factory('interactiveMapDefaults', [
 	function() {
 		return {
-			ServiceUrl: "https://imap.ticketutils.com",
+			ServiceUrl: "https://imap.ticketutils.net",
 			MapSet: "tn",
+			MapType: "Interactive",
 			ZoomLevel: 1,
 			ColorScheme: 1,
 			//AutoSwitchToStatic: true,
@@ -1838,11 +1839,12 @@ factory('interactiveMapDefaults', [
 			FailOverMapUrl: "http://data.ticketutils.com/Charts/No-Seating-Chart.jpg",
 			GroupsContainer: "#groups-container",
 			RowSelector: ".ticket-row",
+			RowNumberSelector: ".seat-row",
 			SectionSelector: ".ticket-section",
 			PriceSelector: ".actual-price",
 			QuantitySelector: ".ticket-quantity",
 			eTicketSelector: ".e-ticket",
-			ResetButtonText: "Reset Map"
+			ResetButtonText: "Reset Map",
 		};
 	}
 ]).
