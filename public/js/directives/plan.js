@@ -30,7 +30,12 @@ directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout', 'plan', 
             var scrollToSection = 1;
             if ($location.hash()) {
               var h = $location.hash();
-              scrollToSection = parseInt(h.charAt(h.length - 1));
+              /* everyauth hack */
+              if (h == '_=_') {
+                scrollToSection = 1;
+              } else {
+                scrollToSection = parseInt(h.charAt(h.length - 1));
+              }
             } else {
               if ((typeof scope.customer !== "undefined") && (p.organizer.customerId === scope.customer.id)) {
                 /* automatically go to the right section depending on what phase of the plan they are in */
