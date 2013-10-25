@@ -1,6 +1,10 @@
 section#section3.friend-invitees-section.invitees-section.plan-section
 	.header.clearfix
 		h1.pull-left Invitees
+	.event-info
+		span.blue &nbsp;{{plan.event.eventName}}
+		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+		span &nbsp;at {{plan.event.eventVenue}}&nbsp;
 	.body
-		h3 Find out who else is invited
+		//- h3 Find out who else is invited
 		include ../includes/invitees-list
