@@ -5577,7 +5577,6 @@ h2 {
   font-size: 16px;
 }
 h3 {
-  font-family: "Helveticaneueltstd-ex";
   font-size: 14px;
 }
 .icon-check-empty {
@@ -7254,10 +7253,6 @@ label {
   margin: 0;
   font-weight: normal;
 }
-h2,
-h3 {
-  text-transform: uppercase;
-}
 a:hover {
   text-decoration: none;
 }
@@ -7647,9 +7642,9 @@ header {
   width: 100%;
   top: 0;
   left: 0;
-  -webkit-box-shadow: 0 0px 1px 0px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0 0px 1px 0px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0px 1px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 1px 5px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 1px 5px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 5px 0px rgba(0, 0, 0, 0.2);
   font-size: 18px;
 }
 header .login,
@@ -11063,9 +11058,6 @@ a#facebook-login-button {
 #plan-frame #middle .alert-danger {
   text-shadow: none;
 }
-#plan-frame #middle section > .header {
-  border-bottom: 6px solid #426799;
-}
 #plan-frame #middle #plan-dashboard {
   /* global invitees lists */
 
@@ -11076,14 +11068,13 @@ a#facebook-login-button {
   border-bottom: thin solid #666666;
 }
 #plan-frame #middle #plan-dashboard .plan-section > .header {
-  border-bottom: 6px solid #426799;
+  border-bottom: 4px solid #426799;
 }
 #plan-frame #middle #plan-dashboard .plan-section {
   padding: 0 20px;
 }
 #plan-frame #middle #plan-dashboard .plan-section .header h1 {
-  padding: 10px 0 4px;
-  text-transform: uppercase;
+  padding: 10px 0px 0px;
   margin: 10px 0;
   font-weight: bold;
 }
@@ -11128,9 +11119,6 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard .plan-section .body:after {
   clear: both;
-}
-#plan-frame #middle #plan-dashboard .plan-section .body h3 {
-  font-weight: bold;
 }
 #plan-frame #middle #plan-dashboard .plan-section .body .block1 {
   *zoom: 1;
@@ -11297,7 +11285,6 @@ a#facebook-login-button {
   margin: 0 30px 40px 0;
 }
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .img-container {
-  margin-top: 10px;
   width: 75px;
   text-align: center;
   line-height: 12px;
@@ -11375,7 +11362,7 @@ a#facebook-login-button {
   height: 24px;
 }
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .name {
-  font-size: 24px;
+  font-size: 20px;
 }
 #plan-frame #middle #plan-dashboard .invitees-container .invitee .invitee-info .invitee-name .guests {
   font-weight: bold;
@@ -11679,17 +11666,17 @@ a#facebook-login-button {
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .right .parking-container h2,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .right .tickets-container h2 {
   font-family: 'Arial';
-  font-size: 22px;
-  line-height: 22px;
-  color: #000000;
+  font-size: 20px;
+  line-height: 30px;
+  color: #666666;
 }
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .right .hotel-container .row,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .right .restaurant-container .row,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .right .parking-container .row,
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .right .tickets-container .row {
-  color: #000000 !important;
-  padding: 6px;
-  font-size: 16px;
+  color: #666666 !important;
+  padding: 6px 0;
+  font-size: 14px;
   border-bottom: 2px solid #999999;
 }
 #plan-frame #middle #plan-dashboard .itinerary-section .body .itinerary-data .right .hotel-container .row .info,
@@ -11799,7 +11786,6 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard .rsvp-section .body .rsvp-container .info-container .info .row h3 {
   color: #666666;
-  font-family: "Calibri";
   line-height: 15px;
   vertical-align: middle;
   padding: 0px;
@@ -12132,14 +12118,14 @@ a#facebook-login-button {
   margin: 0;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .icon-3x {
-  font-size: 2.5em;
+  font-size: 2em;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container.border-bottom {
   border-bottom: 4px solid #666666;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container {
   width: 100%;
-  padding: 40px 0;
+  padding: 20px 0 40px 0;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .cartoon-man {
   width: 100px;
@@ -12150,12 +12136,12 @@ a#facebook-login-button {
   border: none;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .header label i {
-  width: 40px;
+  width: 30px;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .header label h3 {
   color: #666666;
-  font-size: 28px;
-  line-height: 42px;
+  font-size: 20px;
+  line-height: 30px;
   vertical-align: middle;
 }
 #plan-frame #middle #plan-dashboard.organizer-plan-dashboard .organizer-cart-section .body .container .body {
