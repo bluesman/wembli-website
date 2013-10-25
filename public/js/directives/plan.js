@@ -79,8 +79,8 @@ directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout', 'plan', 
   }
 ]).
 
-directive('scrollTo', ['$window', 'planNav',
-  function($window, planNav) {
+directive('scrollTo', ['$window', 'planNav','googleMap',
+  function($window, planNav, googleMap) {
     return {
       restrict: 'EAC',
       cache: false,
@@ -90,6 +90,7 @@ directive('scrollTo', ['$window', 'planNav',
             var elId = '#' + element.attr('id').split('-')[1];
             var sectionNumber = parseInt(elId.charAt(elId.length - 1));
             planNav.scrollTo(sectionNumber);
+            googleMap.resize();
           });
         };
       }
@@ -1270,8 +1271,8 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
   }
 ]).
 
-directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowContent', 'mapVenue', 'mapMarker',
-  function($rootScope, googleMap, plan, mapInfoWindowContent, mapVenue, mapMarker) {
+directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowContent', 'mapVenue', 'mapMarker', '$timeout',
+  function($rootScope, googleMap, plan, mapInfoWindowContent, mapVenue, mapMarker, $timeout) {
     return {
       restrict: 'EC',
       cache: false,
@@ -1308,11 +1309,10 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
             }
           }
 
+          /* google map is drawing before the div width is defined and screwing everything up */
           googleMap.draw(element, mapOpts);
 
-          plan.get(function(p) {
-            /* reset the map */
-            googleMap.isDrawn(false);
+          var placeMarkers = function(p) {
 
             var lat = p.venue.data.geocode.geometry.location.lat;
             var lng = p.venue.data.geocode.geometry.location.lng;
@@ -1375,16 +1375,21 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
                 });
               }
             }
+          };
 
-            if (scope.sequenceCompleted) {
-              //googleMap.draw(element, mapOpts);
-            } else {
-              var dereg = scope.$watch('sequenceCompleted', function(complete) {
-                if (complete) {
-                  //googleMap.draw(element, mapOpts);
-                  dereg();
-                }
-              })
+          plan.get(function(p) {
+            scope.$on('google-map-resize', function() {
+              googleMap.init();
+              googleMap.draw(element, mapOpts);
+              placeMarkers(p);
+            });
+
+            var dereg = scope.$on('google-map-drawn',function() {
+              placeMarkers(p);
+            });
+            if (googleMap.isDrawn()) {
+              dereg();
+              placeMarkers(p);
             }
           });
         };

@@ -1324,6 +1324,10 @@ factory('googleMap', ['$rootScope',
 					win.open = true;
 					win.infoWindow.open(self._map, marker);
 				}
+			},
+			resize: function() {
+				google.maps.event.trigger(self._map, 'resize');
+				$rootScope.$broadcast('google-map-resize');
 			}
 
 		};

@@ -11714,11 +11714,9 @@ a#facebook-login-button {
 }
 #plan-frame #middle #plan-dashboard .itinerary-section .body .google-map-container {
   background-color: #ffffff;
-  top: 1275px;
   height: 700px;
 }
 #plan-frame #middle #plan-dashboard .itinerary-section .body .google-map-container .itinerary-map {
-  width: 100%;
   height: 600px;
 }
 #plan-frame #middle #plan-dashboard .itinerary-section .body .google-map-container .itinerary-map .info-window {
