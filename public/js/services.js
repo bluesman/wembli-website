@@ -718,17 +718,15 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 			get: function(callback, str) {
 				if (callback) {
 					if (self.plan) {
-
 						callback(self.plan);
 					} else {
-
-						self.getStack++;
-						if (self.getStack == 1) {
-
+						if (self.getStack == 0) {
 							this.fetch(function(p) {
+								
 								callback(p.plan);
 							});
 						} else {
+						self.getStack++;
 
 						var dereg = $rootScope.$on('plan-fetched', function() {
 							self.getStack--;
@@ -2052,7 +2050,6 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 						}
 
 						if (samePage) {
-
 							angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
 							$rootScope.$emit('viewContentLoaded', {});
 							loadingModal.hide();
