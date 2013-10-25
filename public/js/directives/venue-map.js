@@ -410,13 +410,8 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 if (replace) $tip.offset(offset)
                 $('.ticket-list-container').height(h);
               };
-
-
             };
-
           };
-
-
 
           plan.get(function(p) {
             console.log('get plan');

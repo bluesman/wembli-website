@@ -1,8 +1,12 @@
 section#section4.me-pony-up-section.pony-up-section.plan-section.even
 	.header.clearfix
 		h1.pull-left Pony Up!
+	.event-info
+		span.blue &nbsp;{{plan.event.eventName}}
+		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+		span &nbsp;at {{plan.event.eventVenue}}&nbsp;
 	.body(ng-hide="me.payment[0]")
-		h3 Find Out What It Means To Pony Up
+		//- h3 Find Out What It Means To Pony Up
 		.pony-up
 			.content.pull-left
 				p.calibri So you're interested to hear all about the Pony Up process?  I like your style.  Here's how this process goes down:

@@ -1,8 +1,12 @@
 section#section1.friend-rsvp-section.rsvp-section.plan-section
 	.header.clearfix
 		h1.pull-left RSVP
+	.event-info
+		span.blue &nbsp;{{plan.event.eventName}}
+		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+		span &nbsp;at {{plan.event.eventVenue}}&nbsp;
 	.body
-		h3 {{organizer.firstName}} {{organizer.lastName}} Is Planning An Event And You're Invited!
+		//- h3 {{organizer.firstName}} {{organizer.lastName}} Is Planning An Event And You're Invited!
 		.organizer-rsvp-container.rsvp-container.clearfix
 			.img-container.pull-left
 				img.img-polaroid(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")

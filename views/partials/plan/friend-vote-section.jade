@@ -1,105 +1,109 @@
 section#section2.friend-vote-section.vote-section.plan-section.even
-		.header.clearfix
-			h1.pull-left Vote
-		.body
-			h3 Help {{organizer.firstName}} plan the perfect outing by voting on your preferences
-			#vote-container
-				.block1
-					.left.pull-left
-						.row.firstRow
-							h3 Pick Your Maximum Price Per Ticket:
-							.price-slider-container.pull-left
-								#ticket-price-slider.price-slider.jquery-slider(min="0",max="500",step="5",value="{{me.rsvp.tickets.price}}",range="min",slide="ticketsPriceSlide",stop="ticketsPriceStop")
-								.price-range-group-container
-									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.low]") $
-									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.med]") $$
-									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.high]") $$$
-							.price-input-container.pull-right
-								.orange.pull-left $
-								input#ticket-price-range.pull-left(ng-model="me.rsvp.tickets.price")
-								.plus-sign.pull-left(ng-show="me.rsvp.tickets.price==500") +
-						.row(ng-show="plan.preferences.addOns.parking")
-							label.checkbox
-								input(type="checkbox",name="parking_decision",ng-model="me.rsvp.parking.decision",ng-click="toggleInputs('parking',me.rsvp.parking.decision)")
-								.calibri Include me in the parking plans:
-							.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.parking.decision]")
-								#parking-price-slider.price-slider.jquery-slider(min="0",max="100",enable="me.rsvp.parking.decision",step="5",value="{{me.rsvp.parking.price}}",range="min",slide="parkingPriceSlide",stop="parkingPriceStop")
-								.price-range-group-container
-									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.low]") $
-									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.med]") $$
-									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.high]") $$$
-							.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.parking.decision]")
-								.orange.pull-left $
-								input#parking-price-range.pull-left(ng-model="me.rsvp.parking.price")
-								.plus-sign.pull-left(ng-show="me.rsvp.parking.price==100") +
-					.right.pull-right
-						img(src="/images/cartoon-man-checkboxes.png")
-				.block2
-					.row(ng-show="plan.preferences.addOns.restaurants")
-						label.checkbox
-							input.pull-left(type="checkbox",name="restaurant_decision",ng-model="me.rsvp.restaurant.decision",ng-click="toggleInputs('restaurant',me.rsvp.restaurant.decision)")
-							.calibri Include me in the restaurant plans:
-						.preference-dropdown
-							select#food-preference.multiselect(click="foodPreferenceClick",enable="me.rsvp.restaurant.decision",append-to="#section2",header="false",min-width="300",none-selected-text="Food Preference",multiple="multiple",ng-model="me.rsvp.restaurant.preference")
-								option(value="American (traditional)") American (traditional)
-								option(value="Asian Fusion") Asian Fusion
-								option(value="Bars") Bars
-								option(value="Burgers") Burgers
-								option(value="Chinese") Chinese
-								option(value="Fast Food") Fast Food
-								option(value="Italian") Italian
-								option(value="Japanese") Japanese
-								option(value="Mediterranean") Mediterranean
-								option(value="Mexican") Mexican
-								option(value="Pizza") Pizza
-								option(value="Steakhouse") Steakhouse
-								option(value="Sushi") Sushi
-								option(value="Thai") Thai
-								option(value="Vegetarian") Vegetarian
-								option(value="Vietnamese") Vietnamese
-						.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.restaurant.decision]")
-							#restaurant-price-slider.price-slider.jquery-slider(min="0",max="100",step="5",enable="me.rsvp.restaurant.decision",value="{{me.rsvp.restaurant.price}}",range="min",slide="restaurantPriceSlide",stop="restaurantPriceStop")
+	.header.clearfix
+		h1.pull-left Vote
+	.event-info
+		span.blue &nbsp;{{plan.event.eventName}}
+		span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+		span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+	.body
+		//- h3 Help {{organizer.firstName}} plan the perfect outing by voting on your preferences
+		#vote-container
+			.block1
+				.left.pull-left
+					.row.firstRow
+						h3 Pick Your Maximum Price Per Ticket:
+						.price-slider-container.pull-left
+							#ticket-price-slider.price-slider.jquery-slider(min="0",max="500",step="5",value="{{me.rsvp.tickets.price}}",range="min",slide="ticketsPriceSlide",stop="ticketsPriceStop")
 							.price-range-group-container
-								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.low]") $
-								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.med]") $$
-								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.high]") $$$
-						.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.restaurant.decision]")
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.low]") $
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.med]") $$
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.high]") $$$
+						.price-input-container.pull-right
 							.orange.pull-left $
-							input#restaurant-price-range.pull-left(ng-model="me.rsvp.restaurant.price")
-							.plus-sign.pull-left(ng-show="me.rsvp.restaurant.price==100") +
-					.row(ng-show="plan.preferences.addOns.hotels")
+							input#ticket-price-range.pull-left(ng-model="me.rsvp.tickets.price")
+							.plus-sign.pull-left(ng-show="me.rsvp.tickets.price==500") +
+					.row(ng-show="plan.preferences.addOns.parking")
 						label.checkbox
-							input.pull-left(type="checkbox",name="hotel_decision",ng-model="me.rsvp.hotel.decision",ng-click="toggleInputs('hotel',me.rsvp.hotel.decision)")
-							.calibri Include me in the hotel plans.
-						.preference-dropdown
-							select#hotel-preference.multiselect(click="hotelPreferenceClick",enable="me.rsvp.hotel.decision",append-to="#section2",header="false",min-width="300",none-selected-text="Hotel Types",multiple="multiple",ng-model="me.rsvp.hotel.preference")
-								option(value="Bed & Breakfast") Bed & Breakfast
-								option(value="Boutique") Boutique
-								option(value="Budget") Budget
-								option(value="Chain") Chain (Marriott, Hyatt, etc.)
-								option(value="Luxury") Luxury
-						.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.hotel.decision]")
-							#hotel-price-slider.price-slider.jquery-slider(min="0",max="500",step="5",enable="me.rsvp.hotel.decision",value="{{me.rsvp.hotel.price}}",range="min",slide="hotelPriceSlide",stop="hotelPriceStop")
+							input(type="checkbox",name="parking_decision",ng-model="me.rsvp.parking.decision",ng-click="toggleInputs('parking',me.rsvp.parking.decision)")
+							.calibri Include me in the parking plans:
+						.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.parking.decision]")
+							#parking-price-slider.price-slider.jquery-slider(min="0",max="100",enable="me.rsvp.parking.decision",step="5",value="{{me.rsvp.parking.price}}",range="min",slide="parkingPriceSlide",stop="parkingPriceStop")
 							.price-range-group-container
-								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.low]") $
-								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.med]") $$
-								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.high]") $$$
-						.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.hotel.decision]")
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.low]") $
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.med]") $$
+								span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.high]") $$$
+						.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.parking.decision]")
 							.orange.pull-left $
-							input#hotel-price-range.pull-left(ng-model="me.rsvp.hotel.price")
-							.plus-sign.pull-left(ng-show="me.rsvp.hotel.price==500") +
-			.section-bottom
-				.row.pull-left
-					.pull-right
-						label#per-person
-							h3.pull-left Per Person:
-							.pull-right
-								.orange.pull-left $
-								input.pull-right(ng-model="votePriceTotalPerPerson")
-						label#total
-							h2.pull-left Total:
-							.pull-right
-								.orange.pull-left $
-								input.pull-right(ng-model="votePriceTotal")
-				.next-wrapper.pull-right
-					button#next-section3.btn.btn-orange.btn-large.scroll-to NEXT
+							input#parking-price-range.pull-left(ng-model="me.rsvp.parking.price")
+							.plus-sign.pull-left(ng-show="me.rsvp.parking.price==100") +
+				.right.pull-right
+					img(src="/images/cartoon-man-checkboxes.png")
+			.block2
+				.row(ng-show="plan.preferences.addOns.restaurants")
+					label.checkbox
+						input.pull-left(type="checkbox",name="restaurant_decision",ng-model="me.rsvp.restaurant.decision",ng-click="toggleInputs('restaurant',me.rsvp.restaurant.decision)")
+						.calibri Include me in the restaurant plans:
+					.preference-dropdown
+						select#food-preference.multiselect(click="foodPreferenceClick",enable="me.rsvp.restaurant.decision",append-to="#section2",header="false",min-width="300",none-selected-text="Food Preference",multiple="multiple",ng-model="me.rsvp.restaurant.preference")
+							option(value="American (traditional)") American (traditional)
+							option(value="Asian Fusion") Asian Fusion
+							option(value="Bars") Bars
+							option(value="Burgers") Burgers
+							option(value="Chinese") Chinese
+							option(value="Fast Food") Fast Food
+							option(value="Italian") Italian
+							option(value="Japanese") Japanese
+							option(value="Mediterranean") Mediterranean
+							option(value="Mexican") Mexican
+							option(value="Pizza") Pizza
+							option(value="Steakhouse") Steakhouse
+							option(value="Sushi") Sushi
+							option(value="Thai") Thai
+							option(value="Vegetarian") Vegetarian
+							option(value="Vietnamese") Vietnamese
+					.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.restaurant.decision]")
+						#restaurant-price-slider.price-slider.jquery-slider(min="0",max="100",step="5",enable="me.rsvp.restaurant.decision",value="{{me.rsvp.restaurant.price}}",range="min",slide="restaurantPriceSlide",stop="restaurantPriceStop")
+						.price-range-group-container
+							span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.low]") $
+							span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.med]") $$
+							span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.high]") $$$
+					.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.restaurant.decision]")
+						.orange.pull-left $
+						input#restaurant-price-range.pull-left(ng-model="me.rsvp.restaurant.price")
+						.plus-sign.pull-left(ng-show="me.rsvp.restaurant.price==100") +
+				.row(ng-show="plan.preferences.addOns.hotels")
+					label.checkbox
+						input.pull-left(type="checkbox",name="hotel_decision",ng-model="me.rsvp.hotel.decision",ng-click="toggleInputs('hotel',me.rsvp.hotel.decision)")
+						.calibri Include me in the hotel plans.
+					.preference-dropdown
+						select#hotel-preference.multiselect(click="hotelPreferenceClick",enable="me.rsvp.hotel.decision",append-to="#section2",header="false",min-width="300",none-selected-text="Hotel Types",multiple="multiple",ng-model="me.rsvp.hotel.preference")
+							option(value="Bed & Breakfast") Bed & Breakfast
+							option(value="Boutique") Boutique
+							option(value="Budget") Budget
+							option(value="Chain") Chain (Marriott, Hyatt, etc.)
+							option(value="Luxury") Luxury
+					.price-slider-container.pull-left(ng-class="{false:'muted'}[me.rsvp.hotel.decision]")
+						#hotel-price-slider.price-slider.jquery-slider(min="0",max="500",step="5",enable="me.rsvp.hotel.decision",value="{{me.rsvp.hotel.price}}",range="min",slide="hotelPriceSlide",stop="hotelPriceStop")
+						.price-range-group-container
+							span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.low]") $
+							span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.med]") $$
+							span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.high]") $$$
+					.price-input-container.pull-right(ng-class="{false:'muted'}[me.rsvp.hotel.decision]")
+						.orange.pull-left $
+						input#hotel-price-range.pull-left(ng-model="me.rsvp.hotel.price")
+						.plus-sign.pull-left(ng-show="me.rsvp.hotel.price==500") +
+		.section-bottom
+			.row.pull-left
+				.pull-right
+					label#per-person
+						h3.pull-left Per Person:
+						.pull-right
+							.orange.pull-left $
+							input.pull-right(ng-model="votePriceTotalPerPerson")
+					label#total
+						h2.pull-left Total:
+						.pull-right
+							.orange.pull-left $
+							input.pull-right(ng-model="votePriceTotal")
+			.next-wrapper.pull-right
+				button#next-section3.btn.btn-orange.btn-large.scroll-to NEXT
