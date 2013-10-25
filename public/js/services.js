@@ -718,9 +718,18 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 			get: function(callback, str) {
 				if (callback) {
 					if (self.plan) {
+
 						callback(self.plan);
 					} else {
+
 						self.getStack++;
+						if (self.getStack == 1) {
+
+							this.fetch(function(p) {
+								callback(p.plan);
+							});
+						} else {
+
 						var dereg = $rootScope.$on('plan-fetched', function() {
 							self.getStack--;
 							if (self.getStack == 0) {
@@ -728,10 +737,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 							}
 							callback(self.plan);
 						});
-						if (self.getStack == 1) {
-							this.fetch(function(p) {
-								callback(p.plan);
-							});
 						}
 					}
 				} else {
@@ -1570,7 +1575,6 @@ factory('pixel', ['$http', 'wembliRpc',
 
 			*/
 			fire: function(args, cb) {
-				console.log(args);
 				if (typeof self.pixelsFired[args.content] === "undefined") {
 
 					/* fetch the facebook conversion snipped and add the pixel id to it - then compile it */
@@ -2035,7 +2039,6 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 					/* fetch the plan once we have the html */
 					plan.get(function(p) {
 						var headers = headerFunc();
-
 						/* if the server tells us explicitly what the location should be, set it here: */
 						if (typeof headers['x-wembli-location'] !== "undefined") {
 							//have to comment this out right now because this causes the page to reload :(
@@ -2045,6 +2048,7 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 						}
 
 						if (samePage) {
+
 							angular.element('#frame' + $rootScope.currentFrame).html($compile(data)($rootScope));
 							$rootScope.$emit('viewContentLoaded', {});
 							loadingModal.hide();
