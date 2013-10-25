@@ -20,15 +20,13 @@ angular.module('wembliApp', [
 ]).run(['sequence','balancedApiConfig', '$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'fetchModals', 'slidePage', 'facebook', 'twitter', 'plan', 'wembliRpc',
   function(sequence, balancedApiConfig, $timeout, initRootScope, $scope, $location, $route, $window, fetchModals, slidePage, facebook, twitter, plan, wembliRpc) {
     /* just fetch the plan right away */
-    plan.fetch(function() {});
+    $timeout(function() {
+      plan.fetch(function() {});
+    });
 
     if ($location.path() === '/') {
       $location.path('/index');
     }
-
-    $scope.$on('$locationChangeSuccess', function() {
-      $scope.actualLocation = $location.path();
-    });
 
     /* check if back button was pressed */
     $scope.$watch(function() {

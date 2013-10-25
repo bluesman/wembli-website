@@ -21,7 +21,6 @@ module.exports = function(app) {
 
 		/* get the friend for this token */
 		Friend.findOne().where('rsvp.token').equals(token).where('planGuid').equals(guid).exec(function(err, friend) {
-
 			/* if i have a friend then this person is invited */
 			if (err) {
 				res.redirect('/');
@@ -42,8 +41,7 @@ module.exports = function(app) {
 					return res.redirect(eventView);
 				}
 
-
-				var locals = {
+				var l = {
 					token: token,
 					guid: guid,
 					service: service,
@@ -54,8 +52,9 @@ module.exports = function(app) {
 
 				/* if they are not logged in ask them to log in :) */
 				if (!req.session.loggedIn) {
+					console.log('not logged in');
 					/* make them login and if they came from twitter or facebook they need to login there too */
-					return res.render('rsvp', locals);
+					return res.render('rsvp', l);
 				}
 
 				/* is this customer the plan organizer? */
@@ -93,8 +92,9 @@ module.exports = function(app) {
 				var csid = getServiceIdFromCustomer[service](req.session.customer);
 
 				if (typeof csid === "undefined") {
-					locals.confirmSocial = true;
-					return res.render('rsvp', locals);
+					console.log('no csid render rsvp');
+					l.confirmSocial = true;
+					return res.render('rsvp', l);
 				}
 
 				/* check to see if the logged in customer is also the invited friend */
