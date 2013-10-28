@@ -44,8 +44,17 @@ angular.module('wembliApp', [
       }
     });
 
+    $scope.$on('$locationChangeStart', function(e, newUrl, oldUrl) {
+      if ($location.protocol() === 'http') {
+        if (/^\/(plan|login|dashboard|confirm)/.test($location.path())) {
+          $window.location.href = 'https://'+ $location.host() + $location.path();
+        }
+      }
+    });
+
     /* slide pages using sequence when location changes */
     $scope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl) {
+      console.log('location change success');
       $scope.actualLocation = $location.path();
       /* if they're just going from 1 index url to another */
       if ((oldUrl.split('/')[3] === '') && (newUrl.split('/')[3] === 'index')) {
@@ -87,6 +96,7 @@ angular.module('wembliApp', [
     });
 
     $window.fbAsyncInit = function() {
+      console.log('call fb init');
       FB.init({
         appId: fbAppId,
         channelUrl: fbChannelUrl,

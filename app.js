@@ -68,10 +68,22 @@ app.set('twitAppSecret', wembliEveryauth.conf.twit.appSecret);
 
 //redirect to https if not development
 app.use(function(req, res, next) {
-	if (process.env.NODE_ENV != 'development') {
-	    var proto = (req.headers["x-forwarded-port"] == 80) ? 'http' : 'https';
-		// --- Do nothing if schema is already https
-		if (proto === "https") return next();
+  var proto = 'http';
+  if (typeof req.headers["x-forwarded-for"] !== "undefined") {
+  	proto = (req.headers["x-forwarded-for"] == 'http') ? 'http' : 'https';
+  }
+  if (typeof req.headers["x-forwarded-port"] !== "undefined") {
+  	proto = (req.headers["x-forwarded-port"] == 80) ? 'http' : 'https';
+  }
+  console.log('proto: '+proto);
+	console.log('uri: '+ req.url);
+
+	// --- Do nothing if schema is already https
+	if (proto === "https") return next();
+
+	/* ghetto whitelist for now */
+	if (/^\/(plan|login|dashboard|confirm)/.test(req.url)) {
+		console.log('redirect to https');
 
 		// --- Redirect to https
 		var host = req.headers['host']; //use req.headers.host eventually
@@ -79,6 +91,7 @@ app.use(function(req, res, next) {
 	} else {
 		next();
 	}
+
 });
 
 
