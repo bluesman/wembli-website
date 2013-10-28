@@ -722,7 +722,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 					} else {
 						if (self.getStack == 0) {
 							this.fetch(function(p) {
-								
+
 								callback(p.plan);
 							});
 						} else {

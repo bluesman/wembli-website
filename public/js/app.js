@@ -46,7 +46,7 @@ angular.module('wembliApp', [
 
     $scope.$on('$locationChangeStart', function(e, newUrl, oldUrl) {
       if ($location.protocol() === 'http') {
-        if (/^\/(plan|login|dashboard|confirm)/.test($location.path())) {
+        if (/^\/(plan|login|dashboard|confirm|rsvp)/.test($location.path())) {
           $window.location.href = 'https://'+ $location.host() + $location.path();
         }
       }
