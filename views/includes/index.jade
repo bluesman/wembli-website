@@ -90,17 +90,17 @@
 							a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
 				- each c, i in concerts
 					li.performers
-						a.performer.white.show-ellipses(start="0", title="#{c.Name}", characters="30", ng-href="/search/events/#{c.Name}") #{i+1}) #{c.Name}
+						a.performer.white.show-ellipses(start="0", title="#{c.Name}", characters="30", href="http://#{app.settings.host}.wembli.com/search/events/#{c.Name}", ng-href="http://#{app.settings.host}.wembli.com/search/events/#{c.Name}") #{i+1}) #{c.Name}
 			ul.middle.pull-left
 				h2 Sporting Events:
 				- each s, i in sports
 					li.performers
-						a.performer.white.show-ellipses(start="0", title="#{s.Name}", characters="40", ng-href="/search/events/#{s.Name}") #{i+1}) #{s.Name}
+						a.performer.white.show-ellipses(start="0", title="#{s.Name}", characters="40", href="http://#{app.settings.host}.wembli.com/search/events/#{s.Name}", ng-href="http://#{app.settings.host}.wembli.com/search/events/#{s.Name}") #{i+1}) #{s.Name}
 			ul.right.pull-left
 				h2 Theater:
 				- each t, i in theater
 					li.performers
-						a.performer.white.show-ellipses(start="0", title="#{t.Name}", characters="40", ng-href="/search/events/#{t.Name}") #{i+1}) #{t.Name}
+						a.performer.white.show-ellipses(start="0", title="#{t.Name}", characters="40", href="http://#{app.settings.host}.wembli.com/search/events/#{t.Name}", ng-href="http://#{app.settings.host}.wembli.com/search/events/#{t.Name}") #{i+1}) #{t.Name}
 	section.section6
 		.container.clearfix
 			.left.pull-left
@@ -139,10 +139,10 @@
 					a(href="//twitter.com/wembli", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow @wembli
 			.social-links.clearfix
 				.footer-social-button.facebook-like-button.pull-left
-					.fb-like(data-href="https://www.wembli.com", data-width="480",data-show-faces="true", data-send="true")
+					.fb-like(data-href="http://www.wembli.com", data-width="480",data-show-faces="true", data-send="true")
 				.footer-social-button.gplus-like-button.pull-left
-					.g-plusone(data-href="https://www.wembli.com", data-annotation="inline", data-width="480")
+					.g-plusone(data-href="http://www.wembli.com", data-annotation="inline", data-width="480")
 			.links.clearfix.pull-left
-				a.footer-link(href="/about-us") About Us
-				a.footer-link(href="/terms-policies") Terms Of Service & Privacy Policy
+				a.footer-link(href="http://#{app.settings.host}.wembli.com/about-us") About Us
+				a.footer-link(href="http://#{app.settings.host}.wembli.com/terms-policies") Terms Of Service & Privacy Policy
 				a.footer-links(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+

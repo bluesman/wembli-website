@@ -24,8 +24,9 @@ angular.module('wembliApp', [
       plan.fetch(function() {});
     });
 
+    /* why is this here? */
     if ($location.path() === '/') {
-      $location.path('/index');
+      //$location.path('/index');
     }
 
     /* check if back button was pressed */

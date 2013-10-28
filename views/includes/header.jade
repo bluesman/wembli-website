@@ -12,19 +12,19 @@ block header
 				strong log out
 		ul.side-nav
 			li
-				a(href="/index") home
+				a(href="http://www.wembli.com/") home
 			li(ng-show="loggedIn && plan")
-				a(href="/plan") current plan
+				a(href="http://www.wembli.com/plan") current plan
 			li
-				a(href="/about-us") about us
+				a(href="http://www.wembli.com/about-us") about us
 			li
 				a(href="http://blog.wembli.com/", target="_self") blog
 			li
 				a(href="mailto:team@wembli.com") contact us
 			li.hide
-				a(href="/press") press
+				a(href="http://www.wembli.com/press") press
 			li.hide
-				a(href="/jobs") jobs
+				a(href="http://www.wembli.com/jobs") jobs
 
 	header#header.clearfix(ng-controller="HeaderCtrl")
 		a.slidepanel.left-container.pull-left.clearfix(href="#",data-slidepanel="panel")
@@ -32,9 +32,9 @@ block header
 			span &nbsp;menu
 		.middle-container.pull-left.clearfix(ng-hide="loggedIn")
 			.login.pull-left
-				a(href="/login") login
+				a(href="http://www.wembli.com/login") login
 			.signup.pull-left
-				a(href="/signup") signup
+				a(href="http://www.wembli.com/signup") signup
 		.middle-container.pull-left.clearfix(ng-show="loggedIn && !hideHeaderSearch")
 			.header-search.pull-left
 				form#header-search-form.form-search.clearfix(ng-submit="submitSearch()", method="GET", action="/search/events")
@@ -42,7 +42,7 @@ block header
 					i.icon-cog.icon-spin.pull-left(ng-show="searchInProgress")
 					input.pull-left(type="text", ng-model="search", name="search", placeholder="")
 			//- .login.pull-left
-				a(href="/logout") logout
+				a(href="http://www.wembli.com/logout") logout
 		.right-container.pull-right
-			a.logo-35(href="/index")
+			a.logo-35(href="http://www.wembli.com/index")
 				h1 Wembli
