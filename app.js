@@ -23,6 +23,7 @@ app.set('secure', false);
 app.set('autoIndex', false); //tell mongoose not to do autoIndex in produciton
 app.set('dbhost','mongo01.wembli.com');
 app.set('redishost','redis01.wembli.com');
+app.set('mailchimpKey','a70be54f752f1b3ce3ccd4116d0e470c-us5');
 
 var port = 8000;
 
@@ -65,6 +66,9 @@ app.set('fbAppId', wembliEveryauth.conf.fb.appId);
 app.set('fbAppSecret', wembliEveryauth.conf.fb.appSecret);
 app.set('twitAppId', wembliEveryauth.conf.twit.appId);
 app.set('twitAppSecret', wembliEveryauth.conf.twit.appSecret);
+
+/* mailchimp */
+
 
 //redirect to https if not development
 app.use(function(req, res, next) {

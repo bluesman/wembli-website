@@ -235,6 +235,8 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+          $scope.listId = 'a55323395c';
+
           $scope.$on('forgot-password-email-sent', function(e, err) {
             if (err) {
               $scope.forgotPasswordEmailError = true;
@@ -276,7 +278,8 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                 'firstName': $scope.customer.firstName,
                 'lastName': $scope.customer.lastName,
                 'email': $scope.customer.email,
-                'next': $scope.next
+                'next': $scope.next,
+                'listId': $scope.listId
               };
 
               wembliRpc.fetch('invite-friends.submit-signup', rpcArgs, function(err, result) {

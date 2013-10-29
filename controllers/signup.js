@@ -10,6 +10,8 @@ module.exports = function(app) {
 
 	app.post(/\/signup\/?/, function(req, res) {
 
+		var listId = 'a55323395c';
+
 		customerRpc['signup'].apply(function(err,results) {
 			if (err) {	return res.redirect('/signup');	}
 
@@ -32,7 +34,9 @@ module.exports = function(app) {
 		},[{email:req.param('email'),
 				firstName:req.param('firstName'),
 				lastName:req.param('lastName'),
-				next:req.param('next')},req,res]);
+				next:req.param('next'),
+				listId: listId
+			},req,res]);
 
 	});
 

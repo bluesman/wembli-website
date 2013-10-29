@@ -1234,6 +1234,7 @@ controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'custo
 		$scope.token = rsvpLoginModal.get('token');
 		$scope.friend = rsvpLoginModal.get('friend');
 		$scope.event = JSON.parse(rsvpLoginModal.get('event'));
+		$scope.listId = 'a55323395c';
 
 		if ($scope.service === 'wemblimail') {
 			wembliRpc.fetch('friend.getServiceId', {
@@ -1279,7 +1280,8 @@ controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'custo
 						firstName: $scope.firstName,
 						lastName: $scope.lastName,
 						email: $scope.email,
-						next: $scope.next
+						next: $scope.next,
+						listId: $scope.listId
 					}, function(err, result) {
 
 						if (result.customer) {
@@ -1411,6 +1413,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'fetchModals', 'plan', 'custom
 controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
+		$scope.listId = 'a55323395c';
 
 		plan.get(function(p) {
 			$scope.$on('tickets-login-clicked', function(e, args) {
@@ -1424,7 +1427,8 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 				wembliRpc.fetch('customer.signup', {
 						firstName: $scope.firstName,
 						lastName: $scope.lastName,
-						email: $scope.email
+						email: $scope.email,
+						listId: $scope.listId
 					}, function(err, result) {
 						if (result.customer) {
 							/* hide this modal and display the tickets offsite modal */
@@ -1516,6 +1520,8 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 ]).
 controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'pixel',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, pixel) {
+		$scope.listId = 'a55323395c';
+
 		plan.get(function(p) {
 			$scope.$on('parking-login-clicked', function(e, args) {
 				$scope.redirectUrl = '/parking/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
@@ -1536,7 +1542,9 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 				wembliRpc.fetch('customer.signup', {
 						firstName: $scope.firstName,
 						lastName: $scope.lastName,
-						email: $scope.email
+						email: $scope.email,
+						listId: $scope.listId
+
 					}, function(err, result) {
 						if (result.customer) {
 							/* hide this modal and display the tickets offsite modal */
@@ -1628,6 +1636,8 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 ]).
 controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
+		$scope.listId = 'a55323395c';
+
 		plan.get(function(p) {
 			$scope.$on('restaurants-login-clicked', function(e, args) {
 				$scope.redirectUrl = '/restaurants/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/';
@@ -1652,7 +1662,9 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 				wembliRpc.fetch('customer.signup', {
 						firstName: $scope.firstName,
 						lastName: $scope.lastName,
-						email: $scope.email
+						email: $scope.email,
+						listId: $scope.listId
+
 					}, function(err, result) {
 						if (result.customer) {
 							/* hide this modal and display the tickets offsite modal */
@@ -1747,6 +1759,7 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
+		$scope.listId = 'a55323395c';
 
 		plan.get(function(p) {
 			$scope.$on('tickets-login-clicked', function(e, args) {
@@ -1760,7 +1773,9 @@ controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'cust
 				wembliRpc.fetch('customer.signup', {
 						firstName: $scope.firstName,
 						lastName: $scope.lastName,
-						email: $scope.email
+						email: $scope.email,
+						listId: $scope.listId
+
 					}, function(err, result) {
 						if (result.customer) {
 							/* hide this modal and display the tickets offsite modal */
@@ -2241,6 +2256,8 @@ controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc',
 		$scope.signupInProgress = false;
 		$scope.showSearch = false;
 
+		$scope.listId = 'a55323395c';
+
 		$scope.submitSearch = function() {
 			$scope.searchInProgress = true;
 			$location.path('/search/events/' + $scope.search);
@@ -2259,7 +2276,8 @@ controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc',
 				firstName: $scope.firstName,
 				lastName: $scope.lastName,
 				email: $scope.email,
-				promo: $scope.promo
+				promo: $scope.promo,
+				listId: $scope.listId
 			}, function(err, result) {
 				console.log($scope.customer);
 				$scope.signupInProgress = false;

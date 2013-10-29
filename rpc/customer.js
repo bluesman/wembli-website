@@ -11,6 +11,9 @@ var balanced = require('wembli/balanced-api')({
 	secret: app.settings.balancedSecret,
 	marketplace_uri: app.settings.balancedMarketplaceUri
 });
+var mcapi = require('mailchimp-api');
+var mc = new mcapi.Mailchimp(app.settings.mailchimpKey);
+
 
 exports.customer = {
 	updateAccountHolderInfo: function(args, req, res) {
@@ -333,6 +336,7 @@ exports.customer = {
 		};
 
 		if (!args.email) {
+			req.syslog.error('no email in signup');
 			data.formError = true;
 			return respond(data);
 		}
@@ -343,12 +347,14 @@ exports.customer = {
 		}, function(err, c) {
 			//error happened
 			if (err) {
+				req.syslog.error('error finding customer in signup');
 				data.success = 0;
 				return respond(data);
 			}
 
 			//customer exists
 			if (c !== null) {
+				req.syslog.notice('email: '+args.email+' is already signed up');
 				//they've already signed up
 				data.exists = true;
 				if (typeof c.password === "undefined") {
@@ -434,6 +440,7 @@ exports.customer = {
 
 			customer.save(function(err) {
 				if (err) {
+					req.syslog.error('error creating customer in signup');
 					data.success = 0;
 					return respond(data);
 				}
@@ -450,6 +457,29 @@ exports.customer = {
 					promo: args.promo,
 					next: args.next
 				});
+
+				/* TODO: make this a promise */
+				if (typeof args.listId !== "undefined") {
+					mc.lists.subscribe({
+							id: args.listId,
+							email: {
+								email: args.email
+							},
+							merge_vars: {
+								fname: args.firstName,
+								lname: args.lastName,
+								optin_ip: req.session.visitor.tracking.ipAddress,
+								optin_time: new Date(),
+							},
+							double_optin: false,
+							send_welcome: false
+						}, function(data) {
+							req.syslog.notice(args.email + ' subscribed to list: ' + args.listId);
+						},
+						function(error) {
+							req.syslog.err('unable subscribe email ' + args.email + ' to list: ' + args.listId);
+						});
+				}
 
 				if (typeof req.session.plan !== "undefined") {
 					/* sanity check - make sure this plan does not have an organizer */

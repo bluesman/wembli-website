@@ -24,7 +24,8 @@
     "twitter-text": "1.6.x",
     "keen.io": "0.0.x",
     "yamlparser": "0.0.2",
-    "node-syslog":"1.1.x"
+    "node-syslog":"1.1.x",
+    "mailchimp-api-2.0.x"
   },
   "repository": {
     "type": "git",
