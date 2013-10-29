@@ -40,11 +40,11 @@ module.exports = function(app) {
 
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 
-		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-first';
-		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-first';
-		req.session.plan.preferences.parking.payment     = req.params[0] ? req.params[0] : 'split-first';
-		req.session.plan.preferences.restaurants.payment = req.params[0] ? req.params[0] : 'split-first';
-		req.session.plan.preferences.hotels.payment      = req.params[0] ? req.params[0] : 'split-first';
+		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-after';
+		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-after';
+		req.session.plan.preferences.parking.payment     = req.params[0] ? req.params[0] : 'split-after';
+		req.session.plan.preferences.restaurants.payment = req.params[0] ? req.params[0] : 'split-after';
+		req.session.plan.preferences.hotels.payment      = req.params[0] ? req.params[0] : 'split-after';
 
 		req.session.visitor.context = 'organizer';
 

@@ -341,9 +341,6 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
               scope.event.MapURL = "/images/no-seating-chart.jpg";
             }
             /* TODO: check if this is split first */
-            console.log('payment:');
-            console.log(scope.plan.preferences.payment);
-            console.log(scope.plan.preferences.tickets.payment);
 
             var img = new Image();
             img.src = scope.event.MapURL;

@@ -77,7 +77,7 @@ module.exports = function(app) {
 						req.session.plan.event.data = results.event[0];
 						req.session.plan.venue.venueId = results.event[0].VenueID;
 						req.session.plan.venue.data = venueResults.venue[0];
-						req.session.plan.preferences.payment = 'split-first';
+						req.session.plan.preferences.payment = 'split-after';
 						if (typeof geocode !== "undefined") {
 							req.session.plan.venue.data.geocode = geocode[0];
 						}
