@@ -79,16 +79,12 @@ app.use(function(req, res, next) {
   if (typeof req.headers["x-forwarded-port"] !== "undefined") {
   	proto = (req.headers["x-forwarded-port"] == 80) ? 'http' : 'https';
   }
-  console.log('proto: '+proto);
-	console.log('uri: '+ req.url);
 
 	// --- Do nothing if schema is already https
 	if (proto === "https") return next();
 
 	/* ghetto whitelist for now */
 	if (/^\/(plan|login|dashboard|confirm)/.test(req.url)) {
-		console.log('redirect to https');
-
 		// --- Redirect to https
 		var host = req.headers['host']; //use req.headers.host eventually
 		res.redirect("https://" + host + req.url);
@@ -98,13 +94,12 @@ app.use(function(req, res, next) {
 
 });
 
-
-
 app.use(express.logger({
 	stream: access_logfile
 }));
 app.use(express.cookieParser());
 app.use(express.static(__dirname + '/public'));
+
 /* session expires in 7 days */
 app.use(express.session({
 	key: 'wembli.sid',
@@ -116,6 +111,7 @@ app.use(express.session({
 }));
 
 app.use(express.bodyParser());
+
 app.use(require('./lib/wembli/syslog'));
 app.use(require('./lib/wembli/visitor'));
 app.use(require('./lib/wembli/customer'));
@@ -128,6 +124,15 @@ app.set('view engine', 'jade');
 app.use(express.methodOverride());
 app.use(require('./lib/wembli/secure'));
 
+app.use(require('express-meta-tags')({
+	ignore: /^\/(images|js|css)/,
+	redis: {
+		host: app.settings.redishost || 'localhost',
+		port: app.settings.redisport || '6379',
+		opts: {}
+	}
+}));
+
 /* remember this happens before the controller runs :( */
 app.use(function(req, res, next) {
 	res.locals.req = req;
@@ -137,8 +142,10 @@ app.use(function(req, res, next) {
 	res.locals.ipinfo = req.session.ipinfo;
 	res.locals.visitor = req.session.visitor;
 	res.locals.customer = req.session.customer;
+	res.locals.meta = req.meta;
 	next();
 });
+
 app.use(app.router);
 
 // if (process.env.NODE_ENV === 'development') {

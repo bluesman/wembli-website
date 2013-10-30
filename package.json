@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "redis":"0.7.x",
     "express": "3.x",
     "connect-redis": "1.4.x",
     "everyauth": "0.4.x",
@@ -25,7 +26,8 @@
     "keen.io": "0.0.x",
     "yamlparser": "0.0.2",
     "node-syslog":"1.1.x",
-    "mailchimp-api-2.0.x"
+    "mailchimp-api":"2.0.x",
+    "express-meta-tags":"0.0.x"
   },
   "repository": {
     "type": "git",
