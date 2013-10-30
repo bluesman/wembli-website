@@ -1,6 +1,6 @@
-- var title       = (typeof meta.TITLE       !== "undefined") ? meta.TITLE       : 'Live Event Outings - Wembli';
-- var description = (typeof meta.DESCRIPTION !== "undefined") ? meta.DESCRIPTION : 'Your one stop shop for planning an outing to concerts, theater and sporting events with friends:  Tickets, Parking, Restaurant Deals & Hotels.';
-- var canonical   = (typeof meta.CANONICAL   !== "undefined") ? meta.CANONICAL   : false;
+- var title       = (meta && (typeof meta.TITLE       !== "undefined")) ? meta.TITLE       : 'Live Event Outings - Wembli';
+- var description = (meta && (typeof meta.DESCRIPTION !== "undefined")) ? meta.DESCRIPTION : 'Your one stop shop for planning an outing to concerts, theater and sporting events with friends:  Tickets, Parking, Restaurant Deals & Hotels.';
+- var canonical   = (meta && (typeof meta.CANONICAL   !== "undefined")) ? meta.CANONICAL   : false;
 
 title #{title}
 meta(charset="utf-8")
