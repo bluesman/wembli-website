@@ -1112,7 +1112,7 @@ controller('PaymentTypeModalCtrl', ['$scope', '$location', 'plan', 'wembliRpc', 
 				eventName: $scope.eventName
 			}, function(err, result) {
 
-				ga.trackEvent('Plan', 'start', $scope.eventName, $scope.paymentType);
+				ga.trackEvent('Plan', 'start', $scope.eventName);
 
 				plan.fetch(function() {
 					$scope.submitInProgress = false;
