@@ -708,7 +708,9 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
             }, function(err, result) {
               $scope.plan = result.plan;
               $scope.calcTotalComing();
-              cb();
+              if (typeof cb !== "undefined") {
+                cb();
+              }
             });
           };
 
