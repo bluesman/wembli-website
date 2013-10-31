@@ -2250,6 +2250,25 @@ controller('VenueMapCtrl', ['$rootScope', '$scope', 'interactiveMapDefaults', 'p
 	}
 ]).
 
+controller('LandingPageSearchCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc', 'pixel',
+	function($rootScope, $scope, $location, wembliRpc, pixel) {
+
+		$rootScope.$broadcast('search-page-loaded', {});
+
+		$scope.searchInProgress = false;
+
+		$scope.$on('search-page-loaded', function() {
+			$scope.searchInProgress = false;
+		});
+
+		$scope.submitSearch = function() {
+			$scope.searchInProgress = true;
+			$location.path('/search/events/' + $scope.search);
+		}
+
+	}
+]).
+
 controller('LandingPageCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc', 'pixel',
 	function($rootScope, $scope, $location, wembliRpc, pixel) {
 		$scope.searchInProgress = false;
