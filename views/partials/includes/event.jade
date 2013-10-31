@@ -20,11 +20,11 @@
 		.cta
 			case payment
 				when "split-first"
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="http://#{app.settings.host}.wembli.com/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 				when "split-after"
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="http://#{app.settings.host}.wembli.com/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 				when "no-split"
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="http://#{app.settings.host}.wembli.com/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 				default
-					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",name="{{event.Name}}",ng-href="http://#{app.settings.host}.wembli.com/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+					a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",name="{{event.Name}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
 

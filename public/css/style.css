@@ -9982,6 +9982,7 @@ header .right-container .logo-45 h1 {
   float: left;
 }
 #tickets-frame #map-background #venue-map-container {
+  margin: auto;
   width: 68%;
   height: 100%;
 }
