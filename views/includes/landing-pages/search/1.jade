@@ -1,0 +1,135 @@
+#landing-page-frame.landing-page-search-1(ng-controller="LandingPageSearchCtrl")
+	section.section1.carousel-container
+		#carousel.carousel.slide
+			ol.carousel-indicators
+				- each img, idx in section[1].carousel
+					- var c = (idx === 0) ? 'active' : '';
+					li(class="#{c}",data-target="#carousel",data-slide-to="#{idx}")
+			.carousel-inner
+				- each img, idx in section[1].carousel
+					- var c = (idx === 0) ? 'active' : '';
+					.item(class="#{c}")
+						img(src="/images/landing-pages/search/1/carousel/#{img}")
+	section.section2
+		h1
+			- each text in section[2].h1
+				p #{text}
+		.search
+			form#index-search-form.form-search.clearfix(ng-submit="submitSearch()")
+				i.icon-search.icon-2x.pull-left(ng-hide="searchInProgress")
+				i.icon-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
+				input.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
+				button.btn.btn-secondary.segoe.pull-left(href="#") search
+	section.section3
+		.container
+			h2 HOW DOES WEMBLI WORK?
+			.wembli-man-arrow
+			.info-boxes
+				.box.one.pull-left.clearfix
+					h3.number 1.
+					.header.clearfix
+						i.icon-search.icon-2x.pull-left
+						h4.pull-left You pick an event
+					.body
+						p Whether you have an event in mind, or you want some ideas of what’s available in your area, use Wembli to search for events throughout the U.S.
+				.box.two.pull-left.clearfix
+					h3.number 2.
+					.header.clearfix
+						i.icon-group.icon-2x.pull-left
+						h4.pull-left Invite friends
+					.body
+						p They get to vote on things like ticket prices and any add ons you choose for your outing i.e.: parking, restaurant deals & hotel
+				.box.three.pull-left.clearfix
+					h3.number 3.
+					.header.clearfix
+						i.icon-credit-card.icon-2x.pull-left
+						h4.pull-left Everyone pays
+					.body
+						p Gone are the days of you getting stuck footing the bill.  Using Wembli, you can have your friends pay up front or you can collect after.  You choose.
+				.box.four.pull-left.clearfix
+					h3.number 4.
+					.header.clearfix
+						i.icon-ticket.icon-2x.pull-left
+						h4.pull-left Tickets are bought
+					.body
+						p We aggregate tickets from across the web - so you don’t waste precious time bouncing from site to site.  We even know how many seats you can get together.
+	section.section4
+		.video-container.clearfix
+			.video-text.pull-left
+				h2.calibri
+					- each h2 in section[4].h2
+						p #{h2}
+				- each p in section[4].copy
+					p #{p}
+			.video.pull-right
+				iframe(width="480",height="360",src="//www.youtube.com/embed/_DKAIoIHk5c",frameborder="0",allowfullscreen)
+
+	section.section5
+		h2.calibri UPCOMING EVENTS IN YOUR AREA
+		.container.clearfix
+			.top-events-arrow
+			ul.left.pull-left
+				h2 Concerts:
+				//- keeping this cause it was cool
+					high-sales-performers(parent-category-id="2",num-returned="10")
+						li.performers(ng-repeat="performer in concertPerformers | filter:orderBy:'-Percent'")
+							a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
+				- each c, i in topEvents.concerts
+					li.performers
+						a.performer.white.show-ellipses(start="0", title="#{c.Name}", characters="30", href="http://#{app.settings.host}.wembli.com/search/events/#{c.Name}", ng-href="http://#{app.settings.host}.wembli.com/search/events/#{c.Name}") #{i+1}) #{c.Name}
+			ul.middle.pull-left
+				h2 Sporting Events:
+				- each s, i in topEvents.sports
+					li.performers
+						a.performer.white.show-ellipses(start="0", title="#{s.Name}", characters="40", href="http://#{app.settings.host}.wembli.com/search/events/#{s.Name}", ng-href="http://#{app.settings.host}.wembli.com/search/events/#{s.Name}") #{i+1}) #{s.Name}
+			ul.right.pull-left
+				h2 Theater:
+				- each t, i in topEvents.theater
+					li.performers
+						a.performer.white.show-ellipses(start="0", title="#{t.Name}", characters="40", href="http://#{app.settings.host}.wembli.com/search/events/#{t.Name}", ng-href="http://#{app.settings.host}.wembli.com/search/events/#{t.Name}") #{i+1}) #{t.Name}
+
+	section.section6
+		.container.clearfix
+			.left.pull-left
+				.body.twitter-widget
+					a.twitter-timeline(href="//twitter.com/search?q=%40wembli",data-link-color="#0088CC", data-theme="dark",data-widget-id="318018385696915459", data-tweet-limit="3", data-chrome="noborders noscrollbar", height="400px" ,width="500px").segoe
+					.twitter-right-arrow
+			.right.pull-left
+				.body
+					.row.clearfix
+						a.facebook-link.pull-left(href="//www.facebook.com/wemblifan")
+						a.blog-link.pull-left(href="//blog.wembli.com/")
+					.row.clearfix
+						a.twitter-link.pull-left(href="//twitter.com/wembli")
+						a.gplus-link.pull-left(href="//plus.google.com/102053515859174299215/posts")
+					.row.message
+						h2 Promos & Insider Info
+						.text Here at Wembli we love social networking and connecting with our favorite people – our beloved Wemblizens! That’s why we are all over Facebook, Twitter and Google+.
+	section.section7
+		//-
+			.container
+				.footer-column.pull-left
+					h4 TICKETS
+					.list
+				.footer-column.pull-left
+					h4 IN YOUR AREA
+					.list
+				.footer-column.pull-left
+					h4 TRENDING NOW
+					.list
+				.footer-column.pull-left
+					h4 ABOUT WEMBLI
+					.list
+		.container.clearfix
+			//-
+				.footer-social-button.twitter-button.pull-left
+					a(href="//twitter.com/wembli", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow @wembli
+			.social-links.clearfix
+				.footer-social-button.facebook-like-button.pull-left
+					.fb-like(data-href="https://www.wembli.com", data-width="480",data-show-faces="true", data-send="true")
+				.footer-social-button.gplus-like-button.pull-left
+					.g-plusone(data-href="https://www.wembli.com", data-annotation="inline", data-width="480")
+			.links.clearfix.pull-left
+				a.footer-link(href="/about-us") About Us
+				a.footer-link(href="/terms-policies") Terms Of Service & Privacy Policy
+				a.footer-links(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+

@@ -8,6 +8,7 @@
 		}
 	}
 
+	/* this is the old landing page which is not used for the dynamic landing pages */
 	.section2 {
 		position:relative;
 		top:-475px;
@@ -241,7 +242,6 @@
 			text-align:left;
 
 			.video-text {
-				margin-top:50px;
 				width:500px;
 				font-size: 20px;
 				line-height: 22px;
@@ -278,33 +278,40 @@
 		}
 
 		.container {
-			text-align: center;
+			text-align: left;
 
-			.left {
-				.polaroid {
-					margin-top:40px;
-					border:10px solid @white;
-					.rotate(-4deg);
-					.box-shadow(#222 2px 2px 4px 1px);
+			.top-events-arrow {
+				margin:auto;
+				width:587px;
+				height:638px;
+				background: transparent url("/images/top-events-arrow.png") no-repeat center center;
+				position:absolute;
+				top:-60px;
+				left:220px;
+			}
 
-					.img-caption {
-						background-color: @white;
-						color:@blue;
-						font-size:16px;
-						padding:20px;
-						border:thin solid @white;
-					}
+			.left, .middle, .right {
+				min-height:350px;
+				width:340px;
+				position: relative;
+				z-index: 2;
+				h2 {
+					color:@black;
+					font-size: 18px;
+					margin-top: 20px;
+				}
+				.performers {
+					padding:6px;
+					max-width:300px;
+				}
+				.performer {
+					font-size:14px;
 				}
 			}
-			.right {
-				width: 500px;
-				margin: 40px;
-				color: #000;
-				font-size: 30px;
-				line-height: 30px;
 
-				.caption {
-					padding:20px;
+			.left {
+				.performers {
+					max-width:250px;
 				}
 			}
 		}

@@ -589,9 +589,7 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 $('#venue-map-container').css("height", $($window).height() - 172);
                 $('#tickets').css("height", $($window).height() - 172);
                 //width of the venue map container
-                $('#venue-map-container').css("width", $($window).width() - 480);
-                console.log('loading tumap with options');
-                console.log(options);
+                $('#venue-map-container').css("width", $($window).width() - 700);
                 $('#venue-map-container').tuMap(options);
 
                 if ($('.price-slider').length) {

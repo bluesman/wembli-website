@@ -7374,6 +7374,9 @@ body {
   background-color: #ffffff;
   left: 100%;
   width: 100%;
+  height: 100%;
+  /* adding this because the restaurant pages don't work otherwise */
+
   -webkit-transition-duration: 0.6s;
   -moz-transition-duration: 0.6s;
   -ms-transition-duration: 0.6s;
@@ -7930,6 +7933,10 @@ header .right-container .logo-45 h1 {
 .info .location {
   max-width: 420px;
 }
+#landing-page-frame {
+  /* this is the old landing page which is not used for the dynamic landing pages */
+
+}
 #landing-page-frame section h2 {
   font-size: 24px;
   color: #000000;
@@ -8174,7 +8181,6 @@ header .right-container .logo-45 h1 {
   text-align: left;
 }
 #landing-page-frame .section4 .video-container .video-text {
-  margin-top: 50px;
   width: 500px;
   font-size: 20px;
   line-height: 22px;
@@ -8207,36 +8213,45 @@ header .right-container .logo-45 h1 {
   text-transform: uppercase;
 }
 #landing-page-frame .section5 .container {
-  text-align: center;
+  text-align: left;
 }
-#landing-page-frame .section5 .container .left .polaroid {
-  margin-top: 40px;
-  border: 10px solid #ffffff;
-  -webkit-transform: rotate(-4deg);
-  -moz-transform: rotate(-4deg);
-  -ms-transform: rotate(-4deg);
-  -o-transform: rotate(-4deg);
-  transform: rotate(-4deg);
-  -webkit-box-shadow: #222222 2px 2px 4px 1px;
-  -moz-box-shadow: #222222 2px 2px 4px 1px;
-  box-shadow: #222222 2px 2px 4px 1px;
+#landing-page-frame .section5 .container .top-events-arrow {
+  margin: auto;
+  width: 587px;
+  height: 638px;
+  background: transparent url("/images/top-events-arrow.png") no-repeat center center;
+  position: absolute;
+  top: -60px;
+  left: 220px;
 }
-#landing-page-frame .section5 .container .left .polaroid .img-caption {
-  background-color: #ffffff;
-  color: #4380b8;
-  font-size: 16px;
-  padding: 20px;
-  border: thin solid #ffffff;
-}
+#landing-page-frame .section5 .container .left,
+#landing-page-frame .section5 .container .middle,
 #landing-page-frame .section5 .container .right {
-  width: 500px;
-  margin: 40px;
-  color: #000;
-  font-size: 30px;
-  line-height: 30px;
+  min-height: 350px;
+  width: 340px;
+  position: relative;
+  z-index: 2;
 }
-#landing-page-frame .section5 .container .right .caption {
-  padding: 20px;
+#landing-page-frame .section5 .container .left h2,
+#landing-page-frame .section5 .container .middle h2,
+#landing-page-frame .section5 .container .right h2 {
+  color: #000000;
+  font-size: 18px;
+  margin-top: 20px;
+}
+#landing-page-frame .section5 .container .left .performers,
+#landing-page-frame .section5 .container .middle .performers,
+#landing-page-frame .section5 .container .right .performers {
+  padding: 6px;
+  max-width: 300px;
+}
+#landing-page-frame .section5 .container .left .performer,
+#landing-page-frame .section5 .container .middle .performer,
+#landing-page-frame .section5 .container .right .performer {
+  font-size: 14px;
+}
+#landing-page-frame .section5 .container .left .performers {
+  max-width: 250px;
 }
 #landing-page-frame .section6 {
   background: transparent url("/images/index-car.png") no-repeat left bottom;
@@ -8316,6 +8331,114 @@ header .right-container .logo-45 h1 {
 }
 #landing-page-frame .section7 .container .footer-column {
   width: 25%;
+}
+/* specific landing page layout css */
+#landing-page-frame.landing-page-search-1 .section2 {
+  position: relative;
+  top: -270px;
+  width: 100%;
+  margin-bottom: -200px;
+}
+#landing-page-frame.landing-page-search-1 .section2 h1 {
+  font-family: Arial;
+  text-transform: uppercase;
+  text-shadow: #000 2px 2px 6px;
+  font-size: 32px;
+  line-height: 48px;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+}
+#landing-page-frame.landing-page-search-1 .section2 .search {
+  margin: 40px 0;
+}
+#landing-page-frame.landing-page-search-1 .section2 .search form {
+  background-color: #ffcc00;
+  width: 675px;
+  margin: auto;
+  padding: 6px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+#landing-page-frame.landing-page-search-1 .section2 .search form i {
+  -webkit-border-top-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-bottom-left-radius: 3px;
+  position: absolute;
+  color: #cccccc;
+  display: block;
+  background-color: transparent;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  margin: 0px;
+}
+#landing-page-frame.landing-page-search-1 .section2 .search form input {
+  -webkit-border-top-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-bottom-left-radius: 3px;
+  height: 30px;
+  border: none;
+  padding: 10px 10px 10px 50px;
+  margin: 0px;
+  width: 500px;
+  color: #333333;
+  font-size: 22px;
+  line-height: 26px;
+  vertical-align: middle;
+  font-style: italic;
+}
+#landing-page-frame.landing-page-search-1 .section2 .search form input:focus {
+  border: none;
+}
+#landing-page-frame.landing-page-search-1 .section2 .search form button:hover {
+  background-color: #ffd83d;
+  background-image: -moz-linear-gradient(top, #ffe066, #ffcc00);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffe066), to(#ffcc00));
+  background-image: -webkit-linear-gradient(top, #ffe066, #ffcc00);
+  background-image: -o-linear-gradient(top, #ffe066, #ffcc00);
+  background-image: linear-gradient(to bottom, #ffe066, #ffcc00);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffe066', endColorstr='#ffffcc00', GradientType=0);
+}
+#landing-page-frame.landing-page-search-1 .section2 .search form button {
+  font-size: 22px;
+  color: #000000;
+  -webkit-border-top-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-bottom-right-radius: 3px;
+  -webkit-border-top-left-radius: 0px;
+  -moz-border-radius-topleft: 0px;
+  border-top-left-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  border-bottom-left-radius: 0px;
+  background-color: #ffcc00;
+  background-image: -moz-linear-gradient(top, #ffcc00, #ffcc00);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffcc00), to(#ffcc00));
+  background-image: -webkit-linear-gradient(top, #ffcc00, #ffcc00);
+  background-image: -o-linear-gradient(top, #ffcc00, #ffcc00);
+  background-image: linear-gradient(to bottom, #ffcc00, #ffcc00);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffcc00', endColorstr='#ffffcc00', GradientType=0);
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  width: 105px;
+  height: 50px;
+  border: none;
+  padding: 0px;
+  margin: 0px;
 }
 #payment-type-modal form {
   margin: 20px;
@@ -9862,6 +9985,7 @@ header .right-container .logo-45 h1 {
   float: left;
 }
 #tickets-frame #map-background #venue-map-container {
+  margin: auto;
   width: 68%;
   height: 100%;
 }

@@ -1,0 +1,81 @@
+#landing-page-frame.landing-page-search-1 {
+	.section2 {
+		position:relative;
+		top:-270px;
+		width:100%;
+		margin-bottom:-200px;
+
+		h1 {
+			font-family: Arial;
+			text-transform: uppercase;
+			text-shadow: #000 2px 2px 6px;
+			font-size: 32px;
+			line-height: 48px;
+			font-weight: bold;
+			text-align:center;
+			color:@white;
+		}
+		.search {
+			margin:40px 0;
+
+			form {
+				background-color:@yellow;
+				width:675px;
+				margin:auto;
+				padding:6px;
+				.border-radius(3px);
+				i {
+					.border-top-left-radius(3px);
+					.border-bottom-left-radius(3px);
+					position:absolute;
+					color:@grayLight;
+					display: block;
+					background-color: transparent;
+					width: 50px;
+					height: 50px;
+					line-height:50px;
+					margin:0px;
+				}
+
+				input {
+					.border-top-left-radius(3px);
+					.border-bottom-left-radius(3px);
+
+					height: 30px;
+					border: none;
+					padding: 10px 10px 10px 50px;
+					margin: 0px;
+					width:500px;
+					color:@grayDarker;
+					font-size: 22px;
+					line-height: 26px;
+					vertical-align: middle;
+					font-style: italic;
+				}
+
+				input:focus {
+					border:none;
+				}
+				button:hover {
+					#gradient > .vertical(lighten(@yellow, 20%), @yellow);
+				}
+
+				button {
+					font-size:22px;
+					color:@black;
+					.border-top-right-radius(3px);
+					.border-bottom-right-radius(3px);
+					.border-top-left-radius(0px);
+					.border-bottom-left-radius(0px);
+					#gradient > .vertical(@yellow, @yellow);
+					.box-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+					width:105px;
+					height:50px;
+					border:none;
+					padding:0px;
+					margin:0px;
+				}
+			}
+		}
+	}
+}

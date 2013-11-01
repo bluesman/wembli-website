@@ -1553,6 +1553,28 @@ factory('loggedIn', [
 	}
 ]).
 
+factory('googleAnalytics',['wembliRpc',
+	function(wembliRpc) {
+		return {
+			trackEvent: function(category, action, label, value, cb) {
+				console.log(_gaq);
+        _gaq.push(['_trackEvent', category, action, label, value]);
+
+				wembliRpc.fetch('analytics.addEvent', {
+					collection: "event",
+					category:category,
+					action: action,
+					label: label,
+					value: value
+				}, function(err, result) {
+					if (typeof cb !== "undefined") {
+						cb(err, result);
+					}
+				});
+			},
+		}
+	}
+]).
 
 factory('pixel', ['$http', 'wembliRpc',
 	function($http, wembliRpc) {

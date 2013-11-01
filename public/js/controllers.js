@@ -1088,8 +1088,8 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'parking'
 ]).
 
 
-controller('PaymentTypeModalCtrl', ['$scope', '$location', 'plan', 'wembliRpc', '$rootScope',
-	function($scope, $location, plan, wembliRpc, $rootScope) {
+controller('PaymentTypeModalCtrl', ['$scope', '$location', 'plan', 'wembliRpc', '$rootScope', 'googleAnalytics',
+	function($scope, $location, plan, wembliRpc, $rootScope, ga) {
 		$scope.$on('payment-type-modal-clicked', function(e, args) {
 			$scope.$apply(function() {
 				$scope.name = args.name;
@@ -1099,6 +1099,7 @@ controller('PaymentTypeModalCtrl', ['$scope', '$location', 'plan', 'wembliRpc', 
 			});
 		});
 		$scope.submitInProgress = false;
+
 		$scope.startPlan = function() {
 			$scope.submitInProgress = true;
 			if ($scope.paymentType === 'split-first') {
@@ -1110,6 +1111,9 @@ controller('PaymentTypeModalCtrl', ['$scope', '$location', 'plan', 'wembliRpc', 
 				eventId: $scope.eventId,
 				eventName: $scope.eventName
 			}, function(err, result) {
+
+				ga.trackEvent('Plan', 'start', $scope.eventName);
+
 				plan.fetch(function() {
 					$scope.submitInProgress = false;
 					$location.path($scope.nextLink);
@@ -2245,6 +2249,25 @@ controller('VenueMapCtrl', ['$rootScope', '$scope', 'interactiveMapDefaults', 'p
 			});
 			var str = 'up to ' + highest + ' tix available';
 			return str;
+		}
+
+	}
+]).
+
+controller('LandingPageSearchCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc', 'pixel',
+	function($rootScope, $scope, $location, wembliRpc, pixel) {
+
+		$rootScope.$broadcast('search-page-loaded', {});
+
+		$scope.searchInProgress = false;
+
+		$scope.$on('search-page-loaded', function() {
+			$scope.searchInProgress = false;
+		});
+
+		$scope.submitSearch = function() {
+			$scope.searchInProgress = true;
+			$location.path('/search/events/' + $scope.search);
 		}
 
 	}
