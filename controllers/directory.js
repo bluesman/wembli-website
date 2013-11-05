@@ -129,7 +129,7 @@ module.exports = function(app) {
 				type: "venue",
 				layout-style: "default",
 				layout-id: "1",
-				data-sets: []
+				data-sets: ['countries','cities','states','top_venues','alpha_venues']
 			}
 	*/
 
