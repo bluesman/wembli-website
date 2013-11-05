@@ -1824,7 +1824,7 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 	}
 ]).
 
-controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel', 'googleAnalytics'
+controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel', 'googleAnalytics',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel, googleAnalytics) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
 		$scope.listId = 'a55323395c';
