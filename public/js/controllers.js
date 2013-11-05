@@ -1157,7 +1157,7 @@ controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'pixel', 'googleAnalyt
 			pixel.fire({
 				type: 'signup',
 				campaign: gCookie.__utmz.utmccn,
-				source: gCookie.__utmz.utmcsr,
+				source: 'google',
 				medium: gCookie.__utmz.utmcmd,
 				term: gCookie.__utmz.utmctr,
 				content: '1070734106',
@@ -1342,7 +1342,7 @@ controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'custo
 			pixel.fire({
 				type: 'signup',
 				campaign: gCookie.__utmz.utmccn,
-				source: gCookie.__utmz.utmcsr,
+				source: 'google',
 				medium: gCookie.__utmz.utmcmd,
 				term: gCookie.__utmz.utmctr,
 				content: '1070734106',
@@ -1491,7 +1491,7 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 			pixel.fire({
 				type: 'signup',
 				campaign: gCookie.__utmz.utmccn,
-				source: gCookie.__utmz.utmcsr,
+				source: 'google',
 				medium: gCookie.__utmz.utmcmd,
 				term: gCookie.__utmz.utmctr,
 				content: '1070734106',
@@ -1620,7 +1620,7 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 			pixel.fire({
 				type: 'signup',
 				campaign: gCookie.__utmz.utmccn,
-				source: gCookie.__utmz.utmcsr,
+				source: 'google',
 				medium: gCookie.__utmz.utmcmd,
 				term: gCookie.__utmz.utmctr,
 				content: '1070734106',
@@ -1754,7 +1754,7 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 			pixel.fire({
 				type: 'signup',
 				campaign: gCookie.__utmz.utmccn,
-				source: gCookie.__utmz.utmcsr,
+				source: 'google',
 				medium: gCookie.__utmz.utmcmd,
 				term: gCookie.__utmz.utmctr,
 				content: '1070734106',
@@ -1878,7 +1878,7 @@ controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'cust
 			pixel.fire({
 				type: 'signup',
 				campaign: gCookie.__utmz.utmccn,
-				source: gCookie.__utmz.utmcsr,
+				source: 'google',
 				medium: gCookie.__utmz.utmcmd,
 				term: gCookie.__utmz.utmctr,
 				content: '1070734106',

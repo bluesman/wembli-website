@@ -313,7 +313,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                 pixel.fire({
                   type: 'signup',
                   campaign: gCookie.__utmz.utmccn,
-                  source: gCookie.__utmz.utmcsr,
+                  source: 'google',
                   medium: gCookie.__utmz.utmcmd,
                   term: gCookie.__utmz.utmctr,
                   content: '1070734106',
