@@ -184,13 +184,8 @@ require('./controllers/admin')(app);
 //this is last so individual controllers can override
 require('./controllers/partials')(app);
 
-/* catch all */
-app.get(/(\/.*)/, function(req, res) {
-	var str = req.params[0].replace(/^\//,'');
-	var q = str.replace(/-/gi,' ');
-	res.redirect("/search/events?search="+q);
-});
-
+/* catch all - this has to be last */
+require('./controllers/directory')(app);
 
 
 if (!module.parent) app.listen(port);
