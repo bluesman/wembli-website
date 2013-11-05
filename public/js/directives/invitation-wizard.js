@@ -229,8 +229,8 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
   }
 ]).
 
-directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn', 'pixel',
-  function(wembliRpc, $window, customer, plan, loggedIn, pixel) {
+directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn', 'pixel', 'googleAnalytics',
+  function(wembliRpc, $window, customer, plan, loggedIn, pixel, googleAnalytics) {
     return {
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
@@ -306,6 +306,19 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                 $scope.signup.success = true;
                 $scope.showForm('showSignupView', 'showSignupForm');
                 console.log('submit signup succes - fire pixel');
+
+      /* fire the signup pixels */
+      var gCookie = googleAnalytics.getCookie();
+
+      pixel.fire({
+        type: 'signup',
+        campaign: gCookie.__utmz.utmccn,
+        source: gCookie.__utmz.utmcsr,
+        medium: gCookie.__utmz.utmcmd,
+        term: gCookie.__utmz.utmctr,
+        content: '1070734106',
+      });
+
 
                 /* fire the facebook signup pixels */
                 pixel.fire({

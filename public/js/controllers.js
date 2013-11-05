@@ -28,8 +28,8 @@ controller('InviteFriendsWizardCtrl', [
  * Index Controller
  */
 
-controller('IndexCtrl', ['$scope', '$templateCache', '$rootScope', '$location',
-	function($scope, $templateCache, $rootScope, $location) {
+controller('IndexCtrl', ['$scope', '$templateCache', '$rootScope', '$location', 'googleAnalytics', 'pixel',
+	function($scope, $templateCache, $rootScope, $location, googleAnalytics, pixel) {
 		/* clear the cache when the home page loads to make sure we start fresh */
 		/* taking this out for now - i'd like to be able to cache some things */
 		/* $templateCache.removeAll(); */
@@ -43,6 +43,7 @@ controller('IndexCtrl', ['$scope', '$templateCache', '$rootScope', '$location',
 
 		$scope.submitSearch = function() {
 			$scope.searchInProgress = true;
+
 			$location.path('/search/events/' + $scope.search);
 		}
 
@@ -1129,8 +1130,8 @@ controller('SearchCtrl', ['$scope', '$rootScope',
 	}
 ]).
 
-controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'pixel',
-	function($scope, $http, wembliRpc, pixel) {
+controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'pixel', 'googleAnalytics',
+	function($scope, $http, wembliRpc, pixel, googleAnalytics) {
 		//init login vars
 		var args = {};
 		$scope.error = false;
@@ -1150,7 +1151,18 @@ controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'pixel',
 
 		$scope.clickSubmit = function() {
 
-			/* fire the facebook signup pixels */
+			/* fire the signup pixels */
+			var gCookie = googleAnalytics.getCookie();
+
+			pixel.fire({
+				type: 'signup',
+				campaign: gCookie.__utmz.utmccn,
+				source: gCookie.__utmz.utmcsr,
+				medium: gCookie.__utmz.utmcmd,
+				term: gCookie.__utmz.utmctr,
+				content: '1070734106',
+			});
+
 			pixel.fire({
 				type: 'signup',
 				campaign: 'Conversion Pixel For Music Feed Ad',
@@ -1230,8 +1242,8 @@ controller('HeaderCtrl', ['$scope',
 	}
 ]).
 
-controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'rsvpLoginModal', 'pixel',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal, pixel) {
+controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'rsvpLoginModal', 'pixel', 'googleAnalytics',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal, pixel, googleAnalytics) {
 		$scope.plan = plan.get();
 		$scope.guid = rsvpLoginModal.get('guid');
 		$scope.service = rsvpLoginModal.get('service');
@@ -1324,6 +1336,19 @@ controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'custo
 						}
 
 
+			/* fire the signup pixels */
+			var gCookie = googleAnalytics.getCookie();
+
+			pixel.fire({
+				type: 'signup',
+				campaign: gCookie.__utmz.utmccn,
+				source: gCookie.__utmz.utmcsr,
+				medium: gCookie.__utmz.utmcmd,
+				term: gCookie.__utmz.utmctr,
+				content: '1070734106',
+			});
+
+
 						/* fire the facebook signup pixels */
 						pixel.fire({
 							type: 'signup',
@@ -1414,8 +1439,8 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'fetchModals', 'plan', 'custom
 
 	}
 ]).
-controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
+controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel', 'googleAnalytics',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel, googleAnalytics) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
 		$scope.listId = 'a55323395c';
 
@@ -1459,6 +1484,19 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 						$scope.signupError = false;
 						$scope.formError = false;
 						$scope.accountExists = false;
+
+			/* fire the signup pixels */
+			var gCookie = googleAnalytics.getCookie();
+
+			pixel.fire({
+				type: 'signup',
+				campaign: gCookie.__utmz.utmccn,
+				source: gCookie.__utmz.utmcsr,
+				medium: gCookie.__utmz.utmcmd,
+				term: gCookie.__utmz.utmctr,
+				content: '1070734106',
+			});
+
 
 						/* fire the facebook signup pixels */
 						pixel.fire({
@@ -1522,8 +1560,8 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 		};
 	}
 ]).
-controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'pixel',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, pixel) {
+controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'pixel', 'googleAnalytics',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, pixel, googleAnalytics) {
 		$scope.listId = 'a55323395c';
 
 		plan.get(function(p) {
@@ -1576,6 +1614,19 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 						$scope.formError = false;
 						$scope.accountExists = false;
 
+			/* fire the signup pixels */
+			var gCookie = googleAnalytics.getCookie();
+
+			pixel.fire({
+				type: 'signup',
+				campaign: gCookie.__utmz.utmccn,
+				source: gCookie.__utmz.utmcsr,
+				medium: gCookie.__utmz.utmcmd,
+				term: gCookie.__utmz.utmctr,
+				content: '1070734106',
+			});
+
+
 						/* fire the facebook signup pixels */
 						pixel.fire({
 							type: 'signup',
@@ -1638,8 +1689,8 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 		};
 	}
 ]).
-controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
+controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel', 'googleAnalytics',
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel, googleAnalytics) {
 		$scope.listId = 'a55323395c';
 
 		plan.get(function(p) {
@@ -1697,6 +1748,19 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 						$scope.formError = false;
 						$scope.accountExists = false;
 
+			/* fire the signup pixels */
+			var gCookie = googleAnalytics.getCookie();
+
+			pixel.fire({
+				type: 'signup',
+				campaign: gCookie.__utmz.utmccn,
+				source: gCookie.__utmz.utmcsr,
+				medium: gCookie.__utmz.utmcmd,
+				term: gCookie.__utmz.utmctr,
+				content: '1070734106',
+			});
+
+
 						/* fire the facebook signup pixels */
 						pixel.fire({
 							type: 'signup',
@@ -1760,8 +1824,8 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 	}
 ]).
 
-controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel) {
+controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel', 'googleAnalytics'
+	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel, googleAnalytics) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
 		$scope.listId = 'a55323395c';
 
@@ -1807,6 +1871,19 @@ controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'cust
 						$scope.signupError = false;
 						$scope.formError = false;
 						$scope.accountExists = false;
+
+			/* fire the signup pixels */
+			var gCookie = googleAnalytics.getCookie();
+
+			pixel.fire({
+				type: 'signup',
+				campaign: gCookie.__utmz.utmccn,
+				source: gCookie.__utmz.utmcsr,
+				medium: gCookie.__utmz.utmcmd,
+				term: gCookie.__utmz.utmctr,
+				content: '1070734106',
+			});
+
 
 						/* fire the facebook signup pixels */
 						pixel.fire({

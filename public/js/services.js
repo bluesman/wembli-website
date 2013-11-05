@@ -726,15 +726,15 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 								callback(p.plan);
 							});
 						} else {
-						self.getStack++;
+							self.getStack++;
 
-						var dereg = $rootScope.$on('plan-fetched', function() {
-							self.getStack--;
-							if (self.getStack == 0) {
-								dereg();
-							}
-							callback(self.plan);
-						});
+							var dereg = $rootScope.$on('plan-fetched', function() {
+								self.getStack--;
+								if (self.getStack == 0) {
+									dereg();
+								}
+								callback(self.plan);
+							});
 						}
 					}
 				} else {
@@ -1553,16 +1553,77 @@ factory('loggedIn', [
 	}
 ]).
 
-factory('googleAnalytics',['wembliRpc',
-	function(wembliRpc) {
+/* http://www.quirksmode.org/js/cookies.html */
+factory('cookie', [
+	function() {
 		return {
+			create: function(name, value, days) {
+				if (days) {
+					var date = new Date();
+					date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+					var expires = "; expires=" + date.toGMTString();
+				} else var expires = "";
+				document.cookie = name + "=" + value + expires + "; path=/";
+			},
+			read: function(name) {
+				var nameEQ = name + "=";
+				var ca = document.cookie.split(';');
+				for (var i = 0; i < ca.length; i++) {
+					var c = ca[i];
+					while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+					if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+				}
+				return null;
+			},
+
+			erase: function(name) {
+				createCookie(name, "", -1);
+			}
+		}
+	}
+]).
+
+factory('googleAnalytics', ['wembliRpc', 'cookie',
+	function(wembliRpc, cookie) {
+		var self = this;
+
+		/* parse the ga cookie
+		 * inspiration from http://stackoverflow.com/questions/1688657/how-do-i-extract-google-analytics-campaign-data-from-their-cookie-with-javascript
+		 * readCookie is from // http://www.quirksmode.org/js/cookies.html
+		 * utmcsr = utm_source
+		 * utmccn = utm_campaign
+		 * utmcmd = utm_medium
+		 * utmctr = utm_term
+		 * utmcct = utm_content
+		 */
+		self.cookie = {__utmz: {}};
+		var cookie = cookie.read("__utmz");
+		if (cookie) {
+			var z = cookie.split('.');
+			if (z.length >= 4) {
+				var y = z[4].split('|');
+				for (var i = 0; i < y.length; i++) {
+					var pair = y[i].split("=");
+					self.cookie.__utmz[pair[0]] = pair[1];
+				}
+			}
+		}
+
+		console.log('google cookie values');
+		console.log(self.cookie);
+
+		return {
+			getCookie: function() {
+				return self.cookie;
+			},
+
 			trackEvent: function(category, action, label, value, cb) {
 				console.log(_gaq);
-        _gaq.push(['_trackEvent', category, action, label, value]);
+				_gaq.push(['_trackEvent', category, action, label, value]);
 
 				wembliRpc.fetch('analytics.addEvent', {
 					collection: "event",
-					category:category,
+					category: category,
 					action: action,
 					label: label,
 					value: value
@@ -1601,7 +1662,10 @@ factory('pixel', ['$http', 'wembliRpc',
 			fire: function(args, cb) {
 				if (typeof self.pixelsFired[args.content] === "undefined") {
 
-					/* fetch the facebook conversion snipped and add the pixel id to it - then compile it */
+					console.log('pixel args: ');
+					console.log(args);
+
+					/* fetch the facebook conversion snippet and add the pixel id to it - then compile it */
 					var getArgs = {
 						method: 'get',
 						cache: false,
