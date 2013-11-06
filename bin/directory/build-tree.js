@@ -26,9 +26,16 @@ var client = redis.createClient(argv.p, argv.h, {});
 
 console.log('process file: ' + argv._[0]);
 
+var urls = {
+	'venues': {},
+	'events': {},
+	'performers': {}
+};
 var topVenue = {};
 var topEvent = {};
 var topPerformer = {};
+var geo = {};
+var category = {};
 
 /* this is the function that does all the work */
 
@@ -114,90 +121,102 @@ function handleRow(row, next) {
 		 */
 
 		if (slugs['venue']) {
-			var venue1 = '/venue';
 			var venueDetail = '/venue/' + slugs['venue'];
-			store(venueDetail,row);
-			if (slugs['country']) {
-				var venueGeo1 = '/venue/' + slugs['country'];
-				store(venueGeo1,true);
-				if (slugs['state']) {
-					var venueGeo2 = venueGeo1 + '/' + slugs['state'];
-					store(venueGeo2,true);
-					if (slugs['city']) {
-						var venueGeo3 = '/venue/' + slugs['country'] + '/' + slugs['state'] + '/' + slugs['city'];
-						store(venueGeo3,true);
-					}
-				}
-			}
+			store(venueDetail, row['VenueID']);
 		}
 
 		if (slugs['performer']) {
 			var performerDetail = '/' + slugs['performer'];
-			store(performerDetail, row);
-			if(slugs['pcat'] && (slugs['pcat']) !== '-') {
-				var pcat = '/' + slugs['pcat'];
-				store(pcat, true);
-				if(slugs['ccat'] && (slugs['ccat']) !== '-') {
-					var ccat = '/' + slugs['pcat'] + '/' + slugs['ccat'];
-					store(ccat, true);
-					if(slugs['gcat'] && (slugs['gcat']) !== '-') {
-						var gcat = '/' + slugs['pcat'] + '/' + slugs['ccat'] + '/' + slugs['gcat'];
-						store(gcat, true);
-					}
-				}
-			}
+			store(performerDetail, row['PerformerID']);
 		}
 
 		if (slugs['event']) {
-			var event1 = '/event';
 			var eventDetail = '/event/' + slugs['event'];
 			store(eventDetail, row);
-			if (slugs['country']) {
-				var eventGeo1 = '/event/' + slugs['country'];
-				store(eventGeo1, true);
-				if (slugs['state']) {
-					var eventGeo2 = '/event/' + slugs['country'] + '/' + slugs['state'];
-					store(eventGeo2, true);
-					if (slugs['city']) {
-						var eventGeo3 = '/event/' + slugs['country'] + '/' + slugs['state'] + '/' + slugs['city'];
-						store(eventGeo3, true);
-					}
-				}
-			}
 		}
 
+		/* tony says don't do performers by geo */
+		(function() {
+			['venues', 'events'].forEach(function(type) {
+				var url = '/' + type;
+				urls[type][url] = true;
+				['country', 'state', 'city'].forEach(function(sub) {
+					if (slugs[sub]) {
+						url += '/' + slugs[sub];
+						urls[type][url] = true;
+					}
+				})
+			});
+		})();
 
+		(function() {
+			var url = '';
+			['pcat', 'ccat', 'gcat'].forEach(function(cat) {
+				if (slugs[cat]) {
+					if (slugs[cat] == '-') {
+						return;
+					}
+					url += '/' + slugs[cat];
+					urls['performers'][url] = true;
+				}
+			});
+		})();
 
-		/* count some stuff
-		 * top venues - most events?
-		 * top events - most ticket volume
-		 * top performers
-		 * list of states per country
-		 * list of cities per state
-		 * list of ccat per pcat
-		 * list of gcat per ccat
-
-  minprice: '.000000',
-  maxprice: '.000000',
-  numorders: '0',
-  numticketssold: '0',
-
-		*/
-
-		/* most events */
+		/* score */
 		var score = parseInt(row['numorders']) + parseInt(row['numticketssold']);
 
-		topVenue[slugs['venue']]     = topVenue[slugs['venue']] ? topVenue[slugs['venue']] + score : score;
-		topPerformer[slugs['event']] = topPerformer[slugs['event']] ? topPerformer[slugs['event']] + score : score;
-		topEvent[slugs['performer']] = topEvent[slugs['performer']] ? topEvent[slugs['performer']] + score : score;
+		/* lists of venues, performers, events by score, with meta data: country, state, city, pcat, ccat, gcat */
+		topVenue[slugs['venue']] = topVenue[slugs['venue']] || {"score": 0};
+		topVenue[slugs['venue']].score += score;
+		['country','state','city'].forEach(function(geo) {
+			topVenue[slugs['venue']][geo] = slugs[geo];
+		});
+
+		topEvent[slugs['event']] = topEvent[slugs['event']] || {"score": 0};
+		topEvent[slugs['event']].score += score;
+		['country','state','city'].forEach(function(geo) {
+			topEvent[slugs['event']][geo] = slugs[geo];
+		});
+
+
+		/* performers */
+		topPerformer[slugs['performer']] = topPerformer[slugs['performer']] || {"score": 0};
+		topPerformer[slugs['performer']].score += score;
+		['country','state','city','pcat','ccat','gcat'].forEach(function(el) {
+			if (slugs[el]) {
+				topPerformer[slugs['performer']][slugs[el]] = topPerformer[slugs['performer']][slugs[el]] ? topPerformer[slugs['performer']][slugs[el]] + 1 : 1;
+			}
+		});
+
+		/* category lists */
+		var catKey = 'category:';
+		var prevCat = '';
+		['pcat','ccat','gcat'].forEach(function(cat) {
+			catKey += '/' + prevCat;
+			category[catKey] = category[catKey] || {};
+			category[catKey][slugs[cat]] = true;
+			prevCat = cat;
+		});
+
+		/* geo lists */
+		var geoKey = 'geo:';
+		['events','venues'].forEach(function(type) {
+			var prevGeo = type;
+			['country','state','city'].forEach(function(g) {
+				geoKey += '/' + prevGeo;
+				geo[geoKey] = geo[geoKey] || {};
+				geo[geoKey][slugs[g]] = true;
+				prevGeo = g;
+			});
+
+		});
 
 		next();
-
 	});
 };
 
 function store(key, val) {
-	//console.log(key);
+	console.log(key);
 }
 
 function makeSlug(str) {
@@ -205,8 +224,8 @@ function makeSlug(str) {
 	var slug = str.toLowerCase().replace(/\W/g, ' ');
 	slug = slug.replace(/\s\s*/g, '-');
 	/* no - at beginning or end */
-	slug = slug.replace(/^-/,'');
-	slug = slug.replace(/-$/,'');
+	slug = slug.replace(/^-/, '');
+	slug = slug.replace(/-$/, '');
 	return slug;
 }
 
@@ -261,12 +280,230 @@ function parseCsv(stream) {
 						});
 				},
 				function(err, result) {
+					/* lists of keys are here:
+					 * urls
+					 * geo
+					 * category
+					 * topVenue
+					 * topEvent
+					 * topPerformer
+					*/
+
 					/* sort the tops */
-					var v = Object.keys(topVenue).sort(function(a, b) {return -(topVenue[a] - topVenue[b])});
-					v.slice(0,100).forEach(function(k) {
-						console.log(k + ' => ' + topVenue[k]);
+					var v = Object.keys(topVenue).sort(function(a, b) {
+						return -(topVenue[a].score - topVenue[b].score)
+					});
+					v.slice(0, 100).forEach(function(k) {
+						//console.log(k + ' => ');
+						//console.log(topVenue[k]);
 					});
 
+					/* supplemental redis data
+					 * top
+					 * geo (list of countries, states, cities)
+					 * category
+					 */
+
+					/* figure out top_events */
+					//organizeByCountry('top:', '/events', topEvent);
+
+					/* tony didn't say to organizer performers by country */
+					//organizeByCountry('top_performers', '/', topPerformer)
+					//organizeByCountry('top:', '/venues', topVenue);
+
+					//organizeByCategory('top:', '/', topPerformer);
+
+					function organizeByCategory(namespace, root, list) {
+
+						var eAllSorted = Object.keys(list).sort(function(a, b) {
+							return -(list[a].score - list[b].score)
+						});
+
+						/* find top events by pcat */
+						var ePcat = {};
+						Object.keys(country).forEach(function(c) {
+							eAllSorted.forEach(function(el) {
+								if (list[el].country == c) {
+									if (!eCountry[c]) {
+										eCountry[c] = {};
+									}
+									eCountry[c][el] = list[el];
+								}
+							});
+							var k = namespace + root + '/' + c;
+
+							/* top 100 events by country */
+							var eCountrySorted = Object.keys(eCountry[c]).sort(function(a, b) {
+								return -(eCountry[c][a].score - eCountry[c][a].score)
+							});
+							store(k, eCountrySorted.slice(0, 100));
+
+							/* find top events by state */
+							var eState = {};
+							Object.keys(state).forEach(function(s) {
+
+								eAllSorted.forEach(function(el) {
+									if (list[el].state == s) {
+										if (!eState[s]) {
+											eState[s] = {};
+										}
+										eState[s][el] = list[el];
+									}
+								});
+
+								if (eState[s]) {
+									var k = key + '/' + c + '/' + s;
+									/* top 100 events by state */
+									var eStateSorted = Object.keys(eState[s]).sort(function(a, b) {
+										return -(eState[s][a].score - eState[s][a].score)
+									});
+									store(k, eStateSorted.slice(0, 100));
+
+
+									/* find top events by city */
+									var eCity = {};
+									Object.keys(city).forEach(function(ci) {
+										eAllSorted.forEach(function(el) {
+											if (list[el].city == ci) {
+												if (!eCity[ci]) {
+													eCity[ci] = {};
+												}
+												eCity[ci][el] = list[el];
+											}
+										});
+										if (eCity[ci]) {
+
+											var k = key + '/' + c + '/' + s + '/' + ci;
+											/* top 100 events by city */
+											var eCitySorted = Object.keys(eCity[ci]).sort(function(a, b) {
+												return -(eCity[ci][a].score - eCity[ci][a].score)
+											});
+											store(k, eCitySorted.slice(0, 100));
+										}
+									});
+								}
+							});
+						});
+					}
+
+					function organizeByCountry(namespace, root, list) {
+
+						/* list sorted by score descending */
+						var eAllSorted = Object.keys(list).sort(function(a, b) {
+							return -(list[a].score - list[b].score)
+						});
+
+						/* find top events by country */
+						var eCountry = {};
+
+						Object.keys(country).forEach(function(c) {
+
+							/* for each event */
+							eAllSorted.forEach(function(el) {
+
+								if (list[el].country == c) {
+
+									if (!eCountry[c]) {
+										eCountry[c] = {};
+									}
+									eCountry[c][el] = list[el];
+								}
+
+							});
+
+							/* top_events:/events/united-states-of-america */
+							var k = namespace + root + '/' + c;
+
+							/* top 100 events by country */
+							var eCountrySorted = Object.keys(eCountry[c]).sort(function(a, b) {
+								return -(eCountry[c][a].score - eCountry[c][a].score)
+							});
+
+							store(k, eCountrySorted.slice(0, 100));
+
+							/* find top events by state */
+							var eState = {};
+							/* loop through all states */
+							Object.keys(state).forEach(function(s) {
+
+								/* loop through all events */
+								eAllSorted.forEach(function(el) {
+									/* if the state for this event is this state */
+									if (list[el].state == s) {
+
+										if (!eState[s]) {
+											eState[s] = {};
+										}
+										/* put this element into the states hash */
+										eState[s][el] = list[el];
+									}
+								});
+
+								if (eState[s]) {
+									var k = namespace + root + '/' + c + '/' + s;
+									/* top 100 events by state */
+									var eStateSorted = Object.keys(eState[s]).sort(function(a, b) {
+										return -(eState[s][a].score - eState[s][a].score)
+									});
+									store(k, eStateSorted.slice(0, 100));
+
+
+									/* find top events by city */
+									var eCity = {};
+									Object.keys(city).forEach(function(ci) {
+										eAllSorted.forEach(function(el) {
+											if (list[el].city == ci) {
+												if (!eCity[ci]) {
+													eCity[ci] = {};
+												}
+												eCity[ci][el] = list[el];
+											}
+										});
+										if (eCity[ci]) {
+
+											var k = namespace + root + '/' + c + '/' + s + '/' + ci;
+											/* top 100 events by city */
+											var eCitySorted = Object.keys(eCity[ci]).sort(function(a, b) {
+												return -(eCity[ci][a].score - eCity[ci][a].score)
+											});
+											store(k, eCitySorted.slice(0, 100));
+										}
+									});
+								}
+							});
+						});
+					}
+
+					/* loop through and store the urls */
+					Object.keys(urls).forEach(function(type) {
+						Object.keys(urls[type]).forEach(function(url) {
+							store(url,true);
+						});
+					});
+
+					/* loop through and store the geo */
+					Object.keys(geo).forEach(function(key) {
+						if (geo[key]) {
+							var sorted = Object.keys(geo[key]).sort(function(a, b) {
+								if (a < b) return -1;
+								if (a > b) return 1;
+								return 0;
+							});
+							store(key, sorted);
+						}
+					});
+
+					/* loop through and store the category */
+					Object.keys(category).forEach(function(key) {
+						if (category[key]) {
+							var sorted = Object.keys(category[key]).sort(function(a, b) {
+								if (a < b) return -1;
+								if (a > b) return 1;
+								return 0;
+							});
+							store(key, sorted);
+						}
+					});
 
 					process.exit(0);
 				});

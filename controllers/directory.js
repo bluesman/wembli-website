@@ -20,24 +20,24 @@ module.exports = function(app) {
 		/events/usa/ca/as-bd
 		/events/usa/ca/san-diego/as-bd
 
-		top_events:/events
-		top_events:/events/<country>
-		top_events:/events/<country>/<state>
-		top_events:/events/<country>/<state>/<city>
-		top_events:/events/<country>/<state>/<zip>
+		top:/events
+		top:/events/<country>
+		top:/events/<country>/<state>
+		top:/events/<country>/<state>/<city>
+		top:/events/<country>/<state>/<zip>
 
-		alpha_events:/events => {aa-ar:150,as-bd:135, etc...}
-		alpha_events:/events/<country> => {aa-ar:150,as-bd:135, etc...}
-		alpha_events:/events/<country>/<state> => {aa-ar:150,as-bd:135, etc...}
-		alpha_events:/events/<country>/<state>/<city> => {aa-ar:150,as-bd:135, etc...}
-		alpha_events:/events/aa-ar -> list of events
-		alpha_events:/events/<country>/aa-ar
-		alpha_events:/events/<country>/<state>/aa-ar
-		alpha_events:/events/<country>/<state>/<city>/aa-ar
+		alpha:/events => {aa-ar:150,as-bd:135, etc...}
+		alpha:/events/<country> => {aa-ar:150,as-bd:135, etc...}
+		alpha:/events/<country>/<state> => {aa-ar:150,as-bd:135, etc...}
+		alpha:/events/<country>/<state>/<city> => {aa-ar:150,as-bd:135, etc...}
+		alpha:/events/aa-ar -> list of events
+		alpha:/events/<country>/aa-ar
+		alpha:/events/<country>/<state>/aa-ar
+		alpha:/events/<country>/<state>/<city>/aa-ar
 
-		countries:/events
-		states:/events/<country>
-		cities:/events/<country>/<state>
+		geo:/events
+		geo:/events/<country>
+		geo:/events/<country>/<state>
 
 		- event detail -
 		/events/chargers-vs-chiefs -> detail page lets customer choose how to split then sends them to tickets page
@@ -65,20 +65,20 @@ module.exports = function(app) {
 		/parking-near-qualcomm-stadium
 		/deals-near-qualcomm-stadium
 
-		top_venues:/venues => top 100 venues of all venues, if > 100 venues total: organize by alpha
-		top_venues:/venues/<country> => top max 100 venues by country, if > 100 venues total: organize by alpha
-		top_venues:/venues/<country>/<state> => top max 100 venues by state, if > 100 venues total: organize by alpha
-		top_venues:/venues/<country>/<state>/<city> => top max 100 venues for city, if > 100 venues total: organize by alpha
-		top_venues:/venues/<country>/<state>/<zip> => top max 100 venues by zip, if > 100 venues total: organize by alpha
+		top:/venues => top 100 venues of all venues, if > 100 venues total: organize by alpha
+		top:/venues/<country> => top max 100 venues by country, if > 100 venues total: organize by alpha
+		top:/venues/<country>/<state> => top max 100 venues by state, if > 100 venues total: organize by alpha
+		top:/venues/<country>/<state>/<city> => top max 100 venues for city, if > 100 venues total: organize by alpha
+		top:/venues/<country>/<state>/<zip> => top max 100 venues by zip, if > 100 venues total: organize by alpha
 
-		alpha_venues:/venues => {"a-c":24,"d-h":50} (count of venues in each alpha range - should have even distribution using sq root or cube root)
-		alpha_venues:/venues/<country> => {"a-c":24,"d-h":50}
-		alpha_venues:/venues/<country>/<state> => {"a-c":24,"d-h":50}
-		alpha_venues:/venues/a-c => list of venues
+		alpha:/venues => {"a-c":24,"d-h":50} (count of venues in each alpha range - should have even distribution using sq root or cube root)
+		alpha:/venues/<country> => {"a-c":24,"d-h":50}
+		alpha:/venues/<country>/<state> => {"a-c":24,"d-h":50}
+		alpha:/venues/a-c => list of venues
 
-		countries:/venues -> list of countries with venues that have events
-		states:/venues/<country>
-		cities:/venues/<country>/<state>
+		geo:/venues -> list of countries with venues that have events
+		geo:/venues/<country>
+		geo:/venues/<country>/<state>
 
 
 		- performer -
@@ -91,12 +91,14 @@ module.exports = function(app) {
 		/sports/tennis/a-d -> list performers
 		/sports/tennis/e-h
 
-		top_performers:/<parent> => list of 100 performer slugs
-		top_performers:/<parent>/<child>
-		top_performers:/<parent>/<grandchild>
-		alpha_performers:/<parent>/<child> => {a-d:50,e-h:45, etc...}
-		sub_category:/<parent> => list of all child categories
-		sub_category:/<parent>/<child>
+		top:/<parent> => list of 100 performer slugs
+		top:/<parent>/<child>
+		top:/<parent>/<grandchild>
+		alpha:/<parent>/<child> => {a-d:50,e-h:45, etc...}
+
+		category:/
+		category:/<parent> => list of all child categories
+		category:/<parent>/<child>
 
 	*/
 
