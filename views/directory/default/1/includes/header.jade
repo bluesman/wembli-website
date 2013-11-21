@@ -1,0 +1,54 @@
+block header
+	header#header.clearfix(header="#header",scroll="window")
+
+		//- slidepanel - only when not mobile
+		#slidepanel.cb_slide_panel
+			.wrapper.clearfix
+				.controls.pull-right.close
+					i.fa.fa-chevron-left
+					i.fa.fa-chevron-left
+			.sign-up(ng-hide="loggedIn")
+				a.btn.btn-secondary.btn-large(href="/signup")
+					strong sign up
+			.log-out(ng-show="loggedIn")
+				a.btn.btn-secondary.btn-large(href="/logout", target="_self")
+					strong log out
+
+			ul.side-nav
+				li
+					a(href="http://www.wembli.com/") home
+				li(ng-show="loggedIn && plan")
+					a(href="http://www.wembli.com/plan") current plan
+				li
+					a(href="http://www.wembli.com/about-us") about us
+				li
+					a(href="http://blog.wembli.com/", target="_self") blog
+				li
+					a(href="mailto:team@wembli.com") contact us
+				li.hide
+					a(href="http://www.wembli.com/press") press
+				li.hide
+					a(href="http://www.wembli.com/jobs") jobs
+
+		nav.navbar.navbar-fixed-top(role="navigation")
+			button.nav.navbar-left.slidepanel(href="#", data-slidepanel="panel")
+				i.fa.fa-bars
+				span &nbsp;menu
+
+
+			//- hide for phones
+			ul.nav.navbar-nav.navbar-left.hidden-xs
+				li
+					a(href="//#{app.settings.host}.wembli.com/login") login
+				li
+					a(href="//#{app.settings.host}.wembli.com/signup") signup
+
+			form#header-search-form.navbar-form.navbar-left.hidden-xs(role="search", method="GET", action="//#{app.settings.host}.wembli.com/search/events")
+				i.fa.fa-search.pull-left(ng-hide="searchInProgress")
+				input.pull-left(type="text", name="search", placeholder="Search")
+
+			.navbar-brand.navbar-right
+				a(href="//#{app.settings.host}.wembli.com/")
+					img.img-responsive.logo-35(src="/images/wembli-logo-35.png")
+
+

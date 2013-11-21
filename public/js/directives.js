@@ -548,56 +548,6 @@ directive('carousel', [
   }
 ]).
 
-directive('slidepanel', [
-  function() {
-    return {
-      restrict: 'C',
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr) {
-          var sp = $('[data-slidepanel]').slidepanel({
-            "static": true,
-            "mode": 'overlay'
-          });
-
-          $('#empty-modal').modal({
-            show: false
-          });
-          $('#empty-modal').on('hidden', function() {
-            if (angular.element('#slidepanel').is(':visible')) {
-              angular.element('#slidepanel .close').click();
-            }
-          });
-
-          $('#slidepanel .close').click(function() {
-            if ($('#empty-modal').is(':visible')) {
-              $('#empty-modal').modal('hide');
-            }
-          });
-
-          element.click(function() {
-            $('#empty-modal').modal('toggle');
-          });
-        }
-      }
-    }
-  }
-]).
-
-directive('header', ['header',
-  function(header) {
-    return {
-      restrict: 'E',
-      replace: false,
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr) {
-          header.init();
-        }
-      }
-    }
-  }
-]).
-
-
 
 directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'sequence',
   function($rootScope, $filter, wembliRpc, plan, sequence) {

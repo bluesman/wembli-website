@@ -5586,107 +5586,6 @@ h3 {
 .icon-check-empty {
   margin-right: 11px !important;
 }
-/* buttons */
-.btn-primary,
-.btn-primary:hover {
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #35689e;
-  background-image: -moz-linear-gradient(top, #4380b8, #214478);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4380b8), to(#214478));
-  background-image: -webkit-linear-gradient(top, #4380b8, #214478);
-  background-image: -o-linear-gradient(top, #4380b8, #214478);
-  background-image: linear-gradient(to bottom, #4380b8, #214478);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4380b8', endColorstr='#ff214478', GradientType=0);
-  border-color: #214478 #214478 #10223c;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #214478;
-  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-}
-.btn-primary:hover,
-.btn-primary:hover:hover,
-.btn-primary:focus,
-.btn-primary:hover:focus,
-.btn-primary:active,
-.btn-primary:hover:active,
-.btn-primary.active,
-.btn-primary:hover.active,
-.btn-primary.disabled,
-.btn-primary:hover.disabled,
-.btn-primary[disabled],
-.btn-primary:hover[disabled] {
-  color: #ffffff;
-  background-color: #214478;
-  *background-color: #1b3964;
-}
-.btn-primary:active,
-.btn-primary:hover:active,
-.btn-primary.active,
-.btn-primary:hover.active {
-  background-color: #162d50 \9;
-}
-.btn-secondary,
-.btn-orange,
-.btn-secondary:hover,
-.btn-orange:hover {
-  color: #000000;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #ebbc00;
-  background-image: -moz-linear-gradient(top, #ffcc00, #cca300);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffcc00), to(#cca300));
-  background-image: -webkit-linear-gradient(top, #ffcc00, #cca300);
-  background-image: -o-linear-gradient(top, #ffcc00, #cca300);
-  background-image: linear-gradient(to bottom, #ffcc00, #cca300);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffcc00', endColorstr='#ffcca300', GradientType=0);
-  border-color: #cca300 #cca300 #806600;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #cca300;
-  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-}
-.btn-secondary:hover,
-.btn-orange:hover,
-.btn-secondary:hover:hover,
-.btn-orange:hover:hover,
-.btn-secondary:focus,
-.btn-orange:focus,
-.btn-secondary:hover:focus,
-.btn-orange:hover:focus,
-.btn-secondary:active,
-.btn-orange:active,
-.btn-secondary:hover:active,
-.btn-orange:hover:active,
-.btn-secondary.active,
-.btn-orange.active,
-.btn-secondary:hover.active,
-.btn-orange:hover.active,
-.btn-secondary.disabled,
-.btn-orange.disabled,
-.btn-secondary:hover.disabled,
-.btn-orange:hover.disabled,
-.btn-secondary[disabled],
-.btn-orange[disabled],
-.btn-secondary:hover[disabled],
-.btn-orange:hover[disabled] {
-  color: #000000;
-  background-color: #cca300;
-  *background-color: #b38f00;
-}
-.btn-secondary:active,
-.btn-orange:active,
-.btn-secondary:hover:active,
-.btn-orange:hover:active,
-.btn-secondary.active,
-.btn-orange.active,
-.btn-secondary:hover.active,
-.btn-orange:hover.active {
-  background-color: #997a00 \9;
-}
 .btn-large {
   font-size: 16px;
 }
@@ -5783,62 +5682,6 @@ a:focus {
 }
 .alert-danger a:hover {
   color: #000 !important;
-}
-.module {
-  *zoom: 1;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
-  padding: 0px;
-  min-height: 20px;
-  margin-bottom: 20px;
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-.module:before,
-.module:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.module:after {
-  clear: both;
-}
-.module:before,
-.module:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.module:after {
-  clear: both;
-}
-.module blockquote {
-  border-color: #ddd;
-  border-color: rgba(0, 0, 0, 0.15);
-}
-.module .alert {
-  -webkit-border-radius: 0 0 0 0;
-  -moz-border-radius: 0 0 0 0;
-  border-radius: 0 0 0 0;
-}
-.module h3 {
-  -webkit-border-radius: 4px 4px 0 0;
-  -moz-border-radius: 4px 4px 0 0;
-  border-radius: 4px 4px 0 0;
-  background-color: #8cb2d5;
-  padding: 0px 19px;
-  border-bottom: thin solid #cccccc;
-}
-.module h3 i {
-  margin-top: 7px;
-}
-.module .oddRow {
-  background-color: #ffffff;
 }
 #no-event-background {
   background: transparent url('/images/invite-no-event-bg.jpg') no-repeat center center;
@@ -5941,6 +5784,229 @@ button .icon {
   border: none;
   background: transparent;
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+ul,
+ol,
+label {
+  margin: 0;
+  font-weight: normal;
+}
+a:hover {
+  text-decoration: none;
+}
+fieldset {
+  border: none;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+dl {
+  margin-bottom: 0;
+}
+dd {
+  margin-left: 0;
+}
+.hidden {
+  display: none;
+}
+.bold {
+  font-weight: bold;
+}
+.seo {
+  text-indent: -9999px;
+  overflow: hidden;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+.finePrint,
+.small {
+  font-size: .7em;
+}
+.normalSize {
+  font-size: 0.5em;
+}
+.error {
+  color: #ffcc00;
+}
+.tl {
+  text-align: left;
+}
+.tr {
+  text-align: right;
+}
+.tc {
+  text-align: center;
+}
+.tb {
+  text-align: block;
+}
+/* old bootstrap overrides */
+/* buttons */
+.btn-primary,
+.btn-primary:hover {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #35689e;
+  background-image: -moz-linear-gradient(top, #4380b8, #214478);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4380b8), to(#214478));
+  background-image: -webkit-linear-gradient(top, #4380b8, #214478);
+  background-image: -o-linear-gradient(top, #4380b8, #214478);
+  background-image: linear-gradient(to bottom, #4380b8, #214478);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4380b8', endColorstr='#ff214478', GradientType=0);
+  border-color: #214478 #214478 #10223c;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #214478;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-primary:hover,
+.btn-primary:hover:hover,
+.btn-primary:focus,
+.btn-primary:hover:focus,
+.btn-primary:active,
+.btn-primary:hover:active,
+.btn-primary.active,
+.btn-primary:hover.active,
+.btn-primary.disabled,
+.btn-primary:hover.disabled,
+.btn-primary[disabled],
+.btn-primary:hover[disabled] {
+  color: #ffffff;
+  background-color: #214478;
+  *background-color: #1b3964;
+}
+.btn-primary:active,
+.btn-primary:hover:active,
+.btn-primary.active,
+.btn-primary:hover.active {
+  background-color: #162d50 \9;
+}
+.btn-secondary,
+.btn-orange,
+.btn-secondary:hover,
+.btn-orange:hover {
+  color: #000000;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #ebbc00;
+  background-image: -moz-linear-gradient(top, #ffcc00, #cca300);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffcc00), to(#cca300));
+  background-image: -webkit-linear-gradient(top, #ffcc00, #cca300);
+  background-image: -o-linear-gradient(top, #ffcc00, #cca300);
+  background-image: linear-gradient(to bottom, #ffcc00, #cca300);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffcc00', endColorstr='#ffcca300', GradientType=0);
+  border-color: #cca300 #cca300 #806600;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #cca300;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-secondary:hover,
+.btn-orange:hover,
+.btn-secondary:hover:hover,
+.btn-orange:hover:hover,
+.btn-secondary:focus,
+.btn-orange:focus,
+.btn-secondary:hover:focus,
+.btn-orange:hover:focus,
+.btn-secondary:active,
+.btn-orange:active,
+.btn-secondary:hover:active,
+.btn-orange:hover:active,
+.btn-secondary.active,
+.btn-orange.active,
+.btn-secondary:hover.active,
+.btn-orange:hover.active,
+.btn-secondary.disabled,
+.btn-orange.disabled,
+.btn-secondary:hover.disabled,
+.btn-orange:hover.disabled,
+.btn-secondary[disabled],
+.btn-orange[disabled],
+.btn-secondary:hover[disabled],
+.btn-orange:hover[disabled] {
+  color: #000000;
+  background-color: #cca300;
+  *background-color: #b38f00;
+}
+.btn-secondary:active,
+.btn-orange:active,
+.btn-secondary:hover:active,
+.btn-orange:hover:active,
+.btn-secondary.active,
+.btn-orange.active,
+.btn-secondary:hover.active,
+.btn-orange:hover.active {
+  background-color: #997a00 \9;
+}
+.module {
+  *zoom: 1;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.05);
+  padding: 0px;
+  min-height: 20px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.module:before,
+.module:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.module:after {
+  clear: both;
+}
+.module:before,
+.module:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.module:after {
+  clear: both;
+}
+.module blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+.module .alert {
+  -webkit-border-radius: 0 0 0 0;
+  -moz-border-radius: 0 0 0 0;
+  border-radius: 0 0 0 0;
+}
+.module h3 {
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+  background-color: #8cb2d5;
+  padding: 0px 19px;
+  border-bottom: thin solid #cccccc;
+}
+.module h3 i {
+  margin-top: 7px;
+}
+.module .oddRow {
+  background-color: #ffffff;
+}
+/* end old bootstrap overrides */
 /*!
  *  Font Awesome 3.1.0
  *  the iconic font designed for Bootstrap
@@ -7245,70 +7311,6 @@ ul.icons-ul > li .icon-li {
 .calibri {
   font-family: Arial;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-p,
-ul,
-ol,
-label {
-  margin: 0;
-  font-weight: normal;
-}
-a:hover {
-  text-decoration: none;
-}
-fieldset {
-  border: none;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-dl {
-  margin-bottom: 0;
-}
-dd {
-  margin-left: 0;
-}
-.hidden {
-  display: none;
-}
-.bold {
-  font-weight: bold;
-}
-.seo {
-  text-indent: -9999px;
-  overflow: hidden;
-}
-.lowercase {
-  text-transform: lowercase;
-}
-.finePrint,
-.small {
-  font-size: .7em;
-}
-.normalSize {
-  font-size: 0.5em;
-}
-.error {
-  color: #ffcc00;
-}
-.tl {
-  text-align: left;
-}
-.tr {
-  text-align: right;
-}
-.tc {
-  text-align: center;
-}
-.tb {
-  text-align: block;
-}
 html {
   overflow-x: hidden;
   height: 100%;
@@ -7318,6 +7320,23 @@ body {
   overflow-x: hidden;
   font-family: Arial;
   font-size: 14px;
+}
+#overlay.overlay {
+  display: block;
+  content: "";
+  position: fixed;
+  /* could also be absolute */
+
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1031;
+  /* one more than the header */
+
+  background-color: #000000;
+  opacity: 0.75;
+  filter: alpha(opacity=75);
 }
 * {
   outline: none !important;

@@ -5,7 +5,7 @@ html.trigger-partial(ng-app="wembliApp",xmlns:ng="http://angularjs.org",id="ng-a
     include includes/head
   body(ng-controller="MainCtrl")
     include includes/facebook-sdk
-    #empty-modal.modal.hide
+    #overlay
     include includes/header
     include includes/modals
     - if (typeof fixedHeight !== "undefined")

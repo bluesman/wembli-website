@@ -20,6 +20,10 @@ module.exports = function(app) {
 
 			};
 
+			/* request_id is not the same as transaction token - maybe get transaction token from referrer
+			* /callback/tn/checkout?request_id=13907914&request_datetime=11/10/2013%2010:44:28%20PM&request_tickets=2&request_promo=ERROR&event_id=2042642&event_name=Clemson%20Tigers%20vs.%20Georgia%20Tech%20Yellow%20Jackets&event_datetime=11/14/2013%207:30:00%20PM&venue_id=844&venue_name=Clemson%20Memorial%20Stadium&ticket_retail=23.00&ticket_wholesale=23.00&ticket_face=0.00&sale_tickets=46.00&sale_shipping=15.00&sale_discount=0&sale_total=67.90&customer_id=28323863&customer_name=Kayla%20Burdine&customer_email=Lindseyburdine@gmail.com&customer_phone=8593537448%20[Daytime]&customer_altphone= HTTP/1.1" 200 53 "https://tickettransaction2.com/Receipt.aspx?brokerid=5006&sitenumber=0&tgid=1404113353&evtid=2042642&price=23&treq=2&req.sessionId=t8hJm" "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_3 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B511 Safari/9537.53" "75.139.74.31"
+			*/
+
 			/* find the ticket record in the ticket collection and add the transaction data to the payment part and mark the ticket purchased */
 			var query = {
 				'service':'tn',

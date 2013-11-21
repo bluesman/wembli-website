@@ -15,7 +15,7 @@ var access_logfile = fs.createWriteStream('./logs/access.log', {
 app = module.exports = express();
 
 /* static helper functions */
-app.locals = require('./static-helpers.js');
+app.locals = require('./helpers/static.js');
 
 /* app.settings */
 app.set('host', 'www');

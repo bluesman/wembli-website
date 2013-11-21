@@ -10,6 +10,21 @@ body {
 	font-size:14px;
 }
 
+
+#overlay.overlay {
+	display: block;
+	content: "";
+  position: fixed; /* could also be absolute */
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1031; /* one more than the header */
+  background-color: @black;
+  .opacity(75);
+}
+
+
 * {outline:none !important;}
 
 .block {display:block;}

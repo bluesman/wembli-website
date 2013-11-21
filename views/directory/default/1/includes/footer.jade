@@ -1,0 +1,36 @@
+footer#footer
+	.container
+		.row
+			.col-md-4
+				if (rootGeoEvents)
+					.root-geo-events
+						h3 Find Tickets By Country
+						ul.clearfix
+							each c in rootGeoEvents
+								li.pull-left
+									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+			.col-md-4
+				if (rootGeoVenues)
+					.root-geo-venues
+						h3 Find Tickets By Venue
+						ul.clearfix
+							each c in rootGeoVenues
+								li.pull-left
+									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+			.col-md-4
+				if (rootCategories)
+					.root-categories
+						h3 Find Tickets By Category
+						ul
+							//- hard coding the root categories (there's onlu 4)
+								each c in rootCategories
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+							li
+								a(href="http://#{app.settings.host}.wembli.com/sports") Sports Tickets
+							li
+								a(href="http://#{app.settings.host}.wembli.com/concerts") Concert Tickets
+							li
+								a(href="http://#{app.settings.host}.wembli.com/theater") Theater Tickets
+							li
+								a(href="http://#{app.settings.host}.wembli.com/other") Other Categoires

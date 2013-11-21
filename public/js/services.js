@@ -459,33 +459,6 @@ factory('hotels', ['wembliRpc', 'googlePlaces',
 	}
 ]).
 
-factory('header', [
-	function() {
-		self.prevScroll = angular.element('#content').scrollTop();
-		return {
-			init: function() {
-				angular.element('#header').show();
-				angular.element('#content').on('scroll', function() {
-					/* are we scrolling up or down? */
-					if (angular.element('#content').scrollTop() > prevScroll) {
-						if (angular.element('#header').is(':visible')) {
-							angular.element('#header').fadeOut(250);
-						}
-					} else {
-						if (!angular.element('#header').is(':visible')) {
-							angular.element('#header').fadeIn(250);
-						}
-					}
-					prevScroll = angular.element('#content').scrollTop();
-				});
-			},
-			fixed: function() {
-				angular.element('#content').off('scroll');
-			}
-		}
-	}
-]).
-
 factory('cart', ['plan',
 	function(plan) {
 		var self = this;

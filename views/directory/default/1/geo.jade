@@ -1,0 +1,43 @@
+extends layout
+block content
+	- var mainHeading = {"events":'Event Tickets by Region',"venues":'Venues by Region'}[type];
+	.container
+		.row
+			h1.col-xs-12= mainHeading
+		.row.breadcrumbs
+			if (typeof breadcrumbs !== "undefined")
+				ul.col-md-12
+					- var l = breadcrumbs.length - 1
+					each crum, idx in breadcrumbs
+						li.pull-left
+							a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") &nbsp;#{crum[0]}&nbsp;
+							if (idx < l)
+								i.fa.fa-chevron-right
+		.row
+			.sidebar.col-md-4
+
+				if (typeof subGeoEvents !== "undefined" && subGeoEvents !== null)
+					.category
+						h2 Sub Geo Events
+						ul
+							each c in subGeoEvents
+								li
+									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+
+				if (typeof subGeoVenues !== "undefined" && subGeoVenues !== null)
+					.category
+						h2 Sub Geo Venues
+						ul
+							each c in subGeoVenues
+								li
+									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+
+			.main.col-md-8
+				if (top)
+					.top
+						h2 Top #{type.charAt(0).toUpperCase() + type.slice(1)}
+						ul
+							each t in top
+								li
+									a(href="http://#{app.settings.host}.wembli.com#{t[1]}") #{t[0]}
+

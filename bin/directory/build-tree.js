@@ -93,19 +93,28 @@ function handleRow(row, next) {
 	 * organize countries, cities, states, sub_category, top_venues, top_events, top_performers, alpha_venues, alpha_events, alpha_performers
 	 */
 
+	/* HACK: replace THEATRE with THEATER */
+	if (row["pcat"] === "THEATRE") {
+		row["pcat"] = "THEATER";
+	}
+
 	/* if row ticketsyn == 'N' then next */
 	if (row['ticketsyn'] === 'N') {
 		next();
 	}
 
 	var slugs = {};
+
+	/* TODO: event name isn't unique */
 	var keys = ['event', 'performer', 'venue', 'pcat', 'ccat', 'gcat', 'country', 'state', 'city'];
 	async.forEachSeries(keys, function(k, cb) {
 		slugs[k] = makeSlug(row[k]);
 		cb();
 	}, function(err) {
 		/* make urls */
-
+		row.slugs = slugs;
+		row.type = 'events';
+		row.id = row.eventid;
 		/*
 		 * - detail: /key/slug => row
 		 *
@@ -119,45 +128,86 @@ function handleRow(row, next) {
 		 * - ccat: /pcat/ccat
 		 * - gcat: /pcat/ccat/gcat
 		 */
-
-		if (slugs['venue']) {
-			var venueDetail = '/venue/' + slugs['venue'];
-			store(venueDetail, row['VenueID']);
-		}
-
-		if (slugs['performer']) {
-			var performerDetail = '/' + slugs['performer'];
-			store(performerDetail, row['PerformerID']);
-		}
-
-		if (slugs['event']) {
-			var eventDetail = '/event/' + slugs['event'];
-			store(eventDetail, row);
-		}
-
 		/* tony says don't do performers by geo */
 		(function() {
+			var lookup = {
+				'venues': 'venue',
+				'events': 'event'
+			};
+			var lookupId = {
+				'venues': 'venueid',
+				'events': 'eventid'
+			};
 			['venues', 'events'].forEach(function(type) {
 				var url = '/' + type;
-				urls[type][url] = true;
-				['country', 'state', 'city'].forEach(function(sub) {
+				var saveUrl = [];
+				var obj = {
+					type: type,
+					id: row[lookupId[type]]
+				};
+
+
+				urls[type][url] = {type:type};
+				urls[type][url + '/' + slugs[lookup[type]]] = type === 'events' ? row : obj;
+				var geos = ['country', 'state', 'city'];
+				geos.forEach(function(sub) {
 					if (slugs[sub]) {
 						url += '/' + slugs[sub];
-						urls[type][url] = true;
+						saveUrl.push(url);
+
+						var obj = {
+							"type": type,
+							"breadcrumbs": []
+						};
+
+						for (var i = 0; i < geos.length; i++) {
+							var g = geos[i];
+							obj.breadcrumbs.push(
+								[row[g], saveUrl[i]]
+							);
+
+							if (g == sub) {
+								break;
+							}
+						};
+						urls[type][url] = obj;
 					}
 				})
 			});
 		})();
 
+		/* make all performer urls - which include performer detail and performers by category */
 		(function() {
 			var url = '';
-			['pcat', 'ccat', 'gcat'].forEach(function(cat) {
+			var saveUrl = [];
+
+			urls['performers']['/' + slugs['performer']] = {type:"performers",id:row.performerid};
+			var cats = ['pcat', 'ccat', 'gcat']
+
+			cats.forEach(function(cat) {
 				if (slugs[cat]) {
 					if (slugs[cat] == '-') {
 						return;
 					}
 					url += '/' + slugs[cat];
-					urls['performers'][url] = true;
+					saveUrl.push(url);
+
+					var obj = {
+						"type":"performers",
+						"breadcrumbs": []
+					};
+
+
+					for (var i = 0; i < cats.length; i++) {
+						var c = cats[i];
+						obj.breadcrumbs.push(
+							[row[c], saveUrl[i]]
+						);
+						if (c == cat) {
+							break;
+						}
+					};
+					urls['performers'][url] = obj;
 				}
 			});
 		})();
@@ -166,49 +216,79 @@ function handleRow(row, next) {
 		var score = parseInt(row['numorders']) + parseInt(row['numticketssold']);
 
 		/* lists of venues, performers, events by score, with meta data: country, state, city, pcat, ccat, gcat */
-		topVenue[slugs['venue']] = topVenue[slugs['venue']] || {"score": 0};
+		topVenue[slugs['venue']] = topVenue[slugs['venue']] || {
+			"score": 0,
+			"name":row["venue"]
+		};
+
 		topVenue[slugs['venue']].score += score;
-		['country','state','city'].forEach(function(geo) {
+		['country', 'state', 'city'].forEach(function(geo) {
 			topVenue[slugs['venue']][geo] = slugs[geo];
 		});
 
-		topEvent[slugs['event']] = topEvent[slugs['event']] || {"score": 0};
+		topEvent[slugs['event']] = topEvent[slugs['event']] || {
+			"score": 0,
+			"name": row['event']
+		};
+
 		topEvent[slugs['event']].score += score;
-		['country','state','city'].forEach(function(geo) {
+		['country', 'state', 'city'].forEach(function(geo) {
 			topEvent[slugs['event']][geo] = slugs[geo];
 		});
 
-
 		/* performers */
-		topPerformer[slugs['performer']] = topPerformer[slugs['performer']] || {"score": 0};
+		topPerformer[slugs['performer']] = topPerformer[slugs['performer']] || {
+			"score": 0,
+			"name": row['performer']
+		};
 		topPerformer[slugs['performer']].score += score;
-		['country','state','city','pcat','ccat','gcat'].forEach(function(el) {
+		['pcat', 'ccat', 'gcat'].forEach(function(el) {
 			if (slugs[el]) {
-				topPerformer[slugs['performer']][slugs[el]] = topPerformer[slugs['performer']][slugs[el]] ? topPerformer[slugs['performer']][slugs[el]] + 1 : 1;
+				topPerformer[slugs['performer']][el] = topPerformer[slugs['performer']][el] || {};
+
+				topPerformer[slugs['performer']][el][slugs[el]] = topPerformer[slugs['performer']][el][slugs[el]] ? topPerformer[slugs['performer']][el][slugs[el]] + 1 : 1;
 			}
 		});
 
 		/* category lists */
-		var catKey = 'category:';
-		var prevCat = '';
-		['pcat','ccat','gcat'].forEach(function(cat) {
-			catKey += '/' + prevCat;
+		var url = '';
+		var catKey = 'category:/' + url;
+		var prevCat = '/';
+		['pcat', 'ccat', 'gcat'].forEach(function(cat) {
+			if (!slugs[cat]) {
+				return;
+			}
 			category[catKey] = category[catKey] || {};
-			category[catKey][slugs[cat]] = true;
-			prevCat = cat;
+			category[catKey][slugs[cat]] = [row[cat], url + '/' + slugs[cat]];
+
+			prevCat = slugs[cat];
+			url += '/' + prevCat;
+			if (!/\/$/.test(catKey)) {
+			catKey += '/' + prevCat;
+
+
+			} else {
+			catKey += prevCat;
+
+			}
+
 		});
 
 		/* geo lists */
-		var geoKey = 'geo:';
-		['events','venues'].forEach(function(type) {
-			var prevGeo = type;
-			['country','state','city'].forEach(function(g) {
-				geoKey += '/' + prevGeo;
+		['events', 'venues'].forEach(function(type) {
+			var url = '/' + type;
+			var geoKey = 'geo:' + url;
+			var prevGeo = '/';
+			['country', 'state', 'city'].forEach(function(g) {
 				geo[geoKey] = geo[geoKey] || {};
-				geo[geoKey][slugs[g]] = true;
-				prevGeo = g;
-			});
 
+				geo[geoKey][slugs[g]] = [row[g], url + '/' + slugs[g]];
+
+				prevGeo = slugs[g];
+				geoKey += '/' + prevGeo;
+				url += '/' + prevGeo;
+
+			});
 		});
 
 		next();
@@ -216,7 +296,12 @@ function handleRow(row, next) {
 };
 
 function store(key, val) {
-	console.log(key);
+	var k = 'directory:' + key;
+	console.log(k);
+	var str = JSON.stringify(val);
+	client.set(k, str, redis.print);
+	//client.get(key, redis.print);
+
 }
 
 function makeSlug(str) {
@@ -287,16 +372,7 @@ function parseCsv(stream) {
 					 * topVenue
 					 * topEvent
 					 * topPerformer
-					*/
-
-					/* sort the tops */
-					var v = Object.keys(topVenue).sort(function(a, b) {
-						return -(topVenue[a].score - topVenue[b].score)
-					});
-					v.slice(0, 100).forEach(function(k) {
-						//console.log(k + ' => ');
-						//console.log(topVenue[k]);
-					});
+					 */
 
 					/* supplemental redis data
 					 * top
@@ -305,179 +381,90 @@ function parseCsv(stream) {
 					 */
 
 					/* figure out top_events */
-					//organizeByCountry('top:', '/events', topEvent);
+					organizeByCountry('top:', '/events', topEvent);
+					organizeByCountry('top:', '/venues', topVenue);
 
 					/* tony didn't say to organizer performers by country */
-					//organizeByCountry('top_performers', '/', topPerformer)
-					//organizeByCountry('top:', '/venues', topVenue);
+					//organizeByCountry('top:', '/', topPerformer);
 
-					//organizeByCategory('top:', '/', topPerformer);
+					organizeByCategory('top:', '', topPerformer);
 
 					function organizeByCategory(namespace, root, list) {
+						var topCat = {};
 
-						var eAllSorted = Object.keys(list).sort(function(a, b) {
-							return -(list[a].score - list[b].score)
+						/* each performer */
+						Object.keys(list).forEach(function(slug) {
+							var el = list[slug];
+							var key = namespace + root;
+							['pcat', 'ccat', 'gcat'].forEach(function(c) {
+								if (el[c]) {
+									/* this performer may have many categories */
+									Object.keys(el[c]).forEach(function(cat) {
+										key += '/' + cat;
+										topCat[key] = topCat[key] || {};
+										if (slug) {
+											topCat[key][slug] = list[slug];
+										}
+									});
+								}
+							});
 						});
 
-						/* find top events by pcat */
-						var ePcat = {};
-						Object.keys(country).forEach(function(c) {
-							eAllSorted.forEach(function(el) {
-								if (list[el].country == c) {
-									if (!eCountry[c]) {
-										eCountry[c] = {};
-									}
-									eCountry[c][el] = list[el];
-								}
+						/* now topgeo should have a list of events by country */
+						//console.log(topCat);
+						/* sort each list and take the top 100 only */
+						Object.keys(topCat).forEach(function(url) {
+							var sorted = Object.keys(topCat[url]).sort(function(a, b) {
+								return -(topCat[url][a].score - topCat[url][b].score)
 							});
-							var k = namespace + root + '/' + c;
 
-							/* top 100 events by country */
-							var eCountrySorted = Object.keys(eCountry[c]).sort(function(a, b) {
-								return -(eCountry[c][a].score - eCountry[c][a].score)
+							var save = [];
+							var top;
+							sorted.slice(0,100).forEach(function(top) {
+								save.push([topCat[url][top].name,'/'+top]);
 							});
-							store(k, eCountrySorted.slice(0, 100));
-
-							/* find top events by state */
-							var eState = {};
-							Object.keys(state).forEach(function(s) {
-
-								eAllSorted.forEach(function(el) {
-									if (list[el].state == s) {
-										if (!eState[s]) {
-											eState[s] = {};
-										}
-										eState[s][el] = list[el];
-									}
-								});
-
-								if (eState[s]) {
-									var k = key + '/' + c + '/' + s;
-									/* top 100 events by state */
-									var eStateSorted = Object.keys(eState[s]).sort(function(a, b) {
-										return -(eState[s][a].score - eState[s][a].score)
-									});
-									store(k, eStateSorted.slice(0, 100));
-
-
-									/* find top events by city */
-									var eCity = {};
-									Object.keys(city).forEach(function(ci) {
-										eAllSorted.forEach(function(el) {
-											if (list[el].city == ci) {
-												if (!eCity[ci]) {
-													eCity[ci] = {};
-												}
-												eCity[ci][el] = list[el];
-											}
-										});
-										if (eCity[ci]) {
-
-											var k = key + '/' + c + '/' + s + '/' + ci;
-											/* top 100 events by city */
-											var eCitySorted = Object.keys(eCity[ci]).sort(function(a, b) {
-												return -(eCity[ci][a].score - eCity[ci][a].score)
-											});
-											store(k, eCitySorted.slice(0, 100));
-										}
-									});
-								}
-							});
+							store(url, save);
 						});
 					}
 
 					function organizeByCountry(namespace, root, list) {
+						var topGeo = {};
+						/* for each event */
+						/* TODO: handle multiple events with the same name */
 
-						/* list sorted by score descending */
-						var eAllSorted = Object.keys(list).sort(function(a, b) {
-							return -(list[a].score - list[b].score)
+						/* each country, each event */
+						Object.keys(list).forEach(function(slug) {
+							var el = list[slug];
+							var key = namespace + root;
+							['country', 'state', 'city'].forEach(function(g) {
+								if (el[g]) {
+									key += '/' + el[g];
+									topGeo[key] = topGeo[key] || {};
+									topGeo[key][slug] = el;
+								}
+							});
 						});
 
-						/* find top events by country */
-						var eCountry = {};
+						/* now topgeo should have a list of events by country */
 
-						Object.keys(country).forEach(function(c) {
-
-							/* for each event */
-							eAllSorted.forEach(function(el) {
-
-								if (list[el].country == c) {
-
-									if (!eCountry[c]) {
-										eCountry[c] = {};
-									}
-									eCountry[c][el] = list[el];
-								}
-
+						/* sort each list and take the top 100 only */
+						Object.keys(topGeo).forEach(function(url) {
+							var sorted = Object.keys(topGeo[url]).sort(function(a, b) {
+								return -(topGeo[url][a].score - topGeo[url][b].score)
 							});
-
-							/* top_events:/events/united-states-of-america */
-							var k = namespace + root + '/' + c;
-
-							/* top 100 events by country */
-							var eCountrySorted = Object.keys(eCountry[c]).sort(function(a, b) {
-								return -(eCountry[c][a].score - eCountry[c][a].score)
+							var save = [];
+							sorted.slice(0,100).forEach(function(top) {
+								save.push([topGeo[url][top].name, root + '/' + top]);
 							});
-
-							store(k, eCountrySorted.slice(0, 100));
-
-							/* find top events by state */
-							var eState = {};
-							/* loop through all states */
-							Object.keys(state).forEach(function(s) {
-
-								/* loop through all events */
-								eAllSorted.forEach(function(el) {
-									/* if the state for this event is this state */
-									if (list[el].state == s) {
-
-										if (!eState[s]) {
-											eState[s] = {};
-										}
-										/* put this element into the states hash */
-										eState[s][el] = list[el];
-									}
-								});
-
-								if (eState[s]) {
-									var k = namespace + root + '/' + c + '/' + s;
-									/* top 100 events by state */
-									var eStateSorted = Object.keys(eState[s]).sort(function(a, b) {
-										return -(eState[s][a].score - eState[s][a].score)
-									});
-									store(k, eStateSorted.slice(0, 100));
-
-
-									/* find top events by city */
-									var eCity = {};
-									Object.keys(city).forEach(function(ci) {
-										eAllSorted.forEach(function(el) {
-											if (list[el].city == ci) {
-												if (!eCity[ci]) {
-													eCity[ci] = {};
-												}
-												eCity[ci][el] = list[el];
-											}
-										});
-										if (eCity[ci]) {
-
-											var k = namespace + root + '/' + c + '/' + s + '/' + ci;
-											/* top 100 events by city */
-											var eCitySorted = Object.keys(eCity[ci]).sort(function(a, b) {
-												return -(eCity[ci][a].score - eCity[ci][a].score)
-											});
-											store(k, eCitySorted.slice(0, 100));
-										}
-									});
-								}
-							});
+							store(url, save);
 						});
 					}
 
+					//console.log(urls);
 					/* loop through and store the urls */
 					Object.keys(urls).forEach(function(type) {
 						Object.keys(urls[type]).forEach(function(url) {
-							store(url,true);
+							store(url, urls[type][url]);
 						});
 					});
 
@@ -489,7 +476,12 @@ function parseCsv(stream) {
 								if (a > b) return 1;
 								return 0;
 							});
-							store(key, sorted);
+
+							var list = [];
+							sorted.forEach(function(g) {
+								list.push(geo[key][g]);
+							});
+							store(key, list);
 						}
 					});
 
@@ -501,7 +493,12 @@ function parseCsv(stream) {
 								if (a > b) return 1;
 								return 0;
 							});
-							store(key, sorted);
+
+							var list = [];
+							sorted.forEach(function(k) {
+								list.push(category[key][k]);
+							});
+							store(key, list);
 						}
 					});
 

@@ -15,42 +15,13 @@
 @import url('/css/plugins/jquery.multiselect.filter.css');
 @import url('/css/plugins/jquery.slidepanel.css');
 
-@import "bootstrap/bootstrap.less";
+@import "../plugins/bootstrap-2.3.1/less/bootstrap.less";
 /* @import "bootstrap/responsive.less"; */
 @import "wembli-variables.less"; // Modify this for custom colors, font-sizes, etc
 @import "wembli-mixins.less"; // Modify this for custom colors, font-sizes, etc
+@import "wembli-style.less";
 
-form { margin-bottom:0px; }
-
-.container { width: 1000px; margin-top:0px;}
-
-h1 {
-  font-family:"SegoePrint";
-  color:@blueDark;
-  margin:6px;
-  font-size:36px;
-}
-
-h2 {
-  /* font-family: "architects_daughterregular"; */
-  font-family:"SegoePrint";
-  color:@blueDark;
-  font-size:16px;
-}
-
-h3 {
-  font-size:14px;
-}
-
-#empty-modal {
-  width:0 !important;
-  height:0 !important;
-}
-
-.icon-check-empty {
-  margin-right:11px !important;
-}
-
+/* old bootstrap overrides */
 /* buttons */
 .btn-primary, .btn-primary:hover {
   .buttonBackground(@blue,@blueDarker, @white);
@@ -60,96 +31,6 @@ h3 {
 .btn-secondary, .btn-orange, .btn-secondary:hover, .btn-orange:hover {
   .buttonBackground(@orange, @orangeDarker, @black);
 }
-
-.btn-large {
-  font-size:16px;
-}
-
-.modal {
-  top:40%;
-}
-
-a, a:hover, a:focus {
-  text-decoration: none;
-}
-
-
-#page-loading-modal {
-  //background: url('/images/loading-med.gif') no-repeat center center @grayLight;
-  width:400px;
-  margin:-250px 0 0 -200px;
-  .modal-body {
-    p {
-      font-style:italic;
-    }
-  }
-  .progress {
-    margin-bottom:0;
-  }
-}
-
-.pika-single {
-  position:inherit;
-  * {position:inherit;}
-}
-
-.is-selected .pika-button {
-  background:none repeat scroll 0 0 @yellow;
-  box-shadow: 0 1px 3px @yellow inset;
-}
-
-.pika-button:hover {
-  background:none repeat scroll 0 0 @blue !important;
-};
-
-.clearfix {
-  .clearfix()
-}
-
-.white {color:@white;}
-.black {colort:@black;}
-.green {color:#64C832;}
-.red { color:red !important; }
-.orange {color:@orange;}
-.yellow {color:@yellow;}
-.blue {color:@blueDark;}
-.arrow {
-  border:none;
-  background: transparent url('/images/transparent-arrow.png') no-repeat center center;
-  width:112px;
-  height:84px;
-  color:@orange;
-  text-transform:uppercase;
-  text-align:left;
-
-  .arrow-text {
-    padding:0px 0 0 15px;
-  }
-
-}
-
-.arrow:hover {
-  color:@white;
-  background-image:url('/images/orange-arrow.png');
-}
-
-.dollar-sign {
-  font-size:20px;
-  font-weight:bold;
-}
-
-.alert-danger {
-  background-color: #FF0000;
-  color:@white !important;
-  a {
-    color:#060F80 !important;
-  }
-  a:hover {
-    color:#000 !important;
-  }
-}
-
-
 
 .module {
   .clearfix();
@@ -192,115 +73,9 @@ a, a:hover, a:focus {
   }
 
 }
-
-#no-event-background {
-  background: transparent url('/images/invite-no-event-bg.jpg') no-repeat center center;
-  margin:100px auto 0;
-  width:940px;
-  height:376px;
-  position:relative;
-
-  #no-event-container {
-    position:relative;
-    top:35px;
-    left:-15px;
-    margin:0 auto;
-    width:500px;
-    h3 {
-      text-align:left;
-    }
-
-    .log-in {
-      .clearfix();
-      padding:20px;
-      height:40px;
-      line-height:20px;
-      vertical-align:middle;
-
-      .copy {
-        width:110px;
-      }
-
-      .login-button {
-        width:200px;
-        margin-top:2px;
-      }
-
-      .signup {
-        width:110px;
-        text-align:center;
-
-        a {padding:0;}
-      }
-    }
-
-  }
-  #no-event-container a, #no-event-container > .architect {
-    padding:10px;
-  }
-
-  #no-event-arrow-text {
-    color: @white;
-    left: 90px;
-    position: absolute;
-    text-transform: uppercase;
-    top: 68px;
-    transform: rotate(6deg);
-  }
-}
-
-.map-container, #map-container {
-  /* twitter bootstrap screws up google map */
-  img { max-width : none }
-}
-
-a {
-  color:@blue;
-}
-
-a:hover {
-  color:@yellowDark;
-}
-
-a, button {
-  .icon {
-    width:20px;
-  }
-}
-
-
-.alert {
-  color:@grayDark;
-
-
-  .text.one-line {
-    line-height:38px;
-    vertical-align: middle;
-  }
-
-}
-
-.alert-warning {
-  background-color:@yellow,
-}
-
-.carousel {
-  .carousel-inner {
-    .item {
-      img {
-
-      }
-    }
-  }
-  .carousel-control {
-    border:none;
-    background: transparent;
-  }
-}
-
+/* end old bootstrap overrides */
 @import "/font-awesome/font-awesome.less";
-@import "fonts.less";
-@import "type.less";
+@import "wembli-fonts.less";
 @import "layout.less";
 @import "header.less";
 

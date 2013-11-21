@@ -1,0 +1,39 @@
+html {
+}
+
+body {
+}
+
+#overlay.overlay {
+	display: block;
+	content: "";
+  position: fixed; /* could also be absolute */
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1031; /* one more than the header */
+  background-color: @black;
+  .opacity(.75);
+}
+
+* {outline:none !important;}
+
+.block {display:block;}
+.clearfix:after {content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+
+.container {
+	width:1024px;
+	margin:auto;
+	position:relative;
+}
+
+#content {
+	padding-top:60px;
+}
+
+h1 {
+	padding:0;
+	margin:0;
+	font-family: Arial;
+}

@@ -2,6 +2,9 @@ var eventRpc = require('../rpc/event').event;
 var wembliUtils = require('../lib/wembli/utils');
 var async = require('async');
 var redis = require("redis");
+var eventRpc = require('../rpc/event').event;
+var venueRpc = require('../rpc/venue').venue;
+var performerRpc = require('../rpc/performer').performer;
 
 module.exports = function(app) {
 	/* this is another redis connection (there's already one in landing-pages.js maybe I should share */
@@ -103,13 +106,13 @@ module.exports = function(app) {
 	*/
 
 
-		/* check for alpha trail
+	/* check for alpha trail
 			- this url could be: venues in usa/ca/aa-ar
 			- or it could be: venues in usa/ca/san-diego
 			* check for city match first then check for alpha match
 		*/
 
-		/* this will always be a list view page which can have:
+	/* this will always be a list view page which can have:
 			- top venues in this category
 			- alpha list
 			- venues near you
@@ -117,7 +120,7 @@ module.exports = function(app) {
 			- top performers sports|concert|theater at venues in these dirs
 		*/
 
-		/* add-ons
+	/* add-ons
 			- top deals near venue
 			- best parking near venue
 			- hotels near venue
@@ -141,8 +144,10 @@ module.exports = function(app) {
 		req.syslog.notice('catchall: ' + req.params[0]);
 
 		/* check slug in redis */
-		var key = prefix + req.params[0];
-		client.hgetall(key, function(err, obj) {
+		var key = prefix + req.url;
+		req.syslog.notice(key);
+
+		client.get(key, function(err, obj) {
 			if (err || !obj) {
 				return notInRedis();
 			}
@@ -162,12 +167,142 @@ module.exports = function(app) {
 		};
 
 		function handlePage(obj) {
-			/* fetch the data */
 
-			/* make the template from the layout style and layout id */
-			var template = 'directory/' + obj['layout-style'] + '/' + obj['layout-id'] + '/' + obj['type'];
-			res.render(template, locals);
-		};
+			/* fetch the data */
+			console.log(obj);
+			/* directory level pages will have no obj */
+			obj = (obj === "true") ? "{}" : obj;
+			obj = JSON.parse(obj);
+
+			if (!obj.type) {
+				obj.type = 'performers';
+			}
+
+			/* set up some defaults */
+			if (!obj.layout) {
+				obj.layout = {
+					"style": "default",
+					"id": 1,
+					"type": "category"
+				};
+			}
+
+			/* pick the right content template */
+			obj.layout.type = (obj.type === 'performers') ? 'category' : 'geo';
+
+			var locals = obj;
+
+			/* TODO: handle title & meta */
+			locals.meta = {
+				title: "title",
+				description: "description",
+			};
+
+			var fetchKeys = {};
+			/* list of countries */
+			fetchKeys.rootGeoEvents = 'directory:geo:/events';
+			/* list of countries */
+			fetchKeys.rootGeoVenues = 'directory:geo:/venues';
+			/* this of parent categories */
+			fetchKeys.rootCategories = 'directory:category:/';
+			/* top 100 performers, events or venues depending on url (could be by geo or category) */
+			fetchKeys.top = 'directory:top:' + req.url;
+			/* complete list of performers, events, venues by alpha */
+			fetchKeys.alpha = 'directory:alpha:' + req.url;
+
+			/* list of sub categories for this current category */
+			if (obj.layout.type === 'category') {
+				var categories = req.url.split('/');
+				fetchKeys.childCategories = 'directory:category:/' + categories[1];
+				if (categories[2]) {
+					fetchKeys.grandChildCategories = 'directory:category:/' + categories[1] + '/' + categories[2];
+				}
+			}
+
+			/* if we're looking at a venues directory, get the list of sub geo for the current geo for both venues and events */
+			if (/\/venues/.test(req.url)) {
+				fetchKeys.subGeoVenues = 'directory:geo:' + req.url;
+				fetchKeys.subGeoEvents = 'directory:geo:' + req.url.replace('venues', 'events');
+			}
+
+			/* if we're looking at events directory, get the list of sub geo for the current geo for both venues and events */
+			if (/\/events/.test(req.url)) {
+				fetchKeys.subGeoEvents = 'directory:geo:' + req.url;
+				fetchKeys.subGeoVenues = 'directory:geo:' + req.url.replace('events', 'venues');
+			}
+
+			var getData = [];
+			getData.push(
+				/* fetch the redis directory nav data */
+
+				function(pCb) {
+					async.forEach(Object.keys(fetchKeys),
+						function(key, cb) {
+							console.log('getting data set: ' + fetchKeys[key]);
+							client.get(fetchKeys[key], function(err, result) {
+								var data = JSON.parse(result);
+								locals[key] = data;
+								cb();
+							});
+						},
+
+						function(err) {
+							pCb(null);
+						}
+					);
+				}
+			);
+
+			if (obj.id) {
+				getData.push(
+					/* fetch the detail page data */
+
+					function(pCb) {
+						console.log('fetch ' + obj.type + ' ' + obj.id);
+
+						var fetchDetail = {
+
+							'events': function(cb) {
+								eventRpc['get'].apply(function(err, results) {
+									console.log(err);
+									console.log(results);
+									cb();
+								}, [{"eventID":obj.id}, req, res]);
+
+							},
+
+							'venues': function(cb) {
+								eventRpc['get'].apply(function(err, results) {
+									console.log(results);
+									cb();
+								}, [{"venueID":obj.id}, req, res]);
+							},
+
+							'performers': function(cb) {
+								eventRpc['get'].apply(function(err, results) {
+									console.log(err);
+									console.log(results);
+									cb();
+								}, [{"performerID":obj.id}, req, res]);
+
+							}
+
+						}
+						fetchDetail[obj.type](pCb);
+					}
+				);
+			}
+
+			/* get data sets - can this be done as a pipeline? */
+			async.parallel(getData, function(err, results) {
+				console.log(obj);
+				/* make the template from the layout style and layout id */
+				var template = 'directory/' + obj.layout.style + '/' + obj.layout.id + '/' + obj.layout.type;
+				console.log("render template: " + template);
+				console.log(locals);
+				res.render(template, locals);
+			});
+		}
 
 		function notInRedis() {
 
