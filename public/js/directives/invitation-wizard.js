@@ -322,22 +322,23 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                 /* fire the facebook signup pixels */
                 pixel.fire({
                   type: 'signup',
-                  campaign: 'Conversion Pixel For Music Feed Ad',
+                  campaign: 'Signup Conversion Pixel Facebook Ad',
                   source: 'facebook',
                   medium: 'cpc',
                   term: '',
-                  content: '6012472260371',
+                  content: '6013588786171',
                 });
 
+                /*
                 pixel.fire({
-                  type: 'signup',
-                  campaign: 'Conversion Pixel For Sports Feed Ad',
+                  type: 'purchase',
+                  campaign: 'Purchase Conversion Pixel Facebook Ad',
                   source: 'facebook',
                   medium: 'cpc',
                   term: '',
-                  content: '6012473272971',
+                  content: '6013588780171',
                 });
-
+                */
 
                 return $scope.gotoStep('step2');
 

@@ -1163,23 +1163,15 @@ controller('SignupCtrl', ['$scope', '$http', 'wembliRpc', 'pixel', 'googleAnalyt
 				content: '1070734106',
 			});
 
-			pixel.fire({
-				type: 'signup',
-				campaign: 'Conversion Pixel For Music Feed Ad',
-				source: 'facebook',
-				medium: 'cpc',
-				term: '',
-				content: '6012472260371',
-			});
+      pixel.fire({
+        type: 'signup',
+        campaign: 'Signup Conversion Pixel Facebook Ad',
+        source: 'facebook',
+        medium: 'cpc',
+        term: '',
+        content: '6013588786171',
+      });
 
-			pixel.fire({
-				type: 'signup',
-				campaign: 'Conversion Pixel For Sports Feed Ad',
-				source: 'facebook',
-				medium: 'cpc',
-				term: '',
-				content: '6012473272971',
-			});
 		}
 	}
 ]).
@@ -1336,37 +1328,28 @@ controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'custo
 						}
 
 
-			/* fire the signup pixels */
-			var gCookie = googleAnalytics.getCookie();
+						/* fire the signup pixels */
+						var gCookie = googleAnalytics.getCookie();
 
-			pixel.fire({
-				type: 'signup',
-				campaign: gCookie.__utmz.utmccn,
-				source: 'google',
-				medium: gCookie.__utmz.utmcmd,
-				term: gCookie.__utmz.utmctr,
-				content: '1070734106',
-			});
+						pixel.fire({
+							type: 'signup',
+							campaign: gCookie.__utmz.utmccn,
+							source: 'google',
+							medium: gCookie.__utmz.utmcmd,
+							term: gCookie.__utmz.utmctr,
+							content: '1070734106',
+						});
 
 
 						/* fire the facebook signup pixels */
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Music Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012472260371',
-						});
-
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Sports Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012473272971',
-						});
+			      pixel.fire({
+			        type: 'signup',
+			        campaign: 'Signup Conversion Pixel Facebook Ad',
+			        source: 'facebook',
+			        medium: 'cpc',
+			        term: '',
+			        content: '6013588786171',
+			      });
 
 					},
 					/* transformRequest */
@@ -1485,37 +1468,27 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 						$scope.formError = false;
 						$scope.accountExists = false;
 
-			/* fire the signup pixels */
-			var gCookie = googleAnalytics.getCookie();
+						/* fire the signup pixels */
+						var gCookie = googleAnalytics.getCookie();
 
-			pixel.fire({
-				type: 'signup',
-				campaign: gCookie.__utmz.utmccn,
-				source: 'google',
-				medium: gCookie.__utmz.utmcmd,
-				term: gCookie.__utmz.utmctr,
-				content: '1070734106',
-			});
-
+						pixel.fire({
+							type: 'signup',
+							campaign: gCookie.__utmz.utmccn,
+							source: 'google',
+							medium: gCookie.__utmz.utmcmd,
+							term: gCookie.__utmz.utmctr,
+							content: '1070734106',
+						});
 
 						/* fire the facebook signup pixels */
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Music Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012472260371',
-						});
-
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Sports Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012473272971',
-						});
+			      pixel.fire({
+			        type: 'signup',
+			        campaign: 'Signup Conversion Pixel Facebook Ad',
+			        source: 'facebook',
+			        medium: 'cpc',
+			        term: '',
+			        content: '6013588786171',
+			      });
 
 					},
 					/* transformRequest */
@@ -1614,37 +1587,27 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 						$scope.formError = false;
 						$scope.accountExists = false;
 
-			/* fire the signup pixels */
-			var gCookie = googleAnalytics.getCookie();
+						/* fire the signup pixels */
+						var gCookie = googleAnalytics.getCookie();
 
-			pixel.fire({
-				type: 'signup',
-				campaign: gCookie.__utmz.utmccn,
-				source: 'google',
-				medium: gCookie.__utmz.utmcmd,
-				term: gCookie.__utmz.utmctr,
-				content: '1070734106',
-			});
-
+						pixel.fire({
+							type: 'signup',
+							campaign: gCookie.__utmz.utmccn,
+							source: 'google',
+							medium: gCookie.__utmz.utmcmd,
+							term: gCookie.__utmz.utmctr,
+							content: '1070734106',
+						});
 
 						/* fire the facebook signup pixels */
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Music Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012472260371',
-						});
-
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Sports Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012473272971',
-						});
+			      pixel.fire({
+			        type: 'signup',
+			        campaign: 'Signup Conversion Pixel Facebook Ad',
+			        source: 'facebook',
+			        medium: 'cpc',
+			        term: '',
+			        content: '6013588786171',
+			      });
 
 					},
 					/* transformRequest */
@@ -1748,37 +1711,27 @@ controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan',
 						$scope.formError = false;
 						$scope.accountExists = false;
 
-			/* fire the signup pixels */
-			var gCookie = googleAnalytics.getCookie();
+						/* fire the signup pixels */
+						var gCookie = googleAnalytics.getCookie();
 
-			pixel.fire({
-				type: 'signup',
-				campaign: gCookie.__utmz.utmccn,
-				source: 'google',
-				medium: gCookie.__utmz.utmcmd,
-				term: gCookie.__utmz.utmctr,
-				content: '1070734106',
-			});
-
+						pixel.fire({
+							type: 'signup',
+							campaign: gCookie.__utmz.utmccn,
+							source: 'google',
+							medium: gCookie.__utmz.utmcmd,
+							term: gCookie.__utmz.utmctr,
+							content: '1070734106',
+						});
 
 						/* fire the facebook signup pixels */
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Music Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012472260371',
-						});
-
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Sports Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012473272971',
-						});
+			      pixel.fire({
+			        type: 'signup',
+			        campaign: 'Signup Conversion Pixel Facebook Ad',
+			        source: 'facebook',
+			        medium: 'cpc',
+			        term: '',
+			        content: '6013588786171',
+			      });
 
 					},
 					/* transformRequest */
@@ -1872,37 +1825,28 @@ controller('HotelsLoginCtrl' ['$rootScope', '$scope', '$location', 'plan', 'cust
 						$scope.formError = false;
 						$scope.accountExists = false;
 
-			/* fire the signup pixels */
-			var gCookie = googleAnalytics.getCookie();
+						/* fire the signup pixels */
+						var gCookie = googleAnalytics.getCookie();
 
-			pixel.fire({
-				type: 'signup',
-				campaign: gCookie.__utmz.utmccn,
-				source: 'google',
-				medium: gCookie.__utmz.utmcmd,
-				term: gCookie.__utmz.utmctr,
-				content: '1070734106',
-			});
-
+						pixel.fire({
+							type: 'signup',
+							campaign: gCookie.__utmz.utmccn,
+							source: 'google',
+							medium: gCookie.__utmz.utmcmd,
+							term: gCookie.__utmz.utmctr,
+							content: '1070734106',
+						});
 
 						/* fire the facebook signup pixels */
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Music Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012472260371',
-						});
+			      pixel.fire({
+			        type: 'signup',
+			        campaign: 'Signup Conversion Pixel Facebook Ad',
+			        source: 'facebook',
+			        medium: 'cpc',
+			        term: '',
+			        content: '6013588786171',
+			      });
 
-						pixel.fire({
-							type: 'signup',
-							campaign: 'Conversion Pixel For Sports Feed Ad',
-							source: 'facebook',
-							medium: 'cpc',
-							term: '',
-							content: '6012473272971',
-						});
 
 					},
 					/* transformRequest */
