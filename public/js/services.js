@@ -1733,15 +1733,14 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 							method: 'feed',
 							display: 'iframe',
 							link: actionLink,
-							picture: 'http://www.wembli.com/images/layout/wembli-button-222x200.png',
-							name: 'Click Here To Check Out The Details & RSVP',
+							picture: 'http://www.wembli.com/images/layout/wembli-button-222x198.png',
+							name: 'Click Here To RSVP To '+args.eventName,
 							to: args.to,
 							properties: {
-								'RSVP Before': args.rsvpDate,
 								'Event': args.eventName + ' @ ' + args.venue
 							},
 							actions: {
-								name: 'RSVP',
+								name: 'Click To RSVP Before '+args.rsvpDate,
 								link: actionLink
 							},
 							ref: 'rsvp'
