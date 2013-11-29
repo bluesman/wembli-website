@@ -6,7 +6,7 @@ exports.venue = {
 	get: function(args, req, res) {
 		var me = this;
 		args.cnt = (args.cnt) ? args.cnt : 15;
-
+		console.log(args);
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.GetVenue(args, function(err, results) {
 			if (err) {

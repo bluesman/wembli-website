@@ -263,6 +263,8 @@ module.exports = function(app) {
 						var fetchDetail = {
 
 							'events': function(cb) {
+								obj.layout.type = 'event';
+
 								eventRpc['get'].apply(function(err, results) {
 									console.log(err);
 									console.log(results);
@@ -272,13 +274,35 @@ module.exports = function(app) {
 							},
 
 							'venues': function(cb) {
-								eventRpc['get'].apply(function(err, results) {
+								obj.layout.type = 'venue';
+								console.log('venue id: '+ obj.id);
+								venueRpc['get'].apply(function(err, results) {
+									console.log('GET VENUE DETAILS');
+									console.log(err);
 									console.log(results);
-									cb();
-								}, [{"venueID":obj.id}, req, res]);
+
+									/* just take the first venue */
+									obj.venue = results.venue[0];
+
+									/* get venue configurations */
+									venueRpc['getConfigurations'].apply(function(e2, configs) {
+										console.log('get configs: ');
+										console.log(configs);
+										obj.venue.configurations = configs.venue;
+										eventRpc['get'].apply(function(e3,events) {
+											console.log('EVENTS');
+											console.log(events);
+											obj.venue.events = events.event;
+											cb();
+
+										}, [{"venueID":parseInt(obj.id)}, req, res]);
+									}, [{"VenueID":parseInt(obj.id)}, req, res]);
+								}, [{"VenueID":parseInt(obj.id)}, req, res]);
 							},
 
 							'performers': function(cb) {
+								obj.layout.type = 'performer';
+
 								eventRpc['get'].apply(function(err, results) {
 									console.log(err);
 									console.log(results);

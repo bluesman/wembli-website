@@ -2,41 +2,45 @@ extends layout
 block content
 	- var mainHeading = {"CONCERTS":'Concert Tickets',"SPORTS":'Sports Tickets',"THEATER":'Theater Tickets',"OTHER":'Other Tickets'}[breadcrumbs[0][0]];
 	.container
-		.row
-			h1.col-xs-12= mainHeading
+		.row.heading
+			.col-md-12
+				h1= mainHeading
+
 		.row.breadcrumbs
 			if (typeof breadcrumbs !== "undefined")
-				ul.col-md-12
-					- var l = breadcrumbs.length - 1
+				ol.breadcrumb
+					- var l = breadcrumbs.length - 1;
 					each crum, idx in breadcrumbs
-						li.pull-left
-							a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") &nbsp;#{crum[0]}&nbsp;
-							if (idx < l)
-								i.fa.fa-chevron-right
+						if (l == idx)
+							li.active	#{crum[0]}
+						else
+							li
+								a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") #{crum[0]}
 		.row
 			.sidebar.col-md-4
 				- var sidebarHeading = {"CONCERTS":'Music Genres',"SPORTS":'Sports',"THEATER":'Theater Genres',"OTHER":'Other Categories'}[breadcrumbs[0][0]];
-				if (childCategories)
+				if (rootCategories)
 					.category
 						h2= sidebarHeading
 						ul
-							each cat in childCategories
-								li
-									.row
-										a(href="http://#{app.settings.host}.wembli.com#{cat[1]}") #{cat[0]}
-									if (breadcrumbs[1] && cat[0] === breadcrumbs[1][0] && typeof grandChildCategories !== "undefined" && grandChildCategories !== null)
-										.row
-											ul
-												each cat2 in grandChildCategories
-													li
-														.row
-															a(href="http://#{app.settings.host}.wembli.com#{cat2[1]}") #{cat2[0]}
 							//- each parent cat except breadcrums[0][0]
 							each cat in rootCategories
-								if (cat[0] !== breadcrumbs[0][0])
-									li
-										.row
-											a(href="http://#{app.settings.host}.wembli.com#{cat[1]}") #{cat[0]}
+								li
+									a(href="http://#{app.settings.host}.wembli.com#{cat[1]}") #{cat[0]}
+									if (breadcrumbs[0] && cat[0] === breadcrumbs[0][0] && typeof childCategories !== "undefined" && childCategories !== null)
+										ul
+											each cat in childCategories
+													if (breadcrumbs[1] && cat[0] === breadcrumbs[1][0] && typeof grandChildCategories !== "undefined" && grandChildCategories !== null)
+														li
+															span #{cat[0]}
+															ul
+																each cat2 in grandChildCategories
+																	li
+																		a(href="http://#{app.settings.host}.wembli.com#{cat2[1]}") #{cat2[0]}
+													else
+														li
+															a(href="http://#{app.settings.host}.wembli.com#{cat[1]}") #{cat[0]}
+
 
 				if (typeof subGeoEvents !== "undefined" && subGeoEvents !== null)
 					.category
@@ -58,8 +62,9 @@ block content
 				if (top)
 					.top
 						h2 Top #{type.charAt(0).toUpperCase() + type.slice(1)}
+						//- make 3 lists
 						ul
 							each t in top
-								li
+								li.col-md-4
 									a(href="http://#{app.settings.host}.wembli.com#{t[1]}") #{t[0]}
 

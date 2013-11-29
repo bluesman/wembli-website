@@ -1,0 +1,15 @@
+.event-list
+	each e,idx in venue.events
+		- var itemscope = 'http://schema.org/Event'
+		- console.log(e);
+		case e.ParentCategoryID
+			when '1'
+				- itemscope = 'http://schema.org/SportsEvent'
+			when '2'
+				- itemscope = 'http://schema.org/MusicEvent'
+			when '3'
+				- itemscope = 'http://schema.org/TheaterEvent'
+			default
+				- itemscope = 'http://schema.org/Event'
+		.event-list-item(itemscope="#{itemscope}")
+			h2.name(itemprop="name")= e.Name

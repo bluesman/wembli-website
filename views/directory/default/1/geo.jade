@@ -2,31 +2,34 @@ extends layout
 block content
 	- var mainHeading = {"events":'Event Tickets by Region',"venues":'Venues by Region'}[type];
 	.container
-		.row
-			h1.col-xs-12= mainHeading
+		.row.heading
+			.col-md-12
+				h1= mainHeading
+
 		.row.breadcrumbs
 			if (typeof breadcrumbs !== "undefined")
-				ul.col-md-12
-					- var l = breadcrumbs.length - 1
+				ol.breadcrumb
+					- var l = breadcrumbs.length - 1;
 					each crum, idx in breadcrumbs
-						li.pull-left
-							a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") &nbsp;#{crum[0]}&nbsp;
-							if (idx < l)
-								i.fa.fa-chevron-right
+						if (l == idx)
+							li.active	#{crum[0]}
+						else
+							li
+								a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") #{crum[0]}
 		.row
 			.sidebar.col-md-4
-
-				if (typeof subGeoEvents !== "undefined" && subGeoEvents !== null)
+				- var sidebarHeading = breadcrumbs[1] ? 'Cities' : 'States';
+				if (type == 'events' && typeof subGeoEvents !== "undefined" && subGeoEvents !== null)
 					.category
-						h2 Sub Geo Events
+						h2= sidebarHeading
 						ul
 							each c in subGeoEvents
 								li
 									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
 
-				if (typeof subGeoVenues !== "undefined" && subGeoVenues !== null)
+				if (type == 'venues' && typeof subGeoVenues !== "undefined" && subGeoVenues !== null)
 					.category
-						h2 Sub Geo Venues
+						h2= sidebarHeading
 						ul
 							each c in subGeoVenues
 								li
@@ -38,6 +41,6 @@ block content
 						h2 Top #{type.charAt(0).toUpperCase() + type.slice(1)}
 						ul
 							each t in top
-								li
+								li.col-md-4
 									a(href="http://#{app.settings.host}.wembli.com#{t[1]}") #{t[0]}
 

@@ -11,6 +11,43 @@
 @import "layout.less";
 @import "header.less";
 
+h1 {
+	padding: 20px 0;
+}
+h2 {
+	font-family:"Arial";
+	font-size:20px;
+	padding:10px 0
+}
 
+.main, .sidebar {
+	padding:10px 0;
+}
+
+.sidebar {
+
+	li {
+		padding:4px;
+	}
+
+	ul {
+
+		ul {
+			margin-left:20px;
+
+			ul {
+				margin-left:20px;
+			}
+		}
+	}
+}
+
+.main {
+	.top {
+		li {
+			padding:4px 0;
+		}
+	}
+}
 
 @import "footer.less";
