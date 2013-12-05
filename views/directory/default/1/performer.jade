@@ -1,0 +1,9 @@
+extends layout
+block content
+	if (pcat === 'SPORTS')
+		- var itemtype = "http://schema.org/SportsTeam"
+	else
+		- var itemtype = "http://schema.org/PerformingGroup"
+	.container.event-venue(itemscope, itemtype="#{itemtype}")
+		h1.name(itemprop="name")= name
+

@@ -9,6 +9,7 @@ exports.venue = {
 		console.log(args);
 		//ticketNetwork.GetEvents({beginDate:date,nearZip:zip,orderByClause:'Date'},function(err,results) {
 		ticketNetwork.GetVenue(args, function(err, results) {
+
 			if (err) {
 				return me(err);
 			}

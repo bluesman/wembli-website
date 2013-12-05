@@ -1,0 +1,46 @@
+extends layout
+block content
+	.container.event(itemscope, itemtype="http://schema.org/Event")
+		h1.name(itemprop="name") #{event}
+		.when
+			span When:&nbsp;
+			span.hide(itemprop="startDate") #{date}
+			span #{displayDate}
+		.row
+			.col-md-6.where
+				h2(itemprop="location", itemscope, itemtype="http://schema.org/EventVenue")
+					span Where:&nbsp;
+					a(itemprop="url", href="//#{app.settings.host}.wembli.com/venues/#{slugs.venue}") #{venue}
+				if (venuestreetaddress && venuestreetaddress !== "")
+					address.venue-address
+						span.address-street #{venuestreetaddress}
+						br
+						a.address-locality(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.state}/#{slugs.city}")= city + ', '
+						a.address-region(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.state}")= state+', '
+						a.address-country(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}")= country+ ' '
+						span.address-postal-code= zip
+			.col-md-6.who
+				if (pcat === 'SPORTS')
+					- var itemtype = "http://schema.org/SportsTeam"
+				else
+					- var itemtype = "http://schema.org/PerformingGroup"
+				h2(itemprop="performer")
+					span Who:&nbsp;
+					a(itemprop="url", itemscope, itemtype="#{itemtype}", href="//#{app.settings.host}.wembli.com/#{slugs.performer}") #{performer}
+		.row.categories.breadcrumbs
+			ol.breadcrumb
+				if (slugs.pcat && slugs.pcat !== '')
+					li
+						a(href="http://#{app.settings.host}.wembli.com#{slugs.pcat}") #{pcat}
+				if (slugs.ccat && slugs.ccat !== '')
+					li
+						a(href="http://#{app.settings.host}.wembli.com#{slugs.ccat}") #{ccat}
+				if (slugs.gccat && slugs.gccat !== '')
+					li
+						a(href="http://#{app.settings.host}.wembli.com#{slugs.gccat}") #{gccat}
+		.row
+			.panel.col.md-6.cta
+				a.btn.btn-primary.btn-lg Check Out The Tickets!
+				- var min = parseFloat(minprice).toFixed(0)
+				- var max = parseFloat(maxprice).toFixed(0)
+				.range Tickets Priced From $#{min} to $#{max}

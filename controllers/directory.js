@@ -268,6 +268,8 @@ module.exports = function(app) {
 								eventRpc['get'].apply(function(err, results) {
 									console.log(err);
 									console.log(results);
+									obj.date = results.event[0].Date;
+									obj.displayDate = results.event[0].DisplayDate;
 									cb();
 								}, [{"eventID":obj.id}, req, res]);
 
@@ -301,11 +303,13 @@ module.exports = function(app) {
 							},
 
 							'performers': function(cb) {
+
 								obj.layout.type = 'performer';
 
 								eventRpc['get'].apply(function(err, results) {
 									console.log(err);
 									console.log(results);
+									obj.events = results.event;
 									cb();
 								}, [{"performerID":obj.id}, req, res]);
 

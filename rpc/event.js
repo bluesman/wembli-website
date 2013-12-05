@@ -118,6 +118,28 @@ exports.event = {
 			});
 		});
 	},
+
+
+
+	getEventPerformers: function(args, req, res) {
+		var me = this;
+
+		//get the ticket pricing info for this event
+		ticketNetwork.GetEventPerformers({
+			eventID: args.eventID
+		}, function(err, results) {
+			if (err) {
+				return me(err);
+			}
+			var ret = {
+				success: 1,
+				eventPerformers: results
+			};
+			return me(null, ret);
+		});
+	},
+
+
 	getPricingInfo: function(args, req, res) {
 		var me = this;
 
