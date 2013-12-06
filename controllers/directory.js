@@ -202,8 +202,8 @@ module.exports = function(app) {
 
 			/* TODO: handle title & meta */
 			locals.meta = {
-				title: "title",
-				description: "description",
+				title: "Tickets",
+				description: "Get the best prices on tickets, parking, restaurants and hotels then split the cost with friends so you don't get stuck with the bill.",
 			};
 
 			var fetchKeys = {};
@@ -278,6 +278,11 @@ module.exports = function(app) {
 									console.log(results);
 									obj.date = results.event[0].Date;
 									obj.displayDate = results.event[0].DisplayDate;
+
+									/* set the meta tags */
+									locals.meta.title = 'Friends Split The Cost Of '+ obj.event +' Tickets';
+									locals.meta.description = 'Get tickets for the upcoming ' + obj.performer + ' event: "' + obj.event + '" on Wembli.  Then, find parking, restaurants and hotels near '+obj.venue+'. Split the cost of everything with friends so you don\'t get stuck with the bill.';
+
 									cb();
 								}, [{"eventID":obj.id}, req, res]);
 
@@ -294,6 +299,12 @@ module.exports = function(app) {
 									/* just take the first venue */
 									obj.venue = results.venue[0];
 
+						  		obj.slugs = {};
+						  		obj.slugs.country = wembliUtils.slugify(obj.venue.Country);
+						  		obj.slugs.state = wembliUtils.slugify(obj.venue.StateProvince);
+						  		obj.slugs.city = wembliUtils.slugify(obj.venue.City);
+
+
 									/* get venue configurations */
 									venueRpc['getConfigurations'].apply(function(e2, configs) {
 										console.log('get configs: ');
@@ -304,6 +315,10 @@ module.exports = function(app) {
 											console.log('EVENTS');
 											console.log(events);
 											obj.venue.events = events.event;
+
+											locals.meta.title = 'Cheap Tickets For Events at '+obj.venue.name;
+											locals.meta.description = 'Get tickets for upcoming events at: "' + obj.venue.name + '" on Wembli.  Then, find parking, restaurants and hotels and split the cost of everything with friends so you don\'t get stuck with the bill.';
+
 											cb();
 
 										}, [{"venueID":parseInt(obj.id)}, req, res]);
@@ -327,10 +342,21 @@ module.exports = function(app) {
 						  			obj.layout.type = 'team';
 						  		}
 
+						  		obj.slugs = {};
+						  		obj.slugs.pcat = wembliUtils.slugify(obj.performer.ParentCategory);
+						  		obj.slugs.ccat = wembliUtils.slugify(obj.performer.ChildCategory);
+						  		obj.slugs.gcat = wembliUtils.slugify(obj.performer.GrandChildCategory);
+
+
 									eventRpc['get'].apply(function(err, results) {
 										console.log(err);
 										console.log(results);
 										obj.performer.events = results.event;
+
+										locals.meta.title = 'Friends Split The Cost Of '+ obj.performer.PerformerName +' Tickets';
+										locals.meta.description = 'Get tickets for upcoming ' + obj.performer + ' events on Wembli.  Then, find parking, restaurants and hotels near the venue. Split the cost of everything with friends so you don\'t get stuck with the bill.';
+
+
 										cb();
 
 									}, [{"performerID":obj.id}, req, res]);

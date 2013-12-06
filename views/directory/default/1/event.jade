@@ -27,8 +27,8 @@ block content
 				h2(itemprop="performer")
 					span Who:&nbsp;
 					a(itemprop="url", itemscope, itemtype="#{itemtype}", href="//#{app.settings.host}.wembli.com/#{slugs.performer}") #{performer}
-		.row.categories.breadcrumbs
-			ol.breadcrumb
+		.row.categories.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
+			ol.breadcrumb(itemprop="breadcrumb")
 				if (slugs.pcat && slugs.pcat !== '')
 					li
 						a(href="http://#{app.settings.host}.wembli.com#{slugs.pcat}") #{pcat}
@@ -43,4 +43,4 @@ block content
 				a.btn.btn-primary.btn-lg Check Out The Tickets!
 				- var min = parseFloat(minprice).toFixed(0)
 				- var max = parseFloat(maxprice).toFixed(0)
-				.range Tickets Priced From $#{min} to $#{max}
+				.range Tickets priced from $#{min} to $#{max}.

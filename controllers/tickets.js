@@ -146,7 +146,7 @@ module.exports = function(app) {
 
 				});
 			}, [{
-					VenueID: venueId
+					venueID: venueId
 				},
 				req, res
 			]);

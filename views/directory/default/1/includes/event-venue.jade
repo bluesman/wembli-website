@@ -1,6 +1,18 @@
 //- venue data and event data
 .container.event-venue(itemscope, itemtype="http://schema.org/EventVenue")
 	h1.name(itemprop="name")= venue.Name
+	.row.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
+		ol.breadcrumb(itemprop="breadcrumb")
+			if (venue.Country && venue.Country !== '')
+				li
+					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}") #{venue.Country}
+			if (venue.StateProvince && venue.StateProvince !== '')
+				li
+					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}/#{slugs.state}") #{venue.StateProvince}
+			if (venue.City && venue.City !== '')
+				li
+					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}/#{slugs.state}/#{slugs.city}") #{venue.City}
+
 	if (venue.Street1 && venue.Street1 !== '')
 		address.venue-address(itemprop="address", itemscope, itemtype="http://schema.org/PostalAddress")
 			span.address-street(itemprop="streetAddress")= venue.Street1

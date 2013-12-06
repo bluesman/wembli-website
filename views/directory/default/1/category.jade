@@ -6,9 +6,9 @@ block content
 			.col-md-12
 				h1= mainHeading
 
-		.row.breadcrumbs
+		.row.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
 			if (typeof breadcrumbs !== "undefined")
-				ol.breadcrumb
+				ol.breadcrumb(itemprop="breadcrumb")
 					- var l = breadcrumbs.length - 1;
 					each crum, idx in breadcrumbs
 						if (l == idx)

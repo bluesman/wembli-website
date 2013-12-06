@@ -1,6 +1,7 @@
 var eventRpc = require('../rpc/event').event;
 var wembliUtils = require('../lib/wembli/utils');
 var async = require('async');
+var redis = require("redis");
 
 module.exports = function(app) {
 
@@ -16,36 +17,37 @@ module.exports = function(app) {
 		}
 
 		var view = {};
+
+		var client = redis.createClient(app.settings.redisport || 6379, app.settings.redishost || 'localhost', {});
+
+
 		/* get concerts, sport and theater events in parallel */
 		async.parallel([
 			/* get 10 concerts nearby (categoryId: 2) */
 			function(cb) {
-				var args = defaults;
-				args.parentCategoryID = 2;
-				eventRpc['get'].apply(function(err, results) {
-					view.concerts = ((typeof results !== "undefined") && (typeof results.event !== "undefined")) ? results.event : [];
+				client.get('directory:top:/concerts', function(err, results) {
+					console.log('top concerts performers');
+					view.concerts = JSON.parse(results).slice(0,10);
 					cb();
-				}, [args, req, res]);
+				});
 			},
 
 			/* get 10 sports nearby (categoryId: 1) */
 			function(cb) {
-				var args = defaults;
-				args.parentCategoryID = 1;
-				eventRpc['get'].apply(function(err, results) {
-					view.sports = ((typeof results !== "undefined") && (typeof results.event !== "undefined")) ? results.event : [];
+				client.get('directory:top:/sports', function(err, results) {
+					console.log('top sports performers');
+					view.sports = JSON.parse(results).slice(0,10);
 					cb();
-				}, [args, req, res]);
+				});
 			},
 
 			/* get 10 theater nearby (categoryId: 3) */
 			function(cb) {
-				var args = defaults;
-				args.parentCategoryID = 3;
-				eventRpc['get'].apply(function(err, results) {
-					view.theater = ((typeof results !== "undefined") && (typeof results.event !== "undefined")) ? results.event : [];
+				client.get('directory:top:/theater', function(err, results) {
+					console.log('top sports performers');
+					view.theater = JSON.parse(results).slice(0,10);
 					cb();
-				}, [args, req, res]);
+				});
 			},
 
 		], function(err, results) {
