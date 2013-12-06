@@ -50,6 +50,8 @@ exports.event = {
 			var beginIdx = 0;
 			if (args.lastEventId) {
 				for (var i = results.Event.length - 1; i >= 0; i--) {
+					//hack: sub out slashes from event name
+					results.Event[i].Name = results.Event[i].Name.replace(/\//g,'');
 					if (results.Event[i].ID == args.lastEventId) {
 						beginIdx = i + 1;
 					}
@@ -63,7 +65,10 @@ exports.event = {
 				var events = [results.Event];
 			}
 
-
+			events.forEach(function(el) {
+				//hack: sub out slashes from event name
+				el.Name = el.Name.replace(/\//g,'');
+			});
 
 			return me(null, {
 				success: 1,
@@ -112,6 +117,13 @@ exports.event = {
 				//there's only 1 and its not an array
 				var events = [results.Event];
 			}
+
+			events.forEach(function(el) {
+				//hack: sub out slashes from event name
+				el.Name = el.Name.replace(/\//g,'');
+			});
+
+
 			return me(null, {
 				success: 1,
 				event: events

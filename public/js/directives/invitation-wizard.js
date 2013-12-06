@@ -229,8 +229,8 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
   }
 ]).
 
-directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn', 'pixel',
-  function(wembliRpc, $window, customer, plan, loggedIn, pixel) {
+directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn', 'pixel', 'googleAnalytics',
+  function(wembliRpc, $window, customer, plan, loggedIn, pixel, googleAnalytics) {
     return {
       restrict: 'E',
       controller: ['$scope', '$element', '$attrs', '$transclude',
@@ -307,25 +307,38 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                 $scope.showForm('showSignupView', 'showSignupForm');
                 console.log('submit signup succes - fire pixel');
 
+                /* fire the signup pixels */
+                var gCookie = googleAnalytics.getCookie();
+
+                pixel.fire({
+                  type: 'signup',
+                  campaign: gCookie.__utmz.utmccn,
+                  source: 'google',
+                  medium: gCookie.__utmz.utmcmd,
+                  term: gCookie.__utmz.utmctr,
+                  content: '1070734106',
+                });
+
                 /* fire the facebook signup pixels */
                 pixel.fire({
                   type: 'signup',
-                  campaign: 'Conversion Pixel For Music Feed Ad',
+                  campaign: 'Signup Conversion Pixel Facebook Ad',
                   source: 'facebook',
                   medium: 'cpc',
                   term: '',
-                  content: '6012472260371',
+                  content: '6013588786171',
                 });
 
+                /*
                 pixel.fire({
-                  type: 'signup',
-                  campaign: 'Conversion Pixel For Sports Feed Ad',
+                  type: 'purchase',
+                  campaign: 'Purchase Conversion Pixel Facebook Ad',
                   source: 'facebook',
                   medium: 'cpc',
                   term: '',
-                  content: '6012473272971',
+                  content: '6013588780171',
                 });
-
+                */
 
                 return $scope.gotoStep('step2');
 
