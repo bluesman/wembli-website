@@ -1,9 +1,17 @@
 extends layout
 block content
-	if (pcat === 'SPORTS')
-		- var itemtype = "http://schema.org/SportsTeam"
-	else
-		- var itemtype = "http://schema.org/PerformingGroup"
-	.container.event-venue(itemscope, itemtype="#{itemtype}")
-		h1.name(itemprop="name")= name
-
+	- console.log(performer.PeformerName)
+	.container.event-venue(itemscope, itemtype="http://schema.org/PerformingGroup")
+		h1.name(itemprop="name") #{performer.PerformerName}
+		.row.categories.breadcrumbs
+			ol.breadcrumb
+				if (performer.ParentCategory && performer.ParentCategory !== '-')
+					li
+						a(href="http://#{app.settings.host}.wembli.com#{performer.ParentCategory}") #{performer.ParentCategory}
+				if (performer.ChildCategory && performer.ChildCategory !== '-')
+					li
+						a(href="http://#{app.settings.host}.wembli.com#{performer.ChildCategory}") #{performer.ChildCategory}
+				if (performer.GrandChildCategory && performer.GrandChildCategory !== '-')
+					li
+						a(href="http://#{app.settings.host}.wembli.com#{performer.GrandChildCategory}") #{performer.GrandChildCategory}
+		include includes/performer-event-list

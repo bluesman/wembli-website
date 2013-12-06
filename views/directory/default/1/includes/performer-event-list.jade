@@ -1,0 +1,21 @@
+.event-list
+	each e,idx in performer.events
+		- var itemtype = 'http://schema.org/Event'
+		- var next = encodeURI('/tickets/'+e.ID+'/'+e.Name);
+		- console.log(e);
+		case e.ParentCategoryID
+			when '1'
+				- itemtype = 'http://schema.org/SportsEvent'
+			when '2'
+				- itemtype = 'http://schema.org/MusicEvent'
+			when '3'
+				- itemtype = 'http://schema.org/TheaterEvent'
+			default
+				- itemtype = 'http://schema.org/Event'
+		.event-list-item.clearfix(itemprop="event", itemscope, itemtype="#{itemtype}")
+			h2.name(itemprop="name")= e.Name
+			//- would be cool to make breadcrumbs with the catergories. I'd need to be able to translate category id into category name
+			.info.pull-left
+				.date.hide(itemprop="startDate")= e.Date
+				.display-date()= e.DisplayDate
+			a.btn.btn-primary.pull-right(href="/start-plan/split-after?next=#{next}") See Tickets

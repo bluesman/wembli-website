@@ -2,6 +2,14 @@ var eventRpc = require('../rpc/event').event;
 var wembliUtils = require('../lib/wembli/utils');
 var async = require('async');
 var redis = require("redis");
+var ESClient = require('elasticsearchclient');
+var es = new ESClient({
+        hosts:[{
+            host: 'es01.wembli.com',
+            port: 9200
+        }]
+});
+
 var eventRpc = require('../rpc/event').event;
 var venueRpc = require('../rpc/venue').venue;
 var performerRpc = require('../rpc/performer').performer;
@@ -291,6 +299,7 @@ module.exports = function(app) {
 										console.log('get configs: ');
 										console.log(configs);
 										obj.venue.configurations = configs.venue;
+
 										eventRpc['get'].apply(function(e3,events) {
 											console.log('EVENTS');
 											console.log(events);
@@ -306,12 +315,28 @@ module.exports = function(app) {
 
 								obj.layout.type = 'performer';
 
-								eventRpc['get'].apply(function(err, results) {
-									console.log(err);
-									console.log(results);
-									obj.events = results.event;
-									cb();
-								}, [{"performerID":obj.id}, req, res]);
+								es.search('ticket_network', 'performers', {"query":{"term":{"PerformerID":obj.id}}}, function(err, data) {
+						  		obj.performer = JSON.parse(data).hits.hits[0]._source;
+
+									/* tn misspelled their performer name header */
+						  		if (obj.performer.PeformerName) {
+						  			obj.performer.PerformerName = obj.performer.PeformerName;
+						  		}
+
+						  		if (obj.performer.ParentCategory === 'SPORTS') {
+						  			obj.layout.type = 'team';
+						  		}
+
+									eventRpc['get'].apply(function(err, results) {
+										console.log(err);
+										console.log(results);
+										obj.performer.events = results.event;
+										cb();
+
+									}, [{"performerID":obj.id}, req, res]);
+
+
+								});
 
 							}
 
