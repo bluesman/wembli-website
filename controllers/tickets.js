@@ -44,12 +44,12 @@ module.exports = function(app) {
 			}
 
 			/* TODO: convert this to call planRpc.startPlan() */
-
+			console.log('VENUEID: '+venueId);
 			/* get the venue data for this event - why do this if i already did? */
 			venueRpc['get'].apply(function(err, venueResults) {
 				res.setHeader('x-wembli-overflow', 'hidden');
 				res.setHeader('x-wembli-location', '/tickets/' + req.param("eventId") + '/' + req.param("eventName"));
-
+				console.log(err);
 				var address = venueResults.venue[0].Street1 + ', ' + venueResults.venue[0].City + ', ' + venueResults.venue[0].StateProvince + ' ' + venueResults.venue[0].ZipCode;
 				gg.geocode(address, function(err, geocode) {
 
@@ -146,7 +146,7 @@ module.exports = function(app) {
 
 				});
 			}, [{
-					venueID: venueId
+					VenueID: venueId
 				},
 				req, res
 			]);

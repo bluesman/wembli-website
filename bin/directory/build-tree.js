@@ -24,6 +24,9 @@ default ('a', 'meta-tag')
 
 var client = redis.createClient(argv.p, argv.h, {});
 
+client.on("error", function (err) {
+        console.log("REDIS Error " + err);
+    });
 console.log('process file: ' + argv._[0]);
 
 var urls = {
@@ -86,7 +89,7 @@ var category = {};
  * HasInteractiveMap
  */
 
-function handleRow(row, next) {
+function handleRow(row) {
 	/* foreach row:
 	 * make slugs for event, venue, performer, country, city, state, parent, child, grandchild
 	 * make urls
@@ -100,7 +103,7 @@ function handleRow(row, next) {
 
 	/* if row ticketsyn == 'N' then next */
 	if (row['ticketsyn'] === 'N') {
-		next();
+		return;
 	}
 
 	var slugs = {};
@@ -291,7 +294,7 @@ function handleRow(row, next) {
 			});
 		});
 
-		next();
+		return;
 	});
 };
 
@@ -299,7 +302,8 @@ function store(key, val) {
 	var k = 'directory:' + key;
 	console.log(k);
 	var str = JSON.stringify(val);
-	client.set(k, str, redis.print);
+	client.set(k, str);
+
 	//client.get(key, redis.print);
 
 }
@@ -314,12 +318,16 @@ function makeSlug(str) {
 	return slug;
 }
 
+client.on('ready',function() {
+	console.log(client);
+
 if (/^http/.test(argv._[0])) {
 	streamCsv(argv._[0], parseCsv);
 } else {
 	readCsv(argv._[0], parseCsv);
 }
 
+    });
 function streamCsv(url, cb) {
 	if (/^https/.test(url)) {
 		https.get(url, function(res) {
@@ -344,12 +352,12 @@ function parseCsv(stream) {
 			delimiter: ',',
 			columns: true
 		})
-		.to.array(function(data) {
+	    .on('record', function(row, index) {
+		    //.to.array(function(data) {
 			/* TODO: support a header row */
-			async.forEach(data, function(row, next) {
 					var newRow = {};
 
-					async.forEach(Object.keys(row), function(k, cb) {
+					async.forEachSeries(Object.keys(row), function(k, cb) {
 
 							var u = k.toLowerCase();
 							newRow[u] = row[k];
@@ -360,11 +368,10 @@ function parseCsv(stream) {
 							if (err) {
 								console.log(err);
 							} else {
-								handleRow(newRow, next);
+								handleRow(newRow);
 							}
 						});
-				},
-				function(err, result) {
+		}).on('end',function(count) {
 					/* lists of keys are here:
 					 * urls
 					 * geo
@@ -467,7 +474,6 @@ function parseCsv(stream) {
 							store(url, urls[type][url]);
 						});
 					});
-
 					/* loop through and store the geo */
 					Object.keys(geo).forEach(function(key) {
 						if (geo[key]) {
@@ -502,7 +508,9 @@ function parseCsv(stream) {
 						}
 					});
 
-					process.exit(0);
-				});
+
+		})
+	    .on('error', function(error){
+		    console.log(error.message);
 		});
 }
