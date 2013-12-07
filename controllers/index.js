@@ -29,6 +29,8 @@ module.exports = function(app) {
 					console.log('top concerts performers');
 					if (results) {
 						view.concerts = JSON.parse(results).slice(0,10);
+					} else {
+						view.concerts = [];
 					}
 					cb();
 				});
@@ -40,6 +42,8 @@ module.exports = function(app) {
 					console.log('top sports performers');
 					if (results) {
 						view.sports = JSON.parse(results).slice(0,10);
+					} else {
+						view.sports = [];
 					}
 					cb();
 				});
@@ -51,6 +55,8 @@ module.exports = function(app) {
 					console.log('top sports performers');
 					if (results) {
 						view.theater = JSON.parse(results).slice(0,10);
+					} else {
+						view.theater = [];
 					}
 					cb();
 				});
