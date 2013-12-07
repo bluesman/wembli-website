@@ -24,9 +24,9 @@ default ('a', 'meta-tag')
 
 var client = redis.createClient(argv.p, argv.h, {});
 
-client.on("error", function (err) {
-        console.log("REDIS Error " + err);
-    });
+client.on("error", function(err) {
+	console.log("REDIS Error " + err);
+});
 console.log('process file: ' + argv._[0]);
 
 var urls = {
@@ -150,7 +150,9 @@ function handleRow(row) {
 				};
 
 
-				urls[type][url] = {type:type};
+				urls[type][url] = {
+					type: type
+				};
 				urls[type][url + '/' + slugs[lookup[type]]] = type === 'events' ? row : obj;
 				var geos = ['country', 'state', 'city'];
 				geos.forEach(function(sub) {
@@ -184,7 +186,10 @@ function handleRow(row) {
 			var url = '';
 			var saveUrl = [];
 
-			urls['performers']['/' + slugs['performer']] = {type:"performers",id:row.performerid};
+			urls['performers']['/' + slugs['performer']] = {
+				type: "performers",
+				id: row.performerid
+			};
 			var cats = ['pcat', 'ccat', 'gcat']
 
 			cats.forEach(function(cat) {
@@ -196,7 +201,7 @@ function handleRow(row) {
 					saveUrl.push(url);
 
 					var obj = {
-						"type":"performers",
+						"type": "performers",
 						"breadcrumbs": []
 					};
 
@@ -221,7 +226,7 @@ function handleRow(row) {
 		/* lists of venues, performers, events by score, with meta data: country, state, city, pcat, ccat, gcat */
 		topVenue[slugs['venue']] = topVenue[slugs['venue']] || {
 			"score": 0,
-			"name":row["venue"]
+			"name": row["venue"]
 		};
 
 		topVenue[slugs['venue']].score += score;
@@ -267,11 +272,11 @@ function handleRow(row) {
 			prevCat = slugs[cat];
 			url += '/' + prevCat;
 			if (!/\/$/.test(catKey)) {
-			catKey += '/' + prevCat;
+				catKey += '/' + prevCat;
 
 
 			} else {
-			catKey += prevCat;
+				catKey += prevCat;
 
 			}
 
@@ -318,16 +323,15 @@ function makeSlug(str) {
 	return slug;
 }
 
-client.on('ready',function() {
-	console.log(client);
+client.on('ready', function() {
+	if (/^http/.test(argv._[0])) {
+		streamCsv(argv._[0], parseCsv);
+	} else {
+		readCsv(argv._[0], parseCsv);
+	}
 
-if (/^http/.test(argv._[0])) {
-	streamCsv(argv._[0], parseCsv);
-} else {
-	readCsv(argv._[0], parseCsv);
-}
+});
 
-    });
 function streamCsv(url, cb) {
 	if (/^https/.test(url)) {
 		https.get(url, function(res) {
@@ -352,165 +356,165 @@ function parseCsv(stream) {
 			delimiter: ',',
 			columns: true
 		})
-	    .on('record', function(row, index) {
-		    //.to.array(function(data) {
+		.on('record', function(row, index) {
+			//.to.array(function(data) {
 			/* TODO: support a header row */
-					var newRow = {};
+			var newRow = {};
 
-					async.forEachSeries(Object.keys(row), function(k, cb) {
+			async.forEachSeries(Object.keys(row), function(k, cb) {
 
-							var u = k.toLowerCase();
-							newRow[u] = row[k];
-							cb();
-						},
+					var u = k.toLowerCase();
+					newRow[u] = row[k];
+					cb();
+				},
 
-						function(err, result) {
-							if (err) {
-								console.log(err);
-							} else {
-								handleRow(newRow);
-							}
-						});
-		}).on('end',function(count) {
-					/* lists of keys are here:
-					 * urls
-					 * geo
-					 * category
-					 * topVenue
-					 * topEvent
-					 * topPerformer
-					 */
+				function(err, result) {
+					if (err) {
+						console.log(err);
+					} else {
+						handleRow(newRow);
+					}
+				});
+		}).on('end', function(count) {
+			/* lists of keys are here:
+			 * urls
+			 * geo
+			 * category
+			 * topVenue
+			 * topEvent
+			 * topPerformer
+			 */
 
-					/* supplemental redis data
-					 * top
-					 * geo (list of countries, states, cities)
-					 * category
-					 */
+			/* supplemental redis data
+			 * top
+			 * geo (list of countries, states, cities)
+			 * category
+			 */
 
-					/* figure out top_events */
-					organizeByCountry('top:', '/events', topEvent);
-					organizeByCountry('top:', '/venues', topVenue);
+			/* figure out top_events */
+			organizeByCountry('top:', '/events', topEvent);
+			organizeByCountry('top:', '/venues', topVenue);
 
-					/* tony didn't say to organizer performers by country */
-					//organizeByCountry('top:', '/', topPerformer);
+			/* tony didn't say to organizer performers by country */
+			//organizeByCountry('top:', '/', topPerformer);
 
-					organizeByCategory('top:', '', topPerformer);
+			organizeByCategory('top:', '', topPerformer);
 
-					function organizeByCategory(namespace, root, list) {
-						var topCat = {};
+			function organizeByCategory(namespace, root, list) {
+				var topCat = {};
 
-						/* each performer */
-						Object.keys(list).forEach(function(slug) {
-							var el = list[slug];
-							var key = namespace + root;
-							['pcat', 'ccat', 'gcat'].forEach(function(c) {
-								if (el[c]) {
-									/* this performer may have many categories */
-									Object.keys(el[c]).forEach(function(cat) {
-										key += '/' + cat;
-										topCat[key] = topCat[key] || {};
-										if (slug) {
-											topCat[key][slug] = list[slug];
-										}
-									});
+				/* each performer */
+				Object.keys(list).forEach(function(slug) {
+					var el = list[slug];
+					var key = namespace + root;
+					['pcat', 'ccat', 'gcat'].forEach(function(c) {
+						if (el[c]) {
+							/* this performer may have many categories */
+							Object.keys(el[c]).forEach(function(cat) {
+								key += '/' + cat;
+								topCat[key] = topCat[key] || {};
+								if (slug) {
+									topCat[key][slug] = list[slug];
 								}
 							});
-						});
-
-						/* now topgeo should have a list of events by country */
-						//console.log(topCat);
-						/* sort each list and take the top 100 only */
-						Object.keys(topCat).forEach(function(url) {
-							var sorted = Object.keys(topCat[url]).sort(function(a, b) {
-								return -(topCat[url][a].score - topCat[url][b].score)
-							});
-
-							var save = [];
-							var top;
-							sorted.slice(0,100).forEach(function(top) {
-								save.push([topCat[url][top].name,'/'+top]);
-							});
-							store(url, save);
-						});
-					}
-
-					function organizeByCountry(namespace, root, list) {
-						var topGeo = {};
-						/* for each event */
-						/* TODO: handle multiple events with the same name */
-
-						/* each country, each event */
-						Object.keys(list).forEach(function(slug) {
-							var el = list[slug];
-							var key = namespace + root;
-							['country', 'state', 'city'].forEach(function(g) {
-								if (el[g]) {
-									key += '/' + el[g];
-									topGeo[key] = topGeo[key] || {};
-									topGeo[key][slug] = el;
-								}
-							});
-						});
-
-						/* now topgeo should have a list of events by country */
-
-						/* sort each list and take the top 100 only */
-						Object.keys(topGeo).forEach(function(url) {
-							var sorted = Object.keys(topGeo[url]).sort(function(a, b) {
-								return -(topGeo[url][a].score - topGeo[url][b].score)
-							});
-							var save = [];
-							sorted.slice(0,100).forEach(function(top) {
-								save.push([topGeo[url][top].name, root + '/' + top]);
-							});
-							store(url, save);
-						});
-					}
-
-					//console.log(urls);
-					/* loop through and store the urls */
-					Object.keys(urls).forEach(function(type) {
-						Object.keys(urls[type]).forEach(function(url) {
-							store(url, urls[type][url]);
-						});
-					});
-					/* loop through and store the geo */
-					Object.keys(geo).forEach(function(key) {
-						if (geo[key]) {
-							var sorted = Object.keys(geo[key]).sort(function(a, b) {
-								if (a < b) return -1;
-								if (a > b) return 1;
-								return 0;
-							});
-
-							var list = [];
-							sorted.forEach(function(g) {
-								list.push(geo[key][g]);
-							});
-							store(key, list);
 						}
 					});
+				});
 
-					/* loop through and store the category */
-					Object.keys(category).forEach(function(key) {
-						if (category[key]) {
-							var sorted = Object.keys(category[key]).sort(function(a, b) {
-								if (a < b) return -1;
-								if (a > b) return 1;
-								return 0;
-							});
+				/* now topgeo should have a list of events by country */
+				//console.log(topCat);
+				/* sort each list and take the top 100 only */
+				Object.keys(topCat).forEach(function(url) {
+					var sorted = Object.keys(topCat[url]).sort(function(a, b) {
+						return -(topCat[url][a].score - topCat[url][b].score)
+					});
 
-							var list = [];
-							sorted.forEach(function(k) {
-								list.push(category[key][k]);
-							});
-							store(key, list);
+					var save = [];
+					var top;
+					sorted.slice(0, 100).forEach(function(top) {
+						save.push([topCat[url][top].name, '/' + top]);
+					});
+					store(url, save);
+				});
+			}
+
+			function organizeByCountry(namespace, root, list) {
+				var topGeo = {};
+				/* for each event */
+				/* TODO: handle multiple events with the same name */
+
+				/* each country, each event */
+				Object.keys(list).forEach(function(slug) {
+					var el = list[slug];
+					var key = namespace + root;
+					['country', 'state', 'city'].forEach(function(g) {
+						if (el[g]) {
+							key += '/' + el[g];
+							topGeo[key] = topGeo[key] || {};
+							topGeo[key][slug] = el;
 						}
 					});
+				});
+
+				/* now topgeo should have a list of events by country */
+
+				/* sort each list and take the top 100 only */
+				Object.keys(topGeo).forEach(function(url) {
+					var sorted = Object.keys(topGeo[url]).sort(function(a, b) {
+						return -(topGeo[url][a].score - topGeo[url][b].score)
+					});
+					var save = [];
+					sorted.slice(0, 100).forEach(function(top) {
+						save.push([topGeo[url][top].name, root + '/' + top]);
+					});
+					store(url, save);
+				});
+			}
+
+			//console.log(urls);
+			/* loop through and store the urls */
+			Object.keys(urls).forEach(function(type) {
+				Object.keys(urls[type]).forEach(function(url) {
+					store(url, urls[type][url]);
+				});
+			});
+			/* loop through and store the geo */
+			Object.keys(geo).forEach(function(key) {
+				if (geo[key]) {
+					var sorted = Object.keys(geo[key]).sort(function(a, b) {
+						if (a < b) return -1;
+						if (a > b) return 1;
+						return 0;
+					});
+
+					var list = [];
+					sorted.forEach(function(g) {
+						list.push(geo[key][g]);
+					});
+					store(key, list);
+				}
+			});
+
+			/* loop through and store the category */
+			Object.keys(category).forEach(function(key) {
+				if (category[key]) {
+					var sorted = Object.keys(category[key]).sort(function(a, b) {
+						if (a < b) return -1;
+						if (a > b) return 1;
+						return 0;
+					});
+
+					var list = [];
+					sorted.forEach(function(k) {
+						list.push(category[key][k]);
+					});
+					store(key, list);
+				}
+			});
 
 
 		})
-	    .on('error', function(error){
-		    console.log(error.message);
+		.on('error', function(error) {
+			console.log(error.message);
 		});
 }
