@@ -27,7 +27,9 @@ module.exports = function(app) {
 			function(cb) {
 				client.get('directory:top:/concerts', function(err, results) {
 					console.log('top concerts performers');
-					view.concerts = JSON.parse(results).slice(0,10);
+					if (results) {
+						view.concerts = JSON.parse(results).slice(0,10);
+					}
 					cb();
 				});
 			},
@@ -36,7 +38,9 @@ module.exports = function(app) {
 			function(cb) {
 				client.get('directory:top:/sports', function(err, results) {
 					console.log('top sports performers');
-					view.sports = JSON.parse(results).slice(0,10);
+					if (results) {
+						view.sports = JSON.parse(results).slice(0,10);
+					}
 					cb();
 				});
 			},
@@ -45,7 +49,9 @@ module.exports = function(app) {
 			function(cb) {
 				client.get('directory:top:/theater', function(err, results) {
 					console.log('top sports performers');
-					view.theater = JSON.parse(results).slice(0,10);
+					if (results) {
+						view.theater = JSON.parse(results).slice(0,10);
+					}
 					cb();
 				});
 			},
