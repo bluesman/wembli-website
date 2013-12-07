@@ -13,18 +13,22 @@
 				li
 					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}/#{slugs.state}/#{slugs.city}") #{venue.City}
 
-	if (venue.Street1 && venue.Street1 !== '')
-		address.venue-address(itemprop="address", itemscope, itemtype="http://schema.org/PostalAddress")
-			span.address-street(itemprop="streetAddress")= venue.Street1
-			br
-			span.address-locality(itemprop="addressLocality")= venue.City + ', '
-			span.address-region(itemprop="addressRegion")= venue.StateProvince+', '
-			span.address-country(itemprop="addressCountry")= venue.Country+ ' '
-			span.address-postal-code(itemprop="postalCode")= venue.ZipCode
-			br
-			if (venue.BoxOfficePhone && venue.BoxOfficePhone !== '')
-				span.venue-box-office-phone(itemprop="telephone")= venue.BoxOfficePhone
+	.row
+		if (venue.Street1 && venue.Street1 !== '')
+			address.venue-address(itemprop="address", itemscope, itemtype="http://schema.org/PostalAddress")
+				span.address-street(itemprop="streetAddress")= venue.Street1
 				br
+				span.address-locality(itemprop="addressLocality")= venue.City + ', '
+				span.address-region(itemprop="addressRegion")= venue.StateProvince+', '
+				span.address-country(itemprop="addressCountry")= venue.Country+ ' '
+				span.address-postal-code(itemprop="postalCode")= venue.ZipCode
+				br
+				if (venue.BoxOfficePhone && venue.BoxOfficePhone !== '')
+					span.venue-box-office-phone(itemprop="telephone")= venue.BoxOfficePhone
+					br
+	.row
+		if (venue.image)
+			img(itemprop="image",src="#{venue.image}")
 
 	.row.venue-info
 		if (venue.Capacity && venue.Capacity !== '')
