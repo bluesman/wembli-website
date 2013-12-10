@@ -8589,12 +8589,17 @@ header .right-container .logo-45 h1 {
   padding: 0px;
   margin: 0px;
 }
+#index-frame .section2 .container .copy {
+  color: #ffffff;
+  font-size: 20px;
+  line-height: 30px;
+}
 #index-frame .section3 {
   position: relative;
   padding: 0 0 100px 0;
 }
 #index-frame .section3 h2 {
-  margin-top: 20px;
+  margin-top: 0px;
 }
 #index-frame .section3 .wembli-man-arrow {
   background: transparent url("/images/index-wembli-man-arrow.png") no-repeat center center;
