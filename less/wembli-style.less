@@ -1,36 +1,19 @@
 form { margin-bottom:0px; }
 
-.container { width: 1000px; margin-top:0px;}
-
 h1 {
-  font-family:"SegoePrint";
   color:@blueDark;
-  margin:6px;
-  font-size:36px;
 }
 
 h2 {
-  /* font-family: "architects_daughterregular"; */
-  font-family:"SegoePrint";
   color:@blueDark;
-  font-size:16px;
 }
 
 h3 {
-  font-size:14px;
+
 }
 
-#empty-modal {
-  width:0 !important;
-  height:0 !important;
-}
-
-.icon-check-empty {
+.fa-check-empty {
   margin-right:11px !important;
-}
-
-.btn-large {
-  font-size:16px;
 }
 
 .modal {
@@ -41,9 +24,8 @@ a, a:hover, a:focus {
   text-decoration: none;
 }
 
-
+/* gone?
 #page-loading-modal {
-  //background: url('/images/loading-med.gif') no-repeat center center @grayLight;
   width:400px;
   margin:-250px 0 0 -200px;
   .modal-body {
@@ -55,7 +37,9 @@ a, a:hover, a:focus {
     margin-bottom:0;
   }
 }
+*/
 
+/* pikadate thing - may not need this now that sequence is gone */
 .pika-single {
   position:inherit;
   * {position:inherit;}
@@ -69,10 +53,13 @@ a, a:hover, a:focus {
 .pika-button:hover {
   background:none repeat scroll 0 0 @blue !important;
 };
+/* -- */
 
+/* i think bootstrap does this
 .clearfix {
   .clearfix()
 }
+*/
 
 .white {color:@white;}
 .black {colort:@black;}
@@ -81,6 +68,8 @@ a, a:hover, a:focus {
 .orange {color:@orange;}
 .yellow {color:@yellow;}
 .blue {color:@blueDark;}
+
+/* this shouldn't be global css
 .arrow {
   border:none;
   background: transparent url('/images/transparent-arrow.png') no-repeat center center;
@@ -100,6 +89,7 @@ a, a:hover, a:focus {
   color:@white;
   background-image:url('/images/orange-arrow.png');
 }
+*/
 
 .dollar-sign {
   font-size:20px;
@@ -222,7 +212,9 @@ a, button {
   }
 }
 
-h1, h2, h3, h4, h5, p, ul, ol, label {margin:0; font-weight:normal;}
+h1, h2, h3, h4, h5, h6 { font-family:"Calibri";}
+
+p, ul, ol, label {margin:0; font-weight:normal;}
 
 a:hover {text-decoration:none;}
 
@@ -235,8 +227,6 @@ dd {margin-left:0;}
 .bold {font-weight:bold}
 .seo {text-indent:-9999px; overflow:hidden;}
 .lowercase {text-transform:lowercase;}
-.finePrint, .small {font-size:.7em;}
-.normalSize {font-size:.5em}
 .error {color:@orange}
 
 .tl { text-align: left }

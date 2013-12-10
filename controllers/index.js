@@ -6,20 +6,10 @@ var redis = require("redis");
 module.exports = function(app) {
 
 	function indexView(req, res, callback) {
-		var defaults = {
-			beginDate: wembliUtils.searchBeginDate(),
-			orderByClause: 'Date',
-			numberOfEvents: 10
-		};
-
-		if (typeof req.session.visitor.tracking.postalCode != "undefined") {
-			defaults.nearZip = req.session.visitor.tracking.postalCode;
-		}
 
 		var view = {};
 
 		var client = redis.createClient(app.settings.redisport || 6379, app.settings.redishost || 'localhost', {});
-
 
 		/* get concerts, sport and theater events in parallel */
 		async.parallel([
@@ -73,25 +63,16 @@ module.exports = function(app) {
 			res.render('index', {
 				concerts: view.concerts,
 				sports: view.sports,
-				theater: view.theater
-			});
-		});
-	});
-
-
-	app.get('/partials/index', function(req, res) {
-		indexView(req, res, function(err, view) {
-			res.render('partials/index', {
-				concerts: view.concerts,
-				sports: view.sports,
-				theater: view.theater
+				theater: view.theater,
+				jsIncludes:['/js/index.min.js']
 			});
 		});
 	});
 
 	app.get('/about-us', function(req, res) {
 		res.render('about-us.jade', {
-			title: 'wembli.com - About Us.'
+			title: 'wembli.com - About Us.',
+			jsIncludes:['/js/index.min.js']
 		});
 
 	});

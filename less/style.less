@@ -8,33 +8,36 @@
   git pull
   cp -R /wembli/bootstrap/less/* /wembli/website/less/bootstrap/
 */
-/* @import url('/css/plugins/jquery-ui-1.8.16.custom.css'); */
+
 @import url('/css/bootstrap-modal.css');
 @import url('/css/plugins/pikaday.css');
 @import url('/css/plugins/jquery.multiselect.css');
 @import url('/css/plugins/jquery.multiselect.filter.css');
 @import url('/css/plugins/jquery.slidepanel.css');
 
-@import "../plugins/bootstrap-2.3.1/less/bootstrap.less";
-/* @import "bootstrap/responsive.less"; */
-@import "wembli-variables.less"; // Modify this for custom colors, font-sizes, etc
-@import "wembli-mixins.less"; // Modify this for custom colors, font-sizes, etc
-@import "wembli-style.less";
+@import "../plugins/bootstrap-3.0.2/less/bootstrap.less";
+@import "../plugins/font-awesome-4.0.3/less/font-awesome.less";
+@import "wembli-variables.less";  // Modify this for custom colors, font-sizes, etc
+@import "wembli-mixins.less";     // Modify this for custom colors, font-sizes, etc
+@import "wembli-fonts.less";      // wembli fonts
+@import "wembli-style.less";      // global wembli styles
+
+
 
 /* old bootstrap overrides */
-/* buttons */
+/* buttons - old bootstrap
 .btn-primary, .btn-primary:hover {
   .buttonBackground(@blue,@blueDarker, @white);
 }
 
-//.buttonBackground(@btnBackground, @btnBackgroundHighlight, @grayDark, 0 1px 1px rgba(255,255,255,.75));
 .btn-secondary, .btn-orange, .btn-secondary:hover, .btn-orange:hover {
   .buttonBackground(@orange, @orangeDarker, @black);
 }
-
+*/
+/*
 .module {
   .clearfix();
-  .border-radius(4px);
+  border-radius: 4px;
   .box-shadow(inset 0 2px 2px rgba(0,0,0,.05));
 
   padding:0px;
@@ -50,11 +53,11 @@
   }
 
   .alert {
-    .border-radius(0 0 0 0);
+    border-radius: 0px;
   }
 
   h3 {
-    .border-radius(4px 4px 0 0);
+    border-radius: 4px;
     background-color:lighten(@blue,20%);
     padding:0px 19px;
     border-bottom:thin solid @grayLight;
@@ -73,30 +76,31 @@
   }
 
 }
+*/
+
 /* end old bootstrap overrides */
-@import "/font-awesome/font-awesome.less";
-@import "wembli-fonts.less";
 @import "layout.less";
 @import "header.less";
 
-@import "stars.less";
-@import "event-list.less";
-@import "event.less";
+//@import "stars.less";
+//@import "event-list.less";
+//@import "event.less";
 
-@import "landing-page.less";
+//@import "landing-page.less";
 /* specific landing page layout css */
-@import "landing-pages/search/1.less";
+//@import "landing-pages/search/1.less";
 
 @import "index.less";
 @import "about-us.less";
-@import "search.less";
-@import "addons.less";
-@import "tickets.less";
-@import "login.less";
-@import "signup.less";
-@import "confirm.less";
-@import "event-options.less";
-@import "plan.less";
-@import "invite-friends-wizard.less";
-@import "dashboard.less";
+
+//@import "search.less";
+//@import "addons.less";
+//@import "tickets.less";
+//@import "login.less";
+//@import "signup.less";
+//@import "confirm.less";
+//@import "event-options.less";
+//@import "plan.less";
+//@import "invite-friends-wizard.less";
+//@import "dashboard.less";
 

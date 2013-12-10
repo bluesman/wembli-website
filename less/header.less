@@ -1,177 +1,132 @@
-.logo-45 {
-	height: 45px;
-	width: 177px;
-  background: transparent url("/images/wembli-logo-45.png") no-repeat center center;
-}
-.logo-35 {
-	height: 35px;
-	width: 138px;
-  background: transparent url("/images/wembli-logo-35.png") no-repeat center center;
-}
-
-a.logo-35 {
-	display:block;
-}
-
-.cb_slide_panel {
-  background: @white;
-	/* @shadow:inset -2px 2px 6px 0px rgba(0,0,0,.25); */
-	/* .box-shadow(@shadow); */
-	.wrapper {
-		height:40px;
-		.controls {
-			margin: 10px 10px 0 0;
-			color:@blueDark;
-
-			i.close {
-
-			}
-		}
-	}
-
-	.log-out, .sign-up {
-		width:100%;
-		text-align:center;
-		a {
-			margin:20px;
-			width:180px;
-		}
-	}
-
-	ul {
-		padding:20px 0px;
-		li {
-			a {
-				padding: 10px 20px 10px 40px;
-				display:block;
-				color:@blueDark;
-				font-size: 22px;
-				line-height: 24px;
-			}
-			a:hover {
-				background-color:@blue;
-				color:@yellow;
-			}
-		}
-	}
-
-	ul.side-nav {
-		li {
-			a {
-				border-bottom: 2px solid #CCC;
-			}
-		}
-	}
-
-	ul.links {
-		li {
-			a {
-				display:block;
-				padding:10px 0 10px 40px;
-			}
-		}
-	}
-
-}
-
-
 header {
-	background-color:@white;
-	position:fixed;
-	z-index:999;
-	width: 100%;
-	top:0;
-	left:0;
-	@shadow:0 1px 5px 0px rgba(0,0,0,.2);
-	.box-shadow(@shadow);
-	font-size:18px;
 
-	.login, .signup, .menu-text {
-		line-height:18px;
-		vertical-align: middle;
-		padding:0 6px;
-		margin:7px 0 ;
+	.cb_slide_panel {
+	  background: @white;
+
+		.wrapper {
+			height:40px;
+			.controls {
+				margin: 10px 10px 0 0;
+				color:@blueDark;
+
+				i.close {
+
+				}
+			}
+		}
+
+		.log-out, .sign-up {
+			width:100%;
+			text-align:center;
+			a {
+				margin:20px;
+				width:180px;
+			}
+		}
+
+		ul {
+			padding:20px 0px;
+			li {
+				a {
+					padding: 10px 20px 10px 40px;
+					display:block;
+					color:@blueDark;
+					font-size: 22px;
+					line-height: 24px;
+				}
+				a:hover {
+					background-color:@blue;
+					color:@yellow;
+				}
+			}
+		}
+
+		ul.side-nav {
+			li {
+				a {
+					border-bottom: 2px solid #CCC;
+				}
+			}
+		}
+
+		ul.links {
+			li {
+				a {
+					display:block;
+					padding:10px 0 10px 40px;
+				}
+			}
+		}
+
 	}
 
-	.header-search {
-		margin:0;
+	nav {
+		padding:0 20px;
+		background-color:@white;
+		border:none;
 
-		form {
+		@shadow:0 1px 5px 0px rgba(0,0,0,.2);
+		.box-shadow(@shadow);
+		font-size:18px;
+
+		button.slidepanel {
+			line-height:26px;
+			padding:15px 20px 15px 0;
+			border:none;
+			background:transparent;
+			color:@blue;
+		}
+		button:hover {
+			color:@yellow;
+		}
+
+		.navbar-brand {
+			float:right;
+			padding:10px 0;
+		}
+
+		.navbar-nav > li > a {
+			line-height:26px;
+			padding:15px 20px;
+		}
+
+		.navbar-nav > li > a:hover {
+			background-color:@white;
+		}
+
+		.navbar-form {
+			margin: 12px 20px;
+
 			background-color:@grayLight;
 			color:@grayLight;
-			width:300px;
-			margin:auto;
+
 			padding:2px;
-			.border-radius(10px);
+			border-radius:10px;
+
 			i {
-				.border-top-left-radius(8px);
-				.border-bottom-left-radius(8px);
+				border-top-left-radius:8px;
+				border-bottom-left-radius:8px;
 				position:absolute;
 				display: block;
 				background-color: transparent;
-				line-height:28px;
+				line-height:30px;
 				margin:0px 0px 0px 3px;
 				font-size:18px;
 			}
 
 			input {
-				.border-radius(8px);
+				border-radius:8px;
 
-				height: 20px;
 				border: none;
 				padding: 4px 4px 4px 30px;
 				margin: 0px;
 				width:266px;
 
 				font-size: 14px;
-				line-height: 18px;
+				line-height: 20px;
 				vertical-align: middle;
 				font-style: italic;
 			}
-
-			input:focus {
-
-			}
-		}
-
-	}
-
-
-	.left-container {
-		display:block;
-		margin:20px;
-		width:120px;
-		text-align:center;
-
-		i {
-			font-size:14px;
-			text-align: right;
-		}
-	}
-
-	.middle-container {
-		margin:13px 20px;
-
-		.login, .signup {
-
-		}
-
-		.login {
-
-		}
-		.signup {
-			border-left:2px solid @blue;
-		}
-	}
-
-	.right-container {
-		margin:10px 20px 10px 20px;
-		.logo-35, .logo-45 {
-			margin:auto;
-			h1 {
-	     text-indent: 1000%;
-			}
-
 		}
 	}
 }
