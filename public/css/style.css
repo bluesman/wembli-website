@@ -4617,7 +4617,6 @@ a.thumbnail.active {
     background-position: 0 0;
   }
 }
-<<<<<<< HEAD
 .progress {
   overflow: hidden;
   height: 20px;
@@ -4640,19 +4639,6 @@ a.thumbnail.active {
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   -webkit-transition: width 0.6s ease;
   transition: width 0.6s ease;
-=======
-#index-frame .section2 .container .copy {
-  color: #ffffff;
-  font-size: 20px;
-  line-height: 30px;
-}
-#index-frame .section3 {
-  position: relative;
-  padding: 0 0 100px 0;
-}
-#index-frame .section3 h2 {
-  margin-top: 0px;
->>>>>>> production
 }
 .progress-striped .progress-bar {
   background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
