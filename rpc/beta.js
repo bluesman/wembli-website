@@ -1,30 +1,58 @@
-var sys = require('sys'),
-http = require('http'),
-beta = require('../models/beta');
+var http = require('http'),
+	qs = require('querystring'),
+	ESClient = require('elasticsearchclient');
 
-exports.beta = {
-    submit: function(email) {
-	var me = this;
-	var betaObj = new Beta();
-	betaObj.upsertByEmail({email:email},function(error,betaCustomer) {
-	    if (error) {
-		me(error);
-	    } else {
-		//send an email
-		var postalgone = http.createClient(80, 'www.postalgone.com');
+var es = new ESClient({
+	hosts: [{
+		host: 'es01.wembli.com',
+		port: 9200
+	}]
+});
 
-		var emailBody = 'Thank you for your interest in phatseat.com.  Beta testing is closed at the moment but as soon as we\'re ready for another round, we\'ll let you know!  If you have any questions feel free to email info@phatseat.com.  Thanks!';
-		var postBody = 'to='+email+'&subject=Phatseat.com Beta List&body='+emailBody;
+exports.autocomplete = {
+	events: function(args, req, res) {
+		var me = this;
+		var query = {
+			"fields": ["EventID", "CCat", "TicketsYN", "Event", "Performer", "City", "State", "DateTime"],
+			"query": {
+				"bool": {
+					"must": [{
+						"fuzzy": {
+							"events.Event": {
+								"value": formData.q + "*",
+								"max_expansions": "2"
+							}
+						}
+					}]
+				}
+			},
+			"from": 0,
+			"size": 20,
+			"sort": [{
+					"events.NumOrders": {
+						"order": "desc"
+					}
+				}, {
+					"events.DateTime": {
+						"order": "asc"
+					}
+				},
+				"_score"
+			]
+		};
 
-		var request = postalgone.request('POST', '/mail',
-						 {'host':'www.postalgone.com',
-						  'content-type':'application/x-www-form-urlencoded'});
-		request.write(postBody,encoding='utf8');
-		request.end();
+		es.search('ticket_network', 'events', query, function(err, data) {
+			var d = JSON.parse(data);
+			if (typeof d.hits !== "undefined") {
+				d.hits.hits.map(function(obj) {
+					console.log(obj);
+				});
+				me(null, d.hits.hits);
 
-		betaCustomer.id = betaCustomer._id.toHexString();
-		me(null,betaCustomer);
-	    }
-	});
-    }
-}
+			} else {
+				me(null);
+			}
+		});
+
+	}
+};

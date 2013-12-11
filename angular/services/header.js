@@ -11,8 +11,7 @@ factory('header', [
 		return {
 			init: function(header, scroll) {
 				header = header || '#header';
-				scroll = scroll || '#content';
-
+				scroll = scroll || 'window';
 				/* window is a special case - use the window obj */
 				if (scroll === 'window') {
 					scroll = window;
@@ -22,7 +21,6 @@ factory('header', [
 
 				angular.element(header).show();
 				angular.element(scroll).on('scroll', function() {
-
 					/* at the top? */
 					if (angular.element(scroll).scrollTop() < 1) {
 						angular.element(header).show();

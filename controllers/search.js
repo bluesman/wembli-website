@@ -32,6 +32,7 @@ module.exports = function(app) {
 			res.render('search', {
 				events: results.event,
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+				jsIncludes:['/js/search.min.js']
 			});
 		},[args,req,res]);
 	};
@@ -114,6 +115,7 @@ module.exports = function(app) {
 				search: req.param('city'),
 				events: results.event,
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+				jsIncludes:['/js/search.min.js']
 			});
 		},[args,req,res]);
 	});
@@ -147,6 +149,7 @@ module.exports = function(app) {
 				search: query,
 				events: events,
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+				jsIncludes:['/js/search.min.js']
 			});
 		},[req.session.visitor.lastSearch,req,res]);
 	});

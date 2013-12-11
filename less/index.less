@@ -43,7 +43,7 @@
 	.section2 {
 		position:relative;
 		width:100%;
-		top:-180px;
+		top:-230px;
 		margin-bottom:-200px;
 
 		.tag-line {
@@ -55,87 +55,40 @@
 		}
 
 
-		.search {
-			margin:40px 0;
+		.search-box {
+			width:70%;
+			font-size:1em;
+		}
 
-			form {
-				background-color:@yellow;
-				width:70%;
-				margin:auto;
-				padding:6px;
-				border-radius: 3px;
-
-				i {
-					text-align:center;
-					margin:0px;
-					padding:8px;
-					border-top-left-radius:3px;
-					border-bottom-left-radius:3px;
-					position:absolute;
-					color:@grayLight;
-					display: block;
-					background-color: transparent;
-				}
-
-				input {
-					border-top-left-radius: 3px;
-					border-bottom-left-radius: 3px;
-					border: none;
-					margin: 0px;
-					padding: 8px 8px 8px 50px;
-					width:85%;
-					color:@grayDarker;
-					font-size: .8em;
-					font-style: italic;
-				}
-
-				input:focus {
-					border:none;
-				}
-				button:hover {
-					#gradient > .vertical(lighten(@yellow, 20%), @yellow);
-				}
-
-				button {
-					width:15%;
-					padding:8px;
-					font-size:.8em;
-					color:@black;
-					border-top-right-radius: 3px;
-					border-bottom-right-radius: 3px;
-					border-top-left-radius: 0px;
-					border-bottom-left-radius: 0px;
-					#gradient > .vertical(@yellow, @yellow);
-					.box-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
-					border:none;
-					margin:0px;
-				}
-			}
+		.copy {
+			text-align:center;
+			font-size:.6em;
+			color:@white;
 		}
 
 		/* Small devices (tablets, 768px and up) */
 		@media (min-width: @screen-xs-min) {
-			top:-180px;
+			top:-230px;
 			margin-bottom:-110px;
 		}
 
 		@media (min-width: @screen-sm-min) {
 			font-size: 1.5em;
-			top:-220px;
+			top:-270px;
 			margin-bottom:-140px;
 		}
 
 		/* Medium devices (desktops, 992px and up) */
 		@media (min-width: @screen-md-min) {
 			font-size: 2em;
-			top:-250px;
+			top:-300px;
 			margin-bottom:-170px;
 		}
 
 		/* Large devices (large desktops, 1200px and up) */
 		@media (min-width: @screen-lg-min) {
 			font-size: 2.5em;
-			top:-280px;
+			top:-330px;
 			margin-bottom:-200px;
 		}
 
@@ -256,6 +209,7 @@
 		.container {
 			.left {
 				.twitter-widget {
+					position:relative;
 					margin-top:25px;
 					color:@white;
 					.twitter-right-arrow {
@@ -263,8 +217,8 @@
 						border-bottom: 30px solid transparent;
 						border-left: 40px solid @grayDarker;
 						position:absolute;
-						top:136px;
-						right:430px;
+						top:114px;
+						right:-40px;
 					}
 				}
 			}

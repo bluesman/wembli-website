@@ -30,17 +30,20 @@ block content
 
 		section.section2.container
 			.tag-line
-				p FIND TICKETS TO CONCERTS, THEATER & SPORTING EVENTS
-				p INVITE FRIENDS WITHOUT GETTING STUCK WITH THE BILL
-			.search
+				p LIVE EVENTS SUPERSTORE
+			//- can this be an include?
+			.search-box
 				form#index-search-form.search-form.clearfix(ng-submit="submitSearch()", novalidate)
 					i.fa.fa-search.icon-2x.pull-left(ng-hide="searchInProgress")
-					i.fa.fa-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
-					input.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
+					i.fa.fa-cog.fa-spin.icon-2x.pull-left(ng-show="searchInProgress")
+					//- add class .typeahead to turn on autocomplete
+					input.pull-left(config="index", type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
 					button.btn.btn-secondary.segoe.pull-left(href="#") search
-
+			.copy
+				p Get deals on tickets to concerts, theater and sports events then choose add ons like parking, restaurant deals and hotels.
+				p You can even invite and go dutch with friends so you don’t get stuck footing their bill!
 		section.section3.container
-			h1 How It Works
+			h1 GO AHEAD - INVITE FRIENDS!
 			img(src="/images/index-wembli-man-arrow.png").wembli-man-arrow.img-responsive
 
 			.row.info-boxes
@@ -63,7 +66,7 @@ block content
 					.col-md-6
 						.video-text
 							h1 One Stop Shop For Events
-							p Love going to live events with friends but hate to plan it lest you end up getting stuck with the bill...AGAIN?
+							p We save you time, money... and friendships!
 							p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
 					.col-md-6.video
 						iframe(width="480",height="360",src="//www.youtube.com/embed/_DKAIoIHk5c",frameborder="0",allowfullscreen)

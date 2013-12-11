@@ -3,6 +3,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('wembliApp', [
   'ngRoute',
+  'wembliApp.controllers',
   'wembliApp.controllers.index',
   'wembliApp.controllers.header',
   'wembliApp.filters',
@@ -13,6 +14,7 @@ angular.module('wembliApp', [
   'wembliApp.services.pixel',
   'wembliApp.directives',
   'wembliApp.directives.header',
+  'wembliApp.directives.typeahead',
 ]).config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
     //$locationProvider.html5Mode(true);
