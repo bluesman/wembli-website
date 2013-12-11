@@ -1,0 +1,149 @@
+#index-frame(ng-controller="IndexCtrl")
+	section.section1.carousel-container
+		#carousel.carousel.slide
+			ol.carousel-indicators
+				li.active(data-target="#carousel",data-slide-to="0")
+				li(data-target="#carousel",data-slide-to="1")
+				li(data-target="#carousel",data-slide-to="2")
+				li(data-target="#carousel",data-slide-to="3")
+				li(data-target="#carousel",data-slide-to="4")
+			.carousel-inner
+				//-
+					.item.active
+						img(src="/images/carousel/carousel-1.jpg")
+					.item.active
+						img(src="/images/carousel/carousel-2.jpg")
+				.item.active
+					img(src="/images/carousel/carousel-3.jpg")
+				.item
+					img(src="/images/carousel/carousel-4.jpg")
+				.item
+					img(src="/images/carousel/carousel-5.jpg")
+				.item
+					img(src="/images/carousel/carousel-6.jpg")
+				.item
+					img(src="/images/carousel/carousel-7.jpg")
+			//- a.carousel-control.left.icon-chevron-sign-left.icon-3x(href="#carousel",data-slide="prev")
+			//- a.carousel-control.right.icon-chevron-sign-right.icon-3x(href="#carousel",data-slide="next")
+	section.section2
+		.container
+			.tag-line
+				p THE LIVE EVENT SUPERSTORE
+			.search
+				form#index-search-form.form-search.clearfix(ng-submit="submitSearch()")
+					i.icon-search.icon-2x.pull-left(ng-hide="searchInProgress")
+					i.icon-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
+
+					input.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
+					button.btn.btn-secondary.segoe.pull-left(href="#") search
+			.copy
+				p Get deals on tickets to concerts, theater and sports events then choose add ons like parking, restaurant deals and hotels.  You can even invite and go dutch with friends so you don’t get stuck footing their bill!
+	section.section3
+		.container
+			h2.calibri GO AHEAD - INVITE FRIENDS!
+			.wembli-man-arrow
+			.info-boxes
+				.box.one.pull-left.clearfix
+					h3.number 1.
+					.header.clearfix
+						i.icon-search.icon-2x.pull-left
+						h4.pull-left You pick an event
+					.body
+						p Whether you have an event in mind, or you want some ideas of what’s available in your area, use Wembli to search for events throughout the U.S.
+				.box.two.pull-left.clearfix
+					h3.number 2.
+					.header.clearfix
+						i.icon-group.icon-2x.pull-left
+						h4.pull-left Invite friends
+					.body
+						p They get to vote on things like ticket prices and any add ons you choose for your outing i.e.: parking, restaurant deals & hotel
+				.box.three.pull-left.clearfix
+					h3.number 3.
+					.header.clearfix
+						i.icon-credit-card.icon-2x.pull-left
+						h4.pull-left Everyone pays
+					.body
+						p Gone are the days of you getting stuck footing the bill.  Using Wembli, you can have your friends pay up front or you can collect after.  You choose.
+				.box.four.pull-left.clearfix
+					h3.number 4.
+					.header.clearfix
+						i.icon-ticket.icon-2x.pull-left
+						h4.pull-left Tickets are bought
+					.body
+						p We aggregate tickets from across the web - so you don’t waste precious time bouncing from site to site.  We even know how many seats you can get together.
+	section.section4
+		.video-container.clearfix
+			.video-text.pull-left
+				h2.calibri ONE STOP SHOP FOR EVENTS
+				p We save you time, money... and friendships!
+				p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
+			.video.pull-right
+				iframe(width="480",height="360",src="//www.youtube.com/embed/_DKAIoIHk5c",frameborder="0",allowfullscreen)
+	section.section5
+		h2.calibri UPCOMING EVENTS IN YOUR AREA
+		.container.clearfix
+			.top-events-arrow
+			ul.left.pull-left
+				h2 Concerts:
+				//- keeping this cause it was cool
+					high-sales-performers(parent-category-id="2",num-returned="10")
+						li.performers(ng-repeat="performer in concertPerformers | filter:orderBy:'-Percent'")
+							a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
+				- each c, i in concerts
+					li.performers
+						a.performer.white.show-ellipses(target="_self", start="0", title="#{c[0]}", characters="30", href="http://#{app.settings.host}.wembli.com#{c[1]}", ng-href="http://#{app.settings.host}.wembli.com#{c[1]}") #{i+1}) #{c[0]}
+			ul.middle.pull-left
+				h2 Sporting Events:
+				- each s, i in sports
+					li.performers
+						a.performer.white.show-ellipses(target="_self", start="0", title="#{s[0]}", characters="40", href="http://#{app.settings.host}.wembli.com#{s[1]}", ng-href="http://#{app.settings.host}.wembli.com#{s[1]}") #{i+1}) #{s[0]}
+			ul.right.pull-left
+				h2 Theater:
+				- each t, i in theater
+					li.performers
+						a.performer.white.show-ellipses(target="_self", start="0", title="#{t[0]}", characters="40", href="http://#{app.settings.host}.wembli.com#{t[1]}", ng-href="http://#{app.settings.host}.wembli.com#{t[1]}") #{i+1}) #{t[0]}
+	section.section6
+		.container.clearfix
+			.left.pull-left
+				.body.twitter-widget
+					a.twitter-timeline(href="//twitter.com/search?q=%40wembli",data-link-color="#0088CC", data-theme="dark",data-widget-id="318018385696915459", data-tweet-limit="3", data-chrome="noborders noscrollbar", height="400px" ,width="500px").segoe
+					.twitter-right-arrow
+			.right.pull-left
+				.body
+					.row.clearfix
+						a.facebook-link.pull-left(href="//www.facebook.com/wemblifan")
+						a.blog-link.pull-left(href="//blog.wembli.com/")
+					.row.clearfix
+						a.twitter-link.pull-left(href="//twitter.com/wembli")
+						a.gplus-link.pull-left(href="//plus.google.com/102053515859174299215/posts")
+					.row.message
+						h2 Promos & Insider Info
+						.text Here at Wembli we love social networking and connecting with our favorite people – our beloved Wemblizens! That’s why we are all over Facebook, Twitter and Google+.
+	section.section7
+		//-
+			.container
+				.footer-column.pull-left
+					h4 TICKETS
+					.list
+				.footer-column.pull-left
+					h4 IN YOUR AREA
+					.list
+				.footer-column.pull-left
+					h4 TRENDING NOW
+					.list
+				.footer-column.pull-left
+					h4 ABOUT WEMBLI
+					.list
+		.container.clearfix
+			//-
+				.footer-social-button.twitter-button.pull-left
+					a(href="//twitter.com/wembli", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow @wembli
+			.social-links.clearfix
+				.footer-social-button.facebook-like-button.pull-left
+					.fb-like(data-href="http://www.wembli.com", data-width="480",data-show-faces="true", data-send="true")
+				.footer-social-button.gplus-like-button.pull-left
+					.g-plusone(data-href="http://www.wembli.com", data-annotation="inline", data-width="480")
+			.links.clearfix.pull-left
+				a.footer-link(href="http://#{app.settings.host}.wembli.com/about-us") About Us
+				a.footer-link(target="_self",href="http://#{app.settings.host}.wembli.com/terms-policies") Terms Of Service & Privacy Policy
+				a.footer-links(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+

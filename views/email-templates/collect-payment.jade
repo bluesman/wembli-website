@@ -3,7 +3,7 @@ block body
 	table(style="background:#{white};font-size:16px;",align="center", border="0", cellpadding="0", cellspacing="0", width="100%")
 		tbody
 			tr
-				td Hi #{req.session.customer.firstName},
+				td Hi #{friend.contactInfo.name},
 			tr
 				td(height="80")
 					span We’re doing the happy dance because you chose to join #{req.session.customer.firstName} #{req.session.customer.lastName} for the #{req.session.plan.event.eventName} event. Now It’s time to&nbsp;

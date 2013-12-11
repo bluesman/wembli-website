@@ -32,7 +32,7 @@ module.exports = function(app) {
 			var venueId = '';
 			/* its possible that this event is no longer available - if that is the case, send them to the no-event page */
 			if (err || !results.event[0]) {
-				if (req.session.plan.venue.venueId) {
+			    if ((typeof req.session.plan !== "undefined") && (req.session.plan.venue.venueId)) {
 					/* if we have the event in the session use that instead */
 					venueId = req.session.plan.venue.venueId;
 				} else {
