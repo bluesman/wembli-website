@@ -7,7 +7,7 @@ angular.module('wembliApp.directives.search', []).
 /*
  * show the tickets summary info popover for search results
  */
-directive('eventWrapper', ['wembliRpc', '$window',
+directive('showTicketRange', ['wembliRpc', '$window',
   function(wembliRpc, $window) {
     return {
       restrict: 'C',
@@ -16,48 +16,29 @@ directive('eventWrapper', ['wembliRpc', '$window',
       ],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          element.mouseleave(function() {
-            var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
-            $(".event-wrapper").popover("hide");
-          });
-
           element.mouseover(function() {
-            var elId = (typeof element.parents('li').attr('id') == "undefined") ? element.attr('id') : element.parents('li').attr('id');
-
-            if (attr.noPopover) {
-              return;
-            }
-
             if (typeof scope.ticketSummaryData == "undefined") {
               scope.ticketSummaryData = {};
-              scope.ticketSummaryData.locked = false;
             }
 
-            /* if its locked that means we moused in while doing a fetch */
-            if (scope.ticketSummaryData.locked) {
+            //we have already fetched and displayed this one
+            if (typeof scope.ticketSummaryData[attr.eventId] != "undefined") {
               return;
             }
 
-            //we have a cache of the data - gtfo
-            $(".event-wrapper").popover("destroy");
-            if (typeof scope.ticketSummaryData[elId.split('-')[0]] != "undefined") {
-              $('#' + elId).popover({
-                placement: "left",
-                trigger: 'hover',
-                animation: false,
-                title: 'Tickets Summary',
-                content: scope.ticketSummaryData[elId.split('-')[0]],
-              });
-              $('#' + elId).popover("show");
+            scope.ticketSummaryData[attr.eventId] = {};
+
+            /* if its locked that means we moused in while doing a fetch */
+            if (scope.ticketSummaryData[attr.eventId].locked) {
               return;
             }
 
             /* lock so we don't fetch more than once (we will unlock when the http req returns) */
-            scope.ticketSummaryData.locked = true;
+            scope.ticketSummaryData[attr.eventId].locked = true;
 
             /* fetch the event data */
             var args = {
-              "eventID": elId.split('-')[0]
+              "eventID": attr.eventId
             };
 
             wembliRpc.fetch('event.getPricingInfo', args,
@@ -69,34 +50,30 @@ directive('eventWrapper', ['wembliRpc', '$window',
                 }
 
                 /* we cached the result..lets unlock */
-                scope.ticketSummaryData.locked = false;
+                scope.ticketSummaryData[attr.eventId].locked = false;
+
                 /* init the popover */
-                var summaryContent = "";
+                var summaryContent = null;
                 if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
                   if (result.ticketPricingInfo.ticketsAvailable === '0') {
-                    summaryContent = "Click for ticket information";
+                    summaryContent = null;
                   } else {
-                    summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketsAvailable + " ticket choice" : result.ticketPricingInfo.ticketsAvailable + " ticket choices";
+                    summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketsAvailable + " ticket" : result.ticketPricingInfo.ticketsAvailable + " tickets";
                     if (parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
-                      summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
+                      summaryContent += "<br/> $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
                     } else {
-                      summaryContent += " from $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " to $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
+                      summaryContent += "<br/> $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " - $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
                     }
                   }
                 } else {
-                  summaryContent = "Click for ticket information";
+                  summaryContent = null;
                 }
-                scope.ticketSummaryData[elId.split('-')[0]] = summaryContent;
+                console.log(summaryContent);
+                scope.ticketSummaryData[attr.eventId] = summaryContent;
 
-                $('#' + elId).popover({
-                  placement: "left",
-                  trigger: 'manual',
-                  animation: false,
-                  title: 'Tickets Summary',
-                  content: summaryContent,
-                });
-                $('#' + elId).popover("show");
-
+                if (summaryContent) {
+                  $('#' + attr.id + ' .ticket-range').html(summaryContent).fadeIn();
+                }
               },
 
               /* transformRequest */

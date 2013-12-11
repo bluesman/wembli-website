@@ -14,6 +14,7 @@ angular.module('wembliApp', [
   'wembliApp.services.pixel',
   'wembliApp.directives',
   'wembliApp.directives.header',
+  'wembliApp.directives.search',
   'wembliApp.directives.typeahead',
 ]).config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {

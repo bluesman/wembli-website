@@ -8428,15 +8428,15 @@ header nav .navbar-form input {
   text-align: center;
   width: 100%;
 }
-#search #search-right .results #event-list-wrapper .event-wrapper {
+#search #search-right .results #event-list-wrapper ul li {
   padding: 10px;
 }
-#search #search-right .results #event-list-wrapper .event-wrapper .event-date-box span {
+#search #search-right .results #event-list-wrapper ul li .event-date-box span {
   text-align: center;
   display: block;
   margin: 0 2px;
 }
-#search #search-right .results #event-list-wrapper .event-wrapper .event-date-box .day {
+#search #search-right .results #event-list-wrapper ul li .event-date-box .day {
   padding: 2px;
   border: 1px solid #666666;
   border-top-left-radius: 3px;
@@ -8444,7 +8444,7 @@ header nav .navbar-form input {
   background-color: #ffffff;
   text-transform: uppercase;
 }
-#search #search-right .results #event-list-wrapper .event-wrapper .event-date-box .event-date {
+#search #search-right .results #event-list-wrapper ul li .event-date-box .event-date {
   padding-top: 2px;
   font-weight: bold;
   font-size: 1.2em;
@@ -8452,7 +8452,7 @@ header nav .navbar-form input {
   border-right: 1px solid #666666;
   background-color: #cccccc;
 }
-#search #search-right .results #event-list-wrapper .event-wrapper .event-date-box .time {
+#search #search-right .results #event-list-wrapper ul li .event-date-box .time {
   padding-bottom: 2px;
   border-left: 1px solid #666666;
   border-right: 1px solid #666666;
@@ -8461,11 +8461,19 @@ header nav .navbar-form input {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
-#search #search-right .results #event-list-wrapper .event-wrapper .info .name {
+#search #search-right .results #event-list-wrapper ul li .info .name {
   font-size: 1.5em;
   font-weight: bold;
 }
-#search #search-right .results #event-list-wrapper .event-wrapper:hover {
+#search #search-right .results #event-list-wrapper ul li .cta {
+  text-align: center;
+}
+#search #search-right .results #event-list-wrapper ul li .ticket-range {
+  padding: 6px;
+  text-align: center;
+  font-size: .9em;
+}
+#search #search-right .results #event-list-wrapper ul > li:hover {
   background-color: #b1cdd9;
   cursor: pointer;
 }

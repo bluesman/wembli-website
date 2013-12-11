@@ -39,8 +39,8 @@ block content
 				#search-right.col-md-8.col-xs-12
 					.search-box
 						form#index-search-form.search-form.clearfix(method="GET", action="/search/events", ng-submit="submitSearch()")
-							i.fa.fa-search.icon-2x.pull-left(ng-hide="searchInProgress")
-							i.fa.fa-cog.icon-spin.icon-2x.pull-left(ng-show="searchInProgress")
+							i.fa.fa-search.fa-2x.pull-left(ng-hide="searchInProgress")
+							i.fa.fa-cog.fa-spin.fa-2x.pull-left(ng-show="searchInProgress")
 							input#query.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
 							button.btn.btn-secondary.segoe.pull-left(href="#") search
 
@@ -51,7 +51,7 @@ block content
 								h3= heading
 								ul
 									each event in events
-										li.row.event-wrapper.start-plan(event-name="#{event.Name}",event-id="#{event.ID}",name="#{event.Name}",id="#{event.ID}-wrapper")
+										li.row.show-ticket-range.start-plan(event-name="#{event.Name}",event-id="#{event.ID}",name="#{event.Name}",id="#{event.ID}-wrapper")
 											- var lastSearch = visitor.lastSearch ? visitor.lastSearch : '/search';
 											- lastSearch += '?updateEvent=1';
 											- var date = new Date(Date.parse(event.Date));
@@ -86,6 +86,7 @@ block content
 														default
 															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name) Start Plan
 												.ticket-range
+													i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData['#{event.ID}'].locked")
 									//- this is needed for the more events client side functionality
 									li.hide.event-wrapper.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
 										- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
@@ -135,5 +136,5 @@ block content
 
 						a#more-events(ng-click="moreEvents()",ng-hide="noMoreEvents")
 							span= seeMore
-							i.icon-chevron-down
+							i.fa.fa-chevron-down
 

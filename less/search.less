@@ -37,57 +37,66 @@
 					width:100%;
 				}
 
-				.event-wrapper {
-					padding:10px;
+				ul {
+					li {
+						padding:10px;
 
-					//- this may need to be global
-					.event-date-box {
+						//- this may need to be global
+						.event-date-box {
 
-						span {
-							text-align: center;
-							display:block;
-							margin:0 2px;
+							span {
+								text-align: center;
+								display:block;
+								margin:0 2px;
+							}
+
+							.day {
+								padding:2px;
+								border: 1px solid @grayDark;
+								border-top-left-radius: 3px;
+								border-top-right-radius: 3px;
+								background-color:@white;
+								text-transform: uppercase;
+							}
+
+							.event-date {
+								padding-top:2px;
+								font-weight:bold;
+								font-size:1.2em;
+								border-left: 1px solid @grayDark;
+								border-right: 1px solid @grayDark;
+								background-color: @grayLight;
+							}
+
+							.time {
+								padding-bottom: 2px;
+								border-left: 1px solid @grayDark;
+								border-right: 1px solid @grayDark;
+								border-bottom: 1px solid @grayDark;
+								background-color: @grayLight;
+								border-bottom-right-radius: 3px;
+								border-bottom-left-radius: 3px;
+							}
 						}
 
-						.day {
-							padding:2px;
-							border: 1px solid @grayDark;
-							border-top-left-radius: 3px;
-							border-top-right-radius: 3px;
-							background-color:@white;
-							text-transform: uppercase;
+						.info {
+							.name {
+								font-size:1.5em;
+								font-weight:bold;
+							}
 						}
-
-						.event-date {
-							padding-top:2px;
-							font-weight:bold;
-							font-size:1.2em;
-							border-left: 1px solid @grayDark;
-							border-right: 1px solid @grayDark;
-							background-color: @grayLight;
+						.cta {
+							text-align:center;
 						}
-
-						.time {
-							padding-bottom: 2px;
-							border-left: 1px solid @grayDark;
-							border-right: 1px solid @grayDark;
-							border-bottom: 1px solid @grayDark;
-							background-color: @grayLight;
-							border-bottom-right-radius: 3px;
-							border-bottom-left-radius: 3px;
+						.ticket-range {
+							padding:6px;
+							text-align:center;
+							font-size:.9em;
 						}
 					}
-
-					.info {
-						.name {
-							font-size:1.5em;
-							font-weight:bold;
-						}
-					}
-
 				}
 
-				.event-wrapper:hover {
+				ul > li:hover {
 					background-color: lighten(@blueLight, 20%);
 					cursor:pointer;
 				}
