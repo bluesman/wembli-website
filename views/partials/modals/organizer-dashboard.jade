@@ -15,7 +15,7 @@
 							.text.pull-left(ng-show="createMerchantAccount.errorDob") Date of Birth should follow this format: MM-DD-YYYY.
 							.text.pull-left(ng-show="createMerchantAccount.errorPhoneNumber") Please enter a valid, 10 digit phone number.
 						.container.clearfix
-							fieldset.pull-left(ng-hide="customer.balancedAPI.customerAccount")
+							fieldset.pull-left()
 								.control-group
 									.controls
 										input(type="text",ng-model="createMerchantAccount.accountHolderName",value="",placeholder="Account Holder Name",name="accountHolderName",required)
@@ -46,7 +46,7 @@
 							.icon-warning-sign.pull-left
 							.text.pull-left Invalid Routing Number.
 						.container.clearfix
-							fieldset.pull-left(ng-hide="customer.balancedAPI.bankAccounts")
+							fieldset.pull-left()
 								.control-group
 									.controls
 										input(type="text",ng-model="createMerchantAccount.accountName", name="accountName", placeholder="Account Name",required)
