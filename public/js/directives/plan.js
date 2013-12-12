@@ -1999,6 +1999,9 @@ directive('ponyUpModal', ['$rootScope', 'wembliRpc', 'plan',
             scope.ponyUp = ponyUp;
           });
           scope.sendPonyUp = function() {
+            if (scope.sendPonyUpInProgress) {
+              return;
+            }
             scope.sendPonyUpInProgress = true;
             scope.error = scope.formError = scope.success = false;
             var args = {};
