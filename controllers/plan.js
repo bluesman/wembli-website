@@ -106,6 +106,8 @@ module.exports = function(app) {
 
 		/* must make sure that this customer is allowed to view this plan */
 		var foundPlan = function(err, p) {
+			console.log('found plan');
+			console.log(p);
 			if (!p) {
 				return res.redirect('/dashboard');
 			};
@@ -137,6 +139,9 @@ module.exports = function(app) {
 				if (!f) {
 					return res.redirect('/dashboard');
 				};
+				console.log('found friend invited to plan');
+				console.log(f);
+
 				Plan.findOne({
 					guid: req.param('guid')
 				}, foundPlan);

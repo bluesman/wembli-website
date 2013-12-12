@@ -2275,6 +2275,33 @@ controller('VenueMapCtrl', ['$rootScope', '$scope', 'interactiveMapDefaults', 'p
 	}
 ]).
 
+
+controller('PlanningModalCtrl', ['$rootScope', '$scope', 'wembliRpc', 'plan',
+	function($rootScope, $scope, wembliRpc, plan) {
+		$scope.deletePlan = function(guid) {
+			console.log('delete plan: '+ guid);
+			plan.deactivate({guid:guid}, function(err, result) {
+				console.log(result);
+				$scope.dashboard['organizer'].map(function(plan) {
+					console.log('plan in map: ');
+					console.log(plan);
+				});
+				var newAry = [];
+				for (var i = 0; i < $scope.dashboard['organizer'].length; i++) {
+					if ($scope.dashboard['organizer'][i].guid === guid) {
+						continue;
+					}
+					newAry.push($scope.dashboard['organizer'][i]);
+				};
+				$scope.dashboard['organizer'] = newAry;
+				console.log($scope.dashboard['organizer']);
+
+			});
+		};
+	}
+]).
+
+
 controller('LandingPageSearchCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc', 'pixel',
 	function($rootScope, $scope, $location, wembliRpc, pixel) {
 

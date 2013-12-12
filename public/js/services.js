@@ -151,6 +151,7 @@ factory('pluralize', ['$rootScope', 'wembliRpc', 'customer',
 ]).
 
 factory('pluralizeWords', [
+
 	function() {
 		return {
 			'deal': function(number) {
@@ -1017,7 +1018,12 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 				return (t1 >= t2);
 			},
 
-
+			deactivate: function(args, cb) {
+				console.log(args);
+				wembliRpc.fetch('plan.deactivate', {
+					guid: args.guid
+				}, cb);
+			},
 			//push $rootScope.plan to server and save
 			push: function() {}
 		}
@@ -1483,6 +1489,7 @@ factory('mapVenue', ['mapInfoWindowContent',
 
 
 factory('mapInfoWindowContent', [
+
 	function() {
 		return {
 			create: function(args) {
@@ -1498,6 +1505,7 @@ factory('mapInfoWindowContent', [
 ]).
 
 factory('rsvpLoginModal', [
+
 	function() {
 		var self = this;
 		return {
@@ -1512,6 +1520,7 @@ factory('rsvpLoginModal', [
 ]).
 
 factory('loggedIn', [
+
 	function() {
 		var self = this;
 		this.loggedIn = false;
@@ -1528,6 +1537,7 @@ factory('loggedIn', [
 
 /* http://www.quirksmode.org/js/cookies.html */
 factory('cookie', [
+
 	function() {
 		return {
 			create: function(name, value, days) {
@@ -1569,7 +1579,9 @@ factory('googleAnalytics', ['wembliRpc', 'cookie',
 		 * utmctr = utm_term
 		 * utmcct = utm_content
 		 */
-		self.cookie = {__utmz: {}};
+		self.cookie = {
+			__utmz: {}
+		};
 		var cookie = cookie.read("__utmz");
 		if (cookie) {
 			var z = cookie.split('.');
@@ -1707,13 +1719,13 @@ factory('facebook', ['$rootScope', '$q', 'wembliRpc', '$window', '$filter', 'cus
 							display: 'iframe',
 							link: actionLink,
 							picture: 'http://www.wembli.com/images/layout/wembli-button-222x198.png',
-							name: 'Click Here To RSVP To '+args.eventName,
+							name: 'Click Here To RSVP To ' + args.eventName,
 							to: args.to,
 							properties: {
 								'Event': args.eventName + ' @ ' + args.venue
 							},
 							actions: {
-								name: 'Click To RSVP Before '+args.rsvpDate,
+								name: 'Click To RSVP Before ' + args.rsvpDate,
 								link: actionLink
 							},
 							ref: 'rsvp'
@@ -1890,6 +1902,7 @@ factory('twitter', ['$rootScope', '$filter', 'wembliRpc',
 ]).
 
 factory('interactiveMapDefaults', [
+
 	function() {
 		return {
 			ServiceUrl: "https://imap.ticketutils.net",
@@ -2055,17 +2068,17 @@ factory('slidePage', ['$document', '$rootScope', '$window', '$templateCache', '$
 				if (newUrl.split('/'))
 
 				/* if either new or old has a hash tag and the urls are otherwise the same the gtfo */
-				if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
-					if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
-						return;
+					if (newUrl.split('#')[1] || oldUrl.split('#')[1]) {
+						if (newUrl.split('#')[0] === oldUrl.split('#')[0]) {
+							return;
+						}
+						if ((newUrl.split('#')[0] === '/') && (oldUrl.split('#')[0] === "/index")) {
+							return;
+						}
+						if ((newUrl.split('#')[0] === '/index') && (oldUrl.split('#')[0] === "/")) {
+							return;
+						}
 					}
-					if ((newUrl.split('#')[0] === '/') && (oldUrl.split('#')[0] === "/index")) {
-						return;
-					}
-					if ((newUrl.split('#')[0] === '/index') && (oldUrl.split('#')[0] === "/")) {
-						return;
-					}
-				}
 
 				var me = this;
 				var path = $location.path();

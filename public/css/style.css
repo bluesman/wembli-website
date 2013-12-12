@@ -7791,7 +7791,6 @@ header .right-container .logo-45 h1 {
   font-size: 26px;
   text-align: left;
 }
-.dashboard-plan:hover,
 .event-wrapper:hover {
   background-color: #b1cdd9;
   cursor: pointer;
@@ -11146,10 +11145,11 @@ a#facebook-login-button {
   padding: 10px 0;
 }
 #plan-frame #left #plan-nav {
+  padding-top: 50px;
   height: 100%;
   font-size: 18px;
   background-color: #426799;
-  margin-top: -18px;
+  margin-top: -66px;
 }
 #plan-frame #left #plan-nav .nav-arrow {
   position: absolute;

@@ -158,6 +158,7 @@ exports["invite-friends"] = {
 
 
 		planRpc['addFriend'].apply(function(err, results) {
+			console.log(results);
 			/* must have a customer to create a plan in the db */
 			if (results.noCustomer) {
 				data.noCustomer = true;
@@ -177,11 +178,12 @@ exports["invite-friends"] = {
 				wembliEmail.sendRSVPEmail({
 					res: res,
 					req: req,
-					rsvpDate: results.friend.rsvp.date,
+					rsvpDate: new Date(req.session.plan.rsvpDate).format('mediumDate'),
 					rsvpLink: rsvpLink,
 					email: results.friend.contactInfo.serviceId,
 					message: args.message,
 					friendId: results.friend._id,
+					friendName:results.friend.contactInfo.name,
 					planGuid: req.session.plan.guid
 				});
 

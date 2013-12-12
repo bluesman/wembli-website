@@ -71,4 +71,4 @@
 		button.btn.btn-primary.btn-large(ng-click="authActions[authAction]()",ng-hide="customer")
 			span(ng-hide="continueSpinner") Continue
 			span.icon-spinner.icon-spin(ng-show="continueSpinner")
-		a.btn.btn-primary.btn-large.wembli-sequence-link(ng-href="/rsvp/{{guid}}/{{token}}/{{service}}",ng-show="customer") See The Plan!
+		a.btn.btn-primary.btn-large(target="_self", ng-href="/rsvp/{{guid}}/{{token}}/{{service}}",ng-show="customer") See The Plan!
