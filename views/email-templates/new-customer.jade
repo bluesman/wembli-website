@@ -1,0 +1,22 @@
+extends layout
+block body
+	table(style="background:#{white};font-size:16px;",align="center", border="0", cellpadding="0", cellspacing="0", width="100%")
+		tbody
+			tr
+				td Team Wembli,
+			tr
+				td(height="80")
+					span A Customer just signed up!&nbsp;
+					- if (promo)
+						span Their discount coupon is: #{promo}.
+			tr
+				td(height="80")
+					span Confirm link is: #{confirmLink}
+			tr
+				td(height="80") SESSION:
+			tr
+				td(height="80")
+					pre= JSON.stringify(req.session, null, 2);
+			tr
+				td(height="80")
+					include includes/signature
