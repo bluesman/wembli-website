@@ -21,6 +21,8 @@ module.exports = function(app) {
 
 		/* get the friend for this token */
 		Friend.findOne().where('rsvp.token').equals(token).where('planGuid').equals(guid).exec(function(err, friend) {
+			req.syslog.notice('found friend');
+			console.log(friend);
 			/* if i have a friend then this person is invited */
 			if (err) {
 				res.redirect('/');
@@ -35,9 +37,11 @@ module.exports = function(app) {
 				};
 
 				if (friend === null) {
+				    req.syslog.notice('friend is null');
 					/* this person is no friend of the plan */
 					req.session.visitor.context = 'visitor';
 					var eventView = /partials/.test(view) ? '/partials/event/' + p.event.eventId + '/' + p.event.eventName : '/event/' + p.event.eventId + '/' + p.event.eventName;
+					req.syslog.notice('redirect to '+eventView);
 					return res.redirect(eventView);
 				}
 
@@ -52,6 +56,7 @@ module.exports = function(app) {
 
 				/* if they are not logged in ask them to log in :) */
 				if (!req.session.loggedIn) {
+				    req.syslog.notice('NOT LOGGED IN FOR RSVP');
 					console.log('not logged in');
 					/* make them login and if they came from twitter or facebook they need to login there too */
 					return res.render('rsvp', l);
@@ -61,6 +66,7 @@ module.exports = function(app) {
 				if (p.organizer.customerId === req.session.customer.id) {
 					req.session.plan = p;
 					req.session.visitor.context = 'organizer';
+					req.syslog.notice('customer is the organizer: '+view);
 					return res.redirect(view);
 				}
 
@@ -102,7 +108,7 @@ module.exports = function(app) {
 					friend.rsvp.viewed = parseInt(friend.rsvp.viewed) + 1;
 					friend.rsvp.viewedLastDate = new Date();
 					friend.customerId = req.session.customer.id;
-
+					req.syslog.notice('this person is a friend that is invited');
 					return friend.save(function(err, result) {
 						req.session.plan = p;
 						req.session.visitor.context = 'friend';
@@ -125,6 +131,7 @@ module.exports = function(app) {
 				/* this person is no friend of the plan */
 				req.session.visitor.context = 'visitor';
 				var eventView = /partials/.test(view) ? '/partials/event/' + p.event.eventId + '/' + p.event.eventName : '/event/' + p.event.eventId + '/' + p.event.eventName;
+				req.syslog.notice('this person is not invited send them to: '+eventView);
 				return res.redirect(eventView);
 			});
 		});
@@ -135,6 +142,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/rsvp/:guid/:token/:service', function(req, res) {
+		req.syslog.notice('WTF');
 		return viewPlan(req, res, '/plan');
 	});
 };
