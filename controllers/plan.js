@@ -70,7 +70,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|vote-section|invitees-section|pony-up-section|rsvp-section|cart-section)$/, function(req, res) {
+	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|vote-section|invitees-section|pony-up-section|rsvp-section|cart-section)\/?(friend|organizer)?$/, function(req, res) {
 
 		/* last minute check for geometry */
 		if (typeof req.session.plan.venue.data.geocode === "undefined") {
