@@ -177,6 +177,7 @@ require('./controllers/callback/twitter')(app);
 require('./controllers/callback/sendgrid')(app);
 require('./controllers/callback/paypal')(app);
 require('./controllers/callback/tn')(app);
+require('./controllers/send-rsvp-email')(app);
 require('./controllers/dashboard')(app);
 require('./controllers/confirm')(app);
 require('./controllers/admin')(app);
