@@ -385,14 +385,15 @@ directive('infoSlideDownLabel', [
   }
 ]).
 
-directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav', 'slidePage',
-  function($timeout, $rootScope, $window, $location, wembliRpc, cart, plan, customer, pluralize, fetchModals, planNav, slidePage) {
+directive('planDashboard', ['$templateCache','$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav', 'slidePage',
+  function($templateCache, $timeout, $rootScope, $window, $location, wembliRpc, cart, plan, customer, pluralize, fetchModals, planNav, slidePage) {
     return {
       restrict: 'C',
       replace: true,
       scope: false, //this has to be false so that the plan is shared among all the child directives
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+
           slidePage.directionOverride = -1;
 
           $scope.friendsPonyUp = function(friends) {
@@ -588,6 +589,9 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
       ],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
+          /* clear the template cache because switching between organizer and friend is the same template - refactor this */
+          $templateCache.removeAll();
+
           scope.serviceFee = function(price) {
             return price * 0.15;
           }
