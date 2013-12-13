@@ -1,3 +1,4 @@
+var wembliMail = require('wembli/email');
 var wembliUtils = require('wembli/utils');
 var wembliModel = require('../lib/wembli-model');
 var Customer = wembliModel.load('customer');
@@ -57,8 +58,15 @@ exports.friend = {
 			}
 
 			friend.save(function(err, result) {
-				data.friend = result;
-				me(null, data);
+
+				/* send email to organizer that rsvp changed */
+				/* get the organizer for this plan */
+				Customer.findOne().where('_id').equals(req.session.plan.organizer.customerId).exec(function(err,organizer) {
+					wembliMail.sendRsvpChanged({organizer: organizer, plan: req.session.plan, req: req, res: res}, function(e,r) {
+						data.friend = result;
+						me(null, data);
+					});
+				});
 			});
 		});
 	},
