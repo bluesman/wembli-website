@@ -657,9 +657,9 @@ exports.plan = {
 						/* use it */
 						/* charge the card */
 						var bCustomers = new balanced.customers();
-						bCustomers.setContext(card.customer);
+						bCustomers.setContext(req.session.customer.balancedAPI.customerAccount);
 						bCustomers.debit({
-							customer_uri: card.customer.uri,
+							customer_uri: req.session.customer.balancedAPI.customerAccount.uri,
 							on_behalf_of_uri: onBehalfOf,
 							amount: total
 						}, function(err, res, transaction) {
@@ -685,12 +685,13 @@ exports.plan = {
 								}
 								return me(null, data);
 							}
-
+							console.log('CUSTOMER CARD:');
+							console.log(card);
 							/* now debit the card */
 							var bCustomers = new balanced.customers();
-							bCustomers.setContext(card.customer);
+							bCustomers.setContext(req.session.customer.balancedAPI.customerAccount);
 							bCustomers.debit({
-								customer_uri: card.customer.uri,
+								customer_uri: req.session.customer.balancedAPI.customerAccount.uri,
 								on_behalf_of_uri: onBehalfOf,
 								amount: total
 							}, function(err, res, transaction) {
