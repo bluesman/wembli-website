@@ -30,6 +30,7 @@ module.exports = function(app) {
 
 		/* get all the plans */
 		Plan.find().where('rsvpComplete').equals(false)
+		.where('active').equals(true)
 		.where('rsvpDate').ne(null)
 		.exec(function(err, plans) {
 			plans.map(function(p) {
