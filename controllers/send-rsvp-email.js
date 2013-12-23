@@ -28,12 +28,30 @@ module.exports = function(app) {
 			});
 		};
 
+		var today = new Date();
+
 		/* get all the plans */
 		Plan.find().where('rsvpComplete').equals(false)
 		.where('active').equals(true)
 		.where('rsvpDate').ne(null)
 		.exec(function(err, plans) {
 			plans.map(function(p) {
+				/* check if there's an event and if so is the date of the event expired? */
+				if (typeof p.event === "undefined") {
+					return;
+				}
+
+				if (typeof p.event.eventDate === "undefined") {
+					return;
+				}
+
+				if (p.event.eventDate < today) {
+					/* event is in the past, set active to false */
+					p.active = false;
+					p.save();
+					return;
+				}
+
 				/* get friends invited and see if they have responded */
 				Friend.find().where('planGuid').equals(p.guid).exec(function(err, friends) {
 					var complete = true; // assume its complete until we figure out otherwise
@@ -66,7 +84,7 @@ module.exports = function(app) {
 						console.log(p.rsvpDate);
 						/* not all friends have responded, lets check the rsvp date */
 						var rsvpDate = new Date(p.rsvpDate);
-						var today = new Date();
+
 						/* if the rsvpDate is < right now then rsvp is complete even if friends have not responded */
 						console.log(rsvpDate);
 						console.log(today);
