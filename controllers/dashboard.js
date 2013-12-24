@@ -30,7 +30,7 @@ module.exports = function(app) {
 			});
 		}
 
-
+		console.log('dashboard: render '+view);
 		res.render(view, {
 			title: 'wembli.com - login to get the best seats.',
 		});
