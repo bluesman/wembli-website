@@ -6,6 +6,7 @@ var wemblirpc = require('./lib/wembli/jsonrpc');
 var syslog = require('./lib/wembli/syslog');
 var fs = require('fs');
 
+
 /* init the log file - there is already an nginx access log */
 var access_logfile = fs.createWriteStream('./logs/access.log', {
 	flags: 'a'
@@ -17,28 +18,32 @@ app = module.exports = express();
 /* static helper functions */
 app.locals = require('./helpers/static.js');
 
-/* app.settings */
+/* app.settings (default to production) */
 app.set('host', 'www');
 app.set('secure', false);
 app.set('autoIndex', false); //tell mongoose not to do autoIndex in produciton
 app.set('dbhost','mongo01.wembli.com');
 app.set('redishost','redis01.wembli.com');
 app.set('mailchimpKey','a70be54f752f1b3ce3ccd4116d0e470c-us5');
+app.set('tnUrl', 'tn.wembli.com');
 
 var port = 8000;
 
 if (process.env.NODE_ENV == 'development') {
-	port = 8000;
-	app.set('host', 'tom');
-	app.set('dbhost','localhost');
-	app.set('redishost','localhost');
+
+	var mongoConfig = require('/wembli/config/mongodb.json');
+	var redisConfig = require('/wembli/config/redis.json');
+
+	app.set('host', 'dev');
+	app.set('dbhost',mongoConfig.host);
+	app.set('redishost',redisConfig.host);
 
 	//tom.wembli.com fb app
 	app.set('fbAppId', '364157406939543');
 	app.set('fbAppSecret', 'ce9779873babc764c3e07efb24a34e69');
 	app.set('twitAppId', 'aGekerxvrd9RczHHEOLEw');
 	app.set('twitAppSecret', 'PUdQVzslAATiRCFhTXetmjbaFGoWIM092bSkuulFdk');
-	app.set('tnUrl', 'tn.wembli.com');
+
 	app.set('autoIndex', true);
 	//app.set('balancedSecret', '0b50f03cb15a11e28537026ba7d31e6f');
 	//app.set('balancedMarketplace', 'Test-mplx4zjiaba85bets7q2omz');
@@ -49,14 +54,11 @@ if (process.env.NODE_ENV == 'development') {
 }
 
 if (process.env.NODE_ENV == 'production') {
-	port = 8000;
 	app.set('secure', true);
 	app.set('host', 'www');
-	app.set('tnUrl', 'tn.wembli.com');
 	app.set('balancedSecret', '42e01b00b15e11e29523026ba7c1aba6');
 	app.set('balancedMarketplace', 'MP22BmXshSp7Q8DjgBYnKJmi');
 	app.set('balancedMarketplaceUri', '/v1/marketplaces/MP22BmXshSp7Q8DjgBYnKJmi');
-
 }
 
 /* init the openauth thing */
