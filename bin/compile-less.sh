@@ -1,4 +1,3 @@
-cd /wembli/website/
 #main site
 lessc less/style.less > public/css/style.css
 
