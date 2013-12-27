@@ -138,6 +138,7 @@
 	.modal-footer
 		a.btn(href="#",data-dismiss="modal") No
 		a.btn.btn-primary(ng-click="deleteBankAccount()") Yes
+
 #pony-up-info.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")
@@ -146,14 +147,15 @@
 		p	This is some info about how pony up works
 	.modal-footer
 		a.btn(href="#",data-dismiss="modal") Close
-#planning-modal.modal.hide
+
+#planning-modal.modal.hide(ng-controller="PlanningModalCtrl")
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")
 		h2 Events You're Planning
 	.modal-body(ng-hide="dashboard.organizer")
 		.no-plans
 			p	You aren't planning anything! ...well what are you waiting for??
-			a.start-now.btn.btn-primary.btn-large.segoe.wembli-sequence-link(href="/search")
+			a.start-now.btn.btn-primary.btn-large.segoe(href="/search")
 				span START A NEW PLAN&nbsp;
 				i.icon-double-angle-right
 	.modal-body(ng-show="dashboard.organizer")
@@ -161,6 +163,7 @@
 		include ../includes/dashboard-plan-list
 	.modal-footer
 		a.btn(href="#",data-dismiss="modal") Close
+
 #invited-modal.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")
@@ -176,6 +179,7 @@
 		include ../includes/dashboard-plan-list
 	.modal-footer
 		a.btn(href="#",data-dismiss="modal") Close
+
 #contacts-modal.modal.hide
 	.modal-header
 		i.close.icon-remove(data-dismiss="modal")

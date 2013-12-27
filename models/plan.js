@@ -31,6 +31,7 @@ this.Model = function(mongoose) {
 			eventLng: Number,
 			data:{},
 		},
+		active : {type:Boolean,default:true},
 		preferences : {
 			payment: String,
 			addOns: {

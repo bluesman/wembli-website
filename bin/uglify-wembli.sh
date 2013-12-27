@@ -1,4 +1,4 @@
-cd /wembli/website/public;
+cd public;
 
 #global js
 uglifyjs ../plugins/jquery-1.10.2.js ../plugins/jquery.slidepanel.js ../plugins/angular-1.2.4/angular.min.js ../plugins/angular-1.2.4/angular-route.min.js ../angular/controllers.js ../angular/directives.js ../angular/services.js ../angular/filters.js ../angular/controllers/header.js ../angular/services/header.js ../angular/services/facebook.js ../angular/services/twitter.js ../angular/services/pixel.js ../angular/directives/header.js ../plugins/bootstrap-3.0.2/js/transition.js ../plugins/bootstrap-3.0.2/js/collapse.js ../plugins/bootstrap-3.0.2/js/alert.js ../plugins/bootstrap-3.0.2/js/carousel.js ../plugins/bootstrap-3.0.2/js/tooltip.js ../plugins/bootstrap-3.0.2/js/dropdown.js ../plugins/bootstrap-3.0.2/js/popover.js ../plugins/bootstrap-3.0.2/js/tab.js ../plugins/bootstrap-modal/bootstrap-modalmanager.js ../plugins/bootstrap-modal/bootstrap-modal.js -o js/wembli.min.js

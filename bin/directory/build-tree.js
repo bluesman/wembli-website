@@ -511,7 +511,9 @@ function parseCsv(stream) {
 					store(key, list);
 				}
 			});
-
+			console.log('close redis');
+			client.end();
+			process.exit();
 
 		})
 		.on('error', function(error) {

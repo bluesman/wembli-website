@@ -17,6 +17,8 @@ block header
 			ul.side-nav
 				li
 					a(href="http://www.wembli.com/") home
+				li(ng-show="loggedIn")
+					a(href="http://www.wembli.com/dashboard") dashboard
 				li(ng-show="loggedIn && plan")
 					a(href="http://www.wembli.com/plan") current plan
 				li

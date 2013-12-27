@@ -385,14 +385,15 @@ directive('infoSlideDownLabel', [
   }
 ]).
 
-directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav', 'slidePage',
-  function($timeout, $rootScope, $window, $location, wembliRpc, cart, plan, customer, pluralize, fetchModals, planNav, slidePage) {
+directive('planDashboard', ['$templateCache','$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav', 'slidePage',
+  function($templateCache, $timeout, $rootScope, $window, $location, wembliRpc, cart, plan, customer, pluralize, fetchModals, planNav, slidePage) {
     return {
       restrict: 'C',
       replace: true,
       scope: false, //this has to be false so that the plan is shared among all the child directives
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
+
           slidePage.directionOverride = -1;
 
           $scope.friendsPonyUp = function(friends) {
@@ -588,6 +589,9 @@ directive('planDashboard', ['$timeout', '$rootScope', '$window', '$location', 'w
       ],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
+          /* clear the template cache because switching between organizer and friend is the same template - refactor this */
+          $templateCache.removeAll();
+
           scope.serviceFee = function(price) {
             return price * 0.15;
           }
@@ -871,7 +875,7 @@ directive('organizerItinerarySection', ['$rootScope', 'wembliRpc',
       cache: false,
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/itinerary-section',
+      templateUrl: '/partials/plan/itinerary-section/organizer',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           $rootScope.$broadcast('section-loaded');
@@ -900,7 +904,7 @@ directive('organizerRsvpSection', ['$rootScope', 'planNav', 'plan',
       cache: false,
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/rsvp-section',
+      templateUrl: '/partials/plan/rsvp-section/organizer',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           $rootScope.$broadcast('section-loaded');
@@ -946,7 +950,7 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan', '
       restrict: 'E',
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/cart-section',
+      templateUrl: '/partials/plan/cart-section/organizer',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {}
       ],
@@ -975,7 +979,7 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
       cache: false,
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/pony-up-section',
+      templateUrl: '/partials/plan/pony-up-section/organizer',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
 
@@ -1475,7 +1479,7 @@ directive('friendItinerarySection', ['$rootScope', 'wembliRpc',
       cache: false,
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/itinerary-section',
+      templateUrl: '/partials/plan/itinerary-section/friend',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           $rootScope.$broadcast('section-loaded');
@@ -1492,7 +1496,7 @@ directive('friendRsvpSection', ['$rootScope', 'wembliRpc', 'pluralize',
       cache: false,
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/rsvp-section',
+      templateUrl: '/partials/plan/rsvp-section/friend',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           $rootScope.$broadcast('section-loaded');
@@ -1560,7 +1564,7 @@ directive('friendVoteSection', ['$rootScope', 'wembliRpc',
       cache: false,
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/vote-section',
+      templateUrl: '/partials/plan/vote-section/friend',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           $rootScope.$broadcast('section-loaded');
@@ -1872,7 +1876,7 @@ directive('friendInviteesSection', ['$rootScope', 'wembliRpc',
       cache: false,
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/invitees-section',
+      templateUrl: '/partials/plan/invitees-section/friend',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           $rootScope.$broadcast('section-loaded');
@@ -1889,7 +1893,7 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
       cache: false,
       replace: true,
       scope: false,
-      templateUrl: '/partials/plan/pony-up-section',
+      templateUrl: '/partials/plan/pony-up-section/friend',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
 
@@ -1999,6 +2003,9 @@ directive('ponyUpModal', ['$rootScope', 'wembliRpc', 'plan',
             scope.ponyUp = ponyUp;
           });
           scope.sendPonyUp = function() {
+            if (scope.sendPonyUpInProgress) {
+              return;
+            }
             scope.sendPonyUpInProgress = true;
             scope.error = scope.formError = scope.success = false;
             var args = {};

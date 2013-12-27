@@ -1,3 +1,4 @@
+var wembliMail = require('wembli/email');
 var wembliUtils = require('wembli/utils');
 var wembliModel = require('../lib/wembli-model');
 var Customer = wembliModel.load('customer');
@@ -19,6 +20,8 @@ exports.friend = {
 		.where('planGuid').equals(req.session.plan.guid)
 		.where('customerId').equals(req.session.customer._id)
 		.exec(function(err, friend) {
+			/* if the value of friend.rsvp.decision has changed, send an email */
+			var oldRsvpDecision = friend.rsvp.decision;
 
 			/* this function is a mess */
 			/* args.decision is the overall plan decision and also means they are in for tickets */
@@ -58,7 +61,18 @@ exports.friend = {
 
 			friend.save(function(err, result) {
 				data.friend = result;
-				me(null, data);
+
+				if (oldRsvpDecision !== friend.rsvp.decision) {
+					/* send email to organizer that rsvp changed */
+					/* get the organizer for this plan */
+					Customer.findOne().where('_id').equals(req.session.plan.organizer.customerId).exec(function(err,organizer) {
+						wembliMail.sendRsvpChanged({organizer: organizer, plan: req.session.plan, req: req, res: res}, function(e,r) {
+							me(null, data);
+						});
+					});
+				} else {
+					me(null, data);
+				}
 			});
 		});
 	},

@@ -70,7 +70,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|vote-section|invitees-section|pony-up-section|rsvp-section|cart-section)$/, function(req, res) {
+	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|vote-section|invitees-section|pony-up-section|rsvp-section|cart-section)\/?(friend|organizer)?$/, function(req, res) {
 
 		/* last minute check for geometry */
 		if (typeof req.session.plan.venue.data.geocode === "undefined") {
@@ -106,6 +106,8 @@ module.exports = function(app) {
 
 		/* must make sure that this customer is allowed to view this plan */
 		var foundPlan = function(err, p) {
+			console.log('found plan');
+			console.log(p);
 			if (!p) {
 				return res.redirect('/dashboard');
 			};
@@ -137,6 +139,9 @@ module.exports = function(app) {
 				if (!f) {
 					return res.redirect('/dashboard');
 				};
+				console.log('found friend invited to plan');
+				console.log(f);
+
 				Plan.findOne({
 					guid: req.param('guid')
 				}, foundPlan);

@@ -211,7 +211,8 @@ exports.plan = {
 		/* if there is a customer check for an existing plan for this event and use that */
 		if (req.session.customer) {
 			Plan.findOne()
-				.where('organizer').equals(req.session.customer._id)
+				.where('active').equals(true)
+				.where('organizer.customerId').equals(req.session.customer._id)
 				.where('event.eventId').equals(args.eventId).exec(function(err, p) {
 					if (p === null) {
 						return newPlan();
@@ -656,9 +657,9 @@ exports.plan = {
 						/* use it */
 						/* charge the card */
 						var bCustomers = new balanced.customers();
-						bCustomers.setContext(card.customer);
+						bCustomers.setContext(req.session.customer.balancedAPI.customerAccount);
 						bCustomers.debit({
-							customer_uri: card.customer.uri,
+							customer_uri: req.session.customer.balancedAPI.customerAccount.uri,
 							on_behalf_of_uri: onBehalfOf,
 							amount: total
 						}, function(err, res, transaction) {
@@ -684,12 +685,13 @@ exports.plan = {
 								}
 								return me(null, data);
 							}
-
+							console.log('CUSTOMER CARD:');
+							console.log(card);
 							/* now debit the card */
 							var bCustomers = new balanced.customers();
-							bCustomers.setContext(card.customer);
+							bCustomers.setContext(req.session.customer.balancedAPI.customerAccount);
 							bCustomers.debit({
-								customer_uri: card.customer.uri,
+								customer_uri: req.session.customer.balancedAPI.customerAccount.uri,
 								on_behalf_of_uri: onBehalfOf,
 								amount: total
 							}, function(err, res, transaction) {
@@ -872,11 +874,12 @@ exports.plan = {
 					wembliMail.sendRSVPEmail({
 						res: res,
 						req: req,
-						rsvpDate: friend.rsvp.date,
+						rsvpDate: req.session.plan.rsvpDate,
 						rsvpLink: rsvpLink,
 						email: friend.contactInfo.serviceId,
 						message: args.message,
 						friendId: friend._id,
+						friendName:friend.contactInfo.name,
 						planGuid: req.session.plan.guid
 					}, function() {
 						me(null, data);
@@ -1043,7 +1046,7 @@ exports.plan = {
 				req.session.plan.addFriend(friend, function(err) {
 					if (err) {
 						data.success = 0;
-						data.dbError = 'unable to add friend ' + friend.id;
+						data.dbError = 'unable to add friend ' + friend.id + ' ' + err;
 						return me(null, data);
 					}
 					data.friend = friend;
@@ -1853,7 +1856,33 @@ exports.plan = {
 		});
 	},
 
+	deactivate: function(args, req, res) {
+		/* make sure this plan guid belongs to this customer */
+		var me = this;
+		var data = {
+			success: 1
+		};
+		if (!args.guid) {
+			return me('no guid');
+		}
+		console.log(args);
+		Plan.findOne()
+			.where('organizer.customerId').equals(req.session.customer._id)
+			.where('guid').equals(args.guid).exec(function(err, p) {
+				console.log(err,p);
+				if (p === null) {
+					//this plan does not belong to this customer
+					return me('invalid guid');
+				}
+				console.log('set active to false');
+				p.active = false;
+				p.save(function() {
+					console.log('saved active false');
+					me(null,data);
+				});
+			});
 
+	},
 
 	savePreferences: function(args, req, res) {
 		var me = this;

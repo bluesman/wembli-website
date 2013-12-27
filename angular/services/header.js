@@ -48,7 +48,7 @@ factory('header', [
 				});
 			},
 			fixed: function() {
-				angular.element(scroll).off('scroll');
+				/* angular.element(scroll).off('scroll'); */
 			}
 		}
 	}

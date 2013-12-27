@@ -113,7 +113,9 @@ this.Model = function(mongoose) {
 	/* get all the plans this customer is organizing */
 	Customer.methods.getPlans = function(callback) {
 		var c = this;
-		Plan.find().where('organizer.customerId').equals(c.id).sort('event.eventDate').exec(function(err, plans) {
+		Plan.find().where('organizer.customerId').equals(c.id)
+		.where('active').equals(true)
+		.sort('event.eventDate').exec(function(err, plans) {
 			if (err) {
 				return callback(err);
 			};
@@ -150,14 +152,17 @@ this.Model = function(mongoose) {
 		/* get the guids where this customer is a friend */
 		Friend.find().select({
 			'planGuid': 1
-		}).where('customerId').equals(c.id).exec(function(err, friends) {
+		}).where('customerId').equals(c.id)
+		.exec(function(err, friends) {
 			async.map(friends, function(item, callback) {
 				callback(null, item.planGuid);
 			},
 
 			function(err, guids) {
 				/* get all the plans for these guids */
-				Plan.find().where('guid').in(guids).sort('event.eventDate').exec(function(err, plans) {
+				Plan.find().where('guid').in(guids)
+				.where('active').equals(true)
+				.sort('event.eventDate').exec(function(err, plans) {
 					if (err) {
 						return callback(err);
 					};
