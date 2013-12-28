@@ -1,4 +1,4 @@
-var date = require('./plugins/date.format');
+var date = require('./bower_components/date.format/date.format');
 var express = require('express');
 var redis = require('connect-redis')(express);
 var everyauth = require('everyauth');

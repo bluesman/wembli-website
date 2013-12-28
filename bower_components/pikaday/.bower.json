@@ -1,0 +1,24 @@
+{
+  "name": "Pikaday",
+  "version": "1.1.0",
+  "main": [
+    "./pikaday.js",
+    "./css/pikaday.css"
+  ],
+  "dependencies": {},
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "homepage": "https://github.com/dbushell/Pikaday",
+  "_release": "1.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.1.0",
+    "commit": "8c706f5e519f854e406269a1aab4f1697db706f1"
+  },
+  "_source": "git://github.com/dbushell/Pikaday.git",
+  "_target": "~1.1.0",
+  "_originalSource": "pikaday"
+}
