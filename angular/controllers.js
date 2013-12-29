@@ -36,7 +36,6 @@ controller('PaymentTypeModalCtrl', ['$scope', '$location', 'plan', 'wembliRpc', 
 	}
 ]).
 
-
 controller('TestCtrl', ['$scope',
 	function($scope) {}
 ]);

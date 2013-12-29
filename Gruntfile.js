@@ -99,6 +99,7 @@ module.exports = function(grunt) {
         "files": {
           'public/js/search.min.js':[
             'bower_components/typeahead.js/dist/typeahead.js',
+            'bower_components/jquery-waypoints/waypoints.js',
             'angular/apps/search.js',
             'angular/controllers/search.js',
             'angular/directives/search.js',

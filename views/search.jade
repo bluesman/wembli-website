@@ -25,6 +25,7 @@ block content
 		- var placeholder = 'Enter an event, team or venue...'
 	- url += Date.today().format("mm-dd-yy")
 	#search(ng-controller="SearchCtrl")
+		//- is this needed - check more events directive??
 		input(type="hidden", name="search", value="#{search}", ng-init="search='#{search}'")
 		input(type="hidden", name="city", value="#{req.session.visitor.tracking.city}", ng-init="city='#{req.session.visitor.tracking.city}'")
 		input(type="hidden", name="postalCode", value="#{req.session.visitor.tracking.postalCode}", ng-init="postalCode='#{req.session.visitor.tracking.postalCode}'")
@@ -36,11 +37,12 @@ block content
 					img(src="/images/search-arrow.png").img-responsive.search-arrow
 					.copy.segoe Search for the event you want to go to...
 					img(src="/images/question.png").img-responsive.wembliman
+
 				#search-right.col-md-8.col-xs-12
 					.search-box
-						form#index-search-form.search-form.clearfix(method="GET", action="/search/events", ng-submit="submitSearch()")
-							i.fa.fa-search.fa-2x.pull-left(ng-hide="searchInProgress")
-							i.fa.fa-cog.fa-spin.fa-2x.pull-left(ng-show="searchInProgress")
+						form#search-form.search-form.clearfix(method="GET", action="/search/events", ng-submit="submitSearch()")
+							i.fa.fa-search.pull-left(ng-hide="searchInProgress")
+							i.fa.fa-cog.fa-spin.pull-left(ng-show="searchInProgress")
 							input#query.pull-left(type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
 							button.btn.btn-secondary.segoe.pull-left(href="#") search
 
@@ -49,7 +51,7 @@ block content
 							//- event list
 							#event-list-wrapper
 								h3= heading
-								ul
+								ul.event-list-waypoint
 									each event in events
 										li.row.show-ticket-range.start-plan(event-name="#{event.Name}",event-id="#{event.ID}",name="#{event.Name}",id="#{event.ID}-wrapper")
 											- var lastSearch = visitor.lastSearch ? visitor.lastSearch : '/search';
@@ -88,53 +90,60 @@ block content
 												.ticket-range
 													i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData['#{event.ID}'].locked")
 									//- this is needed for the more events client side functionality
-									li.hide.event-wrapper.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
+									li.row.show-ticket-range.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
 										- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 										- lastSearch += '?updateEvent=1';
 										- var payment;
 										- if ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined"))
 											- payment = plan.preferences.payment;
-										//- a.hide(id="{{event.ID}}",href="/tickets/{{event.ID}}/{{event.Name}}")
-										.event-date-box
-											span.day {{getDate(event.Date)| date:'EEE'}}
-											span.event-date {{getDate(event.Date)| date:'MMM d'}}
-											span.time {{getDate(event.Date)| date:'h:mm a'}}
-										.info
-											.pull-left
+										.col-md-2
+											.event-date-box
+												span.day {{getDate(event.Date)| date:'EEE'}}
+												span.event-date {{getDate(event.Date)| date:'MMM d'}}
+												span.time {{getDate(event.Date)| date:'h:mm a'}}
+										.col-md-8
+											.info
 												span.name.block {{event.Name}}
 												span.venue.block {{ event.Venue.Name || event.Venue }}
 												span.location.block {{event.City+', '+event.StateProvince}}
 												- if (typeof changeEvent != "undefined" && changeEvent == true)
 													span.changeEvent.block
 														a#changeEvent(href="http://#{app.settings.host}.wembli.com/search/#{lastSearch}") Change Event
-											.pull-right
-												.cta
-													case payment
-														when "split-first"
-															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
-														when "split-after"
-															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
-														when "no-split"
-															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
-														default
-															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",name="{{event.Name}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+										.col-md-2
+											.cta
+												case payment
+													when "split-first"
+														a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+													when "split-after"
+														a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+													when "no-split"
+														a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+													default
+														a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",name="{{event.Name}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+											.ticket-range
+												i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData[event.ID].locked")
+
+									li.row.loading-more-events(ng-show="loadingMoreEvents")
+										.icon.col-md-2
+											i.fa.fa-cog.fa-spin.fa-2x.pull-left
+										.message.col-md-10
+											span loading more events...
+
+									li.hide(ng-init="noMoreEvents=false")
+
+									li.no-results(ng-show="noMoreEvents")
+										.notify-email(type="search")
+											.collect-email(ng-hide="emailCollected")
+												p Aww shucks! We haven't got any more event listings to show you.  Enter your email below if you'd like to be notified when events become available.
+												fieldset
+													input#email
+											.collected-email(ng-show="emailCollected")
+												p OK! We'll let you know if any events become available!
+											.clearfix
+												.back-to-search.pull-left
+													a(href="/search") << Perform a new search
+												button.btn.btn-primary.pull-right(ng-hide="emailCollected",ng-click="collectEmail()") Notify Me!
 
 
-							.hide(ng-init="noMoreEvents=false")
-						.no-results(ng-show="noMoreEvents")
-							.notify-email(type="search")
-								.collect-email(ng-hide="emailCollected")
-									p Aww shucks! We haven't got any more event listings to show you.  Enter your email below if you'd like to be notified when events become available.
-									fieldset
-										input#email
-								.collected-email(ng-show="emailCollected")
-									p OK! We'll let you know if any events become available!
-								.clearfix
-									.back-to-search.pull-left
-										a(href="/search") << Perform a new search
-									button.btn.btn-primary.pull-right(ng-hide="emailCollected",ng-click="collectEmail()") Notify Me!
 
-						a#more-events(ng-click="moreEvents()",ng-hide="noMoreEvents")
-							span= seeMore
-							i.fa.fa-chevron-down
 

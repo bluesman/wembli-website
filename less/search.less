@@ -20,9 +20,20 @@
 		.results {
 			background:@grayLighter;
 
-			.loading {
-				padding: 4px;
-				text-align:center;
+			.loading-more-events {
+				background-color: lighten(@blueLight, 20%);
+				font-size:1.6em;
+				.icon {
+					i {
+						margin:0 30px
+					}
+				}
+				.message {
+					text-align:left;
+					span {
+						line-height:50px;
+					}
+				}
 			}
 
 			#event-list-wrapper > h3 {
@@ -60,7 +71,7 @@
 							}
 
 							.event-date {
-								padding-top:2px;
+								padding-top:6px;
 								font-weight:bold;
 								font-size:1.2em;
 								border-left: 1px solid @grayDark;
@@ -69,7 +80,7 @@
 							}
 
 							.time {
-								padding-bottom: 2px;
+								padding-bottom: 6px;
 								border-left: 1px solid @grayDark;
 								border-right: 1px solid @grayDark;
 								border-bottom: 1px solid @grayDark;
@@ -103,18 +114,6 @@
 
 			}
 
-			a#more-events {
-				display:block;
-				background-color: @grayLight;
-				text-align:center;
-				height:30px;
-				line-height: 30px;
-				vertical-align: middle;
-
-				i {
-					margin:1px 0px 0px 8px;
-				}
-			}
 		}
 
 		.no-results {
