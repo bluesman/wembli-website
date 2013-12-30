@@ -13,8 +13,7 @@ angular.module('wembliApp', [
   'wembliApp.services.twitter',
   'wembliApp.services.pixel',
   'wembliApp.directives',
-  'wembliApp.directives.header',
-  'wembliApp.directives.login',
+  'wembliApp.directives.header'
 ]).config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
     //$locationProvider.html5Mode(true);
