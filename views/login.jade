@@ -1,5 +1,53 @@
-extends hero
-block hero-left
-	include includes/login/hero-left
-block hero-right
-	include includes/login/hero-right
+extends layout
+block content
+
+	#login(ng-controller="LoginCtrl")
+		.container
+			.row
+				#login-left.col-md-4.hidden-xs.hidden-sm
+					img(src="/images/search-arrow.png").img-responsive.search-arrow
+					.copy.segoe Did you know your plan is automatically saved when you're logged in?
+					img(src="/images/question.png").img-responsive.wembliman
+				#login-right.col-md-6.col-xs-12
+					h1
+						i.fa.fa-lock
+						span &nbsp;Login To Your Wembli Account
+					form#login-form.row(novalidate, role="form", name="loginForm", ng-submit="submitLoginForm()")
+						input.redirect-url(ng-model="redirectUrl", type="hidden",name="redirectUrl",value="")
+						input(type="hidden",ng-model="formError", value="")
+						fieldset
+							.error(ng-show="loginForm.invalidCredentials") The email or password was not correct.
+							.error(ng-show="loginForm.fatalError") Error trying to login - click feedback and support below to let us know!
+							.form-group.clearfix
+								label(for="email") Enter your email address:
+								input#email.form-control(ng-model="email",placeholder="EMAIL ADDRESS",type="email",name="email", required)
+								i.fa.fa-check-circle.green(ng-show="loginForm.email.$dirty && loginForm.email.$valid")
+								i.fa.fa-exclamation-circle.gray-light(ng-show="loginForm.email.$dirty && loginForm.email.$invalid")
+							.form-group
+								label(for="password") Password
+								input#password.form-control(ng-model="password",placeholder="PASSWORD", type="password", value="", name="password", required)
+								i.fa.fa-check-circle.green(ng-show="loginForm.password.$dirty && loginForm.password.$valid")
+								i.fa.fa-exclamation-circle.gray-light(ng-show="loginForm.password.$dirty && loginForm.password.$invalid")
+							.col-md-4.checkbox
+								label
+									input(ng-model="remember", type="checkbox", name="remember")
+									span Remember Me
+							.col-md-4.col-md-offset-4
+								a#forgot-password-link(href="/forgot-password") Forgot your password?
+
+						.col-md-4
+							button(type="submit").btn.btn-primary.btn-lg
+								span Secure Login&nbsp;
+								i.fa.fa-lock(ng-hide="loginInProgress")
+								i.fa.fa-cog.fa-spin(ng-show="loginInProgress")
+						.col-md-4.col-md-offset-4
+							a#signup-link(href="/signup")
+								span New to Wembli?
+								br
+								span Click here to Sign Up.
+
+					a.facebook-login(target="_self", href="/auth/facebook")
+						i.fa.fa-facebook-square
+						span &nbsp;Login with Facebook instead.
+
+

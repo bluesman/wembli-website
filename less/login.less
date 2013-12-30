@@ -1,23 +1,77 @@
 /* this applies to login and signup */
+#login {
+	margin-top: 20px;
 
-/* this is the old facebook login with the image */
-a#facebook-login {
-	background: transparent url('/images/facebook-login.png') no-repeat center center;
-	display:block;
-	margin:30px auto 0;
-	height:82px;
-	width:258px;
-	color:white;
-	font-size:14px;
+	#login-left {
+		.copy, .wembliman, .search-arrow {
+			margin:25px auto;
+		}
 
-	span {
-		display:block;
-		width:196px;
-		position:relative;
-		top:30px;
-		left:61px;
+		.search-arrow {
+			margin-left:125px;
+		}
+
+		.copy {
+			.rotate(-4deg);
+			width:220px;
+			text-align:center;
+			font-size:1.2em;
+		}
+	}
+
+
+	#login-right {
+		margin-top:40px;
+
+		#confirm-password-form, #signup-form, #forgot-password-form, #login-form {
+			fieldset {
+				border-radius: 4px;
+				border: thin solid @grayDark;
+				padding:20px;
+				margin:20px 0;
+
+				.form-group {
+					position:relative;
+
+					label {
+						font-weight:bold;
+						padding:4px 0;
+					}
+
+					input {
+
+					}
+					i {
+						position:absolute;
+						top:35px;
+						left:95%;
+						font-size:1.4em;
+					}
+				}
+
+				#forgot-password-link {
+					font-size:0.9em;
+					margin:10px 0;
+					display:block;
+				}
+			}
+			#login-link, #signup-link {
+				font-size: .9em;
+				margin:10px 0;
+				display:block;
+			}
+		}
+		.facebook-login {
+			width:100%;
+			margin:20px 0;
+			padding:20px 0;
+			display: block;
+		}
 	}
 }
+
+
+
 
 a#facebook-login:hover {
 	color:@orange;

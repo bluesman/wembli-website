@@ -19,3 +19,56 @@ script
 		po.src = 'https://apis.google.com/js/plusone.js';
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 	})();
+
+//- is this used? - yes
+if (typeof req.session.conversions !== "undefined")
+	if (req.session.conversions.signup)
+		- req.session.conversions.signup = false;
+		script(type="text/javascript")
+			var fb_param = {};
+			fb_param.pixel_id = '6012473272971';
+			fb_param.value = '0.00';
+			fb_param.currency = 'USD';
+			(function(){
+				var fpw = document.createElement('script');
+				fpw.async = true;
+				fpw.src = '//connect.facebook.net/en_US/fp.js';
+				var ref = document.getElementsByTagName('script')[0];
+				ref.parentNode.insertBefore(fpw, ref);
+			})();
+		noscript
+			img(height="1",width="1",alt="",style="display:none",src="https://www.facebook.com/offsite_event.php?id=6012473272971&amp;value=0&amp;currency=USD")
+
+		script(type="text/javascript")
+			var fb_param = {};
+			fb_param.pixel_id = '6012472260371';
+			fb_param.value = '0.00';
+			fb_param.currency = 'USD';
+			(function(){
+				var fpw = document.createElement('script');
+				fpw.async = true;
+				fpw.src = '//connect.facebook.net/en_US/fp.js';
+				var ref = document.getElementsByTagName('script')[0];
+				ref.parentNode.insertBefore(fpw, ref);
+			})();
+		noscript
+			img(height="1",width="1",alt="",style="display:none",src="https://www.facebook.com/offsite_event.php?id=6012472260371&amp;value=0&amp;currency=USD")
+
+//- google analytics
+script(type = "text/javascript")
+	var _gaq = _gaq || [];
+	var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+	_gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+	_gaq.push(['_setAccount', 'UA-28081425-1']);
+	_gaq.push(['_setDomainName', 'wembli.com']);
+	_gaq.push(['_setSiteSpeedSampleRate', 100]);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script');
+		ga.type = 'text/javascript';
+		ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+		var s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(ga, s);
+	})();

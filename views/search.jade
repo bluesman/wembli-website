@@ -47,11 +47,11 @@ block content
 							button.btn.btn-secondary.segoe.pull-left(href="#") search
 
 					.results(ng-controller="EventListCtrl")
-						if ((typeof events !== "undefined") && (typeof events[0] !== "undefined"))
-							//- event list
-							#event-list-wrapper
-								h3= heading
-								ul.event-list-waypoint
+						//- event list
+						#event-list-wrapper
+							h3= heading
+							ul.event-list-waypoint
+								if ((typeof events !== "undefined") && (typeof events[0] !== "undefined"))
 									each event in events
 										li.row.show-ticket-range.start-plan(event-name="#{event.Name}",event-id="#{event.ID}",name="#{event.Name}",id="#{event.ID}-wrapper")
 											- var lastSearch = visitor.lastSearch ? visitor.lastSearch : '/search';
@@ -130,19 +130,21 @@ block content
 											span loading more events...
 
 									li.hide(ng-init="noMoreEvents=false")
+								else
+									li.hide(ng-init="noMoreEvents=true")
 
-									li.no-results(ng-show="noMoreEvents")
-										.notify-email(type="search")
-											.collect-email(ng-hide="emailCollected")
-												p Aww shucks! We haven't got any more event listings to show you.  Enter your email below if you'd like to be notified when events become available.
-												fieldset
-													input#email
-											.collected-email(ng-show="emailCollected")
-												p OK! We'll let you know if any events become available!
-											.clearfix
-												.back-to-search.pull-left
-													a(href="/search") << Perform a new search
-												button.btn.btn-primary.pull-right(ng-hide="emailCollected",ng-click="collectEmail()") Notify Me!
+								li.no-results(ng-show="noMoreEvents")
+									.notify-email(type="search")
+										.collect-email(ng-hide="emailCollected")
+											p Aww shucks! We haven't got any more event listings to show you.  Enter your email below if you'd like to be notified when events become available.
+											fieldset
+												input#email
+										.collected-email(ng-show="emailCollected")
+											p OK! We'll let you know if any events become available!
+										.clearfix
+											.back-to-search.pull-left
+												a(href="/search") << Perform a new search
+											button.btn.btn-primary.pull-right(ng-hide="emailCollected",ng-click="collectEmail()") Notify Me!
 
 
 

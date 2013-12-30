@@ -354,7 +354,7 @@ exports.customer = {
 
 			//customer exists
 			if (c !== null) {
-				req.syslog.notice('email: '+args.email+' is already signed up');
+				req.syslog.notice('email: ' + args.email + ' is already signed up');
 				//they've already signed up
 				data.exists = true;
 				if (typeof c.password === "undefined") {
@@ -510,14 +510,17 @@ exports.customer = {
 			success: 1
 		};
 
+		console.log(args);
+
 		//validate email/password against the db
 		Customer.findOne({
 			email: args.email
 		}, function(err, c) {
 			if (err) {
+				console.log('err finding customer');
 				return me(err);
 			}
-
+			console.log(c);
 			if (c != null) {
 				//make a digest from the email
 				var digest = wembliUtils.digest(args.password);
@@ -583,7 +586,7 @@ exports.customer = {
 				} else {
 					if (c.password != digest) {
 						return me(null, {
-							success: 1,
+							success: 0,
 							error: true,
 							invalidCredentials: true
 						});
@@ -591,12 +594,81 @@ exports.customer = {
 				}
 			} else {
 				return me(null, {
-					success: 1,
+					success: 0,
 					error: true,
 					invalidCredentials: true
 				});
 			}
 		}, false);
+	},
+
+	resetPassword: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		console.log(args);
+
+		if (!args.password || (args.password !== args.password2)) {
+			data.passwordMismatch = true;
+			data.success = 0;
+			return me(null, data);
+		}
+
+		//validate email/password against the db
+		Customer.findOne({
+			email: args.email
+		}, function(err, c) {
+			if (err) {
+				console.log('err finding customer');
+				return me(err);
+			}
+
+			if (c == null) {
+				return me('no customer');
+			}
+
+			if (typeof c.forgotPassword == "undefined") {
+				//no crystal
+				return me('forgot password not initiated');
+			}
+
+			console.log('customer');
+			console.log(c);
+			//check if this token is expired
+			var dbTimestamp = c.forgotPassword[0].timestamp;
+			var currentTimestamp = new Date().getTime();
+			var timePassed = (currentTimestamp - dbTimestamp) / 1000;
+			//has it been more than 2 days?
+			if (timePassed > 172800) {
+				data.success = 0;
+				data.expired = true;
+				return me(null, data);
+			}
+
+			//make sure the passed in token matches the db token
+			if (args.token != c.forgotPassword[0].token) {
+				data.success = 0;
+				data.tokenMismatch = true;
+				return me(null, data);
+			}
+
+			var password = wembliUtils.digest(args.password);
+			var forgotPassword = [];
+			var confirmed = true;
+			c.update({
+				forgotPassword: [],
+				password: password,
+				confirmed: confirmed
+			}, function(err) {
+				//log em in
+				req.session.loggedIn = true;
+				req.session.customer = c;
+				console.log('successfully set password');
+				return me(null, data);
+			});
+		});
 	},
 
 	sendConfirmationEmail: function(args, req, res) {
@@ -752,9 +824,9 @@ exports.customer = {
 				return me(err);
 			}
 			if (c === null) {
+				data.success = 0;
 				data.error = true;
 				data.noCustomer = true;
-
 				return me(null, data);
 			}
 			/* send forgot password email */

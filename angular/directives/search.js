@@ -50,6 +50,7 @@ directive('eventListWaypoint', ['wembliRpc', '$filter', '$timeout',
                 }
 
                 $timeout(function() {
+                  console.log(result);
                   if (result.event.length < 1) {
                     scope.noMoreEvents = true;
                     $this.waypoint('destroy');
@@ -119,10 +120,11 @@ directive('showTicketRange', ['wembliRpc', '$window',
               console.log('getpricing info');
               console.log(args);
 
-            wembliRpc.fetch('event.getPricingInfo', args,
-              function(err, result) {
+            wembliRpc.fetch('event.getPricingInfo', args, function(err, result) {
+                var summaryContent = 'Click for ticket pricing';
+
                 if (err) {
-                  alert('error happened - contact help@wembli.com');
+                  $('#' + attr.id + ' .ticket-range').html(summaryContent).fadeIn();
                   return;
                 }
 
@@ -130,11 +132,8 @@ directive('showTicketRange', ['wembliRpc', '$window',
                 scope.ticketSummaryData[attr.eventId].locked = false;
 
                 /* init the popover */
-                var summaryContent = null;
                 if (typeof result.ticketPricingInfo.ticketsAvailable !== "undefined") {
-                  if (result.ticketPricingInfo.ticketsAvailable === '0') {
-                    summaryContent = null;
-                  } else {
+                  if (result.ticketPricingInfo.ticketsAvailable !== '0') {
                     summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketsAvailable + " ticket" : result.ticketPricingInfo.ticketsAvailable + " tickets";
                     if (parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
                       summaryContent += "<br/> $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
@@ -142,8 +141,6 @@ directive('showTicketRange', ['wembliRpc', '$window',
                       summaryContent += "<br/> $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " - $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
                     }
                   }
-                } else {
-                  summaryContent = 'Click for ticket pricing';
                 }
 
                 scope.ticketSummaryData[attr.eventId] = summaryContent;
@@ -151,20 +148,6 @@ directive('showTicketRange', ['wembliRpc', '$window',
                 if (summaryContent) {
                   $('#' + attr.id + ' .ticket-range').html(summaryContent).fadeIn();
                 }
-              },
-
-              /* transformRequest */
-
-              function(data, headersGetter) {
-                //$('#more-events .spinner').show();
-                return data;
-              },
-
-              /* transformResponse */
-
-              function(data, headersGetter) {
-                //$('#more-events .spinner').hide();
-                return JSON.parse(data);
               });
           });
 

@@ -31,7 +31,6 @@ module.exports = function(app) {
 		eventRpc['get'].apply(function(err,results) {
 			res.render('search', {
 				events: results.event,
-				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 				jsIncludes:['/js/search.min.js']
 			});
 		},[args,req,res]);

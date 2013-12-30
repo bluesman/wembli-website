@@ -11,17 +11,9 @@ controller('EventListCtrl', ['$scope', '$location', 'wembliRpc', '$filter', '$ro
 	}
 ]).
 
-/*
- * Event Controller
- */
 
-controller('EventCtrl', ['$scope',
-	function($scope) {}
-]).
-
-
-controller('SearchCtrl', ['$scope', '$rootScope',
-	function($scope, $rootScope) {
+controller('SearchCtrl', ['$scope', '$rootScope', '$window',
+	function($scope, $rootScope, $window) {
 		$rootScope.$broadcast('search-page-loaded', {});
 
 		$scope.searchInProgress = false;
@@ -32,7 +24,7 @@ controller('SearchCtrl', ['$scope', '$rootScope',
 
 		$scope.submitSearch = function() {
 			$scope.searchInProgress = true;
-			$window.location.href = '/search/events/' + $scope.search;
+			//$window.location.href = '/search/events/' + $scope.search;
 		}
 
 	}

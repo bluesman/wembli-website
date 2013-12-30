@@ -1,6 +1,47 @@
-extends hero
-block hero-left
-	include includes/signup/hero-left
-block hero-right
-	include includes/signup/hero-right
+extends layout
+block content
+	#login(ng-controller="SignupCtrl")
+		.container
+			.row
+				#login-left.col-md-4.hidden-xs.hidden-sm
+					img(src="/images/search-arrow.png").img-responsive.search-arrow
+					.copy.segoe Sign up to get access to the best live-event planning tool in the history of the web!
+					img(src="/images/question.png").img-responsive.wembliman
+				#login-right.col-md-6.col-xs-12
+					h1
+						i.fa.fa-lock
+						span &nbsp;Sign Up For Wembli
+					form#signup-form.row(novalidate, role="form", name="signupForm", ng-submit="submitSignupForm()")
+						input.redirect-url(ng-model="redirectUrl", type="hidden",name="redirectUrl",value="")
+						fieldset
+							.error(ng-show="signupForm.exists") We've already got an account for that email.
+							.error(ng-show="signupForm.fatalError") Error trying to login - click feedback and support below to let us know!
+							.form-group
+								label(for="firstName") First Name
+								input#first-name.form-control(ng-model="firstName",placeholder="FIRST NAME",type="text",name="firstName",required)
+								i.fa.fa-check-circle.green(ng-show="signupForm.firstName.$dirty && signupForm.firstName.$valid")
+								i.fa.fa-exclamation-circle.gray-light(ng-show="signupForm.firstName.$dirty && signupForm.firstName.$invalid")
+							.form-group
+								label(for="lastName") Last Name
+								input#last-name.form-control(ng-model="lastName",placeholder="LAST NAME",type="text",name="lastName",required)
+								i.fa.fa-check-circle.green(ng-show="signupForm.lastName.$dirty && signupForm.lastName.$valid")
+								i.fa.fa-exclamation-circle.gray-light(ng-show="signupForm.lastName.$dirty && signupForm.lastName.$invalid")
+							.form-group
+								label(for="email") Email Address:
+								input#email.form-control(ng-model="email",placeholder="EMAIL ADDRESS",type="email",name="email", required)
+								i.fa.fa-check-circle.green(ng-show="signupForm.email.$dirty && signupForm.email.$valid")
+								i.fa.fa-exclamation-circle.gray-light(ng-show="signupForm.email.$dirty && signupForm.email.$invalid")
+						.col-md-4
+							button(type="submit").btn.btn-primary.btn-lg
+								span Secure Signup&nbsp;
+								i.fa.fa-lock(ng-hide="signupInProgress")
+								i.fa.fa-cog.fa-spin(ng-show="signupInProgress")
+						.col-md-4.col-md-offset-4
+							a#login-link(href="/login")
+								span Already a member?
+								br
+								span Click here to Login.
 
+					a.facebook-login(target="_self", href="/auth/facebook")
+						i.fa.fa-facebook-square
+						span &nbsp;Sign Up with Facebook instead.

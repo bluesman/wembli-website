@@ -106,6 +106,15 @@ module.exports = function(grunt) {
             'angular/directives/typeahead.js'
           ]
         }
+      },
+      "login": {
+        "files": {
+          'public/js/login.min.js':[
+            'angular/apps/login.js',
+            'angular/controllers/login.js',
+            'angular/directives/login.js',
+          ]
+        }
       }
     },
     watch: {

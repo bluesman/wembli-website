@@ -384,6 +384,10 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 							loggedIn.set(result.loggedIn);
 						}
 
+						if (typeof result.rememberEmail !== "undefined") {
+							$rootScope.rememberEmail = result.rememberEmail;
+						}
+
 						if (typeof result.customer !== "undefined" && result.customer) {
 							customer.set(result.customer);
 						}
