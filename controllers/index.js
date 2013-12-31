@@ -88,6 +88,10 @@ module.exports = function(app) {
 		res.render('test-angular');
 	});
 
+	app.get('/test-responsive', function(req, res) {
+		res.render('test-responsive');
+	});
+
 
 	app.get('/style-guide', function(req, res) {
 		res.render('style-guide.jade', {

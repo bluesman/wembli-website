@@ -20,6 +20,7 @@
 }
 
 #index {
+	text-align:left;
 
 	section {
 		position:relative;
@@ -27,67 +28,66 @@
 
 	h1 {
 		font-weight:bold;
-		font-family: "Calibri";
-		font-size:2em;
 		text-transform: uppercase;
-	}
-
-	h2 {
-		font-size:1.3em;
 	}
 
 	h1, h2 {
 		color:@black;
 	}
 
+	/* Extra Small (phones) */
+	@media (max-width: @screen-xs-max) {
+		h1 {
+			font-size:19px;
+		}
+		h2 {
+			font-size:17px;
+		}
+	}
+
+	/* Small devices (tablets, 768px and up) */
+	@media (min-width: @screen-sm-min) {
+		text-align:center;
+	}
+	.section1 {
+		margin:0px;
+	}
+
 	.section2 {
-		position:relative;
 		width:100%;
-		top:-230px;
-		margin-bottom:-200px;
 
 		.tag-line {
-			text-transform: uppercase;
-			text-shadow: #000 2px 2px 6px;
-			font-weight: normal;
-			text-align:center;
-			color:@white;
-		}
-
-
-		.search-box {
-			width:70%;
-			font-size:1em;
-		}
-
-		.copy {
-			text-align:center;
-			font-size:.6em;
-			color:@white;
+			margin:10px 0 4px 0;
 		}
 
 		/* Small devices (tablets, 768px and up) */
-		@media (min-width: @screen-xs-min) {
-			top:-230px;
-			margin-bottom:-110px;
-		}
-
 		@media (min-width: @screen-sm-min) {
-			font-size: 1.5em;
-			top:-270px;
-			margin-bottom:-140px;
+			position:relative;
+			top:-280px;
+			margin-bottom:-200px;
+
+			.tag-line {
+				text-shadow: @grayDarker 2px 2px 6px;
+				font-weight: normal;
+			}
+
+			.copy, .tag-line {
+				color:@white;
+			}
+
+			.search-box {
+				width:70%;
+			}
 		}
 
 		/* Medium devices (desktops, 992px and up) */
 		@media (min-width: @screen-md-min) {
-			font-size: 2em;
 			top:-300px;
 			margin-bottom:-170px;
 		}
 
 		/* Large devices (large desktops, 1200px and up) */
 		@media (min-width: @screen-lg-min) {
-			font-size: 2.5em;
 			top:-330px;
 			margin-bottom:-200px;
 		}
@@ -95,17 +95,15 @@
 	}
 
 	.section3 {
-		padding:0 0 100px 0;
-		text-align: center;
+		padding-bottom: 20px;
+		margin:auto;
 
 		h1 {
-			position:absolute;
 			width:100%;
 			margin-top:20px;
 		}
 
 		h2 {
-			font-size:1.3em;
 			font-weight:bold;
 		}
 
@@ -119,6 +117,7 @@
 				padding:0 20px;
 			}
 		}
+
 	}
 
 	.section4 {
@@ -129,26 +128,51 @@
 		}
 
 		.video-container {
-			padding:100px 0px;
-			margin:auto;
 			color:@black;
-			text-align:left;
 
 			.video-text {
+				text-align:left;
 				margin:auto;
-				width:480px;
 				padding:40px 0;
-
 				p {
 					padding:4px;
 				}
-
 			}
 
 			.video {
+				padding:40px 0;
+
 				iframe {
-					display: block;
+					height:180px;
+					width:240px;
 					margin:auto;
+					display:block;
+				}
+			}
+		}
+
+
+		/* Small devices (tablets, 768px and up) */
+		@media (min-width: @screen-sm-min) {
+
+			.video-container {
+				padding:20px 0px;
+
+				.video-text {
+					margin:auto;
+					padding:40px 0;
+					p {
+						padding:4px;
+					}
+				}
+
+				.video {
+					padding:40px 0;
+
+					iframe {
+						height:360px;
+						width:480px;
+					}
 				}
 			}
 		}
@@ -156,8 +180,18 @@
 
 	.section5 {
 		background-color:@blueDark;
-		padding-bottom: 60px;
-		min-height:490px;
+		padding-bottom:60px;
+
+		/* (tablets) */
+		@media (max-width: @screen-sm-max) {
+			h2 {
+				font-size:1.6em;
+			}
+
+			.performers {
+				font-size:1.4em;
+			}
+		}
 
 		.container {
 			text-align:left;
@@ -165,22 +199,14 @@
 			.top-events-arrow {
 				position:absolute;
 				img {
-					margin:65px 0 0 80px;
+					margin:30px 0 0 20px;
 				}
 			}
 
 			.header {
-				text-align: center;
-
 				h1 {
-					text-align: center;
-					margin:50px 0;
+					margin:20px 0;
 				}
-
-			}
-
-			.top-lists {
-				margin-top:30px;
 			}
 
 			.left, .middle, .right {
@@ -189,17 +215,19 @@
 					padding:6px;
 					max-width:300px;
 				}
-				.performer {
-					font-size:14px;
-				}
 			}
+		}
 
-			.left {
-				.performers {
-
+		/* Small devices (tablets, 768px and up) */
+		@media (min-width: @screen-sm-min) {
+			.top-lists {
+				margin-top:50px;
+				h2 {
+					font-size:20px;
 				}
 			}
 		}
+
 	}
 
 	.section6 {
@@ -268,7 +296,7 @@
 			}
 
 			.links {
-				margin-top:20px;
+				margin:20px 0;
 
 				.footer-link {
 					color:@white;
@@ -276,10 +304,6 @@
 				a:hover {
 					color:@yellowDark;
 				}
-			}
-
-			.footer-column {
-				width:25%;
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 extends layout
 block content
 	#index(ng-controller="IndexCtrl")
-		section.section1.carousel-container
+		section.section1.carousel-container.hidden-xs
 			#carousel.carousel.slide
 				ol.carousel-indicators
 					li.active(data-target="#carousel",data-slide-to="0")
@@ -29,8 +29,7 @@ block content
 				//- a.carousel-control.right.icon-chevron-sign-right.icon-3x(href="#carousel",data-slide="next")
 
 		section.section2.container
-			.tag-line
-				p LIVE EVENTS SUPERSTORE
+			h1.tag-line LIVE EVENTS SUPERSTORE
 			//- can this be an include?
 			.search-box
 				form#index-search-form.search-form.clearfix(ng-submit="submitSearch()", novalidate)
@@ -43,8 +42,9 @@ block content
 				p Get deals on tickets to concerts, theater and sports events then choose add ons like parking, restaurant deals and hotels.
 				p You can even invite and go dutch with friends so you don’t get stuck footing their bill!
 		section.section3.container
-			h1 GO AHEAD - INVITE FRIENDS!
-			img(src="/images/index-wembli-man-arrow.png").wembli-man-arrow.img-responsive
+			h1.hidden-xs GO AHEAD - INVITE FRIENDS!
+			img.hidden-xs.hidden-sm(src="/images/index-wembli-man-arrow.png").wembli-man-arrow.img-responsive
+			h1.visible-xs HOW IT WORKS
 
 			.row.info-boxes
 				.col-md-3.box.one.clearfix
@@ -69,31 +69,31 @@ block content
 							p We save you time, money... and friendships!
 							p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
 					.col-md-6.video
-						iframe(width="480",height="360",src="//www.youtube.com/embed/_DKAIoIHk5c",frameborder="0",allowfullscreen)
+						iframe(src="//www.youtube.com/embed/_DKAIoIHk5c",frameborder="0",allowfullscreen)
 
 		section.section5
 			.container
 				.row.hidden-sm.hidden-xs
-					.col-md-6.col-md-offset-2.top-events-arrow
+					.col-md-6.col-md-offset-3.top-events-arrow
 						img(src="/images/top-events-arrow.png").img-responsive
 				.row.header
-					.col-md-6.col-md-offset-3
+					.col-md-8.col-md-offset-2
 						h1 UPCOMING EVENTS IN YOUR AREA
 				.row.top-lists
 					.col-md-3.col-md-offset-1
-						h2.segoe Concerts:
+						h2.segoe Top Concerts:
 						ul.left
 							- each c, i in concerts
 								li.performers
 									a.performer.white.show-ellipses(target="_self", start="0", title="#{c[0]}", characters="26", href="http://#{app.settings.host}.wembli.com#{c[1]}", ng-href="http://#{app.settings.host}.wembli.com#{c[1]}") #{i+1}) #{c[0]}
 					.col-md-3.col-md-offset-1
-						h2.segoe Sporting Events:
+						h2.segoe Top Sporting Events:
 						ul.middle
 							- each s, i in sports
 								li.performers
 									a.performer.white.show-ellipses(target="_self", start="0", title="#{s[0]}", characters="26", href="http://#{app.settings.host}.wembli.com#{s[1]}", ng-href="http://#{app.settings.host}.wembli.com#{s[1]}") #{i+1}) #{s[0]}
 					.col-md-3
-						h2.segoe Theater:
+						h2.segoe Top Theater:
 						ul.right
 							- each t, i in theater
 								li.performers
@@ -105,14 +105,14 @@ block content
 					.col-md-5.col-md-offset-1.left
 						.twitter-widget
 							a.twitter-timeline(href="//twitter.com/search?q=%40wembli",data-link-color="#0088CC", data-theme="dark",data-widget-id="318018385696915459", data-tweet-limit="3", data-chrome="noborders noscrollbar", height="400px" ,width="480px").segoe
-							.twitter-right-arrow
+							.twitter-right-arrow.hidden-xs.hidden-sm
 					.col-md-5.col-md-offset-1.right
 						.row
-							a.col-md-4.facebook-link(href="//www.facebook.com/wemblifan")
-							a.col-md-4.blog-link(href="//blog.wembli.com/")
+							a.col-xs-4.facebook-link(href="//www.facebook.com/wemblifan")
+							a.col-xs-4.blog-link(href="//blog.wembli.com/")
 						.row
-							a.col-md-4.twitter-link(href="//twitter.com/wembli")
-							a.col-md-4.gplus-link(href="//plus.google.com/102053515859174299215/posts")
+							a.col-xs-4.twitter-link(href="//twitter.com/wembli")
+							a.col-xs-4.gplus-link(href="//plus.google.com/102053515859174299215/posts")
 						.row
 							.col-md-8.message
 								h2 Promos & Insider Info
@@ -124,11 +124,11 @@ block content
 					.footer-social-button.twitter-button.pull-left
 						a(href="//twitter.com/wembli", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow @wembli
 				.row.social-links
-					.col-md-5.col-md-offset-1.footer-social-button.facebook-like-button.pull-left
-						.fb-like(data-href="http://www.wembli.com", data-width="480",data-show-faces="true", data-send="true")
-					.col-md-5.col-md-offset-1.footer-social-button.gplus-like-button.pull-left
-						.g-plusone(data-href="http://www.wembli.com", data-annotation="inline", data-width="480")
+					.col-md-5.col-md-offset-1.footer-social-button.facebook-like-button
+						.fb-like(data-href="http://www.wembli.com", data-width="280",data-show-faces="true", data-send="true")
+					.col-md-5.col-md-offset-1.footer-social-button.gplus-like-button
+						.g-plusone(data-href="http://www.wembli.com", data-annotation="inline", data-width="280")
 				.row.links
 					a.col-md-2.col-md-offset-1.footer-link(href="http://#{app.settings.host}.wembli.com/about-us") About Us
 					a.col-md-2.footer-link(target="_self",href="http://#{app.settings.host}.wembli.com/terms-policies") Terms Of Service & Privacy Policy
-					a.col-md-2.footer-links(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+
+					a.col-md-2.footer-link(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+

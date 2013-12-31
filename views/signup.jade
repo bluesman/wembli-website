@@ -10,7 +10,7 @@ block content
 				#login-right.col-md-6.col-xs-12
 					h1
 						i.fa.fa-lock
-						span &nbsp;Sign Up For Wembli
+						span &nbsp;Wembli Sign Up
 					form#signup-form.row(novalidate, role="form", name="signupForm", ng-submit="submitSignupForm()")
 						input.redirect-url(ng-model="redirectUrl", type="hidden",name="redirectUrl",value="")
 						fieldset
@@ -36,10 +36,10 @@ block content
 								span Secure Signup&nbsp;
 								i.fa.fa-lock(ng-hide="signupInProgress")
 								i.fa.fa-cog.fa-spin(ng-show="signupInProgress")
-						.col-md-4.col-md-offset-4
+						.col-md-5.col-md-offset-3.col-lg-4.col-lg-offset-4
 							a#login-link(href="/login")
-								span Already a member?
-								br
+								span Already a member?&nbsp;
+								br.hidden-sm.hidden-xs
 								span Click here to Login.
 
 					a.facebook-login(target="_self", href="/auth/facebook")

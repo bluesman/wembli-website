@@ -1,17 +1,14 @@
 .search-box {
-	margin:40px auto;
-	font-size:2em;
+
 	form {
-		background-color:@yellow;
 		width:100%;
 		margin:auto;
-		padding:6px;
-		border-radius: 3px;
+		padding:6px 0;
 
 		i {
 			text-align:center;
 			margin:0px;
-			padding:8px;
+			padding:14px;
 			border-top-left-radius:3px;
 			border-bottom-left-radius:3px;
 			position:absolute;
@@ -27,37 +24,93 @@
 		}
 
 		input {
-			border-top-left-radius: 3px;
-			border-bottom-left-radius: 3px;
-			border: none;
-			margin: 0px;
-			padding: 8px 8px 8px 50px;
-			width:85%;
+			width:100%;
+			border-radius: 3px;
+			border: 3px solid @yellow;
+			margin: 0;
+			padding: 8px 8px 8px 30px;
 			color:@grayDarker;
-			font-size: .8em;
 			font-style: italic;
 		}
 
 		input:focus {
 			border:none;
 		}
-		button:hover {
-			#gradient > .vertical(lighten(@yellow, 20%), @yellow);
-		}
 
 		button {
-			width:15%;
+			width:100%;
+			margin:10px 0;
 			padding:8px;
-			font-size:.8em;
 			color:@black;
-			border-top-right-radius: 3px;
-			border-bottom-right-radius: 3px;
-			border-top-left-radius: 0px;
-			border-bottom-left-radius: 0px;
-			#gradient > .vertical(@yellow, @yellow);
-			.box-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+			#gradient > .vertical(@blueDark,@blueDark);
 			border:none;
-			margin:0px;
+		}
+	}
+
+
+	/* Small devices (tablets, 768px and up) */
+	@media (min-width: @screen-sm-min) {
+		margin:40px auto;
+		font-size:2em;
+
+		form {
+			background-color:@yellow;
+			width:100%;
+			margin:auto;
+			padding:6px;
+			border-radius: 3px;
+
+			i {
+				text-align:center;
+				margin:0px;
+				padding:8px;
+				border-top-left-radius:3px;
+				border-bottom-left-radius:3px;
+				position:absolute;
+				color:@grayLight;
+				display: block;
+				background-color: transparent;
+				z-index:1;
+			}
+
+			.twitter-typeahead {
+				width:85%;
+				float:left;
+			}
+
+			input {
+				border-top-left-radius: 3px;
+				border-bottom-left-radius: 3px;
+				border: none;
+				margin: 0px;
+				padding: 8px 8px 8px 50px;
+				width:85%;
+				color:@grayDarker;
+				font-size: .8em;
+				font-style: italic;
+			}
+
+			input:focus {
+				border:none;
+			}
+			button:hover {
+				#gradient > .vertical(lighten(@yellow, 20%), @yellow);
+			}
+
+			button {
+				width:15%;
+				padding:8px;
+				font-size:.8em;
+				color:@black;
+				border-top-right-radius: 3px;
+				border-bottom-right-radius: 3px;
+				border-top-left-radius: 0px;
+				border-bottom-left-radius: 0px;
+				#gradient > .vertical(@yellow, @yellow);
+				.box-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+				border:none;
+				margin:0px;
+			}
 		}
 	}
 }
