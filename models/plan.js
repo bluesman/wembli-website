@@ -170,6 +170,8 @@ this.Model = function(mongoose) {
 		async.detect(p[key],function(el,cb) {
 			 return cb((id === el));
 		}, function(result) {
+			console.log('addItem:');
+			console.log(result);
 			if (typeof result === "undefined") {
 				p[key].push(id);
 				p.markModified(key);
