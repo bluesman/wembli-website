@@ -25,12 +25,54 @@ block content
 		- var placeholder = 'Enter an event, team or venue...'
 	- url += Date.today().format("mm-dd-yy")
 	#search(ng-controller="SearchCtrl")
-		//- is this needed - check more events directive??
 		input(type="hidden", name="search", value="#{search}", ng-init="search='#{search}'")
 		input(type="hidden", name="city", value="#{req.session.visitor.tracking.city}", ng-init="city='#{req.session.visitor.tracking.city}'")
 		input(type="hidden", name="postalCode", value="#{req.session.visitor.tracking.postalCode}", ng-init="postalCode='#{req.session.visitor.tracking.postalCode}'")
 		input(type="hidden", name="lastEventDate", ng-init="lastEventDate='#{lastEventDate}'", value="#{lastEventDate}")
 		input(type="hidden", name="lastEventId", ng-init="lastEventId='#{lastEventId}'", value="#{lastEventId}")
+
+		#payment-type-modal.modal.fade
+			.modal-dialog
+				#payment-type.modal-content
+					.modal-header
+						button(type="button", class="close", data-dismiss="modal")&times;
+						h2.modal-title {{event.Name}}
+						h3.modal-subtitle Share the cost with your friends or pay for it all on your own?
+					form#payment-type-form(novalidate name="payment-type-form")
+						.modal-body
+							.form-group
+								label.radio.clearfix
+									input#option-split-first.form-control.hide(ng-model="paymentType",type="radio",name="payment_type",value="split-first",ng-init="paymentType='split-first'")
+									i.fa.fa-check-circle-o.fa-2x.pull-left.green(ng-show="{'split-first':true}[paymentType]")
+									i.fa.fa-circle-o.fa-2x.pull-left(ng-show="!{'split-first':true}[paymentType]")
+									.option-content.pull-left
+										h3 Everyone Pays Up Front
+										p Tired of getting stuck with the bill? Breathe easy, just pick an event, invite friends, and have them pony up before shelling out any cash.
+								label.radio.clearfix
+									input#option-split-after.form-control.hide(ng-model="paymentType",type="radio",name="payment_type",value="split-after")
+									i.fa.fa-check-circle-o.fa-2x.pull-left.green(ng-show="{'split-after':true}[paymentType]")
+									i.fa.fa-circle-o.fa-2x.pull-left(ng-show="!{'split-after':true}[paymentType]")
+									.option-content.pull-left
+										h3 I'll Pay First, Then Collect Later
+										p Want to guarantee you all get seats together?  Buy the tickets now then use Wembli to split the bill later. Better safe than sitting solo!
+								label.radio.clearfix
+									input#option-no-split.hide(ng-model="paymentType", type="radio",name="payment_type",value="no-split")
+									i.fa.fa-check-circle-o.fa-2x.pull-left.green(ng-show="{'no-split':true}[paymentType]")
+									i.fa.fa-circle-o.fa-2x.pull-left(ng-show="!{'no-split':true}[paymentType]")
+									.option-content.pull-left
+										h3 I Want To Buy Tickets Now
+										p Search for your event, buy your tickets and you're on your way!
+						.modal-footer
+							button.btn.btn-primary.btn-large(ng-hide="submitInProgress", ng-click="startPlan()")
+								span(ng-show="{'split-first':true}[paymentType]") Invite Friends!&nbsp;
+								span(ng-show="{'split-after':true}[paymentType]") See Tickets!&nbsp;
+								span(ng-show="{'no-split':true}[paymentType]") See Tickets!&nbsp;
+							button.btn.btn-primary.btn-large.mute(ng-disabled="submitInProgress", ng-show="submitInProgress",ng-click="startPlan()")
+								.icon.icon-cog.icon-spin.pull-left
+								span(ng-show="{'split-first':true}[paymentType]") Invite Friends!&nbsp;
+								span(ng-show="{'split-after':true}[paymentType]") See Tickets!&nbsp;
+								span(ng-show="{'no-split':true}[paymentType]") See Tickets!&nbsp;
+
 		.container
 			.row
 				#search-left.col-md-4.hidden-xs.hidden-sm
@@ -53,7 +95,7 @@ block content
 							ul.event-list-waypoint
 								if ((typeof events !== "undefined") && (typeof events[0] !== "undefined"))
 									each event in events
-										li.row.show-ticket-range.start-plan(event-name="#{event.Name}",event-id="#{event.ID}",name="#{event.Name}",id="#{event.ID}-wrapper")
+										li.row.show-ticket-range(event-id="#{event.ID}",name="#{event.Name}",id="#{event.ID}-wrapper")
 											- var lastSearch = visitor.lastSearch ? visitor.lastSearch : '/search';
 											- lastSearch += '?updateEvent=1';
 											- var date = new Date(Date.parse(event.Date));
@@ -63,12 +105,12 @@ block content
 												- var btnText = 'Plan It';
 											- if ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined"))
 												- payment = plan.preferences.payment;
-											.col-md-2
+											.col-sm-2
 												.event-date-box
 													span.day!=        date.format("ddd")
 													span.event-date!= date.format("mmm d")
 													span.time!=       date.format("h:MM TT")
-											.col-md-8
+											.col-sm-7
 												.info
 													span.name.block= event.Name
 													span.venue.block= (typeof event.Venue.Name != "undefined") ? event.Venue.Name : event.Venue
@@ -76,32 +118,26 @@ block content
 													- if (typeof changeEvent != "undefined" && changeEvent == true)
 														span.changeEvent.block
 															a#changeEvent(href="http://#{app.settings.host}.wembli.com/search/#{lastSearch}") Change Event
-											.col-md-2
-												.cta
-													case payment
-														when "split-first"
-															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name) Start Plan
-														when "split-after"
-															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name) Start Plan
-														when "no-split"
-															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name) Start Plan
-														default
-															a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-id="#{event.ID}",event-name="#{event.Name}",id="#{event.ID}",href="/tickets/"+event.ID+"/"+event.Name) Start Plan
-												.ticket-range
+											.col-sm-3.col-xs-12
+												.cta.col-xs-4.col-sm-12
+													a.btn.btn-primary.prevent-default(ng-click="openPaymentModal({ID: \"#{event.ID}\",Name: \"#{event.Name}\"})",id="#{event.ID}", name="#{event.Name}", href="/tickets/"+event.ID+"/"+event.Name) Start Plan
+												.ticket-range.col-xs-8.col-sm-12
 													i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData['#{event.ID}'].locked")
+													span.visible-xs.visible-sm
+														span(ng-hide="ticketSummaryData['#{event.ID}'] || ticketSummaryData['#{event.ID}'].locked") Tap for ticket price range.
 									//- this is needed for the more events client side functionality
-									li.row.show-ticket-range.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
+									li.row.show-ticket-range(event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
 										- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 										- lastSearch += '?updateEvent=1';
 										- var payment;
 										- if ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined"))
 											- payment = plan.preferences.payment;
-										.col-md-2
+										.col-sm-2
 											.event-date-box
 												span.day {{getDate(event.Date)| date:'EEE'}}
 												span.event-date {{getDate(event.Date)| date:'MMM d'}}
 												span.time {{getDate(event.Date)| date:'h:mm a'}}
-										.col-md-8
+										.col-sm-7
 											.info
 												span.name.block {{event.Name}}
 												span.venue.block {{ event.Venue.Name || event.Venue }}
@@ -109,24 +145,18 @@ block content
 												- if (typeof changeEvent != "undefined" && changeEvent == true)
 													span.changeEvent.block
 														a#changeEvent(href="http://#{app.settings.host}.wembli.com/search/#{lastSearch}") Change Event
-										.col-md-2
-											.cta
-												case payment
-													when "split-first"
-														a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
-													when "split-after"
-														a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
-													when "no-split"
-														a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
-													default
-														a.btn.btn-primary.choose-event.next-link.prevent-default.start-plan(event-name="{{event.Name}}",event-id="{{event.ID}}",id="{{event.ID}}",name="{{event.Name}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
-											.ticket-range
+										.col-sm-3.col-xs-12
+											.cta.col-xs-4.col-sm-12
+												a.btn.btn-primary.prevent-default(ng-click="openPaymentModal(event)", id="{{event.ID}}",name="{{event.Name}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
+											.ticket-range.col-xs-8.col-sm-12
 												i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData[event.ID].locked")
+												span.visible-xs.visible-sm
+													span(ng-hide="ticketSummaryData[event.ID] || ticketSummaryData[event.ID].locked") Tap for ticket price range.
 
 									li.row.loading-more-events(ng-show="loadingMoreEvents")
-										.icon.col-md-2
+										.icon.col-sm-2
 											i.fa.fa-cog.fa-spin.fa-2x.pull-left
-										.message.col-md-10
+										.message.col-sm-10
 											span loading more events...
 
 									li.hide(ng-init="noMoreEvents=false")

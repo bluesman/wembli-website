@@ -1,4 +1,11 @@
-form { margin-bottom:0px; }
+form {
+  margin-bottom:0px;
+}
+
+i {
+  margin-right:10px;
+}
+
 
 h1 {
   color:@grayDarker;
@@ -9,7 +16,12 @@ h2 {
 }
 
 h3 {
+  color:@yellowDark;
+  margin-top:10px;
+  font-style:italic;
+}
 
+h3.modal-subtitle {
 }
 
 .fa-check-empty {
@@ -61,14 +73,14 @@ a, a:hover, a:focus {
 }
 */
 
-.white {color:@white;}
-.black {colort:@black;}
-.green {color:#64C832;}
+.white {color:@white !important;}
+.black {colort:@black !important;}
+.green {color:#64C832 !important; }
 .red { color:red !important; }
-.orange {color:@orange;}
-.yellow {color:@yellow;}
-.blue {color:@blueDark;}
-.gray-light {color:@grayLight;}
+.orange {color:@orange !important;}
+.yellow {color:@yellow !important;}
+.blue {color:@blueDark !important;}
+.gray-light {color:@grayLight !important;}
 
 /* this shouldn't be global css
 .arrow {
@@ -95,6 +107,13 @@ a, a:hover, a:focus {
 .dollar-sign {
   font-size:20px;
   font-weight:bold;
+}
+
+
+
+.alert {
+  margin-bottom:10px;
+  padding:10px;
 }
 
 .alert-danger {

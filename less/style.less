@@ -13,10 +13,20 @@
 @import url('/css/plugins/pikaday.css');
 @import url('/css/plugins/jquery.multiselect.css');
 @import url('/css/plugins/jquery.multiselect.filter.css');
-@import url('/css/plugins/jquery.slidepanel.css');
+@import url('/css/plugins/bootstrap-additions.min.css');
+@import url('/css/plugins/angular-motion.min.css');
 
 @import "../bower_components/bootstrap/less/bootstrap.less";
 @import "../bower_components/components-font-awesome/less/font-awesome.less";
+
+/* angular-motion needed for angular-strap */
+/* - doesn't do browser compatability right
+@import "../bower_components/angular-motion/src/fade/fade.less";
+@import "../bower_components/angular-motion/src/fade-and-scale/fade-and-scale.less";
+@import "../bower_components/angular-motion/src/fade-and-slide/fade-and-slide.less";
+@import "../bower_components/angular-motion/src/flip/flip.less";
+@import "../bower_components/angular-motion/src/slide/slide.less";
+*/
 /* @import "../plugins/bootstrap-3.0.2/less/bootstrap.less"; */
 /* @import "../plugins/font-awesome-4.0.3/less/font-awesome.less"; */
 @import "wembli-variables.less";  // Modify this for custom colors, font-sizes, etc
@@ -106,5 +116,5 @@
 //@import "event-options.less";
 //@import "plan.less";
 //@import "invite-friends-wizard.less";
-//@import "dashboard.less";
+@import "dashboard.less";
 

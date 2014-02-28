@@ -1,3 +1,19 @@
+#payment-type-modal.modal {
+  overflow-y:auto;
+  max-height:90%;
+  margin-top:-45%;
+
+	label.radio {
+		i {
+			margin-top: 20px;
+			color:@gray;
+		}
+		.option-content {
+			width:80%;
+		}
+	}
+}
+
 #search {
 	#search-left {
 		.copy, .wembliman, .search-arrow {
@@ -17,6 +33,7 @@
 	}
 
 	#search-right {
+
 		.results {
 			background:@grayLighter;
 
@@ -104,12 +121,22 @@
 							text-align:center;
 							font-size:.9em;
 						}
+
+						@media (max-width: @screen-xs-max) {
+							.cta {
+								text-align:left;
+								margin:15px 0;
+								padding-left:0px;
+							}
+							.ticket-range {
+								margin:20px 0;
+							}
+						}
 					}
 				}
 
 				ul > li:hover {
 					background-color: lighten(@blueLight, 20%);
-					cursor:pointer;
 				}
 
 			}

@@ -1,19 +1,13 @@
 header {
 
-	.cb_slide_panel {
+	.aside {
 	  background: @white;
 
-		.wrapper {
-			height:40px;
-			.controls {
-				margin: 10px 10px 0 0;
-				color:@blueDark;
-
-				i.close {
-
-				}
-			}
-		}
+	  .aside-content {
+	  	button {
+	  		padding: 0 10px;
+	  	}
+	  }
 
 		.log-out, .sign-up {
 			width:100%;
@@ -27,12 +21,19 @@ header {
 		ul {
 			padding:20px 0px;
 			li {
+
 				a {
-					padding: 10px 20px 10px 40px;
+					padding: 10px;
 					display:block;
 					color:@blueDark;
-					font-size: 22px;
-					line-height: 24px;
+					font-size: 16px;
+					line-height: 16px;
+
+					i {
+						width:25px;
+						margin-right:10px;
+					}
+
 				}
 				a:hover {
 					background-color:@blue;
@@ -41,10 +42,10 @@ header {
 			}
 		}
 
-		ul.side-nav {
+		ul.aside-nav {
 			li {
 				a {
-					border-bottom: 2px solid #CCC;
+					border-bottom: 1px solid #CCC;
 				}
 			}
 		}
@@ -60,7 +61,7 @@ header {
 
 	}
 
-	nav {
+	nav.navbar {
 		padding:0 20px;
 		background-color:@white;
 		border:none;
@@ -75,27 +76,40 @@ header {
 			border:none;
 			background:transparent;
 			color:@blue;
+
+			i {
+				margin-top:5px;
+			}
+
+			.menu-text {
+
+			}
 		}
 		button:hover {
 			color:@yellow;
 		}
 
-		.navbar-brand {
-			float:right;
-			padding:10px 0;
+		.row {
+			padding:5px 0;
 		}
 
-		.navbar-nav > li > a {
-			line-height:26px;
-			padding:15px 20px;
+		.nav-aside-toggle {
+			margin:5px 0;
+
+			i {
+				margin-top:10px;
+			}
+			line-height:35px;
+			vertical-align:middle;
 		}
 
-		.navbar-nav > li > a:hover {
-			background-color:@white;
+		#page-title {
+			margin:10px 0;
+			text-align:center;
+			font-size:14px;
 		}
 
 		.navbar-form {
-			margin: 12px 20px;
 
 			background-color:@grayLight;
 			color:@grayLight;
@@ -109,7 +123,7 @@ header {
 				position:absolute;
 				display: block;
 				background-color: transparent;
-				line-height:30px;
+				line-height:28px;
 				margin:0px 0px 0px 3px;
 				font-size:18px;
 			}
@@ -127,6 +141,10 @@ header {
 				vertical-align: middle;
 				font-style: italic;
 			}
+		}
+
+		.logo-35 {
+			margin:5px;
 		}
 	}
 }

@@ -938,7 +938,6 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'parking'
 	}
 ]).
 
-
 controller('RsvpLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'rsvpLoginModal', 'pixel', 'googleAnalytics',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, rsvpLoginModal, pixel, googleAnalytics) {
 		$scope.plan = plan.get();
@@ -1127,6 +1126,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'fetchModals', 'plan', 'custom
 
 	}
 ]).
+
 controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel', 'googleAnalytics',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel, googleAnalytics) {
 		$scope.tnUrl = ticketPurchaseUrls.tn;
@@ -1238,6 +1238,7 @@ controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 		};
 	}
 ]).
+
 controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'pixel', 'googleAnalytics',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, pixel, googleAnalytics) {
 		$scope.listId = 'a55323395c';
@@ -1357,6 +1358,7 @@ controller('ParkingLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'cu
 		};
 	}
 ]).
+
 controller('RestaurantsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel', 'googleAnalytics',
 	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel, googleAnalytics) {
 		$scope.listId = 'a55323395c';
@@ -1980,7 +1982,6 @@ controller('VenueMapCtrl', ['$rootScope', '$scope', 'interactiveMapDefaults', 'p
 	}
 ]).
 
-
 controller('PlanningModalCtrl', ['$rootScope', '$scope', 'wembliRpc', 'plan',
 	function($rootScope, $scope, wembliRpc, plan) {
 		$scope.deletePlan = function(guid) {
@@ -2005,7 +2006,6 @@ controller('PlanningModalCtrl', ['$rootScope', '$scope', 'wembliRpc', 'plan',
 		};
 	}
 ]).
-
 
 controller('LandingPageSearchCtrl', ['$rootScope', '$scope', '$location', 'wembliRpc', 'pixel',
 	function($rootScope, $scope, $location, wembliRpc, pixel) {

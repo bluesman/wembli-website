@@ -1,17 +1,1 @@
-ul.event-list
-	li.dashboard-plan(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard['#{dashboardPlanCategory}']",ng-cloak)
-		.event-date-box
-			span.day {{getDate(plan.event.eventDate)| date:'EEE'}}
-			span.event-date {{getDate(plan.event.eventDate)| date:'MMM d'}}
-			span.time {{getDate(plan.event.eventDate)| date:'h:mm a'}}
-		.info
-			.pull-left
-				span.name.block {{plan.event.eventName}}
-				span.venue.block {{ plan.event.eventVenue }}
-				span.location.block {{plan.event.eventCity+', '+plan.event.eventState}}
-				//- add counts of who has responded and not
-				if (dashboardPlanCategory === 'organizer')
-					a(href="#",ng-click="deletePlan(plan.guid)") Delete this plan
-			.pull-right
-				.cta
-					a.btn.btn-primary(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
+

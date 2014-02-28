@@ -1,0 +1,470 @@
+extends ../dashboard
+block dashboard-content
+	.dashboard-payment-information(ng-controller="DashboardPaymentsCtrl")
+		#payment-information.payment-information(ng-hide="showDetail")
+			.row(ng-show="needBankAccountInfo")
+				.col-md-8.col-md-offset-2.col-xs-12
+					.alert.alert-info
+						i.fa.fa-info-circle
+						span.text Add a bank account to have friends securely send you money for expenses.
+
+			.row
+				.col-md-4.col-md-offset-2.col-xs-12(ng-show="needBankAccountInfo")
+					a#add-account.btn.btn-default.dashboard-button(href="#add-account",ng-click="showDetail='/add-account'")
+						h3 Add Bank Account
+						i.fa.fa-lock.fa-3x
+				.col-md-4.col-md-offset-2.col-xs-12(ng-hide="needBankAccountInfo")
+					a#manage-accounts.btn.btn-default.dashboard-button(href="#manage-accounts",ng-click="showDetail='/manage-accounts'")
+						h3 Manage Bank Accounts
+						i.fa.fa-lock.fa-3x
+				.col-md-4.col-xs-12(ng-show="needCreditCardInfo")
+					a#add-card.btn.btn-default.dashboard-button(href="#add-card",ng-click="showDetail='/add-card'")
+						h3 Add Credit Card
+						i.fa.fa-credit-card.fa-3x
+				.col-md-4.col-xs-12(ng-hide="needCreditCardInfo")
+					a#manage-cards.btn.btn-default.dashboard-button(href="#manage-cards",ng-click="showDetail='/manage-cards'")
+						h3 Manage Credit Cards
+						i.fa.fa-credit-card.fa-3x
+
+		#add-card(ng-show="{'/add-card':true}[showDetail] && needCreditCardInfo")
+			.add-card-header.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					ol.breadcrumb
+						li
+							a(href="#",ng-click="showDetail=false") Payment Information
+						li.active
+							i.fa.fa-credit-card
+							span Add Credit Card
+			.add-card-detail.create-balanced-credit-card.row
+				form.pony-up-modal-form(ng-submit="addCreditCard()", name="addCreditCardForm")
+					#new-credit-card.col-md-8.col-md-offset-2.col-xs-12
+						.credit-card-info
+							.row
+								.header.col-xs-12
+									i.fa.fa-credit-card.fa-2x
+									h3 Credit Card Information
+							.row(ng-show="error")
+								.col-xs-12
+									.credit-card-alert.alert.alert-warning
+										i.fa.fa-warningd.fa-2x
+										span.text {{errorMessage}}
+							.row
+								fieldset.col-md-6.col-xs-12
+									.form-group
+										input.form-control(type="text", name="card_holder_name", ng-model="creditCard.cardHolderName", placeholder="Card Holder Name", required)
+									.form-group
+										input.form-control(type="text", name="credit_card_number", ng-model="creditCard.creditCardNumber", placeholder="Credit Card Number", required)
+									.row
+										.col-xs-6.form-group
+											select.month.form-control(ng-model="creditCard.expirationDateMonth", name="expiration_date_month", required)
+												option(value="") Exp. Month
+												option(value="01") Jan
+												option(value="02") Feb
+												option(value="03") Mar
+												option(value="04") Apr
+												option(value="05") May
+												option(value="06") Jun
+												option(value="07") Jul
+												option(value="08") Aug
+												option(value="09") Sep
+												option(value="10") Oct
+												option(value="11") Nov
+												option(value="12") Dec
+										.col-xs-6.form-group
+											select.year.form-control(ng-model="creditCard.expirationDateYear", name="expiration_date_year", required)
+												option(value="") Exp. Year
+												option(value="2014") 2014
+												option(value="2015") 2015
+												option(value="2016") 2016
+												option(value="2017") 2017
+												option(value="2018") 2018
+												option(value="2019") 2019
+												option(value="2020") 2020
+												option(value="2020") 2021
+												option(value="2020") 2022
+												option(value="2020") 2023
+									.form-group
+										input.form-control(type="text", name="cvv", ng-model="creditCard.cvv", placeholder="Security Code", required,ng-disabled="success")
+									.form-group
+										input.form-control(type="text", name="postal_code", ng-model="creditCard.postalCode", placeholder="Postal Code", required,ng-disabled="success")
+									.row
+										.form-group.col-xs-12
+											button.btn.btn-primary.btn-large.form-control(ng-disabled="addCreditCardForm.$invalid",type="submit")
+												i.fa.fa-cog.fa-spin(ng-show="submitInProgress")
+												span Add Credit Card
+								.col-md-6.hidden-sm.hidden-xs
+									.security-codes
+									.balanced-credit-card-logos
+
+
+		#manage-cards(ng-show="{'/manage-cards':true}[showDetail]")
+			.manage-cards-header.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					ol.breadcrumb
+						li
+							a(href="#",ng-click="showDetail=false") Payment Information
+						li.active
+							i.fa.fa-credit-card
+							span Manage Credit Cards
+			.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					.table-responsive
+						table.table.table-striped
+							thead
+								tr
+									th #
+									th Name
+									th Card Number
+									th Card Type
+									th Status
+									th Actions
+							//- there's only support for 1 account right now
+							tbody
+								tr.bank-account(ng-show="customer.balancedAPI.creditCards.items[0].is_valid")
+									td 1.
+									td {{customer.balancedAPI.creditCards.items[0].name}}
+									td xx{{customer.balancedAPI.creditCards.items[0].last_four}}
+									td {{customer.balancedAPI.creditCards.items[0].brand}}
+									td
+										.label.label-success VALID
+									td
+										//-
+											a.view-credit-card-button(href="#view-card", ng-click="showDetail='/view-card'") View Details
+										a.btn.btn-xs.btn-danger.delete-credit-card-button(href="#delete-card", ng-click="showDetail='/delete-card'") Delete
+				.col-md-8.col-md-offset-2.col-xs-12
+					.alert.alert-info
+						i.fa.fa-info-circle
+						span.text Wembli does not support multiple credit cards (but we will soon!).
+
+		#add-account(ng-show="{'/add-account':true}[showDetail] && needBankAccountInfo")
+			.add-account-header.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					ol.breadcrumb
+						li
+							a(href="#",ng-click="showDetail=false") Payment Information
+						li.active
+							i.fa.fa-lock
+							span Add Account
+			.add-account-detail.create-balanced-account.row
+				form#create-merchant-account-form(ng-submit="createBalancedAccount()", name="createMerchantAccountForm")
+					#new-merchant-account.col-md-8.col-md-offset-2.col-xs-12
+						.account-holder-info
+							.row
+								.header.col-xs-12
+									i.fa.fa-lock.fa-2x
+									h3 Bank Account Holder
+							.row(ng-show="createMerchantAccount.accountHolderError")
+								.col-xs-12
+									.account-info-alert.alert.alert-warning
+										i.fa.fa-warning
+										span.text(ng-show="createMerchantAccount.errorDob") Date of Birth should follow this format: MM-DD-YYYY.&nbsp;
+										span.text(ng-show="createMerchantAccount.errorPhoneNumber") Please enter a valid, 10 digit phone number.
+							.row
+								fieldset.col-md-6.col-xs-12
+									.form-group
+										input.form-control(type="text",ng-model="createMerchantAccount.accountHolderName",value="",placeholder="Account Holder Name",name="accountHolderName",required)
+									.form-group
+										input.form-control(type="text",ng-model="createMerchantAccount.dob",value="",placeholder="Date Of Birth (MM-DD-YYYY)",name="dob",required)
+									.form-group
+										input.format-phone-number.form-control(maxlength="10",type="text",ng-model="createMerchantAccount.phoneNumber", value="",name="phoneNumber", placeholder="Phone Number",required)
+									.form-group
+										input.form-control(type="text",ng-model="createMerchantAccount.streetAddress", value="",name="streetAddress", placeholder="Street Address",required)
+									.form-group
+										input.format-postal-code.form-control(type="text",ng-model="createMerchantAccount.postalCode", value="",name="postalCode", placeholder="Postal Code",required)
+								.col-md-6.hidden-sm.hidden-xs
+									.security-message
+										.header
+											i.fa.fa-lock.fa-2x
+											h4 Security is our highest priority!
+										.message
+											span Wembli uses the latest security technology and has the ultimate safeguards in place to keep your information safe.  We never store bank account information on our servers. Please read our&nbsp;
+											a(target="_blank",href="/terms-policies") Terms Of Use &amp; Privacy Policy&nbsp;
+											span for more information about how we protect your security on the internet.
+						.bank-account-info
+							.row
+								.header.col-xs-12
+									i.fa.fa-lock.fa-2x.pull-left
+									h3 Bank Account Information
+							.row(ng-show="createMerchantAccount.errorRoutingNumber")
+								.col-xs-12
+									.bank-account-info-alert.alert.alert-warning
+										i.fa.fa-warning
+										span.text Invalid Routing Number.
+							.row
+								fieldset.col-md-6.col-xs-12
+									.form-group
+										input.form-control(type="text",ng-model="createMerchantAccount.accountName", name="accountName", placeholder="Account Name",required)
+									.form-group
+										input.form-control(type="text",ng-model="createMerchantAccount.routingNumber", name="routingNumber", placeholder="Routing Number",required)
+									.form-group
+										input.form-control(type="text",ng-model="createMerchantAccount.accountNumber", name="accountNumber", placeholder="Account Number",required)
+									.form-group
+										span.nullable
+											select.form-control(ng-model="createMerchantAccount.accountType",name="accountType",required)
+												option(value="") Select Account Type
+												option(value="checking") CHECKING
+												option(value="savings") SAVINGS
+								.security-logos.col-md-6.hidden-sm.hidden-xs
+									.balanced-logo
+									.safe-and-secure safe and secure
+						.row
+							.form-group.col-xs-12
+								button.btn.btn-primary.btn-large.form-control(ng-disabled="createMerchantAccountForm.$invalid",type="submit")
+									i.fa.fa-cog.fa-spin(ng-show="submitInProgress")
+									span Create Account
+
+		#manage-accounts(ng-show="{'/manage-accounts':true}[showDetail]")
+			.manage-account-header.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					ol.breadcrumb
+						li
+							a(href="#",ng-click="showDetail=false") Payment Information
+						li.active
+							i.fa.fa-lock
+							span Manage Account
+			.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					.table-responsive
+						table.table.table-striped
+							thead
+								tr
+									th #
+									th Account Holder
+									th Account Number
+									th Status
+									th Actions
+							//- there's only support for 1 account right now
+							tbody
+								tr.bank-account(ng-show="customer.balancedAPI.bankAccounts.items[0].is_valid")
+									td 1.
+									td {{customer.balancedAPI.bankAccounts.items[0].customer.name}}
+									td {{customer.balancedAPI.bankAccounts.items[0].account_number}}
+									td
+										.label.label-success VALID
+									td
+										a.view-bank-account-button(href="#view-account", ng-click="showDetail='/view-account'") View Details
+										a.btn.btn-xs.btn-danger.delete-bank-account-button(href="#delete-account", ng-click="showDetail='/delete-account'") Delete
+				.col-md-8.col-md-offset-2.col-xs-12
+					.alert.alert-info
+						i.fa.fa-info-circle
+						span.text Wembli does not support multiple accounts (but we will soon!).
+
+		#view-account(ng-show="{'/view-account':true}[showDetail]")
+			.view-account-header.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					ol.breadcrumb
+						li
+							a(href="#",ng-click="showDetail=false") Payment Information
+						li
+							i.fa.fa-lock
+							a(href="#manage-accounts", ng-click="showDetail='/manage-accounts'") Manage Account
+						li.active
+							span View Account
+			.add-account-detail.create-balanced-account.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					.account-holder-info
+						.row
+							.header.col-xs-12
+								i.fa.fa-lock.fa-2x
+								h3 Bank Account Holder
+						.row
+							.col-md-6.col.xs-12
+								dl.dl-horizontal
+									dt Account Holder Name:
+									dd {{customer.balancedAPI.customerAccount.name}}
+									dt Address:
+									dd
+										address
+											span(ng-show="customer.balancedAPI.customerAccount.address.line1") {{customer.balancedAPI.customerAccount.address.line1}},&nbsp;
+											br
+											span(ng-show="customer.balancedAPI.customerAccount.address.postal_code") {{customer.balancedAPI.customerAccount.address.postal_code}}&nbsp;
+											span(ng-show="customer.balancedAPI.customerAccount.address.country_code") {{customer.balancedAPI.customerAccount.address.country_code}}&nbsp;
+									dt Birth Date (YYYY-MM):
+									dd {{customer.balancedAPI.customerAccount.dob}}
+									dt Email Address:
+									dd {{customer.balancedAPI.customerAccount.email}}
+									dt Phone Number:
+									dd {{customer.balancedAPI.customerAccount.phone}}
+							.col-md-6.hidden-sm.hidden-xs
+								.security-message
+									.header
+										i.fa.fa-lock.fa-2x
+										h4 Security is our highest priority!
+									.message
+										span Wembli uses the latest security technology and has the ultimate safeguards in place to keep your information safe.  We never store bank account information on our servers. Please read our&nbsp;
+										a(target="_blank",href="/terms-policies") Terms Of Use &amp; Privacy Policy&nbsp;
+										span for more information about how we protect your security on the internet.
+					.bank-account-info
+						.row
+							.header.col-xs-12
+								i.fa.fa-lock.fa-2x.pull-left
+								h3 Bank Account Information
+						.row
+							.col-md-6.col.xs-12
+								dl.dl-horizontal
+									dt Your Name:
+									dd {{customer.balancedAPI.bankAccounts.items[0].name}}
+									dt Bank Name:
+									dd {{customer.balancedAPI.bankAccounts.items[0].bank_name}}
+									dt Routing Number:
+									dd {{customer.balancedAPI.bankAccounts.items[0].routing_number}}
+									dt Account Number:
+									dd {{customer.balancedAPI.bankAccounts.items[0].account_number}}
+									dt Account Type:
+									dd {{customer.balancedAPI.bankAccounts.items[0].type}}
+							.security-logos.col-md-6.hidden-sm.hidden-xs
+								.balanced-logo
+								.safe-and-secure safe and secure
+
+		#delete-card(ng-show="{'/delete-card':true}[showDetail]")
+			.delete-account-header.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					ol.breadcrumb
+						li
+							a(href="#",ng-click="showDetail=false") Payment Information
+						li
+							i.fa.fa-credit-card
+							a(href="#manage-cards", ng-click="showDetail='/manage-cards'") Manage Credit Cards
+						li.active
+							i.fa.fa-warning
+							span Delete Card
+			.row
+				form#delete-card-form.form-horizontal.col-md-8.col-md-offset-2.col-xs-12(role="form", novalidate, name="deleteCardForm")
+					.row
+						.col-xs-12
+							.alert.alert-danger
+								i.fa.fa-exclamation-triangle
+								span.text Really permanently delete your credit card information?
+					.form-group.row
+						.col-xs-4
+							button.btn.btn-danger.form-control(type="submit",ng-click="deleteCard()")
+								i.fa.fa-cog.fa-spin(ng-show="submitInProgress")
+								span Yes, delete my card
+						.col-xs-3.col-offset-1
+							a.btn.btn-default.form-control(ng-click="showDetail='/manage-cards'") Cancel
+
+		#delete-account(ng-show="{'/delete-account':true}[showDetail]")
+			.delete-account-header.row
+				.col-md-8.col-md-offset-2.col-xs-12
+					ol.breadcrumb
+						li
+							a(href="#",ng-click="showDetail=false") Payment Information
+						li
+							i.fa.fa-lock
+							a(href="#manage-accounts", ng-click="showDetail='/manage-accounts'") Manage Account
+						li.active
+							i.fa.fa-warning
+							span Delete Account
+			.row
+				form#delete-account-form.form-horizontal.col-md-8.col-md-offset-2.col-xs-12(role="form", novalidate, name="deleteAccountForm")
+					.row
+						.col-xs-12
+							.alert.alert-danger
+								i.fa.fa-exclamation-triangle
+								span.text Really permanently delete your account information?
+					.form-group.row
+						.col-xs-4
+							button.btn.btn-danger.form-control(type="submit",ng-click="deleteAccount()")
+								i.fa.fa-cog.fa-spin(ng-show="submitInProgress")
+								span Yes, delete my account
+						.col-xs-3.col-offset-1
+							a.btn.btn-default.form-control(ng-click="showDetail='/manage-accounts'") Cancel
+
+		//- not implemented yet
+			#edit-customer-account.update-customer-info.modal.hide
+				.modal-header
+					i.close.fa.fa-remove(data-dismiss="modal")
+					h2 Update Account Holder Information
+				.modal-body
+					form#edit-account-info-form.form-horizontal(novalidate, name="editAccountInfoForm")
+						fieldset
+							.form-group
+								label.form-control Account Holder
+								.controls
+									input(ng-model="customer.balancedAPI.customerAccount.name", name="accountHolderName", placeholder="Account Holder Name",required)
+							.form-group
+								label.form-control Phone Number
+								.controls
+									input(ng-model="customer.balancedAPI.customerAccount.phone", name="accountPhone", placeholder="",required)
+							.form-group
+								label.form-control Birth Year/Month
+								.controls
+									input(ng-model="customer.balancedAPI.customerAccount.dob", name="accountDob", placeholder="YYYY-MM",required)
+							.form-group
+								label.form-control Street Address Line 1
+								.controls
+									input(ng-model="customer.balancedAPI.customerAccount.address.line1", name="addressLine1", placeholder="Street Address Line 1",required)
+							.form-group
+								label.form-control Street Address Line 2
+								.controls
+									input(ng-model="customer.balancedAPI.customerAccount.address.line2", name="addressLine2", placeholder="Street Address Line 2",required)
+							.form-group
+								label.form-control City
+								.controls
+									input(ng-model="customer.balancedAPI.customerAccount.address.city", name="addressCity", placeholder="City",required)
+							.form-group
+								label.form-control Account Type
+								.controls
+									span.nullable
+										select(ng-model="customer.balancedAPI.customerAccount.address.state",name="addressState",required)
+											option(value="") Select State
+											option(value="AL") Alabama
+											option(value="AK") Alaska
+											option(value="AZ") Arizona
+											option(value="AR") Arkansas
+											option(value="CA") California
+											option(value="CO") Colorado
+											option(value="CT") Connecticut
+											option(value="DE") Delaware
+											option(value="DC") District of Columbia
+											option(value="FL") Florida
+											option(value="GA") Georgia
+											option(value="HI") Hawaii
+											option(value="ID") Idaho
+											option(value="IL") Illinois
+											option(value="IN") Indiana
+											option(value="IA") Iowa
+											option(value="KS") Kansas
+											option(value="KY") Kentucky
+											option(value="LA") Louisiana
+											option(value="ME") Maine
+											option(value="MD") Maryland
+											option(value="MA") Massachusetts
+											option(value="MI") Michigan
+											option(value="MN") Minnesota
+											option(value="MS") Mississippi
+											option(value="MO") Missouri
+											option(value="MT") Montana
+											option(value="NE") Nebraska
+											option(value="NV") Nevada
+											option(value="NH") New Hampshire
+											option(value="NJ") New Jersey
+											option(value="NM") New Mexico
+											option(value="NY") New York
+											option(value="NC") North Carolina
+											option(value="ND") North Dakota
+											option(value="OH") Ohio
+											option(value="OK") Oklahoma
+											option(value="OR") Oregon
+											option(value="PA") Pennsylvania
+											option(value="RI") Rhode Island
+											option(value="SC") South Carolina
+											option(value="SD") South Dakota
+											option(value="TN") Tennessee
+											option(value="TX") Texas
+											option(value="UT") Utah
+											option(value="VT") Vermont
+											option(value="VA") Virginia
+											option(value="WA") Washington
+											option(value="WV") West Virginia
+											option(value="WI") Wisconsin
+											option(value="WY") Wyoming
+							.form-group
+								label.form-control Postal Code
+								.controls
+									input(ng-model="customer.balancedAPI.customerAccount.address.postal_code", name="addressPostalCode", placeholder="Postal Code",required)
+							.form-group
+								.controls
+									button.btn.btn-primary(ng-click="updateCustomerInfo()") Update Info
+				.modal-footer
+					a.btn(href="#",data-dismiss="modal") Close

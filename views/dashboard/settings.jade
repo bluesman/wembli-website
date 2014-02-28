@@ -1,0 +1,46 @@
+extends ../dashboard
+block dashboard-content
+	.dashboard-settings(ng-controller="DashboardSettingsCtrl")
+		#dashboard-settings(ng-hide="showDetail")
+			.row
+				.col-md-4.col-md-offset-2
+					a#chang-password.btn.btn-default.dashboard-button(href="#change-password",ng-click="showDetail='/change-password'")
+						h3 Change Password
+						i.fa.fa-key.fa-3x
+
+		#settings.settings(ng-show="{'/change-password':true}[showDetail]")
+			- var activeBreadcrumb = "Change Password";
+			- var icon = 'fa-key'
+			include settings-detail-header
+			#change-password.change-password.row
+				form#change-password-form.form-horizontal.col-md-8.col-md-offset-2.col-xs-12(role="form", novalidate, name="changePasswordForm")
+					.row(ng-show="changePasswordForm.mismatch")
+						.col-xs-12
+							.alert.alert-warning
+								i.fa.fa-exclamation-triangle
+								span.text Doh! Your passwords don't match
+					.row(ng-show="changePasswordForm.tooShort")
+						.col-xs-12
+							.alert.alert-warning
+								i.fa.fa-exclamation-triangle
+								span.text Doh! Your password must be at least 4 characters.
+					.row(ng-show="changePasswordForm.success")
+						.col-xs-12
+							.alert.alert-success
+								i.fa.fa-check-circle-o
+								span.text Yes! You successfully changed your password.
+					.form-group.row
+						.col-sm-4.col-xs-12
+							label.control-label(for="password") New Password
+						.col-sm-8.col-xs-12
+							input#password.form-control(ng-model="changePassword.password",placeholder="New Password", type="password",value="",name="password",required)
+					.form-group.row
+						.col-sm-4.col-xs-12
+							label.control-label(form="password2") Confirm Password
+						.col-sm-8.col-xs-12
+							input#password2.form-control(ng-model="changePassword.password2",placeholder="Confirm New Password", type="password",value="",name="password2",required)
+					.form-group.row
+						.col-xs-5.col-xs-offset-7
+							button.btn.btn-primary.form-control(type="submit",ng-click="changePassword()")
+								i.fa.fa-cog.fa-spin(ng-show="submitInProgress")
+								span Change Password

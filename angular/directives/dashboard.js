@@ -3,13 +3,11 @@
 /* Directives */
 angular.module('wembliApp.directives.dashboard', []).
 
-directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$location',
-  function(customer, fetchModals, $rootScope, wembliRpc, $location) {
+/* do i need to fetch modals? i don't think so */
+directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$location', 'loadingModal',
+  function(customer, fetchModals, $rootScope, wembliRpc, $location, loadingModal) {
     return {
-      restrict: 'E',
-      replace: true,
-      cache: false,
-      templateUrl: "/partials/dashboard-app",
+      restrict: 'C',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
 
@@ -18,217 +16,56 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
             scope.customer = customer.get();
             scope.noValidBankAccounts = true;
             /* check for a valid bank account */
-            if (scope.customer.balancedAPI.customerAccount) {
+            if (typeof scope.customer.balancedAPI !== "undefined" &&
+                typeof scope.customer.balancedAPI.bankAccounts !== "undefined") {
               angular.forEach(scope.customer.balancedAPI.bankAccounts.items, function(bank) {
                 if (bank.is_valid) {
-                  scope.noValidBankAccounts = false;
+                  scope.needBankAccountInfo = false;
+                }
+              });
+            }
+            if (typeof scope.customer.balancedAPI !== "undefined" &&
+                typeof scope.customer.balancedAPI.creditCards !== "undefined") {
+              angular.forEach(scope.customer.balancedAPI.creditCards.items, function(bank) {
+                if (bank.is_valid) {
+                  scope.needCreditCardInfo = false;
                 }
               });
             }
           });
 
-          /* show the generic loading modal */
-          $rootScope.genericLoadingModal.header = 'Fetching Your Plans...';
-          $('#page-loading-modal').modal("hide");
-          $('#generic-loading-modal').modal("show");
+          /* show the loading modal */
+          loadingModal.show('Fetching Your Plans...');
 
-          fetchModals.fetch('/partials/modals/dashboard', function() {
-
-            wembliRpc.fetch('dashboard.init', {}, function(err, result) {
-              if (err) {
-                alert('error happened - contact help@wembli.com');
-                return;
-              }
-              /*
-              if they do not have bank info and they have at least 1 plan they are organizing,
-              then we need to alert them for the payment info
-            */
-              if (result.organizer.length && !result.customer.balancedAPI.merchantAccount) {
-                scope.needPaymentInfo = true; //show an alert telling them to enter bank info
-              }
-
-              scope.welcomeMessage = "Welcome, " + result.customer.firstName + '!';
-
-              /* let the modals know that the dashboard has been initialized */
-              $rootScope.$broadcast('dashboard-fetched', result);
-            });
-
-          });
-
-
-          scope.changePassword = function() {
-            /* form must be valid */
-            if (scope.changePasswordForm.$valid) {
-
-              var args = {
-                password: scope.changePassword.password,
-                password2: scope.changePassword.password2
-              };
-
-              wembliRpc.fetch('customer.changePassword', args,
-
-                function(err, result) {
-                  scope.changePasswordForm.error = result.formError;
-                  scope.changePasswordForm.mismatch = result.passwordMismatch;
-                  scope.changePasswordForm.tooShort = result.passwordTooShort;
-                  if (!scope.changePasswordForm.error) {
-                    scope.changePasswordForm.success = true;
-                  }
-                });
-            }
-          };
-
-          scope.createMerchantAccount = function() {
-            /* validate dob */
-            var error = false;
-            if (!/^\d{2}[-\/]\d{2}[-\/]\d{4}$/.test(scope.createMerchantAccount.dob)) {
-              scope.createMerchantAccount.errorDob = true;
-              error = true;
-            } else {
-              scope.createMerchantAccount.errorDob = false;
-            }
-            if (!/^\d{10}$/.test(scope.createMerchantAccount.phoneNumber)) {
-              scope.createMerchantAccount.errorPhoneNumber = true;
-              error = true;
-            } else {
-              scope.createMerchantAccount.errorPhoneNumber = false;
-            }
-            /* validate routing number */
-            if (!balanced.bankAccount.validateRoutingNumber(scope.createMerchantAccount.routingNumber)) {
-              scope.createMerchantAccount.errorRoutingNumber = true;
-              error = true;
-            } else {
-              scope.createMerchantAccount.errorRoutingNumber = false;
-            }
-
-            if (error) {
+          wembliRpc.fetch('dashboard.init', {}, function(err, result) {
+            if (err) {
+              alert('error happened - contact help@wembli.com');
               return;
             }
-
-            /* reformat dob form MM-DD-YYYY to YYYY-MM-DD */
-            var dobAry = scope.createMerchantAccount.dob.split(/[-\/]/);
-            var dob = dobAry[2] + '-' + dobAry[0] + '-' + dobAry[1];
-
-            var accountInfo = {
-              name: scope.createMerchantAccount.accountHolderName,
-              dob: dob,
-              phoneNumber: scope.createMerchantAccount.phoneNumber,
-              streetAddress: scope.createMerchantAccount.streetAddress,
-              postalCode: scope.createMerchantAccount.postalCode,
-              bankAccount: {
-                name: scope.createMerchantAccount.accountName,
-                accountNumber: scope.createMerchantAccount.accountNumber,
-                routingNumber: scope.createMerchantAccount.routingNumber,
-                type: scope.createMerchantAccount.accountType
-              }
-            }
-            /*
-              this is the balanced js client lib - it doesn't let you do much..we don't want to just create a bank account
-              we want to create a merchant account..for that we have to do it server side
-              balanced.bankAccount.create(bankAccountData, handleCreateMerchant);
-            */
-
-            wembliRpc.fetch('customer.createMerchantAccount', accountInfo, function(err, result) {
-              if (err) {
-                alert('something bad happened contact help@wembli.com');
-              }
-              /* back from creating merchant account */
-
-              /* TODO: handle the merchant underwrite flow
-                  - if there was not enough info to underwrite (300 code), ask for more info
-              */
-
-
-              $('#generic-loading-modal').modal("hide");
-
-            }, function(data, headersGetter) {
-
-              $rootScope.genericLoadingModal.header = 'Securely saving your information...';
-              $('#page-loading-modal').modal("hide");
-              $('#generic-loading-modal').modal("show");
-              return data;
-
-            }, function(data, headersGetter) {
-              return JSON.parse(data);
-            });
-
-          };
-
-          /* ghetto routing for dashboard submenus */
-          scope.routeDashboard = function(h) {
-
-            if (/^#/.test(h)) {
-              h = h.split('#')[1];
-            }
-            var routes = {
-              'preferences': 'showPreferences',
-              'settings': 'showSettings',
-              'payment-information': 'showPaymentInformation',
-            };
-            angular.forEach(routes, function(value, key) {
-              /*default to dashboard*/
-              if (typeof routes[h] === "undefined") {
-                scope[value] = false;
-                scope.showDashboard = true;
-              } else {
-                scope.showDashboard = false;
-                scope[value] = (key === h);
-              }
-            });
-            if (h === 'pony-up-info') {
-              scope.showDashboard = false;
-              scope.showPaymentInformation = true;
+            /* is there a credit card? */
+            if (typeof result.customer.balancedAPI === "undefined" ||
+                typeof result.customer.balancedAPI.creditCards == "undefined" ||
+                typeof result.customer.balancedAPI.creditCards.items[0] === "undefined") {
+              scope.needCreditCardInfo = true;
             }
 
-          };
+            /* is there a bank account? */
+            if (typeof result.customer.balancedAPI === "undefined" ||
+                typeof result.customer.balancedAPI.bankAccounts == "undefined" ||
+                typeof result.customer.balancedAPI.bankAccounts.items[0] === "undefined") {
+              scope.needBankAccountInfo = true;
+            }
 
-          scope.routeDashboard($location.hash());
-        };
-      },
-    }
-  }
-]).
 
-directive('dashboardLink', [
-  function() {
-    return {
-      restrict: 'C',
-      replace: false,
-      cache: false,
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr, controller) {
-          element.click(function() {
-            scope.routeDashboard(attr.modal);
+            /* put the result in the scope for the children scopes */
+            scope.dashboard = result;
+            customer.set(result.customer);
+            console.log(result);
+            /* let the modals know that the dashboard has been initialized */
+            $rootScope.$broadcast('dashboard-fetched', result);
           });
         };
-      }
-    }
-  }
-]).
-
-directive('dashboardModal', ['customer', 'wembliRpc',
-  function(customer, wembliRpc) {
-    return {
-      restrict: 'C',
-      replace: false,
-      cache: false,
-      controller: function($scope, $element, $attrs, $transclude) {
-        $scope.$on('dashboard-fetched', function(e, args) {
-          $scope.dashboard = {};
-          $scope.dashboard.organizer = args.organizer;
-          $scope.dashboard.archived = args.archived;
-          $scope.dashboard.invited = args.invited;
-          $scope.dashboard.friends = args.friends;
-
-          $('#generic-loading-modal').modal("hide");
-
-        });
-
       },
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr, controller) {
-        };
-      }
     }
   }
 ]).
@@ -250,8 +87,8 @@ directive('updateCustomerInfoButton', ['$rootScope',
   }
 ]).
 
-directive('updateCustomerInfo', ['customer', 'wembliRpc', '$rootScope', '$location',
-  function(customer, wembliRpc, $rootScope, $location) {
+directive('updateCustomerInfo', ['customer', 'wembliRpc', '$rootScope', '$location', 'loadingModal',
+  function(customer, wembliRpc, $rootScope, $location, loadingModal) {
     return {
       restrict: 'C',
       replace: false,
@@ -282,13 +119,11 @@ directive('updateCustomerInfo', ['customer', 'wembliRpc', '$rootScope', '$locati
               /* back from creating merchant account */
               $location.hash('#payment-information');
               $('#edit-customer-account').modal("hide");
-              $('#generic-loading-modal').modal("hide");
+              loadingModal.hide();
 
             }, function(data, headersGetter) {
 
-              $rootScope.genericLoadingModal.header = 'Securely saving your information...';
-              $('#page-loading-modal').modal("hide");
-              $('#generic-loading-modal').modal("show");
+              loadingModal.show('Securely saving your information...');
               return data;
 
             }, function(data, headersGetter) {
@@ -302,8 +137,8 @@ directive('updateCustomerInfo', ['customer', 'wembliRpc', '$rootScope', '$locati
   }
 ]).
 
-directive('addBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location',
-  function(customer, wembliRpc, $rootScope, $location) {
+directive('addBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location', 'loadingModal',
+  function(customer, wembliRpc, $rootScope, $location, loadingModal) {
     return {
       restrict: 'C',
       replace: false,
@@ -325,13 +160,10 @@ directive('addBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location',
               /* back from creating merchant account */
               $location.hash('#payment-information');
               $('#add-bank-account').modal("hide");
-              $('#generic-loading-modal').modal("hide");
+              loadingModal.hide();
 
             }, function(data, headersGetter) {
-
-              $rootScope.genericLoadingModal.header = 'Securely saving your information...';
-              $('#page-loading-modal').modal("hide");
-              $('#generic-loading-modal').modal("show");
+              loadingModal.show('Securely saving your information...');
               return data;
 
             }, function(data, headersGetter) {
@@ -379,8 +211,8 @@ directive('activityFeed', [
   }
 ]).
 
-directive('deleteBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location',
-  function(customer, wembliRpc, $rootScope, $location) {
+directive('deleteBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location', 'loadingModal',
+  function(customer, wembliRpc, $rootScope, $location, loadingModal) {
     return {
       restrict: 'C',
       replace: false,
@@ -390,31 +222,6 @@ directive('deleteBankAccount', ['customer', 'wembliRpc', '$rootScope', '$locatio
           scope.$on('dashboard-setBankAccountUri', function(e, args) {
             scope.bankAccountUri = args.uri;
           });
-          scope.deleteBankAccount = function() {
-
-            wembliRpc.fetch('customer.deleteBankAccount', {
-              uri: scope.bankAccountUri
-            }, function(err, result) {
-              if (err) {
-                alert('something bad happened contact help@wembli.com');
-              }
-
-              $location.hash('#payment-information');
-              $('#delete-bank-account').modal("hide");
-              $('#generic-loading-modal').modal("hide");
-
-            }, function(data, headersGetter) {
-
-              $rootScope.genericLoadingModal.header = 'Securely saving your information...';
-              $('#page-loading-modal').modal("hide");
-              $('#generic-loading-modal').modal("show");
-              return data;
-
-            }, function(data, headersGetter) {
-              return JSON.parse(data);
-            });
-
-          };
         };
       }
     }

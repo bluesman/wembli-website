@@ -1,0 +1,56 @@
+.aside.left-aside(tabindex="-1", role="dialog")
+	.aside-dialog
+		.aside-content.clearfix
+			button.close(type="button", ng-click="$hide()")
+				i.fa.fa-angle-double-left
+		.aside-body
+			//-
+				.sign-up(ng-hide="loggedIn")
+					a.btn.btn-secondary.btn-large(href="/signup")
+						strong sign up
+				.log-out(ng-show="loggedIn")
+					a.btn.btn-secondary.btn-large(href="/logout", target="_self")
+						strong log out
+
+			ul.aside-nav
+				li
+					a(href="http://#{app.settings.host}.wembli.com/")
+						i.fa.fa-home
+						span home
+				li(ng-show="loggedIn")
+					a(href="http://#{app.settings.host}.wembli.com/dashboard")
+						i.fa.fa-dashboard
+						span dashboard
+				li(ng-show="loggedIn && plan")
+					a(href="http://#{app.settings.host}.wembli.com/plan")
+						i.fa.fa-flag
+						span current plan
+				li(ng-show="loggedIn")
+					a(href="/dashboard/settings")
+						i.fa.fa-gears
+						span settings
+				li(ng-show="loggedIn")
+					a(href="/dashboard/payment-information")
+						i.fa.fa-lock
+						span payment information
+				li(ng-show="loggedIn")
+					a(href="/logout")
+						i.fa.fa-power-off
+						span log out
+
+			ul.aside-nav
+				li
+					a(href="http://#{app.settings.host}.wembli.com/about-us")
+						i.fa.fa-info
+						span about us
+				li
+					a(href="http://blog.wembli.com/", target="_self")
+						i.fa.fa-rss
+						span blog
+				li
+					a(href="mailto:team@wembli.com")
+						i.fa.fa-envelope-o
+						span contact us
+
+		.aside-footer
+			button.btn.btn-default(type="button", ng-click="$hide()") Close

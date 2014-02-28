@@ -14,8 +14,9 @@ var balanced = require('wembli/balanced-api')({
 var mcapi = require('mailchimp-api');
 var mc = new mcapi.Mailchimp(app.settings.mailchimpKey);
 
-
 exports.customer = {
+
+	/* deprecated */
 	updateAccountHolderInfo: function(args, req, res) {
 		var me = this;
 		var data = {
@@ -46,9 +47,9 @@ exports.customer = {
 				});
 			});
 		});
-
 	},
 
+	/* deprecated */
 	addBankAccount: function(args, req, res) {
 		var me = this;
 		var data = {
@@ -103,56 +104,11 @@ exports.customer = {
 		});
 	},
 
+	/* deprecated */
 	deleteBankAccount: function(args, req, res) {
-		var me = this;
-		var data = {
-			success: 1
-		};
-		/* make sure there is a customer */
-		if (!req.session.customer) {
-			data.success = 0;
-			data.error = true;
-			data.errorMessage = 'customer must be logged in';
-			return me(null, data);
-		}
-
-		if (typeof req.session.customer.balancedAPI.merchantAccount === "undefined") {
-			//there are not bank accounts
-			data.bankAccounts = [];
-			return me(null, data);
-		}
-
-		/* get a list of bank accounts for this merchant */
-		var bAccount = new balanced.accounts();
-		bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {}, function(err, bRes, bankAccounts) {
-			/* find the matching bank account uri and delete it */
-			var items = [];
-			var deleted = false;
-			bankAccounts.items.forEach(function(bank) {
-				if (bank.uri == args.uri) {
-					deleted = true;
-					/* safe to delete this bank account */
-					var bBank = new balanced.bank_accounts();
-					bBank.delete(bank.uri, function(err, bRes, result) {
-						//TODO check err
-						bAccount.listBankAccounts(req.session.customer.balancedAPI.merchantAccount.bank_accounts_uri, {}, function(err, bRes, bankAccounts) {
-							req.session.customer.balancedAPI.customerAccount.bank_accounts = bankAccounts;
-							req.session.customer.markModified('balancedAPI.customerAccount');
-							req.session.customer.save(function(err) {
-								return me(null, data);
-							});
-						});
-					});
-				}
-			});
-			if (!deleted) {
-				data.success = 0;
-				data.error('did not find bank account to delete');
-				return me(null, data);
-			}
-		});
-
 	},
+
+	/* deprecated */
 	listBankAccounts: function(args, req, res) {
 		var me = this;
 		var data = {
@@ -188,13 +144,171 @@ exports.customer = {
 		});
 	},
 
+	createCreditCard: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+
+		var saveCustomer = function(bCustomer) {
+			var customer = new balanced.customers(bCustomer);
+			customer.listCards(function(err, bRes, cards) {
+				data.accountHolderInfo = bCustomer;
+				data.creditCards = cards;
+				req.session.customer.balancedAPI.customerAccount = bCustomer;
+				req.session.customer.balancedAPI.creditCards = cards;
+
+				req.session.customer.markModified('balancedAPI.customerAccount');
+				req.session.customer.markModified('balancedAPI.creditCards');
+				req.session.customer.save(function(err) {
+					return me(null, data);
+				});
+			});
+		};
+
+
+		var creditCard = {
+			card_number: args.creditCardNumber,
+			expiration_month: args.expirationDateMonth,
+			expiration_year: args.expirationDateYear,
+			security_code: args.cvv,
+			postal_code: args.postalCode,
+			name: args.cardHolderName
+		}
+
+		var buyer = {
+			name: req.session.customer.firstName + ' ' + req.session.customer.lastName,
+			email: req.session.customer.email,
+			card: creditCard,
+			meta: {
+				customerId: req.session.customer._id
+			}
+		};
+
+		/* if this card exists, update it instead of adding it */
+		if (typeof req.session.customer.balancedAPI !== "undefined" &&
+				typeof req.session.customer.balancedAPI.creditCards !== "undefined") {
+			var exists = false;
+			req.session.customer.balancedAPI.creditCards.items.forEach(function(card) {
+				if (card.card_number === args.creditCardNumber) {
+					exists = true;
+				}
+			});
+
+			if (exists) {
+				/* TODO: updated the card w/balanced and in the db */
+				data.success = 0;
+				data.error = true;
+				data.errorMessage = 'credit card exists';
+				return me(null,data);
+			}
+		}
+
+		/* check for an existing balancedAPI.customerAccount - if exists, just add the creditCard to it */
+		if (typeof req.session.customer.balancedAPI !== "undefined" &&
+				typeof req.session.customer.balancedAPI.customerAccount !== "undefined") {
+
+			/* add the card */
+			var bCards = new balanced.cards();
+			bCards.create(creditCard, function(err, res, card) {
+
+				if (card.status_code == '400') {
+					data.body = card;
+					data.success = 0;
+					if (card.category_code == 'card-number-not-valid') {
+						data.error = true;
+						data.errorMessage = 'The credit card number is not valid.';
+					}
+					return me(null, data);
+				}
+
+				console.log('CUSTOMER CARD:');
+				console.log(card);
+				/* now debit the card */
+				var bCustomers = new balanced.customers();
+				bCustomers.addCard(req.session.customer.balancedAPI.customerAccount.uri, {card_uri: card.uri}, function(err, res, custData) {
+					console.log('added card to existing customer');
+					console.log(err);
+					console.log(res);
+					console.log(custData);
+					/* if there's an error gtfo */
+					if (err) {
+						data.success = 0;
+						data.error = true;
+						data.errorMessage = 'unable to add card: ' + err;
+						return me(null, data);
+					}
+
+					bCustomers.setContext(custData);
+					bCustomers.listCards(function(err, bRes, cards) {
+						console.log('list cards:');
+						console.log(err,bRes,cards);
+						data.creditCards = cards;
+						req.session.customer.balancedAPI.creditCards = cards;
+						req.session.customer.markModified('balancedAPI.creditCards');
+						req.session.customer.balancedAPI.customerAccount = custData;
+						req.session.customer.markModified('balancedAPI.customerAccount');
+						req.session.customer.save(function(err) {
+							return me(null, data);
+						});
+					});
+				});
+			});
+		} else {
+			/* there is no customerAccount - create it and add the card */
+			var bCustomers = new balanced.customers();
+			bCustomers.create(buyer, function(err, res, body) {
+				/* if there's an error gtfo */
+				if (err) {
+					data.success = 0;
+					data.error = true;
+					data.errorMessage = 'unable to create balanced customer: ' + err;
+					return me(null, data);
+				}
+
+				if (body.status_code == '409') {
+					data.body = body;
+					data.success = 0;
+					if (body.category_code == 'card-not-validated') {
+						data.error = true;
+						data.errorMessage = 'Card could not be validated.';
+					}
+					return me(null, data);
+				}
+
+				/* save this in our customer document */
+				req.session.customer.balancedAPI.customerAccount = body;
+				req.session.customer.markModified('balancedAPI.customerAccount');
+
+				bCustomers.setContext(body);
+				/* add the creditcards to this customer */
+				bCustomers.listCards(function(err, res, cards) {
+					req.session.customer.balancedAPI.creditCards = cards;
+					req.session.customer.markModified('balancedAPI.creditCards');
+
+					/* save the balancedAPI data for this customer */
+					req.session.customer.save(function(err, c) {
+
+						if (err) {
+							data.success = 0;
+							data.error = true;
+							data.errorMessage = 'unable to save customer: ' + err;
+							return me(null, data);
+						}
+						data.creditCards = cards;
+						return me(null, data);
+					});
+				});
+			});
+		}
+	},
+
 	createMerchantAccount: function(args, req, res) {
 		var me = this;
 		var data = {
 			success: 1
 		};
 
-		/* save the customer and respond when all is done */
 		var saveCustomer = function(bCustomer) {
 			var customer = new balanced.customers(bCustomer);
 			customer.listBankAccounts(function(err, bRes, bankAccounts) {
@@ -264,6 +378,132 @@ exports.customer = {
 
 				/* call the balancedAPI to get bank accounts for this customer */
 				return saveCustomer(bCustomer);
+			}
+		});
+	},
+
+	deleteCreditCard: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+		/* make sure there is a customer */
+		if (!req.session.customer) {
+			data.success = 0;
+			data.error = true;
+			data.errorMessage = 'customer must be logged in';
+			return me(null, data);
+		}
+
+		if (typeof req.session.customer.balancedAPI.creditCards === "undefined") {
+			//there are not bank accounts
+			data.creditCards = [];
+			return me(null, data);
+		}
+
+		/* find the bank account we're dealing with */
+		var card = req.session.customer.balancedAPI.creditCards.items[0];
+		console.log('deleting card:');
+		console.log(card);
+
+		/* get a list of bank accounts for this customer */
+		var customer = new balanced.customers(req.session.customer.balancedAPI.customerAccount);
+		customer.listCards(function(err, bRes, cards) {
+			console.log('cards');
+			console.log(cards);
+			console.log(err);
+			console.log(bRes);
+			/* find the matching bank account uri and delete it */
+			var items = [];
+			var deleted = false;
+			cards.items.forEach(function(c) {
+				if (c.uri == card.uri) {
+					deleted = true;
+					/* safe to delete this bank account */
+					var bCard = new balanced.cards();
+					bCard.delete(c.uri, function(err, bRes, result) {
+						console.log(err);
+						console.log(bRes);
+						console.log(result);
+						//TODO check err
+						customer.listCards(function(err, bRes, creditCards) {
+							req.session.customer.balancedAPI.creditCards = creditCards;
+							req.session.customer.markModified('balancedAPI.creditCards');
+							req.session.customer.save(function(err) {
+								return me(null, data);
+							});
+						});
+					});
+				}
+			});
+			if (!deleted) {
+				data.success = 0;
+				data.error = true;
+				data.errorMessage ='did not find credit card to delete';
+				return me(null, data);
+			}
+		});
+	},
+
+	deleteBankAccount: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+		/* make sure there is a customer */
+		if (!req.session.customer) {
+			data.success = 0;
+			data.error = true;
+			data.errorMessage = 'customer must be logged in';
+			return me(null, data);
+		}
+
+		if (typeof req.session.customer.balancedAPI.bankAccounts === "undefined") {
+			//there are not bank accounts
+			data.bankAccounts = [];
+			return me(null, data);
+		}
+
+		/* find the bank account we're dealing with */
+		var bankAccount = req.session.customer.balancedAPI.bankAccounts.items[0];
+		console.log('deleting account:');
+		console.log(bankAccount);
+
+		/* get a list of bank accounts for this customer */
+		var customer = new balanced.customers(req.session.customer.balancedAPI.customerAccount);
+		customer.listBankAccounts(function(err, bRes, bankAccounts) {
+			console.log('bank accounts');
+			console.log(bankAccounts);
+			console.log(err);
+			console.log(bRes);
+			/* find the matching bank account uri and delete it */
+			var items = [];
+			var deleted = false;
+			bankAccounts.items.forEach(function(bank) {
+				if (bank.uri == bankAccount.uri) {
+					deleted = true;
+					/* safe to delete this bank account */
+					var bBank = new balanced.bank_accounts();
+					bBank.delete(bank.uri, function(err, bRes, result) {
+						console.log(err);
+						console.log(bRes);
+						console.log(result);
+						//TODO check err
+						customer.listBankAccounts(function(err, bRes, bankAccounts) {
+							req.session.customer.balancedAPI.bankAccounts = bankAccounts;
+							req.session.customer.markModified('balancedAPI.bankAccounts');
+							req.session.customer.save(function(err) {
+								return me(null, data);
+							});
+						});
+					});
+				}
+			});
+			if (!deleted) {
+				data.success = 0;
+				data.error = true;
+				data.errorMessage ='did not find bank account to delete';
+				return me(null, data);
 			}
 		});
 	},

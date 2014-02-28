@@ -187,10 +187,11 @@ controller('LoginCtrl', ['$scope', '$window', 'wembliRpc',
 					$scope.forgotPasswordForm.fatalError = err;
 					return;
 				}
+
 				if (results.error) {
 					$scope.forgotPasswordForm.noCustomer = true;
 				} else {
-					$scope.submitForgotPasswordForm.success = true;
+					$scope.forgotPasswordForm.success = true;
 				}
 			});
 		};

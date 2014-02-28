@@ -121,7 +121,7 @@ directive('showTicketRange', ['wembliRpc', '$window',
               console.log(args);
 
             wembliRpc.fetch('event.getPricingInfo', args, function(err, result) {
-                var summaryContent = 'Click for ticket pricing';
+                var summaryContent = 'Start plan for ticket pricing';
 
                 if (err) {
                   $('#' + attr.id + ' .ticket-range').html(summaryContent).fadeIn();
@@ -136,9 +136,9 @@ directive('showTicketRange', ['wembliRpc', '$window',
                   if (result.ticketPricingInfo.ticketsAvailable !== '0') {
                     summaryContent = (result.ticketPricingInfo.ticketsAvailable === "1") ? result.ticketPricingInfo.ticketsAvailable + " ticket" : result.ticketPricingInfo.ticketsAvailable + " tickets";
                     if (parseFloat(result.ticketPricingInfo.lowPrice) === parseFloat(result.ticketPricingInfo.highPrice)) {
-                      summaryContent += "<br/> $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
+                      summaryContent += ": $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0);
                     } else {
-                      summaryContent += "<br/> $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " - $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
+                      summaryContent += ": $" + parseFloat(result.ticketPricingInfo.lowPrice).toFixed(0) + " - $" + parseFloat(result.ticketPricingInfo.highPrice).toFixed(0);
                     }
                   }
                 }

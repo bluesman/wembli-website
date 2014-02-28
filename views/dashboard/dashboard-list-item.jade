@@ -1,0 +1,10 @@
+.col-sm-2
+	.event-date-box
+		span.day {{getDate(plan.event.Date)| date:'EEE'}}
+		span.event-date {{getDate(plan.event.Date)| date:'MMM d'}}
+		span.time {{getDate(plan.event.Date)| date:'h:mm a'}}
+.col-sm-7
+	.info
+		span.name.block {{plan.event.Name}}
+		span.venue.block {{ plan.event.Venue.Name || plan.event.Venue }}
+		span.location.block {{plan.event.City+', '+plan.event.StateProvince}}

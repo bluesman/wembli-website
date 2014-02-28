@@ -33,133 +33,110 @@
 	}
 }
 
-#dashboard-wrapper {
-	.clearfix();
-	height:100%;
+#dashboard {
 
-	#left {
+	margin-bottom:50px;
+
+	#dashboard-header {
+		margin-top:10px;
+		#dashboard-nav {
+			width:100%;
+			margin-bottom:10px;
+		}
+	}
+
+	.dashboard-button {
+		h3 {
+			display:block !important;
+			font-size: 18px;
+		}
+		height:110px;
 		width:100%;
-		text-align: left;
-		.alert {text-align:center;}
+		margin-top:20px;
+	}
 
-		#dashboard {
-			margin-bottom:60px;
-			#dashboard-header {
-				.clearfix();
-				width:600px;
+	.dashboard-button:hover {
+		color:@orange;
+	}
+
+	.alert {
+		.text {
+			width:500px;
+		}
+	}
+
+	.breadcrumb {
+		i {
+			margin-right: 6px;
+		}
+	}
+
+	#start-now {
+		margin-top:30px;
+		display:block;
+	}
+
+	.no-list {
+		.no-list-text {
+			padding:15px;
+		}
+		img {
+			float:right;
+			padding:0 15px;
+		}
+	}
+
+	.dashboard-payment-information {
+		.header {
+			margin:10px 0;
+		}
+
+		h3, h4 {
+			display:inline;
+			font-weight:bold;
+		}
+
+		h4 {
+			font-size:1.5em;
+		}
+
+
+		.security-message {
+			padding:10px 20px;
+			background-color: @blueLighter;
+		}
+
+		.bank-account-info {
+			margin-top:20px;
+			.balanced-logo {
 				margin:auto;
-				padding:20px 50px;
-
-				.dropdown-menu {
-					left:8px;
-					min-width:230px;
-				}
-				.dropdown {
-				margin:10px 20px 0;
-				line-height:26px;
-				vertical-align: middle;
-				text-transform: capitalize;
-				text-align:left;
-				color:@grayDark;
-				width:256px;
-
-				a {
-					.clearfix();
-					color:@grayDark;
-					.border-radius(4px);
-					display:block;
-					padding:9px;
-				}
-				a.selected, a:hover {
-					background:@grayDark;
-					color:@white;
-				}
-
-				.welcome-message {
-					font-size:12px;
-					padding:0 10px;
-					width:186px;
-				}
-				.icon-cog {
-					float:left;
-				}
-				.icon-caret-down {
-
-				}
-				}
-
-				.start-now {
-
-					#start-now {
-						margin:10px 30px 0 0;
-						width:212px;
-					}
-				}
+			}
+			.safe-and-secure {
+				text-align:center;
+				font-style: italic;
+				font-weight:bold;
+				color:@grayDarker;
 			}
 		}
 
-		.payment-information-wrapper, #settings-wrapper, #dashboard-body {
-			padding:50px;
-			margin: auto;
-			border:3px solid @grayDark;
-			width:600px;
-
-			.alert {
-				.text {
-					width:500px;
-				}
+		.credit-card-info {
+			.balanced-credit-card-logos {
+				margin-top: 5px;
 			}
-
-			.dashboard-row {
-				.clearfix();
-
-				.dashboard-button {
-					width:230px;
-					height:90px;
-					margin:20px;
-					display:block;
-					float:left;
-				}
-
-				.dashboard-button:hover {
-					color:@orange;
-				}
-
-				#planning {
-
-				}
-
-				#invited {
-
-				}
-
-				#contacts {
-
-				}
-
-				#archive {
-
-				}
-
-			}
-
 		}
 
-		#payment-information-wrapper, #settings-wrapper {
-			text-align:left;
-			p {
-				padding:10px;
+		#manage-cards {
+			.view-credit-card-button {
+				margin-right: 20px;
+			}
+		}
+
+		#manage-accounts {
+			.view-bank-account-button {
+				margin-right:20px;
 			}
 		}
 
 	}
 
-	#right {
-		width:20%;
-		height:100%;
-		#activity-feed {
-			background-color: @grayLighter;
-			height:100%;
-		}
-	}
 }

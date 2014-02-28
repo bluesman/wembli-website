@@ -10,10 +10,7 @@ var async = require('async');
 //var https = require('https');
 module.exports = function(app) {
 
-	var viewDashboard = function(req,res) {
-		var view = /partial/.test(req.url) ? 'partials/dashboard-wrapper' : 'dashboard-wrapper';
-		res.setHeader('x-wembli-overflow','hidden');
-
+	var checkLogin = function(req, res) {
 		//not logged in? send to login page
 		if (!req.session.loggedIn) {
 			//this wont work for a partial
@@ -23,40 +20,49 @@ module.exports = function(app) {
 		//they need to confirm their email before they can use the dashboard
 		if (req.session.customer.confirmed === false) {
 			//need email confirmation
-			view = /partial/.test(req.url) ? 'partials/confirm-email-sent' : 'confirm-email-sent';
-			return res.render(view, {
-				title: 'wembli.com - check your email!.',
-
+			return res.render('confirm-email-sent', {
+				jsIncludes:['/js/dashboard.min.js']
 			});
 		}
-
-		console.log('dashboard: render '+view);
-		res.render(view, {
-			title: 'wembli.com - login to get the best seats.',
-		});
-
-
 	};
 
-
-	app.get('(/partials)?/dashboard/?', viewDashboard);
-
-	app.get('(/partials)?/modals/dashboard/?', function(req,res) {
-			res.render('partials/modals/dashboard',{partial:true,plan:req.session.plan});
+	app.get('/dashboard/settings', function(req, res) {
+		checkLogin(req, res);
+		// add dashboard.min.js
+		res.render('dashboard/settings', {
+			active: {
+				'settings':'active'
+			},
+			jsIncludes:['/js/dashboard.min.js']
+		});
 	});
 
+	app.get('/dashboard/payment-information', function(req, res) {
+		checkLogin(req, res);
+		// add dashboard.min.js
+		res.render('dashboard/payment-information', {
+			active: {
+				'payment-information':'active'
+			},
+			jsIncludes:['/js/dashboard.min.js']
+		});
+	});
+
+	app.get('/dashboard', function(req, res) {
+		checkLogin(req, res);
+		// add dashboard.min.js
+		res.render('dashboard/main', {
+			active: {
+				'dashboard':'active'
+			},
+			jsIncludes:['/js/dashboard.min.js']
+		});
+	});
 
 	/* if they try to hit refresh on the prefs page - send to the dashboard */
 	app.get('/dashboard/preferences',function(req,res) {
 		res.redirect('/dashboard');
 	});
-
-	app.get('/partials/dashboard/preferences', function(req,res) {
-		res.render('partials/dashboard/preferences',{partial:true});
-	});
-
-
-
 
 
 	var foo = function( ) {

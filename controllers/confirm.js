@@ -113,7 +113,9 @@ module.exports = function(app) {
 							var locals = {
 								email: req.param('email'),
 								token: req.param('token'),
-								title: 'wembli.com - supply your password!.'
+								title: 'wembli.com - supply your password!.',
+								jsIncludes: ['/js/login.min.js']
+
 							};
 
 							locals.next = req.param('next') ? decodeURIComponent(req.param('next')) : '/dashboard';

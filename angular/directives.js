@@ -355,6 +355,93 @@ directive('focusOnClick', ['$timeout',
   }
 ]).
 
+directive('createBalancedAccount', ['$rootScope', 'pluralize', 'wembliRpc', 'plan', 'loadingModal',
+  function($rootScope, pluralize, wembliRpc, plan, loadingModal) {
+    return {
+      restrict: 'C',
+      cache: false,
+      compile: function(element, attr, transclude) {
+        return function(scope, element, attr, controller) {
+
+          scope.createBalancedAccount = function() {
+            console.log('show loading modal');
+            scope.submitInProgress = true;
+
+            /* validate dob */
+            var error = false;
+            if (!/^\d{2}[-\/]\d{2}[-\/]\d{4}$/.test(scope.createMerchantAccount.dob)) {
+              scope.createMerchantAccount.errorDob = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorDob = false;
+            }
+            if (!/^\d{10}$/.test(scope.createMerchantAccount.phoneNumber)) {
+              scope.createMerchantAccount.errorPhoneNumber = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorPhoneNumber = false;
+            }
+
+            if (scope.createMerchantAccount.errorPhoneNumber || scope.createMerchantAccount.errorDob) {
+              scope.createMerchantAccount.accountHolderError = true;
+            } else {
+              scope.createMerchantAccount.accountHolderError = false;
+            }
+
+            /* validate routing number */
+            if (!balanced.bankAccount.validateRoutingNumber(scope.createMerchantAccount.routingNumber)) {
+              scope.createMerchantAccount.errorRoutingNumber = true;
+              error = true;
+            } else {
+              scope.createMerchantAccount.errorRoutingNumber = false;
+            }
+
+            if (error) {
+              console.log('error creating bank account');
+              console.log(scope.createMerchantAccount);
+              scope.submitInProgress = false;
+              return;
+            }
+
+            /* reformat dob form MM-DD-YYYY to YYYY-MM-DD */
+            var dobAry = scope.createMerchantAccount.dob.split(/[-\/]/);
+            var dob = dobAry[2] + '-' + dobAry[0] + '-' + dobAry[1];
+
+            var accountInfo = {
+              name: scope.createMerchantAccount.accountHolderName,
+              dob: dob,
+              phoneNumber: scope.createMerchantAccount.phoneNumber,
+              streetAddress: scope.createMerchantAccount.streetAddress,
+              postalCode: scope.createMerchantAccount.postalCode,
+              bankAccount: {
+                name: scope.createMerchantAccount.accountName,
+                accountNumber: scope.createMerchantAccount.accountNumber,
+                routingNumber: scope.createMerchantAccount.routingNumber,
+                type: scope.createMerchantAccount.accountType
+              }
+            }
+            /*
+              this is the balanced js client lib - it doesn't let you do much..we don't want to just create a bank account
+              we want to create a merchant account..for that we have to do it server side
+              balanced.bankAccount.create(bankAccountData, handleCreateMerchant);
+            */
+
+            wembliRpc.fetch('customer.createMerchantAccount', accountInfo, function(err, result) {
+              if (err) {
+                alert('something bad happened contact help@wembli.com');
+              }
+
+              /* back from creating merchant account */
+              scope.submitInProgress = true;
+              $rootScope.$broadcast('bank-account-created', result);
+            });
+          };
+        };
+      }
+    }
+  }
+]).
+
 /*
 directive('friendTweetButton', ['$window','wembliRpc',function($window,wembliRpc) {
   return {
@@ -711,12 +798,11 @@ directive('preventDefault', [
   }
 ]).
 
-directive('startPlan', ['$rootScope', 'fetchModals',
-  function($rootScope, fetchModals) {
+directive('startPlan', ['$rootScope',
+  function($rootScope) {
     return {
       restrict: 'C',
       compile: function(element, attr, transclude) {
-        fetchModals.fetch('/partials/payment-type');
 
         return function(scope, element, attr) {
           element.click(function() {
@@ -726,14 +812,14 @@ directive('startPlan', ['$rootScope', 'fetchModals',
             } else {
               nextLink = element.find('.next-link').attr('href');
             }
+
             $rootScope.$broadcast('payment-type-modal-clicked', {
               nextLink: nextLink,
               name: attr.name,
               eventId: attr.eventId,
               eventName: attr.eventName
             });
-            /* show the popup to collect payment type */
-            $('#payment-type-modal').modal('show');
+
           });
         }
       }

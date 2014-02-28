@@ -215,15 +215,18 @@ exports.plan = {
 				.where('organizer.customerId').equals(req.session.customer._id)
 				.where('event.eventId').equals(args.eventId).exec(function(err, p) {
 					if (p === null) {
+						req.syslog.notice('existing customer, starting a new plan');
 						return newPlan();
 					}
 					req.session.plan = p;
 					req.session.plan.save(function() {
 						data.plan = req.session.plan;
+						req.syslog.notice('existing customer, revisiting an existing plan');
 						return me(null, data);
 					});
 				});
 		} else {
+			req.syslog.notice('new customer starting a new plan');
 			newPlan();
 		}
 

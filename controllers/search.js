@@ -36,29 +36,10 @@ module.exports = function(app) {
 		},[args,req,res]);
 	};
 
-	app.get(/^\/partials\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
-
-		req.session.plan = new Plan({guid:Plan.makeGuid()});
-
-		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-after';
-		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-after';
-		req.session.plan.preferences.parking.payment     = req.params[0] ? req.params[0] : 'split-after';
-		req.session.plan.preferences.restaurants.payment = req.params[0] ? req.params[0] : 'split-after';
-		req.session.plan.preferences.hotels.payment      = req.params[0] ? req.params[0] : 'split-after';
-
-		req.session.visitor.context = 'organizer';
-
-		if(req.param('next')) {
-			/* tell app to update the location using this header */
-			res.redirect('partials'+req.param('next'));
-		} else {
-			res.render('partials/start-plan',{partial:true});
-		}
-	});
-
+	/* can i deprecate this? */
+	/*
 	app.get(/^\/start-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 
-		/* set payment pref to indicate how this person wants pay */
 		req.session.plan = new Plan({guid:Plan.makeGuid()});
 		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-first';
 		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-first';
@@ -74,10 +55,12 @@ module.exports = function(app) {
 			searchView(req,res);
 		}
 	});
+	*/
 
+	/* can i deprecate this? */
+	/*
 	app.get(/^\/update-plan\/(split-first|split-after|no-split)?/,function(req,res) {
 
-		/* set payment pref to indicate how this person wants pay */
 		req.session.plan.preferences.payment             = req.params[0] ? req.params[0] : 'split-first';
 		req.session.plan.preferences.tickets.payment     = req.params[0] ? req.params[0] : 'split-first';
 		req.session.plan.preferences.parking.payment     = req.params[0] ? req.params[0] : 'split-first';
@@ -92,10 +75,12 @@ module.exports = function(app) {
 			searchView(req,res);
 		}
 	});
+	*/
 
 	//app.get('/search/?', searchView);
 
-	//these come from the more events button
+	//these come from the more events button - deprecate?
+	/*
 	app.get('/search/events/:city/:from', function(req,res) {
 
 		var whereClause = '';
@@ -118,11 +103,10 @@ module.exports = function(app) {
 			});
 		},[args,req,res]);
 	});
-
+	*/
 
 	app.get(/^\/search(\/events\/(.+)$)?/, function(req, res) {
 		var title = 'Wembli Search';
-
 		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];
 		if (!query) {
 			res.setHeader('x-wembli-location','/search');
@@ -151,29 +135,6 @@ module.exports = function(app) {
 				jsIncludes:['/js/search.min.js']
 			});
 		},[req.session.visitor.lastSearch,req,res]);
-	});
-
-
-	app.get(/^\/partials\/search(\/events\/(.+)$)?/, function(req, res) {
-		var title = 'Wembli Search';
-
-		var query = (typeof req.param('search') !== "undefined") ? req.param('search') : req.params[1];
-		if (query) {
-			query = query.replace(/\+/i,' ');
-			req.session.lastSearch = query;
-
-			/* TODO: try to parse out a date from the search string */
-			req.session.visitor.lastSearch = {
-				searchTerms: query,
-				orderByClause: 'Date'
-			};
-		}
-
-		return res.render('partials/search', {
-			partial:true,
-			search: query,
-			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
-		});
 	});
 
 };

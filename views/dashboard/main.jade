@@ -1,0 +1,81 @@
+extends ../dashboard
+block dashboard-content
+	.dashboard-main(ng-controller="DashboardMainCtrl")
+		#dashboard-body(ng-hide="showList")
+			.row
+				.col-md-4.col-md-offset-2
+					a#planning.btn.btn-default.dashboard-button(href="#planning-list",ng-click="showList='/planning-list'")
+						h3 Events You're Planning
+						i.fa.fa-flask.fa-3x
+				.col-md-4
+					a#invited.btn.btn-default.dashboard-button(href="#invited-list",ng-click="showList='/invited-list'")
+						h3 Events You're Invited To
+						i.fa.fa-group.fa-3x
+			.row
+				.col-md-4.col-md-offset-2
+					a#contacts.btn.btn-default.dashboard-button(href="#contacts-list",ng-click="showList='/contacts-list'")
+						h3 Your Little Black Book
+						i.fa.fa-book.fa-3x
+				.col-md-4
+					a#archive.btn.btn-default.dashboard-button(href="#archived-list",ng-click="showList='/archived-list'")
+						h3 Past Events
+						i.fa.fa-list-alt.fa-3x
+
+		#planning-list.planning-list(ng-show="{'/planning-list':true}[showList]")
+			- var activeBreadcrumb = "Events You're Planning";
+			- var icon = 'fa-flask'
+			include plan-list-header
+			.no-list(ng-hide="dashboard.organizer")
+				- var noListText = "Hey! Looks like you don't have any plans started...don't worry help is on the way! Go ahead and start planning your next great adventure!"
+				include no-list
+			ul.plan-list.row
+				li.dashboard-plan(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.organizer",ng-cloak)
+					include dashboard-list-item
+					.col-sm-3.col-xs-12
+						.cta.col-xs-4.col-sm-12
+							a(href="#",ng-click="deletePlan(plan.guid)") Delete this plan
+							a.btn.btn-primary(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
+		#invited-list.invited-list(ng-show="{'/invited-list':true}[showList]")
+			- var activeBreadcrumb = "Events You're Invited To";
+			- var icon = 'fa-group'
+			include plan-list-header
+			.no-list(ng-hide="dashboard.invited")
+				- var noListText = "Hey! Looks like you aren't invited to any plans...maybe you should take the first step and start planning something."
+				include no-list
+			ul.plan-list.row
+				li.dashboard-plan(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.invited",ng-cloak)
+					include dashboard-list-item
+					.col-sm-3.col-xs-12
+						.cta.col-xs-4.col-sm-12
+							a.btn.btn-primary(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
+		#contacts-list.contacts-list(ng-show="{'/contacts-list':true}[showList]")
+			- var activeBreadcrumb = "Your Little Black Book";
+			- var icon = 'fa-book'
+			include plan-list-header
+			.no-list(ng-hide="dashboard.contacts")
+				- var noListText = "Hey! Looks like you don't have any contacts...maybe you should get out and meet people - start something!"
+				include no-list
+			ul.contacts-list.row
+				li.dashboard-contact(id="{{friend.id}}-wrapper",ng-repeat="friend in dashboard.friends",ng-cloak)
+					i.icon-user.pull-left(ng-hide="friend.imageUrl")
+					.contact-info.pull-left
+						span.name.block {{friend.contactInfo.name}}
+					.icon-twitter.pull-right(ng-show="{twitter:true}[friend.contactInfo.service]")
+					.icon-facebook.pull-right(ng-show="{facebook:true}[friend.contactInfo.service]")
+					.icon-envelope.pull-right(ng-show="{wemblimail:true}[friend.contactInfo.service]")
+		#archived-list.archived-list(ng-show="{'/archived-list':true}[showList]")
+			- var activeBreadcrumb = "Past Events";
+			- var icon = 'fa-list-alt'
+			include plan-list-header
+			.no-list(ng-hide="dashboard.archived")
+				- var noListText = "Your list is empty - you haven't been anywhere! Get ta' Planning!"
+				include no-list
+			ul.plan-list.row
+				li.dashboard-plan(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.archived",ng-cloak)
+					include dashboard-list-item
+		.row
+			.col-md-8.col-md-offset-2.col-xs-12
+				a#start-now.btn.btn-primary.btn-large(href="/search")
+					span START A NEW PLAN&nbsp;
+					i.fa.fa-double-angle-right
+

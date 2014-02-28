@@ -1,0 +1,11 @@
+.aside(tabindex="-1", role="dialog")
+	.aside-dialog
+		.aside-content
+			button.close(type="button", ng-click="$hide()") &times;
+			h4.aside-title {{title}}
+		.aside-body
+			form#header-search-form.navbar-form.navbar-left(role="search", method="GET", action="//#{app.settings.host}.wembli.com/search/events")
+				i.fa.fa-search.pull-left(ng-hide="searchInProgress")
+				input.pull-left(type="text", name="search", placeholder="Search")
+		.aside-footer
+			button.btn.btn-default(type="button", ng-click="$hide()") Close

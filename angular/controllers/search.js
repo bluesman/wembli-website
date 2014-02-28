@@ -27,6 +27,53 @@ controller('SearchCtrl', ['$scope', '$rootScope', '$window',
 			//$window.location.href = '/search/events/' + $scope.search;
 		}
 
+		$scope.openPaymentModal = function(event) {
+			console.log(event);
+			$scope.event = event;
+			$('#payment-type-modal').modal('show');
+		}
+
+	}
+]).
+
+controller('PaymentTypeModalCtrl', ['$scope', '$location', 'plan', 'wembliRpc', '$rootScope', 'googleAnalytics',
+	function($scope, $location, plan, wembliRpc, $rootScope, ga) {
+		$scope.$on('payment-type-modal-clicked', function(e, args) {
+			$scope.$apply(function() {
+				$scope.name = args.name;
+				$scope.eventId = args.eventId;
+				$scope.eventName = args.eventName;
+				$scope.nextLink = args.nextLink;
+			});
+		});
+		$scope.submitInProgress = false;
+
+		$scope.startPlan = function() {
+			$scope.submitInProgress = true;
+			if ($scope.paymentType === 'split-first') {
+				$scope.nextLink = '/event-options/' + $scope.eventId + '/' + $scope.eventName;
+			}
+
+			if (typeof $scope.nextLink === 'undefined') {
+				$scope.nextLink = '/tickets/' + $scope.eventId + '/' + $scope.eventName;
+			}
+			/* start the plan */
+			wembliRpc.fetch('plan.startPlan', {
+				payment: $scope.paymentType,
+				eventId: $scope.eventId,
+				eventName: $scope.eventName
+			}, function(err, result) {
+				console.log(result);
+				ga.trackEvent('Plan', 'start', $scope.eventName);
+
+				plan.fetch(function() {
+					$scope.submitInProgress = false;
+					/* go to the next page which depends on whether they are splitting with friends or paying themself */
+
+					$location.path($scope.nextLink);
+				});
+			})
+		};
 	}
 ]);
 

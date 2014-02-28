@@ -24,15 +24,18 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+        /*
         mangle: {
         	except: ['jQuery']
-        }
+        },
+        */
+        mangle:false,
+        beautify: true
       },
       "global": {
       	"files": {
       		'public/js/wembli.min.js':[
-            'bower_components/jquery/jquery.js',
-            'plugins/jquery.slidepanel.js',
+            'bower_components/jquery/dist/jquery.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-route/angular-route.js',
             'bower_components/bootstrap/js/transition.js',
@@ -45,6 +48,10 @@ module.exports = function(grunt) {
             'bower_components/bootstrap/js/tab.js',
             'bower_components/bootstrap-modal/js/bootstrap-modalmanager.js',
             'bower_components/bootstrap-modal/js/bootstrap-modal.js',
+            'bower_components/angular-animate/angular-animate.js',
+            'bower_components/angular-strap/dist/angular-strap.js',
+            'bower_components/angular-strap/dist/angular-strap.tpl.js',
+            'plugins/balanced/v1/balanced.js',
             'angular/controllers.js',
             'angular/directives.js',
             'angular/services.js',
@@ -61,8 +68,7 @@ module.exports = function(grunt) {
       "directory-default-1": {
       	"files": {
       		'public/js/directory-default-1.min.js':[
-            'bower_components/jquery/jquery.js',
-            'plugins/jquery.slidepanel.js',
+            'bower_components/jquery/dist/jquery.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-route/angular-route.js',
             'bower_components/bootstrap/js/transition.js',
@@ -75,6 +81,8 @@ module.exports = function(grunt) {
             'bower_components/bootstrap/js/tab.js',
             'bower_components/bootstrap-modal/js/bootstrap-modalmanager.js',
             'bower_components/bootstrap-modal/js/bootstrap-modal.js',
+            'bower_components/angular-strap/dist/angular-strap.js',
+            'bower_components/angular-strap/dist/angular-strap.tpl.js',
             'angular/directory/default/1/controllers.js',
             'angular/directory/default/1/services.js',
             'angular/services/header.js',
@@ -113,6 +121,15 @@ module.exports = function(grunt) {
             'angular/apps/login.js',
             'angular/controllers/login.js',
             'angular/directives/login.js',
+          ]
+        }
+      },
+      "dashboard": {
+        "files": {
+          'public/js/dashboard.min.js':[
+            'angular/apps/dashboard.js',
+            'angular/controllers/dashboard.js',
+            'angular/directives/dashboard.js',
           ]
         }
       }

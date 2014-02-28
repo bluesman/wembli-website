@@ -1,17 +1,16 @@
 /* Controllers */
 angular.module('wembliApp.controllers.header', []).
 
-controller('HeaderCtrl', ['$scope',
-	function($scope) {
-		$scope.searchInProgress = false;
-		$scope.hideHeaderSearch = false;
-		$scope.$on('search-page-loaded', function() {
-			$scope.searchInProgress = false;
-			$scope.hideHeaderSearch = true;
-		});
-
-		$scope.submitSearch = function() {
-			$scope.searchInProgress = true;
+controller('HeaderCtrl', ['$scope', '$aside',
+	function($scope, $aside) {
+		/*
+		var myAside = $aside({title: 'My Title', content: 'My Content', show: true});
+		console.log(myAside);
+		*/
+		$scope.aside = {
+			"title": "Title",
+			"content": "Content"
 		}
+
 	}
 ]);

@@ -1,0 +1,13 @@
+#dashboard-header.hidden-xs
+	.row
+		.col-md-8.col-md-offset-2.col-xs-12
+			.clearfix
+				ul#dashboard-nav.nav.nav-tabs.pull-left
+					li(class="#{active['dashboard']}")
+						a(href="/dashboard") Dashboard
+					li(class="#{active['settings']}")
+						a(href="/dashboard/settings") Settings
+					li(class="#{active['payment-information']}")
+						a(href="/dashboard/payment-information") Payment Information
+					li
+						a(href="/logout") Log Out
