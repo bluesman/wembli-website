@@ -3,7 +3,6 @@
 /* Directives */
 angular.module('wembliApp.directives.venueMap', []).
 
-
 directive('ticketsLoginModal', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan',
   function($rootScope, $window, $location, $http, $timeout, fetchModals, plan) {
     return {
@@ -100,7 +99,6 @@ directive('buyTicketsOffsite', ['$rootScope', '$window', '$location', '$http', '
     };
   }
 ]).
-
 
 directive('addTicketsToPlan', ['$rootScope', '$window', '$location', '$http', '$timeout', 'fetchModals', 'plan', 'wembliRpc',
   function($rootScope, $window, $location, $http, $timeout, fetchModals, plan, wembliRpc) {
@@ -589,7 +587,6 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 $('#venue-map-container').css("height", $($window).height() - 172);
                 $('#tickets').css("height", $($window).height() - 172);
                 //width of the venue map container
-                $('#venue-map-container').css("width", $($window).width() - 700);
                 $('#venue-map-container').tuMap(options);
 
                 if ($('.price-slider').length) {
@@ -633,20 +630,6 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                     });
                   }
                 }
-
-              },
-              /* transformRequest */
-
-              function(data, headersGetter) {
-                $rootScope.genericLoadingModal.header = 'Finding Tickets...';
-                loadingModal.show('Finding Tickets...', 'We\'re scouring the internet for ' + p.event.eventName + ' tickets!');
-                return data;
-              },
-
-              /* transformResponse */
-
-              function(data, headersGetter) {
-                return JSON.parse(data);
               });
           });
         }

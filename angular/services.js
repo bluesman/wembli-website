@@ -710,7 +710,6 @@ factory('googleAnalytics', ['wembliRpc', 'cookie',
 			},
 
 			trackEvent: function(category, action, label, value, cb) {
-				console.log(_gaq);
 				_gaq.push(['_trackEvent', category, action, label, value]);
 
 				wembliRpc.fetch('analytics.addEvent', {

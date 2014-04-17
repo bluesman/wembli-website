@@ -232,7 +232,12 @@ exports.plan = {
 
 		function newPlan() {
 			/* get the event and venue data and stuff it in the plan */
+			console.log('newplan event args');
+			console.log(args);
 			eventRpc['get'].apply(function(err, results) {
+				console.log('fetch event data from tn results');
+				console.log(results);
+
 				var venueId = '';
 				/* its possible that this event is no longer available - if that is the case, send them to the no-event page */
 				if (err || !results.event[0]) {
@@ -245,10 +250,13 @@ exports.plan = {
 
 				/* get the venue data for this event - why do this if i already did? */
 				venueRpc['get'].apply(function(err, venueResults) {
-
+					console.log('fetch venue data from tn:');
+					console.log(venueResults);
 					var address = venueResults.venue[0].Street1 + ', ' + venueResults.venue[0].City + ', ' + venueResults.venue[0].StateProvince + ' ' + venueResults.venue[0].ZipCode;
 
 					gg.geocode(address, function(err, geocode) {
+						console.log('fetch geocode');
+						console.log(geocode);
 						req.session.plan.event.eventId = args.eventId;
 						req.session.plan.event.eventName = args.eventName;
 						req.session.plan.event.eventDate = results.event[0].Date;

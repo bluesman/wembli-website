@@ -1,6 +1,102 @@
-extends hero
-block hero-left
-	include includes/event-options/hero-left
-block hero-right
-	include includes/event-options/hero-right
+extends layout
+block content
+	#event-options(ng-controller="EventOptionsCtrl")
+		.container-fluid
+			.row
+				#event-options-left.col-md-3.col-md-offset-1.hidden-xs.hidden-sm
+					.relative
+						.absolute
+							.copy.segoe Customize your plan by choosing your payment, add-ons & invite preferences.
+							img.cartoon-man.img-responsive(src="/images/event-options.png")
+				#event-options-right.col-md-7.col-xs-12
+					.header.row
+						.col-sm-3.col-xs-12
+							.event-date-box(ng-cloak)
+								span.day {{plan.event.eventDate| date:'EEE'}}
+								span.event-date {{plan.event.eventDate| date:'MMM d'}}
+								span.time {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+						.col-sm-9.col-xs-12
+							.info(ng-cloak)
+								h1.name.block {{plan.event.eventName}}
+								h2.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
+								.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
+								.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+
+					.row(ng-show="error")
+						.col-xs-12
+							.credit-card-alert.alert.alert-warning
+								i.fa.fa-warningd.fa-2x
+								span.text {{errorMessage}}
+
+					.row
+						form#event-options-form.col-xs-12(name="eventOptionsForm", ng-submit="submitForm()")
+							fieldset
+								#add-ons.options-group
+									h3 Add-Ons:
+									.error-text(ng-show="addOnsError") Error with add-ons...
+									.form-group
+										label
+											input#parking.hide.form-control(ng-model="parking",type="checkbox",name="parking",ng-checked="parking")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="parking")
+											i.fa.fa-square-o.fa-2x(ng-hide="parking")
+											span I want to lock in parking spot(s) ahead of time
+									.form-group
+										label
+											input#restaurant.hide.form-control(ng-model="restaurant",type="checkbox",name="restaurant",ng-checked="restaurant")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="restaurant")
+											i.fa.fa-square-o.fa-2x(ng-hide="restaurant")
+											span I want to add a restaurant deal to my outing
+									.form-group
+										label
+											input#hotel.hide.form-control(ng-model="hotel",type="checkbox",name="hotel",ng-checked="hotel")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="hotel")
+											i.fa.fa-square-o.fa-2x(ng-hide="hotel")
+											span I need to book a hotel room(s)
+								#invite-options.options-group
+									h3 Invite Preferences:
+									.error-text(ng-show="inviteOptionsError") Error with invite preferences...
+									.form-group
+										label
+											input#guest-friends.hide.form-control(ng-model="guest_friends",type="checkbox",name="guest_friends",ng-checked="guest_friends")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="guest_friends")
+											i.fa.fa-square-o.fa-2x(ng-hide="guest_friends")
+											span My guests can invite their friends/family
+									.form-group
+										label
+											input#over-21.hide.form-control(ng-model="over_21",type="checkbox",name="over_21",ng-checked="over_21")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="over_21")
+											i.fa.fa-square-o.fa-2x(ng-hide="over_21")
+											span This outing is for people over 21 (sorry no kids this time)
+									.form-group
+										label
+											input#organizer-not-attending.hide.form-control(ng-model="organizer_not_attending",type="checkbox", name="organizer_not_attending", ng-checked="organizer_not_attending")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="organizer_not_attending")
+											i.fa.fa-square-o.fa-2x(ng-hide="organizer_not_attending")
+											span I am organizing this event but I will NOT be attending
+								#guest-list-options.options-group(ng-init="guest_list='full'")
+									h3 Guest List:
+									.error-text(ng-show="guestListOptionsError") Dude, you need to pick one of these...
+									.form-group
+										label
+											input.hide.form-control(ng-model="guest_list",type="radio",name="guest_list",value="full",ng-checked="guest_list=='full'")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="{'full':true}[guest_list]")
+											i.fa.fa-square-o.fa-2x(ng-show="!{'full':true}[guest_list]")
+											span My guests can see the full invite list
+									.form-group
+										label
+											input.hide.form-control(ng-model="guest_list",type="radio",name="guest_list",value="rsvp",ng-checked="guest_list=='rsvp'")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="{'rsvp':true}[guest_list]")
+											i.fa.fa-square-o.fa-2x(ng-show="!{'rsvp':true}[guest_list]")
+											span My guests can only see who's RSVP'd 'yes'
+									.form-group
+										label
+											input.hide.form-control(ng-model="guest_list",type="radio",name="guest_list",value="private",ng-checked="guest_list=='private'")
+											i.fa.fa-check-square-o.fa-2x.green(ng-show="{'private':true}[guest_list]")
+											i.fa.fa-square-o.fa-2x(ng-show="!{'private':true}[guest_list]")
+											span My guests can not see who else is invited
+								button.btn.btn-primary.form-control(type="submit", ng-hide="submitInProgress") Continue To Invite Friends
+								button.btn.btn-primary.form-control.mute(type="submit", ng-show="submitInProgress",ng-disabled="submitInProgress")
+									.fa.fa-cog.fa-spin
+									span Continue To Invite Friends
+
 

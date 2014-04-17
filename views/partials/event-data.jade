@@ -1,12 +1,13 @@
-- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '';
-.event-date-box.pull-left(ng-cloak)
-	span.day {{event.eventDate| date:'EEE'}}
-	span.event-date {{event.eventDate| date:'MMM d'}}
-	span.time {{getDate(event.eventDate)| date:'h:mm a'}}
-.info(ng-cloak)
-	span.name.block {{event.eventName}}
-	span.venue.block {{ event.eventVenue || event.eventVenue }}
-		span.location.block {{venue.Street1+', '+event.eventCity+', '+event.eventState}}
+//- deprecated
+	- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '';
+	.event-date-box.pull-left(ng-cloak)
+		span.day {{event.eventDate| date:'EEE'}}
+		span.event-date {{event.eventDate| date:'MMM d'}}
+		span.time {{getDate(event.eventDate)| date:'h:mm a'}}
+	.info(ng-cloak)
+		span.name.block {{event.eventName}}
+		span.venue.block {{ event.eventVenue || event.eventVenue }}
+			span.location.block {{venue.Street1+', '+event.eventCity+', '+event.eventState}}
 
 
 

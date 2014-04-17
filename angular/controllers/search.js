@@ -12,9 +12,11 @@ controller('EventListCtrl', ['$scope', '$location', 'wembliRpc', '$filter', '$ro
 ]).
 
 
-controller('SearchCtrl', ['$scope', '$rootScope', '$window',
-	function($scope, $rootScope, $window) {
+controller('SearchCtrl', ['$scope', '$rootScope', '$window', 'wembliRpc', 'googleAnalytics',
+	function($scope, $rootScope, $window, wembliRpc, googleAnalytics) {
 		$rootScope.$broadcast('search-page-loaded', {});
+
+		$scope.submitInProgress = false;
 
 		$scope.searchInProgress = false;
 
@@ -27,53 +29,44 @@ controller('SearchCtrl', ['$scope', '$rootScope', '$window',
 			//$window.location.href = '/search/events/' + $scope.search;
 		}
 
-		$scope.openPaymentModal = function(event) {
-			console.log(event);
-			$scope.event = event;
+		$scope.openPaymentModal = function(eventData) {
+			console.log(eventData);
+			$scope.eventData = eventData;
 			$('#payment-type-modal').modal('show');
 		}
 
-	}
-]).
-
-controller('PaymentTypeModalCtrl', ['$scope', '$location', 'plan', 'wembliRpc', '$rootScope', 'googleAnalytics',
-	function($scope, $location, plan, wembliRpc, $rootScope, ga) {
-		$scope.$on('payment-type-modal-clicked', function(e, args) {
-			$scope.$apply(function() {
-				$scope.name = args.name;
-				$scope.eventId = args.eventId;
-				$scope.eventName = args.eventName;
-				$scope.nextLink = args.nextLink;
-			});
-		});
-		$scope.submitInProgress = false;
-
 		$scope.startPlan = function() {
+			console.log('clicked startPlan');
+			console.log($scope.eventData);
 			$scope.submitInProgress = true;
 			if ($scope.paymentType === 'split-first') {
-				$scope.nextLink = '/event-options/' + $scope.eventId + '/' + $scope.eventName;
+				$scope.nextLink = '/event-options/' + $scope.eventData.ID + '/' + $scope.eventData.Name;
 			}
 
 			if (typeof $scope.nextLink === 'undefined') {
-				$scope.nextLink = '/tickets/' + $scope.eventId + '/' + $scope.eventName;
+				$scope.nextLink = '/tickets/' + $scope.eventData.ID + '/' + $scope.eventData.Name;
 			}
+
 			/* start the plan */
 			wembliRpc.fetch('plan.startPlan', {
 				payment: $scope.paymentType,
-				eventId: $scope.eventId,
-				eventName: $scope.eventName
+				eventId: $scope.eventData.ID,
+				eventName: $scope.eventData.Name
 			}, function(err, result) {
 				console.log(result);
-				ga.trackEvent('Plan', 'start', $scope.eventName);
+				if (!result.success) {
+					$('#no-event-modal').modal('show');
+					$('#payment-type-modal').modal('hide');
+					return;
+				}
 
-				plan.fetch(function() {
+				googleAnalytics.trackEvent('Plan', 'start', $scope.eventName, '', function(err, result) {
 					$scope.submitInProgress = false;
 					/* go to the next page which depends on whether they are splitting with friends or paying themself */
-
-					$location.path($scope.nextLink);
+					$window.location.href = $scope.nextLink;
 				});
 			})
 		};
+
 	}
 ]);
-

@@ -1,6 +1,0 @@
-- plan = req.session.plan;
-input(type="hidden", name="eventId", value="#{plan.event.eventId}", ng-init="eventId='#{plan.event.eventId}'")
-input(type="hidden", name="eventName", value="#{plan.event.eventName}", ng-init='eventName="#{escape(plan.event.eventName)}"')
-input#tnMapUrl(type="hidden", name="tnMapUrl", value="#{tnMapUrl}", ng-init="tnMapUrl='#{tnMapUrl}'")
-#tickets-frame.animate-in(ng-controller="TicketsCtrl")
-	interactive-venue-map(event-id="#{plan.event.eventId}")

@@ -54,9 +54,11 @@
 				}
 			}
 		}
+		/*
 		label.radio.selected,label.radio:hover {
 			#translucent > .background(@blue,0.25);
 		}
+		*/
 	}
 }
 
@@ -75,10 +77,11 @@
 				}
 			}
 		}
+		/*
 		label.radio.selected,label.radio:hover {
 			#translucent > .background(@blue,0.25);
 		}
-
+		*/
 		#qty {
 			width:20px;
 			text-align: center;
@@ -101,10 +104,46 @@
 	text-align: right;
 	padding:20px;
 	font-size: 1.2em;
-	#translucent > .background(@gray,0.9);
+	/* #translucent > .background(@gray,0.9); */
 }
 
-#tickets-frame {
+#tickets {
+	position:relative;
+	margin:0 auto;
+}
+
+.addons-content-container {
+	/* Medium devices (desktops, 992px and up) */
+	@media (min-width: @screen-md-min) {
+		position:absolute;
+		width: 70%;
+
+		#venue-map-container {
+			height:100%;
+		}
+		overflow-y: hidden;
+	}
+
+	#groups-container {
+		position: absolute;
+		bottom:0px;
+		left:0px;
+	}
+}
+
+.addons-list-container {
+	/* default is mobile style */
+
+	/* Medium devices (desktops, 992px and up) */
+	@media (min-width: @screen-md-min) {
+		position:absolute;
+		overflow-y:auto;
+		right:0px;
+		width:30%;
+	}
+}
+
+#tickets-also-off {
 	overflow:hidden;
 	.clearfix();
 
@@ -131,7 +170,7 @@
 		}
 	}
 
-	#map-background {
+	#map-background-foo {
 		position:relative;
 		bottom:0px;
 		overflow:hidden;
@@ -149,15 +188,15 @@
 			padding:6px;
 			cursor:pointer;
 			.box-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
-			.buttonBackground(@orange,@orange);
-			.border-radius(5px);
+			/* .buttonBackground(@orange,@orange); */
+			border-radius: 5px;
 			color:@white;
 		}
 
 		.tuMapTooltip {
 			background: none repeat scroll 0 0 #FCF1BD;
 			border: 1px solid #666666;
-			.border-radius(5px);
+			border-radius: 5px;
 			.box-shadow(1px 1px 3px rgba(0, 0, 0, 0.5));
 			font-size: 12px;
 			padding: 5px;
@@ -210,7 +249,7 @@
 			left:20px;
 			padding:0;
 			.box-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
-			.border-radius(5px);
+			border-radius: 5px;
 			max-width:350px;
 			background-color:@bgColor;
 			color:@black;
@@ -258,7 +297,7 @@
 							background:transparent;
 							width:100px;
 							.box-shadow(0 0 0 0);
-							.border-radius(0);
+							border-radius:0;
 						}
 					}
 
@@ -309,10 +348,11 @@
 			.list-container {
 				overflow-y: auto;
 
+				/*
 				.row:hover {
 					#translucent > .background(@gray,.9);
 				}
-
+				*/
 				.row {
 					padding:0;
 					margin:2px 0 0 0;
@@ -428,10 +468,11 @@
 		overflow-y:auto;
 		overflow-x:hidden;
 
+		/*
 		.filter-container, .ticket-list-container .ticket-row, .ticket-list-header-container {
 				#translucent > .background(@grayLight,0.25);
 		}
-
+		*/
 		.filter-container > h3 {
 			margin-left:0.5em;
 			margin-top:2px;
@@ -484,7 +525,7 @@
 						background:transparent;
 						width:100px;
 						.box-shadow(0 0 0 0);
-						.border-radius(0);
+						border-radius:0;
 					}
 				}
 
@@ -527,9 +568,11 @@
 		}
 
 		.ticket-list-container {
+			/*
 			.ticket-row:hover {
 				#translucent > .background(@blue,0.25);
 			}
+			*/
 			.ticket-row {
 				.clearfix();
 				padding:10px;
@@ -611,7 +654,7 @@
 						color:@grayDark;
 					}
 					label.checkbox:hover {
-						#translucent > .background(@blue,0.25);
+						/* #translucent > .background(@blue,0.25); */
 						color:@orange;
 					}
 				}
@@ -691,9 +734,11 @@
 					margin-top:6px;
 				}
 			}
+			/*
 			.ticket-row:hover {
 				#translucent > .background(@grayLight,0.25);
 			}
+			*/
 		}
 
 		#purchased-tickets-container, #add-to-plan-container, #buy-now-container {

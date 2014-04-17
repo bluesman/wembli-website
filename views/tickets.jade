@@ -1,3 +1,18 @@
 extends layout
-block frame2
-	include includes/tickets
+block content
+	include includes/modals/tickets/no-tickets
+	include includes/modals/tickets/tickets-login
+	include includes/modals/tickets/tickets-offsite
+	#tickets.addons-container(ng-controller="TicketsCtrl")
+		.addons-content-container
+			#venue-map-container
+			#groups-container
+		.addons-list-container
+			.purchased-tickets-list
+			.invite-friends-list
+			.add-to-plan-list
+			.buy-now-list
+				include partials/interactive-venue-map/tickets/buy-now
+			.read-only-list
+			.no-results
+

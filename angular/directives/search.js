@@ -76,7 +76,6 @@ directive('eventListWaypoint', ['wembliRpc', '$filter', '$timeout',
   }
 ]).
 
-
 /*
  * show the tickets summary info popover for search results
  */

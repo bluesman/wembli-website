@@ -32,6 +32,7 @@ module.exports = function(grunt) {
         mangle:false,
         beautify: true
       },
+      /*
       "global": {
       	"files": {
       		'public/js/wembli.min.js':[
@@ -120,7 +121,6 @@ module.exports = function(grunt) {
           'public/js/login.min.js':[
             'angular/apps/login.js',
             'angular/controllers/login.js',
-            'angular/directives/login.js',
           ]
         }
       },
@@ -130,6 +130,37 @@ module.exports = function(grunt) {
             'angular/apps/dashboard.js',
             'angular/controllers/dashboard.js',
             'angular/directives/dashboard.js',
+          ]
+        }
+      },
+      "event-options": {
+        "files": {
+          'public/js/event-options.min.js':[
+            'angular/apps/event-options.js',
+            'angular/controllers/event-options.js',
+          ]
+        }
+      },
+      */
+      "tickets": {
+        "files": {
+          'public/js/tickets.min.js':[
+            'plugins/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js',
+            'plugins/jquery.tuMap.demo.3.1.11/Lib/jquery.hammer.min.js',
+            'plugins/jquery.tuMap.demo.3.1.11/Lib/excanvas-min.js',
+            'plugins/jquery.tuMap.demo.3.1.11/Lib/jquery.tuMap-min.js',
+            'angular/apps/tickets.js',
+            'angular/controllers/tickets.js',
+            'angular/directives/venue-map.js',
+            'angular/services/venue-map.js'
+          ]
+        }
+      },
+      "invitation": {
+        "files": {
+          'public/js/invitation.min.js':[
+            'angular/apps/invitation.js',
+            'angular/controllers/invitation.js',
           ]
         }
       }

@@ -21,7 +21,8 @@ module.exports = function(app) {
 	var invitationView = function(req, res, view) {
 		var viewData = {
 			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
-			plan: req.session.plan
+			plan: req.session.plan,
+			jsIncludes: ['/js/invitation.min.js']
 		}
 		if (req.session.loggedIn) {
 			/* if they are logged in but have no plan, send them to dashboard */

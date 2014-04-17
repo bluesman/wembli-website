@@ -163,7 +163,7 @@ require('./controllers/pixel')(app);
 require('./controllers/typeahead')(app);
 require('./controllers/index')(app);
 require('./controllers/search')(app);
-require('./controllers/events')(app);
+require('./controllers/event-options')(app);
 require('./controllers/invitation')(app);
 require('./controllers/plan')(app);
 require('./controllers/rsvp')(app);

@@ -1,61 +1,108 @@
-.hero {
-	margin: 20px auto 0;
+#event-options {
 
-	#event-options-hero-left {
-		#copy {
-			top:230px;
+	#event-options-left {
+		.relative {
+			position:relative;
+			height:500px;
 		}
-
-		#cartoon-man {
-			background: transparent url('/images/event-options.png') no-repeat center center;
-			margin: 340px 0 0 90px;
-			width:180px;
-		}
-
-		height:auto;
-	}
-	#event-options-hero-right {
-		.clearfix();
-		text-align:left;
-		height:auto;
-
-		.event-data {
-			height:95px;
-		}
-
-		fieldset {
-			border:none;
-			background:transparent;
-			width:525px;
-
-			.options-group {
+		.absolute {
+			position:absolute;
+			bottom:0px;
+			.copy {
+				.rotate(-4deg);
+				width:220px;
+				text-align:center;
+				font-size:1.2em;
 			}
 
-			.control-group {
-				.clearfix();
+			.cartoon-man {
+				width:180px;
+			}
+		}
+	}
+
+
+	#event-options-right {
+		/* Extra small devices (phones, less than 768px) */
+		/* No media query since this is the default in Bootstrap */
+		h1 {
+			color:@white;
+		  font-size: 1.3em;
+		  margin:10px 0;
+		}
+		h2 {
+			color:@grayDarker;
+		  font-size: 1.2em;
+			margin:5px 0;
+		}
+		h3 {
+		  font-size: 20px;
+		}
+
+		/* Small devices (tablets, 768px and up) */
+		@media (min-width: @screen-sm-min) {
+		  h1 {
+		    font-size: 1.4em;
+		  }
+		  h2 {
+		    font-size: 1.3em;
+		  }
+		  h3 {
+		    font-size: 22px;
+		  }
+		}
+
+		/* Medium devices (desktops, 992px and up) */
+		@media (min-width: @screen-md-min) {
+		  h1 {
+		    font-size: 1.3em;
+		  }
+		  h2 {
+		    font-size: 1.2em;
+		  }
+		  h3 {
+		    font-size: 22px;
+		  }
+		}
+
+		/* Large devices (large desktops, 1200px and up) */
+		@media (min-width: @screen-lg-min) {
+		  h1 {
+		    font-size: 1.4em;
+		  }
+		  h2 {
+		    font-size: 1.3em;
+		  }
+		  h3 {
+		    font-size: 24px;
+		  }
+		}
+
+		.header {
+			padding:10px;
+			background-color:@blue;
+		}
+
+
+		fieldset {
+			.form-group {
 				margin:5px;
-
-				input {
-					float:left;
-				}
 				label {
-					margin-left:20px;
-
+					i {
+						width:26px;
+					}
 					span {
-						line-height:25px;
-						vertical-align: middle;
+						@media (min-width: @screen-sm-min) {
+							font-size:1.4em;
+						}
+						font-size:1em;
 					}
 				}
 			}
 
 			button {
-				margin:20px;
+				margin:20px 0;
 			}
-		}
-
-		.arrow {
-			top:550px;
-			width:110px;
 		}
 	}
 }

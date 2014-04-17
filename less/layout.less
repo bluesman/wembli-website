@@ -1,7 +1,9 @@
 html {
+
 }
 
 body {
+
 }
 
 #overlay.overlay {
@@ -67,6 +69,44 @@ h1 {
 	height:100px;
 	width:320px;
 	background: @white url('/images/balanced-credit-card-logos.png') no-repeat center center;
+}
+
+//- this may need to be global
+.event-date-box {
+
+	span {
+		text-align: center;
+		display:block;
+		margin:0 2px;
+	}
+
+	.day {
+		padding:2px;
+		border: 1px solid @grayDark;
+		border-top-left-radius: 3px;
+		border-top-right-radius: 3px;
+		background-color:@white;
+		text-transform: uppercase;
+	}
+
+	.event-date {
+		padding-top:6px;
+		font-weight:bold;
+		font-size:1.2em;
+		border-left: 1px solid @grayDark;
+		border-right: 1px solid @grayDark;
+		background-color: @grayLight;
+	}
+
+	.time {
+		padding-bottom: 6px;
+		border-left: 1px solid @grayDark;
+		border-right: 1px solid @grayDark;
+		border-bottom: 1px solid @grayDark;
+		background-color: @grayLight;
+		border-bottom-right-radius: 3px;
+		border-bottom-left-radius: 3px;
+	}
 }
 
 

@@ -1,5 +1,5 @@
 - plan = req.session.plan
-#interactive-venue-map.clearfix(ng-controller="VenueMapCtrl")
+#interactive-venue-map(ng-controller="VenueMapCtrl")
 	- console.log('visitor context: '+visitor.context)
 	- var include = 'buy-now';
 
@@ -95,9 +95,6 @@
 							.price.pull-left
 								.value ${{ticket.ActualPrice}}
 								.header per ticket
-
-
-
 		//- #groups-container
 	#tickets.addons-list.pull-right
 		- if (include == 'purchased-tickets')

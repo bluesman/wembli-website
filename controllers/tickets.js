@@ -1,158 +1,48 @@
-var ticketNetwork = require('../lib/wembli/ticketnetwork');
-var gg = require('../lib/wembli/google-geocode');
-var async = require('async');
-var eventRpc = require('../rpc/event').event;
-var venueRpc = require('../rpc/venue').venue;
-var wembliModel = require('wembli-model'),
-	Customer = wembliModel.load('customer'),
-	Ticket = wembliModel.load('ticket'),
-	Plan = wembliModel.load('plan');
-
+var planRpc = require('../rpc/event').event;
 
 module.exports = function(app) {
 	//if no event is defined just show the teaser telling them to search and pick an event
+	/* deprecated?
 	app.get('/tickets', function(req, res) {
 		res.render('no-event', {
+			jsIncludes:['/js/tickets.min.js'],
 			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 		});
 	});
-
-	app.get('/partials/tickets', function(req, res) {
-		res.render('partials/no-event', {
-			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
-		});
-	});
+	*/
 
 
-	var ticketsView = function(req, res, template, locals) {
-		var args = {
-			"eventID": req.param("eventId")
+	app.get('/tickets/:eventId/:eventName', function(req, res) {
+		/* logic:
+		 * - just started a plan (split-after, no-split)
+		 * - haven't started a plan and got here somehow
+		 * - existing plan viewing tix to add
+		 * - existing plan viewing tix added
+		 */
+		var locals = {
+			'jsIncludes':[
+				'/js/tickets.min.js'
+			]
 		};
-		eventRpc['get'].apply(function(err, results) {
-			var venueId = '';
-			/* its possible that this event is no longer available - if that is the case, send them to the no-event page */
-			if (err || !results.event[0]) {
-			    if ((typeof req.session.plan !== "undefined") && (req.session.plan.venue.venueId)) {
-					/* if we have the event in the session use that instead */
-					venueId = req.session.plan.venue.venueId;
-				} else {
-					var noEventUrl = locals.partial ? '/partials/tickets' : '/tickets';
-					return res.redirect(noEventUrl);
-				}
-			} else {
-				venueId = results.event[0].VenueID;
-			}
+		/* check for a plan in the session */
+		if (typeof req.session.plan == "undefined") {
+			console.log('no plan - starting one');
+			var args = {
+				'eventId': req.param("eventId"),
+				'eventName': req.param("eventName"),
+				'payment': 'split-after'
+			};
+			planRpc['startPlan'].apply(function(err, results) {
+				console.log('started plan');
+				console.log(results);
 
-			/* TODO: convert this to call planRpc.startPlan() */
-			console.log('VENUEID: '+venueId);
-			/* get the venue data for this event - why do this if i already did? */
-			venueRpc['get'].apply(function(err, venueResults) {
-				res.setHeader('x-wembli-overflow', 'hidden');
-				res.setHeader('x-wembli-location', '/tickets/' + req.param("eventId") + '/' + req.param("eventName"));
-				console.log(err);
-				var address = venueResults.venue[0].Street1 + ', ' + venueResults.venue[0].City + ', ' + venueResults.venue[0].StateProvince + ' ' + venueResults.venue[0].ZipCode;
-				gg.geocode(address, function(err, geocode) {
-
-					locals.tnMapUrl = results.event[0] ? results.event[0].MapURL : req.session.plan.event.data.MapURL;
-
-					/* friends just get to view */
-					if (req.session.visitor.context === 'friend') {
-						return res.render(template, locals);
-					}
-
-					if (!results.event[0]) {
-						return res.render(template, locals);
-					}
-
-					if (typeof req.session.plan === "undefined") {
-						req.session.plan = new Plan({
-							guid: Plan.makeGuid()
-						});
-						req.session.plan.event.eventId = req.param("eventId");
-						req.session.plan.event.eventName = req.param("eventName");
-						req.session.plan.event.eventDate = results.event[0].Date;
-						req.session.plan.event.eventVenue = results.event[0].Venue;
-						req.session.plan.event.eventCity = results.event[0].City;
-						req.session.plan.event.eventState = results.event[0].StateProvince;
-						req.session.plan.event.data = results.event[0];
-						req.session.plan.venue.venueId = results.event[0].VenueID;
-						req.session.plan.venue.data = venueResults.venue[0];
-						req.session.plan.preferences.payment = 'split-after';
-						if (typeof geocode !== "undefined") {
-							req.session.plan.venue.data.geocode = geocode[0];
-						}
-
-						/* you are now the organizer */
-						req.session.visitor.context = 'organizer';
-					}
-
-					/* if they do have a plan but this event is different
-						than the current plan then over write the plan
-						save prefs only if the customer is logged in */
-					if (typeof req.session.plan !== "undefined" && typeof req.session.plan.event !== "undefined" && (req.session.plan.event.eventId !== req.param("eventId"))) {
-						/* if they are the plan organizer, safe their prefs - thy ar ejust changing plans */
-						if (req.session.visitor.context === "organizer") {
-							var savePrefs = req.session.plan.preferences;
-						}
-
-						var newPlan = function() {
-							/* overwrite the existing plan keeping the prefs but nothing else */
-							req.session.plan = new Plan({
-								guid: Plan.makeGuid()
-							});
-
-							if (savePrefs) {
-								req.session.plan.preferences = {
-									payment: savePrefs.payment
-								};
-								req.session.plan.preferences.tickets = savePrefs.tickets;
-							}
-							req.session.plan.event.eventId = req.param("eventId");
-							req.session.plan.event.eventName = req.param("eventName");
-							req.session.plan.event.eventDate = results.event[0].Date;
-							req.session.plan.event.eventVenue = results.event[0].Venue;
-							req.session.plan.event.eventCity = results.event[0].City;
-							req.session.plan.event.eventState = results.event[0].StateProvince;
-							req.session.plan.event.data = results.event[0];
-							req.session.plan.venue.venueId = results.event[0].VenueID;
-							req.session.plan.venue.data = venueResults.venue[0];
-							if (typeof geocode !== "undefined") {
-								req.session.plan.venue.data.geocode = geocode[0];
-							}
-
-							/* you are now the organizer */
-							req.session.visitor.context = 'organizer';
-							return res.render(template, locals);
-						};
-
-						/* if there is a customer check for an existing plan for this event and use that */
-						if (req.session.customer) {
-							Plan.findOne()
-								.where('organizer').equals(req.session.customer._id)
-								.where('event.eventId').equals(req.param("eventId")).exec(function(err, p) {
-									if (p === null) {
-										return newPlan();
-									}
-									req.session.plan = p;
-									return res.render(template, locals);
-								});
-						} else {
-							newPlan();
-						}
-					} else {
-						req.session.plan.venue.data.geocode = geocode[0];
-						return res.render(template, locals);
-					}
-
-				});
-			}, [{
-					VenueID: venueId
-				},
-				req, res
-			]);
-		}, [args, req, res]);
-
-	};
+				res.render('tickets',locals);
+			}, [args, req, res]);
+		} else {
+			console.log('existing plan');
+			res.render('tickets',locals)
+		}
+	});
 
 	app.get('/tickets/:eventId/:eventName/login/:ticketId', function(req, res) {
 		return res.redirect('/tickets/' + req.param('eventId') + '/' + req.param('eventName') + '#tickets-login-modal-' + req.param('ticketId'));
@@ -163,12 +53,6 @@ module.exports = function(app) {
 			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 			fixedHeight: true
 		});
-	});
-
-	app.get('/partials/tickets/:eventId/:eventName', function(req, res) {
-		return ticketsView(req, res, 'partials/tickets', {
-			partial: true
-		})
 	});
 
 	app.get('/partials/interactive-venue-map', function(req, res) {
@@ -196,6 +80,7 @@ module.exports = function(app) {
 				});
 		});
 	});
+
 	app.get('/partials/modals/tickets-modals', function(req, res) {
 		return res.render('partials/modals/tickets-modals');
 	});
