@@ -25,7 +25,7 @@ module.exports = function(app) {
 		async.parallel([
 			/* get 10 concerts nearby (categoryId: 2) */
 			function(cb) {
-				client.get('directory:top:/concerts', function(err, results) {
+				client.get('directory:top:/music', function(err, results) {
 					if (results) {
 						view.concerts = JSON.parse(results).slice(0,10);
 					} else {
@@ -49,7 +49,7 @@ module.exports = function(app) {
 
 			/* get 10 theater nearby (categoryId: 3) */
 			function(cb) {
-				client.get('directory:top:/theater', function(err, results) {
+				client.get('directory:top:/performing-arts', function(err, results) {
 					if (results) {
 						view.theater = JSON.parse(results).slice(0,10);
 					} else {
