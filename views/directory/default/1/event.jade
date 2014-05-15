@@ -19,7 +19,7 @@ block content
 					address.venue-address
 						span.address-street #{venue.address}
 						br
-						a.address-locality(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.state}/#{slugs.city}")= venue.city + ', '
+						a.address-locality(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.region}/#{slugs.city}")= venue.city + ', '
 						a.address-region(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.region}")= venue.region+', '
 						a.address-country(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}")= venue.country+ ' '
 						span.address-postal-code= venue.postal_code
@@ -48,7 +48,7 @@ block content
 
 		.row
 			.panel.col.md-6.cta
-				a.btn.btn-primary.btn-lg Check Out The Tickets!
+				a.btn.btn-primary.btn-lg(href="/search/events/#{event.title}") Check Out The Tickets!
 				//- var min = parseFloat(minprice).toFixed(0)
 				//- var max = parseFloat(maxprice).toFixed(0)
 				//- .range Tickets priced from $#{min} to $#{max}.

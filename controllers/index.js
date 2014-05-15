@@ -25,9 +25,10 @@ module.exports = function(app) {
 		async.parallel([
 			/* get 10 concerts nearby (categoryId: 2) */
 			function(cb) {
-				client.get('directory:top:/music', function(err, results) {
+				client.get('directory:top:/concerts-and-tour-dates', function(err, results) {
 					if (results) {
-						view.concerts = JSON.parse(results).slice(0,10);
+						var r = JSON.parse(results);
+						view.concerts = r.list.slice(0,10);
 					} else {
 						view.concerts = [];
 					}
@@ -39,7 +40,8 @@ module.exports = function(app) {
 			function(cb) {
 				client.get('directory:top:/sports', function(err, results) {
 					if (results) {
-						view.sports = JSON.parse(results).slice(0,10);
+						var r = JSON.parse(results);
+						view.sports = r.list.slice(0,10);
 					} else {
 						view.sports = [];
 					}
@@ -51,7 +53,8 @@ module.exports = function(app) {
 			function(cb) {
 				client.get('directory:top:/performing-arts', function(err, results) {
 					if (results) {
-						view.theater = JSON.parse(results).slice(0,10);
+						var r = JSON.parse(results);
+						view.theater = r.list.slice(0,10);
 					} else {
 						view.theater = [];
 					}

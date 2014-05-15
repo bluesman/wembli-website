@@ -2,7 +2,8 @@
 	each e,idx in venue.events
 		- console.log(e)
 		- var itemtype = 'http://schema.org/Event'
-		- var next = encodeURI('/tickets/'+e._source.id+'/'+e._source.title);
+		//- var next = encodeURI('/tickets/'+e._source.id+'/'+e._source.title);
+		- var next = encodeURI('/search/events/'+venue.name);
 		case e._source.categories.category.name
 			when 'Sports'
 				- itemtype = 'http://schema.org/SportsEvent'
@@ -18,4 +19,5 @@
 			.info.pull-left
 				.date.hide(itemprop="startDate")= e._source.start_time
 				.display-date()= e._source.start_time
-			a.btn.btn-primary.pull-right(href="/start-plan/split-after?next=#{next}") See Tickets
+			//-a.btn.btn-primary.pull-right(href="/start-plan/split-after?next=#{next}") See Tickets
+			a.btn.btn-primary.pull-right(href="#{next}") See Tickets

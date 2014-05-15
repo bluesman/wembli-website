@@ -25,7 +25,7 @@ block content
 						ul
 							each c in subGeoEvents
 								li
-									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 
 				if (type == 'venues' && typeof subGeoVenues !== "undefined" && subGeoVenues !== null)
 					.category
@@ -33,14 +33,14 @@ block content
 						ul
 							each c in subGeoVenues
 								li
-									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 
 			.main.col-md-8
 				if (top)
 					.top
 						h2 Top #{type.charAt(0).toUpperCase() + type.slice(1)}
 						ul
-							each t in top
+							each t in top.list
 								li.col-md-4
-									a(href="http://#{app.settings.host}.wembli.com#{t[1]}") #{t[0]}
+									a(href="http://#{app.settings.host}.wembli.com#{t.url}") #{t.name}
 

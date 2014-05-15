@@ -9,7 +9,7 @@ var es = new elasticsearch.Client({
 
 /* maybe this is a param some day */
 var dataSource = 'eventful';
-
+var maxTopCount = 3;
 
 var argv = require('optimist')
 	.usage('\nImport a full eventful xml feed file.\n\nUsage: $0 <file>\n\n')
@@ -74,6 +74,70 @@ function getVenue(venue_id, cb) {
 		}
 		return cb(null, res);
 	});
+}
+
+
+function manageTopList(key, topGeo, obj, cb) {
+	/* determine if we need to add this one to the top */
+	var save = {
+		min: obj.score,
+		list:[]
+	};
+	if (topGeo !== null) {
+		//TODO: sort
+		save = JSON.parse(topGeo);
+	}
+
+	/* if we don't have a full list yet then just put this in there */
+	if (save.list.length < maxTopCount) {
+		async.detect(save.list,function(item, detectCb) {
+			if (item.name && item.name == obj.name) {
+				detectCb(true);
+			} else {
+				detectCb();
+			}
+		}, function(result){
+			if (typeof result === "undefined") {
+				save.list.push(obj);
+				if (save.min > obj.score) {
+					/* a new low score */
+					save.min = obj.score;
+				}
+			}
+			store(key,save);
+			cb(null,true);
+		});
+	} else {
+		/* this deserves to be in the top */
+		if (obj.score > save.min) {
+			async.detect(save.list,function(item, detectCb) {
+				if (item.name && item.name == obj.name) {
+					/* just update the score if its in the list already */
+					item.score = obj.score;
+					detectCb(true);
+				} else {
+					detectCb();
+				}
+			}, function(result){
+				if (typeof result === "undefined") {
+					/* add this to the list */
+					save.list.push(obj);
+				}
+
+				/* sort the list by score and slice the last one */
+				var sorted = save.list.sort(function(a, b) {
+					return -(a.score - b.score);
+				});
+				save.list = sorted.slice(0, maxTopCount);
+				save.min = save.list[save.list.length-1].score;
+				store(key,save);
+				cb(null,true);
+			});
+		} else {
+			/* this item didn't make the cut so sorry */
+			cb(null,true);
+		}
+	}
 }
 
 client.on('ready', function() {
@@ -141,6 +205,8 @@ client.on('ready', function() {
 	xml.on('endElement: result > events > event', function(e) {
 		totalRead++;
 		console.log(e.id);
+		xml.pause();
+
 		/* hold functions that fetch related data (venue & performer data) */
 		var getRelated = [];
 
@@ -255,16 +321,20 @@ client.on('ready', function() {
 				var url = '/' + type;
 
 				/* detail url - eg: /venues/venue-slug */
-				urls[type][ url + '/' + slugs[lookup[type]] ] = {dataSource: dataSource, type: type};
+				var detailKey = url + '/' + slugs[lookup[type]];
+				var detailVal = {dataSource: dataSource, type: type};
+
 				if (type === 'events') {
-					urls[type][ url + '/' + slugs[lookup[type]] ].id = e.id;
-					urls[type][ url + '/' + slugs[lookup[type]] ].venueId = e.venue_id;
-					urls[type][ url + '/' + slugs[lookup[type]] ].performerIds = e.performers;
+					detailVal.id = e.id;
+					detailVal.venueId = e.venue_id;
+					detailVal.performIds = e.performers;
 				}
 
 				if (type === 'venues') {
-					urls[type][ url + '/' + slugs[lookup[type]] ].id = v.id;
+					detailVal.id = v.id;
 				}
+				store(detailKey,detailVal);
+
 
 				/* urls for the geos */
 				var saveUrl = [];
@@ -292,13 +362,14 @@ client.on('ready', function() {
 							}
 						};
 						/* eg: urls['venues']['/united-states/california'] = {type: venues, breadcrumbs: [['United States', '/united-states'], ['California', '/united-states/california']]} */
-						urls[type][url] = obj;
+						store(url, obj)
 					}
 				});
 			});
 
 			/* make all performer urls - which include performer detail and performers by category */
 			var performersDemandScore = 0;
+
 			if (typeof ps !== "undefined" && ps !== '') {
 				/* foreach performer involved in this event */
 				ps.forEach(function(p) {
@@ -307,7 +378,8 @@ client.on('ready', function() {
 					slugs.performer[p.id] = pSlug;
 
 					/* performer detail - eg: /dave-matthews-band */
-					urls['performers']['/' + pSlug] = {
+					var performerKey = '/' + pSlug;
+					var performerVal = {
 						dataSource: dataSource,
 						type:'performers',
 						id: p.id,
@@ -319,7 +391,8 @@ client.on('ready', function() {
 					if (e.subcategories) {
 						c.subcategory = e.subcategories.subcategory;
 					}
-					urls['performers']['/' + pSlug].categories.push(c);
+					performerVal.categories.push(c);
+					store(performerKey, performerVal);
 
 					/* performer by category */
 					var obj = {
@@ -328,12 +401,16 @@ client.on('ready', function() {
 					};
 
 					obj.breadcrumbs.push([e.categories.category.name, '/' + slugs['category']]);
-					urls['performers']['/' + slugs['category']] = obj;
+					var performerCategoryKey = '/' + slugs['category'];
+					var performerCategoryVal = obj;
+					store(performerCategoryKey,performerCategoryVal);
 
 					/* performer by sub category */
 					if (typeof e.subcategories !== "undefined" && e.subcategories !== '') {
 						obj.breadcrumbs.push([e.subcategories.subcategory.short_name, '/' + slugs['category'] + '/' + slugs['subcategory']]);
-						urls['performers']['/' + slugs['category'] + '/' + slugs['subcategory']] = obj;
+						var performerSubcategoryKey = '/' + slugs['category'] + '/' + slugs['subcategory'];
+						var performerSubcategoryVal = obj;
+						store(performerSubcategoryKey, performerSubcategoryVal);
 					}
 
 					/* performer demand score */
@@ -354,82 +431,288 @@ client.on('ready', function() {
 				score += performersDemandScore;
 			}
 
-			/* lists of venues, performers, events by score, with meta data: country, state, city, pcat, ccat, gcat */
-			topVenue[slugs['venue']] = topVenue[slugs['venue']] || {
-				"score": 0,
-				"name": v.name
-			};
+			async.series([
 
-			topVenue[slugs['venue']].score += score;
-			['country', 'region', 'city'].forEach(function(geo) {
-				topVenue[slugs['venue']][geo] = slugs[geo];
-			});
+				/* tally the score for the venue and manage the top venues list */
+				function(callback) {
+					//tally the score for the venue
+					// get data from redis and update accordingly
+					client.get('directory:score:/venues/'+slugs['venue'], function(err, res) {
+						var obj = {
+							score:score,
+							name:v.name,
+							url: '/venues/'+slugs['venue']
+						};
 
-			topEvent[slugs['event']] = topEvent[slugs['event']] || {
-				"score": 0,
-				"name": e.title
-			};
+						['country', 'region', 'city'].forEach(function(geo) {
+							obj[geo] = slugs[geo];
+						});
 
-			topEvent[slugs['event']].score += score;
-			['country', 'region', 'city'].forEach(function(geo) {
-				topEvent[slugs['event']][geo] = slugs[geo];
-			});
+						if (res !== null) {
+							obj = JSON.parse(res);
+							obj.score += score;
+						}
 
-			/* performers */
-			if (typeof ps !== "undefined" && ps !== '') {
-				ps.forEach(function(p) {
-					pSlug = slugs.performer[p.id];
-					topPerformer[pSlug] = topPerformer[pSlug] || {
-						"score": 0,
-						"name": p.name
-					};
-					topPerformer[pSlug].score += score;
+						store('score:/venues/'+slugs['venue'],obj);
 
-					if (slugs['category']) {
-						topPerformer[pSlug]['category'] = topPerformer[pSlug]['category'] || {};
-						topPerformer[pSlug]['category'][slugs['category']] = topPerformer[pSlug]['category'][slugs['category']] ? topPerformer[pSlug]['category'][slugs['category']] + 1 : 1;
+						/* do the geos in parallel */
+						async.parallel([
+							/* top venues by country */
+							function(parallelCb) {
+								var key = 'top:/venues/'+slugs["country"];
+								client.get('directory:'+key, function(err, res) {
+									manageTopList(key, res, obj, parallelCb);
+								});
+							},
+
+							/* top venues by country/region */
+							function(parallelCb) {
+								var key = 'top:/venues/'+slugs["country"]+'/'+slugs['region'];
+								client.get('directory:'+key, function(err, res) {
+									manageTopList(key, res, obj, parallelCb);
+								});
+							},
+							/* top venues by country/region/city */
+							function(parallelCb) {
+								var key = 'top:/venues/'+slugs["country"]+'/'+slugs['region']+'/'+slugs['city'];
+								client.get('directory:'+key, function(err, res) {
+									manageTopList(key, res, obj, parallelCb);
+								});
+							},
+						], function(err, results) {
+							callback(null, true);
+						});
+					});
+				},
+
+				/* tally the score for event and manage the top events list */
+				function(callback) {
+					//tally the score for the event
+					// get data from redis and update accordingly
+					client.get('directory:score:/events/'+slugs['event'], function(err, res) {
+						var obj = {
+							score:score,
+							name:e.title,
+							url: '/events/'+slugs['event']
+						};
+
+						['country', 'region', 'city'].forEach(function(geo) {
+							obj[geo] = slugs[geo];
+						});
+
+						if (res !== null) {
+							obj = JSON.parse(res);
+							obj.score += score;
+						}
+
+						store('score:/events/'+slugs['event'],obj);
+
+						/* do the geos in parallel */
+						async.parallel([
+							/* top venues by country */
+							function(parallelCb) {
+								var key = 'top:/events/'+slugs["country"];
+								client.get('directory:'+key, function(err, res) {
+									manageTopList(key, res, obj, parallelCb);
+								});
+							},
+
+							/* top venues by country/region */
+							function(parallelCb) {
+								var key = 'top:/events/'+slugs["country"]+'/'+slugs['region'];
+								client.get('directory:'+key, function(err, res) {
+									manageTopList(key, res, obj, parallelCb);
+								});
+							},
+							/* top venues by country/region/city */
+							function(parallelCb) {
+								var key = 'top:/events/'+slugs["country"]+'/'+slugs['region']+'/'+slugs['city'];
+								client.get('directory:'+key, function(err, res) {
+									manageTopList(key, res, obj, parallelCb);
+								});
+							},
+						], function(err, results) {
+							callback(null, true);
+						});
+					});
+				},
+
+				/* performers */
+				function(callback) {
+					if (typeof ps !== "undefined" && ps !== '') {
+						ps.forEach(function(p) {
+							pSlug = slugs.performer[p.id];
+
+							client.get('directory:score:/'+pSlug, function(err, res) {
+								var obj = {
+									score:score,
+									name:p.name,
+									url:'/'+pSlug,
+									categories:{}
+								};
+
+								if (res !== null) {
+									obj = JSON.parse(res);
+									obj.score += score;
+								}
+
+								if (slugs['category']) {
+									obj["categories"]['category'] = obj["categories"]['category'] || {};
+									obj["categories"]['category'][slugs['category']] = obj["categories"]['category'][slugs['category']] ? obj["categories"]['category'][slugs['category']] + 1 : 1;
+								}
+
+								if (slugs['subcategory']) {
+									obj["categories"]['subcategory'] = obj["categories"]['subcategory'] || {};
+									obj["categories"]['subcategory'][slugs['subcategory']] = obj["categories"]['subcategory'][slugs['subcategory']] ? obj["categories"]['subcategory'][slugs['subcategory']] + 1 : 1;
+								}
+
+								//give this a tmp: namespace?
+								store('score:/'+pSlug, obj);
+
+								/* get the top: for this category */
+								async.parallel([
+									/* top venues by country */
+									function(parallelCb) {
+										var key = 'top:/'+slugs["category"];
+										client.get('directory:'+key, function(err, res) {
+											manageTopList(key, res, obj, parallelCb);
+										});
+									},
+									/* top performers by subcategory */
+									function(parallelCb) {
+										var key = 'top:/'+slugs['category']+'/'+slugs["subcategory"];
+										client.get('directory:'+key, function(err, res) {
+											manageTopList(key, res, obj, parallelCb);
+										});
+									},
+								], function(err, results) {
+									callback(null, true);
+								});
+							});
+						});
+					} else {
+						callback(null,true);
 					}
+				},
 
-					if (slugs['subcategory']) {
-						topPerformer[pSlug]['subcategory'] = topPerformer[pSlug]['subcategory'] || {};
-						topPerformer[pSlug]['subcategory'][slugs['subcategory']] = topPerformer[pSlug]['subcategory'][slugs['subcategory']] ? topPerformer[pSlug]['subcategory'][slugs['subcategory']] + 1 : 1;
-					}
-				});
-			}
+				/* categories, subcategories and geo lists */
+				function(callback) {
+					/* make a list of categories for key 'category:/' */
+					/* check for this key in redis */
+					client.get('directory:category:/', function(err, res) {
+						var list = [];
+						var obj = {};
+						if (res !== null) {
+							list = JSON.parse(res);
+						}
+						/* now add this category */
+						obj.name = e.categories.category.name;
+						obj.url = '/' + slugs['category'];
+						async.detect(list,function(item, detectCb) {
+							if (item.name && item.name == obj.name) {
+								detectCb(true);
+							} else {
+								detectCb();
+							}
+						}, function(result){
+							if (typeof result === "undefined") {
+								list.push(obj);
+								store('category:/', list);
+							}
 
-			/* category lists */
-			var catKey = 'category:/';
+							if (slugs['subcategory']) {
+								client.get('directory:category:/'+slugs['category'], function(err, res) {
+									var list = [];
+									var obj = {};
+									if (res !== null) {
+										list = JSON.parse(res);
+									}
+									/* now add this category */
+									obj.name = e.subcategories.subcategory.short_name;
+									obj.url = '/'+slugs['category']+'/'+slugs['subcategory'];
+									async.detect(list,function(item, detectCb) {
+										if (item.name && item.name == obj.name) {
+											detectCb(true);
+										} else {
+											detectCb();
+										}
+									}, function(result){
+										/* store this obj in the list since it wasn't already in there */
+										if (typeof result === "undefined") {
+											list.push(obj);
+											store('category:/'+slugs['category'], list);
+										} else {
+											/* already in the list */
+										}
+									});
+								});
+							}
+						});
 
-			/* add categories to the root */
-			if (slugs['category']) {
-				category[catKey] = category[catKey] || {};
-				category[catKey][slugs['category']] = [e.categories.category.name, '/' + slugs['category']];
-			}
+						/* geo lists */
+						async.forEachSeries(['events', 'venues'], function(type, callback2) {
+							var url = '/' + type;
+							var geoKey = 'geo:' + url;
+							var prevGeo = '/';
+							async.forEachSeries(['country', 'region', 'city'], function(g, callback3) {
+								/* make lists of countries in root, regions in /country, and cities in /country/region */
+								/*
+								 * 1st loop: geoKey = 'geo:/events'
+								 * 2nd loop: 'geo:/events/united-states'
+								 * 3rd loop: 'geo:/events/united-states/california'
+								 */
+								client.get('directory:'+geoKey, function(err, res) {
+									var list = [];
+									var obj = {};
+									if (res !== null) {
+										list = JSON.parse(res);
+									}
+									/* contains the geo name for the venue and the url
+									 *
+									 * 1st: [United States, '/events/united-states']
+									 * 2nd: [California, '/events/united-states/california']
+									 * 3rd: [San Diego, '/events/united-states/california/san-diego']
+									 */
 
-			/* add sub categories under categories */
-			if (slugs['subcategory']) {
-				catKey += slugs['category'];
-				category[catKey] = category[catKey] || {};
-				category[catKey][slugs['subcategory']] = [e.subcategories.subcategory.short_name, '/' + slugs['category'] + '/' + slugs['subcategory']];
-			}
+									/* detect of this v[g] is already in the array */
+									obj.name = v[g];
+									obj.url = url + '/' + slugs[g];
+									async.detect(list,function(item, detectCb) {
+										if (item.name && item.name == obj.name) {
+											detectCb(true);
+										} else {
+											detectCb();
+										}
+									}, function(result){
+										if (typeof result === "undefined") {
+											list.push(obj);
+											/* now store it */
+											store(geoKey, list);
+										}
 
-			/* geo lists */
-			['events', 'venues'].forEach(function(type) {
-				var url = '/' + type;
-				var geoKey = 'geo:' + url;
-				var prevGeo = '/';
-				['country', 'region', 'city'].forEach(function(g) {
-					geo[geoKey] = geo[geoKey] || {};
+										prevGeo = slugs[g];
+										geoKey += '/' + prevGeo;
+										url += '/' + prevGeo;
 
-					geo[geoKey][slugs[g]] = [v[g], url + '/' + slugs[g]];
+										callback3();
 
-					prevGeo = slugs[g];
-					geoKey += '/' + prevGeo;
-					url += '/' + prevGeo;
+									});
+								});
+							}, function(err) {
+								callback2();
+							});
+						}, function(err) {
+							callback(null,true);
+						});
+					});
+				}
 
-				});
+
+			/* finished score tally for events, venues and performers */
+			], function(err, results) {
+				xml.resume();
+				totalProcessed++;
 			});
-			totalProcessed++;
 		});
 	});
 
@@ -505,149 +788,9 @@ client.on('ready', function() {
 		console.log('read:'+totalRead);
 
 		var postProcess = function() {
-			/* lists of keys are here:
-			 * urls
-			 * geo
-			 * category
-			 * topVenue
-			 * topEvent
-			 * topPerformer
-			 */
+			/* sort everything */
 
-			/* supplemental redis data
-			 * top
-			 * geo (list of countries, states, cities)
-			 * category
-			 */
 
-			/* figure out top_events */
-			organizeByCountry('top:', '/events', topEvent);
-			organizeByCountry('top:', '/venues', topVenue);
-
-			/* tony didn't say to organize performers by country */
-			//organizeByCountry('top:', '/', topPerformer);
-
-			organizeByCategory('top:', '', topPerformer);
-
-			function organizeByCategory(namespace, root, list) {
-				var topCat = {};
-				/* each performer */
-				Object.keys(list).forEach(function(slug) {
-					var el = list[slug];
-					var key = namespace + root;
-
-					['category','subcategory'].forEach(function(c) {
-						if (el[c]) {
-							/* this performer may have many categories */
-							Object.keys(el[c]).forEach(function(cat) {
-								key += '/' + cat;
-								topCat[key] = topCat[key] || {};
-								if (slug) {
-									topCat[key][slug] = list[slug];
-								}
-							});
-						}
-					});
-				});
-
-				/* now topcat should have a list of events by category */
-				/* sort each list and take the top 100 only */
-				Object.keys(topCat).forEach(function(url) {
-					var sorted = Object.keys(topCat[url]).sort(function(a, b) {
-						return -(topCat[url][a].score - topCat[url][b].score)
-					});
-
-					var save = [];
-					var top;
-					sorted.slice(0, 100).forEach(function(top) {
-						save.push([topCat[url][top].name, '/' + top]);
-					});
-					store(url, save);
-				});
-			}
-
-			function organizeByCountry(namespace, root, list) {
-				var topGeo = {};
-				/* for each event */
-				/* TODO: handle multiple events with the same name */
-
-				/* each country, each event */
-				Object.keys(list).forEach(function(slug) {
-					var el = list[slug];
-					var key = namespace + root;
-					['country', 'region', 'city'].forEach(function(g) {
-						if (el[g]) {
-							key += '/' + el[g];
-							topGeo[key] = topGeo[key] || {};
-							topGeo[key][slug] = el;
-						}
-					});
-				});
-
-				/* now topgeo should have a list of events by country */
-
-				/* sort each list and take the top 100 only */
-				Object.keys(topGeo).forEach(function(url) {
-					var sorted = Object.keys(topGeo[url]).sort(function(a, b) {
-						return -(topGeo[url][a].score - topGeo[url][b].score)
-					});
-					var save = [];
-					sorted.slice(0, 100).forEach(function(top) {
-						save.push([topGeo[url][top].name, root + '/' + top]);
-					});
-					store(url, save);
-				});
-			}
-
-			//console.log(urls);
-			/* loop through and store the urls */
-			Object.keys(urls).forEach(function(type) {
-				Object.keys(urls[type]).forEach(function(url) {
-					store(url, urls[type][url]);
-				});
-			});
-			/* loop through and store the geo */
-			Object.keys(geo).forEach(function(key) {
-				if (geo[key]) {
-					var sorted = Object.keys(geo[key]).sort(function(a, b) {
-						if (a < b) return -1;
-						if (a > b) return 1;
-						return 0;
-					});
-
-					var list = [];
-					sorted.forEach(function(g) {
-						list.push(geo[key][g]);
-					});
-					store(key, list);
-				}
-			});
-
-			/* loop through and store the category */
-			Object.keys(category).forEach(function(key) {
-				if (category[key]) {
-					var sorted = Object.keys(category[key]).sort(function(a, b) {
-						if (a < b) return -1;
-						if (a > b) return 1;
-						return 0;
-					});
-
-					var list = [];
-					sorted.forEach(function(k) {
-						list.push(category[key][k]);
-					});
-					store(key, list);
-				}
-			});
-
-			/*
-			console.log(topPerformer);
-			console.log(topVenue);
-			console.log(topEvent);
-			console.log(geo);
-			console.log(category);
-			console.log(urls);
-			*/
 
 			client.end();
 			process.exit();

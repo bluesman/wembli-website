@@ -1,6 +1,6 @@
 //- venue data and event data
 .container.event-venue(itemscope, itemtype="http://schema.org/EventVenue")
-	h1.name(itemprop="name")= venue.Name
+	h1.name(itemprop="name")= venue.name
 	.row.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
 		ol.breadcrumb(itemprop="breadcrumb")
 			if (venue.country && venue.country !== '')

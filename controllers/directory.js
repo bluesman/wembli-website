@@ -403,6 +403,20 @@ module.exports = function(app) {
 				/* make the template from the layout style and layout id */
 				var template = 'directory/' + obj.layout.style + '/' + obj.layout.id + '/' + obj.layout.type;
 				console.log(obj);
+				var sortFunc = function(a, b) {
+					if (a.name < b.name) return -1;
+					if (a.name > b.name) return 1;
+					return 0;
+				}
+				if (obj.top) {
+					obj.top.list = obj.top.list.sort(sortFunc);
+				}
+				if (obj.subGeoEvents) {
+					obj.subGeoEvents = obj.subGeoEvents.sort(sortFunc);
+				}
+				if (obj.subGeoVenues) {
+					obj.subGeoVenues = obj.subGeoVenues.sort(sortFunc);
+				}
 				res.render(template, obj);
 			});
 		}
