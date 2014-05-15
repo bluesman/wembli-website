@@ -9,7 +9,7 @@ var es = new elasticsearch.Client({
 
 /* maybe this is a param some day */
 var dataSource = 'eventful';
-var maxTopCount = 3;
+var maxTopCount = 100;
 
 var argv = require('optimist')
 	.usage('\nImport a full eventful xml feed file.\n\nUsage: $0 <file>\n\n')
