@@ -402,7 +402,7 @@ module.exports = function(app) {
 			async.parallel(getData, function(err, results) {
 				/* make the template from the layout style and layout id */
 				var template = 'directory/' + obj.layout.style + '/' + obj.layout.id + '/' + obj.layout.type;
-				console.log(obj);
+				//console.log(obj);
 				var sortFunc = function(a, b) {
 					if (a.name < b.name) return -1;
 					if (a.name > b.name) return 1;
