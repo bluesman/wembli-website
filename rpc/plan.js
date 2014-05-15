@@ -1043,12 +1043,18 @@ exports.plan = {
 				}
 
 				/* now add the friend to the plan */
+				console.log('addingfriend');
+				console.log(req.session.plan);
 				req.session.plan.addFriend(friend, function(err) {
+					/*
 					if (err) {
 						data.success = 0;
 						data.dbError = 'unable to add friend ' + friend.id + ' ' + err;
 						return me(null, data);
 					}
+					*/
+					console.log('friend added:');
+					console.log(friend);
 					data.friend = friend;
 
 					/* get list of friends for this plan */
@@ -1058,6 +1064,7 @@ exports.plan = {
 
 						data.friends = friends;
 						feedRpc['logActivity'].apply(function(err, feedResult) {
+							
 							return me(null, data);
 						}, [{
 								action: 'addFriend',
