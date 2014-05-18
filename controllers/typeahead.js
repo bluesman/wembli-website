@@ -1,6 +1,6 @@
 var http = require('http'),
 	qs = require('querystring'),
-	ESClient = require('elasticsearchclient');
+	ESClient = require('elasticsearch');
 
 var es = new ESClient({
 	hosts: [{

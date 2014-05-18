@@ -29,7 +29,8 @@
     "express-meta-tags": "0.0.x",
     "csv": "0.3.x",
     "optimist": "0.6.x",
-    "elasticsearchclient": "0.5.x"
+    "elasticsearch":"2.1.x",
+    "xml-stream":"0.4.x"
   },
   "repository": {
     "type": "git",

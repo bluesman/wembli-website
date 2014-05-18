@@ -14,14 +14,15 @@ angular.module('wembliApp', [
   'wembliApp.services.twitter',
   'wembliApp.services.pixel',
   'wembliApp.directives',
-  'wembliApp.directives.header'
+  'wembliApp.directives.header',
+  'wembliApp.directives.invitationWizard'
 ]).config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
     //$locationProvider.html5Mode(true);
   }
 ]).run(['$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'facebook', 'twitter', 'plan', 'wembliRpc',
   function($timeout, initRootScope, $scope, $location, $route, $window, facebook, twitter, plan, wembliRpc) {
-    console.log('run event-options angular app');
+    console.log('run invitation angular app');
     $timeout(function() {
       plan.fetch(function() {});
     });

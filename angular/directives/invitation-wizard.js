@@ -3,11 +3,9 @@
 /* Directives */
 angular.module('wembliApp.directives.invitationWizard', []).
 
-directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '$timeout', 'sequence', 'fetchModals', 'plan', '$location', 'wembliRpc', 'customer', 'facebook', 'twitter', 'loggedIn',
-  function($rootScope, $http, $filter, $window, $timeout, sequence, fetchModals, plan, $location, wembliRpc, customer, facebook, twitter, loggedIn) {
+directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '$timeout', 'plan', '$location', 'wembliRpc', 'customer', 'facebook', 'twitter', 'loggedIn',
+  function($rootScope, $http, $filter, $window, $timeout, plan, $location, wembliRpc, customer, facebook, twitter, loggedIn) {
     return {
-      templateUrl: '/partials/invite-friends-wizard',
-      cache: false,
       restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
@@ -232,7 +230,7 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
 directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 'loggedIn', 'pixel', 'googleAnalytics',
   function(wembliRpc, $window, customer, plan, loggedIn, pixel, googleAnalytics) {
     return {
-      restrict: 'E',
+      restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
           $scope.listId = 'a55323395c';
@@ -397,7 +395,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
 directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter',
   function(wembliRpc, $window, $filter) {
     return {
-      restrict: 'E',
+      restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
           if ($scope.plan && $scope.plan.rsvpDate) {
@@ -451,7 +449,7 @@ directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter',
 directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', '$http', '$rootScope',
   function(wembliRpc, $window, facebook, plan, $http, $rootScope) {
     return {
-      restrict: 'E',
+      restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
 
@@ -620,7 +618,7 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
 directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '$http', '$rootScope', '$location', '$filter',
   function(wembliRpc, $window, twitter, plan, $http, $rootScope, $location, $filter) {
     return {
-      restrict: 'E',
+      restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
           $scope.navData['nav-step4'] = 0;
@@ -771,7 +769,7 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
 directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', '$rootScope',
   function(wembliRpc, $window, plan, $timeout, $rootScope) {
     return {
-      restrict: 'E',
+      restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
           $scope.navData['nav-step5'] = 0;

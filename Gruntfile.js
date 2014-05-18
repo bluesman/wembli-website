@@ -32,7 +32,6 @@ module.exports = function(grunt) {
         mangle:false,
         beautify: true
       },
-      /*
       "global": {
       	"files": {
       		'public/js/wembli.min.js':[
@@ -141,7 +140,6 @@ module.exports = function(grunt) {
           ]
         }
       },
-      */
       "tickets": {
         "files": {
           'public/js/tickets.min.js':[
@@ -159,8 +157,11 @@ module.exports = function(grunt) {
       "invitation": {
         "files": {
           'public/js/invitation.min.js':[
+            'bower_components/pikaday/pikaday.js',
+            'bower_components/pikaday/plugins/pikaday.jquery.js',
             'angular/apps/invitation.js',
             'angular/controllers/invitation.js',
+            'angular/directives/invitation-wizard.js'
           ]
         }
       }
@@ -179,6 +180,13 @@ module.exports = function(grunt) {
         options: {
           spawn: false
         }
+      },
+      invitation: {
+        files: ['less/**/*.less','angular/**/invitation.js','angular/**/invitation-wizard*'],
+        tasks:['less:style','uglify:invitation'],
+        options: {
+          spawn: false
+        }
       }
     }
   });
@@ -190,5 +198,6 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', ['watch']);
+  grunt.registerTask('watch-invitation',['watch:invitation']);
 
 };

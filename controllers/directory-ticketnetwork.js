@@ -2,9 +2,12 @@ var eventRpc = require('../rpc/event').event;
 var wembliUtils = require('../lib/wembli/utils');
 var async = require('async');
 var redis = require("redis");
-var elasticsearch= require('elasticsearch');
-var es = new elasticsearch.Client({
-		host: '166.78.116.141:9200'
+var ESClient = require('elasticsearchclient');
+var es = new ESClient({
+	hosts: [{
+		host: 'es01.wembli.com',
+		port: 9200
+	}]
 });
 
 var eventRpc = require('../rpc/event').event;
@@ -166,6 +169,9 @@ module.exports = function(app) {
 
 		});
 
+		var run = {
+
+		};
 
 		function handlePage(obj) {
 
@@ -190,8 +196,10 @@ module.exports = function(app) {
 			/* pick the right content template */
 			obj.layout.type = (obj.type === 'performers') ? 'category' : 'geo';
 
+			var locals = obj;
+
 			/* TODO: handle title & meta */
-			obj.meta = {
+			locals.meta = {
 				title: "Tickets",
 				description: "Get the best prices on tickets, parking, restaurants and hotels then split the cost with friends so you don't get stuck with the bill.",
 			};
@@ -232,13 +240,13 @@ module.exports = function(app) {
 			var getData = [];
 			getData.push(
 				/* fetch the redis directory nav data */
+
 				function(pCb) {
 					async.forEach(Object.keys(fetchKeys),
 						function(key, cb) {
-							console.log('fetching: '+fetchKeys[key]);
 							client.get(fetchKeys[key], function(err, result) {
 								var data = JSON.parse(result);
-								obj[key] = data;
+								locals[key] = data;
 								cb();
 							});
 						},
@@ -258,138 +266,197 @@ module.exports = function(app) {
 						var fetchDetail = {
 
 							'events': function(cb) {
-
 								obj.layout.type = 'event';
 
-								/* get this event, venue and performers from ES */
-								var docs = [
-										{"_index":"eventful", "_type": "events", "_id": obj.id},
-										{"_index":"eventful", "_type": "venues", "_id": obj.venueId},
-								];
-								if (obj.performerIds) {
-									obj.performerIds.forEach(function(p) {
-										docs.push({"_index":"eventful", "_type": "performers", "_id": p.performer.id});
-									});
-								}
+								eventRpc['get'].apply(function(err, results) {
 
-								es.mget({body: {docs: docs}}, function(err, data) {
-									if (err) {
-										/* TODO: render the not found page */
-									}
+									obj.date = results.event[0].Date;
+									obj.displayDate = results.event[0].DisplayDate;
 
-									data.docs.forEach(function(el) {
-										if (el._type === 'events' && el.exists) {
-											obj.event = el._source;
-										}
-										if (el._type === 'venues' && el.exists) {
-											obj.venue = el._source;
-										}
-										if (el._type === 'performers' && el.exists) {
-											if (typeof obj.performers === "undefined") {
-												obj.performers = [];
-											}
-											obj.performers.push(el._source);
-										}
-									});
-
-									obj.slugs = {};
-									obj.slugs.country = wembliUtils.slugify(obj.venue.country);
-									obj.slugs.region = wembliUtils.slugify(obj.venue.region);
-									obj.slugs.city = wembliUtils.slugify(obj.venue.city);
-									obj.slugs.venue = wembliUtils.slugify(obj.venue.name);
-									obj.slugs.category = wembliUtils.slugify(obj.event.categories.category.name);
-
-									if (typeof obj.event.subcategories.subcategory !== "undefined") {
-										obj.slugs.subcategory = wembliUtils.slugify(obj.event.subcategories.subcategory.short_name);
-									}
 									/* set the meta tags */
-									obj.meta.title = 'Friends Split The Cost Of ' + obj.event.title + ' Tickets';
-									/* TODO: get performer & venue from ES */
-									/* obj.meta.description = 'Get tickets for the upcoming ' + obj.event.performers[0].name + ' event: "' + obj.event.title + '" on Wembli.  Then, find parking, restaurants and hotels near ' + obj.venue.name + '. Split the cost of everything with friends so you don\'t get stuck with the bill.';
-									*/
+									locals.meta.title = 'Friends Split The Cost Of ' + obj.event + ' Tickets';
+									locals.meta.description = 'Get tickets for the upcoming ' + obj.performer + ' event: "' + obj.event + '" on Wembli.  Then, find parking, restaurants and hotels near ' + obj.venue + '. Split the cost of everything with friends so you don\'t get stuck with the bill.';
+
 									cb();
-								});
+								}, [{
+										"eventID": obj.id
+									},
+									req, res
+								]);
 
 							},
 
 							'venues': function(cb) {
 								obj.layout.type = 'venue';
 
-								/* get the venue and a list of events */
-								es.get({index:"eventful",type:"venues",id:obj.id},function(err, venue) {
-									if (err) {
-										/* TODO: render the not found page */
-									}
-									console.log(venue._source);
-									obj.venue = venue._source;
-									/* now get the events, parking and restaurants for this venue */
+								venueRpc['get'].apply(function(err, results) {
+									/* just take the first venue */
+									obj.venue = results.venue[0];
+									obj.slugs = {};
+									obj.slugs.country = wembliUtils.slugify(obj.venue.Country);
+									obj.slugs.state = wembliUtils.slugify(obj.venue.StateProvince);
+									obj.slugs.city = wembliUtils.slugify(obj.venue.City);
+
+
 									async.parallel([
-										/* get eventlist from es */
+
+										/* get venue configurations from ticket network */
 										function(venueGetDetailCb) {
-											es.search({index:'eventful',type:'events',size:20,q:'venue_id:'+venue._source.id}, function(err, result) {
-												console.log(result.hits.hits)
-												obj.venue.events = result.hits.hits;
+											venueRpc['getConfigurations'].apply(function(e2, configs) {
+												if (typeof configs.venue[0] !== "undefined") {
+													obj.venue.configurations = configs.venue;
+												} else {
+													obj.venue.configurations = [];
+												}
 												venueGetDetailCb();
-											});
+
+											}, [{
+													"VenueID": parseInt(obj.id)
+												},
+												req, res
+											]);
 										},
 
-									], function(err, results) {
-										obj.slugs = {};
-										obj.slugs.country = wembliUtils.slugify(obj.venue.country);
-										obj.slugs.region = wembliUtils.slugify(obj.venue.region);
-										obj.slugs.city = wembliUtils.slugify(obj.venue.city);
-										obj.slugs.venue = wembliUtils.slugify(obj.venue.name);
+										/* get events for this venue */
+										function(venueGetDetailCb) {
+											//TODO use elastic search instead of tn?
+											eventRpc['get'].apply(function(e3, events) {
+												obj.venue.events = events.event;
+												venueGetDetailCb();
 
-										//obj.meta.title = 'Cheap Tickets For Events at ' + obj.venue.Name;
-										//obj.meta.description = 'Get tickets for upcoming events at: "' + obj.venue.Name + '" on Wembli.  Then, find parking, restaurants and hotels and split the cost of everything with friends so you don\'t get stuck with the bill.';
+											}, [{
+													"venueID": parseInt(obj.id)
+												},
+												req, res
+											]);
+										},
+
+										/* find this venue in elastic search ticketmaster index */
+										function(venueGetDetailCb) {
+
+											var q = {
+												from: 0,
+												size: 1,
+												"query": {
+													"text_phrase": {
+														"name": obj.venue.Name
+													}
+												},
+												"filter": {
+													"script": {
+														"script": "_source.name == x",
+														"params": {
+															"x": obj.venue.Name
+														}
+													}
+												}
+											};
+
+											es.search('ticketmaster', 'venues', q, function(err, data) {
+												var hits = JSON.parse(data).hits;
+
+												if (typeof hits.hits[0] !== "undefined") {
+													obj.venue.image = hits.hits[0]._source.image;
+												}
+												venueGetDetailCb();
+											});
+										}
+									], function(err, results) {
+										locals.meta.title = 'Cheap Tickets For Events at ' + obj.venue.Name;
+										locals.meta.description = 'Get tickets for upcoming events at: "' + obj.venue.Name + '" on Wembli.  Then, find parking, restaurants and hotels and split the cost of everything with friends so you don\'t get stuck with the bill.';
 										cb();
 									});
 
-								});
+								}, [{
+										"VenueID": parseInt(obj.id)
+									},
+									req, res
+								]);
+
 							},
 
 							'performers': function(cb) {
 
 								obj.layout.type = 'performer';
-
-								/* get the performer and a list of events */
-								es.get({index:"eventful",type:"performers",id:obj.id},function(err, performer) {
-									if (err) {
-										/* TODO: render the not found page */
+								es.search('ticket_network', 'performers', {
+									"query": {
+										"term": {
+											"PerformerID": obj.id
+										}
+									}
+								}, function(err, data) {
+									obj.performer = JSON.parse(data).hits.hits[0]._source;
+									/* tn misspelled their performer name header */
+									if (obj.performer.PeformerName) {
+										obj.performer.PerformerName = obj.performer.PeformerName;
 									}
 
-									obj.performer = performer._source;
-									/* now get the events, parking and restaurants for this venue */
 									async.parallel([
-										/* get eventlist from es */
-										function(venueGetDetailCb) {
-											es.search({index:'eventful',type:'events',size:20,q:'performers.performer.id:'+performer._source.id}, function(err, result) {
-												console.log(result.hits.hits)
-												obj.performer.events = result.hits.hits;
-												venueGetDetailCb();
+										/* look for a match in ticketmaster data */
+										/* this works but doesn't give us anything useful so commenting it out
+										function(performerGetDetailCb) {
+											var q = {
+												from: 0,
+												size: 1,
+												"query": {
+													"text_phrase": {
+														"name": obj.performer.PerformerName
+													}
+												},
+												"filter": {
+													"script": {
+														"script": "_source.name == x",
+														"params": {
+															"x": obj.performer.PerformerName
+														}
+													}
+												}
+											};
+											es.search('ticketmaster', 'performers', q, function(err, data) {
+
+												var hits = JSON.parse(data).hits;
+												if (typeof hits.hits[0] !== "undefined") {
+													console.log('ticketmaster');
+													console.log(hits.hits[0]._source);
+												}
+												performerGetDetailCb();
 											});
+
 										},
+										*/
+
+										/* get events for this performer */
+										function(performerGetDetailCb) {
+											eventRpc['get'].apply(function(err, results) {
+												obj.performer.events = results.event;
+												performerGetDetailCb();
+
+											}, [{
+													"performerID": obj.id
+												},
+												req, res
+											]);
+										},
+
 
 									], function(err, results) {
 
-										if (obj.categories[0].category.name === 'sports') {
+										if (obj.performer.ParentCategory === 'SPORTS') {
 											obj.layout.type = 'team';
 										}
 
 										obj.slugs = {};
-										obj.slugs.category    = wembliUtils.slugify(obj.categories[0].category.name);
-										if (obj.categories[0].subcategory) {
-											obj.slugs.subcategory = wembliUtils.slugify(obj.categories[0].subcategory.short_name);
-										}
+										obj.slugs.pcat = wembliUtils.slugify(obj.performer.ParentCategory);
+										obj.slugs.ccat = wembliUtils.slugify(obj.performer.ChildCategory);
+										obj.slugs.gcat = wembliUtils.slugify(obj.performer.GrandChildCategory);
 
-										obj.meta.title = 'Friends Split The Cost Of ' + obj.performer.name + ' Tickets';
-										obj.meta.description = 'Get tickets for upcoming ' + obj.performer.name + ' events on Wembli.  Then, find parking, restaurants and hotels near the venue. Split the cost of everything with friends so you don\'t get stuck with the bill.';
+										locals.meta.title = 'Friends Split The Cost Of ' + obj.performer.PerformerName + ' Tickets';
+										locals.meta.description = 'Get tickets for upcoming ' + obj.performer + ' events on Wembli.  Then, find parking, restaurants and hotels near the venue. Split the cost of everything with friends so you don\'t get stuck with the bill.';
 
 										cb();
+
 									});
-
 								});
-
 							}
 
 						}
@@ -402,22 +469,7 @@ module.exports = function(app) {
 			async.parallel(getData, function(err, results) {
 				/* make the template from the layout style and layout id */
 				var template = 'directory/' + obj.layout.style + '/' + obj.layout.id + '/' + obj.layout.type;
-				//console.log(obj);
-				var sortFunc = function(a, b) {
-					if (a.name < b.name) return -1;
-					if (a.name > b.name) return 1;
-					return 0;
-				}
-				if (obj.top) {
-					obj.top.list = obj.top.list.sort(sortFunc);
-				}
-				if (obj.subGeoEvents) {
-					obj.subGeoEvents = obj.subGeoEvents.sort(sortFunc);
-				}
-				if (obj.subGeoVenues) {
-					obj.subGeoVenues = obj.subGeoVenues.sort(sortFunc);
-				}
-				res.render(template, obj);
+				res.render(template, locals);
 			});
 		}
 

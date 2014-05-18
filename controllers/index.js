@@ -15,10 +15,10 @@ module.exports = function(app) {
 		async.parallel([
 			/* get 10 concerts nearby (categoryId: 2) */
 			function(cb) {
-				client.get('directory:top:/concerts', function(err, results) {
-					console.log('top concerts performers');
+				client.get('directory:top:/concerts-and-tour-dates', function(err, results) {
 					if (results) {
-						view.concerts = JSON.parse(results).slice(0,10);
+						var r = JSON.parse(results);
+						view.concerts = r.list.slice(0,10);
 					} else {
 						view.concerts = [];
 					}
@@ -29,9 +29,9 @@ module.exports = function(app) {
 			/* get 10 sports nearby (categoryId: 1) */
 			function(cb) {
 				client.get('directory:top:/sports', function(err, results) {
-					console.log('top sports performers');
 					if (results) {
-						view.sports = JSON.parse(results).slice(0,10);
+						var r = JSON.parse(results);
+						view.sports = r.list.slice(0,10);
 					} else {
 						view.sports = [];
 					}
@@ -41,10 +41,10 @@ module.exports = function(app) {
 
 			/* get 10 theater nearby (categoryId: 3) */
 			function(cb) {
-				client.get('directory:top:/theater', function(err, results) {
-					console.log('top sports performers');
+				client.get('directory:top:/performing-arts', function(err, results) {
 					if (results) {
-						view.theater = JSON.parse(results).slice(0,10);
+						var r = JSON.parse(results);
+						view.theater = r.list.slice(0,10);
 					} else {
 						view.theater = [];
 					}

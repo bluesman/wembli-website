@@ -1,1 +1,61 @@
+<<<<<<< HEAD
+=======
+#about-us-frame(ng-controller="AboutusCtrl", ng-init="content='kim'")
+	section.pics.container.xlearfix
+		.left.pull-left
+			label.kim(ng-class="{'kim':'active'}[content]")
+				input.pic(type="radio", name="content", value="kim", ng-model="content")
+		.middle.pull-left
+			label.tom(ng-class="{'tom':'active'}[content]")
+				input.pic(type="radio", name="content", value="tom", ng-model="content")
+		.right.pull-left
+			label.ash(ng-class="{'ash':'active'}[content]")
+				input.pic(type="radio", name="content", value="ash", ng-model="content")
+	section.content.container.clearfix(ng-show="{'kim':true}[content]")
+		.left.pull-left
+			h1.name.calibri Kim Walpole
+			h2.title.calibri Co-Founder & CEO
+			.clearfix
+				strong.key.pull-left Twitter:&nbsp;
+				.value.pull-left
+					a(href="https://twitter.com/kimbeela") @kimbeela
+				.pipe.pull-left &nbsp;|&nbsp;
+				strong.key.pull-left Linked In:&nbsp;
+				.value.pull-left
+					a(href="http://www.linkedin.com/in/kimwalpole/") Kim Walpole
+			.clearfix
+				strong.key.pull-left Best live event ever attended:&nbsp;
+				.value.pull-left Needtobreathe at Birch Aquarium, La Jolla
+			.clearfix
+				strong.key.pull-left Favorite sports team:&nbsp;
+				.value.pull-left Washington Redskins
+			.clearfix
+				strong.key.pull-left Random fact about me:&nbsp;
+				.value.pull-left I have made 3 citizens arrests
+		.right.pull-left
+			p.info Kim’s love of business began early when she turned a profit selling home-made ice pops to kids on the block from her grandmother’s stoop in the Bronx. A native New Yorker, the faster Kim walks, the faster she talks. After launching and successfully running a national management training & consulting company for over 10 years, she and her husband, Tom decided it was time to tap rings and pull a “wonder twin powers, activate! - form of Wembli!”. Their new company, like Expedia for live events lets you pick tickets to a concert, theater or sporting event then choose options like parking, restaurant deals and splitting the bill with friends. That may seem like a random choice for a geek and a management consultant but not so! Both avid event goers, this idea was born of their personal frustration with the archaic process of planning an outing and worse, trying to go dutch with friends.  Kim is a focused ball of energy that can cast vision & talk strategy in one breathe, and have the team in hysterics the next.
+	section.content.container.clearfix(ng-show="{'tom':true}[content]")
+		.left.pull-left
+			h1.name.calibri Tom Walpole
+			h2.title.calibri Co-Founder & CTO
+			.clearfix
+				strong.key.pull-left Twitter:&nbsp;
+				.value.pull-left
+					a(href="https://twitter.com/walpolet") @walpolet
+				.pipe.pull-left &nbsp;|&nbsp;
+				strong.key.pull-left Linked In:&nbsp;
+				.value.pull-left
+					a(href="http://www.linkedin.com/pub/tom-walpole/0/8/717") Tom Walpole
+			.clearfix
+				strong.key.pull-left Best live event ever attended:&nbsp;
+				.value.pull-left Pearl Jam in Hawaii circa 1992
+			.clearfix
+				strong.key.pull-left Favorite sports team:&nbsp;
+				.value.pull-left San Diego Padres
+			.clearfix
+				strong.key.pull-left Random fact about me:&nbsp;
+				.value.pull-left I secretly want to be a gold-miner
+		.right.pull-left
+			p.info A keyboard cowboy, Tom brings over 15 years of web development experience  and leadership to the team.  When he’s not blazing new technical trails, or dreaming in code, you can find him guitar in hand singing the blues.  A haole who hails from the oldest of the Hawaiian Islands he’s one of those rare geeks with stellar people skills. Toms new mission in life is to gentrify the term ‘code monkey’ so that no geek will ever hang their head again.  In our book that makes him a modern day activist.  For the win.
+>>>>>>> production
 

@@ -1,36 +1,41 @@
 //- venue data and event data
 .container.event-venue(itemscope, itemtype="http://schema.org/EventVenue")
-	h1.name(itemprop="name")= venue.Name
+	h1.name(itemprop="name")= venue.name
 	.row.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
 		ol.breadcrumb(itemprop="breadcrumb")
-			if (venue.Country && venue.Country !== '')
+			if (venue.country && venue.country !== '')
 				li
-					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}") #{venue.Country}
-			if (venue.StateProvince && venue.StateProvince !== '')
+					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}") #{venue.country}
+			if (venue.region && venue.region !== '')
 				li
-					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}/#{slugs.state}") #{venue.StateProvince}
-			if (venue.City && venue.City !== '')
+					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}/#{slugs.region}") #{venue.region}
+			if (venue.city && venue.city !== '')
 				li
-					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}/#{slugs.state}/#{slugs.city}") #{venue.City}
+					a(href="http://#{app.settings.host}.wembli.com/venues/#{slugs.country}/#{slugs.region}/#{slugs.city}") #{venue.city}
 
 	.row
-		if (venue.Street1 && venue.Street1 !== '')
+		if (venue.address && venue.address !== '')
 			address.venue-address(itemprop="address", itemscope, itemtype="http://schema.org/PostalAddress")
-				span.address-street(itemprop="streetAddress")= venue.Street1
+				span.address-street(itemprop="streetAddress")= venue.address
 				br
-				span.address-locality(itemprop="addressLocality")= venue.City + ', '
-				span.address-region(itemprop="addressRegion")= venue.StateProvince+', '
-				span.address-country(itemprop="addressCountry")= venue.Country+ ' '
-				span.address-postal-code(itemprop="postalCode")= venue.ZipCode
+				span.address-locality(itemprop="addressLocality")= venue.city + ', '
+				span.address-region(itemprop="addressRegion")= venue.region+', '
+				span.address-country(itemprop="addressCountry")= venue.country+ ' '
+				span.address-postal-code(itemprop="postalCode")= venue.postal_code
 				br
 				if (venue.BoxOfficePhone && venue.BoxOfficePhone !== '')
 					span.venue-box-office-phone(itemprop="telephone")= venue.BoxOfficePhone
 					br
 	.row
-		if (venue.image)
-			img(itemprop="image",src="#{venue.image}")
+		if (venue.image && venue.image.url)
+			img(itemprop="image",src="#{venue.image.url}")
 
 	.row.venue-info
+		if (venue.description && venue.description !== '')
+			.venue-description.col-md-4.clearfix
+				strong.pull-left Description:
+				.pull-left!= venue.description
+
 		if (venue.Capacity && venue.Capacity !== '')
 			.venue-capacity.col-md-4.clearfix
 				strong.pull-left Capacity:
@@ -70,31 +75,31 @@
 			.venue-public-transportation.col-md-4
 				strong.pull-left Public Transportation
 				.pull-left= venue.PublicTransportation
-
-	ul.nav.nav-tabs.venue-configurations-tabs
-		each c,idx in venue.configurations
-			- var active = idx == 0 ? 'active' : '';
-			li.venue-configuration-tab(class="#{active}")
-				a.description(itemprop="description", href="#config-#{idx}", data-toggle="tab")= c.TypeDescription
-	.tab-content.venue-configurations
-		each c,idx in venue.configurations
-			- var active = idx == 0 ? 'active' : '';
-			.tab-pane.venue-configuration(class="#{active}",id="config-#{idx}")
-				.media.venue-map.center-block.clearfix
-					a.pull-left(href="#", data-toggle="modal", data-target="#configuration-#{idx}-modal")
-						img.venue-map.media-object(itemprop="map", src="//seatics.tickettransaction.com/#{c.MapURL}")
-					.media-body
-						h2.configuration-name= c.TypeDescription
-						.clearfix
-							strong.pull-left Capacity:
-							.pull-left.capacity(itemprop="capacity")= c.Capacity
-					.modal.fade(id="configuration-#{idx}-modal")
-						.modal-dialog
-							.modal-content
-								.modal-header
-									button.close(type="button",aria-hidden="true")&times;
-									h2= c.TypeDescription
-								.modal-body.photo.center-block(itemscope itemtype="http://schema.org/ImageObject")
-									img.venue-map(itemprop="contentURL", src="//seatics.tickettransaction.com/#{c.MapURL}")
+	//- this is only supplied by ticket network
+		ul.nav.nav-tabs.venue-configurations-tabs
+			each c,idx in venue.configurations
+				- var active = idx == 0 ? 'active' : '';
+				li.venue-configuration-tab(class="#{active}")
+					a.description(itemprop="description", href="#config-#{idx}", data-toggle="tab")= c.TypeDescription
+		.tab-content.venue-configurations
+			each c,idx in venue.configurations
+				- var active = idx == 0 ? 'active' : '';
+				.tab-pane.venue-configuration(class="#{active}",id="config-#{idx}")
+					.media.venue-map.center-block.clearfix
+						a.pull-left(href="#", data-toggle="modal", data-target="#configuration-#{idx}-modal")
+							img.venue-map.media-object(itemprop="map", src="//seatics.tickettransaction.com/#{c.MapURL}")
+						.media-body
+							h2.configuration-name= c.TypeDescription
+							.clearfix
+								strong.pull-left Capacity:
+								.pull-left.capacity(itemprop="capacity")= c.Capacity
+						.modal.fade(id="configuration-#{idx}-modal")
+							.modal-dialog
+								.modal-content
+									.modal-header
+										button.close(type="button",aria-hidden="true")&times;
+										h2= c.TypeDescription
+									.modal-body.photo.center-block(itemscope itemtype="http://schema.org/ImageObject")
+										img.venue-map(itemprop="contentURL", src="//seatics.tickettransaction.com/#{c.MapURL}")
 
 	include venue-event-list

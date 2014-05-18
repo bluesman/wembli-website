@@ -1,3 +1,91 @@
 extends layout
-block frame1
-	include includes/invitation
+block content
+	- var wizardNav = initInviteFriendsWizard();
+	- wizardNav[0]['active'] = 'active';
+	#invitation(ng-controller="InvitationCtrl")
+		.invite-friends-wizard.container-fluid
+			.row
+				#invitation-left.col-md-3.col-md-offset-1.hidden-xs.hidden-sm
+					#wizard-left-nav
+						- var cnt = 0
+						each navItem in wizardNav
+							- cnt++
+							a.clearfix(ng-class="{'#{navItem.id}':'active'}[currentStep] + ' ' + {true:'complete'}[stepCompleted['#{navItem.id}']]", href="#{navItem.href}",id="#{navItem.id}",class="wizard-step-nav")
+								//- i(class="#{navItem.icon}")
+								.box.box-small.pull-left #{cnt}
+								span #{navItem.text}
+								span.data.show-ellipses(title="{{navData['#{navItem.id}']}}", start="0", characters="20", interpolate="true", text=": {{navData['#{navItem.id}']}}", ng-show="navData['#{navItem.id}']") : {{navData['#{navItem.id}']}}
+					.wembli-friends
+
+				#invitation-right.col-md-7.col-xs-12
+					.header.row
+						.col-sm-3.col-xs-12
+							.event-date-box(ng-cloak)
+								span.day {{plan.event.eventDate| date:'EEE'}}
+								span.event-date {{plan.event.eventDate| date:'MMM d'}}
+								span.time {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+						.col-sm-9.col-xs-12
+							.info(ng-cloak)
+								h1.name.block {{plan.event.eventName}}
+								h2.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
+								.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
+								.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+					#wizard-progress.row
+						.col-sm-4.col-md-5.hidden-xs
+							.progress-header.segoe Invite Friends Progress:
+						- var cnt = 0
+						each navItem in wizardNav
+							- cnt++
+							- var first = ''
+							if (cnt === 1)
+								- first = 'col-xs-offset-1'
+							.col-sm-1.col-xs-2(class="#{first}")
+								a.box.pull-left(ng-class="{'nav-step1':'first'}['nav-step#{cnt}'] + ' ' + {'#{navItem.id}':'active'}[currentStep] + ' ' + {true:'complete'}[stepCompleted['#{navItem.id}']]", href="#{navItem.href}",id="#{navItem.id}",class="wizard-step-nav") #{cnt}
+					#step1.invitation-wizard-step1.wizard-step(ng-show="{'step1':true}[showStep]")
+						include includes/invite-friends-wizard/step-1
+					#step2.invitation-wizard-step2.wizard-step(ng-show="{'step2':true}[showStep]")
+						include includes/invite-friends-wizard/step-2
+					#step3.invitation-wizard-step3.wizard-step(ng-show="{'step3':true}[showStep]")
+						include includes/invite-friends-wizard/step-3
+					#step4.invitation-wizard-step4.wizard-step(ng-show="{'step4':true}[showStep]")
+						include includes/invite-friends-wizard/step-4
+					#step5.invitation-wizard-step5.wizard-step(ng-show="{'step5':true}[showStep]")
+						include includes/invite-friends-wizard/step-5
+					.form-controls
+						//- step-1
+						.row(ng-show="{'nav-step1':true}[currentStep] && showSignupForm")
+							.col-xs-12
+								button.submit-step.btn.btn-primary.btn-large.form-control(ng-click="submitSignup()") Go to next step
+						.row(ng-show="{'nav-step1':true}[currentStep] && showSignupView")
+							.col-xs-12
+								button.submit-step.btn.btn-primary.btn-large.form-control(ng-click="gotoStep('step2')") Go to next step
+						.row(ng-show="{'nav-step1':true}[currentStep] && showLoginForm")
+							.col-xs-12
+								button.submit-step.btn.btn-primary.btn-large.form-control(ng-click="submitLogin()") Go to next step
+
+						//- step-2
+						.row(ng-show="{'nav-step2':true}[currentStep]")
+							.col-xs-12
+								a.submit-step.btn.btn-primary.btn-large.form-control(href="#step3", ng-click="submitRsvp()") Go to next step
+						//- step-3
+						.row(ng-show="{'nav-step3':true}[currentStep]")
+							.col-sm-8.col-xs-12
+								a.submit-step.btn.btn-primary.btn-large.form-control(href="#step4",ng-click="skipStep('step3','step3')") Go to next step
+							.col-sm-4.col-xs-12.skip-step-container
+								a.skip-step(href="#step4", ng-click="skipStep('step3','step3')") Skip this step
+
+						//- step-4
+						.row(ng-show="{'nav-step4':true}[currentStep]")
+							.col-sm-8.col-xs-12
+								a.submit-step.btn.btn-primary.btn-large.form-control(href="#step5",ng-click="skipStep('step4', 'step4')") Go to next step
+							.col-sm-4.col-xs-12.skip-step-container
+								a.skip-step(ng-href="#step5", ng-click="skipStep('step4', 'step4')") Skip this step
+
+						//- step-5
+						.row
+							.col-sm-8.col-xs-12
+								button.submit-step.btn.btn-primary.btn-large.form-control(ng-show="{'nav-step5':true}[currentStep]", ng-disabled="{true:'disabled'}[!loggedIn]",ng-click="finished()") Finished!
+							.col-sm-4.col-xs-12.skip-step-container
+								a.skip-step(ng-show="loggedIn && {'nav-step5':true}[currentStep]", ng-click="finished()") Skip this step
+
+

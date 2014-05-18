@@ -30,67 +30,6 @@
 
 	#invite-friends-wizard {
 
-		.box {
-			margin:0 10px 10px;
-			background-color: @blue;
-			color:@white;
-			.border-radius(3px);
-			height:35px;
-			width:35px;
-			font-size:20px;
-			line-height: 36px;
-			vertical-align: middle;
-			text-align:center;
-		}
-
-		a.complete > .box-small, a.active > .box-small, a:hover > .box-small, .box:hover, .box.active, .box.complete {
-			background-color:@yellow;
-			color:@black;
-		}
-
-		.box-small {
-			width: 20px;
-			height:20px;
-			font-size:14px;
-			line-height:20px;
-			margin:0 4px;
-		}
-
-		.form-controls {
-			position:absolute;
-			bottom:0px;
-			right:0px;
-			width:100%;
-			text-align: right;
-			border-top:thin solid @grayLight;
-			background-color:@white;
-
-			.wembli-friends {
-				background: transparent url('/images/tickets-preview-wembliman.png') no-repeat center center;
-				position:absolute;
-				top:-82px;
-				left:10px;
-				height:80px;
-				width:150px;
-			}
-
-			a, button {
-				margin:20px;
-			}
-
-			.skip-step {
-				margin-right:20px;
-			}
-		}
-
-		.icon-question-sign {
-			color:@blue;
-		}
-
-		.icon-question-sign:before {
-			margin-right:10px;
-		}
-
 		.invite-wizard-left {
 			white-space: nowrap;
 			width:300px;
@@ -130,14 +69,6 @@
 			padding:5px 0 0 60px;
 			text-align:left;
 
-			#invite-wizard-signup-view {
-				.already-logged-in {
-					span {
-						line-height:20px;
-						vertical-align: middle;
-					}
-				}
-			}
 
 			.invite-friends-progress {
 				margin-top: 10px;
@@ -160,22 +91,12 @@
 				}
 			}
 
-			.invite-wizard-step1-form {
-				.switch-login, .or, .facebook-login {
-					width:100%;
-					text-align:left;
-					margin-top:15px;
-				}
-
-			}
-
 			#facebook-login-button {
 				margin:0;
 			}
 
 			#invite-wizard-rsvp-form {
 				min-height: 490px;
-
 
 				.datepicker-container {
 					position:relative;
@@ -192,48 +113,6 @@
 
 			#step5.wizard-step {
 				min-height:490px;
-			}
-
-			p {
-				margin: 10px 0;
-			}
-
-			textarea {
-				width:475px;
-				height:60px;
-			}
-
-			input[type=text],input[type=password] {
-				width:320px;
-			}
-
-			form {
-				fieldset {
-					.clearfix();
-				}
-			}
-
-			.name-group {
-				input {
-					width:475px;
-				}
-				input.first-name {
-					width:180px;
-					margin-right:6px;
-				}
-				input.last-name {
-					width:275px;
-				}
-				button {
-					display:block;
-				}
-			}
-
-			.form-status {
-				color: @green;
-				width:145px;
-				text-align:center;
-				margin-top:5px;
 			}
 
 			#invite-wizard-step5-form {

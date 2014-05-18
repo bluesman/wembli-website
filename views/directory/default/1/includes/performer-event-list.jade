@@ -1,21 +1,22 @@
 .event-list
 	each e,idx in performer.events
 		- var itemtype = 'http://schema.org/Event'
-		- var next = encodeURI('/tickets/'+e.ID+'/'+e.Name);
-		- console.log(e);
-		case e.ParentCategoryID
-			when '1'
+		//- var next = encodeURI('/tickets/'+e._source.id+'/'+e._source.title);
+		- var next = encodeURI('/search/events/'+performer.name);
+		case e._source.categories.category.name
+			when 'Sports'
 				- itemtype = 'http://schema.org/SportsEvent'
-			when '2'
+			when 'Concerts'
 				- itemtype = 'http://schema.org/MusicEvent'
-			when '3'
+			when 'Performing Arts'
 				- itemtype = 'http://schema.org/TheaterEvent'
 			default
 				- itemtype = 'http://schema.org/Event'
 		.event-list-item.clearfix(itemprop="event", itemscope, itemtype="#{itemtype}")
-			h2.name(itemprop="name")= e.Name
+			h2.name(itemprop="name")= e._source.title
 			//- would be cool to make breadcrumbs with the catergories. I'd need to be able to translate category id into category name
 			.info.pull-left
-				.date.hide(itemprop="startDate")= e.Date
-				.display-date()= e.DisplayDate
-			a.btn.btn-primary.pull-right(href="/start-plan/split-after?next=#{next}") See Tickets
+				.date.hide(itemprop="startDate")= e._source.start_time
+				.display-date()= e._source.start_time
+			//-a.btn.btn-primary.pull-right(href="/start-plan/split-after?next=#{next}") See Tickets
+			a.btn.btn-primary.pull-right(href="#{next}") See Tickets

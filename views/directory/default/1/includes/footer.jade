@@ -8,7 +8,7 @@ footer#footer
 						ul.row
 							each c in rootGeoEvents
 								li.col-md-4
-									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 			.col-md-4
 				if (rootGeoVenues)
 					.root-geo-venues
@@ -16,21 +16,13 @@ footer#footer
 						ul.row
 							each c in rootGeoVenues
 								li.col-md-4
-									a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
+									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 			.col-md-4
 				if (rootCategories)
 					.root-categories
 						h3 Find Tickets By Category
 						ul.row
-							//- hard coding the root categories (there's onlu 4)
-								each c in rootCategories
-									li
-										a(href="http://#{app.settings.host}.wembli.com#{c[1]}") #{c[0]}
-							li.col-md-6
-								a(href="http://#{app.settings.host}.wembli.com/sports") Sports Tickets
-							li.col-md-6
-								a(href="http://#{app.settings.host}.wembli.com/concerts") Concert Tickets
-							li.col-md-6
-								a(href="http://#{app.settings.host}.wembli.com/theater") Theater Tickets
-							li.col-md-6
-								a(href="http://#{app.settings.host}.wembli.com/other") Other Categoires
+							each c in rootCategories
+								li.col-md-6
+									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+

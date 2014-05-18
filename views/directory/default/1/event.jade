@@ -1,46 +1,54 @@
 extends layout
 block content
 	.container.event(itemscope, itemtype="http://schema.org/Event")
-		h1.name(itemprop="name") #{event}
-		.when
-			span When:&nbsp;
-			span.hide(itemprop="startDate") #{date}
-			span #{displayDate}
-		.row
-			.col-md-6.where
-				h2(itemprop="location", itemscope, itemtype="http://schema.org/EventVenue")
-					span Where:&nbsp;
-					a(itemprop="url", href="//#{app.settings.host}.wembli.com/venues/#{slugs.venue}") #{venue}
-				if (venuestreetaddress && venuestreetaddress !== "")
-					address.venue-address
-						span.address-street #{venuestreetaddress}
-						br
-						a.address-locality(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.state}/#{slugs.city}")= city + ', '
-						a.address-region(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.state}")= state+', '
-						a.address-country(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}")= country+ ' '
-						span.address-postal-code= zip
-			.col-md-6.who
-				if (pcat === 'SPORTS')
-					- var itemtype = "http://schema.org/SportsTeam"
-				else
-					- var itemtype = "http://schema.org/PerformingGroup"
-				h2(itemprop="performer")
-					span Who:&nbsp;
-					a(itemprop="url", itemscope, itemtype="#{itemtype}", href="//#{app.settings.host}.wembli.com/#{slugs.performer}") #{performer}
+		h1.name(itemprop="name") #{event.title}
 		.row.categories.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
 			ol.breadcrumb(itemprop="breadcrumb")
-				if (slugs.pcat && slugs.pcat !== '')
+				if (slugs.category && slugs.category !== '')
 					li
-						a(href="http://#{app.settings.host}.wembli.com#{slugs.pcat}") #{pcat}
-				if (slugs.ccat && slugs.ccat !== '')
+						a(href="http://#{app.settings.host}.wembli.com/#{slugs.category}") #{event.categories.category.name}
+				if (slugs.subcategory && slugs.subcategory !== '')
 					li
-						a(href="http://#{app.settings.host}.wembli.com#{slugs.ccat}") #{ccat}
-				if (slugs.gccat && slugs.gccat !== '')
-					li
-						a(href="http://#{app.settings.host}.wembli.com#{slugs.gccat}") #{gccat}
+						a(href="http://#{app.settings.host}.wembli.com/#{slugs.category}/#{slugs.subcategory}") #{event.subcategories.subcategory.short_name}
+		.row
+			.col-md-4.where
+				h2(itemprop="location", itemscope, itemtype="http://schema.org/EventVenue")
+					span Where:&nbsp;
+					a(itemprop="url", href="//#{app.settings.host}.wembli.com/venues/#{slugs.venue}") #{venue.name}
+				if (venue.address && venue.address !== "")
+					address.venue-address
+						span.address-street #{venue.address}
+						br
+						a.address-locality(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.region}/#{slugs.city}")= venue.city + ', '
+						a.address-region(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.region}")= venue.region+', '
+						a.address-country(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}")= venue.country+ ' '
+						span.address-postal-code= venue.postal_code
+			.col-md-4.when
+				h2(itemprop="startDate")
+					span When:&nbsp;
+					span #{event.start_time}
+			if (typeof performers !== "undefined")
+				.col-md-4.who
+					if (event.categories.category.name === 'Sports')
+						- var itemtype = "http://schema.org/SportsTeam"
+					else
+						- var itemtype = "http://schema.org/PerformingGroup"
+					h2(itemprop="performer")
+						span Who:&nbsp;
+						a(itemprop="url", itemscope, itemtype="#{itemtype}", href="//#{app.settings.host}.wembli.com/#{slugs.performer}") #{performers[0].name}
+		.row
+			if (typeof event.image !== "undefined" && typeof event.image.url !== "undefined")
+				.col-md-2
+					img(itemprop="image", src="#{event.image.url}")
+				.col-md-10
+					.description(itemprop="description") !{event.description}
+			else
+				.col-md-12
+					.description(itemprop="description") !{event.description}
+
 		.row
 			.panel.col.md-6.cta
-				a.btn.btn-primary.btn-lg Check Out The Tickets!
-				- var min = parseFloat(minprice).toFixed(0)
-				- var max = parseFloat(maxprice).toFixed(0)
-				.range Tickets priced from $#{min} to $#{max}.
+				a.btn.btn-primary.btn-lg(href="/search/events/#{event.title}") Check Out The Tickets!
+				//- var min = parseFloat(minprice).toFixed(0)
+				//- var max = parseFloat(maxprice).toFixed(0)
+				//- .range Tickets priced from $#{min} to $#{max}.

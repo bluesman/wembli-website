@@ -28,7 +28,7 @@
 	section.section2
 		.container
 			.tag-line
-				p THE LIVE EVENT SUPERSTORE
+				p HARD TO GET TICKETS AND SO MUCH MORE...
 			.search
 				form#index-search-form.form-search.clearfix(ng-submit="submitSearch()")
 					i.icon-search.icon-2x.pull-left(ng-hide="searchInProgress")
@@ -91,17 +91,17 @@
 							a.performer.white(target="_self", ng-href="/search/events/{{performer.Description}}") {{$index+1}}. {{performer.Description}}
 				- each c, i in concerts
 					li.performers
-						a.performer.white.show-ellipses(target="_self", start="0", title="#{c[0]}", characters="30", href="http://#{app.settings.host}.wembli.com#{c[1]}", ng-href="http://#{app.settings.host}.wembli.com#{c[1]}") #{i+1}) #{c[0]}
+						a.performer.white.show-ellipses(target="_self", start="0", title="#{c.name}", characters="30", href="http://#{app.settings.host}.wembli.com#{c.url}", ng-href="http://#{app.settings.host}.wembli.com#{c.url}") #{i+1}) #{c.name}
 			ul.middle.pull-left
 				h2 Sporting Events:
 				- each s, i in sports
 					li.performers
-						a.performer.white.show-ellipses(target="_self", start="0", title="#{s[0]}", characters="40", href="http://#{app.settings.host}.wembli.com#{s[1]}", ng-href="http://#{app.settings.host}.wembli.com#{s[1]}") #{i+1}) #{s[0]}
+						a.performer.white.show-ellipses(target="_self", start="0", title="#{s.name}", characters="40", href="http://#{app.settings.host}.wembli.com#{s.url}", ng-href="http://#{app.settings.host}.wembli.com#{s.url}") #{i+1}) #{s.name}
 			ul.right.pull-left
 				h2 Theater:
 				- each t, i in theater
 					li.performers
-						a.performer.white.show-ellipses(target="_self", start="0", title="#{t[0]}", characters="40", href="http://#{app.settings.host}.wembli.com#{t[1]}", ng-href="http://#{app.settings.host}.wembli.com#{t[1]}") #{i+1}) #{t[0]}
+						a.performer.white.show-ellipses(target="_self", start="0", title="#{t.name}", characters="40", href="http://#{app.settings.host}.wembli.com#{t.url}", ng-href="http://#{app.settings.host}.wembli.com#{t.url}") #{i+1}) #{t.name}
 	section.section6
 		.container.clearfix
 			.left.pull-left

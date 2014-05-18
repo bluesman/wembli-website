@@ -142,6 +142,7 @@ function handleRow(row) {
 				'events': 'eventid'
 			};
 			['venues', 'events'].forEach(function(type) {
+
 				var url = '/' + type;
 				var saveUrl = [];
 				var obj = {
@@ -149,10 +150,10 @@ function handleRow(row) {
 					id: row[lookupId[type]]
 				};
 
-
 				urls[type][url] = {
 					type: type
 				};
+
 				urls[type][url + '/' + slugs[lookup[type]]] = type === 'events' ? row : obj;
 				var geos = ['country', 'state', 'city'];
 				geos.forEach(function(sub) {

@@ -1,0 +1,240 @@
+#invitation {
+	@boxHeight:35px;
+
+	margin-bottom:20px;
+
+	.box {
+		margin:10px;
+		background-color: @blue;
+		color:@white;
+		border-radius:3px;
+		height:@boxHeight;
+		width:35px;
+		font-size:20px;
+		line-height: 36px;
+		vertical-align: middle;
+		text-align:center;
+	}
+
+	.box-small {
+		width: 20px;
+		height:20px;
+		font-size:14px;
+		line-height:20px;
+		margin:0 4px;
+	}
+
+	a.complete > .box-small, a.active > .box-small, a:hover > .box-small, .box:hover, .box.active, .box.complete {
+		background-color:@yellow;
+		color:@black;
+	}
+
+	#invitation-left {
+		white-space: nowrap;
+		font-size:14px;
+		text-align:left;
+		line-height:20px;
+		vertical-align: middle;
+
+		a.wizard-step-nav {
+			display:block;
+			padding:6px;
+			color:@black;
+			.data {
+				color:@blue;
+			}
+
+		}
+
+		a:hover {
+			color:@black;
+			.data {
+				color:@yellow;
+			}
+		}
+
+		#wizard-left-nav {
+			margin-top:160px;
+			padding:20px;
+			.box-shadow(2px 2px 5px rgba(0, 0, 0, 0.5));
+		}
+
+		.wembli-friends {
+			background: transparent url('/images/tickets-preview-wembliman.png') no-repeat center center;
+			height:80px;
+			width:150px;
+			margin:40px auto;
+		}
+
+	}
+
+	#invitation-right {
+		/* Extra small devices (phones, less than 768px) */
+		/* No media query since this is the default in Bootstrap */
+		h1 {
+			color:@white;
+		  font-size: 1.3em;
+		  margin:10px 0;
+		}
+		h2 {
+			color:@grayDarker;
+		  font-size: 1.2em;
+			margin:5px 0;
+		}
+		h3 {
+		  font-size: 20px;
+		}
+
+		/* Small devices (tablets, 768px and up) */
+		@media (min-width: @screen-sm-min) {
+		  h1 {
+		    font-size: 1.4em;
+		  }
+		  h2 {
+		    font-size: 1.3em;
+		  }
+		  h3 {
+		    font-size: 22px;
+		  }
+		}
+
+		/* Medium devices (desktops, 992px and up) */
+		@media (min-width: @screen-md-min) {
+		  h1 {
+		    font-size: 1.3em;
+		  }
+		  h2 {
+		    font-size: 1.2em;
+		  }
+		  h3 {
+		    font-size: 22px;
+		  }
+		}
+
+		/* Large devices (large desktops, 1200px and up) */
+		@media (min-width: @screen-lg-min) {
+		  h1 {
+		    font-size: 1.4em;
+		  }
+		  h2 {
+		    font-size: 1.3em;
+		  }
+		  h3 {
+		    font-size: 24px;
+		  }
+		}
+
+		.header {
+			padding:10px;
+			background-color:@blue;
+		}
+
+		#wizard-progress {
+			.progress-header {
+				margin:10px 0;
+				line-height: @boxHeight;
+				font-size:18px;
+			}
+		}
+
+		/* begin css for steps */
+		p {	margin: 10px 0;	}
+
+		textarea {
+			/* width:475px; */
+			height:60px;
+		}
+
+		input[type=text],input[type=password] {
+			/* width:320px; */
+		}
+
+		form {
+			fieldset {
+				.clearfix();
+			}
+		}
+
+		.name-group {
+			input {
+				/* width:475px; */
+			}
+			input.first-name {
+				/* width:180px; */
+				/* margin-right:6px; */
+			}
+			input.last-name {
+				/* width:275px; */
+			}
+			button {
+				display:block;
+			}
+		}
+
+		.form-status {
+			color: @green;
+			width:145px;
+			text-align:center;
+			margin-top:5px;
+		}
+
+
+		#step1 {
+			#invite-wizard-signup-view {
+				.already-logged-in {
+					span {
+						line-height:20px;
+						vertical-align: middle;
+					}
+				}
+			}
+
+			.invite-wizard-step1-form {
+				.switch-login, .or, .facebook-login {
+					width:100%;
+					text-align:left;
+					margin-top:15px;
+				}
+
+			}
+
+
+		}
+
+		#step2 {
+
+		}
+
+		#step3 {
+
+		}
+
+		#step4 {
+
+		}
+
+		#step5 {
+
+		}
+
+		.form-controls {
+			.skip-step-container {
+				text-align:center;
+				line-height:35px;
+				vertical-align: middle;
+			}
+		}
+
+		.form-controls-off {
+			position:absolute;
+			bottom:0px;
+			right:0px;
+			width:100%;
+			text-align: right;
+			border-top:thin solid @grayLight;
+			background-color:@white;
+
+
+		}
+	}
+}

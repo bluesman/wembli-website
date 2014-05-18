@@ -1,17 +1,21 @@
 extends layout
 block content
-	- console.log(performer.PeformerName)
+	- console.log(performer.name)
 	.container.event-venue(itemscope, itemtype="http://schema.org/PerformingGroup")
-		h1.name(itemprop="name") #{performer.PerformerName}
+		h1.name(itemprop="name") #{performer.name}
 		.row.categories.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
 			ol.breadcrumb(itemprop="breadcrumb")
-				if (performer.ParentCategory && performer.ParentCategory !== '-')
+				if (categories[0])
 					li
-						a(href="http://#{app.settings.host}.wembli.com/#{slugs.pcat}") #{performer.ParentCategory}
-				if (performer.ChildCategory && performer.ChildCategory !== '-')
+						a(href="http://#{app.settings.host}.wembli.com/#{slugs.category}") #{categories[0].category.name}
+				if (categories[0] && categories[0].subcategory)
 					li
-						a(href="http://#{app.settings.host}.wembli.com/#{slugs.pcat}/#{slugs.ccat}") #{performer.ChildCategory}
-				if (performer.GrandChildCategory && performer.GrandChildCategory !== '-')
-					li
-						a(href="http://#{app.settings.host}.wembli.com/#{slugs.pcat}/#{slugs.ccat}/#{slugs.gcat}") #{performer.GrandChildCategory}
+						a(href="http://#{app.settings.host}.wembli.com/#{slugs.category}/#{slugs.subcategory}") #{categories[0].subcategory.short_name}
+		.row
+			.col-md-12
+				.short-bio!= performer.short_bio
+		.row
+			.col-md-12
+				.long-bio!= performer.long_bio
+
 		include includes/performer-event-list
