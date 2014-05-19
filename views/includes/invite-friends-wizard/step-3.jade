@@ -1,34 +1,42 @@
 .social-loader(ng-hide="facebook.loginStatusLoaded") Loading...
 form#invite-wizard-step3-form(name="step3",ng-cloak,ng-show="facebook.loginStatusLoaded", novalidate)
 	fieldset
-		h2 Select Facebook Friends To Invite
-		p Post a message on your friends' wall to let them know they're invited. You can post a message on the wall of each facebook friend you invite and it will include a link to your Wembli plan so they can RSVP.
-		#facebook-need-login(ng-hide="facebook.service.getAuth()")
-			p Connect with Facebook to view your friends.
-			button#facebook-login.btn.btn-primary(ng-click="facebook.service.login()")
-				i.icon-facebook.pull-left
-				span &nbsp;Connect With Facebook
-		#facebook-friends-list.friends-list-container(ng-show="facebook.service.getAuth()")
-			.control-group
-				.input-append
-					input.friend-filter(type="text",placeholder="Enter friend name to filter",ng-model="facebook.friendFilterKey"))
-					span.add-on
-						i.icon-search
-			.error-text(ng-show="noResults") No matching friends were found...
-			.spinner(ng-hide="facebook.friends")
-				i.icon-spinner.icon-spin.icon-2x(ng-hide="facebook.friends")
-			.friends-list(ng-show="facebook.friends")
-				label.friend.pull-left.clearfix(ng-click="addFacebookFriend(f, $event)",ng-repeat="f in facebook.friends | filter:facebook.friendFilterKey")
-					.friend-controls.pull-left
-						input(id="{{f.contactInfo.serviceId}}",type="checkbox",ng-model="f.checked")
-					.friend-img.pull-left
-						img.picture(ng-src="https://graph.facebook.com/{{f.id}}/picture?height=30&width=30")
-					.friend-name.pull-left
-						span.name {{f.name}}
-					.friend-status.pull-right(ng-show="f.checked && rsvpUndecided(f)")
-						span.label.label-info undecided&nbsp;
-					.friend-status.pull-right(ng-show="f.checked && rsvpAccepted(f)")
-						span.label.label-success accepted&nbsp;
-					.friend-status.pull-right(ng-show="rsvpDeclined(f)")
-						span.label.label-important declined&nbsp;
+		.row
+			.col-xs-12
+				h3 Select Facebook Friends To Invite
+		.row
+			.col-xs-12
+				p Post a message on your friends' wall to let them know they're invited. You can post a message on the wall of each facebook friend you invite and it will include a link to your Wembli plan so they can RSVP.
+		.row
+			.col-xs-12
+				#facebook-need-login(ng-hide="facebook.service.getAuth()")
+					p Connect with Facebook to view your friends.
+					button#facebook-login.btn.btn-primary(ng-click="facebook.service.login()")
+						i.fa.fa-facebook
+							span &nbsp;Connect With Facebook
+		.row
+			.col-xs-12
+				#facebook-friends-list.friends-list-container(ng-show="facebook.service.getAuth()")
+					.form-group
+						.input-group
+							input.friend-filter.form-control(type="text",placeholder="Enter friend name to filter",ng-model="facebook.friendFilterKey"))
+							span.input-group-addon
+								i.fa.fa-search
+					.error-text(ng-show="noResults") No matching friends were found...
+					.spinner(ng-hide="facebook.friends")
+						i.fa.fa-cog.fa-spin.fa-2x(ng-hide="facebook.friends")
+					.friends-list.row(ng-show="facebook.friends")
+						label.friend.col-sm-4.col-xs-12.clearfix(ng-click="addFacebookFriend(f, $event)",ng-repeat="f in facebook.friends | filter:facebook.friendFilterKey")
+							.friend-controls.pull-left
+								input(id="{{f.contactInfo.serviceId}}",type="checkbox",ng-model="f.checked")
+							.friend-img.pull-left
+								img.picture(ng-src="https://graph.facebook.com/{{f.id}}/picture?height=30&width=30")
+							.friend-name.pull-left
+								span.name {{f.name}}
+							.friend-status.pull-right(ng-show="f.checked && rsvpUndecided(f)")
+								span.label.label-info undecided&nbsp;
+							.friend-status.pull-right(ng-show="f.checked && rsvpAccepted(f)")
+								span.label.label-success accepted&nbsp;
+							.friend-status.pull-right(ng-show="rsvpDeclined(f)")
+								span.label.label-important declined&nbsp;
 

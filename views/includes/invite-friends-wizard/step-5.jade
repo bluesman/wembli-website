@@ -1,35 +1,56 @@
 form#invite-wizard-step5-form(name="wemblimailForm")
 	fieldset()
-		h2 Go old skool and send an eMail
-		.alert.alert-block.fade.in.clearfix(ng-show="error")
-			i.icon-info-sign.icon-2x
-			.error-text(ng-show="formError") All fields are required.
-		.alert.alert-block.fade.in.clearfix(ng-show="isOrganizer")
-			i.icon-info-sign.icon-2x
-			.error-text You don't have to invite yourself :)
-		.alert.alert-info.alert-block.fade.in.clearfix(ng-show="successConfirmed")
-			i.icon-info-sign.icon-2x
-			.error-text Invitation email successfully sent to {{wemblimail.lastSentEmail}}!
-		.alert.alert-info.alert-block.fade.in.clearfix(ng-show="successUnconfirmed")
-			i.icon-info-sign.icon-2x
-			.error-text Invitation email to {{wemblimail.lastSentEmail}} will be sent as soon as you confirm your email address (hint: check your email!).
-		p Email friends to let them know they're invited.  Supply a name, email address and a note and we'll send out an email for you.
-		.name-group.control-group.pull-left
-			input#step5-name.name(ng-model="wemblimail.name", placeholder="GUEST'S FULL NAME",type="text",name="name",required)
-			input#step5-email(ng-model="wemblimail.email",placeholder="GUEST'S EMAIL ADDRESS",type="email",name="email",required)
-			textarea#step5-message-text(placeholder="Include a personalized message...",ng-model="wemblimail.messageText", name="step5_message_text", required)
-			button.btn.btn-primary(ng-click="sendWemblimail()") Send Email Now
-		#step5-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
-			.friends-list(ng-show="wemblimail.friends[0]")
-				.friend.pull-left(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends")
-					.friend-img.pull-left
-						i.friend-no-img.icon-user
-					.friend-name.pull-left
-						.name {{friend.contactInfo.name}}
-					.friend-status.pull-right(ng-show="friend.checked && rsvpUndecided(friend)")
-						span.label.label-info undecided
-					.friend-status.pull-right(ng-show="friend.checked && rsvpAccepted(friend)")
-						span.label.label-success accepted
-					.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
-						span.label.label-important declined
+		.row
+			.col-xs-12
+				h3 Go old skool and send an eMail
+		.row
+			.col-xs-12
+				.alert.alert-block.fade.in.clearfix(ng-show="error")
+					i.fa.fa-info-circle
+					.error-text(ng-show="formError") All fields are required.
+		.row
+			.col-xs-12
+				.alert.alert-block.fade.in.clearfix(ng-show="isOrganizer")
+					i.fa.fa-info-circle
+					.error-text You don't have to invite yourself :)
+		.row
+			.col-xs-12
+				.alert.alert-info.alert-block.fade.in.clearfix(ng-show="successConfirmed")
+					i.fa.fa-info-circle
+					.error-text Invitation email successfully sent to {{wemblimail.lastSentEmail}}!
+				.row
+			.col-xs-12
+				.alert.alert-info.alert-block.fade.in.clearfix(ng-show="successUnconfirmed")
+					i.fa.fa-info-circle
+					.error-text Invitation email to {{wemblimail.lastSentEmail}} will be sent as soon as you confirm your email address (hint: check your email!).
+		.row
+			.col-xs-12
+				p Email friends to let them know they're invited.  Supply a name, email address and a note and we'll send out an email for you.
+		.row
+			.col-xs-12
+				.name-group.form-group
+					input#step5-name.name.form-control(ng-model="wemblimail.name", placeholder="GUEST'S FULL NAME",type="text",name="name",required)
+				.email-group.form-group
+					input#step5-email.form-control(ng-model="wemblimail.email",placeholder="GUEST'S EMAIL ADDRESS",type="email",name="email",required)
+				.message-group.form-group
+					textarea#step5-message-text.form-control(placeholder="Include a personalized message...",ng-model="wemblimail.messageText", name="step5_message_text", required)
+				.button-group.form-group
+					button.btn.btn-success(ng-click="sendWemblimail()") Send Email Now
+		.row
+			.col-xs-12
+				#step5-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
+					.friends-list.row(ng-show="wemblimail.friends[0]")
+						.col-xs-12
+							.friend.row(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends")
+								.col-xs-8
+									.friend-name
+										.name
+											i.friend-no-img.fa.fa-user &nbsp;{{friend.contactInfo.name}}
+								.col-xs-4
+									.friend-status(ng-show="friend.checked && rsvpUndecided(friend)")
+										span.label.label-info undecided
+									.friend-status(ng-show="friend.checked && rsvpAccepted(friend)")
+										span.label.label-success accepted
+									.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
+										span.label.label-important declined
 

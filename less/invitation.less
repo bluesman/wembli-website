@@ -179,6 +179,83 @@
 		}
 
 
+		.friends-list-container {
+			.spinner {
+				height:30px;
+				width:30px;
+				margin:50px auto;
+			}
+
+			.friends-list {
+				margin-left:2px;
+				overflow-y:auto;
+				height:352px;
+
+				.friend:hover {
+					background-color:lighten(@blueLight,30%);
+				}
+
+				.friend {
+					padding:6px 0;
+					display:block;
+
+					.friend-controls {
+						text-align:center;
+						padding:5px 0px;
+
+					}
+
+					.friend-img {
+						width:100%;
+						text-align:center;
+
+						i.fa-user {
+							font-size:29px;
+							margin:0;
+						}
+						.picture {
+
+						}
+					}
+
+					.friend-name {
+						width:100%;
+
+						.name {
+							padding:4px 10px;
+							font-size:14px;
+							height:24px;
+							line-height:24px;
+							vertical-align:middle;
+						}
+					}
+					.friend-status {
+						padding:5px 10px 5px 5px;
+						width:100%;
+						text-align:right;
+
+						.fa-question {
+							color:@blue;
+						}
+						.icon--circle {
+							color:@green;
+						}
+						.icon-remove-circle {
+							color:@orange;
+						}
+					}
+				}
+			}
+		}
+		#twitter-friends-list {
+			.friends-list {
+				height:334px;
+				.friend {
+					width:100%;
+				}
+			}
+		}
+
 		#step1 {
 			#invite-wizard-signup-view {
 				.already-logged-in {
@@ -203,14 +280,59 @@
 
 		#step2 {
 
+			#invite-wizard-rsvp-form {
+				.datepicker-container {
+					position:relative;
+					margin:20px auto;
+					width:260px;
+					padding:10px;
+					background-color:@yellow;
+				}
+				.pika-single {
+					margin:auto;
+				}
+			}
+
 		}
 
 		#step3 {
+			margin-bottom:10px;
+			#facebook-need-login {
+				padding:10px 0;
+			}
+
+			.friends-list-container {
+				.friends-list {
+					.friend {
+						.friend-controls {
+							padding:5px 10px;
+						}
+
+						.friend-img {
+							width:45px;
+
+							.picture {
+								margin:auto;
+							}
+						}
+
+						.friend-name {
+							width:135px;
+						}
+						.friend-status {
+
+						}
+					}
+				}
+			}
+
 
 		}
 
 		#step4 {
-
+			#twitter-need-login {
+				padding:10px 0;
+			}
 		}
 
 		#step5 {
