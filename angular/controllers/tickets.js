@@ -65,7 +65,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
         $scope.ticketSort = 1;
       }
       $scope.tickets.sort(function(a, b) {
-        if (scope.ticketSort) {
+        if ($scope.ticketSort) {
           return a.ActualPrice - b.ActualPrice;
         } else {
           return b.ActualPrice - a.ActualPrice;
@@ -226,7 +226,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 				$scope.backToPlan = true;
 			}
 
-
       //get the tix and make the ticket list
       wembliRpc.fetch('event.getTickets', {
           eventID: p.event.eventId
@@ -257,6 +256,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             if (/parking/gi.test(el.Section)) {
               return;
             }
+            /* console.log(el); */
             if (parseInt(el.ActualPrice) < $scope.minTixPrice) {
               $scope.minTixPrice = parseInt(el.ActualPrice);
             }
@@ -300,6 +300,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             newT.push(el);
           });
           $scope.tickets = newT;
+          $scope.sortByPrice();
 
           var initSlider = function() {
             /*Set Minimum and Maximum Price from your Dataset*/
@@ -339,7 +340,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 					/* init the tuMap */
 					var options = {};
 		      options.MapId = $scope.plan.event.data.VenueConfigurationID;
-		      options.ControlsPosition = "Inside";
 		      options.SingleSectionSelection = true;
 
 		      /* don't need this if I have a mapId
@@ -351,6 +351,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 					*/
 
 			    options.OnInit = function(e, data) {
+            $('#venue-map-loading').hide();
 			    	console.log('maptype: ');
 			      console.log(data.MapType);
 			      //$(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
@@ -359,20 +360,13 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 			        if (/ga_venue_tn/.test($scope.plan.event.data.MapUrl)) {
 			          //initStaticMap();
 			        } else {
-			          $(".ZoomIn").html('+');
-			          $(".ZoomOut").html('-');
+                /* move the controls to the column to the left */
+                //$(".ZoomControls").appendTo("#venue-map-col");
+                //$(".ZoomControls + div").appendTo("#venue-map-col");
 			        }
 			      } else {
 			        //initStaticMap();
 			      }
-
-			      /* make the map fit better in the screen */
-			      var zl = $('#venue-map-container').tuMap("ConvertZoom");
-			      /* hack: if zoom level > 3 knock it down by 50% */
-			      if (zl > 3) {
-			      	zl = parseInt(zl/2);
-			      }
-		      	$('#venue-map-container').tuMap("SetOptions", {"ZoomLevel":zl});
 			    };
 
 			    options.OnError = function(e, Error) {
@@ -417,12 +411,51 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 			      //Write Code Here
 			    };
 
-          //set the height of the containers to the window height 60 is the header - only if not mobile
-          if ($($window).width() > 992) {
-	          $('.addons-content-container').css("height", $($window).height() - 60);
-	          $('.addons-list-container').css("height", $($window).height() - 60);
-	        }
+          $('#tickets-list > div').css("height", $($window).height() - 172);
 					tuMap.init('#venue-map-container', options);
+
+          if ($('.price-slider').length) {
+            $('.price-slider').slider({
+              range: true,
+              min: $scope.minTixPrice,
+              max: $scope.maxTixPrice,
+              step: 5,
+              values: [$scope.minTixPrice, $scope.maxTixPrice],
+              slide: function(event, ui) {
+                $(".amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+              },
+              stop: function(event, ui) {
+                var q = $(this).val();
+                filterTickets({
+                  quantity: q
+                });
+              }
+
+            });
+
+            var amtVal = "$" + $(".price-slider").slider("values", 0) + " - $" + $(".price-slider").slider("values", 1);
+            $(".amount").val(amtVal);
+          }
+
+          if ($(".quantity-filter").length) {
+            /* filter tix when the drop down changes */
+            $(".quantity-filter").change(function() {
+              var q = $(this).val();
+              filterTickets({
+                quantity: q
+              });
+            });
+
+            /* default value for quantity-filter? */
+            var s = $location.search();
+            if (s.qty) {
+              $(".quantity-filter").val(s.qty);
+              filterTickets({
+                quantity: s.qty
+              });
+            }
+          }
+
 				});
 		});
 	}
@@ -665,7 +698,6 @@ controller('VenueMapCtrl', ['$rootScope', '$scope', 'interactiveMapDefaults', 'p
 			});
 
 		};
-
 
 		$scope.determineTixAvailable = function(tix) {
 			if (typeof tix[0] === "undefined") {

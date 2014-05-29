@@ -9,7 +9,7 @@ factory('interactiveMapDefaults', [
 			ZoomLevel: 1,
 			ColorScheme: 1,
 			//AutoSwitchToStatic: true,
-			ControlsPosition: "Outside",
+			ControlsPosition: "Inside",
 			FailOverMapUrl: "http://data.ticketutils.com/Charts/No-Seating-Chart.jpg",
 			GroupsContainer: "#groups-container",
 			RowSelector: ".ticket-row",

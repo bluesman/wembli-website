@@ -185,6 +185,7 @@ directive('ticketsPopover', ['plan', 'wembliRpc', '$compile',
   }
 ]).
 
+/* this has been replaced by code in the tickets controller */
 directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interactiveMapDefaults', 'wembliRpc', '$window', '$templateCache', 'plan', '$location', 'loadingModal',
   function($timeout, $rootScope, $compile, interactiveMapDefaults, wembliRpc, $window, $templateCache, plan, $location, loadingModal) {
     return {
@@ -222,7 +223,7 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
 
           scope.$watch('tickets', function(newVal, oldVal) {
             if (newVal !== oldVal) {
-              console.log('refresh reset map');
+
               $('#venue-map-container').tuMap("Refresh", "ProcessTickets");
             }
           });
@@ -525,19 +526,20 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 options.EventId = scope.event.ID;
                 options.OnInit = function(e, MapType) {
                   console.log(MapType);
-                  $(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
+                  console.log('move zoom controls');
+                  //$(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
                   if (MapType == 'Interactive') {
                     /* check if the ticket utils url is general admission */
                     if (/ga_venue_tn/.test(scope.event.MapUrl)) {
                       initStaticMap();
                     } else {
-                      $(".ZoomIn").html('+');
-                      $(".ZoomOut").html('-');
+                      console.log('moving zoom controls');
+                      $(".ZoomControls").appendTo("#venue-map");
                     }
                   } else {
                     initStaticMap();
                   }
-                  loadingModal.hide()
+                  //loadingModal.hide()
                 };
 
                 options.OnError = function(e, Error) {
@@ -584,8 +586,8 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 };
 
                 //set the height of the map-container to the window height 174 is the header + the footer
-                $('#venue-map-container').css("height", $($window).height() - 172);
-                $('#tickets').css("height", $($window).height() - 172);
+                //$('#venue-map-container').css("height", $($window).height() - 172);
+                //$('#tickets').css("height", $($window).height() - 172);
                 //width of the venue map container
                 $('#venue-map-container').tuMap(options);
 
