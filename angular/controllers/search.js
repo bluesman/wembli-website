@@ -12,13 +12,15 @@ controller('EventListCtrl', ['$scope', '$location', 'wembliRpc', '$filter', '$ro
 ]).
 
 
-controller('SearchCtrl', ['$scope', '$rootScope', '$window', 'wembliRpc', 'googleAnalytics',
-	function($scope, $rootScope, $window, wembliRpc, googleAnalytics) {
+controller('SearchCtrl', ['$scope', '$rootScope', '$window', 'wembliRpc', 'googleAnalytics', 'overlay',
+	function($scope, $rootScope, $window, wembliRpc, googleAnalytics, overlay) {
 		$rootScope.$broadcast('search-page-loaded', {});
 
 		$scope.submitInProgress = false;
 
 		$scope.searchInProgress = false;
+
+		$scope.showPaymentType = false;
 
 		$scope.$on('search-page-loaded', function() {
 			$scope.searchInProgress = false;
@@ -30,12 +32,36 @@ controller('SearchCtrl', ['$scope', '$rootScope', '$window', 'wembliRpc', 'googl
 		}
 
 		$scope.openPaymentModal = function(eventData) {
-			console.log(eventData);
 			$scope.eventData = eventData;
-			$('#payment-type-modal').modal('show');
+			$scope.showPaymentType = true;
+			overlay.show();
+			console.log($scope.showPaymentType);
+		}
+		$scope.closePaymentModal = function() {
+			$scope.showPaymentType = false;
+			overlay.hide();
 		}
 
+		$rootScope.$on('overlay-clicked', function() {
+			console.log('overlay clicked');
+			$rootScope.$apply(function() {
+				$scope.closePaymentModal();
+			});
+		});
+
+		$scope.splitAfter = function() {
+			$scope.paymentType = 'split-after';
+			$scope.startPlan();
+		};
+
+		$scope.splitFirst = function() {
+			$scope.paymentType = 'split-first';
+			$scope.startPlan();
+		};
+
 		$scope.startPlan = function() {
+			$scope.showPaymentType = false;
+			overlay.loading(true);
 			console.log('clicked startPlan');
 			console.log($scope.eventData);
 			$scope.submitInProgress = true;
@@ -56,7 +82,7 @@ controller('SearchCtrl', ['$scope', '$rootScope', '$window', 'wembliRpc', 'googl
 				console.log(result);
 				if (!result.success) {
 					$('#no-event-modal').modal('show');
-					$('#payment-type-modal').modal('hide');
+					$scope.closePaymentModal();
 					return;
 				}
 

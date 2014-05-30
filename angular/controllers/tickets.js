@@ -1,45 +1,43 @@
 /* Controllers */
 angular.module('wembliApp.controllers.tickets', []).
 
-controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPurchaseUrls', 'tuMap', '$location', '$window', '$timeout',
-	function($scope, wembliRpc, plan, customer, ticketPurchaseUrls, tuMap, $location, $window, $timeout) {
-		$scope.tnUrl = ticketPurchaseUrls.tn;
-		console.log('running tix ctrl');
+controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPurchaseUrls', 'tnConfig', 'tuMap', '$location', '$window', '$timeout',
+	function($scope, wembliRpc, plan, customer, ticketPurchaseUrls, tnConfig, tuMap, $location, $window, $timeout) {
 
+    /*
+     * scope variables for the template
+     *
+    */
 
-    var generateTnSessionId = function() {
-      var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-      var sid_length = 5;
-      var sid = '';
-      for (var i = 0; i < sid_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        sid += chars.substring(rnum, rnum + 1);
-      }
-      return sid;
-    };
+    /* where to send them if they click buy */
+    $scope.tnUrl = ticketPurchaseUrls.tn;
 
-    $scope.predicate = 'ActualPrice';
-    $scope.reverse = false;
-    $scope.showTicketsPopover = false;
+    /* list of all possible ticket split combinations for the qty filter */
+    $scope.distinctSplits = [1];
 
-    $scope.$watch('tickets', function(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        //console.log('refresh reset map');
-        //$('#venue-map-container').tuMap("Refresh", "ProcessTickets");
-      }
-    });
+    /* display toggle for whether tickets are found */
+    $scope.notFound = false;
 
+    /* min and max ticket price for slider */
+    $scope.minTixPrice = 0;
+    $scope.maxTixPrice = 200;
+
+    /*
+     * scope functions
+     *
+     */
+    /* replaced by price slider filter
+        TODO: set price range when slider updates
+    */
     $scope.handlePriceRange = function() {
       /* post the updated preferences to the server */
       wembliRpc.fetch('plan.setTicketsPriceRange', {
           "low": $scope.priceRange.low,
           "med": $scope.priceRange.med,
           "high": $scope.priceRange.high,
-        },
+        }, function(err, res) {
 
-        function(err, res) {
-
-        });
+      });
 
 
       /* hide the tix they don't want to see */
@@ -126,89 +124,19 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
       $scope.qtySort = ($scope.qtySort) ? 0 : 1;
     }
 
-    $scope.$watch('showTicketsPopover', function(newVal) {
-      if (typeof newVal !== "undefined") {
-        if (newVal) {
-          angular.element('#static-popover-content').show();
-        } else {
-          angular.element('#static-popover-content').hide();
-        }
+    $scope.showLoginModal = function() {
+      $('#tickets-login-modal').modal('show');
+    }
+
+    /*
+     * watch functions
+     *
+     */
+    $scope.$watch('tickets', function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        $('#venue-map-container').tuMap("Refresh", "ProcessTickets");
       }
     });
-
-    function initStaticMap() {
-      if (!scope.event.MapURL) {
-        $scope.event.MapURL = "/images/no-seating-chart.jpg";
-      }
-      /* TODO: check if this is split first */
-
-      var img = new Image();
-      img.src = $scope.event.MapURL;
-      img.onload = function() {
-
-        var w = img.width;
-        var h = img.height;
-        $('#venue-map-container').css("width", $($window).width() - 680);
-        $('#venue-map-container').css("position","relative");
-        $('#venue-map-container').empty().css('overflow-y', 'auto').css('float','right').prepend('<div id="static-map-image" style="overflow-y:auto;background:transparent url(\''+scope.event.MapURL+'\') no-repeat center center;margin:auto;padding:20px;height:'+h+'px;width:'+w+'px;" />');
-        var h2 = $('#venue-map-container').height() - 220;
-        $('.ticket-list-container').height(h2);
-        $('#static-map-image').mouseenter(function() {
-          console.log('enter mouse');
-          $scope.$apply(function(){
-            $scope.showTicketsPopover = true;
-          });
-        });
-        $('#static-map-image').mouseleave(function() {
-          console.log('enter mouse');
-          $scope.$apply(function(){
-            $scope.showTicketsPopover = false;
-          });
-        });
-
-
-        var originalPlacement = $.fn.popover.Constructor.prototype.applyPlacement;
-        $.fn.popover.Constructor.prototype.applyPlacement = function(offset, placement) {
-          offset.top = 200;
-          var $tip = this.tip(),
-            width = $tip[0].offsetWidth,
-            height = $tip[0].offsetHeight,
-            actualWidth, actualHeight, delta, replace
-
-            $tip
-              .offset(offset)
-              .addClass(placement)
-              .addClass('in')
-
-            actualWidth = $tip[0].offsetWidth
-            actualHeight = $tip[0].offsetHeight
-
-          if (placement == 'top' && actualHeight != height) {
-            offset.top = offset.top + height - actualHeight
-            replace = true
-          }
-
-          if (placement == 'bottom' || placement == 'top') {
-            delta = 0
-
-            if (offset.left < 0) {
-              delta = offset.left * -2
-              offset.left = 0
-              $tip.offset(offset)
-              actualWidth = $tip[0].offsetWidth
-              actualHeight = $tip[0].offsetHeight
-            }
-
-            this.replaceArrow(delta - width + actualWidth, actualWidth, 'left')
-          } else {
-            this.replaceArrow(actualHeight - height, actualHeight, 'top')
-          }
-
-          if (replace) $tip.offset(offset)
-          $('.ticket-list-container').height(h);
-        };
-      };
-    };
 
 
 		plan.get(function(p) {
@@ -218,6 +146,8 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 			/* todo find out if this person is a friend invited to the plan */
 			$scope.context = plan.getContext() || 'visitor';
 
+      /* show a link to go back to the plan if that's where they came from
+        TODO: don't use friends count to know if they came from the plan */
 			$scope.backToPlan = true;
 			if (plan.getFriends().length == 0) {
 				$scope.backToPlan = false;
@@ -226,80 +156,79 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 				$scope.backToPlan = true;
 			}
 
-      //get the tix and make the ticket list
-      wembliRpc.fetch('event.getTickets', {
-          eventID: p.event.eventId
-        }, function(err, result) {
-          console.log('fetched tix');
+      /* get the tix and make the ticket list */
+      wembliRpc.fetch('event.getTickets', {eventID: p.event.eventId}, function(err, result) {
+
           if (err) {
-            //handle err
             alert('error happened - contact help@wembli.com');
             return;
           }
 
           if (typeof result.tickets[0] === "undefined") {
-            //$('#no-tickets').modal("show");
-            $scope.noTickets = true;
+            //$scope.noTickets = true;
             $scope.notFound = true;
-            //return;
           }
 
-          $scope.event = result.event;
-          $scope.tickets = result.tickets;
-          /* get min and max tix price for this set of tix */
-          $scope.minTixPrice = 0;
-          $scope.maxTixPrice = 200;
-          var newT = [];
-          /* loop through tickets */
-          angular.forEach($scope.tickets, function(el) {
+          var filteredTicketsList = [];
+
+          /* loop through all tickets */
+          angular.forEach(result.tickets, function(el) {
             /* filter out parking for now and TODO: add to parking page */
             if (/parking/gi.test(el.Section)) {
               return;
             }
             /* console.log(el); */
+
+            /* session id for the ticketNetwork purchase link */
+            el.sessionId = tnConfig.generateSessionId();
+
+
+
+            /* determine the lower bound for the tickets price */
             if (parseInt(el.ActualPrice) < $scope.minTixPrice) {
               $scope.minTixPrice = parseInt(el.ActualPrice);
             }
+            /* determine the upper bound for the tix price */
             if (parseInt(el.ActualPrice) > $scope.maxTixPrice) {
               $scope.maxTixPrice = parseInt(el.ActualPrice);
             }
 
+
+
+            /* initialize selectedQty */
             el.selectedQty = el.ValidSplits.int[0];
-            /* how high to count in the qty filter */
-            $scope.maxSplit = 1;
+            /* configure the qty dropdown for the tickets list */
             el.maxSplit = 1;
-            /* better idea would be to sort desc and take the 1st one */
-            angular.forEach(el.ValidSplits.int, function(split) {
-              if (split > $scope.maxSplit) {
-                $scope.maxSplit = split;
-              }
 
-              if (split > el.maxSplit) {
-                el.maxSplit = split;
-              }
+            /* if there's only 1 then its not an array - thanks tn */
+            if (typeof el.ValidSplits.int === 'string') {
+              el.ValidSplits.int = [el.ValidSplits.int]
+            }
 
-              if ($location.search().qty) {
-                if ($location.search().qty == split) {
-                  el.selectedQty = $location.search().qty;
-                }
-              }
+            /* sort the splits ascending */
+            el.ValidSplits.int.sort(function(a, b){return a-b});
+            el.maxSplit = el.ValidSplits.int[el.ValidSplits.int.length-1];
+            /* update the global max split if necessary */
+            if (el.maxSplit > $scope.maxSplit) {
+              $scope.maxSplit = el.maxSplit;
+            }
+            /* if the passed in qty is one of the valid splits, set it to the selectedQty of the dropdown */
+            if ($location.search().qty && (el.ValidSplits.int.indexOf($location.search().qty))) {
+              el.selectedQty = $location.search().qty;
+            }
 
-            });
 
-
+            /* check for tickets already chosen */
             el.ticketsInPlan = false;
-            el.sessionId = generateTnSessionId();
-
-            var t = plan.getTickets();
-            for (var i = 0; i < t.length; i++) {
-              if (t[i].ticketGroup.ID == el.ID) {
-                el.ticketsInPlan = true;
-                el._id = t[i]._id;
-              } else {}
-            };
-            newT.push(el);
+            angular.forEach(plan.getTickets(), function(ticketInPlan) {
+              el.ticketsInPlan = true;
+              el._id = ticketInPlan._id;
+            });
+            filteredTicketsList.push(el);
           });
-          $scope.tickets = newT;
+
+          $scope.tickets = filteredTicketsList;
+          /* default to sort by price asc */
           $scope.sortByPrice();
 
           var initSlider = function() {
@@ -321,20 +250,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
                 eTicket: $("#e-ticket-filter").is(":checked")
               }
             }).tuMap("Refresh");
-
-            /* this is supposed to update selected Qty when the filter changes but its not working */
-            /*
-	          angular.forEach(scope.tickets, function(el) {
-	            el.selectedQty = el.ValidSplits.int[0];
-	            angular.forEach(el.ValidSplits.int, function(split) {
-	              if (args.quantity) {
-	                if (args.quantity == split) {
-	                  el.selectedQty = args.quantity;
-	                }
-	              }
-	            });
-	          });
-          */
           };
 
 					/* init the tuMap */
@@ -342,30 +257,23 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 		      options.MapId = $scope.plan.event.data.VenueConfigurationID;
 		      options.SingleSectionSelection = true;
 
-		      /* don't need this if I have a mapId
-		      options.EventInfo = {
-		      	'Venue': $scope.plan.venue.data.Name,
-		      	'EventName': $scope.plan.event.eventName,
-		      	'EventDate': $scope.plan.event.eventDate
-		      };
-					*/
-
 			    options.OnInit = function(e, data) {
             $('#venue-map-loading').hide();
-			    	console.log('maptype: ');
-			      console.log(data.MapType);
-			      //$(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
-			      if (data.MapType === 'Interactive') {
+            console.log(data);
+            tuMap.mapType = data.MapType;
+
+            /* display the static map if ticket utils map is not interactive */
+			      if (tuMap.mapType === 'Interactive') {
 			        /* check if the ticket utils url is general admission */
 			        if (/ga_venue_tn/.test($scope.plan.event.data.MapUrl)) {
-			          //initStaticMap();
+			          tuMap.displayStaticMap($scope.plan.event.data.MapUrl);
 			        } else {
                 /* move the controls to the column to the left */
-                //$(".ZoomControls").appendTo("#venue-map-col");
-                //$(".ZoomControls + div").appendTo("#venue-map-col");
+                $(".ZoomControls").appendTo("#venue-map-row");
+                $(".ZoomControls + div").appendTo("#venue-map-row");
 			        }
 			      } else {
-			        //initStaticMap();
+			        tuMap.displayStaticMap($scope.plan.event.data.MapUrl);
 			      }
 			    };
 
@@ -376,44 +284,17 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 			        if (typeof $scope.plan.event.data.MapURL === "undefined") {
 			          $scope.plan.event.data.MapURL = "/images/no-seating-chart.jpg";
 			        }
-			        //initStaticMap();
+			        tuMap.displayStaticMap();
 			      }
 			    };
 
-			    options.ToolTipFormatter = function(Data) {
-			    };
-
-			    options.OnMouseover = function(e, Section) {
-			      if (Section.Active) {} else {}
-			    };
-
-			    options.OnMouseout = function(e, Section) {
-			      if (Section.Active) {}
-			    };
-
-			    options.OnClick = function(e, Section) {
-			      if (Section.Active && Section.Selected) {}
-			    };
-
-			    options.OnControlClick = function(e, Data) {
-			      if (Section.Selected) {}
-			    };
-
-			    options.OnGroupClick = function(e, Group) {
-			      if (Group.Selected) {
-
-			      }
-			    };
-
-			    options.OnTicketSelected = function(e, Ticket) {}
-
-			    options.OnReset = function(e) {
-			      //Write Code Here
-			    };
-
+          /* make this tickets list fill up the whole height of the page
+             TODO: make this reevaluate when the window size changes
+          */
           $('#tickets-list > div').css("height", $($window).height() - 172);
 					tuMap.init('#venue-map-container', options);
 
+          /* init the price slider in the tickets list header */
           if ($('.price-slider').length) {
             $('.price-slider').slider({
               range: true,
@@ -426,11 +307,11 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
               },
               stop: function(event, ui) {
                 var q = $(this).val();
+                console.log('quantity in price slider stop: '+q);
                 filterTickets({
                   quantity: q
                 });
               }
-
             });
 
             var amtVal = "$" + $(".price-slider").slider("values", 0) + " - $" + $(".price-slider").slider("values", 1);
@@ -455,7 +336,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
               });
             }
           }
-
 				});
 		});
 	}
@@ -660,58 +540,6 @@ controller('TicketsOffsiteCtrl', ['$scope', 'plan', '$http', '$location', '$root
 			});
 
 		};
-
-	}
-]).
-
-controller('VenueMapCtrl', ['$rootScope', '$scope', 'interactiveMapDefaults', 'plan', '$filter', 'customer', 'wembliRpc',
-	function($rootScope, $scope, interactiveMapDefaults, plan, $filter, customer, wembliRpc) {
-		plan.get(function(p) {
-			//var p = result.plan;
-			$scope.plan = p;
-			$scope.priceRange = {};
-			$scope.eventOptionsLink = '/event-options/' + p.event.eventId + '/' + p.event.eventName;
-			$scope.priceRange.low = p.preferences.tickets.priceRange.low || true;
-			$scope.priceRange.med = p.preferences.tickets.priceRange.med || true;
-			$scope.priceRange.high = p.preferences.tickets.priceRange.high || true;
-		});
-
-		$scope.determineRange = function(price) {
-			/* hard coded price range for now */
-			var i = parseInt(price);
-			if (i <= 100) {
-				return '$';
-			}
-			if (i > 100 && i <= 300) {
-				return '$$';
-			}
-			if (i > 300) {
-				return '$$$';
-			}
-		}
-
-		$scope.removeTicketGroup = function(ticketId) {
-			wembliRpc.fetch('plan.removeTicketGroup', {
-				ticketId: ticketId
-			}, function(err, result) {
-				plan.setTickets(result.tickets);
-			});
-
-		};
-
-		$scope.determineTixAvailable = function(tix) {
-			if (typeof tix[0] === "undefined") {
-				tix = [tix];
-			}
-			var highest = tix[0];
-			angular.forEach(tix, function(el) {
-				if (el > highest) {
-					highest = el;
-				}
-			});
-			var str = 'up to ' + highest + ' tix available';
-			return str;
-		}
 
 	}
 ]);

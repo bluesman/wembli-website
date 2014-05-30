@@ -108,6 +108,20 @@ directive('logActivity', ['wembliRpc',
   }
 ]).
 
+directive('wembliOverlay', ['$rootScope',
+  function($rootScope) {
+    return {
+      restrict: 'A',
+      compile: function(element, attr, transclude) {
+        element.click(function() {
+          console.log('broadcast overlay clicked');
+          $rootScope.$broadcast('overlay-clicked');
+        });
+      }
+    }
+  }
+]).
+
 directive('formatPhoneNumber', [
   function() {
     return {

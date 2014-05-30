@@ -7,9 +7,9 @@ block content
 		.header.row(ng-cloak)
 			.col-md-2.col-sm-3.col-xs-12
 				.event-date-box
-					span.day {{plan.event.eventDate| date:'EEE'}}
-					span.event-date {{plan.event.eventDate| date:'MMM d'}}
-					span.time {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+					span.day(ng-cloak) {{plan.event.eventDate| date:'EEE'}}
+					span.event-date(ng-cloak) {{plan.event.eventDate| date:'MMM d'}}
+					span.time(ng-cloak) {{getDate(plan.event.eventDate)| date:'h:mm a'}}
 			.col-md-10.col-sm-9.col-xs-12
 				.info
 					h1.name.block {{plan.event.eventName}}
@@ -19,7 +19,7 @@ block content
 		.row
 			#tickets-left.col-md-8.col-xs-12.addons-content-container
 				#venue-map-row.row
-					.col-xs-12.col-md-10.col-lg-8
+					.col-xs-12.col-md-10.col-lg-8.col-md-offset-1.col-lg-offset-2
 						#venue-map-loading.addons-content-loading
 							.loading-icon
 								i.fa.fa-cog.fa-spin.fa-3x
@@ -91,7 +91,8 @@ block content
 															span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
 											.col-xs-3.controls
 													.actions
-														a.btn.btn-primary.btn-large.tickets-login-modal(ticket="{{ticket}}",ng-href="#tickets-login-modal-{{ticket.ID}}",ng-hide="customer") Buy Tix
+														//- have to log in to buy tix
+														a.btn.btn-primary.btn-large(ng-href="#tickets-login-modal-{{ticket.ID}}",ng-hide="customer",ng-click="showLoginModal()") Buy Tix
 														a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket="{{ticket}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",ng-show="customer",target="_blank") Buy Tix
 										.row
 											.col-xs-12.qty.hide

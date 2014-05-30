@@ -1,76 +1,79 @@
-#tickets-login-modal.modal.hide(ng-controller="TicketsLoginCtrl")
-	.confirm(ng-show="customer")
-		.modal-header
-			h2 You're Logged In - Now Get Your Tickets!
-		.modal-body
-			.top.clearfix
-				.icon.pull-left
-					i.icon-ticket.icon-2x
-				.title.pull-left {{ticket.TicketGroupType}}
-			.bottom.clearfix
-				.price.pull-left
-					.header price
-					.value ${{ticket.ActualPrice}}
-				.ticket-info.pull-left
-					.seats
-						div
-							strong Section:&nbsp;
-							span {{ticket.Section}}&nbsp;
-						div
-							strong Row:&nbsp;
-							span {{ticket.Row}}&nbsp;
-						div
-							strong Seats:&nbsp;
-							span(ng-show="{'\*':true}[ticket.LowSeat]") *
-							span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
-				.qty.pull-right
-					span {{ticket.selectedQty}}
-					.header qty
+#tickets-login-modal.modal(ng-controller="TicketsLoginCtrl")
+	.modal-dialog
+		.modal-content.confirm(ng-show="customer")
+			.modal-header
+				h2 You're Logged In - Now Get Your Tickets!
+			.modal-body
+				.top.clearfix
+					.icon.pull-left
+						i.icon-ticket.icon-2x
+					.title.pull-left {{ticket.TicketGroupType}}
+				.bottom.clearfix
+					.price.pull-left
+						.header price
+						.value ${{ticket.ActualPrice}}
+					.ticket-info.pull-left
+						.seats
+							div
+								strong Section:&nbsp;
+								span {{ticket.Section}}&nbsp;
+							div
+								strong Row:&nbsp;
+								span {{ticket.Row}}&nbsp;
+							div
+								strong Seats:&nbsp;
+								span(ng-show="{'\*':true}[ticket.LowSeat]") *
+								span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
+					.qty.pull-right
+						span {{ticket.selectedQty}}
+						.header qty
 
-	.login(ng-hide="customer")
-		.modal-header
-			h2 Login To Buy Your Tickets
-		.modal-body
-			form#tickets-login-form(name="tickets-login")
-				p Choose from the options below:
-				label.radio
-					input#radio-signup(ng-model="authAction",type="radio",name="auth_action",value="signup",ng-init="authAction='signup'")
-					.option-content
-						h3 1. Create an account:
-						fieldset()
-							#signup-error.alert.alert-block.fade.in(ng-show="signupError")
-								.error-text.icon-spinner.icon-spin.icon-2x(ng-show="signupSpinner")
-								.error-text(ng-show="formError") Please provide a name and email address.
-								.error-text(ng-show="accountExists")
-									span Hey! This account already exists. Log in using one of the options below or&nbsp;
-									a.send-forgot-password-email(href="#") request a password change email
-									span .
-								.error-text(ng-show="forgotPasswordEmailSent") An email has been sent to you. Follow the instructions to reset your password.
-							.name-group.control-group
-								input.focus-on-click.first-name.pull-left(ng-model="firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
-								input.focus-on-click.last-name.pull-left(ng-model="lastName",placeholder="LAST NAME",type="text",name="lastName",required)
-								input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="signup_email",required)
-				label.radio
-					input#radio-login(ng-model="authAction",type="radio",name="auth_action",value="login")
-					.option-content
-						h3 2. Login to your existing account:
-						fieldset()
-							#error.alert.alert-block.fade.in(ng-show="loginError")
-								.error-text(ng-show="noPassword") No password was set for this account.  A email has been sent you. Follow the instructions to set your password.
-								.error-text(ng-show="invalidCredentials") Woops! Looks like your email or password was incorrect.
-							.name-group.control-group
-								input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="login_email",required)
-								input.focus-on-click.password(type="password",ng-model="password",placeholder="PASSWORD",name="password",required)
-				label.radio
-					input#facebook-login(ng-model="authAction",type="radio",name="auth_action",value="facebook")
-					.option-content
-						h3 3. Login with facebook:
-						.facebook-login
-							a#facebook-login-button.btn.btn-primary(target="_self",ng-href="/auth/facebook?redirectUrl={{redirectUrl}}")
-								i.icon-facebook.icon-2x.pull-left
-								span Login with Facebook
-	.modal-footer
-		button.btn.btn-primary.btn-large.muted(ng-click="authActions[authAction]()",ng-hide="customer", ng-class="{'facebook':'muted'}[authAction]")
-			span(ng-hide="continueSpinner") Continue
-			span.icon-spinner.icon-spin(ng-show="continueSpinner")
-		a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket="{{ticket}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",ng-show="customer",target="_blank") Buy Tickets
+		.modal-content.login(ng-hide="customer")
+			.modal-header
+				h3 Buy Your Tickets
+				p
+					i Choose from the options below:
+
+			.modal-body
+				form#tickets-login-form(novalidate name="tickets-login")
+					label.radio
+						input#radio-signup(ng-model="authAction",type="radio",name="auth_action",value="signup",ng-init="authAction='signup'")
+						.option-content
+							h3 1. Create an account:
+							fieldset()
+								#signup-error.alert.alert-block.fade.in(ng-show="signupError")
+									.error-text.icon-spinner.icon-spin.icon-2x(ng-show="signupSpinner")
+									.error-text(ng-show="formError") Please provide a name and email address.
+									.error-text(ng-show="accountExists")
+										span Hey! This account already exists. Log in using one of the options below or&nbsp;
+										a.send-forgot-password-email(href="#") request a password change email
+										span .
+									.error-text(ng-show="forgotPasswordEmailSent") An email has been sent to you. Follow the instructions to reset your password.
+								.name-group.control-group
+									input.focus-on-click.first-name.pull-left(ng-model="firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
+									input.focus-on-click.last-name.pull-left(ng-model="lastName",placeholder="LAST NAME",type="text",name="lastName",required)
+									input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="signup_email",required)
+					label.radio
+						input#radio-login(ng-model="authAction",type="radio",name="auth_action",value="login")
+						.option-content
+							h3 2. Login to your existing account:
+							fieldset()
+								#error.alert.alert-block.fade.in(ng-show="loginError")
+									.error-text(ng-show="noPassword") No password was set for this account.  A email has been sent you. Follow the instructions to set your password.
+									.error-text(ng-show="invalidCredentials") Woops! Looks like your email or password was incorrect.
+								.name-group.control-group
+									input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="login_email",required)
+									input.focus-on-click.password(type="password",ng-model="password",placeholder="PASSWORD",name="password",required)
+					label.radio
+						input#facebook-login(ng-model="authAction",type="radio",name="auth_action",value="facebook")
+						.option-content
+							h3 3. Login with facebook:
+							.facebook-login
+								a#facebook-login-button.btn.btn-primary(target="_self",ng-href="/auth/facebook?redirectUrl={{redirectUrl}}")
+									i.icon-facebook.icon-2x.pull-left
+									span Login with Facebook
+			.modal-footer
+				button.btn.btn-primary.btn-large.muted(ng-click="authActions[authAction]()",ng-hide="customer", ng-class="{'facebook':'muted'}[authAction]")
+					span(ng-hide="continueSpinner") Continue
+					span.icon-spinner.icon-spin(ng-show="continueSpinner")
+				a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket="{{ticket}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",ng-show="customer",target="_blank") Buy Tickets

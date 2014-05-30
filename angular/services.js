@@ -44,6 +44,27 @@ factory('loadingModal', ['$rootScope',
 	}
 ]).
 
+factory('overlay', ['$rootScope',
+	function($rootScope) {
+		return {
+			show: function() {
+				console.log('show overlay');
+				angular.element('#overlay').addClass('overlay');
+			},
+			hide: function() {
+				angular.element('#overlay').removeClass('overlay');
+			},
+			loading: function(bool) {
+				if (bool) {
+					angular.element('#overlay > .overlay-loading').removeClass('hide');
+				} else {
+					angular.element('#overlay > .overlay-loading').addClass('hide');
+				}
+			}
+		}
+	}
+]).
+
 factory('environment', ['$location',
 	function($location) {
 		var env = 'development';
@@ -89,6 +110,18 @@ factory('tnConfig', ['environment',
 		};
 		var envConfig = config[environment];
 		envConfig.url = envConfig.baseUrl + '?brokerid=' + envConfig.brokerId + '&sitenumber=' + envConfig.siteNumber;
+
+		envConfig.generateSessionId = function() {
+      var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
+      var sid_length = 5;
+      var sid = '';
+      for (var i = 0; i < sid_length; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        sid += chars.substring(rnum, rnum + 1);
+      }
+      return sid;
+    };
+
 		return envConfig;
 	}
 ]).

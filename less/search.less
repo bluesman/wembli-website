@@ -1,20 +1,77 @@
-#payment-type-modal.modal {
-  overflow-y:auto;
-  max-height:90%;
-  margin-top:-45%;
 
-	label.radio {
-		i {
-			margin-top: 20px;
-			color:@gray;
-		}
-		.option-content {
-			width:80%;
-		}
-	}
-}
 
 #search {
+	.slide-in-down {
+		position:fixed;
+		z-index:1032;
+		box-shadow: 0px 2px 10px;
+		margin-top:-80px;
+
+		@media (max-width: @screen-sm-max) {
+			height:100%;
+			overflow: auto;
+		}
+	}
+
+	.slide-in-down.ng-hide-remove,.slide-in-down.ng-hide-add {
+		display:block!important;
+	}
+
+	.slide-in-down.ng-hide-remove {
+		-webkit-animation:slideInDown 0.5s;
+		animation: slideInDown 0.5s;
+	}
+
+	.slide-in-down.ng-hide-add {
+		-webkit-animation:slideOutUp 0.5s;
+		animation: slideOutUp 0.5s;
+	}
+
+	.slide-in-down.ng-hide {
+		display:none;
+	}
+
+
+	#payment-type-shade {
+		/*
+	  overflow-y:auto;
+	  max-height:90%;
+	  margin-top:-45%;
+		*/
+
+		padding:40px;
+		background-color: @white;
+
+		.payment-type-header {
+			margin:0 20px;
+			border-bottom:thin solid @grayLight;
+		}
+
+		.payment-type-body {
+			@media (min-width: @screen-md-min) {
+				.middle-option {
+					border-left: thin solid @grayLight;
+
+				}
+			}
+			.option-container {
+
+			}
+			.option-container:hover {
+				background-color: lighten(@blueLight, 20%);
+			}
+
+			.option-content {
+				padding:20px;
+
+				p {
+					height:100px;
+				}
+
+			}
+		}
+	}
+
 	#search-left {
 		.copy, .wembliman, .search-arrow {
 			margin:25px auto;
@@ -77,6 +134,10 @@
 						}
 						.cta {
 							text-align:center;
+							a {
+								position:relative;
+								z-index:2;
+							}
 						}
 						.ticket-range {
 							padding:6px;

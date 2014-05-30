@@ -40,48 +40,29 @@ block content
 					.modal-body.container-fluid
 						.form-group
 							button.btn.btn-default.form-control.close(type="button", data-dismiss="modal") Back to Search
-		#payment-type-modal.modal.fade
-			.modal-dialog
-				#payment-type.modal-content
-					.modal-header
-						button(type="button", class="close", data-dismiss="modal")&times;
-						h2.modal-title {{event.Name}}
-						h3.modal-subtitle Share the cost with your friends or pay for it all on your own?
-					form#payment-type-form(novalidate name="payment-type-form", ng-submit="startPlan()")
-						.modal-body.container-fluid
-							.form-group
-								label.radio.row
-									.control.col-xs-2.col-md-1
-										input#option-split-first.form-control.hide(ng-model="paymentType",type="radio",name="payment_type",value="split-first",ng-init="paymentType='split-first'")
-										i.fa.fa-check-circle-o.fa-2x.green(ng-show="{'split-first':true}[paymentType]")
-										i.fa.fa-circle-o.fa-2x(ng-show="!{'split-first':true}[paymentType]")
-									.option-content.col-xs-10.col-md-11
-										h3 Everyone Pays Up Front
-										p Tired of getting stuck with the bill? Breathe easy, just pick an event, invite friends, and have them pony up before shelling out any cash.
-							.form-group
-								label.radio.row
-									.control.col-xs-2.col-md-1
-										input#option-split-after.form-control.hide(ng-model="paymentType",type="radio",name="payment_type",value="split-after")
-										i.fa.fa-check-circle-o.fa-2x.green(ng-show="{'split-after':true}[paymentType]")
-										i.fa.fa-circle-o.fa-2x(ng-show="!{'split-after':true}[paymentType]")
-									.option-content.col-xs-10.col-md-11
-										h3 I'll Pay First, Then Collect Later
-										p Want to guarantee you all get seats together?  Buy the tickets now then use Wembli to split the bill later. Better safe than sitting solo!
-							.form-group
-								label.radio.row
-									.control.col-xs-2.col-md-1
-										input#option-no-split.form-control.hide(ng-model="paymentType", type="radio",name="payment_type",value="no-split")
-										i.fa.fa-check-circle-o.fa-2x.green(ng-show="{'no-split':true}[paymentType]")
-										i.fa.fa-circle-o.fa-2x(ng-show="!{'no-split':true}[paymentType]")
-									.option-content.col-xs-10.col-md-11
-										h3 I Want To Buy Tickets Now
-										p Search for your event, buy your tickets and you're on your way!
-						.modal-footer
-							button.btn.btn-primary.btn-large(ng-class="{true:'mute'}[submitInProgress]", ng-disabled="submitInProgress")
-								i.fa.fa-cog.fa-spin(ng-show="submitInProgress")
-								span(ng-show="{'split-first':true}[paymentType]") Invite Friends!&nbsp;
-								span(ng-hide="{'split-first':true}[paymentType]") See Tickets!&nbsp;
-
+		#payment-type-shade.slide-in-down(ng-show="showPaymentType")
+			.payment-type-header
+				a(href="#")
+					i.fa.fa-times.fa-2x(ng-click="closePaymentModal()").pull-right
+				h2.modal-title {{eventData.Name}}
+				h4.modal-subtitle Share the cost with your friends or pay for it all on your own?
+			.payment-type-body.row
+				.col-md-6.col-xs-12.option-container
+					.option-content
+						h3 Everyone Pays Up Front
+						p Tired of getting stuck with the bill? Breathe easy, just have your friends pony up before shelling out any cash.
+						button.btn.btn-primary.btn-sm.form-control(ng-click="splitFirst()") Split With Friends
+				.col-md-6.col-xs-12.option-container.middle-option
+					.option-content
+						h3 I'll Pay First, Then Collect Later
+						p Want to guarantee you all get seats together?  Buy the tickets now then, if you want, you can use Wembli to split the bill later.
+						button.btn.btn-primary.btn-sm.form-control(ng-click="splitAfter()") Find Tickets Now
+			//-
+				.col-md-4.col-xs-12.option-container
+					.option-content
+						h3 I Want To Buy Tickets Now
+						p Search for your event, buy your tickets and you're on your way!
+						button.btn.btn-primary.btn-sm.form-control(ng-click="noSplit()") Find Tickets
 
 		.container
 			.row
