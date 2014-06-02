@@ -31,28 +31,31 @@
 		.modal-content.login(ng-hide="customer")
 			.modal-header
 				h3 Buy Your Tickets
-				p
-					i Choose from the options below:
-
+				h4 Choose from the options below:
 			.modal-body
 				form#tickets-login-form(novalidate name="tickets-login")
-					label.radio
-						input#radio-signup(ng-model="authAction",type="radio",name="auth_action",value="signup",ng-init="authAction='signup'")
-						.option-content
-							h3 1. Create an account:
-							fieldset()
-								#signup-error.alert.alert-block.fade.in(ng-show="signupError")
-									.error-text.icon-spinner.icon-spin.icon-2x(ng-show="signupSpinner")
-									.error-text(ng-show="formError") Please provide a name and email address.
-									.error-text(ng-show="accountExists")
-										span Hey! This account already exists. Log in using one of the options below or&nbsp;
-										a.send-forgot-password-email(href="#") request a password change email
-										span .
-									.error-text(ng-show="forgotPasswordEmailSent") An email has been sent to you. Follow the instructions to reset your password.
-								.name-group.control-group
-									input.focus-on-click.first-name.pull-left(ng-model="firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
-									input.focus-on-click.last-name.pull-left(ng-model="lastName",placeholder="LAST NAME",type="text",name="lastName",required)
-									input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="signup_email",required)
+					.form-group
+						label.radio.row
+							.control.col-xs-2.col-md-1
+								input#radio-signup.form-control.hide(ng-model="authAction",type="radio",name="auth_action",value="signup",ng-init="authAction='signup'")
+								i.fa.fa-check-circle-o.fa-2x.green(ng-show="{'signup':true}[authAction]")
+								i.fa.fa-circle-o.fa-2x(ng-show="!{'signup':true}[authAction]")
+							.option-content.col-xs-10.col-md-11
+								.row
+									.col-xs-12
+										h3 1. Create an account:
+									#signup-error.alert.alert-block.fade.in(ng-show="signupError")
+										.error-text.icon-spinner.icon-spin.icon-2x(ng-show="signupSpinner")
+										.error-text(ng-show="formError") Please provide a name and email address.
+										.error-text(ng-show="accountExists")
+											span Hey! This account already exists. Log in using one of the options below or&nbsp;
+											a.send-forgot-password-email(href="#") request a password change email
+											span .
+										.error-text(ng-show="forgotPasswordEmailSent") An email has been sent to you. Follow the instructions to reset your password.
+									.name-group.control-group
+										input.focus-on-click.first-name.pull-left(ng-model="firstName", placeholder="FIRST NAME",type="text",name="firstName",required)
+										input.focus-on-click.last-name.pull-left(ng-model="lastName",placeholder="LAST NAME",type="text",name="lastName",required)
+										input.focus-on-click.email(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="signup_email",required)
 					label.radio
 						input#radio-login(ng-model="authAction",type="radio",name="auth_action",value="login")
 						.option-content

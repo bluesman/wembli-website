@@ -10,6 +10,7 @@ module.exports = function(app) {
 
 		var locals = {
 			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
+			jsIncludes:['/js/plan.min.js','//maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places'],
 			plan: req.session.plan
 		}
 

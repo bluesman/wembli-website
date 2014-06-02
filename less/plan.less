@@ -204,1206 +204,1353 @@
 
 #plan-frame {
 
-	input {
-		border:thin solid @grayLight;
+	.img-container {
+		position:relative;
+		width:75px;
+		box-shadow: 0 1px 2px -1px;
+		border: thin solid @grayLight;
+
+		.no-image-overlay {
+			position:absolute;
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			background-color: @white;
+			opacity: .5;
+			z-index: 2;
+
+			i {
+				height: 25px;
+				width: 25px;
+				margin: 25px auto;
+				display: block;
+			}
+
+		}
 	}
 
-	#left {
-		width:160px;
-		height:100%;
-		padding:10px 0;
+	#nav-container {
+		/* xs and sm get a bottom nav */
+		width:100%;
+		height:60px;
+		bottom:0;
+		left:0;
+		z-index:1;
+
+		text-align:center;
+		background-color: @blueDark;
+
+		border-top:thin solid @blueDarker;
+
 
 		#plan-nav {
-			padding-top:50px;
-			height:100%;
-			font-size:18px;
-			background-color: @blueDark;
-			margin-top:-66px;
-
-			.nav-arrow {
-				position:absolute;
-				top:0px;
-				left:150px;
-				width: 0;
-				height: 0;
-				border-top: 10px solid transparent;
-				border-bottom: 10px solid transparent;
-				border-right: 10px solid @white;
-			}
+			width:100%;
+			.clearfix();
 
 			a.plan-section-nav {
 				position:relative;
 				color:@blueDarker;
 				display:block;
-				.border-radius(5px);
-				margin:10px auto;
-				padding:10px;
-				width:80px;
-				div {
-					text-align:center;
+				padding:10px 0;
+
+				float:left;
+				width:20%;
+				height:60px;
+
+				.fa {
+					font-size: 1.75em;
 				}
-
-				i {
-					margin:12px 12px;
-				}
-
-				.notification {
-					background-color: red;
-					height: 15px;
-					width: 15px;
-					position: absolute;
-					.border-radius(4px);
-					font-size: 12px;
-					line-height: 16px;
-					vertical-align: middle;
-					color:@white !important;
-					top: 12px;
-					right: 19px;
-
-				}
-
-				.notification-icon-envelope {
-				}
-
 
 			}
 
-			a:hover, a.active {
+			a.active {
 				color:@white;
 				background-color:@blue;
 			}
+
+		}
+
+		/* md and larger devices get a side nav */
+		@media (min-width: @screen-md-min) {
+			height:100%;
+			top:0;
+			bottom:0;
+			width:160px;
+			border:none;
+			#plan-nav {
+				margin-top:60px;
+				height:100%;
+				font-size:18px;
+
+				.nav-arrow {
+					position:absolute;
+					top:0px;
+					left:150px;
+					width: 0;
+					height: 0;
+					border-top: 10px solid transparent;
+					border-bottom: 10px solid transparent;
+					border-right: 10px solid @white;
+				}
+
+				a.plan-section-nav {
+					border-radius:5px;
+					padding:10px;
+					width:120px;
+					margin:10px auto;
+
+					height:initial;
+					float:none;
+
+					&:hover {
+						color:@white;
+						background-color:@blue;
+					}
+
+					div {
+						text-align:center;
+					}
+
+					.fa {
+						font-size:3em;
+					}
+
+					.notification {
+						background-color: red;
+						height: 15px;
+						width: 15px;
+						position: absolute;
+						border-radius:4px;
+						font-size: 12px;
+						line-height: 16px;
+						vertical-align: middle;
+						color:@white !important;
+						top: 12px;
+						right: 19px;
+
+					}
+
+					.notification-fa-envelope-o {
+					}
+
+
+				}
+			}
 		}
 	}
 
-	#middle {
+	#plan-dashboard-container {
 		height:100%;
-		margin-left:160px;
 		text-align:left;
-
-		.alert-danger {
-			text-shadow:none;
-		}
 
 		#plan-dashboard {
 
-			.border-bottom {
-				border-bottom: thin solid @grayDark;
-			}
-
 			.plan-section > .header {
-				border-bottom:4px solid @blueDark;
+				h1 {
+					padding:10px 0px 0px;
+					margin:10px 0;
+					font-weight:bold;
+					color:@grayDarker;
+					border-bottom:4px solid @grayDarker;
+				}
 			}
 
 			.plan-section {
-				padding:0 20px;
 
-				.header {
-
-					h1 {
-						padding:10px 0px 0px;
-						margin:10px 0;
-						font-weight:bold;
-					}
-
-					.btn {
-						margin:30px;
-					}
+				.alert-danger {
+					text-shadow:none;
 				}
 
 				.alert {
-					.icon-2x {
-						margin:4px 10px 0 0;
-					}
-					.text {
-						width:89%;
+					.fa-2x {
+						margin:6px 8px;
+						font-size:1.5em;
 					}
 					.close {
+						position:absolute;
 						top:1px;
-					}
-				}
-
-				.event-info {
-					font-size:16px;
-					color:@blue;
-					padding:10px 0;
-				}
-
-
-				.body > h3 {
-					color:@blueDarker;
-				}
-
-				.body {
-					.clearfix();
-					margin-top:30px;
-
-					.block1 {
-						.clearfix();
-
-						.firstRow {
-							h3 {
-								font-size:1.2em;
-								padding:10px 0;
-							}
-						}
+						right:25px;
 					}
 
-					.row {
-						margin:0;
-						.clearfix();
-
-						.price-slider-container {
-							width:300px;
-
-							.price-range-group-container {
-								.clearfix();
-								width:300px;
-								.dollar-sign {
-									display:block;
-									width:80px;
-									padding:10px;
-									text-align:center;
-									float:left;
-								}
-							}
-						}
-						.price-input-container {
-							width:120px;
-							line-height:45px;
-							margin:auto;
-							font-size:40px;
-							color:@orange;
-							.clearfix();
-
-							input {
-								width:75px;
-								border:none;
-								margin:auto;
-								height:45px;
-								font-size:40px;
-								color:@orange;
-								line-height: 45px;
-								vertical-align: middle;
-							}
-						}
-					}
-
-				}
-				.section-bottom {
-					.clearfix();
-					margin-top:30px;
-
-					.total-coming {
-						color:@grayDark;
-						width:230px;
-						.header {
-							.border-radius(6px);
-							background-color: @grayLight;
-							padding:10px;
-
-							.rsvp-count {
-								font-size:26px;
-							}
-						}
-						.friend-coming {
-							margin:5px 10px;
-						}
-					}
-
-					.next-wrapper {
-						button {
-							font-weight: bold;
-							width:200px;
-						}
-					}
-				}
-			}
-
-			/* global invitees lists */
-			.invitees-container {
-				margin-top: 40px;
-
-				.invitee {
-					margin:0 30px 40px 0;
-
-					.img-container {
-						width:75px;
-						text-align:center;
-						line-height:12px;
-						.rsvp-for {
-							font-size: .8em;
-						}
-					}
-
-					.invitee-info {
-						margin-left:10px;
-						width:80%;
-						.invitee-prefs-container {
-							.clearfix();
-							width:100%;
-							.invitee-pref {
-								width:20%;
-								text-align:center;
-								.invitee-pref-header {
-									text-transform:uppercase;
-									color:@gray;
-									font-style: italic;
-									margin:10px 5px;
-									font-size:14px;
-								}
-								.invitee-pref-value {
-									.icon {
-										height:45px;
-										line-height:45px;
-										vertical-align:middle;
-									}
-									.dollar-sign {
-										font-size: 30px;
-										height:45px;
-										line-height:45px;
-										vertical-align:middle;
-									}
-									.prefs-list {
-										text-align:left;
-									}
-								}
-							}
-
-							.invitee-pref.muted {
-								.invitee-pref-header {
-									color:@grayLight;
-								}
-								.invitee-pref-value {
-									.icon {
-										color:@grayLight;
-									}
-									.dollar-sign {
-										color:@grayLight;
-									}
-								}
-							}
-
-
-							.first {
-								text-align:left;
-								i {
-									margin-left:25px;
-								}
-							}
-						}
-						.invitee-name {
-							height: 24px;
-							.name {
-								font-size:20px;
-							}
-							.guests {
-								font-weight:bold;
-							}
-						}
-						.requested-amounts-container, .transaction-fee-container, .suggested-amounts-container {
-							width:465px;
-
-							.me-pony-up-amount {
-								width:60px;
-								text-align:right;
-								margin-bottom:0px;
-							}
-
-							label.transaction-fee-label:hover, label.suggested-amounts-label:hover {
-								background-color:lighten(@blueLight,30%);
-								cursor:pointer;
-							}
-							.transaction-fee-label, .requested-amounts-label, .suggested-amounts-label {
-								width:444px;
-								padding:6px;
-
-								line-height: 24px;
-								vertical-align: middle;
-
-								i {width:15px;}
-								.transaction-fee-header, .requested-amounts-header, .suggested-amount-header {
-									font-size: 1em;
-									line-height: 30px;
-									vertical-align: middle;
-
-								}
-								.header {
-									font-size: 1.25em;
-									font-weight: bold;
-									line-height: 30px;
-									vertical-align: middle;
-								}
-								.value {
-									font-size: 1em;
-									line-height: 30px;
-									vertical-align: middle;
-								}
-							}
-							.transaction-fee-container, .suggested-amounts {
-								.popover-content {
-									width:250px;
-
-									.disclaimer {
-										small {
-											padding:10px 0;
-										}
-									}
-									h4 {
-										font-size: 0.75em;
-										display:block;
-										width:100%;
-									}
-								}
-								.suggested-amount {
-									width: 426px;
-									height:18px;
-									margin:0 10px 10px 30px;
-
-									.header {
-										font-weight: bold;
-										width:100px;
-									}
-									.suggested-amount-body {
-										margin:0 0 0 30px;
-										width:290px;
-										.key {
-											color:@grayLight;
-											font-style: italic;
-										}
-
-									}
-								}
-							}
-						}
-
-						.send-pony-up-control {
-							width: 450px;
-							margin:6px;
-							label {
-								height:30px;
-								padding:6px;
-								line-height:30px;
-								vertical-align: middle;
-
-								.header {
-									font-weight: bold;
-									font-style: italic;
-									line-height: 30px;
-									vertical-align: middle;
-								}
-
-								i {
-									width:26px;
-								}
-							}
-							.input-prepend {
-								margin-top:5px;
-								margin-bottom:0px;
-							}
-							input[type=text] {
-								width:75px;
-								font-size:18px;
-								text-align: right;
-							}
-							.total {
-								font-size:18px;
-								text-align: right;
-							}
-						}
-					}
-
-					.history-container {
-						width:75%;
-						margin-left:85px;
-						padding:6px;
-						background-color:lighten(@blueLight,30%);
-						border:2px dashed @grayDark;
-						.history-label {
-							cursor: pointer;
-							.header {
-								font-weight: bold;
-								font-size:16px;
-								font-style: italic;
-								line-height:26px;
-								vertical-align: middle;
-								margin-top:3px;
-							}
-							.icon {
-								width:20px;
-							}
-						}
-						.history {
-							margin-left:24px;
-							.outside-payment-form {
-								padding: 20px 6px;
-								label {
-									font-weight: bold;
-									font-style: italic;
-								}
-
-								select {
-									width:75px;
-									margin:0 40px;
-								}
-
-								input[type=text] {
-									width:50px;
-								}
-
-								a {margin-left:40px;}
-							}
-							table {
-								width:100%;
-								td {
-									color: @grayDark;
-									text-transform: uppercase;
-									font-style: italic;
-									font-weight: bold;
-									text-align: center;
-									padding:6px;
-								}
-								td.type {
-									width:175px;
-									text-align: left;
-								}
-								td.history-header {
-									color:@gray;
-									text-align: right;
-									font-size:.8em;
-								}
-
-								td.date, td.status, td.amount {
-									text-align:left;
-								}
-								td.actions {
-									a {
-										line-height: 14px;
-										vertical-align: middle;
-										width:72px;
-										padding:4px 6px;
-										margin-right:4px;
-										font-size: 11px;
-									}
-								}
-								tr.balance > td {
-
-								}
-							}
-						}
-					}
-
-				}
-
-				.pony-up-alert {
-					margin:34px;
-					width:450px;
-				}
-
-				.send-pony-up-button {
-					margin:40px 0 0 86px;
-				}
-
-			}
-
-			/* section specific global css */
-			.itinerary-section {
-				.body {
-
-					.itinerary-data {
-						.left {
-							width:200px;
-							height:104px;
-							background: transparent url('/images/cartoon-man-megaphone-150.png') no-repeat center top;
-						}
-						.right {
-
-
-							.event-container {
-								.event-info {
-									.text {
-										padding-right:10px;
-									}
-								}
-							}
-							.hotel-container, .restaurant-container, .parking-container, .tickets-container {
-								margin-bottom:20px;
-								h2 {
-									font-family:'Arial';
-									font-size:20px;
-									line-height:30px;
-									color:@grayDark;
-								}
-								.row {
-									color:@grayDark !important;
-									padding:6px 0;
-									font-size:14px;
-									border-bottom:2px solid @gray;
-
-									.info {
-										margin-left:0;
-										margin-top:0;
-										margin:0;
-										span {
-											display:inline;
-										}
-										.col {
-											width:400px;
-										}
-									}
-								}
-							}
-
-							.tickets-container {
-
-							}
-
-							.parking-container {
-
-							}
-
-							.hotel-container {
-							}
-
-							.restaurant-container {
-
-							}
-
-							.notes-container {
-								padding:10px;
-								textarea {
-									font-size:16px;
-									color:@black;
-									width:98%;
-									height:200px;
-									.border-radius(5px);
-									border:2px solid @gray;
-								}
-							}
-						}
-					}
-					.google-map-container {
-						background-color: @white;
-						height:700px;
-
-						.itinerary-map {
-							height:600px;
-							.info-window {
-								height:100px;
-								width:350px;
-								color:@black;
-								h3 {
-									line-height:14px;
-									font-size:14px;
-								}
-							}
-						}
-					}
-				}
-			}
-
-
-			.rsvp-section {
-				.body {
-
-					.rsvp-container {
-
-						.info-container {
-							width:35%;
-
-							.info {
-								.clearfix();
-								background-color:@grayLight;
-								.border-radius(6px);
-								padding:10px;
-								margin:0;
-								font-family: "Calibri";
-
-								.row {
-									.clearfix();
-									margin:0;
-									padding:2px;
-									h3 {
-										color:@grayDark;
-										line-height: 15px;
-										vertical-align: middle;
-										padding:0px;
-										margin-right:2px;
-										font-size:1.25em;
-										padding:3px 0;
-									}
-									span {
-										display:inline;
-									}
-									label {
-										margin-left:20px;
-									}
-									.data {
-										line-height: 21px;
-										vertical-align: middle;
-									}
-									.rsvp-days {
-										margin-bottom:10px;
-									}
-								}
-
-								.first-row {
-									.data {
-										font-size:1.5em;
-										line-height:20px;
-									}
-
-									h3 {
-										font-size:1.5em;
-									}
-								}
-							}
-						}
-						.collect-rsvp-container {
-							padding:0px;
-							width:50%;
-							margin-left:20px;
-
-							button {
-								margin:20px 0 40px 0;
-							}
-
-							h3 {
-								padding:10px 0;
-							}
-
-							.collect-rsvp {
-								.clearfix();
-								width:100%;
-								padding:25px 0px;
-
-								/* change this to auto to center the rsvp */
-								margin:0;
-
-								text-align:center;
-
-								a {
-									font-size:40px;
-									margin:10px 20px 0 0;
-									font-weight:bold;
-									color:@grayLight;
-									display:block;
-									float:left;
-								}
-								a.active,a:hover {
-									color:@orange;
-								}
-							}
-							.payment-type-note {
-								margin:30px 0;
-							}
-
-							fieldset {
-								width:290px;
-
-								/* change this to auto to center the rsvp */
-								margin:0;
-
-								label {
-									.clearfix();
-									#including-yourself {
-										line-height:30px;
-										vertical-align: middle;
-										padding-left:10px;
-									}
-									#guest-count {
-										width:30px;
-										height:26px;
-										text-align:center;
-										margin:0 10px;
-									}
-								}
-							}
-						}
-					}
-
-					#no-invitees {
-						background-color: @grayLight;
-						padding:50px;
-						button {
-							margin:auto;
-							display: block;
-							width: 200px;
-							height: 60px;
-						}
-					}
-
-					.section-bottom {
-						.next-wrapper {
-							text-align:right;
-							button {
-								margin-top:-65px;
-							}
-						}
-					}
-				}
-			}
-
-			.vote-section {
-				.row {
-					width:450px;
-					margin:20px 30px;
-
-					.preference-dropdown {
-						margin:0 0 20px 0;
-					}
-
-					.checkbox {
-						font-size:1.4em;
-						font-weight:bold;
-						margin:20px 0;
-					}
-				}
-
-				.right {
-					margin:100px 30px 0;
-				}
-
-				.section-bottom {
-					label {
-						display:block;
-						.clearfix();
-						margin-right:10px;
-
-						h2,h3,.orange,input {
-							line-height: 45px;
-						}
-
-						h2,h3 {
-							margin-right: 30px;
-						}
-
-						input {
-							width:90px;
-							border:none;
-							margin:auto;
-							height:45px;
-							color:@orange;
-							line-height: 40px;
-							vertical-align: middle;
-						}
-					}
-
-					#per-person {
-						.orange {
-							font-size: 25px;
-						}
-						input {
-							font-size:25px;
-						}
-					}
-					#total {
-						h2 {
-							font-size: 20px;
-						}
-						.orange {
-							font-size:40px;
-						}
-						input {
-							font-size:40px;
-						}
-					}
-					button {
-						margin-top:70px;
-					}
-				}
-			}
-
-			.pony-up-section {
-				.pony-up {
-					font-size:20px;
-					.content {
-						margin-left: 30px;
-						width:60%;
-						p {
-							padding:20px 0;
-						}
-						.icon-circle {
-							display:block;
-							font-size: 10px;
-						}
-						span {
-							margin-left: 10px;
-							font-size:20px;
-						}
-						.note {
-							font-style: italic;
-						}
-
-					}
-					.img {
-						width:30%;
-						img {
-							margin: 30px;
-						}
-					}
-				}
-			}
-
-			.chatter-section {
-				.body {
-					margin-bottom:60px;
-				}
-				#plan-chatter {
-					margin:20px 30px;
-					#chatter {
-						#new-chatter {
-							width:760px;
-							textarea {
-								margin:0 0 0 20px;
-								height:75px;
-								width:650px;
-							}
-							button {
-								margin:10px 0;
-							}
-						}
-					}
-					#chatters {
-						width:760px;
-						margin-top:20px;
-						border-top:thin solid @grayLight;
-
-						.upvote {
-							display:inline;
-							padding:2px;
-							text-align:center;
-						}
-
-						.chatter {
-							margin-top:20px;
-							.actor-image-container {
-
-							}
-							.chatter-container {
-								margin-left:95px;
-								.actor-name-container {
-									height:20px;
-									.actor-name {
-										font-weight:bold;
-										.icon-asterisk {
-											font-weight:normal;
-											font-size:.6em;
-											line-height:20px;
-											vertical-align:middle;
-											margin:0 6px;
-											color:@grayLight;
-										}
-									}
-								}
-								.chatter-body {
-									min-height: 45px;
-								}
-								.controls {
-									.chatter-reply {
-									}
-								}
-								.new-chatter-comment {
-									margin-top:20px;
-									width:665px;
-									.actor-image-container {
-										img {
-											width:60%;
-										}
-									}
-									textarea {
-										height:50px;
-										width:575px;
-									}
-									button {
-										margin:10px 0;
-									}
-								}
-								.chatter-comments {
-									margin-top:20px 0 20px 95px;
-									.chatter-comment {
-										margin-top:20px;
-										.actor-image-container {
-											img {
-												max-width:60%;
-											}
-										}
-										.comment-container {
-
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		/* organizer specific css */
-		#plan-dashboard.organizer-plan-dashboard {
-
-			.organizer-rsvp-section {
-				.notification {
-					margin:23px 0 0 150px;
-					height:20px;
-					.icon {
-						margin-top:2px;
-					}
-					.text {
-						width:inherit;
-					}
 					a:hover {
 						color:@blueDark;
 					}
+
 				}
 
-				.invitees-container {
-					margin-left:95px;
+				.rsvp-container {
+
+					.collect-rsvp-container {
+						.collect-rsvp {
+							a {
+								font-size:25px;
+								font-weight:bold;
+								color:@grayLight;
+								display:block;
+								height:50px;
+
+							}
+							a.active, a:hover {
+								color:@orange;
+							}
+						}
+						form {
+							label {
+								#guest-count {
+									width:45px;
+									height:26px;
+									text-align:center;
+									color:@grayDark;
+									margin:0 10px;
+									display: inline-block;
+								}
+							}
+						}
+					}
 				}
 			}
+		}
 
-			.organizer-cart-section {
-				.btn {
-					margin:0;
+		@media (min-width: @screen-md-min) {
+			margin-left:160px;
+
+			#plan-dashboard {
+
+				.plan-section {
+
+					.event-info-container {
+						box-shadow: -4px -4px 4px -4px;
+						background-color: @white;
+						margin-top:-50px;
+						padding:0 15px 30px;
+
+						.event-info-header {
+							position:relative;
+							padding:10px 5px;
+							font-size: 10px;
+							border-bottom:4px solid @blue;
+
+							/* Extra small devices (phones, less than 768px) */
+							/* No media query since this is the default in Bootstrap */
+							h1 {
+								color:@grayDarker;
+							  font-size: 1.3em;
+							  margin:4px 0;
+							  letter-spacing: 1px;
+							}
+							h2 {
+								color:@grayDark;
+							  font-size: 1.2em;
+								margin:4px 0;
+								font-weight:200;
+								font-family: "Helvetica Neue", "Helvetica";
+								letter-spacing: 1px;
+							}
+							h3 {
+							  font-size: 20px;
+							}
+
+							.venue-address {
+								color:@grayDark;
+								font-weight:200;
+								font-family: "Helvetica Neue", "Helvetica";
+								letter-spacing: 1px;
+							}
+
+							.navigation {
+								position:absolute;
+								top:7px;
+								right:0;
+								color:@blue;
+								a {
+									color:@blue;
+								}
+								a:hover {
+									color:@yellow;
+								}
+							}
+
+
+							/* Small devices (tablets, 768px and up) */
+							@media (min-width: @screen-sm-min) {
+							  h1 {
+							    font-size: 1.2em;
+							  }
+							  h2 {
+							    font-size: 1.1em;
+							  }
+							  h3 {
+							    font-size: 20px;
+							  }
+							}
+
+							/* Medium devices (desktops, 992px and up) */
+							@media (min-width: @screen-md-min) {
+							  h1 {
+							    font-size: 1.3em;
+							  }
+							  h2 {
+							    font-size: 1.2em;
+							  }
+							  h3 {
+							    font-size: 22px;
+							  }
+							  .col-sm-9, .col-sm-3 {
+							  	padding:0 5px;
+							  }
+							}
+							/* Large devices (desktops, 1200px and up) */
+							@media (min-width: @screen-lg-min) {
+							  h1 {
+							    font-size: 1.3em;
+							  }
+							  h2 {
+							    font-size: 1.2em;
+							  }
+							  h3 {
+							    font-size: 22px;
+							  }
+							}
+						}
+						.plan-options-container {
+							#event-options-form {
+								.form-group {
+									margin-bottom:5px;
+								}
+							}
+						}
+					}
+
+					.organizer-rsvp-container {
+
+					}
+
+
+
 				}
 
-				.body {
-					margin:0;
 
-					.icon-3x {
-						font-size:2em;
+
+
+
+
+
+
+
+
+
+				.plan-section {
+
+					.event-info {
+						font-size:16px;
+						color:@blue;
+						padding:10px 0;
 					}
 
-					.container.border-bottom {
-						border-bottom:4px solid @grayDark;
+
+					.body > h3 {
+						color:@blueDarker;
 					}
 
-					.container {
-						width:100%;
-						padding:20px 0 40px 0;
+					.body {
+						.clearfix();
 
-						.cartoon-man {
-							width:100px;
-							margin:0 20px;
-							text-align:center;
+						.block1 {
+							.clearfix();
+
+							.firstRow {
+								h3 {
+									font-size:1.2em;
+									padding:10px 0;
+								}
+							}
 						}
 
-						.header {
-							border:none;
-							label {
-								i {
-									width:30px;
-								}
+						.row {
+							margin:0 -15px;
+							.clearfix();
 
-								h3 {
-									color:@grayDark;
-									font-size:20px;
-									line-height: 30px;
+							.price-slider-container {
+								width:300px;
+
+								.price-range-group-container {
+									.clearfix();
+									width:300px;
+									.dollar-sign {
+										display:block;
+										width:80px;
+										padding:10px;
+										text-align:center;
+										float:left;
+									}
+								}
+							}
+							.price-input-container {
+								width:120px;
+								line-height:45px;
+								margin:auto;
+								font-size:40px;
+								color:@orange;
+								.clearfix();
+
+								input {
+									width:75px;
+									border:none;
+									margin:auto;
+									height:45px;
+									font-size:40px;
+									color:@orange;
+									line-height: 45px;
 									vertical-align: middle;
 								}
 							}
 						}
 
-						.body {
-							width:500px;
-							p {
-								padding:10px 0;
-							}
-							.button-container {
-								.buy-now {
-									margin:10px 10px 10px 200px;
-									display:block;
-									color:@blue;
-								}
-							}
-						}
-
 					}
+					.section-bottom {
+						.clearfix();
+						margin-top:30px;
 
-					.ticket-row {
+						.total-coming {
+							color:@grayDark;
+							width:230px;
+							.header {
+								border-radius:6px;
+								background-color: @grayLight;
+								padding:10px;
 
-						.ticket-container {
-							.ticket-info, .ticket-payment {
-								font-size:1.5em;
-								margin:10px 0;
-								line-height: 24px;
-								vertical-align: middle;
-
-								.left {
-									width:360px;
+								.rsvp-count {
+									font-size:26px;
 								}
 							}
-
-							.ticket-section, .ticket-row, .ticket-seat {
-								margin-right:10px;
-								span {
-									margin-left:5px;
-								}
-							}
-
-							.ticket-payment {
-
-								.qty-container {
-									select {
-										margin:0 10px;
-										font-size:0.6em;
-										width:50px;
-									}
-								}
-								.ticket-total {
-									margin:0 10px;
-									color:@green;
-								}
+							.friend-coming {
+								margin:5px 10px;
 							}
 						}
-						.controls {
-							margin:20px 0;
-						}
-					}
 
-					.add-on-row {
-
-						.popover-content {
-							font-size:12px;
-						}
-
-						.add-on-container {
-							.add-on-offsite-link {
-								.text {
-									margin:15px 0 0 15px;
-								}
-							}
-							.add-on-info, .add-on-payment {
-								font-size:1.5em;
-								margin:10px 0;
-								line-height: 24px;
-								vertical-align: middle;
-
-							}
-
-							.add-on-section, .add-on-row, .add-on-seat {
-								margin-right:10px;
-								span {
-									margin-left:5px;
-								}
-							}
-
-							.add-on-payment {
-
-								.qty-container {
-									select {
-										margin:0 10px;
-										font-size:0.6em;
-										width:50px;
-									}
-								}
-								.add-on-total {
-									margin:0 10px;
-									color:@green;
-								}
+						.next-wrapper {
+							button {
+								font-weight: bold;
+								width:200px;
 							}
 						}
-						.controls {
-							margin:20px 0;
-							.change-add-on-link {
-								margin:10px dire0px
-							}
-							.view-add-on-link {
-								margin-right: 20px;
-							}
-							.btn {
-								margin-right:20px;
-							}
-						}
-					}
-
-					.parking-container {
-
-						.body {
-
-						}
-
-						.add-on-included {
-						}
-
-						.add-on-not-included {
-
-						}
-					}
-
-					.totals {
-						font-size:2.5em;
-						width:550px;
-						text-align:right;
-						margin-left:150px;
-						font-weight: bold;
-					}
-					.totals > div {
-						line-height:normal;
 					}
 				}
-			}
 
-			.organizer-pony-up-section {
+				/* global invitees lists */
 				.invitees-container {
-					margin:0;
-				}
-			}
+					margin-top: 40px;
 
-		}
+					.invitee {
+						margin:0 30px 40px 0;
 
-		/* friend specific css */
-		#plan-dashboard.friend-plan-dashboard {
-			.friend-rsvp-section {
-				.body {
-					.friend-rsvp-container {
+						.img-container {
+							width:75px;
+							text-align:center;
+							line-height:12px;
+							.rsvp-for {
+								font-size: .8em;
+							}
+						}
 
-						.info-container {
-							.info {
-								.row {
-									h3 {
-										font-size:1em;
-										padding:4px 0;
+						.invitee-info {
+							margin-left:10px;
+							width:80%;
+							.invitee-prefs-container {
+								.clearfix();
+								width:100%;
+								.invitee-pref {
+									width:20%;
+									text-align:center;
+									.invitee-pref-header {
+										text-transform:uppercase;
+										color:@gray;
+										font-style: italic;
+										margin:10px 5px;
+										font-size:14px;
+									}
+									.invitee-pref-value {
+										.icon {
+											height:45px;
+											line-height:45px;
+											vertical-align:middle;
+										}
+										.dollar-sign {
+											font-size: 30px;
+											height:45px;
+											line-height:45px;
+											vertical-align:middle;
+										}
+										.prefs-list {
+											text-align:left;
+										}
+									}
+								}
+
+								.invitee-pref.muted {
+									.invitee-pref-header {
+										color:@grayLight;
+									}
+									.invitee-pref-value {
+										.icon {
+											color:@grayLight;
+										}
+										.dollar-sign {
+											color:@grayLight;
+										}
+									}
+								}
+
+
+								.first {
+									text-align:left;
+									i {
+										margin-left:25px;
+									}
+								}
+							}
+							.invitee-name {
+								height: 24px;
+								.name {
+									font-size:20px;
+								}
+								.guests {
+									font-weight:bold;
+								}
+							}
+							.requested-amounts-container, .transaction-fee-container, .suggested-amounts-container {
+								width:465px;
+
+								.me-pony-up-amount {
+									width:60px;
+									text-align:right;
+									margin-bottom:0px;
+								}
+
+								label.transaction-fee-label:hover, label.suggested-amounts-label:hover {
+									background-color:lighten(@blueLight,30%);
+									cursor:pointer;
+								}
+								.transaction-fee-label, .requested-amounts-label, .suggested-amounts-label {
+									width:444px;
+									padding:6px;
+
+									line-height: 24px;
+									vertical-align: middle;
+
+									i {width:15px;}
+									.transaction-fee-header, .requested-amounts-header, .suggested-amount-header {
+										font-size: 1em;
+										line-height: 30px;
+										vertical-align: middle;
+
+									}
+									.header {
+										font-size: 1.25em;
+										font-weight: bold;
+										line-height: 30px;
+										vertical-align: middle;
+									}
+									.value {
+										font-size: 1em;
+										line-height: 30px;
+										vertical-align: middle;
+									}
+								}
+								.transaction-fee-container, .suggested-amounts {
+									.popover-content {
+										width:250px;
+
+										.disclaimer {
+											small {
+												padding:10px 0;
+											}
+										}
+										h4 {
+											font-size: 0.75em;
+											display:block;
+											width:100%;
+										}
+									}
+									.suggested-amount {
+										width: 426px;
+										height:18px;
+										margin:0 10px 10px 30px;
+
+										.header {
+											font-weight: bold;
+											width:100px;
+										}
+										.suggested-amount-body {
+											margin:0 0 0 30px;
+											width:290px;
+											.key {
+												color:@grayLight;
+												font-style: italic;
+											}
+
+										}
+									}
+								}
+							}
+
+							.send-pony-up-control {
+								width: 450px;
+								margin:6px;
+								label {
+									height:30px;
+									padding:6px;
+									line-height:30px;
+									vertical-align: middle;
+
+									.header {
+										font-weight: bold;
+										font-style: italic;
+										line-height: 30px;
+										vertical-align: middle;
+									}
+
+									i {
+										width:26px;
+									}
+								}
+								.input-prepend {
+									margin-top:5px;
+									margin-bottom:0px;
+								}
+								input[type=text] {
+									width:75px;
+									font-size:18px;
+									text-align: right;
+								}
+								.total {
+									font-size:18px;
+									text-align: right;
+								}
+							}
+						}
+
+						.history-container {
+							width:75%;
+							margin-left:85px;
+							padding:6px;
+							background-color:lighten(@blueLight,30%);
+							border:2px dashed @grayDark;
+							.history-label {
+								cursor: pointer;
+								.header {
+									font-weight: bold;
+									font-size:16px;
+									font-style: italic;
+									line-height:26px;
+									vertical-align: middle;
+									margin-top:3px;
+								}
+								.icon {
+									width:20px;
+								}
+							}
+							.history {
+								margin-left:24px;
+								.outside-payment-form {
+									padding: 20px 6px;
+									label {
+										font-weight: bold;
+										font-style: italic;
+									}
+
+									select {
+										width:75px;
+										margin:0 40px;
+									}
+
+									input[type=text] {
+										width:50px;
+									}
+
+									a {margin-left:40px;}
+								}
+								table {
+									width:100%;
+									td {
+										color: @grayDark;
+										text-transform: uppercase;
+										font-style: italic;
+										font-weight: bold;
+										text-align: center;
+										padding:6px;
+									}
+									td.type {
+										width:175px;
+										text-align: left;
+									}
+									td.history-header {
+										color:@gray;
+										text-align: right;
+										font-size:.8em;
+									}
+
+									td.date, td.status, td.amount {
+										text-align:left;
+									}
+									td.actions {
+										a {
+											line-height: 14px;
+											vertical-align: middle;
+											width:72px;
+											padding:4px 6px;
+											margin-right:4px;
+											font-size: 11px;
+										}
+									}
+									tr.balance > td {
+
 									}
 								}
 							}
 						}
 
-						.collect-rsvp-container {
-							.collect-rsvp {
-								width:100%;
-								a {
-									font-size: 54px;
+					}
+
+					.pony-up-alert {
+						margin:34px;
+						width:450px;
+					}
+
+					.send-pony-up-button {
+						margin:40px 0 0 86px;
+					}
+
+				}
+
+				/* section specific global css */
+				.itinerary-section {
+					.body {
+
+						.itinerary-data {
+							.left {
+								width:200px;
+								height:104px;
+								background: transparent url('/images/cartoon-man-megaphone-150.png') no-repeat center top;
+							}
+							.right {
+
+
+								.event-container {
+									.event-info {
+										.text {
+											padding-right:10px;
+										}
+									}
+								}
+								.hotel-container, .restaurant-container, .parking-container, .tickets-container {
+									margin-bottom:20px;
+									h2 {
+										font-family:'Arial';
+										font-size:20px;
+										line-height:30px;
+										color:@grayDark;
+									}
+									.row {
+										color:@grayDark !important;
+										padding:6px 0;
+										font-size:14px;
+										border-bottom:2px solid @gray;
+
+										.info {
+											margin-left:0;
+											margin-top:0;
+											margin:0;
+											span {
+												display:inline;
+											}
+											.col {
+												width:400px;
+											}
+										}
+									}
+								}
+
+								.tickets-container {
+
+								}
+
+								.parking-container {
+
+								}
+
+								.hotel-container {
+								}
+
+								.restaurant-container {
+
+								}
+
+								.notes-container {
+									padding:10px;
+									textarea {
+										font-size:16px;
+										color:@black;
+										width:98%;
+										height:200px;
+										border-radius:5px;
+										border:2px solid @gray;
+									}
+								}
+							}
+						}
+						.google-map-container {
+							background-color: @white;
+							height:700px;
+
+							.itinerary-map {
+								height:600px;
+								.info-window {
+									height:100px;
+									width:350px;
+									color:@black;
+									h3 {
+										line-height:14px;
+										font-size:14px;
+									}
+								}
+							}
+						}
+					}
+				}
+
+
+				.rsvp-section {
+					.body {
+
+						.rsvp-container {
+
+							.info-container {
+								width:35%;
+
+								.info {
+									.clearfix();
+									background-color:@grayLight;
+									border-radius:6px;
+									padding:10px;
+									margin:0;
+									font-family: "Calibri";
+
+									.row {
+										.clearfix();
+										margin:0;
+										padding:2px;
+										h3 {
+											color:@grayDark;
+											line-height: 15px;
+											vertical-align: middle;
+											padding:0px;
+											margin-right:2px;
+											font-size:1.25em;
+											padding:3px 0;
+										}
+										span {
+											display:inline;
+										}
+										label {
+											margin-left:20px;
+										}
+										.data {
+											line-height: 21px;
+											vertical-align: middle;
+										}
+										.rsvp-days {
+											margin-bottom:10px;
+										}
+									}
+
+									.first-row {
+										.data {
+											font-size:1.5em;
+											line-height:20px;
+										}
+
+										h3 {
+											font-size:1.5em;
+										}
+									}
+								}
+							}
+
+
+							.collect-rsvp-container {
+
+								button {
+									margin:20px 0 40px 0;
+								}
+
+								h3 {
+									padding:10px 0;
+								}
+
+								.payment-type-note {
+									margin:30px 0;
+								}
+
+								fieldset {
+									width:290px;
+
+									/* change this to auto to center the rsvp */
+									margin:0;
+
+								}
+							}
+						}
+
+						#no-invitees {
+							background-color: @grayLight;
+							padding:50px;
+							button {
+								margin:auto;
+								display: block;
+								width: 200px;
+								height: 60px;
+							}
+						}
+
+						.section-bottom {
+							.next-wrapper {
+								text-align:right;
+								button {
+									margin-top:-65px;
+								}
+							}
+						}
+					}
+				}
+
+				.vote-section {
+					.row {
+						width:450px;
+						margin:20px 30px;
+
+						.preference-dropdown {
+							margin:0 0 20px 0;
+						}
+
+						.checkbox {
+							font-size:1.4em;
+							font-weight:bold;
+							margin:20px 0;
+						}
+					}
+
+					.right {
+						margin:100px 30px 0;
+					}
+
+					.section-bottom {
+						label {
+							display:block;
+							.clearfix();
+							margin-right:10px;
+
+							h2,h3,.orange,input {
+								line-height: 45px;
+							}
+
+							h2,h3 {
+								margin-right: 30px;
+							}
+
+							input {
+								width:90px;
+								border:none;
+								margin:auto;
+								height:45px;
+								color:@orange;
+								line-height: 40px;
+								vertical-align: middle;
+							}
+						}
+
+						#per-person {
+							.orange {
+								font-size: 25px;
+							}
+							input {
+								font-size:25px;
+							}
+						}
+						#total {
+							h2 {
+								font-size: 20px;
+							}
+							.orange {
+								font-size:40px;
+							}
+							input {
+								font-size:40px;
+							}
+						}
+						button {
+							margin-top:70px;
+						}
+					}
+				}
+
+				.pony-up-section {
+					.pony-up {
+						font-size:20px;
+						.content {
+							margin-left: 30px;
+							width:60%;
+							p {
+								padding:20px 0;
+							}
+							.icon-circle {
+								display:block;
+								font-size: 10px;
+							}
+							span {
+								margin-left: 10px;
+								font-size:20px;
+							}
+							.note {
+								font-style: italic;
+							}
+
+						}
+						.img {
+							width:30%;
+							img {
+								margin: 30px;
+							}
+						}
+					}
+				}
+
+				.chatter-section {
+					.body {
+						margin-bottom:60px;
+					}
+					#plan-chatter {
+						margin:20px 30px;
+						#chatter {
+							#new-chatter {
+								width:760px;
+								textarea {
+									margin:0 0 0 20px;
+									height:75px;
+									width:650px;
+								}
+								button {
+									margin:10px 0;
+								}
+							}
+						}
+						#chatters {
+							width:760px;
+							margin-top:20px;
+							border-top:thin solid @grayLight;
+
+							.upvote {
+								display:inline;
+								padding:2px;
+								text-align:center;
+							}
+
+							.chatter {
+								margin-top:20px;
+								.actor-image-container {
+
+								}
+								.chatter-container {
+									margin-left:95px;
+									.actor-name-container {
+										height:20px;
+										.actor-name {
+											font-weight:bold;
+											.icon-asterisk {
+												font-weight:normal;
+												font-size:.6em;
+												line-height:20px;
+												vertical-align:middle;
+												margin:0 6px;
+												color:@grayLight;
+											}
+										}
+									}
+									.chatter-body {
+										min-height: 45px;
+									}
+									.controls {
+										.chatter-reply {
+										}
+									}
+									.new-chatter-comment {
+										margin-top:20px;
+										width:665px;
+										.actor-image-container {
+											img {
+												width:60%;
+											}
+										}
+										textarea {
+											height:50px;
+											width:575px;
+										}
+										button {
+											margin:10px 0;
+										}
+									}
+									.chatter-comments {
+										margin-top:20px 0 20px 95px;
+										.chatter-comment {
+											margin-top:20px;
+											.actor-image-container {
+												img {
+													max-width:60%;
+												}
+											}
+											.comment-container {
+
+											}
+										}
+									}
 								}
 							}
 						}
 					}
 				}
 			}
-		}
-	}
 
-	/* this was removed */
-	#right {
-		width:18%;
-		float:left;
-		height:100%;
-		position:absolute;
-		top:0;
-		right:0;
+			/* organizer specific css */
+			#plan-dashboard.organizer-plan-dashboard {
 
-		#plan-feed {
-			background-color: @grayLighter;
-			height:100%;
-			width:18%;
+				.organizer-rsvp-section {
+					.notification {
 
-			.feed {
-				padding:5px 15px;
-				text-align:left;
-				line-height: 20px;
-				border-bottom:thin solid @grayLight;
-				i {
-					margin:5px;
+					}
+
+					.invitees-container {
+						margin-left:95px;
+					}
+				}
+
+				.organizer-cart-section {
+					.btn {
+						margin:0;
+					}
+
+					.body {
+						margin:0;
+
+						.icon-3x {
+							font-size:2em;
+						}
+
+						.container.border-bottom {
+							border-bottom:4px solid @grayDark;
+						}
+
+						.container {
+							width:100%;
+							padding:20px 0 40px 0;
+
+							.cartoon-man {
+								width:100px;
+								margin:0 20px;
+								text-align:center;
+							}
+
+							.header {
+								border:none;
+								label {
+									i {
+										width:30px;
+									}
+
+									h3 {
+										color:@grayDark;
+										font-size:20px;
+										line-height: 30px;
+										vertical-align: middle;
+									}
+								}
+							}
+
+							.body {
+								width:500px;
+								p {
+									padding:10px 0;
+								}
+								.button-container {
+									.buy-now {
+										margin:10px 10px 10px 200px;
+										display:block;
+										color:@blue;
+									}
+								}
+							}
+
+						}
+
+						.ticket-row {
+
+							.ticket-container {
+								.ticket-info, .ticket-payment {
+									font-size:1.5em;
+									margin:10px 0;
+									line-height: 24px;
+									vertical-align: middle;
+
+									.left {
+										width:360px;
+									}
+								}
+
+								.ticket-section, .ticket-row, .ticket-seat {
+									margin-right:10px;
+									span {
+										margin-left:5px;
+									}
+								}
+
+								.ticket-payment {
+
+									.qty-container {
+										select {
+											margin:0 10px;
+											font-size:0.6em;
+											width:50px;
+										}
+									}
+									.ticket-total {
+										margin:0 10px;
+										color:@green;
+									}
+								}
+							}
+							.controls {
+								margin:20px 0;
+							}
+						}
+
+						.add-on-row {
+
+							.popover-content {
+								font-size:12px;
+							}
+
+							.add-on-container {
+								.add-on-offsite-link {
+									.text {
+										margin:15px 0 0 15px;
+									}
+								}
+								.add-on-info, .add-on-payment {
+									font-size:1.5em;
+									margin:10px 0;
+									line-height: 24px;
+									vertical-align: middle;
+
+								}
+
+								.add-on-section, .add-on-row, .add-on-seat {
+									margin-right:10px;
+									span {
+										margin-left:5px;
+									}
+								}
+
+								.add-on-payment {
+
+									.qty-container {
+										select {
+											margin:0 10px;
+											font-size:0.6em;
+											width:50px;
+										}
+									}
+									.add-on-total {
+										margin:0 10px;
+										color:@green;
+									}
+								}
+							}
+							.controls {
+								margin:20px 0;
+								.change-add-on-link {
+									margin:10px dire0px
+								}
+								.view-add-on-link {
+									margin-right: 20px;
+								}
+								.btn {
+									margin-right:20px;
+								}
+							}
+						}
+
+						.parking-container {
+
+							.body {
+
+							}
+
+							.add-on-included {
+							}
+
+							.add-on-not-included {
+
+							}
+						}
+
+						.totals {
+							font-size:2.5em;
+							width:550px;
+							text-align:right;
+							margin-left:150px;
+							font-weight: bold;
+						}
+						.totals > div {
+							line-height:normal;
+						}
+					}
+				}
+
+				.organizer-pony-up-section {
+					.invitees-container {
+						margin:0;
+					}
+				}
+
+			}
+
+			/* friend specific css */
+			#plan-dashboard.friend-plan-dashboard {
+				.friend-rsvp-section {
+					.body {
+						.friend-rsvp-container {
+
+							.info-container {
+								.info {
+									.row {
+										h3 {
+											font-size:1em;
+											padding:4px 0;
+										}
+									}
+								}
+							}
+
+							.collect-rsvp-container {
+								.collect-rsvp {
+									width:100%;
+									a {
+										font-size: 54px;
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}

@@ -1,8 +1,8 @@
 /* Controllers */
 angular.module('wembliApp.controllers.tickets', []).
 
-controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPurchaseUrls', 'tnConfig', 'tuMap', '$location', '$window', '$timeout',
-	function($scope, wembliRpc, plan, customer, ticketPurchaseUrls, tnConfig, tuMap, $location, $window, $timeout) {
+controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPurchaseUrls', 'tnConfig', 'tuMap', '$location', '$window', '$timeout', '$rootScope', 'overlay', 'googleAnalytics',
+	function($scope, wembliRpc, plan, customer, ticketPurchaseUrls, tnConfig, tuMap, $location, $window, $timeout, $rootScope, overlay, googleAnalytics) {
 
     /*
      * scope variables for the template
@@ -21,6 +21,9 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
     /* min and max ticket price for slider */
     $scope.minTixPrice = 0;
     $scope.maxTixPrice = 200;
+
+    /* if there are tickets already in the plan display extra navigation on the page */
+    $scope.ticketsChosen = false;
 
     /*
      * scope functions
@@ -124,10 +127,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
       $scope.qtySort = ($scope.qtySort) ? 0 : 1;
     }
 
-    $scope.showLoginModal = function() {
-      $('#tickets-login-modal').modal('show');
-    }
-
     /*
      * watch functions
      *
@@ -138,8 +137,143 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
       }
     });
 
+    /* watch selectedQty and initialize amountPaid */
+    $scope.$watch('selectedQty', function(newVal, oldVal) {
+      if (newVal) {
+        var ticket = $scope.tickets[$scope.currentTicketIdx];
+        if (ticket) {
+          ticket.selectedQty      = parseInt(newVal);
+          /* can't do this here cause I don't have selected qty yet */
+          var shipping            = 15;
+          var serviceCharge       = (parseFloat(ticket.ActualPrice) * .15) * parseInt(ticket.selectedQty);
+          var actualPrice         = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
+          var amountPaid          = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
+          ticket.amountPaid       = amountPaid.toFixed(2);
+          $scope.amountPaid       = ticket.amountPaid;
+        }
+      }
+    });
+
+    $scope.$watch('confirmPriceQty', function(newVal, oldVal) {
+      $('#bought-tickets-button').prop('disabled',!newVal);
+    });
 
 		plan.get(function(p) {
+      /* todo: figure out logic to determine backToPlan */
+      var backToPlan = false;
+      $scope.nextLink = backToPlan ? "/plan" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
+      $scope.nextText = backToPlan ? "Back To Plan Dashboard" : "Continue To Plan Preferences";
+      /* click handler for buy tix button
+       * - adds tix to plan
+       * - display a popup asking if they really did buy the tix
+      */
+      $scope.buyTicket = function(idx) {
+        $scope.currentTicketIdx = idx;
+        var ticket              = $scope.tickets[idx];
+        $scope.selectedQty      = ticket.selectedQty;
+
+        /* angularjs hack */
+        delete ticket["$$hashKey"];
+
+        /* add this ticket group - it will be removed if they later say they did not buy it */
+        var ticketGroup = {
+          service: 'tn',
+          eventId: p.event.eventId,
+          ticketGroup: ticket,
+        };
+
+        console.log('add ticketgroup');
+        console.log(ticketGroup);
+        plan.addTicketGroup(ticketGroup, function(err, results) {
+          console.log(results);
+          ticket.ticketsInPlan = true;
+          if (results.ticketGroup._id) {
+            ticket._id = results.ticketGroup._id;
+          }
+
+          /* find this ticket in the tickets list and update it so the button changes */
+          $scope.tickets[idx] = ticket;
+
+          /* wait then show the slidedown */
+          var Promise = $timeout(function() {
+            $rootScope.$apply(function() {
+              console.log('showbuytixoffsite');
+              $scope.buyTicketsOffsite = true;
+              overlay.show();
+            });
+          }, 1500);
+        });
+      }
+
+      $scope.removeTicketGroup = function(idx) {
+        var index = (typeof idx !== "undefined") ? idx : $scope.currentTicketIdx;
+
+        if (typeof index == "undefined") {
+          $scope.buyTicketsOffsite = false;
+          overlay.hide();
+          return;
+        }
+
+        /* if there's _id then there's a db record to modify, else its just stored in the session and no db id */
+        var id = $scope.tickets[index]._id ? $scope.tickets[index]._id : $scope.tickets[index].ID;
+        console.log('removing ticket id: '+id);
+
+        /* remove the ticketgroup and close the modal */
+        plan.removeTicketGroup({ticketId: id}, function(err, results) {
+          /* cause the button to change */
+          $scope.tickets[index].ticketsInPlan = false;
+
+          /* no longer interested in this ticket */
+          if ($scope.currentTicketIdx) {
+            delete $scope.currentTicketIdx;
+          }
+
+          /* hide the slide down popover */
+          if ($scope.buyTicketsOffsite) {
+            $scope.buyTicketsOffsite = false;
+            overlay.hide();
+          }
+        });
+      }
+
+      $scope.boughtTickets = function() {
+        console.log('set receipt for tix with idx: '+$scope.currentTicketIdx);
+
+        if (typeof $scope.currentTicketIdx == "undefined") {
+          console.log('no currenttixid');
+          $window.location.href = $scope.nextLink;
+          return;
+        }
+
+        var ticket = $scope.tickets[$scope.currentTicketIdx];
+        var id = ticket._id ? ticket._id : ticket.ID;
+        /* update the tickets to have a receipt */
+        plan.addTicketGroupReceipt({
+          ticketId: id,
+          service: 'tn',
+          receipt: {
+            transactionToken: ticket.sessionId,
+            amount: $scope.amountPaid,
+            qty: $scope.selectedQty
+          }
+        }, function(err, result) {
+          console.log('receipt added');
+          console.log(err, result);
+          /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
+          //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+
+          googleAnalytics.trackEvent('Plan', 'boughtTickets', $scope.plan.event.eventName, '', function(err, result) {
+            /* go to the next page which depends on whether they are splitting with friends or paying themself */
+            $window.location.href = $scope.nextLink;
+          });
+        });
+      }
+
+      $rootScope.$on('overlay-clicked', function() {
+        $scope.removeTicketGroup();
+        console.log('overlay clicked');
+      });
+
 			console.log($scope.plan);
 			$scope.organizer = plan.getOrganizer();
 
@@ -197,6 +331,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
             /* initialize selectedQty */
             el.selectedQty = el.ValidSplits.int[0];
+
             /* configure the qty dropdown for the tickets list */
             el.maxSplit = 1;
 
@@ -217,12 +352,16 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
               el.selectedQty = $location.search().qty;
             }
 
-
             /* check for tickets already chosen */
             el.ticketsInPlan = false;
             angular.forEach(plan.getTickets(), function(ticketInPlan) {
-              el.ticketsInPlan = true;
-              el._id = ticketInPlan._id;
+              if (ticketInPlan.ticketGroup.ID === el.ID) {
+                el.ticketsInPlan = true;
+                $scope.ticketsChosen = true;
+                if (typeof ticketInPlan._id !== "undefined") {
+                  el._id = ticketInPlan._id;
+                }
+              }
             });
             filteredTicketsList.push(el);
           });
@@ -480,64 +619,20 @@ controller('TicketsOffsiteCtrl', ['$scope', 'plan', '$http', '$location', '$root
 		};
 
 		$scope.submitForm = function() {
-			/* update the tickets to have a receipt */
-			plan.addTicketGroupReceipt({
-				ticketId: $scope.ticketId,
-				service: 'tn',
-				receipt: {
-					qty: $scope.qty,
-					amountPaid: $scope.amountPaid
-				}
-			}, function(err, result) {
-				$('#tickets-offsite-modal').modal('hide');
-
-				/* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
-				//$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
-
-				/* have to back to plan so they don't have a chance to buy more */
-				if ($scope.continueLink) {
-					$location.path($scope.continueLink);
-				} else {
-					$location.path("/plan");
-				}
-
-				var t = plan.getTickets();
-
-				var newT = [];
-
-				if (typeof t[0] === "undefined") {
-					newT.push(result.ticket);
-				} else {
-					for (var i = 0; i < t.length; i++) {
-						if (t[i]._id = result.ticket._id) {
-							newT.push(result.ticket);
-						} else {
-							newT.push(t[i]);
-						}
-					};
-				}
-				plan.setTickets(newT);
-				$rootScope.$broadcast('tickets-changed', {
-					restaurants: newT
-				});
-
-
-
-			});
 
 		};
 
 		$scope.cancelForm = function() {
-			/* remove the ticketgroup and close the modal */
-			plan.removeTicketGroup({
-				ticketId: $scope.ticketId
-			}, function(err, results) {
-				$('#tickets-offsite-modal').modal('hide');
-				$rootScope.$broadcast('tickets-changed', {
-					tickets: results.tickets
-				});
+      /* remove the ticketgroup and close the modal */
+      plan.removeTicketGroup({
+        ticketId: $scope.ticketId
+      }, function(err, results) {
+        $('#tickets-offsite-modal').modal('hide');
+        $rootScope.$broadcast('tickets-changed', {
+          tickets: results.tickets
+        });
 
-			});
+      });
 
 		};
 

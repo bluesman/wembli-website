@@ -164,6 +164,19 @@ module.exports = function(grunt) {
             'angular/directives/invitation-wizard.js'
           ]
         }
+      },
+      "plan": {
+        "files": {
+          'public/js/plan.min.js':[
+            'angular/apps/plan.js',
+            'angular/controllers/plan.js',
+            'angular/directives/plan.js',
+            'angular/filters/plan.js',
+            'angular/filters/invitation-wizard.js',
+            'angular/services/plan.js',
+            'angular/services/google.js'
+          ]
+        }
       }
     },
     watch: {

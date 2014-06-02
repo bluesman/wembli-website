@@ -10,7 +10,8 @@ block content
 						- var cnt = 0
 						each navItem in wizardNav
 							- cnt++
-							a.clearfix(ng-class="{'#{navItem.id}':'active'}[currentStep] + ' ' + {true:'complete'}[stepCompleted['#{navItem.id}']]", href="#{navItem.href}",id="#{navItem.id}",class="wizard-step-nav")
+							- gotoStep = 'step'+cnt;
+							a.clearfix(ng-class="{'#{navItem.id}':'active'}[currentStep] + ' ' + {true:'complete'}[stepCompleted['#{navItem.id}']]", href="#{navItem.href}",ng-click="gotoStep('#{gotoStep}')", id="#{navItem.id}",class="wizard-step-nav")
 								//- i(class="#{navItem.icon}")
 								.box.box-small.pull-left #{cnt}
 								span #{navItem.text}
@@ -37,10 +38,11 @@ block content
 						each navItem in wizardNav
 							- cnt++
 							- var first = ''
+							- gotoStep = 'step'+cnt;
 							if (cnt === 1)
 								- first = 'col-xs-offset-1'
 							.col-sm-1.col-xs-2(class="#{first}")
-								a.box.pull-left(ng-class="{'nav-step1':'first'}['nav-step#{cnt}'] + ' ' + {'#{navItem.id}':'active'}[currentStep] + ' ' + {true:'complete'}[stepCompleted['#{navItem.id}']]", href="#{navItem.href}",id="#{navItem.id}",class="wizard-step-nav") #{cnt}
+								a.box.pull-left(ng-class="{'nav-step1':'first'}['nav-step#{cnt}'] + ' ' + {'#{navItem.id}':'active'}[currentStep] + ' ' + {true:'complete'}[stepCompleted['#{navItem.id}']]", href="#{navItem.href}", ng-click="gotoStep('#{gotoStep}')", id="#{navItem.id}",class="wizard-step-nav") #{cnt}
 					#step1.invitation-wizard-step1.wizard-step(ng-show="{'step1':true}[showStep]")
 						include includes/invite-friends-wizard/step-1
 					#step2.invitation-wizard-step2.wizard-step(ng-show="{'step2':true}[showStep]")

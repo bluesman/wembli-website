@@ -6,6 +6,7 @@ var wembliModel = require('wembli-model');
 var Customer = wembliModel.load('customer');
 var Notify = wembliModel.load('notify');
 var Plan = wembliModel.load('plan');
+var Ticket = wembliModel.load('ticket');
 var Feed = wembliModel.load('feed');
 var balanced = require('wembli/balanced-api')({
 	secret: app.settings.balancedSecret,
@@ -13,6 +14,7 @@ var balanced = require('wembli/balanced-api')({
 });
 var mcapi = require('mailchimp-api');
 var mc = new mcapi.Mailchimp(app.settings.mailchimpKey);
+var async = require('async');
 
 exports.customer = {
 
@@ -731,10 +733,50 @@ exports.customer = {
 					req.session.plan.organizer.customerId = customer.id;
 					req.session.visitor.context = 'organizer';
 
-
 					req.session.plan.save(function(err) {
 						customer.addPlan(req.session.plan.guid, function(err) {
-							return respond(data);
+
+							/* see if there are any tickets to add */
+							if (req.session.ticketsToAdd) {
+								var ticketIds = [];
+								async.forEach(req.session.ticketsToAdd, function(set, tixToAddCb) {
+									set.planId = req.session.plan._id;
+									console.log('adding ticket on create customer');
+									console.log(set);
+									ticket = new Ticket(set);
+
+									ticket.save(function(err) {
+										if (err) {
+											data.success = 0;
+											data.dbError = 'unable to save ticketGroup: ' + err;
+											console.log('error adding ticket to plan:');
+											console.log(data);
+											tixToAddCb(err)
+										}
+										console.log()
+										ticketIds.push(ticket._id);
+										tixToAddCb();
+									});
+								}, function(err) {
+									if (err) {
+										return respond(data);
+									}
+									console.log('save ticketIds to plan');
+									console.log(ticketIds);
+									/* now add the ticket to the plan */
+									req.session.plan.tickets = ticketIds;
+									req.session.plan.save(function(err) {
+										if (err) {
+											console.log(err);
+											data.success = 0;
+											data.dbError = 'unable to add ticketGroup ' + ticket.id;
+										}
+										return respond(data);
+									});
+								});
+							} else {
+								return respond(data);
+							}
 						});
 					});
 				} else {

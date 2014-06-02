@@ -3,101 +3,6 @@
 /* Directives */
 angular.module('wembliApp.directives.plan', []).
 
-directive('initPlanNav', ['$location', 'planNav', '$rootScope', '$timeout', 'header',
-  function($location, planNav, $rootScope, $timeout, header) {
-    return {
-      restrict: 'C',
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr, controller) {
-          planNav.init(attr.sections);
-        };
-      }
-    }
-
-  }
-]).
-
-directive('planNav', ['$location', 'planNav', '$rootScope', '$timeout', 'plan', 'customer',
-  function($location, planNav, $rootScope, $timeout, plan, customer) {
-    return {
-      restrict: 'E',
-      replace: true,
-      scope: false,
-      templateUrl: "/partials/plan/nav",
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr, controller) {
-          plan.get(function(p) {
-            var scrollToSection = 1;
-            if ($location.hash()) {
-              var h = $location.hash();
-              /* everyauth hack */
-              if (h == '_=_') {
-                scrollToSection = 1;
-              } else {
-                scrollToSection = parseInt(h.charAt(h.length - 1));
-              }
-            } else {
-              if ((typeof scope.customer !== "undefined") && (p.organizer.customerId === scope.customer.id)) {
-                /* automatically go to the right section depending on what phase of the plan they are in */
-                if (p && p.rsvpComplete) {
-                  scrollToSection = 2; //cart
-
-                  /* if tickets are not chosen */
-                  if (!p.tickets[0]) {
-                    scrollToSection = 2;
-                  }
-
-                  /* parking is in plan but parking not chosen */
-                  if (p.preferences.addOns.parking && !p.parking[0]) {
-                    scrollToSection = 2;
-                  }
-
-                  /* restaurants in plan but not chosen */
-                  if (p.preferences.addOns.restaurants && !p.restaurants[0]) {
-                    scrollToSection = 2;
-                  }
-                  /* hotels are in the plan but not chosen */
-                  if (p.preferences.addOns.hotels && !p.hotels[0]) {
-                    scrollToSection = 2;
-                  }
-                }
-              } else {
-                /* i'm not the organizer */
-                if (!p.rsvpComplete) {
-                  scrollToSection = 1;
-                } else {
-                  scrollToSection = 4;
-                }
-              }
-            }
-            planNav.setScrollToSection(scrollToSection);
-            $rootScope.$broadcast('section-loaded');
-          });
-        };
-      }
-    }
-  }
-]).
-
-directive('scrollTo', ['$window', 'planNav','googleMap',
-  function($window, planNav, googleMap) {
-    return {
-      restrict: 'EAC',
-      cache: false,
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr, controller) {
-          element.click(function() {
-            var elId = '#' + element.attr('id').split('-')[1];
-            var sectionNumber = parseInt(elId.charAt(elId.length - 1));
-            planNav.scrollTo(sectionNumber);
-            googleMap.resize();
-          });
-        };
-      }
-    }
-  }
-]).
-
 directive('notification', ['$timeout', 'notifications',
   function($timeout, notifications) {
     return {
@@ -291,16 +196,14 @@ directive('infoSlideDownLabel', [
   }
 ]).
 
-directive('planDashboard', ['$templateCache','$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav', 'slidePage',
-  function($templateCache, $timeout, $rootScope, $window, $location, wembliRpc, cart, plan, customer, pluralize, fetchModals, planNav, slidePage) {
+directive('planDashboard', ['$templateCache','$timeout', '$rootScope', '$window', '$location', 'wembliRpc', 'cart', 'plan', 'customer', 'pluralize', 'fetchModals', 'planNav',
+  function($templateCache, $timeout, $rootScope, $window, $location, wembliRpc, cart, plan, customer, pluralize, fetchModals, planNav) {
     return {
       restrict: 'C',
       replace: true,
       scope: false, //this has to be false so that the plan is shared among all the child directives
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
-
-          slidePage.directionOverride = -1;
 
           $scope.friendsPonyUp = function(friends) {
 
@@ -351,6 +254,7 @@ directive('planDashboard', ['$templateCache','$timeout', '$rootScope', '$window'
 
 
           $scope.calcTotalComing = function() {
+            console.log('here');
             $scope.totalComing = 0;
             $scope.friendsComing = [];
             $scope.totalPoniedUp = 0.00;
@@ -576,7 +480,7 @@ directive('planDashboard', ['$templateCache','$timeout', '$rootScope', '$window'
               };
               scope.friends = f;
               scope.friendsPonyUp(scope.friends);
-              scope.guestCountPlural = pluralize(scope.me.rsvp.guestCount);
+              //scope.guestCountPlural = pluralize(scope.me.rsvp.guestCount);
               scope.calcTotalComing();
             }
           });
@@ -640,7 +544,7 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
             }
             $scope.plan.organizer.rsvp.decision = ($scope.plan.organizer.rsvp.guestCount > 0);
 
-            $scope.guestCountPlural = pluralize($scope.plan.organizer.rsvp.guestCount);
+            //$scope.guestCountPlural = pluralize($scope.plan.organizer.rsvp.guestCount);
             $scope.calcTotalComing();
 
             wembliRpc.fetch('plan.submitOrganizerRsvp', {
@@ -695,7 +599,7 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
           };
 
           var initDirective = function() {
-            $scope.guestCountPlural = pluralize($scope.plan.organizer.rsvp.guestCount);
+            //$scope.guestCountPlural = pluralize($scope.plan.organizer.rsvp.guestCount);
 
             if ($scope.plan.organizer.rsvp.decision === null) {
               $scope.setRsvp(true);
@@ -774,8 +678,8 @@ directive('organizerPlanDashboard', ['$rootScope', '$window', '$location', 'wemb
   }
 ]).
 
-directive('organizerItinerarySection', ['$rootScope', 'wembliRpc',
-  function($rootScope, wembliRpc) {
+directive('organizerItinerarySection', ['wembliRpc', 'planNav',
+  function(wembliRpc, planNav) {
     return {
       restrict: 'E',
       cache: false,
@@ -784,7 +688,9 @@ directive('organizerItinerarySection', ['$rootScope', 'wembliRpc',
       templateUrl: '/partials/plan/itinerary-section/organizer',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          $rootScope.$broadcast('section-loaded');
+          console.log('organize itinerary loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
           var timer;
           scope.submitNotes = function() {
             clearTimeout(timer);
@@ -803,8 +709,8 @@ directive('organizerItinerarySection', ['$rootScope', 'wembliRpc',
   }
 ]).
 
-directive('organizerRsvpSection', ['$rootScope', 'planNav', 'plan',
-  function($rootScope, planNav, plan) {
+directive('organizerRsvpSection', ['planNav', 'plan',
+  function(planNav, plan) {
     return {
       restrict: 'E',
       cache: false,
@@ -813,7 +719,9 @@ directive('organizerRsvpSection', ['$rootScope', 'planNav', 'plan',
       templateUrl: '/partials/plan/rsvp-section/organizer',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          $rootScope.$broadcast('section-loaded');
+          console.log('organize rsvp loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
           var makeRsvpDays = function() {
             var rsvpTime = new Date(scope.plan.rsvpDate).getTime();
             var now = new Date().getTime();
@@ -850,8 +758,8 @@ directive('organizerRsvpSection', ['$rootScope', 'planNav', 'plan',
   }
 ]).
 
-directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan', 'cart',
-  function($rootScope, ticketPurchaseUrls, plan, cart) {
+directive('organizerCartSection', ['ticketPurchaseUrls', 'plan', 'cart', 'planNav',
+  function(ticketPurchaseUrls, plan, cart, planNav) {
     return {
       restrict: 'E',
       replace: true,
@@ -863,8 +771,9 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan', '
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           scope.tnUrl = ticketPurchaseUrls.tn;
-
-          $rootScope.$broadcast('section-loaded');
+          console.log('organize cart loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
 
           var d = scope.$on('rsvp-complete', function() {
             scope.plan.rsvpComplete = true;
@@ -878,8 +787,8 @@ directive('organizerCartSection', ['$rootScope', 'ticketPurchaseUrls', 'plan', '
   }
 ]).
 
-directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeout', 'customer',
-  function($rootScope, plan, wembliRpc, $timeout, customer) {
+directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeout', 'customer', 'planNav',
+  function($rootScope, plan, wembliRpc, $timeout, customer, planNav) {
     return {
       restrict: 'E',
       cache: false,
@@ -1175,8 +1084,9 @@ directive('organizerPonyUpSection', ['$rootScope', 'plan', 'wembliRpc', '$timeou
 
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-
-          $rootScope.$broadcast('section-loaded');
+          console.log('organize pony up loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
         }
       }
     }
@@ -1378,8 +1288,8 @@ directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', '
   }
 ]).
 
-directive('friendItinerarySection', ['$rootScope', 'wembliRpc',
-  function($rootScope, wembliRpc) {
+directive('friendItinerarySection', ['wembliRpc', 'planNav',
+  function(wembliRpc, planNav) {
     return {
       restrict: 'E',
       cache: false,
@@ -1388,15 +1298,16 @@ directive('friendItinerarySection', ['$rootScope', 'wembliRpc',
       templateUrl: '/partials/plan/itinerary-section/friend',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          $rootScope.$broadcast('section-loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
         };
       }
     };
   }
 ]).
 
-directive('friendRsvpSection', ['$rootScope', 'wembliRpc', 'pluralize',
-  function($rootScope, wembliRpc, pluralize) {
+directive('friendRsvpSection', ['planNav', 'wembliRpc', 'pluralize',
+  function(planNav, wembliRpc, pluralize) {
     return {
       restrict: 'E',
       cache: false,
@@ -1405,7 +1316,8 @@ directive('friendRsvpSection', ['$rootScope', 'wembliRpc', 'pluralize',
       templateUrl: '/partials/plan/rsvp-section/friend',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          $rootScope.$broadcast('section-loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
 
           /* handle the main plan rsvp */
           scope.setRsvp = function(rsvp) {
@@ -1463,8 +1375,8 @@ directive('friendRsvpSection', ['$rootScope', 'wembliRpc', 'pluralize',
   }
 ]).
 
-directive('friendVoteSection', ['$rootScope', 'wembliRpc',
-  function($rootScope, wembliRpc) {
+directive('friendVoteSection', ['planNav', 'wembliRpc',
+  function(planNav, wembliRpc) {
     return {
       restrict: 'E',
       cache: false,
@@ -1473,7 +1385,8 @@ directive('friendVoteSection', ['$rootScope', 'wembliRpc',
       templateUrl: '/partials/plan/vote-section/friend',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          $rootScope.$broadcast('section-loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
 
 
           var submitVote = function() {
@@ -1775,8 +1688,8 @@ directive('friendVoteSection', ['$rootScope', 'wembliRpc',
   }
 ]).
 
-directive('friendInviteesSection', ['$rootScope', 'wembliRpc',
-  function($rootScope, wembliRpc) {
+directive('friendInviteesSection', ['planNav', 'wembliRpc',
+  function(planNav, wembliRpc) {
     return {
       restrict: 'E',
       cache: false,
@@ -1785,15 +1698,16 @@ directive('friendInviteesSection', ['$rootScope', 'wembliRpc',
       templateUrl: '/partials/plan/invitees-section/friend',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          $rootScope.$broadcast('section-loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
         };
       }
     };
   }
 ]).
 
-directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
-  function($rootScope, wembliRpc) {
+directive('friendPonyUpSection', ['$rootScope', 'wembliRpc', 'planNav',
+  function($rootScope, wembliRpc, planNav) {
     return {
       restrict: 'E',
       cache: false,
@@ -1889,7 +1803,8 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc',
       ],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          $rootScope.$broadcast('section-loaded');
+          planNav.registerSection();
+          //$rootScope.$broadcast('section-loaded');
         };
       }
     };
@@ -2065,8 +1980,8 @@ directive('planFeed', ['plan', '$timeout', 'wembliRpc',
     - delete a comment
  */
 
-directive('planChatter', ['$timeout', 'wembliRpc', '$rootScope',
-  function($timeout, wembliRpc, $rootScope) {
+directive('planChatter', ['$timeout', 'wembliRpc', 'planNav',
+  function($timeout, wembliRpc, planNav) {
     return {
       restrict: 'E',
       replace: true,
@@ -2093,8 +2008,9 @@ directive('planChatter', ['$timeout', 'wembliRpc', '$rootScope',
             scope.chatters = results.chatters;
             scope.chatterLoading = false;
             $timeout(function() {
-
-              $rootScope.$broadcast('section-loaded');
+              console.log('organize chatter loaded');
+              planNav.registerSection();
+              //$rootScope.$broadcast('section-loaded');
             }, 500);
 
           });

@@ -82,21 +82,6 @@
 			#translucent > .background(@blue,0.25);
 		}
 		*/
-		#qty {
-			width:20px;
-			text-align: center;
-			margin: 0 6px;
-		}
-
-		#amount-paid-prepend {
-			margin: 0 6px;
-		}
-
-		#amount-paid {
-			width:60px;
-			text-align: center;
-			margin:0;
-		}
 	}
 }
 
@@ -126,6 +111,7 @@
 	}
 
 	.header {
+		position:relative;
 		padding:10px;
 		background-color:@blue;
 
@@ -154,6 +140,19 @@
 			font-weight:100;
 			font-family: "Helvetica Neue", "Helvetica";
 			letter-spacing: 1px;
+		}
+
+		.navigation {
+			position:absolute;
+			top:7px;
+			right:0;
+			color:@white;
+			a {
+				color:@white;
+			}
+			a:hover {
+				color:@yellow;
+			}
 		}
 
 
@@ -209,6 +208,38 @@
 }
 
 #tickets {
+
+
+
+	#tickets-offsite {
+
+		#qty {
+			width:50px;
+			text-align: center;
+			margin: 0 6px;
+		}
+
+		#confirm-price-qty-container {
+			padding:10px;
+		}
+
+		#amount-paid-input-group {
+			width:133px;
+			margin:0 10px;
+		}
+
+		#amount-paid-prepend {
+			margin: 0 6px;
+		}
+
+		#amount-paid {
+			width:100px;
+			text-align: center;
+			margin:0;
+		}
+
+
+	}
 
 	#tickets-right {
 		background-color:@white;
@@ -341,7 +372,7 @@
 						}
 						.qty {
 							color:@gray;
-							font-size:.9em;
+							font-size:.85em;
 						}
 					}
 					.seats, .controls {

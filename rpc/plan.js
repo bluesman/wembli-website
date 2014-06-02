@@ -77,8 +77,16 @@ exports.plan = {
 								planId: req.session.plan.id
 							}, function(err, results) {
 								data.tickets = results;
+
+								/* merge in any tickets that didn't get saved in the db yet */
+								if (typeof req.session.ticketsToAdd !== "undefined") {
+									for (var i = req.session.ticketsToAdd.length - 1; i >= 0; i--) {
+										data.tickets.push(req.session.ticketsToAdd[i]);
+									};
+								}
 								/* check if these tickets are still available */
 								async.forEach(data.tickets, function(item, callback2) {
+
 									ticketNetwork.GetTickets({
 										ticketGroupID: item.ticketGroup.ID
 									}, function(err, results) {
@@ -87,14 +95,19 @@ exports.plan = {
 										}
 										if (typeof results.TicketGroup === "undefined") {
 											item.gone = true;
-											item.save(function(err) {
-												callback2();
-											});
+
+											if (item._id) {
+												item.save(function(err) {
+													callback2();
+												});
+											}
+
 										} else {
 											/* done with loop iteration */
 											callback2();
 										}
 									});
+
 								}, function(err) {
 									/* done with outer loop iteration */
 									callback();
@@ -1075,7 +1088,7 @@ exports.plan = {
 
 						data.friends = friends;
 						feedRpc['logActivity'].apply(function(err, feedResult) {
-							
+
 							return me(null, data);
 						}, [{
 								action: 'addFriend',
@@ -1624,13 +1637,6 @@ exports.plan = {
 			success: 1
 		};
 
-		/* must have a customer to create a plan in the db */
-		if (!req.session.customer) {
-			console.log('no customer...');
-			data.noCustomer = true;
-			return me(null, data);
-		}
-
 		if (!req.session.plan) {
 			console.log('no plan...to add tickets to');
 			data.noPlan = true;
@@ -1642,6 +1648,34 @@ exports.plan = {
 			data.noTicketGroup = true;
 			return me(null, data);
 		}
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			/* throw the ticket group in the session */
+			if (typeof req.session.ticketsToAdd == "undefined") {
+				req.session.ticketsToAdd = [];
+			}
+
+			var set = {
+				planGuid: req.session.plan.guid,
+				service: 'tn',
+				eventId: args.ticketGroup.EventID,
+				ticketGroup: args.ticketGroup,
+			};
+
+			if (typeof args.qty !== "undefined") {
+				set.qty = args.qty;
+			}
+
+			if (typeof args.total !== "undefined") {
+				set.total = args.total;
+			}
+			req.session.ticketsToAdd.push(set);
+			data.ticketGroup = set;
+			return me(null, data);
+		}
+
+
 
 		console.log('add tickets to plan:');
 		console.log(args);
@@ -1664,6 +1698,7 @@ exports.plan = {
 
 			/* check if these tickets are still available */
 			async.forEach(tickets, function(item, callback) {
+
 				/* check if any of these are not yet purchased and remove them */
 				if (!item.purchased) {
 					item.remove(function(err) {
@@ -1691,10 +1726,16 @@ exports.plan = {
 					planGuid: req.session.plan.guid,
 					service: 'tn',
 					eventId: args.ticketGroup.EventID,
-					ticketGroup: args.ticketGroup,
-					qty: args.qty,
-					total: args.total,
+					ticketGroup: args.ticketGroup
 				};
+
+				if (typeof args.qty !== "undefined") {
+					set.qty = args.qty;
+				}
+
+				if (typeof args.total !== "undefined") {
+					set.total = args.total;
+				}
 
 				console.log(set);
 				if (typeof args.payment !== "undefined") {
@@ -1748,8 +1789,20 @@ exports.plan = {
 
 		/* must have a customer to create a plan in the db */
 		if (!req.session.customer) {
-			console.log('no customer...');
-			data.noCustomer = true;
+			/* no customer then check the ticketsToAdd in session
+			 * should be its own function because this uses the service's id not our own db id
+			 */
+			var newT = [];
+			if (typeof req.session.ticketsToAdd !== "undefined") {
+				for (var i = req.session.ticketsToAdd.length - 1; i >= 0; i--) {
+					console.log(req.session.ticketsToAdd[i]);
+					if (req.session.ticketsToAdd[i].ticketGroup.ID != args.ticketId) {
+						newT.push(req.session.ticketsToAdd[i]);
+					}
+				};
+				req.session.ticketsToAdd = newT;
+			}
+			data.tickets = newT;
 			return me(null, data);
 		}
 
@@ -1763,21 +1816,17 @@ exports.plan = {
 			"_id": args.ticketId
 		}, function(err) {
 			console.log('remove ticket err is: ' + err);
-			/* delete the ticket id from the plan and save it */
-			var newTickets = [];
-			for (var i = 0; i < req.session.plan.tickets.length; i++) {
-				if (req.session.plan.tickets[i] != args.ticketId) {
-					newTickets.push(req.session.plan.tickets[i]);
+			/* sync the plan ticket list with whats in the tickets collection */
+			Ticket.find({
+				planId: req.session.plan.id
+			}, function(err, results) {
+				var newT = [];
+				for (var i = 0; i < results.length; i++) {
+					newT.push(results[i]._id);
 				}
-			};
-			console.log('removing ticket from plan');
-			req.session.plan.tickets = newTickets;
-			req.session.plan.save(function(err, results) {
-				console.log('saved plan after removing ticket - err is:' + err);
-				/* get tickets to return */
-				Ticket.find({
-					planId: req.session.plan.id
-				}, function(err, results) {
+				req.session.plan.tickets = newT;
+				req.session.plan.save(function(err, results) {
+					console.log('saved plan after removing ticket - err is:' + err);
 					data.tickets = results;
 					me(null, data);
 				});
@@ -1792,10 +1841,44 @@ exports.plan = {
 			success: 1
 		};
 
+		console.log('add receipt');
+		console.log(args);
+
 		/* must have a customer to create a plan in the db */
 		if (!req.session.customer) {
-			console.log('no customer...');
-			data.noCustomer = true;
+			if (typeof req.session.ticketsToAdd !== "undefined") {
+				for (var i = req.session.ticketsToAdd.length - 1; i >= 0; i--) {
+					console.log(req.session.ticketsToAdd[i]);
+					if (req.session.ticketsToAdd[i].ticketGroup.ID === args.ticketId) {
+						console.log('adding receipt to ticket:');
+						console.log(req.session.ticketsToAdd[i]);
+
+						var item = req.session.ticketsToAdd[i];
+						if (typeof item.payment === "undefined") {
+							item.payment = {};
+						}
+
+						item.purchased = true;
+						console.log('adding receipt for:');
+						console.log(item);
+						item.payment.manual = args.receipt;
+						if (args.receipt.qty) {
+							item.payment.qty = args.receipt.qty;
+							item.qty         = args.receipt.qty;
+						}
+						if (args.receipt.amountPaid) {
+							item.payment.amount = args.receipt.amountPaid;
+							item.total          = args.receipt.amountPaid;
+
+						}
+						console.log('finished adding receipt to ticket:');
+						console.log(req.session.ticketsToAdd[i]);
+
+					}
+				};
+			}
+			data.tickets = req.session.ticketsToAdd;
+			console.log(data);
 			return me(null, data);
 		}
 
@@ -1839,7 +1922,7 @@ exports.plan = {
 				console.log('existing ticket to add receipt to');
 				console.log(item);
 
-				/* find the parking that matches args.parkingId */
+				/* find the item that matches args.ticketId */
 				if (args.ticketId == item.id) {
 					notFound = false;
 					item.purchased = true;
@@ -1848,9 +1931,11 @@ exports.plan = {
 					item.payment.manual = args.receipt;
 					if (args.receipt.qty) {
 						item.payment.qty = args.receipt.qty;
+						item.qty         = args.receipt.qty;
 					}
 					if (args.receipt.amountPaid) {
 						item.payment.amount = args.receipt.amountPaid;
+						item.total          = args.receipt.amountPaid;
 					}
 
 					item.save(function(err) {

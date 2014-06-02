@@ -40,7 +40,6 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
             }
           });
 
-
           $scope.$watch('customer', function(newVal) {
             $scope.loggedIn = loggedIn.check();
           });
@@ -61,6 +60,7 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
           };
 
           $scope.gotoStep = function(step) {
+            console.log('goto step: '+step);
             $scope.currentStep = 'nav-' + step;
             $scope.showStep = step;
           };
@@ -114,8 +114,7 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
               $scope.signup.noContinue = true;
               return $scope.gotoStep('step1');
             }
-            $location.hash('#section1');
-            $location.path('/plan');
+            $window.location.href = "/plan#section1";
           };
 
 
@@ -130,10 +129,23 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
             }
 
             /* figure out which step to go to */
-            var hash = $location.hash();
-            var initialStep = /^step/.test(hash) ? hash : 'step1';
+            var path = $location.path();
+            var initialStep = 'step1';
+            if (/^\/step2/.test(path)) {
+              initialStep = 'step2';
+            }
+            if (/^\/step3/.test(path)) {
+              initialStep = 'step3';
+            }
+            if (/^\/step4/.test(path)) {
+              initialStep = 'step4';
+            }
+            if (/^\/step5/.test(path)) {
+              initialStep = 'step5';
+            }
+
             /* hack to deal with everyauth weirdness */
-            if (hash === "_=_") {
+            if (path === "_=_") {
               /* it means they logged in */
               initialStep = 'step2';
             }
@@ -194,23 +206,16 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
             /* if there's an rsvp date, set it in the datepicker */
             if (typeof p.rsvpDate !== "undefined") {
               /* init the date picker */
+              console.log('init datepicker with date: '+p.rsvpDate);
               defaultDate = new Date(p.rsvpDate);
             }
-            /* don't set this be default per kim 20131008 */
-            /*
-            wembliRpc.fetch('invite-friends.submit-rsvp', {
-              rsvpDate: defaultDate
-            }, function(err, res) {
-              $rootScope.$broadcast('plan-rsvp-changed', defaultDate);
-            });
-            */
 
             element.pikaday({
               bound: false,
               minDate: startDate,
               maxDate: endDate,
               defaultDate: defaultDate,
-              setDefaultDate: false,
+              setDefaultDate: true,
               onSelect: function() {
                 scope.plan.rsvpDate = this.getDate();
                 wembliRpc.fetch('invite-friends.submit-rsvp', {
@@ -245,19 +250,22 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
           });
 
           $scope.initSignupForm = function() {
-
+            console.log('init signup form');
             plan.get(function(p) {
               $scope.next = '/plan/' + p.guid + '/' + '2';
-            });
 
-            /* check if there's a customer already - if so just display the customer info */
-            if ($scope.customer && $scope.customer.email) {
-              $scope.navData['nav-step1'] = $scope.customer.email;
-              $scope.stepCompleted['nav-step1'] = true;
-              $scope.showSignupView = true;
-            } else {
-              $scope.showSignupForm = true;
-            }
+              console.log($scope.customer);
+              /* check if there's a customer already - if so just display the customer info */
+              if ($scope.customer && $scope.customer.email) {
+                console.log('got a customer in scope');
+                $scope.navData['nav-step1'] = $scope.customer.email;
+                $scope.stepCompleted['nav-step1'] = true;
+                $scope.showSignupView = true;
+              } else {
+                console.log('no customer');
+                $scope.showSignupForm = true;
+              }
+            });
           };
 
           $scope.showForm = function(show, hide) {
@@ -378,9 +386,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
               });
             } else {}
           };
-
-          // i htink this is already done in plan.fetch()
-          //$scope.customer = customer.get();
         }
       ],
       compile: function(element, attr, transclude) {
@@ -392,22 +397,12 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
   }
 ]).
 
-directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter',
-  function(wembliRpc, $window, $filter) {
+directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter', 'plan',
+  function(wembliRpc, $window, $filter, plan) {
     return {
       restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude) {
-          if ($scope.plan && $scope.plan.rsvpDate) {
-            $scope.navData['nav-step2'] = $filter('date')($scope.plan.rsvpDate, 'mediumDate');
-            $scope.stepCompleted['nav-step2'] = true;
-          }
-
-          $scope.$on('plan-rsvp-changed', function(e, date) {
-            $scope.plan.rsvpDate = date;
-            $scope.navData['nav-step2'] = $filter('date')($scope.plan.rsvpDate, 'mediumDate');
-            $scope.stepCompleted['nav-step2'] = true;
-          });
 
           $scope.submitRsvp = function() {
             if (!$scope.customer.email) {
@@ -434,7 +429,20 @@ directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter',
             });
           };
 
+          $scope.$watch('plan', function(newVal, oldVal) {
+            if (newVal) {
+              if ($scope.plan.rsvpDate) {
+                $scope.navData['nav-step2'] = $filter('date')($scope.plan.rsvpDate, 'mediumDate');
+                $scope.stepCompleted['nav-step2'] = true;
+              }
+            }
+          });
 
+          $scope.$on('plan-rsvp-changed', function(e, date) {
+            $scope.plan.rsvpDate = date;
+            $scope.navData['nav-step2'] = $filter('date')($scope.plan.rsvpDate, 'mediumDate');
+            $scope.stepCompleted['nav-step2'] = true;
+          });
         }
       ],
       compile: function(element, attr, transclude) {

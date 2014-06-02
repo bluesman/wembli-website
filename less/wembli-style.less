@@ -29,6 +29,73 @@ h4 {
   font-style: italic;
 }
 
+.slide-in-down {
+  position:fixed;
+  z-index:1032;
+  box-shadow: 0px 2px 10px;
+  margin-top:-80px;
+
+  padding:40px;
+  background-color: @white;
+  width:100%;
+
+
+  @media (max-width: @screen-sm-max) {
+    height:100%;
+    overflow: auto;
+  }
+
+  .slide-in-down-header {
+    margin:0 20px;
+    border-bottom:thin solid @grayLight;
+  }
+
+  .slide-in-down-body {
+    @media (min-width: @screen-md-min) {
+      .middle-option {
+        border-left: thin solid @grayLight;
+
+      }
+    }
+    .option-container {
+
+    }
+    .option-container:hover {
+      background-color: lighten(@blueLight, 20%);
+    }
+
+    .option-content {
+      padding:20px;
+
+      .option-body {
+        height:100px;
+      }
+
+    }
+  }
+
+}
+
+.slide-in-down.ng-hide-remove,.slide-in-down.ng-hide-add {
+  display:block!important;
+}
+
+.slide-in-down.ng-hide-remove {
+  -webkit-animation:slideInDown 0.5s;
+  animation: slideInDown 0.5s;
+}
+
+.slide-in-down.ng-hide-add {
+  -webkit-animation:slideOutUp 0.5s;
+  animation: slideOutUp 0.5s;
+}
+
+.slide-in-down.ng-hide {
+  display:none;
+}
+
+
+
 .fa-check-empty {
   margin-right:11px !important;
 }

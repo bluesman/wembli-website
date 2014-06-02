@@ -8,49 +8,49 @@ module.exports = {
 			'organizer': [
 			{
 				'name': "rsvp",
-				'icon': "icon-envelope",
+				'icon': "fa-envelope-o",
 				'text': "rsvp's",
 			}, {
 				'name': "cart",
-				'icon': "icon-shopping-cart",
+				'icon': "fa-shopping-cart",
 				'text': "cart",
 			}, {
 				'name': "pony-up",
-				'icon': "icon-credit-card",
+				'icon': "fa-credit-card",
 				'text': "pony up",
 			}, {
 				'name': "itinerary",
-				'icon': "icon-file-alt",
+				'icon': "fa-file-text-o",
 				'text': "itinerary",
 			}, {
 				'name': "chatter",
-				'icon': "icon-comments-alt",
+				'icon': "fa-comments-o",
 				'text': "chatter",
 			}],
 			'friend': [
 			{
 				'name': "rsvp",
-				'icon': "icon-envelope",
+				'icon': "fa-envelope-o",
 				'text': "rsvp",
 			}, {
 				'name': "vote",
-				'icon': "icon-bar-chart",
+				'icon': "fa-bar-chart",
 				'text': "vote",
 			}, {
 				'name': "invitees",
-				'icon': "icon-group",
+				'icon': "fa-group",
 				'text': "invitees",
 			}, {
 				'name': "pony-up",
-				'icon': "icon-money",
+				'icon': "fa-money",
 				'text': "pony up",
 			}, {
 				'name': "itinerary",
-				'icon': "icon-file-alt",
+				'icon': "fa-file-text-o",
 				'text': "itinerary",
 			}, {
 				'name': "chatter",
-				'icon': "icon-comments-alt",
+				'icon': "fa-comments-o",
 				'text': "chatter",
 			}]
 		};
@@ -73,19 +73,19 @@ module.exports = {
 
 	initInviteFriendsWizard: function() {
 		var nav = [{
-			'icon': "icon-share-alt",
+			'icon': "fa-share-alt",
 			'text': "Who's It From",
 		}, {
-			'icon': "icon-calendar",
+			'icon': "fa-calendar",
 			'text': "Choose RSVP Date",
 		}, {
-			'icon': "icon-facebook",
+			'icon': "fa-facebook",
 			'text': "Invite Facebook Friends",
 		}, {
-			'icon': "icon-twitter",
+			'icon': "fa-twitter",
 			'text': "Invite Twitter Friends",
 		}, {
-			'icon': "icon-envelope",
+			'icon': "fa-envelope-o",
 			'text': "Invite Friends Via Email",
 		}];
 

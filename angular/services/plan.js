@@ -1,50 +1,34 @@
 angular.module('wembliApp.services.plan', []).
 /* plan */
-factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notifications',
-	function($timeout, $rootScope, $location, header, notifications) {
-		var self = this;
-		self.sectionsCount = 0;
-		self.sectionsLoaded = -1;
-		self.scrollToSection = 1;
-		self.arrowTop = 40;
-		self.arrowHeight = 104;
+factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notifications','overlay',
+	function($timeout, $rootScope, $location, header, notifications, overlay) {
+		var self             = this;
+		self.sectionsCount   = 0;
+		self.sectionsLoaded  = 0;
+		self.activateSection = 1;
+		self.arrowTop        = 111;
+		self.arrowHeight     = 109;
 
 		var planNav = {
-			init: function(sectionsCount) {
-				if (self.sectionsCount == 0) {
-					self.sectionsCount = sectionsCount;
-				}
-				var dereg = $rootScope.$on('section-loaded', function(e, data) {
-					self.sectionsLoaded++;
-					if (self.sectionsLoaded == sectionsCount) {
-						/* all the sections are loaded */
-						self.sectionsLoaded = -1;
 
-						$('.plan-section-nav').removeClass('active');
-						var top = self.arrowTop + (self.arrowHeight * self.scrollToSection);
-
-						$('.nav-arrow').css('top', top + 'px').show();
-						$('#nav-section' + (self.scrollToSection)).addClass('active');
-						planNav.scrollTo(self.scrollToSection);
-
-						notifications.update();
-
-						header.fixed();
-
-						$timeout(function() {
-							$('#page-loading-modal').modal("hide");
-						}, 500);
-						dereg();
-					}
-				});
-
+			registerSection: function(sectionName) {
+				self.sectionsLoaded++;
+				this.activate();
 			},
 
-			setScrollToSection: function(sectionNumber) {
-				self.scrollToSection = sectionNumber;
+			onActivate: function(f) {
+				self.onActivate = f;
 			},
+
+			setActivateSection: function(sectionNumber) {
+				console.log('to section ' + sectionNumber);
+				self.activateSection = sectionNumber;
+				this.activate();
+			},
+
 			setSectionsCount: function(cnt) {
 				self.sectionsCount = cnt;
+				this.activate();
 				return cnt;
 			},
 
@@ -53,29 +37,43 @@ factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notificati
 			},
 
 			/* took out scroll functionality for click instead */
-			scrollTo: function(sectionNumber) {
-				/* this is the scroll functionality which is now replaced
-				var height = 20;
-				for (var i = 1; i < sectionNumber; i++) {
-					var h = $('#section' + i).height();
-					height += parseInt($('#section' + i).height());
-				};
+			activate: function(sectionNumber) {
+				self.activateSection = sectionNumber ? sectionNumber : self.activateSection;
 
-				$('#content').animate({
-					scrollTop: (height - 10)
-				}, 1000, 'easeOutBack');
-				*/
+				console.log('activate section ' + self.activateSection);
 
-				/* hide all sections & fade in new one */
-				for (var i = 1; i <= self.sectionsCount; i++) {
-					$('#section' + i).hide();
-				};
+				if (self.sectionsCount && (self.sectionsLoaded == self.sectionsCount)) {
+					console.log('all sections loaded');
 
-				$('.plan-section-nav').removeClass('active');
-				$('#nav-section' + sectionNumber).addClass('active');
-				var top = self.arrowTop + (self.arrowHeight * sectionNumber);
-				$('.nav-arrow').css('top', top + 'px').show();
-				$('#section' + sectionNumber).fadeIn(500);
+					/* hide all sections & fade in new one
+					for (var i = 1; i <= self.sectionsCount; i++) {
+						$('#section' + i).removeClass('hide');
+						$('#section' + i).hide();
+					};
+					*/
+
+					/* hide all the sections */
+					$('.plan-section').removeClass('hide').hide();
+					/* deactivate all the navs */
+					$('.plan-section-nav').removeClass('active');
+					/* activate the one we're going to */
+					$('#nav-section' + self.activateSection).addClass('active');
+					var top = self.arrowTop + (self.arrowHeight * self.activateSection);
+					/* put the arrow in the right place */
+					$('.nav-arrow').css('top', top + 'px').removeClass('hide').show();
+					/* fade in the section */
+					$('#section' + self.activateSection).fadeIn(500);
+
+					notifications.update();
+
+					header.fixed();
+
+					/* custom callback once a section loads */
+					if (self.onActivate) {
+						self.onActivate();
+					}
+
+				}
 			}
 
 		};

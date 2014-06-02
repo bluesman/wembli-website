@@ -3,109 +3,148 @@ block content
 	include includes/modals/tickets/no-tickets
 	include includes/modals/tickets/tickets-login
 	include includes/modals/tickets/tickets-offsite
-	#tickets.addons-container.container-fluid(ng-controller="TicketsCtrl")
-		.header.row(ng-cloak)
-			.col-md-2.col-sm-3.col-xs-12
-				.event-date-box
-					span.day(ng-cloak) {{plan.event.eventDate| date:'EEE'}}
-					span.event-date(ng-cloak) {{plan.event.eventDate| date:'MMM d'}}
-					span.time(ng-cloak) {{getDate(plan.event.eventDate)| date:'h:mm a'}}
-			.col-md-10.col-sm-9.col-xs-12
-				.info
-					h1.name.block {{plan.event.eventName}}
-					h2.helvetica.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
-					.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
-					.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
-		.row
-			#tickets-left.col-md-8.col-xs-12.addons-content-container
-				#venue-map-row.row
-					.col-xs-12.col-md-10.col-lg-8.col-md-offset-1.col-lg-offset-2
-						#venue-map-loading.addons-content-loading
-							.loading-icon
-								i.fa.fa-cog.fa-spin.fa-3x
-							.loading-text Loading Map...
+	#tickets.addons-container(ng-controller="TicketsCtrl")
+		#tickets-offsite.slide-in-down(ng-show="buyTicketsOffsite")
+			.buy-offsite-header.slide-in-down-header
+				a(href="#")
+					i.fa.fa-times.fa-2x(ng-click="removeTicketGroup()").pull-right
+				h2.modal-title Ticket Purchase For {{plan.event.eventName}}
+				h4.modal-subtitle Before we take you to your planning dashboard we need to know:
+			.buy-offsite-body.slide-in-down-body.row
+				.col-md-6.col-xs-12.option-container
+					.option-content
+						h3 Yes, I bought my tickets!
+						form#tickets-offsite-form.form-inline.option-body(name="tickets-offsite-form")
+							.form-group
+								span I just bought
+								select#qty.form-control(ng-model="selectedQty",name="selectedQty",ng-options="q for q in tickets[currentTicketIdx].ValidSplits.int")
+								span tix for a total of
+							.form-group
+								#amount-paid-input-group.input-group
+									span.input-group-addon $
+									input#amount-paid.form-control(type="text",name="amount_paid",ng-model="amountPaid")
+									span .
+							br
+							.form-group
+								label#confirm-price-qty-container
+									input#confirm-price-qty.hide.form-control(name="confirmPriceQty",type="checkbox",ng-model="confirmPriceQty")
+									i.fa.fa-check-square-o(ng-show="confirmPriceQty")
+									i.fa.fa-square-o(ng-hide="confirmPriceQty")
+									span Check this box if its correct. Otherwise, please update the info above.
+						button#bought-tickets-button.btn.btn-primary.btn-sm.form-control(ng-click="boughtTickets()") Continue
+				.col-md-6.col-xs-12.option-container.middle-option
+					.option-content
+						h3 No, show me somethin' else...
+						p.option-body I decided not to buy those stinkin' tickets. Show me other options.
+						button.btn.btn-primary.btn-sm.form-control(ng-click="removeTicketGroup()") See More Tickets
 
-						#venue-map-container
-				//-#groups-container
-			#tickets-right.col-md-4.col-xs-12
-				.addons-list-container
-					#tickets-list-header.addons-list-header
-						.filters.row
-							.col-xs-4.col-xs-offset-1
-								.qty-filter
-									label.pull-left(for="qty") Qty:
-									select.quantity-filter.form-control(name="qty")
-										option --
-										option(value="1") 1
-										option(value="2") 2
-										option(value="3") 3
-										option(value="4") 4
-										option(value="5") 5+
-							.col-xs-6
-								.price-filter
-									.price-range
-										label(for="amount") Price range:
-										input.amount(type="text")
-									.price-slider
-					//-
-						.ticket-list-header-container.list-header-container.row
-							.col-xs-2
-								a.price-header(href="#",ng-click="sortByPrice()") Price
-							.col-xs-8
-								a.section-header(href="#",ng-click="sortBySection()") Section
-							.col-xs-2
-								a.qty-header(href="#",ng-click="sortByQty()") Qty
-					#tickets-list.row
-						.col-xs-12
-							ul.ticket-list-container.list-container.addons-list
-								li.tickets-loading.addons-list-loading(ng-hide="tickets[0]")
-									.loading-icon
-										i.fa.fa-cog.fa-spin.fa-3x
-									.loading-text Finding Tickets...
-								li.ticket-row.row.display-popover(ng-repeat="ticket in tickets", placement="left",trigger="hover",animation="true",title="Notes:",content="{{ticket.Notes}}")
-									.col-xs-12
+		.container-fluid
+			.header.row(ng-cloak)
+				.col-md-2.col-sm-3.col-xs-12
+					.event-date-box
+						span.day(ng-cloak) {{plan.event.eventDate| date:'EEE'}}
+						span.event-date(ng-cloak) {{plan.event.eventDate| date:'MMM d'}}
+						span.time(ng-cloak) {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+				.col-md-10.col-sm-9.col-xs-12
+					.info
+						h1.name.block {{plan.event.eventName}}
+						h2.helvetica.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
+						.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
+						.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+					.navigation(ng-show="ticketsChosen")
+						a(href="{{nextLink}}") {{nextText}}&nbsp;
+						i.fa.fa-level-down.fa-rotate-270
+			.row
+				#tickets-left.col-md-8.col-xs-12.addons-content-container
+					#venue-map-row.row
+						.col-xs-12.col-md-10.col-lg-8.col-md-offset-1.col-lg-offset-2
+							#venue-map-loading.addons-content-loading
+								.loading-icon
+									i.fa.fa-cog.fa-spin.fa-3x
+								.loading-text Loading Map...
+
+							#venue-map-container
+					//-#groups-container
+				#tickets-right.col-md-4.col-xs-12
+					.addons-list-container
+						#tickets-list-header.addons-list-header
+							.filters.row
+								.col-xs-4.col-xs-offset-1
+									.qty-filter
+										label.pull-left(for="qty") Qty:
+										select.quantity-filter.form-control(name="qty")
+											option --
+											option(value="1") 1
+											option(value="2") 2
+											option(value="3") 3
+											option(value="4") 4
+											option(value="5") 5+
+								.col-xs-6
+									.price-filter
+										.price-range
+											label(for="amount") Price range:
+											input.amount(type="text")
+										.price-slider
+						//-
+							.ticket-list-header-container.list-header-container.row
+								.col-xs-2
+									a.price-header(href="#",ng-click="sortByPrice()") Price
+								.col-xs-8
+									a.section-header(href="#",ng-click="sortBySection()") Section
+								.col-xs-2
+									a.qty-header(href="#",ng-click="sortByQty()") Qty
+						#tickets-list.row
+							.col-xs-12
+								ul.ticket-list-container.list-container.addons-list
+									li.tickets-loading.addons-list-loading(ng-hide="tickets[0]")
+										.loading-icon
+											i.fa.fa-cog.fa-spin.fa-3x
+										.loading-text Finding Tickets...
+									li.ticket-row.display-popover(ng-repeat="ticket in tickets track by $index", placement="left",trigger="hover",animation="true",title="Notes:",content="{{ticket.Notes}}")
+										//- hidden fields that tuMap needs for its sorting/filtering
 										.row.hide
 											.col-xs-12
 												.ticket-price
 													.actual-price ${{ticket.ActualPrice}}
 												.ticket-section {{ticket.Section}}
 												.seat-row {{ticket.Row}}
-										.row
-											.col-xs-4.price
-												.value
-													strong ${{ticket.ActualPrice}}
-													span /ea
-												.qty
-													i {{ticket.maxSplit}} {{ticket.maxSplit | pluralize:'ticket'}}
-											.col-xs-5.seats
-													div
-														strong Section:&nbsp;
-														span {{ticket.Section}}&nbsp;
-													div
-														strong Row:&nbsp;
-														span {{ticket.Row}}&nbsp;
-													//-
-														div
-															strong Seats:&nbsp;
-															span(ng-show="{'\*':true}[ticket.LowSeat]") *
-															span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
-											.col-xs-3.controls
-													.actions
-														//- have to log in to buy tix
-														a.btn.btn-primary.btn-large(ng-href="#tickets-login-modal-{{ticket.ID}}",ng-hide="customer",ng-click="showLoginModal()") Buy Tix
-														a.btn.btn-primary.btn-large.buy-tickets-offsite(ticket="{{ticket}}",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",ng-show="customer",target="_blank") Buy Tix
-										.row
-											.col-xs-12.qty.hide
-												select.form-control(id="qty-{{ticket.ID}}",ng-model="ticket.selectedQty",name="qty-{{ticket.ID}}",ng-options="q for q in ticket.ValidSplits.int")
 												.ticket-quantity.hide(ng-repeat="split in ticket.ValidSplits.int") {{split}}
 												.header qty
+										.row
+											.col-xs-12
+												.row(ng-show="ticket.ticketsInPlan")
+													.col-xs-12
+														i You purchased these tickets and they have been added to your plan:
+												.row
+													.col-xs-3.price
+														.value
+															strong ${{ticket.ActualPrice}}
+															span /ea
+														.qty
+															i {{ticket.maxSplit}} {{ticket.maxSplit | pluralize:'ticket'}}
+													.col-xs-4.seats
+															div
+																strong Section:&nbsp;
+																span {{ticket.Section}}&nbsp;
+															div
+																strong Row:&nbsp;
+																span {{ticket.Row}}&nbsp;
+															//-
+																div
+																	strong Seats:&nbsp;
+																	span(ng-show="{'\*':true}[ticket.LowSeat]") *
+																	span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
+													.col-xs-5.controls
+														.actions
+															a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",target="_blank", ng-hide="ticket.ticketsInPlan") Buy Tix
+															a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)",ng-href="#",ng-show="ticket.ticketsInPlan") Remove From Plan
 
-				//-
-					.purchased-tickets-list
-					.invite-friends-list
-					.add-to-plan-list
-					.buy-now-list
-						include partials/interactive-venue-map/tickets/buy-now
-					.read-only-list
-					.no-results
+					//-
+						.purchased-tickets-list
+						.invite-friends-list
+						.add-to-plan-list
+						.buy-now-list
+							include partials/interactive-venue-map/tickets/buy-now
+						.read-only-list
+						.no-results
 
