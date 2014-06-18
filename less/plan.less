@@ -201,14 +201,17 @@
 	}
 }
 
-
 #plan-frame {
+	margin-bottom: 100px;
 
 	.img-container {
 		position:relative;
-		width:75px;
 		box-shadow: 0 1px 2px -1px;
 		border: thin solid @grayLight;
+
+		img {
+			margin:auto;
+		}
 
 		.no-image-overlay {
 			position:absolute;
@@ -218,15 +221,17 @@
 			right:0;
 			background-color: @white;
 			opacity: .5;
-			z-index: 2;
+			z-index: 1;
 
 			i {
-				height: 25px;
-				width: 25px;
-				margin: 25px auto;
+				font-size:1.5em;
+				margin: 33%;
 				display: block;
 			}
 
+		}
+		.rsvp-for {
+			font-size: .8em;
 		}
 	}
 
@@ -236,7 +241,7 @@
 		height:60px;
 		bottom:0;
 		left:0;
-		z-index:1;
+		z-index:2;
 
 		text-align:center;
 		background-color: @blueDark;
@@ -379,299 +384,23 @@
 
 				}
 
-				.rsvp-container {
-
-					.collect-rsvp-container {
-						.collect-rsvp {
-							a {
-								font-size:25px;
-								font-weight:bold;
-								color:@grayLight;
-								display:block;
-								height:50px;
-
-							}
-							a.active, a:hover {
-								color:@orange;
-							}
-						}
-						form {
-							label {
-								#guest-count {
-									width:45px;
-									height:26px;
-									text-align:center;
-									color:@grayDark;
-									margin:0 10px;
-									display: inline-block;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		@media (min-width: @screen-md-min) {
-			margin-left:160px;
-
-			#plan-dashboard {
-
-				.plan-section {
-
-					.event-info-container {
-						box-shadow: -4px -4px 4px -4px;
-						background-color: @white;
-						margin-top:-50px;
-						padding:0 15px 30px;
-
-						.event-info-header {
-							position:relative;
-							padding:10px 5px;
-							font-size: 10px;
-							border-bottom:4px solid @blue;
-
-							/* Extra small devices (phones, less than 768px) */
-							/* No media query since this is the default in Bootstrap */
-							h1 {
-								color:@grayDarker;
-							  font-size: 1.3em;
-							  margin:4px 0;
-							  letter-spacing: 1px;
-							}
-							h2 {
-								color:@grayDark;
-							  font-size: 1.2em;
-								margin:4px 0;
-								font-weight:200;
-								font-family: "Helvetica Neue", "Helvetica";
-								letter-spacing: 1px;
-							}
-							h3 {
-							  font-size: 20px;
-							}
-
-							.venue-address {
-								color:@grayDark;
-								font-weight:200;
-								font-family: "Helvetica Neue", "Helvetica";
-								letter-spacing: 1px;
-							}
-
-							.navigation {
-								position:absolute;
-								top:7px;
-								right:0;
-								color:@blue;
-								a {
-									color:@blue;
-								}
-								a:hover {
-									color:@yellow;
-								}
-							}
-
-
-							/* Small devices (tablets, 768px and up) */
-							@media (min-width: @screen-sm-min) {
-							  h1 {
-							    font-size: 1.2em;
-							  }
-							  h2 {
-							    font-size: 1.1em;
-							  }
-							  h3 {
-							    font-size: 20px;
-							  }
-							}
-
-							/* Medium devices (desktops, 992px and up) */
-							@media (min-width: @screen-md-min) {
-							  h1 {
-							    font-size: 1.3em;
-							  }
-							  h2 {
-							    font-size: 1.2em;
-							  }
-							  h3 {
-							    font-size: 22px;
-							  }
-							  .col-sm-9, .col-sm-3 {
-							  	padding:0 5px;
-							  }
-							}
-							/* Large devices (desktops, 1200px and up) */
-							@media (min-width: @screen-lg-min) {
-							  h1 {
-							    font-size: 1.3em;
-							  }
-							  h2 {
-							    font-size: 1.2em;
-							  }
-							  h3 {
-							    font-size: 22px;
-							  }
-							}
-						}
-						.plan-options-container {
-							#event-options-form {
-								.form-group {
-									margin-bottom:5px;
-								}
-							}
-						}
-					}
-
-					.organizer-rsvp-container {
-
-					}
-
-
-
-				}
-
-
-
-
-
-
-
-
-
-
-
-				.plan-section {
-
-					.event-info {
-						font-size:16px;
-						color:@blue;
-						padding:10px 0;
-					}
-
-
-					.body > h3 {
-						color:@blueDarker;
-					}
-
-					.body {
-						.clearfix();
-
-						.block1 {
-							.clearfix();
-
-							.firstRow {
-								h3 {
-									font-size:1.2em;
-									padding:10px 0;
-								}
-							}
-						}
-
-						.row {
-							margin:0 -15px;
-							.clearfix();
-
-							.price-slider-container {
-								width:300px;
-
-								.price-range-group-container {
-									.clearfix();
-									width:300px;
-									.dollar-sign {
-										display:block;
-										width:80px;
-										padding:10px;
-										text-align:center;
-										float:left;
-									}
-								}
-							}
-							.price-input-container {
-								width:120px;
-								line-height:45px;
-								margin:auto;
-								font-size:40px;
-								color:@orange;
-								.clearfix();
-
-								input {
-									width:75px;
-									border:none;
-									margin:auto;
-									height:45px;
-									font-size:40px;
-									color:@orange;
-									line-height: 45px;
-									vertical-align: middle;
-								}
-							}
-						}
-
-					}
-					.section-bottom {
-						.clearfix();
-						margin-top:30px;
-
-						.total-coming {
-							color:@grayDark;
-							width:230px;
-							.header {
-								border-radius:6px;
-								background-color: @grayLight;
-								padding:10px;
-
-								.rsvp-count {
-									font-size:26px;
-								}
-							}
-							.friend-coming {
-								margin:5px 10px;
-							}
-						}
-
-						.next-wrapper {
-							button {
-								font-weight: bold;
-								width:200px;
-							}
-						}
-					}
-				}
-
 				/* global invitees lists */
 				.invitees-container {
-					margin-top: 40px;
-
 					.invitee {
-						margin:0 30px 40px 0;
-
-						.img-container {
-							width:75px;
-							text-align:center;
-							line-height:12px;
-							.rsvp-for {
-								font-size: .8em;
-							}
-						}
+						margin-top:20px;
 
 						.invitee-info {
-							margin-left:10px;
-							width:80%;
 							.invitee-prefs-container {
-								.clearfix();
-								width:100%;
 								.invitee-pref {
-									width:20%;
-									text-align:center;
+									text-align:left;
 									.invitee-pref-header {
 										text-transform:uppercase;
 										color:@gray;
 										font-style: italic;
-										margin:10px 5px;
 										font-size:14px;
 									}
 									.invitee-pref-value {
-										.icon {
+										.fa {
 											height:45px;
 											line-height:45px;
 											vertical-align:middle;
@@ -703,7 +432,7 @@
 								}
 
 
-								.first {
+								.first-off {
 									text-align:left;
 									i {
 										margin-left:25px;
@@ -711,14 +440,18 @@
 								}
 							}
 							.invitee-name {
-								height: 24px;
+								/* height: 24px; */
 								.name {
 									font-size:20px;
 								}
 								.guests {
 									font-weight:bold;
 								}
+								.message-status-container {
+									text-align: right;
+								}
 							}
+
 							.requested-amounts-container, .transaction-fee-container, .suggested-amounts-container {
 								width:465px;
 
@@ -924,6 +657,276 @@
 
 				}
 
+
+				/* rsvp section specific */
+				.rsvp-container {
+
+					.collect-rsvp-container {
+
+						.collect-rsvp {
+							a {
+								font-size:2em;
+								font-weight:bold;
+								color:@grayLight;
+								display:block;
+							}
+							a.active, a:hover {
+								color:@orange;
+							}
+						}
+					}
+				}
+
+				.guest-count-container {
+					form {
+						padding:20px;
+
+						label {
+							#guest-count {
+								width:45px;
+								height:26px;
+								text-align:center;
+								color:@grayDark;
+								margin:0 10px;
+								display: inline-block;
+							}
+						}
+					}
+				}
+
+				.payment-type-note {
+					padding:20px;
+				}
+
+				.event-info-container {
+					.event-info-header {
+						padding:0 15px 30px;
+						position:relative;
+						padding:10px 5px;
+						font-size: 10px;
+						background-color: @blue;
+
+						/* Extra small devices (phones, less than 768px) */
+						/* No media query since this is the default in Bootstrap */
+						h1 {
+							color:@white;
+						  font-size: 1.3em;
+						  margin:4px 0;
+						  letter-spacing: 1px;
+						}
+						h2 {
+							color:@white;
+						  font-size: 1.2em;
+							margin:4px 0;
+							font-weight:200;
+							font-family: "Helvetica Neue", "Helvetica";
+							letter-spacing: 1px;
+						}
+						h3 {
+						  font-size: 20px;
+						}
+
+
+					  .col-sm-9, .col-sm-3 {
+					  	padding:0 5px;
+					  }
+					  .info {
+					  	padding:5px;
+
+							.venue-address {
+								color:@white;
+								font-weight:200;
+								font-family: "Helvetica Neue", "Helvetica";
+								letter-spacing: 1px;
+							}
+						}
+
+						.navigation {
+							position:absolute;
+							top:7px;
+							right:0;
+							color:@white;
+							a {
+								color:@white;
+							}
+							a:hover {
+								color:@yellow;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/* md and larger have nav on the left */
+		@media (min-width: @screen-md-min) {
+			margin-left:160px;
+
+			#plan-dashboard {
+
+				.plan-section {
+
+					/* global invitees lists */
+					.invitees-container {
+						.invitee {
+							.invitee-info {
+								.invitee-prefs-container {
+									.invitee-pref {
+										text-align:center;
+									}
+								}
+							}
+						}
+					}
+
+					.event-info-container {
+						box-shadow: -4px -4px 4px -4px;
+						margin-top:-50px;
+
+						.event-info-header {
+							border-bottom:4px solid @blue;
+							background-color: @white;
+							h1, h2, h3 {
+								color:@grayDark;
+							}
+
+							.info {
+								.venue-address {
+									color:@grayDark;
+								}
+							}
+
+							.navigation {
+								color:@blue;
+								a {
+									color:@blue;
+								}
+							}
+
+						}
+					}
+
+					.organizer-rsvp-container {
+
+					}
+
+					.invite-more-button-container {
+						height:100px;
+						position: relative;
+						a {
+							position: absolute;
+							bottom: 0;
+						}
+					}
+				}
+
+
+
+
+
+
+
+
+
+
+				.plan-section {
+
+					.event-info {
+						font-size:16px;
+						color:@blue;
+						padding:10px 0;
+					}
+
+
+					.body > h3 {
+						color:@blueDarker;
+					}
+
+					.body {
+						.clearfix();
+
+						.block1 {
+							.clearfix();
+
+							.firstRow {
+								h3 {
+									font-size:1.2em;
+									padding:10px 0;
+								}
+							}
+						}
+
+						.row {
+							margin:0 -15px;
+							.clearfix();
+
+							.price-slider-container {
+								width:300px;
+
+								.price-range-group-container {
+									.clearfix();
+									width:300px;
+									.dollar-sign {
+										display:block;
+										width:80px;
+										padding:10px;
+										text-align:center;
+										float:left;
+									}
+								}
+							}
+							.price-input-container {
+								width:120px;
+								line-height:45px;
+								margin:auto;
+								font-size:40px;
+								color:@orange;
+								.clearfix();
+
+								input {
+									width:75px;
+									border:none;
+									margin:auto;
+									height:45px;
+									font-size:40px;
+									color:@orange;
+									line-height: 45px;
+									vertical-align: middle;
+								}
+							}
+						}
+
+					}
+					.section-bottom {
+						.clearfix();
+						margin-top:30px;
+
+						.total-coming {
+							color:@grayDark;
+							width:230px;
+							.header {
+								border-radius:6px;
+								background-color: @grayLight;
+								padding:10px;
+
+								.rsvp-count {
+									font-size:26px;
+								}
+							}
+							.friend-coming {
+								margin:5px 10px;
+							}
+						}
+
+						.next-wrapper {
+							button {
+								font-weight: bold;
+								width:200px;
+							}
+						}
+					}
+				}
+
 				/* section specific global css */
 				.itinerary-section {
 					.body {
@@ -1075,30 +1078,6 @@
 											font-size:1.5em;
 										}
 									}
-								}
-							}
-
-
-							.collect-rsvp-container {
-
-								button {
-									margin:20px 0 40px 0;
-								}
-
-								h3 {
-									padding:10px 0;
-								}
-
-								.payment-type-note {
-									margin:30px 0;
-								}
-
-								fieldset {
-									width:290px;
-
-									/* change this to auto to center the rsvp */
-									margin:0;
-
 								}
 							}
 						}
@@ -1329,9 +1308,6 @@
 
 					}
 
-					.invitees-container {
-						margin-left:95px;
-					}
 				}
 
 				.organizer-cart-section {

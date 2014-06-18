@@ -122,8 +122,6 @@ controller('HotelsOffsiteCtrl', ['$scope', 'plan', '$http',
 	}
 ]).
 
-
-
 controller('ParkingOffsiteCtrl', ['$scope', 'plan', '$http', '$location', '$rootScope',
 	function($scope, plan, $http, $location, $rootScope) {
 		plan.get(function(p) {
@@ -205,17 +203,701 @@ controller('ParkingOffsiteCtrl', ['$scope', 'plan', '$http', '$location', '$root
 	}
 ]).
 
+controller('PlanCtrl', ['$rootScope', '$scope', 'plan', 'customer',
+	function($rootScope, $scope, plan, customer) {
+
+		$scope.activateSection = function(sectionName) {
+			console.log('activateSection '+ sectionName);
+      var sectionName = sectionName.split('-')[2];
+      planNav.activate(sectionName);
+      googleMap.resize();
+		};
+
+    $scope.friendsPonyUp = function(friends) {
+
+      var tickets = plan.getTickets();
+      var parking = plan.getParking();
+      var restaurants = plan.getRestaurants();
+
+      /* assuming there's only 1 ticketGroup for now */
+      /* kim and ash say guests don't count for a delivery fee */
+      var totalPoniedUp = 0;
+      for (var i = 0; i < friends.length; i++) {
+        friends[i].suggestedPonyUpAmount = 0;
 
 
-controller('PlanCtrl', ['$scope', 'wembliRpc', '$window', 'plan', 'planNav', '$location', '$rootScope', 'googleMap',
+        if ((typeof tickets[0] !== "undefined") && (typeof tickets[0].costBreakdown !== "undefined")) {
+          if (typeof friends[i].tickets == "undefined") {
+            friends[i].tickets = {};
+          }
+          friends[i].tickets = tickets[0];
+          var suggested = friends[i].tickets.costBreakdown.totalEach * friends[i].rsvp.guestCount + friends[i].tickets.costBreakdown.deliveryFeeEach;
+          friends[i].tickets.suggestedPonyUpAmount = suggested.toFixed(2);
+          friends[i].suggestedPonyUpAmount += parseFloat(suggested);
+        } else {
+          friends[i].tickets = [];
+        }
+
+        if ((typeof parking[0] !== "undefined") && (typeof parking[0].costBreakdown !== "undefined")) {
+          friends[i].parking = parking[0];
+          var suggested = friends[i].parking.costBreakdown.totalEach * friends[i].rsvp.guestCount;
+          friends[i].parking.suggestedPonyUpAmount = suggested.toFixed(2);
+          friends[i].suggestedPonyUpAmount += parseFloat(suggested);
+        } else {
+          friends[i].parking = [];
+        }
+
+        if ((typeof restaurants[0] !== "undefined") && (typeof restaurants[0].costBreakdown !== "undefined")) {
+          friends[i].restaurants = restaurants[0];
+          var suggested = friends[i].restaurants.costBreakdown.totalEach * friends[i].rsvp.guestCount;
+          friends[i].restaurants.suggestedPonyUpAmount = suggested.toFixed(2);
+          friends[i].suggestedPonyUpAmount += parseFloat(suggested);
+        } else {
+          friends[i].restaurants = [];
+        }
+        friends[i].suggestedPonyUpAmount = parseFloat(friends[i].suggestedPonyUpAmount).toFixed(2);
+      };
+      return friends;
+    };
+
+    $scope.calcTotalComing = function() {
+      $scope.totalComing = 0;
+      $scope.friendsComing = [];
+      $scope.totalPoniedUp = 0.00;
+      if (!$scope.friends) {
+        return;
+      }
+      /* get the friend that is this customer */
+      for (var i = 0; i < $scope.friends.length; i++) {
+        if ($scope.friends[i].customerId === customer.get().id) {
+          if ($scope.me.rsvp.decision) {
+            $scope.totalComing = parseInt($scope.totalComing) + parseInt($scope.me.rsvp.guestCount);
+            $scope.friendsComing.push($scope.me);
+            $scope.friends[i] = $scope.me;
+          }
+          continue;
+        }
+
+        if ($scope.friends[i].rsvp.decision && $scope.friends[i].inviteStatus) {
+          $scope.totalComing = parseInt($scope.totalComing) + parseInt($scope.friends[i].rsvp.guestCount);
+          $scope.friendsComing.push($scope.friends[i]);
+
+          /* sum the total ponied up for this friend */
+          $scope.friends[i].totalPoniedUp = 0;
+          for (var j = 0; j < $scope.friends[i].payment.length; j++) {
+            var p = $scope.friends[i].payment[j];
+            if (p.type !== 'request') {
+              $scope.friends[i].totalPoniedUp += p.amount;
+            }
+          };
+          $scope.totalPoniedUp += parseInt($scope.friends[i].totalPoniedUp);
+        }
+      };
+
+
+
+      /* count the organizer */
+      if ($scope.plan.organizer.rsvp.decision) {
+        $scope.totalComing = parseInt($scope.totalComing) + parseInt($scope.plan.organizer.rsvp.guestCount);
+        $scope.friendsComing.push()
+      }
+    };
+
+    $scope.reconcileTicketQty = function() {
+      if (typeof $scope.tickets === "undefined") {
+        return;
+      }
+      /* if there are tickets, see if there is the right number of tickets for the number of people confirmed */
+      var sum = 0;
+      for (var i = 0; i < $scope.tickets.length; i++) {
+        var t = $scope.tickets[i];
+        sum += parseInt(t.ticketGroup.selectedQty);
+      };
+
+      /* if they have more than 0 tickets, check to see if they have more than the number of people coming */
+      if (sum > 0) {
+        $scope.ticketCountMismatch = true;
+        if (sum >= $scope.totalComing) {
+          $scope.ticketCountMismatch = false;
+        }
+      }
+    };
+
+
+
+    /* get the plan */
+    plan.get(function(p) {
+
+      $rootScope.plan    = p;
+      $scope.organizer   = plan.getOrganizer();
+      $scope.tickets     = plan.getTickets();
+      $scope.parking     = plan.getParking();
+      $scope.hotels      = plan.getHotels();
+      $scope.restaurants = plan.getRestaurants();
+      $scope.friends     = plan.getFriends();
+      $scope.context     = plan.getContext();
+
+      /* debug stuff */
+      console.log('GETTING PLAN INFO:');
+      console.log('plan:');
+      console.log($scope.plan);
+      console.log('organizer');
+      console.log($scope.organizer);
+      console.log('tickets');
+      console.log($scope.tickets);
+      console.log('friends');
+      console.log($scope.friends);
+      console.log('parking');
+      console.log($scope.parking);
+      console.log('restaurants');
+      console.log($scope.restaurants);
+      console.log('hotels');
+      console.log($scope.hotels);
+      console.log('context');
+      console.log($scope.context);
+
+      /* get the friend that is this customer */
+      for (var i = 0; i < $scope.friends.length; i++) {
+        if ($scope.friends[i].customerId === customer.get().id) {
+          $scope.me = $scope.friends[i];
+        }
+      };
+
+      /* not sure i need this stuff here
+
+      $scope.calcTotalComing();
+
+      $scope.friendsPonyUp($scope.friends);
+			*/
+
+    });
+	}
+]).
+
+controller('OrganizerPlanCtrl', ['$rootScope', '$scope', 'cart', 'plan', '$location', 'wembliRpc', 'overlay', 'ticketPurchaseUrls',
+	function($rootScope, $scope, cart, plan, $location, wembliRpc, overlay, ticketPurchaseUrls) {
+    $scope.tnUrl = ticketPurchaseUrls.tn;
+
+    $scope.$watch('plan.tickets[0].ticketGroup.selectedQty', function() {
+      if (typeof newVal === "undefined") {
+        return;
+      }
+      if (oldVal === newVal) {
+        return;
+      }
+      cart.totals('tickets');
+      scope.friendsPonyUp(scope.friends);
+      $scope.reconcileTicketQty();
+
+    })
+
+    $scope.savePrefs = function(cb) {
+      plan.savePreferences({
+        preferences: $scope.plan.preferences
+      }, function(err, result) {
+        $scope.plan = result.plan;
+        $scope.calcTotalComing();
+        if (typeof cb !== "undefined") {
+          cb();
+        }
+      });
+    };
+
+    $scope.setPayment = function(addOn, value) {
+      $scope.plan.preferences[addOn].payment = value;
+      $scope.savePrefs(function() {
+        var path = '/' + addOn + '/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName;
+        $location.path(path);
+      });
+
+    }
+
+    /* key bindings for up and down arrows for guestCount */
+    $scope.guestCountKeyUp = function() {
+      if ($scope.plan.organizer.rsvp.guestCount === "") {
+        return;
+      }
+      //$scope.plan.organizer.rsvp.decision = ($scope.plan.organizer.rsvp.guestCount > 0);
+
+      //$scope.guestCountPlural = pluralize($scope.plan.organizer.rsvp.guestCount);
+      $scope.calcTotalComing();
+
+      wembliRpc.fetch('plan.submitOrganizerRsvp', {
+        decision: $scope.plan.organizer.rsvp.decision,
+        guestCount: $scope.plan.organizer.rsvp.guestCount
+      }, function(err, result) {
+
+      });
+    }
+
+    $scope.guestCountKeyDown = function(scope, elm, attr, e) {
+      if (e.keyCode == 38) {
+        $scope.plan.organizer.rsvp.guestCount++;
+      }
+      if (e.keyCode == 40) {
+        $scope.plan.organizer.rsvp.guestCount--;
+        if ($scope.plan.organizer.rsvp.guestCount < 0) {
+          $scope.plan.organizer.rsvp.guestCount = 0;
+        }
+      }
+    }
+
+    $scope.setRsvp = function(rsvp) {
+      $scope.plan.organizer.rsvp.decision = rsvp;
+
+      if ($scope.plan.organizer.rsvp.decision === false) {
+        $scope.plan.organizer.rsvp.guestCount = 0;
+      }
+      if ($scope.plan.organizer.rsvp.decision === true) {
+        if ($scope.plan.organizer.rsvp.guestCount == 0) {
+          $scope.plan.organizer.rsvp.guestCount = 1;
+        }
+      }
+
+      $scope.calcTotalComing();
+
+      wembliRpc.fetch('plan.submitOrganizerRsvp', {
+        decision: $scope.plan.organizer.rsvp.decision,
+        guestCount: $scope.plan.organizer.rsvp.guestCount
+      }, function(err, result) {
+
+      });
+    }
+
+    $scope.removeTicketGroup = function(ticketId) {
+      wembliRpc.fetch('plan.removeTicketGroup', {
+        ticketId: ticketId
+      }, function(err, result) {
+        $scope.tickets = plan.setTickets(result.tickets);
+        $scope.plan = result.plan;
+      });
+    };
+
+    /* start polling for changes */
+    /* took this out because it causes expanded sections get collapsed
+    plan.poll(function(plan) {
+      $scope.plan = plan.get();
+      $scope.friends = plan.getFriends();
+      $scope.tickets = plan.getTickets();
+      $scope.feed = plan.getFeed();
+      $scope.context = plan.getContext();
+      $scope.organizer = plan.getOrganizer();
+    });
+    */
+
+    plan.get(function(p) {
+	    /* deal with transitioning to rsvpcomplete only if rsvp is not already completed */
+	    if (!p.rsvpComplete) {
+	      var handleRsvpComplete = function() {
+	        if (p.rsvpComplete) {
+
+	        } else {
+	          $('#rsvp-complete-notification').show();
+	          wembliRpc.fetch('plan.submitRsvpComplete', {
+	            rsvpComplete: true,
+	          }, function(err, result) {
+	            plan.set(result.plan);
+	            $scope.plan = result.plan;
+	            $rootScope.$broadcast('plan-changed', {});
+	            $rootScope.$broadcast('rsvp-complete', {});
+	          });
+	        }
+	      }
+
+	      /* check right now if the plan has become rsvpComplete */
+	      if (plan.rsvpComplete()) {
+	        handleRsvpComplete();
+	      } else {
+	        var deregRsvpComplete = $scope.$watch('plan', function(newVal, oldVal) {
+	          if (newVal) {
+	            if (plan.rsvpComplete()) {
+	              handleRsvpComplete();
+	              deregRsvpComplete();
+	            }
+	          }
+	        });
+	      }
+	    }
+
+
+      if ($scope.plan.organizer.rsvp.decision === null) {
+        $scope.setRsvp(true);
+      }
+
+      $scope.calcTotalComing();
+
+    });
+
+	}
+]).
+
+controller('OrganizerRsvpCtrl', ['$scope','plan', 'planNav',
+	function($scope, plan, planNav) {
+    var makeRsvpDays = function() {
+      var rsvpTime = new Date($scope.plan.rsvpDate).getTime();
+      var now = new Date().getTime();
+      var difference = rsvpTime - now;
+      var hour = 3600 * 1000;
+      var day = hour * 24;
+      if (difference > 0) {
+        if (difference < day) {
+          $scope.rsvpDays = "That's today!";
+        } else {
+          var days = difference / day;
+          if (days < 14) {
+            var d = (parseInt(days) == 1) ? 'day' : 'days';
+            $scope.rsvpDays = "That's in " + parseInt(days) + " " + d + "!";
+          }
+        }
+      } else {
+        if ($scope.plan.rsvpComplete) {
+          $scope.rsvpDays = "RSVP Date has passed.";
+        }
+      }
+    }
+    plan.get(function(p) {
+      makeRsvpDays();
+    });
+    $scope.$watch("plan.rsvpDate", function(newVal, oldVal) {
+      if (newVal && (newVal !== oldVal)) {
+        makeRsvpDays();
+      }
+    });
+
+    planNav.activate('rsvp');
+
+	}
+]).
+
+controller('OrganizerCartCtrl', ['$scope','plan', 'planNav',
+	function($scope, plan, planNav) {
+    planNav.activate('cart');
+	}
+]).
+
+controller('OrganizerPonyUpCtrl', ['$scope','plan', 'planNav',
+	function($scope, plan, planNav) {
+
+    $scope.submitOutsidePayment = function(friendId) {
+      var friends;
+      angular.forEach($scope.friends, function(f) {
+        if (f._id == friendId) {
+          if (!f.ponyUp.outsideSourceAmount || (parseFloat(f.ponyUp.outsideSourceAmount) == 0)) {
+            return;
+          }
+          f.ponyUp.submitInProgress = true;
+          wembliRpc.fetch('plan.submitOutsidePayment', {
+            friendId: friendId,
+            amount: f.ponyUp.outsideSourceAmount,
+            method: f.ponyUp.outsideSourcePaymentMethod,
+            status: 'logged'
+          }, function(err, result) {
+            if (err) {
+              return;
+            }
+
+            if (!result.success) {
+              f.error = true;
+              return;
+            }
+            /* friend changed this does nto work*/
+            //$scope.friends[i] = result.friend;
+            //$scope.friends[i].ponyUp = f.ponyUp;
+            //$scope.friends[i].ponyUp.submitInProgress = false;
+            f.ponyUp.submitInProgress = false;
+            f.payment = result.friend.payment;
+            $rootScope.$broadcast('plan-friends-changed', plan.getFriends());
+            $scope.paymentTotals();
+
+          });
+        }
+      });
+    };
+
+    $scope.removeOutsidePayment = function(friendId, paymentId) {
+      for (var i = 0; i < $scope.friends.length; i++) {
+        var f = $scope.friends[i]
+        if (f._id === friendId) {
+          var l = f.payment.length;
+          for (var j = 0; j < l; j++) {
+            var p = f.payment.shift();
+            if (p._id === paymentId) {
+              p.removeOutsidePaymentInProgress = true;
+
+              wembliRpc.fetch('plan.removeOutsidePayment', {
+                'friendId': f._id,
+                'paymentId': p._id,
+              }, function(err, result) {
+
+                if (err) {
+
+                  p.error = true;
+                  f.payment.push(p);
+                  return;
+                }
+
+                if (!result.success) {
+                  p.error = true;
+                  f.payment.push(p);
+                  return;
+                }
+
+                p.removeOutsidePaymentInProgress = false;
+                $scope.paymentTotals();
+              });
+            } else {
+              f.payment.push(p);
+            }
+          }
+        }
+      }
+    };
+
+    $scope.cancelPonyUpRequest = function(friendId, paymentId) {
+      for (var i = 0; i < $scope.friends.length; i++) {
+        var f = $scope.friends[i]
+        if (f._id === friendId) {
+          var l = f.payment.length;
+          for (var j = 0; j < l; j++) {
+            var p = f.payment.shift();
+            if (p._id === paymentId) {
+              p.cancelPonyUpRequestInProgress = true;
+
+              wembliRpc.fetch('plan.cancelPonyUpRequest', {
+                'friendId': f._id,
+                'paymentId': p._id,
+              }, function(err, result) {
+
+
+                if (err) {
+                  p.error = true;
+                  f.payment.push(p);
+                  return;
+                }
+
+                if (!result.success) {
+                  p.error = true;
+                  f.payment.push(p);
+                  return;
+                }
+
+                f.payment.push(result.payment);
+                p.cancelPonyUpRequestInProgress = false;
+                $scope.paymentTotals();
+
+              });
+            } else {
+              f.payment.push(p);
+            }
+          }
+        }
+      }
+    };
+
+    $scope.resendPonyUp = function(friendId, paymentId) {
+
+      for (var i = 0; i < $scope.friends.length; i++) {
+        var f = $scope.friends[i]
+        if (f._id === friendId) {
+          angular.forEach(f.payment, function(p) {
+            if (p._id === paymentId) {
+              p.resendPonyUpInProgress = true;
+
+              wembliRpc.fetch('plan.resendPonyUpEmail', {
+                'friendId': f._id,
+                'paymentId': p._id,
+                'amount': parseInt(p.amount * 100),
+              }, function(err, result) {
+
+                if (err) {
+
+                  p.error = true;
+                  return;
+                }
+
+                if (!result.success) {
+                  p.error = true;
+                  return;
+                }
+
+                p.status = result.payment.status;
+                p.date = result.payment.date;
+                p.resendPonyUpInProgress = false;
+                p.resent = true;
+              });
+            }
+          });
+        }
+      }
+    };
+
+    $scope.sendPonyUpEmail = function() {
+      /* check if they have an account - if not throw a modal to collect account info */
+      if ((typeof customer.get().balancedAPI === "undefined") || (typeof customer.get().balancedAPI.bankAccounts === "undefined")) {
+        $('#create-account-modal').modal('show');
+        return;
+      }
+
+      if ($scope.sendPonyUpInProgress) {
+        return;
+      }
+
+      $scope.sendPonyUpInProgress = true;
+      $scope.error = $scope.formError = $scope.success = false;
+      /* get all the friends that have sendponyup checked and get the amounts */
+      var ponyUpRequests = [];
+      for (var i = 0; i < $scope.friends.length; i++) {
+        var f = $scope.friends[i];
+        if ((typeof f.ponyUp.amount !== "undefined") && f.ponyUp.request) {
+          if (parseFloat(f.ponyUp.amount) > 0) {
+            var d = {
+              'friendId': f._id,
+              'amount': parseInt(parseFloat(f.ponyUp.amount) * 100)
+            };
+            ponyUpRequests.push(d);
+          } else {
+            $scope.error = false;
+            $scope.success = false;
+            $scope.formError = true;
+            $scope.sendPonyUpInProgress = false;
+            return;
+          }
+        }
+      };
+
+      if (!ponyUpRequests[0]) {
+        $scope.error = false;
+        $scope.success = false;
+        $scope.formError = true;
+        $scope.sendPonyUpInProgress = false;
+        return;
+      }
+
+
+      wembliRpc.fetch('plan.sendPonyUpEmail', {
+        ponyUpRequests: ponyUpRequests
+      }, function(err, result) {
+        $scope.sendPonyUpInProgress = false;
+
+        if (err) {
+
+          $scope.error = true;
+          return;
+        }
+
+        if (!result.success) {
+          $scope.error = true;
+          return;
+        }
+
+        $scope.success = true;
+
+        for (var i = 0; i < $scope.friends.length; i++) {
+          var f = $scope.friends[i]
+          for (var j = 0; j < result.friends.length; j++) {
+            var f2 = result.friends[j];
+            if (f2._id === f._id) {
+              f.payment = f2.payment;
+            }
+          };
+        };
+        $rootScope.$broadcast('plan-friends-changed', plan.getFriends());
+        $scope.paymentTotals();
+      });
+    };
+
+    var dereg = $scope.$on('bank-account-created', function(e) {
+      $scope.sendPonyUpEmail();
+      dereg();
+    });
+
+    /*
+      sum all the type: requests
+      sum all the others
+      subtract requests from others and get balance
+    */
+    $scope.paymentTotals = function() {
+      for (var i = 0; i < $scope.friends.length; i++) {
+        var requested = 0;
+        var received = 0;
+        var balance = 0;
+        var f = $scope.friends[i];
+        f.ponyUp = (typeof f.ponyUp === "undefined") ? {} : f.ponyUp;
+        f.ponyUp.open = false;
+        f.ponyUp.request = true;
+
+        for (var j = 0; j < f.payment.length; j++) {
+          var p = f.payment[j];
+          if (p.type == 'request') {
+            if (p.open) {
+              f.ponyUp.open = true;
+              f.ponyUp.request = false;
+            }
+            if (p.status !== 'canceled') {
+              requested += parseInt(p.amount);
+              p.amount = parseInt(p.amount);
+
+            }
+          } else {
+            received += parseInt(p.amount);
+          }
+        }
+        var reqFloat = requested;
+        var recFloat = received;
+        var balFloat = requested - received;
+        f.payment.requested = requested;
+        f.payment.received = received;
+        f.payment.balance = balance;
+
+      }
+    }
+
+    $scope.$watch('friends', function(newVal, oldVal) {
+      if (newVal) {
+        $scope.paymentTotals();
+      }
+    });
+
+
+    planNav.activate('pony-up');
+	}
+]).
+
+controller('OrganizerItineraryCtrl', ['$scope','plan', 'planNav',
+	function($scope, plan, planNav) {
+    var timer;
+    $scope.submitNotes = function() {
+      clearTimeout(timer);
+      timer = setTimeout(function() {
+        wembliRpc.fetch('plan.submitNotes', {
+          notes: $scope.plan.notes
+        }, function(err, result) {
+          /* handle error */
+        });
+      }, 2000);
+
+    };
+
+    planNav.activate('itinerary');
+	}
+]).
+
+controller('OrganizerChatterCtrl', ['$scope','plan', 'planNav',
+	function($scope, plan, planNav) {
+    planNav.activate('chatter');
+	}
+]).
+
+controller('PlanCtrlOff', ['$scope', 'wembliRpc', '$window', 'plan', 'planNav', '$location', '$rootScope', 'googleMap',
 	function($scope, wembliRpc, $window, plan, planNav, $location, $rootScope, googleMap) {
 		plan.get(function(p) {
 			$scope.plan = p;
 
-			$scope.activateSection = function(sectionNumber) {
-				console.log('activateSection '+ sectionNumber);
-        var sectionNumber = parseInt(sectionNumber.charAt(sectionNumber.length - 1));
-        planNav.activate(sectionNumber);
+			/* this activate section stuff should no longer be needed */
+			$scope.activateSection = function(sectionName) {
+				console.log('activateSection '+ sectionName);
+        var sectionName = parseInt(sectionName.charAt(sectionName.length - 1));
+        planNav.activate(sectionName);
         googleMap.resize();
 			}
 

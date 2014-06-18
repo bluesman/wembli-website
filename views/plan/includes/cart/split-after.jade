@@ -1,0 +1,14 @@
+//- if they are splitting after, they have already bought tix by the time they get here so just need some add ons
+.body(ng-show="{'split-after':true}[plan.preferences.payment]")
+	include split-after/tickets
+	include split-after/parking
+	include split-after/restaurants
+	include split-after/hotels
+	include totals
+
+
+
+
+
+
+

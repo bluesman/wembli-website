@@ -1,0 +1,12 @@
+- var nav = planNav(req.session.visitor.context, req.session.plan.preferences.payment)
+#nav-container.affix
+	#plan-nav
+		.nav-arrow.hide
+		a.plan-section-nav(href="/dashboard").hidden-xs.hidden-sm
+			.fa.fa-dashboard
+			div dashboard
+		each navItem in nav
+			a.plan-section-nav(ng-click="activateSection('#{navItem.id}')",href="#{navItem.href}",id="#{navItem.id}")
+				.fa(class="#{navItem.icon}")
+				div #{navItem.text}
+				div(id="notification-#{navItem.id}",class="hide notification notification-#{navItem.icon}")

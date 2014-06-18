@@ -6,28 +6,27 @@ var wembliModel = require('wembli-model'),
 
 module.exports = function(app) {
 
-	var initPlanView = function(req, res, callback) {
+	app.get(/^\/plan\/?(itinerary|vote|invitees|pony-up|rsvp|cart|chatter)?$/, function(req, res) {
+
 
 		var locals = {
 			title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
 			jsIncludes:['/js/plan.min.js','//maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places'],
-			plan: req.session.plan
+			plan: req.session.plan,
+			lat: req.session.plan.venue.data.geocode.geometry.location.lat,
+			lon: req.session.plan.venue.data.geocode.geometry.location.lng,
 		}
 
-		//TODO - handle this in a more global way
-		//if they are logged in then clear out any redirectUrl that may have been set
-		if (req.session.loggedIn) {
-			delete req.session.redirectUrl;
-			req.session.loginRedirect = false;
-		} else {
-			//they're going to get a login overlay if they aren't logged in - set the redirectUrl here
-			req.session.redirectUrl = '/plan';
+		if (!req.session.customer) {
 			req.session.loginRedirect = true;
+			req.session.redirectUrl   = req.url;
+			return res.redirect('/login');
 		}
-		callback(req, res, locals)
-	};
 
-	app.get('/plan', function(req, res) {
+		/* they are logged in - do some housekeeping */
+		delete req.session.redirectUrl;
+		req.session.loginRedirect = false;
+
 		/* if there's no event send to the no event page */
 		if ((typeof req.session.plan == "undefined") || (typeof req.session.plan.event.eventId === "undefined")) {
 			return res.render('no-event', {
@@ -35,13 +34,50 @@ module.exports = function(app) {
 			});
 		}
 
-		initPlanView(req, res, function(req, res, locals) {
-			res.render('plan', locals);
-		});
+		console.log('load section: ' + req.params[0]);
+		var section = req.params[0];
+
+		/* different logic depending on context */
+		var context = {
+			'organizer' : function() {
+				/* what page to load if there is no section set
+				 * if there's a plan and rsvp is complete, then go to cart
+				 * else go to rsvp
+				*/
+				if (!section) {
+					if (req.session.plan.rsvpComplete) {
+						section = 'cart';
+					}
+				}
+
+			},
+			'friend' : function() {
+
+			},
+			'visitor' : function() {
+
+			}
+		}
+
+		/* run the context specific function */
+		context[req.session.visitor.context]();
+
+		if (!section) {
+			section = 'rsvp';
+		}
+
+		var view = 'plan/' + req.session.visitor.context + '/' + section;
+		console.log('rendering view: '+view);
+		res.render(view, locals);
 	});
 
+
+	/* old ---- */
+
+
+	/*
 	app.get('/partials/plan', function(req, res) {
-		/* if there's no event send to the no event page */
+		// if there's no event send to the no event page
 		if ((typeof req.session.plan == "undefined") || (typeof req.session.plan.event.eventId === "undefined")) {
 			return res.render('partials/no-event', {
 				title: 'wembli.com - Tickets, Parking, Restaurant Deals - All Here.',
@@ -64,7 +100,7 @@ module.exports = function(app) {
 			partial: true
 		});
 	});
-
+	*/
 	app.get(/^\/partials\/plan\/chatter$/, function(req, res) {
 		return res.render('partials/plan/chatter', {
 			partial: true
@@ -73,28 +109,6 @@ module.exports = function(app) {
 
 	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|vote-section|invitees-section|pony-up-section|rsvp-section|cart-section)\/?(friend|organizer)?$/, function(req, res) {
 
-		/* last minute check for geometry */
-		if (typeof req.session.plan.venue.data.geocode === "undefined") {
-			var address = req.session.plan.venue.data.Street1 + ', ' + req.session.plan.event.eventCity + ', ' + req.session.plan.event.eventState;
-			gg.geocode(address, function(err, geocode) {
-				req.session.plan.venue.data.geocode = geocode[0];
-				req.session.plan.save(function() {
-					return res.render('partials/plan/' + req.session.visitor.context + '-' + req.url.split('/')[3], {
-						lat: req.session.plan.venue.data.geocode.geometry.location.lat,
-						lon: req.session.plan.venue.data.geocode.geometry.location.lng,
-						partial: true
-					});
-
-				});
-			});
-		} else {
-			return res.render('partials/plan/' + req.session.visitor.context + '-' + req.url.split('/')[3], {
-				lat: req.session.plan.venue.data.geocode.geometry.location.lat,
-				lon: req.session.plan.venue.data.geocode.geometry.location.lng,
-				partial: true
-			});
-
-		}
 
 	});
 
@@ -150,6 +164,7 @@ module.exports = function(app) {
 		}
 	});
 
+	/*
 	app.get('/partials/plan/:guid/:section?', function(req, res) {
 		if (!req.session.customer) {
 			req.session.redirectUrl = '/plan/' + req.param('guid') + '/' + req.param('section');
@@ -166,5 +181,5 @@ module.exports = function(app) {
 			res.redirect('/partials/plan');
 		});
 	});
-
+	*/
 }

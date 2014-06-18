@@ -1,0 +1,138 @@
+extends layout
+block plan-section
+	- var sectionClass = (visitor.context === 'organizer') ? 'organizer-itinerary-section' : 'friend-itinerary-section';
+	- var ngController = (visitor.context === 'organizer') ? 'OrganizerItineraryCtrl' : 'friendItineraryCtrl';
+	section#section-itinerary.hide(class="#{sectionClass} itinerary-section plan-section", ng-controller="#{ngController}")
+		.header.clearfix
+			h1.pull-left Itinerary
+		.event-info
+			span.blue &nbsp;{{plan.event.eventName}}
+			span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+			span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+		.body
+			.itinerary-data.clearfix
+				.left.pull-left
+				.right.pull-left
+					.tickets-container
+						h2 Tickets
+						.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && ticketCountMismatch")
+							.icon-warning-sign.icon-2x.pull-left
+							.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
+						.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && tickets[0] && !tickets[0].purchased")
+							.icon-warning-sign.icon-2x.pull-left
+							.text.pull-left
+								span These tickets are not on hold. To guarantee these seats, please&nbsp;
+								a#purchase-3.scroll-to(href="#") purchase your tickets.
+						.row
+							.info.clearfix
+								.col.pull-left
+									.event-name
+										strong EVENT:&nbsp;
+										span {{plan.event.eventName}}
+									.venue-name
+										strong VENUE:&nbsp;
+										span {{plan.event.eventVenue}}
+									.venue-address
+										strong ADDRESS:&nbsp;
+										span {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+								.col.pull-left
+									.ticket-section
+										strong SECTION/AISLE:&nbsp;
+										span(ng-show="tickets[0].ticketGroup.Section") {{tickets[0].ticketGroup.Section}}&nbsp;
+										span(ng-hide="tickets[0].ticketGroup.Section") TBD&nbsp;
+									.ticket-row
+										strong ROW/BOX:&nbsp;
+										span(ng-show="tickets[0].ticketGroup.Row") {{tickets[0].ticketGroup.Row}}
+										span(ng-hide="tickets[0].ticketGroup.Row") TBD
+									.ticket-seat(ng-show="tickets[0].ticketGroup.LowSeat")
+										strong SEATS:&nbsp;
+										span(ng-show="{'*':true}[tickets[0].ticketGroup.LowSeat]") {{tickets[0].ticketGroup.LowSeat}}
+										span(ng-hide="{'*':true}[tickets[0].ticketGroup.LowSeat]") {{tickets[0].ticketGroup.LowSeat}} - {{tickets[0].ticketGroup.HighSeat}}
+									.ticket-seat(ng-hide="tickets[0].ticketGroup.LowSeat")
+										strong SEATS:&nbsp;
+										span TBD
+									.ticket-notes(ng-show="tickets[0].ticketGroup.Notes")
+										strong NOTES:&nbsp;
+										span {{tickets[0].ticketGroup.Notes}}
+								.ticket-payment.clearfix(ng-show="tickets[0].ticketGroup.costBreakdown.total")
+									.per-person.pull-left
+										strong Total cost for&nbsp;
+									.qty-container.pull-left
+										{{tickets[0].ticketGroup.selectedQty}}&nbsp;
+									.pull-left
+										strong {{tickets[0].ticketGroup.selectedQty | pluralize:'ticket'}}:&nbsp;
+									.ticket-total.pull-left
+										{{tickets[0].ticketGroup.costBreakdown.total | currency}}
+					.parking-container
+						h2 Parking
+						.row
+							.info.clearfix(ng-hide="parking[0].parking")
+								.parking-name
+									strong PARKING COMPANY:&nbsp;
+									span TBD
+								.parking-location
+									strong LOCATION:&nbsp;
+									span TBD
+							.info.clearfix(ng-show="parking[0].parking && {'pw':true}[parking[0].service]")
+								.parking-name
+									strong PARKING COMPANY:&nbsp;
+									span {{parking[0].parking.location_name}}
+								.parking-location
+									strong LOCATION:&nbsp;
+									span {{parking[0].parking.address}}, {{parking[0].parking.city}}, {{parking[0].parking.state}} {{parking[0].parking.zip}}
+							.info.clearfix(ng-show="parking[0].parking && {'google':true}[parking[0].service]")
+								.parking-name
+									strong PARKING COMPANY:&nbsp;
+									span {{parking[0].parking.name}}
+								.parking-location
+									strong LOCATION:&nbsp;
+									span {{parking[0].parking.vicinity}}
+					.restaurant-container
+						h2 Restaurant
+						.row
+							.info.clearfix(ng-hide="restaurants[0].restaurant")
+								.restaurants-name
+									strong RESTAURANT NAME:
+									span TBD&nbsp;
+								.restaurants-location
+									strong LOCATION:
+									span TBD
+
+							.info.clearfix(ng-show="restaurants[0].restaurant && {'google':true}[restaurants[0].service]")
+								.restaurants-name
+									strong RESTAURANT NAME:
+									span {{restaurants[0].restaurant.name}}&nbsp;
+								.restaurants-location
+									strong LOCATION:
+									span {{restaurants[0].restaurant.vicinity}}
+
+							.info.clearfix(ng-show="restaurants[0].restaurant && {'yipit':true}[restaurants[0].service]")
+								.restaurants-deal-name
+									strong {{restaurants[0].restaurant.title}}&nbsp;
+								.restaurants-name
+									strong RESTAURANT:&nbsp;
+									span {{restaurants[0].restaurant.business.name}}
+								.restaurants-location
+									strong LOCATION:&nbsp;
+									span {{restaurants[0].restaurant.business.locations[0].address}}, {{restaurants[0].restaurant.business.locations[0].locality}}, {{restaurants[0].restaurant.business.locations[0].state}} {{restaurants[0].restaurant.business.locations[0].zip_code}}
+								.restaurants-location
+									strong PHONE:&nbsp;
+									span {{restaurants[0].restaurant.business.locations[0].phone}}
+					.hotel-container
+						h2 Hotel
+						.row
+							.info.clearfix(ng-hide="hotels[0].hotel")
+								.hotels-name
+									strong NAME:
+									span TBD&nbsp;
+								.hotels-location
+									strong LOCATION:
+									span TBD
+					.notes-container
+						- if (visitor.context === 'organizer')
+							textarea.notes(placeholder="Notes", ng-model="plan.notes",on-keyup="submitNotes")
+						- else
+							textarea.notes(placeholder="Notes", ng-model="plan.notes",disabled="disabled")
+			.google-map-container
+				#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
+

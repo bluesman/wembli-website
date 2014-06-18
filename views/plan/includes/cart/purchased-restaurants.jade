@@ -1,0 +1,53 @@
+//- have restaurants and purchased
+.body.add-on-included(ng-show="restaurants[0] && restaurants[0].purchased")
+	ul.restaurants-list-container.add-on-container
+		li.restaurants-row.add-on-row(ng-repeat="r in restaurants")
+
+			.restaurants-container.add-on-container(ng-show="{'google':true}[r.service]")
+				.restaurants-info.add-on-info.clearfix
+					.restaurants-name
+						strong NAME:
+						span {{r.restaurant.name}}&nbsp;
+					.restaurants-location
+						strong LOCATION:
+						span {{r.restaurant.vicinity}}
+
+			//- TODO: show a parkwhiz logo? add notes field to keep track of order info from parkwhiz?
+			.restaurants-container.add-on-container.display-popover(ng-show="{'yipit':true}[r.service]",title="Deal Cost Breakdown",placement="right",html="true",content-id="{{r._id}}-restaurant-popover-content",trigger="hover")
+				div(id="{{r._id}}-restaurant-popover-content").hide
+					.row.clearfix.border-bottom
+						strong.pull-left  Deal Price
+						.pull-right {{r.costBreakdown.price | currency}}
+					.row.clearfix
+						strong.pull-left  Cost Per Person&nbsp;
+						.pull-right {{r.costBreakdown.totalEach | currency}}
+					.row.clearfix
+						strong.pull-left  Total:&nbsp;
+						strong.pull-right {{r.costBreakdown.total | currency}}
+
+				a.yipit-link.add-on-offsite-link.clearfix(target="_blank",href="{{r.restaurant.url}}")
+					//- img.pull-left(src="/images/yipit-logo.png")
+					.text.pull-left Go to Yipit.com
+				.restaurants-info.add-on-info.clearfix
+					.restaurants-deal-name.pull-left
+						strong {{r.restaurant.title}}&nbsp;
+					.restaurants-name.pull-left
+						strong RESTAURANT:&nbsp;
+						span {{r.restaurant.business.name}}
+					.restaurants-location.pull-left
+						strong LOCATION:&nbsp;
+						span {{r.restaurant.business.locations[0].address}}, {{r.restaurant.business.locations[0].locality}}, {{r.restaurant.business.locations[0].state}} {{r.restaurant.business.locations[0].zip_code}}
+					.restaurants-location.pull-left
+						strong PHONE:&nbsp;
+						span {{r.restaurant.business.locations[0].phone}}
+
+				.restaurants-payment.add-on-info.clearfix
+					.per-person.pull-left
+						strong Total cost for {{r.payment.qty}} restaurant {{r.payment.qty | pluralize:'deal'}}:&nbsp;
+					.restaurants-total.pull-left
+						{{r.payment.amount | currency}}
+			.controls.clearfix
+				a.view-restaurants-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") View restaurants On Map
+				- if (req.session.plan.preferences.restaurants.payment !== 'no-split')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-hide="r.payment.receipt['not-available']", ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+

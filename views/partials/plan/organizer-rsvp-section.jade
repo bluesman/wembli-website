@@ -33,44 +33,44 @@ section#section1.organizer-rsvp-section.rsvp-section.plan-section.container-flui
 									a#rsvp-2(ng-click="activateSection('nav-section2')", href="#", wembli-hide="#rsvp-complete-notification") Click here to get started filling up your cart.
 
 				.organizer-rsvp-container.rsvp-container.row
-					.col-md-3.hidden-xs.col-sm-2.col-md-3.col-lg-2
+					.col-sm-2.hidden-xs
 						.img-container
 							.no-image-overlay(ng-hide="customer.imageUrl")
-								i.fa.fa-question-circle.fa-2x
-							img.img-polaroid(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
-							img.img-polaroid(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
-					.col-xs-12.col-sm-10.col-md-9.col-lg-10
-						.collect-rsvp-container
-							.row
-								.col-xs-12
-									h4 {{customer.firstName}}, are you going or just planning for others?
-							.collect-rsvp.row
-								.col-xs-6
-									a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[plan.organizer.rsvp.decision]",href="#no-slide") I'M GOING!
-								.col-xs-6
-									a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[plan.organizer.rsvp.decision]",href="#no-slide") NOT GOING.
-							.row(ng-show="plan.preferences.inviteOptions.guestFriends")
-								.col-xs-12
-									form.form-inline
-										.form-group
-											label
-												span plus
-												input#guest-count.form-control.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="plan.organizer.rsvp.guestCount",placeholder="1")
-												span {{plan.organizer.rsvp.guestCount | pluralize: 'person'}} (spouse, kids, etc..). Not people you have sent invites to.
-							.payment-type-note.row
-								.col-xs-12
-									strong ** NOTE:&nbsp;
-									span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After invitees vote on preferences you'll favor a ticket group, then we'll prompt you to send a link for everyone to pony up for their part of the outing before you shell out the cash.&nbsp;
-										p &nbsp;
-										p
-											strong Please be aware that tickets are NOT locked in until they are paid for.
-									span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;You have chosen to foot the bill for this plan - w00t!
-									span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, you will lock in the tickets then send a link for everyone to pay for their portion of the outing.
-							.row
-								.col-xs-12
-									.form-group
-										a.btn.btn-primary.form-control(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3")
-											span Invite More People
+								i.fa.fa-question-circle
+							img.img-polaroid.img-responsive(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
+							img.img-polaroid.img-responsive(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
+					.collect-rsvp-container.col-sm-10.col-xs-12
+						.row
+							.col-xs-12
+								h4 {{customer.firstName}}, are you going or just planning for others?
+						.collect-rsvp.row
+							.col-xs-6
+								a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[plan.organizer.rsvp.decision]",href="#no-slide") I'M GOING!
+							.col-xs-6
+								a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[plan.organizer.rsvp.decision]",href="#no-slide") NOT GOING.
+				.guest-count-container.row(ng-show="plan.preferences.inviteOptions.guestFriends")
+					.col-xs-12
+						form.form-inline
+							.form-group
+								label
+									span plus
+									input#guest-count.form-control.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="plan.organizer.rsvp.guestCount",placeholder="1")
+									span {{plan.organizer.rsvp.guestCount | pluralize: 'person'}} (spouse, kids, etc..).
+				.row
+					.col-xs-12
+						.payment-type-note
+							strong ** NOTE:&nbsp;
+							span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After invitees vote on preferences you'll favor a ticket group, then we'll prompt you to send a link for everyone to pony up for their part of the outing before you shell out the cash.&nbsp;
+								p &nbsp;
+								p
+									strong Please be aware that tickets are NOT locked in until they are paid for.
+							span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;You have chosen to foot the bill for this plan - w00t!
+							span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, you will lock in the tickets then send a link for everyone to pay for their portion of the outing.
+				.row
+					.col-xs-12
+						.invite-more-button-container.form-group
+							a.btn.btn-primary.form-control(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3")
+								span Invite More People
 
 			.col-md-5.col-xs-12.event-info-container
 				.event-info-header.row(ng-cloak)

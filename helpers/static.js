@@ -62,9 +62,9 @@ module.exports = {
 				continue;
 			}
 			num++;
-			thisNav[i]['section'] = "section" + num;
+			thisNav[i]['section'] = "section-" + thisNav[i]['name'];
 			thisNav[i]['id']      = "nav-" + thisNav[i]['section'];
-			thisNav[i]['href']    = "#" + thisNav[i]['section'];
+			thisNav[i]['href']    = "/plan/" + thisNav[i]['name'];
 			newNav.push(thisNav[i]);
 		}
 		return newNav;

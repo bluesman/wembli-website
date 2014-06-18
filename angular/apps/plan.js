@@ -26,10 +26,10 @@ angular.module('wembliApp', [
   }
 ]).run(['$timeout', '$rootScope', 'initRootScope', '$window', 'facebook', 'twitter', 'plan', 'overlay', 'planNav',
   function($timeout, $scope, initRootScope, $window, facebook, twitter, plan, overlay, planNav) {
-    console.log('run plan angular app');
 
     overlay.loading(true);
     overlay.show();
+
     planNav.onActivate(function() {
       overlay.loading(false);
       overlay.hide();

@@ -1,0 +1,47 @@
+//- have parking and purchased
+.body.add-on-included(ng-show="parking[0] && parking[0].payment && parking[0].purchased")
+	ul.parking-list-container.add-on-container
+		li.parking-row.add-on-row(ng-repeat="p in parking")
+
+			.parking-container.add-on-container(ng-show="{'google':true}[p.service]")
+				.parking-info.add-on-info.clearfix
+					.parking-name
+						strong NAME:
+						span {{p.parking.name}}&nbsp;
+					.parking-location
+						strong LOCATION:
+						span {{p.parking.vicinity}}
+
+			//- TODO: show a parkwhiz logo? add notes field to keep track of order info from parkwhiz?
+			.parking-container.add-on-container.display-popover(ng-show="{'pw':true}[p.service]",title="Parking Cost Breakdown",placement="right",html="true",content-id="{{p._id}}-parking-popover-content",trigger="hover")
+				div(id="{{p._id}}-parking-popover-content").hide
+					.row.clearfix.border-bottom
+						strong.pull-left  Parking Price
+						.pull-right {{p.costBreakdown.price | currency}}
+					.row.clearfix
+						strong.pull-left  Cost Per Person&nbsp;
+						.pull-right {{p.costBreakdown.totalEach | currency}}
+					.row.clearfix
+						strong.pull-left  Total (x{{parking.reservation}} parking {{parking.reservation | pluralize:'spot'}}):&nbsp;
+						strong.pull-right {{p.costBreakdown.total | currency}}
+
+				a.parkwiz-link.add-on-offsite-link.clearfix(target="_blank",href="{{p.parking.parkwhiz_url}}")
+					//- img.pull-left(src="/images/parkwhiz-logo.png")
+					.text.pull-left Go to ParkWhiz.com
+				.parking-info.add-on-info.clearfix
+					.parking-name.pull-left
+						strong NAME:&nbsp;
+						span {{p.parking.location_name}}&nbsp;
+					.parking-location.pull-left
+						strong ADDRESS:&nbsp;
+						span {{p.parking.address}}, {{p.parking.city}}, {{p.parking.state}} {{p.parking.zip}}
+				.parking-payment.add-on-info.clearfix
+					.per-person.pull-left
+						strong Total cost for {{p.payment.qty}} parking {{p.payment.qty | pluralize:'spot'}}:&nbsp;
+					.parking-total.pull-left
+						{{p.payment.amount | currency}}
+			.controls.clearfix
+				a.view-parking-link.view-add-on-link.pull-left.btn.btn-large.btn-orange(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") View parking On Map
+				- if (req.session.plan.preferences.parking.payment !== 'no-split')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-hide="p.payment.receipt['not-available']", ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+

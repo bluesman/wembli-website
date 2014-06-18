@@ -1,0 +1,54 @@
+//- restaurants part of the plan, restaurant chosen, rsvp is complete, split doesn't matter cause there's nothing to buy yet
+.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && restaurants[0] && !restaurants[0].purchased")
+	//- restaurants is chosen and its yipit
+	//- restaurants is chosen and its google restaurants
+	ul.restaurants-list-container.add-on-container
+		li.restaurants-row.add-on-row(ng-repeat="r in restaurants")
+
+			.restaurants-container.add-on-container(ng-show="{'google':true}[r.service]")
+				.restaurants-info.add-on-info.clearfix
+					.restaurants-name
+						strong NAME:
+						span {{r.restaurant.name}}&nbsp;
+					.restaurants-location
+						strong LOCATION:
+						span {{r.restaurant.vicinity}}
+
+			.restaurants-container.add-on-container.display-popover(ng-show="{'yipit':true}[r.service]",title="Deal Cost Breakdown",placement="right",html="true",content-id="{{r._id}}-restaurant-popover-content",trigger="hover")
+				div(id="{{r._id}}-restaurant-popover-content").hide
+					.row.clearfix.border-bottom
+						strong.pull-left  Deal Price
+						.pull-right {{r.costBreakdown.price | currency}}
+					.row.clearfix
+						strong.pull-left  Cost Per Person&nbsp;
+						.pull-right {{r.costBreakdown.totalEach | currency}}
+					.row.clearfix
+						strong.pull-left  Total:&nbsp;
+						strong.pull-right {{r.costBreakdown.total | currency}}
+
+				.restaurants-info.add-on-info.clearfix
+					.restaurants-deal-name
+						strong {{r.restaurant.title}}&nbsp;
+					.restaurants-name
+						strong RESTAURANT:&nbsp;
+						span {{r.restaurant.business.name}}
+					.restaurants-location
+						strong LOCATION:&nbsp;
+						span {{r.restaurant.business.locations[0].address}}, {{r.restaurant.business.locations[0].locality}}, {{r.restaurant.business.locations[0].state}} {{r.restaurant.business.locations[0].zip_code}}
+					.restaurants-location
+						strong PHONE:&nbsp;
+						span {{r.restaurant.business.locations[0].phone}}
+					.restaurants-discount
+						strong DISCOUNT:&nbsp;
+						span {{r.restaurant.discount.formatted}}
+
+				.restaurants-payment.add-on-info.clearfix
+					.per-person.pull-left
+						strong Total cost:&nbsp;
+					.restaurants-total.pull-left
+						{{r.costBreakdown.total | currency}}
+			.controls.clearfix
+				a.btn.btn-secondary.btn-large.buy-restaurants-offsite.pull-left(restaurant="{{r.restaurant}}",ng-href="{{r.restaurant.url}}",target="_blank") Buy Deal Now
+				- if (req.session.plan.preferences.payment === 'split-first')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+				a.change-restaurants-link.change-add-on-link.pull-left(ng-href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Change Deal

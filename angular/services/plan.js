@@ -1,86 +1,65 @@
 angular.module('wembliApp.services.plan', []).
 /* plan */
-factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notifications','overlay',
-	function($timeout, $rootScope, $location, header, notifications, overlay) {
+factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notifications',
+	function($timeout, $rootScope, $location, header, notifications) {
 		var self             = this;
-		self.sectionsCount   = 0;
-		self.sectionsLoaded  = 0;
 		self.activateSection = 1;
 		self.arrowTop        = 111;
 		self.arrowHeight     = 109;
+		self.navFactor = {
+			'rsvp':1,
+			'cart':2,
+			'pony-up':3,
+			'itinerary':4,
+			'chatter':5
+		};
+
 
 		var planNav = {
-
-			registerSection: function(sectionName) {
-				self.sectionsLoaded++;
-				this.activate();
-			},
 
 			onActivate: function(f) {
 				self.onActivate = f;
 			},
 
-			setActivateSection: function(sectionNumber) {
-				console.log('to section ' + sectionNumber);
-				self.activateSection = sectionNumber;
+			setActivateSection: function(sectionName) {
+				console.log('to section ' + sectionName);
+				self.activateSection = sectionName;
 				this.activate();
-			},
-
-			setSectionsCount: function(cnt) {
-				self.sectionsCount = cnt;
-				this.activate();
-				return cnt;
-			},
-
-			getSectionsCount: function() {
-				return self.sectionsCount;
 			},
 
 			/* took out scroll functionality for click instead */
-			activate: function(sectionNumber) {
-				self.activateSection = sectionNumber ? sectionNumber : self.activateSection;
+			activate: function(sectionName) {
+				self.activateSection = sectionName ? sectionName : self.activateSection;
 
 				console.log('activate section ' + self.activateSection);
 
-				if (self.sectionsCount && (self.sectionsLoaded == self.sectionsCount)) {
-					console.log('all sections loaded');
+				/* hide all the sections */
+				$('.plan-section').removeClass('hide').hide();
+				/* deactivate all the navs */
+				$('.plan-section-nav').removeClass('active');
+				/* activate the one we're going to */
+				$('#nav-section-' + self.activateSection).addClass('active');
+				var top = self.arrowTop + (self.arrowHeight * self.navFactor[self.activateSection]);
+				/* put the arrow in the right place */
+				$('.nav-arrow').css('top', top + 'px').removeClass('hide').show();
+				/* fade in the section */
+				$('#section-' + self.activateSection).fadeIn(500);
 
-					/* hide all sections & fade in new one
-					for (var i = 1; i <= self.sectionsCount; i++) {
-						$('#section' + i).removeClass('hide');
-						$('#section' + i).hide();
-					};
-					*/
+				notifications.update();
 
-					/* hide all the sections */
-					$('.plan-section').removeClass('hide').hide();
-					/* deactivate all the navs */
-					$('.plan-section-nav').removeClass('active');
-					/* activate the one we're going to */
-					$('#nav-section' + self.activateSection).addClass('active');
-					var top = self.arrowTop + (self.arrowHeight * self.activateSection);
-					/* put the arrow in the right place */
-					$('.nav-arrow').css('top', top + 'px').removeClass('hide').show();
-					/* fade in the section */
-					$('#section' + self.activateSection).fadeIn(500);
+				header.fixed();
 
-					notifications.update();
-
-					header.fixed();
-
-					/* custom callback once a section loads */
-					if (self.onActivate) {
-						self.onActivate();
-					}
-
+				/* custom callback once a section loads */
+				if (self.onActivate) {
+					self.onActivate();
 				}
+
 			}
 
 		};
 		return planNav;
 	}
 ]).
-
 
 /* plan */
 factory('notifications', ['$timeout',
@@ -109,8 +88,6 @@ factory('notifications', ['$timeout',
 	}
 ]).
 
-
-/* plan */
 factory('cart', ['plan',
 	function(plan) {
 		var self = this;

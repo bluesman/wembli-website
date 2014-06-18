@@ -1,0 +1,14 @@
+extends layout
+block plan-section
+	- var sectionClass = (visitor.context === 'organizer') ? 'organizer-chatter-section' : 'friend-chatter-section';
+	- var ngController = (visitor.context === 'organizer') ? 'OrganizerChatterCtrl' : 'friendChatterCtrl';
+	section#section-chatter(class="#{sectionClass} chatter-section plan-section", ng-controller="#{ngController}")
+		.header.clearfix
+			h1.pull-left Chatter
+		.event-info
+			span.blue &nbsp;{{plan.event.eventName}}
+			span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+			span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+		.body
+			h3 Use this space to comment and share conversations about your upcoming event!
+			plan-chatter

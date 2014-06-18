@@ -1,0 +1,19 @@
+extends layout
+block plan-section
+	section#section-cart.organizer-cart-section.cart-section.plan-section.hide(ng-controller="OrganizerCartCtrl")
+		.header.clearfix
+			h1.pull-left Shopping Cart
+			.notification.alert.alert-danger.clearfix(ng-show="ticketCountMismatch")
+				.icon-warning-sign.icon-2x.pull-left
+				.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
+		.event-info
+			span.blue &nbsp;{{plan.event.eventName}}
+			span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+			span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+		-if (req.session.plan.preferences.payment === 'split-first')
+			include ../includes/cart/split-first
+		-if (req.session.plan.preferences.payment === 'split-after')
+			include ../includes/cart/split-after
+		-if (req.session.plan.preferences.payment === 'no-split')
+			include ../includes/cart/no-split
+

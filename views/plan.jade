@@ -13,7 +13,7 @@ block content
 						.fa(class="#{navItem.icon}")
 						div #{navItem.text}
 						div(id="notification-#{navItem.id}",class="hide notification notification-#{navItem.icon}")
-		#plan-dashboard-container
+		#plan-dashboard-container.plan-dashboard
 			- if (req.session.visitor.context === 'organizer')
 				#plan-dashboard.organizer-plan-dashboard
 					//- no split has no pony up

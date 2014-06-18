@@ -1,0 +1,8 @@
+.body.add-on-not-included(ng-hide="plan.preferences.addOns.parking")
+	p So you figured it would be no big deal to find parking near the event until you realized that all the other fans probably had the same thought.  Now throwing caution to the wind seems a little less adventurous and a lot more annoying.
+	p No worries!  You can add parking to your plan now.
+	label
+		.btn.btn-primary.btn-large(href="#") Add Parking To Plan
+		input.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()")
+
+

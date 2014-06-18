@@ -1,0 +1,24 @@
+- if (req.session.plan.preferences.hotels.payment === 'split-first' && !req.session.plan.rsvpComplete)
+	//- hotel part of the plan, none chosen, rsvp not complete, split first
+	.body.add-on-included(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0] && !plan.rsvpComplete")
+		p Hotel, Eh? Nice Touch!  It's people like you that know how to plan the perfect outing.  Whether you choose a place with no frills, no budget limit or no paparazzi - your group will love you forever for making this a memorable trip.
+		p While you're waiting for the RSVP's to come in - feel free to check out your options.
+		.button-container.clearfix
+			a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Hotels
+			a.buy-now.wembli-sequence-link(ng-click="setPayment('hotels','split-after')",href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Forget RSVP's - I want to pick now
+	//- hotels part of the plan, none chosen, rsvp not complete, split after
+	.body.add-on-included(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0] && plan.rsvpComplete")
+		p Your home away from home awaits.  In just a few short steps you'll be choosing the lodging of your dreams.  Happy Travels!
+		.button-container.clearfix
+			a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
+			- if (req.session.plan.preferences.payment === 'split-after')
+				//- a.buy-now(ng-click="setPayment('hotels','split-first')",href="#") I changed my mind, I want to know who's coming first
+- else
+	//- hotels part of the plan, none chosen, rsvp not complete, split after
+	.body.add-on-included(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0]")
+		p Your home away from home awaits.  In just a few short steps you'll be choosing the lodging of your dreams.  Happy Travels!
+		.button-container.clearfix
+			a.pull-left.btn.btn-orange.btn-large.wembli-sequence-link(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
+			- if (req.session.plan.preferences.payment === 'split-after')
+				//- a.buy-now(ng-click="setPayment('hotels','split-first')",href="#") I changed my mind, I want to know who's coming first
+

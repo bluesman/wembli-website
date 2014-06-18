@@ -1,0 +1,44 @@
+.body.add-on-included(ng-show="plan.preferences.addOns.parking && parking[0] && !parking[0].purchased")
+	//- parking is chosen and its parkwhiz
+	//- parking is chosen and its google parking
+	ul.parking-list-container.add-on-container
+		li.parking-row.add-on-row(ng-repeat="p in parking")
+
+			.parking-container.add-on-container(ng-show="{'google':true}[p.service]")
+				.parking-info.add-on-info.clearfix
+					.parking-name
+						strong NAME:
+						span {{p.parking.name}}&nbsp;
+					.parking-location
+						strong LOCATION:
+						span {{p.parking.vicinity}}
+
+			.parking-container.add-on-container.display-popover(ng-show="{'pw':true}[p.service]",title="Parking Cost Breakdown",placement="right",html="true",content-id="{{p._id}}-parking-popover-content",trigger="hover")
+				div(id="{{p._id}}-parking-popover-content").hide
+					.row.clearfix.border-bottom
+						strong.pull-left  Parking Price
+						.pull-right {{p.costBreakdown.price | currency}}
+					.row.clearfix
+						strong.pull-left Cost Per Person&nbsp;
+						.pull-right {{p.costBreakdown.totalEach | currency}}
+					.row.clearfix
+						strong.pull-left  Total (x{{p.parking.reservation}} parking {{p.parking.reservation | pluralize:'spot'}}):&nbsp;
+						strong.pull-right {{p.costBreakdown.total | currency}}
+
+				.parking-info.add-on-info.clearfix
+					.parking-name.pull-left
+						strong NAME:&nbsp;
+						span {{p.parking.location_name}}&nbsp;
+					.parking-location.pull-left
+						strong ADDRESS:&nbsp;
+						span {{p.parking.address}}, {{p.parking.city}}, {{p.parking.state}} {{p.parking.zip}}
+				.parking-payment.add-on-info.clearfix
+					.per-person.pull-left
+						strong Total cost for {{p.parking.reservation}} parking {{p.parking.reservation | pluralize:'spot'}}:&nbsp;
+					.parking-total.pull-left
+						{{p.costBreakdown.total | currency}}
+			.controls.clearfix
+				a.btn.btn-secondary.btn-large.buy-parking-offsite.pull-left(parking="{{p.parking}}",ng-href="{{p.parking.www_reserve_url}}",target="_blank") Buy Parking Now
+				- if (req.session.plan.preferences.payment === 'split-first')
+					a.btn.btn-secondary.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+				a.change-parking-link.change-add-on-link.pull-left(ng-href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}") Change Parking
