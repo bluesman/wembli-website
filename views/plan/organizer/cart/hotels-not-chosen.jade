@@ -1,4 +1,4 @@
-- if (req.session.plan.preferences.hotels.payment === 'split-first' && !req.session.plan.rsvpComplete)
+- if (req.session.plan.preferences.hotels.payment === 'split-first')
 	//- hotel part of the plan, none chosen, rsvp not complete, split first
 	.body.add-on-included(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0] && !plan.rsvpComplete")
 		p Hotel, Eh? Nice Touch!  It's people like you that know how to plan the perfect outing.  Whether you choose a place with no frills, no budget limit or no paparazzi - your group will love you forever for making this a memorable trip.

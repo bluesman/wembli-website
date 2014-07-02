@@ -1,0 +1,30 @@
+.hotels-container.add-on-container.row
+	.col-sm-2.hidden-xs
+		include ../../includes/cart/hotels-icon
+	.col-sm-10.col-xs-12
+		.row
+			.col-xs-6.clearfix
+				label.hotels-label.add-on-label.pull-left
+					i.fa.fa-check-square-o.fa-2x.green(ng-show="plan.preferences.addOns.hotels")
+					i.fa.fa-square-o.fa-2x(ng-hide="plan.preferences.addOns.hotels")
+					input.hide(type="checkbox",ng-model="plan.preferences.addOns.hotels", ng-click="savePrefs()" , ng-disabled="{true:'disabled'}[hotels[0].purchased]")
+				h3.pull-left Hotel&nbsp;
+					a.change-hotels-link.change-add-on-link(ng-show="hotels[0]", href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") (Change Deal)
+			.col-xs-6.text-right(ng-show="hotels[0]")
+				a.view-on-map(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") View On Map
+
+		.row(ng-hide="plan.preferences.addOns.hotels")
+			.col-xs-12
+				.add-on-not-included
+					p If you live close enough to the venue to go home and get your beauty rest then by all means sleep tight.  But if you're going to be out of town or far enough away to risk  having to pull over and sleep at a truck-stop on the way home - then click the button below and lock in a comfy bed at the diggs of your choice.
+					p You can thank us later.
+		.row(ng-hide="plan.preferences.addOns.hotels")
+			.col-xs-6
+				label
+					a.btn.btn-primary.btn-lg(href="#") Add Hotel To Plan
+					input.hide(type="checkbox",ng-model="plan.preferences.addOns.hotels", ng-click="savePrefs()")
+
+
+		include hotels-not-chosen
+		//- don't forget to consolidate purchased-hotels with chosen-hotels
+		include chosen-hotels

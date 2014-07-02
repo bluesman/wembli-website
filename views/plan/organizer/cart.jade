@@ -10,13 +10,13 @@ block plan-section
 		.body
 			.row
 				.col-md-7.col-xs-12
-					include notifications
-					include tickets
-					include parking
-					//-include restaurants
-					//-include hotels
+					include cart/notifications
+					include cart/tickets
+					include cart/parking
+					include cart/restaurants
+					include cart/hotels
 					.visible-xs.visible-sm
-						include ../includes/cart/totals
+						include cart/totals
 				.col-md-5.col-xs-12.event-info-container
 					.hidden-xs.hidden-sm
 						include ../includes/event-info

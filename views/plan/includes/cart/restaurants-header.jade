@@ -1,6 +1,0 @@
-.header
-	label.restaurant-label.clearfix
-		i.icon-check.icon-3x.pull-left.green(ng-show="plan.preferences.addOns.restaurants")
-		i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.restaurants")
-		input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.restaurants", ng-click="savePrefs()", ng-disabled="{true:'disabled'}[restaurants[0].purchased]")
-		h3 Restaurant

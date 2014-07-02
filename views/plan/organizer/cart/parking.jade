@@ -1,6 +1,6 @@
 .parking-container.add-on-container.row
 	.col-sm-2.hidden-xs
-		include ../includes/cart/parking-icon
+		include ../../includes/cart/parking-icon
 	.col-sm-10.col-xs-12
 		.row
 			.col-xs-6.clearfix
@@ -25,5 +25,6 @@
 					input.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()")
 
 
-		//- include parking-not-chosen
-		//- include chosen-parking
+		include parking-not-chosen
+		//- don't forget to consolidate purchased-parking with chosen-parking
+		include chosen-parking

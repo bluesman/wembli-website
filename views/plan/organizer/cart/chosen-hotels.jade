@@ -1,0 +1,55 @@
+//- hotels part of the plan, hotel chosen, rsvp not complete, split first - must wait for rsvp complete
+.body.add-on-included(ng-show="plan.preferences.addOns.hotels && hotels[0] && !hotels[0].payment.receipt")
+	ul.hotels-list-container
+		li.hotels-row(ng-repeat="p in hotels")
+			.hotels-container.display-popover(title="hotels Cost Breakdown",placement="right",html="true",content-id="{{hotels._id}}-hotels-popover-content",trigger="hover")
+				div(id="{{hotels._id}}-hotels-popover-content").hide
+					.row.clearfix
+						strong.pull-left  hotels Price
+						.pull-right {{hotels.hotelsGroup.costBreakdown.hotelsPrice | currency}}
+					.row.clearfix.border-bottom
+						strong.pull-left  hotels Service Fee&nbsp;
+						.pull-right {{hotels.hotelsGroup.costBreakdown.serviceFee | currency}}
+					.row.clearfix
+						strong.pull-left  Cost Per Person&nbsp;
+						.pull-right {{hotels.hotelsGroup.costBreakdown.totalEach | currency}}
+					.row.clearfix
+						strong.pull-left  Est. Delivery Fee* Per Invitee&nbsp;
+						.pull-right {{hotels.hotelsGroup.costBreakdown.deliveryFeeEach | currency}}
+					.row.clearfix
+						strong.pull-left  Total (x{{hotels.hotelsGroup.selectedQty}} {{hotels.hotelsGroup.selectedQty | pluralize:'hotels'}}):&nbsp;
+						strong.pull-right {{hotels.hotelsGroup.costBreakdown.total | currency}}
+					.row.disclaimer
+						small
+							strong *
+							span Delivery fee varies depending on the delivery method you choose when you purchase the hotels.
+				.hotels-info.clearfix
+					.hotels-section.pull-left
+						strong SECTION/AISLE:
+						span {{hotels.hotelsGroup.Section}}&nbsp;
+					.hotels-row.pull-left
+						strong ROW/BOX:
+						span {{hotels.hotelsGroup.Row}}
+					.hotels-seat.pull-left
+						strong SEATS:
+						span(ng-show="{'*':true}[hotels.hotelsGroup.LowSeat]") {{hotels.hotelsGroup.LowSeat}}
+						span(ng-hide="{'*':true}[hotels.hotelsGroup.LowSeat]") {{hotels.hotelsGroup.LowSeat}} - {{hotels.hotelsGroup.HighSeat}}
+				.hotels-notes
+					span NOTES:&nbsp;
+					span {{hotels.hotelsGroup.Notes}}
+				.hotels-payment.clearfix
+					.per-person.pull-left
+						strong Total cost for
+					.qty-container.pull-left
+						select(id="qty-{{hotels.hotelsGroup.ID}}",ng-model="hotels.hotelsGroup.selectedQty",name="qty-{{hotels.hotelsGroup.ID}}",ng-options="q for q in hotels.hotelsGroup.ValidSplits.int")
+					.pull-left
+						strong {{hotels.hotelsGroup.selectedQty | pluralize:'hotels'}}:
+					.hotels-total.pull-left
+						{{hotels.hotelsGroup.costBreakdown.total | currency}}
+			.controls.clearfix
+				- if (req.session.plan.preferences.payment === 'split-first')
+					a.btn.btn-orange.btn-large.pull-left.scroll-to(ng-click="gotoSection('#section4')",href="#section4", id="btn-section4") Request Pony Up!
+				- else
+					//- TODO: make this a parkwhiz offsite link
+					a.btn.btn-orange.btn-large.buy-hotels-offsite.pull-left(ng-hide="{'split-after':true}[plan.preferences.hotels.payment]",hotels="{{hotels.hotelsGroup}}",ng-href="{{tnUrl}}&tgid={{hotels.hotelsGroup.ID}}&evtid={{hotels.hotelsGroup.EventID}}&price={{hotels.hotelsGroup.ActualPrice}}&treq={{hotels.hotelsGroup.selectedQty}}&req.sessionId={{hotels.hotelsGroup.sessionId}}",target="_blank") Buy hotels Now
+				a.change-hotels-link.change-add-on-link.pull-left(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Change hotels
