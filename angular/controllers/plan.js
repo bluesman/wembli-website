@@ -357,7 +357,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'customer','overlay', 'cart',
       }
     };
 
-
     $scope.acknowledgeNotification = function(key) {
       plan.acknowledgeNotification(key);
     };
@@ -524,6 +523,33 @@ controller('OrganizerPlanCtrl', ['$scope', 'cart', 'plan', '$location', 'wembliR
       });
     };
 
+    /* prefs watch function */
+    var savePrefs = function(n, o) {
+      if (typeof n === "undefined") {
+        return;
+      }
+      if (typeof o === "undefined") {
+        return;
+      }
+
+      if (n !== o) {
+        console.log('saving prefs');
+        plan.savePreferences({
+          preferences: $scope.plan.preferences
+        }, function(err, result) {
+          $scope.calcTotalComing();
+        });
+      }
+    };
+
+    /* watch the prefs change */
+    $scope.$watch('plan.preferences.inviteOptions.guestFriends', savePrefs);
+    $scope.$watch('plan.preferences.inviteOptions.over21', savePrefs);
+    $scope.$watch('plan.preferences.guestList', savePrefs);
+    $scope.$watch('plan.preferences.addOns.parking', savePrefs);
+    $scope.$watch('plan.preferences.addOns.hotels', savePrefs);
+    $scope.$watch('plan.preferences.addOns.restaurants', savePrefs);
+
     $scope.$watch('rsvpCompleteNotification', function(n, o) {
     	if (typeof n !== "undefined") {
 	    	notifications.update();
@@ -613,29 +639,6 @@ controller('OrganizerRsvpCtrl', ['$rootScope', '$scope','plan', 'planNav', 'wemb
         }
       }
     }
-
-    /* prefs watch function */
-    var savePrefs = function(n, o) {
-      if (typeof n === "undefined") {
-        return;
-      }
-      if (typeof o === "undefined") {
-        return;
-      }
-
-			if (n !== o) {
-	      plan.savePreferences({
-	        preferences: $scope.plan.preferences
-	      }, function(err, result) {
-	        $scope.calcTotalComing();
-	      });
-			}
-    };
-
-    /* watch the prefs change */
-    $scope.$watch('plan.preferences.inviteOptions.guestFriends', savePrefs);
-    $scope.$watch('plan.preferences.inviteOptions.over21', savePrefs);
-    $scope.$watch('plan.preferences.guestList', savePrefs);
 
     $scope.setRsvp = function(rsvp) {
       $scope.plan.organizer.rsvp.decision = rsvp;

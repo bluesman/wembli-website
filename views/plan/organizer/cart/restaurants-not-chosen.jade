@@ -1,25 +1,33 @@
-- if (req.session.plan.preferences.restaurants.payment === 'split-first' && !req.session.plan.rsvpComplete)
+- if (req.session.plan.preferences.restaurants.payment === 'split-first')
 	//- restaurants part of the plan, none chosen, rsvp not complete, split first
-	.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && !restaurants[0] && !plan.rsvpComplete")
-		p Soon you'll be able to cook up a great restaurant plan but first you'll have to wait for your friends to RSVP.  Once votes are in it'll be easy as apple pie to find great eats.
-		p In the meantime why not whet your appetite by looking through some restaurants near your event?
-		.button-container.clearfix
-			a.pull-left.btn.btn-orange.btn-large(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Restaurants
-			a.buy-now(ng-click="setPayment('restaurants','split-after')",href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Forget RSVP's - I want to pick now
+	.row(ng-show="plan.preferences.addOns.restaurants && !restaurants[0] && !plan.rsvpComplete")
+		.col-xs-12
+			.add-on-included
+				p Soon you'll be able to cook up a great restaurant plan but first you'll have to wait for your friends to RSVP.  Once votes are in it'll be easy as apple pie to find great eats.
+				p In the meantime why not whet your appetite by looking through some restaurants near your event?
+	.row(ng-show="plan.preferences.addOns.restaurants && !restaurants[0] && !plan.rsvpComplete")
+		.col-xs-6
+			a.btn.btn-warning.btn-lg(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Restaurants
+
+
 	//- restaurants part of the plan, none chosen, rsvp not complete, split after
-	.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && !restaurants[0] && plan.rsvpComplete")
-		p Go ahead and pick a restaurant - you can always change it later!
-		p Note:  Adding restaurant deals to your cart does NOT place it on hold.  You must purchased a deal to be guaranteed that it is available for use.
-		.button-container.clearfix
-			a.pull-left.btn.btn-orange.btn-large(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
-			- if (req.session.plan.preferences.payment === 'split-after')
-				//- a.buy-now(ng-click="setPayment('restaurants','split-first')",href="#") I changed my mind, I want to know who's coming first
+	.row(ng-show="plan.preferences.addOns.restaurants && !restaurants[0] && plan.rsvpComplete")
+		.col-xs-12
+			.add-on-included
+				p Go ahead and pick a restaurant - you can always change it later!
+				p Note:  Adding restaurant deals to your cart does NOT place it on hold.  You must purchased a deal to be guaranteed that it is available for use.
+	.row(ng-show="plan.preferences.addOns.restaurants && !restaurants[0] && plan.rsvpComplete")
+		.col-xs-6
+			a.btn.btn-warning.btn-lg(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
+
 - else
 	//- restaurants part of the plan, none chosen, rsvp not complete, split after
-	.body.add-on-included(ng-show="plan.preferences.addOns.restaurants && !restaurants[0]")
-		p Go ahead and pick a restaurant - you can always change it later!
-		p Note:  Adding restaurant deals to your cart does NOT place it on hold.  You must purchased a deal to be guaranteed that it is available for use.
-		.button-container.clearfix
-			a.pull-left.btn.btn-orange.btn-large(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
-			- if (req.session.plan.preferences.payment === 'split-after')
-				//- a.buy-now(ng-click="setPayment('restaurants','split-first')",href="#") I changed my mind, I want to know who's coming first
+	.row(ng-show="plan.preferences.addOns.restaurants && !restaurants[0]")
+		.col-xs-12
+			.add-on-included
+				p Go ahead and pick a restaurant - you can always change it later!
+				p Note:  Adding restaurant deals to your cart does NOT place it on hold.  You must purchased a deal to be guaranteed that it is available for use.
+	.row(ng-show="plan.preferences.addOns.restaurants && !restaurants[0]")
+		.col-xs-6
+			a.btn.btn-warning.btn-lg(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Restaurant
+
