@@ -3,14 +3,14 @@ angular.module('wembliApp.services.ticket-utils', []).
 factory('interactiveMapDefaults', [
 	function() {
 		return {
-			ServiceUrl: "https://imap.ticketutils.net",
+			ServiceUrl: "//imap.ticketutils.net",
 			MapSet: "tn",
 			MapType: "Interactive",
 			ZoomLevel: 1,
 			ColorScheme: 1,
 			//AutoSwitchToStatic: true,
 			ControlsPosition: "Inside",
-			FailOverMapUrl: "http://data.ticketutils.com/Charts/No-Seating-Chart.jpg",
+			FailOverMapUrl: "https://data.ticketutils.com/Charts/No-Seating-Chart.jpg",
 			GroupsContainer: "#groups-container",
 			RowSelector: ".ticket-row",
 			RowNumberSelector: ".seat-row",

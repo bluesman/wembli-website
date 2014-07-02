@@ -201,9 +201,12 @@
 	}
 }
 
+
+/* xs and larger devices */
 #plan-frame {
 	margin-bottom: 100px;
 
+	/* customer image */
 	.img-container {
 		position:relative;
 		box-shadow: 0 1px 2px -1px;
@@ -235,6 +238,7 @@
 		}
 	}
 
+	/* bottom nav for xs devices */
 	#nav-container {
 		/* xs and sm get a bottom nav */
 		width:100%;
@@ -267,6 +271,26 @@
 					font-size: 1.75em;
 				}
 
+				.notification {
+					display:none;
+					background-color: red;
+					height: 15px;
+					width: 15px;
+					position: absolute;
+					border-radius:4px;
+					font-size: 12px;
+					line-height: 16px;
+					vertical-align: middle;
+					color:@white !important;
+					top: 10%;
+					right: 23%;
+
+				}
+
+
+				.notification {
+					display: none;
+				}
 			}
 
 			a.active {
@@ -321,21 +345,6 @@
 						font-size:3em;
 					}
 
-					.notification {
-						background-color: red;
-						height: 15px;
-						width: 15px;
-						position: absolute;
-						border-radius:4px;
-						font-size: 12px;
-						line-height: 16px;
-						vertical-align: middle;
-						color:@white !important;
-						top: 12px;
-						right: 19px;
-
-					}
-
 					.notification-fa-envelope-o {
 					}
 
@@ -345,6 +354,7 @@
 		}
 	}
 
+	/* dashboard for xs devices */
 	#plan-dashboard-container {
 		height:100%;
 		text-align:left;
@@ -362,6 +372,10 @@
 			}
 
 			.plan-section {
+
+				.notification {
+
+				}
 
 				.alert-danger {
 					text-shadow:none;
@@ -654,9 +668,7 @@
 					.send-pony-up-button {
 						margin:40px 0 0 86px;
 					}
-
 				}
-
 
 				/* rsvp section specific */
 				.rsvp-container {
@@ -679,7 +691,7 @@
 
 				.guest-count-container {
 					form {
-						padding:20px;
+						padding:20px 0;
 
 						label {
 							#guest-count {
@@ -695,7 +707,7 @@
 				}
 
 				.payment-type-note {
-					padding:20px;
+					padding:20px 0;
 				}
 
 				.event-info-container {
@@ -754,8 +766,109 @@
 							}
 						}
 					}
+					.plan-options-container {
+						.fa-square-o {
+							margin-right:12px;
+						}
+					}
+				}
+
+				.invite-more-button-container {
+					text-align: center;
+					margin-top:40px;
+				}
+
+			}
+
+			.cart-section {
+				.change-add-on-link {
+					font-size: 14px;
+					font-style:normal;
+				}
+
+
+				.tickets-container {
+					.view-on-map {
+						line-height: 45px;
+						padding-right: 10px;
+					}
+
+					.ticket-list-header {
+						font-size:.8em;
+						font-weight:bold;
+						border-bottom:thin solid @gray;
+					}
+
+					.ticket-row {
+						font-size:1.2em;
+
+						.tickets-not-purchased-alert {
+							margin:5px 0;
+							font-size:12px;
+						}
+
+						.ticket-trigger > div {
+							padding-top:5px;
+							padding-bottom:5px;
+						}
+
+						.ticket-trigger:hover {
+							background-color:lighten(@blueLight,30%);
+							cursor:pointer;
+						}
+
+						.slide-down {
+							height:125px;
+							overflow-y: hidden;
+							-webkit-transition: all 0.5s;
+							-moz-transition: all 0.5s;
+							-ms-transition: all 0.5s;
+							-o-transition: all 0.5s;
+							transition: all 0.5s;
+						}
+
+						.slide-down.ng-hide-remove,.slide-down.ng-hide-add {
+						  display:block!important;
+						}
+
+						.slide-down.ng-hide {
+							height: 0;
+						}
+
+						.ticket-price-details {
+							font-size:12px;
+						}
+
+						.ticket-notes {
+							font-size: 12px;
+							padding-top:5px;
+							padding-bottom:5px;
+						}
+
+					}
+				}
+
+				.add-on-container {
+					padding-bottom: 20px;
+					.add-on-label {
+						margin-top:10px;
+					}
+
+					.add-on-included {
+						p {
+							margin:10px 0 20px;
+						}
+					}
+
+					img {
+						margin:0 auto;
+					}
+
 				}
 			}
+
+
+
 		}
 
 		/* md and larger have nav on the left */
@@ -782,6 +895,7 @@
 					.event-info-container {
 						box-shadow: -4px -4px 4px -4px;
 						margin-top:-50px;
+						padding-bottom: 50px;
 
 						.event-info-header {
 							border-bottom:4px solid @blue;
@@ -809,15 +923,6 @@
 					.organizer-rsvp-container {
 
 					}
-
-					.invite-more-button-container {
-						height:100px;
-						position: relative;
-						a {
-							position: absolute;
-							bottom: 0;
-						}
-					}
 				}
 
 
@@ -828,8 +933,7 @@
 
 
 
-
-				.plan-section {
+				.plan-section-off {
 
 					.event-info {
 						font-size:16px;
@@ -1024,7 +1128,7 @@
 				}
 
 
-				.rsvp-section {
+				.rsvp-section-off {
 					.body {
 
 						.rsvp-container {

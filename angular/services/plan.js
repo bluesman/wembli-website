@@ -22,7 +22,6 @@ factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notificati
 			},
 
 			setActivateSection: function(sectionName) {
-				console.log('to section ' + sectionName);
 				self.activateSection = sectionName;
 				this.activate();
 			},
@@ -30,8 +29,6 @@ factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notificati
 			/* took out scroll functionality for click instead */
 			activate: function(sectionName) {
 				self.activateSection = sectionName ? sectionName : self.activateSection;
-
-				console.log('activate section ' + self.activateSection);
 
 				/* hide all the sections */
 				$('.plan-section').removeClass('hide').hide();
@@ -62,25 +59,80 @@ factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notificati
 ]).
 
 /* plan */
-factory('notifications', ['$timeout',
-	function($timeout) {
+factory('notifications', ['$timeout', 'plan',
+	function($timeout, plan) {
+		/* maps notification keys to the com elements */
+		var keyMapping = {
+			'rsvpComplete': {
+				id: '#rsvp-complete-notification',
+				nav: 'notification-nav-section-rsvp'
+			},
+			'notConfirmed': {
+				id: '#not-confirmed-notification',
+				nav: 'notification-nav-section-rsvp'
+			},
+			'ticketCountMismatch': {
+				id: '#ticket-count-mismatch-notification',
+				nav: 'notification-nav-section-cart'
+			}
+		};
+
+		var reverseKeyMapping = {
+			'rsvp-complete-notification':'rsvpComplete',
+			'not-confirmed-notification':'notConfirmed',
+			'ticket-count-mismatch-notification':'ticketCountMismatch'
+		};
+
+
 		return {
-			update: function() {
+
+			findInPlan: function(id, notifications) {
+				var ret = null;
+				angular.forEach(notifications, function(n) {
+					if (reverseKeyMapping[id] == n.key) {
+						ret = n;
+					}
+				});
+				if (ret) {
+					return ret;
+				}
+			},
+			update: function(p) {
+				var self = this;
 				$timeout(function() {
-					/* check for notifications */
-					$('section').each(function(sectionNumber, section) {
-						var count = 0;
-						var key = '#' + section.id + ' .notification';
-						$(key).each(function(idx, el) {
-							if ($(el).css('display') === 'block') {
-								count++;
+					var counts = {};
+
+					/* count all the notifications */
+					plan.get(function(p) {
+						angular.forEach(p.notifications, function(n) {
+							if (!n.acknowledged) {
+								var mapping = keyMapping[n.key];
+								counts[mapping.nav] = (typeof counts[mapping.nav] !== "undefined") ? counts[mapping.nav]++ : 1;
 							}
 						});
-						if (count) {
-							$('#notification-nav-' + section.id).html(count).show();
-						} else {
-							$('#notification-nav-' + section.id).html(count).hide();
-						}
+
+						/* check for notifications on the page to display */
+						$('section .notification').each(function(idx, el) {
+
+							var mapping = keyMapping[reverseKeyMapping[el.id]];
+							/* console will throw: undefined is not a function if the notification isn't in the mappings */
+							/* if its in the plan then display it else hide it */
+							var n = self.findInPlan(el.id, p.notifications);
+							if ((typeof n === "undefined") || n.acknowledged) {
+								$(el).hide();
+							} else {
+								$(el).show();
+							}
+						});
+
+						/* display the counts */
+						$('#plan-nav a .notification').each(function(idx, n) {
+							if (counts[n.id]) {
+								$(n).html(counts[n.id]).show();
+							} else {
+								$(n).html('0').hide();
+							}
+	 					});
 					});
 				}, 500);
 			}
@@ -139,7 +191,8 @@ factory('cart', ['plan',
 							},
 							"totalEach": function(price, fee, qty, splitBy) {
 								//return price + fee;
-								return ((price * qty) + fee) / splitBy;
+								//return ((price * qty) + fee) / splitBy;
+								return ((price + fee) * qty) / splitBy;
 							},
 
 						},
@@ -271,6 +324,17 @@ factory('cart', ['plan',
 						if (typeof qty === "undefined") {
 							qty = 0;
 						}
+
+						/* edge case - what to split by if no one is invited yet? try total tickets
+						 * if organizer is coming but no one else
+						 * or no one is coming at all
+						 */
+						if ((p.organizer.rsvp.decision && splitBy == 1) || (splitBy == 0)) {
+							splitBy = qty;
+							deliverySplitBy = qty;
+						}
+
+
 
 						var cb = {};
 						var groupNumber = i + 1;

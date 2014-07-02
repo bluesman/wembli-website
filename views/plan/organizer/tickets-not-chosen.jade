@@ -1,0 +1,42 @@
+- if (req.session.plan.preferences.tickets.payment === 'split-first')
+	.row
+		.col-xs-12
+			.add-on-included(ng-show="!tickets[0] && !plan.rsvpComplete")
+				p Now that you made short work of inviting friends you can relax while they RSVP.  Once everyone is accounted for we'll shoot you an email.
+				p It's tough to pick tickets until you know how many people are going but feel free to preview what's available during the voting process so you have an idea of what you'll want when it's time to add them to your shopping cart.
+			.add-on-included(ng-show="!tickets[0] && plan.rsvpComplete")
+				p Time to choose tickets and add them to your cart, then we'll prompt you to send a pony up email to your friends.  You don't check out until everyone pays up first.
+				p Note:  Adding tickets in your cart does NOT place them on hold.   You don't get dibs on tickets until you buy them.
+	.row(ng-show="!tickets[0] && !plan.rsvpComplete")
+		.col-xs-6
+			a.btn.btn-warning.btn-lg(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Preview Tickets
+		//- don't need this because you can just add tickets from preview
+			.col-xs-6
+				a.buy-now(ng-click="setPayment('tickets','split-after')",href="#") I don't want to wait, I want to buy now
+	.row(ng-show="!tickets[0] && plan.rsvpComplete")
+		.col-xs-12
+			a.btn.btn-warning.btn-lg(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
+		//-
+			.col-xs-6
+				a.buy-now.wembli-sequence-link(ng-click="setPayment('tickets','split-after')",href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") I don't want to wait, I want to buy now
+
+- if (req.session.plan.preferences.tickets.payment === 'split-after')
+	.row(ng-show="!tickets[0]")
+		.col-xs-12
+			.add-on-included(ng-hide="tickets[0]")
+				p Ok! Add tickets to your cart and then you can check out right away.  Don't worry, you can still have your friends pony up after you've bought the tickets.
+	.row(ng-show="!tickets[0]")
+		.col-xs-6
+			a.btn.btn-warning.btn-lg(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
+
+- if (req.session.plan.preferences.tickets.payment === 'no-split')
+	.row(ng-hide="tickets[0]")
+		.col-xs-12
+			.add-on-included(ng-hide="tickets[0]")
+				p Hey big spender! Go ahead and click the button below to find some tickets for this event.
+	.row(ng-hide="tickets[0]")
+		.col-xs-6
+			a.btn.btn-warning.btn-lg(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") Add Tickets To Cart
+
+
+

@@ -1,6 +1,6 @@
 extends layout
 block content
-	#plan-frame(ng-controller="PlanCtrl")
+	#plan-frame(ng-cloak, ng-controller="PlanCtrl")
 		- var nav = planNav(req.session.visitor.context, req.session.plan.preferences.payment)
 		#nav-container.affix(ng-init="sections=#{nav.length}")
 			#plan-nav

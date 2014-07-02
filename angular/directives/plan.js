@@ -237,61 +237,6 @@ directive('planDashboardOff', ['$templateCache','$timeout', '$rootScope', '$wind
           /* clear the template cache because switching between organizer and friend is the same template - refactor this */
           $templateCache.removeAll();
 
-          scope.serviceFee = function(price) {
-            return price * 0.15;
-          }
-
-          // TODO - make this a filter?
-          scope.showEllipses = function(ary, len) {
-            if (typeof ary !== "undefined") {
-              return (ary.join(', ').length > len);
-            }
-          };
-
-          scope.$watch('restaurants', function(newVal, oldVal) {
-            if (typeof newVal === "undefined") {
-              return;
-            }
-            if (oldVal === newVal) {
-              return;
-            }
-            cart.totals('restaurants');
-            scope.friendsPonyUp(scope.friends);
-          });
-
-          scope.$watch('hotels', function(newVal, oldVal) {
-            if (typeof newVal === "undefined") {
-              return;
-            }
-            if (oldVal === newVal) {
-              return;
-            }
-            cart.totals('hotels');
-            scope.friendsPonyUp(scope.friends);
-          });
-
-          scope.$watch('parking', function(newVal, oldVal) {
-            if (typeof newVal === "undefined") {
-              return;
-            }
-            if (oldVal === newVal) {
-              return;
-            }
-            scope.friendsPonyUp(scope.friends);
-            cart.totals('parking');
-          });
-
-          scope.$watch('tickets', function(newVal, oldVal) {
-            if (typeof newVal === "undefined") {
-              return;
-            }
-            if (oldVal === newVal) {
-              return;
-            }
-            cart.totals('tickets');
-            scope.friendsPonyUp(scope.friends);
-          });
-
 
           /* pluralize the people coming list header */
           scope.$watch('totalComing', function(val) {

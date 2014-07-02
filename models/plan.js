@@ -112,6 +112,10 @@ this.Model = function(mongoose) {
 		parking: [String],
 		restaurants: [String],
 		notes: String,
+		notifications:[{
+			key: String,
+			acknowledged:{type:Date,default:null}
+		}],
 		created: {type: Date,default: Date.now},
 		updated: Date,
 	},{

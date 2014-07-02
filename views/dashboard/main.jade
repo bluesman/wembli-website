@@ -29,12 +29,13 @@ block dashboard-content
 				- var noListText = "Hey! Looks like you don't have any plans started...don't worry help is on the way! Go ahead and start planning your next great adventure!"
 				include no-list
 			ul.plan-list.row
-				li.dashboard-plan(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.organizer",ng-cloak)
-					include dashboard-list-item
-					.col-sm-3.col-xs-12
-						.cta.col-xs-4.col-sm-12
-							a(href="#",ng-click="deletePlan(plan.guid)") Delete this plan
-							a.btn.btn-primary(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
+				li.dashboard-plan.col-md-8.col-md-offset-2.col-xs-12(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.organizer",ng-cloak)
+					.row
+						include dashboard-list-item
+						.col-sm-3.col-xs-12
+							.cta.col-xs-4.col-sm-12
+								a(href="#",ng-click="deletePlan(plan.guid)") Delete this plan
+								a.btn.btn-primary(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
 		#invited-list.invited-list(ng-show="{'/invited-list':true}[showList]")
 			- var activeBreadcrumb = "Events You're Invited To";
 			- var icon = 'fa-group'
@@ -43,11 +44,12 @@ block dashboard-content
 				- var noListText = "Hey! Looks like you aren't invited to any plans...maybe you should take the first step and start planning something."
 				include no-list
 			ul.plan-list.row
-				li.dashboard-plan(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.invited",ng-cloak)
-					include dashboard-list-item
-					.col-sm-3.col-xs-12
-						.cta.col-xs-4.col-sm-12
-							a.btn.btn-primary(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
+				li.dashboard-plan.col-md-8.col-md-offset-2.col-xs-12(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.invited",ng-cloak)
+					.row
+						include dashboard-list-item
+						.col-sm-3.col-xs-12
+							.cta.col-xs-4.col-sm-12
+								a.btn.btn-primary(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
 		#contacts-list.contacts-list(ng-show="{'/contacts-list':true}[showList]")
 			- var activeBreadcrumb = "Your Little Black Book";
 			- var icon = 'fa-book'
@@ -71,8 +73,9 @@ block dashboard-content
 				- var noListText = "Your list is empty - you haven't been anywhere! Get ta' Planning!"
 				include no-list
 			ul.plan-list.row
-				li.dashboard-plan(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.archived",ng-cloak)
-					include dashboard-list-item
+				li.dashboard-plan.col-md-8.col-md-offset-2.col-xs-12(id="{{plan.guid}}-wrapper",ng-repeat="plan in dashboard.archived",ng-cloak)
+					.row
+						include dashboard-list-item
 		.row
 			.col-md-8.col-md-offset-2.col-xs-12
 				a#start-now.btn.btn-primary.btn-large(href="/search")

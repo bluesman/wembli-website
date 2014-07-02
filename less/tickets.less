@@ -143,9 +143,8 @@
 		}
 
 		.navigation {
-			position:absolute;
-			top:7px;
-			right:0;
+			padding-top:7px;
+			text-align:right;
 			color:@white;
 			a {
 				color:@white;
@@ -209,6 +208,33 @@
 
 #tickets {
 
+	#tickets-confirm {
+		.tickets-confirm-body {
+			padding:20px;
+
+			.left {
+				margin-bottom:10px;
+			}
+
+			.right {
+				.fa-exclamation-triangle {
+					margin-top:7px;
+				}
+
+				.ticket-info {
+					padding:0 0 10px 0;
+				}
+
+				.notes {
+					padding:10px 0;
+				}
+				.next-step-text {
+					padding:10px 0;
+				}
+
+			}
+		}
+	}
 
 
 	#tickets-offsite {

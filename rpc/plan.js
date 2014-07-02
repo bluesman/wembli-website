@@ -93,7 +93,7 @@ exports.plan = {
 										if (err) {
 											callback2(err);
 										}
-										if (typeof results.TicketGroup === "undefined") {
+										if (results && (typeof results.TicketGroup === "undefined")) {
 											item.gone = true;
 
 											if (item._id) {
@@ -394,6 +394,7 @@ exports.plan = {
 		if (typeof args.rsvpComplete !== "undefined") {
 			req.session.plan.rsvpComplete = args.rsvpComplete;
 			req.session.plan.rsvpCompleteDate = Date.now();
+			req.session.plan.notifications.push({key:'rsvpComplete'});
 		}
 
 		req.session.plan.save(function(err, res) {
@@ -412,6 +413,35 @@ exports.plan = {
 			]);
 
 		});
+	},
+
+	acknowledgeNotification: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+		console.log(args);
+		if (typeof args['key'] !== "undefined") {
+			async.forEach(req.session.plan.notifications, function(item, callback) {
+				console.log(item);
+				if (item.key === args.key) {
+					item.acknowledged = Date.now()
+				}
+				callback();
+			}, function() {
+				console.log(req.session.plan);
+				req.session.plan.markModified('notifications');
+				req.session.plan.save(function(err, res) {
+					data.plan = req.session.plan;
+					me(null, data);
+				});
+			});
+		} else {
+			data.success = 0;
+			data.error = true;
+			me(null, data);
+		}
+
 	},
 
 	submitNotes: function(args, req, res) {
@@ -910,10 +940,7 @@ exports.plan = {
 					});
 				});
 		}
-
 	},
-
-
 
 	removeOutsidePayment: function(args, req, res) {
 		var me = this;
@@ -1314,7 +1341,6 @@ exports.plan = {
 		});
 	},
 
-
 	removeRestaurant: function(args, req, res) {
 		var me = this;
 
@@ -1362,7 +1388,6 @@ exports.plan = {
 			});
 		});
 	},
-
 
 	addParking: function(args, req, res) {
 		var me = this;
@@ -1488,8 +1513,6 @@ exports.plan = {
 				});
 			});
 		});
-
-
 	},
 
 	addParkingReceipt: function(args, req, res) {
@@ -1984,7 +2007,6 @@ exports.plan = {
 					me(null,data);
 				});
 			});
-
 	},
 
 	savePreferences: function(args, req, res) {
@@ -2003,8 +2025,6 @@ exports.plan = {
 			req.session.plan.preferences.hotels.payment = args.preferences.hotels.payment;
 			req.session.plan.preferences.restaurants.payment = args.preferences.restaurants.payment;
 
-			console.log('plan.save');
-			console.log(args);
 			//req.session.plan.markModified('preferences');
 			req.session.plan.save(function(err, res) {
 				data.plan = req.session.plan;

@@ -159,10 +159,14 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
     });
 
 		plan.get(function(p) {
-      /* todo: figure out logic to determine backToPlan */
-      var backToPlan = false;
-      $scope.nextLink = backToPlan ? "/plan" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
-      $scope.nextText = backToPlan ? "Back To Plan Dashboard" : "Continue To Plan Preferences";
+      $scope.backToPlan = false;
+      /* if organizer rsvp not null then go back to plan */
+      if (p.organizer.rsvp.decision !== null) {
+        $scope.backToPlan = true;
+      }
+
+      $scope.nextLink = $scope.backToPlan ? "/plan" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
+      $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
       /* click handler for buy tix button
        * - adds tix to plan
        * - display a popup asking if they really did buy the tix
@@ -194,14 +198,28 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           /* find this ticket in the tickets list and update it so the button changes */
           $scope.tickets[idx] = ticket;
 
-          /* wait then show the slidedown */
-          var Promise = $timeout(function() {
-            $rootScope.$apply(function() {
-              console.log('showbuytixoffsite');
-              $scope.buyTicketsOffsite = true;
-              overlay.show();
-            });
-          }, 1500);
+          /* if payment type is split-first just go straight to the options page */
+          if ($scope.plan.preferences.payment === 'split-first') {
+            var sections = $('#venue-map-container').tuMap("GetSections");
+            for (var i = sections.length - 1; i >= 0; i--) {
+              if (sections[i].Name === ticketGroup.ticketGroup.Section) {
+                $scope.activeSection = sections[i];
+                break;
+              }
+            };
+
+            $scope.ticketsConfirm = true;
+            overlay.show();
+          } else {
+            /* wait then show the slidedown */
+            var Promise = $timeout(function() {
+              $rootScope.$apply(function() {
+                console.log('showbuytixoffsite');
+                $scope.buyTicketsOffsite = true;
+                overlay.show();
+              });
+            }, 1500);
+          }
         });
       }
 
@@ -210,6 +228,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
         if (typeof index == "undefined") {
           $scope.buyTicketsOffsite = false;
+          $scope.ticketsConfirm = false;
           overlay.hide();
           return;
         }
@@ -231,6 +250,10 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           /* hide the slide down popover */
           if ($scope.buyTicketsOffsite) {
             $scope.buyTicketsOffsite = false;
+            overlay.hide();
+          }
+          if ($scope.ticketsConfirm) {
+            $scope.ticketsConfirm = false;
             overlay.hide();
           }
         });
@@ -279,16 +302,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
 			/* todo find out if this person is a friend invited to the plan */
 			$scope.context = plan.getContext() || 'visitor';
-
-      /* show a link to go back to the plan if that's where they came from
-        TODO: don't use friends count to know if they came from the plan */
-			$scope.backToPlan = true;
-			if (plan.getFriends().length == 0) {
-				$scope.backToPlan = false;
-			}
-			if ($scope.context === 'friend') {
-				$scope.backToPlan = true;
-			}
 
       /* get the tix and make the ticket list */
       wembliRpc.fetch('event.getTickets', {eventID: p.event.eventId}, function(err, result) {
@@ -395,7 +408,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 					var options = {};
 		      options.MapId = $scope.plan.event.data.VenueConfigurationID;
 		      options.SingleSectionSelection = true;
-
+          options.ServiceUrl = "//imap.ticketutils.net";
 			    options.OnInit = function(e, data) {
             $('#venue-map-loading').hide();
             console.log(data);

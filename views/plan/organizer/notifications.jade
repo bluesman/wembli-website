@@ -1,0 +1,9 @@
+.notification-container.row
+	.col-xs-12
+		#ticket-count-mismatch-notification.notification.alert.alert-danger(ng-show="ticketCountMismatch")
+			a(ng-click="acknowledgeNotification('ticketCountMismatch')",href="#",class="close",data-dismiss="alert")&times;
+			.row
+				.col-xs-1
+					.fa.fa-exclamation-triangle.icon-2x
+				.col-xs-11
+					span The number of available tickets in this ticket group do not match the number of confirmed guests.

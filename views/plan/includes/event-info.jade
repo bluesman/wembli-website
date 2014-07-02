@@ -1,0 +1,12 @@
+.event-info-header.row
+	.col-sm-3.col-xs-12(ng-cloak)
+		.event-date-box
+			span.day {{plan.event.eventDate| date:'EEE'}}
+			span.event-date {{plan.event.eventDate| date:'MMM d'}}
+			span.time {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+	.col-sm-9.col-xs-12(ng-cloak)
+		.info
+			h1.name.block {{plan.event.eventName}}
+			h2.helvetica.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
+			.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
+			.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}

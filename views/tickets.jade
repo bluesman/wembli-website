@@ -4,14 +4,17 @@ block content
 	include includes/modals/tickets/tickets-login
 	include includes/modals/tickets/tickets-offsite
 	#tickets.addons-container(ng-controller="TicketsCtrl")
-		#tickets-offsite.slide-in-down(ng-show="buyTicketsOffsite")
-			.buy-offsite-header.slide-in-down-header
+		#tickets-confirm.slide-in-down(ng-show="ticketsConfirm")
+			.tickets-confirm-header.slide-in-down-header
 				a(href="#")
 					i.fa.fa-times.fa-2x(ng-click="removeTicketGroup()").pull-right
-				h2.modal-title Ticket Purchase For {{plan.event.eventName}}
-				h4.modal-subtitle Before we take you to your planning dashboard we need to know:
-			.buy-offsite-body.slide-in-down-body.row
-				.col-md-6.col-xs-12.option-container
+				h2.modal-title Confirm Adding Tickets To Your Plan
+				h4.modal-subtitle
+			.tickets-confirm-body.slide-in-down-body.row
+				.left.section-view.col-md-4.col-xs-12
+					img.img-responsive.center-block(ng-src="{{activeSection.SectionViewUrl}}")
+
+				//-
 					.option-content
 						h3 Yes, I bought my tickets!
 						form#tickets-offsite-form.form-inline.option-body(name="tickets-offsite-form")
@@ -32,11 +35,39 @@ block content
 									i.fa.fa-square-o(ng-hide="confirmPriceQty")
 									span Check this box if its correct. Otherwise, please update the info above.
 						button#bought-tickets-button.btn.btn-primary.btn-sm.form-control(ng-click="boughtTickets()") Continue
-				.col-md-6.col-xs-12.option-container.middle-option
-					.option-content
-						h3 No, show me somethin' else...
-						p.option-body I decided not to buy those stinkin' tickets. Show me other options.
-						button.btn.btn-primary.btn-sm.form-control(ng-click="removeTicketGroup()") See More Tickets
+				.right.col-md-8.col-xs-12
+					.alert.alert-warning
+						.row
+							.col-xs-2.text-center
+								i.fa.fa-exclamation-triangle.fa-2x
+							.col-xs-10
+								span You are&nbsp;
+								strong not&nbsp;
+								span purchasing or holding these tickets. You are only adding them to your plan. Click here to&nbsp;
+								a(href="#") purchase these tickets now&nbsp;
+								span if you want to secure them before collecting payment from friends.
+
+					.row
+						.col-xs-12
+							h3 Tickets Info
+					.ticket-info.row
+						.col-xs-12
+							strong Section:&nbsp;
+							span {{tickets[currentTicketIdx].Section}}
+							strong , Row:&nbsp;
+							span {{tickets[currentTicketIdx].Row}}
+							i , up to {{tickets[currentTicketIdx].maxSplit}} {{tickets[currentTicketIdx].maxSplit | pluralize:'ticket'}}.
+					.notes.row(ng-show="tickets[currentTicketIdx].Notes")
+						.col-xs-12
+							{{tickets[currentTicketIdx].Notes}}
+					.next-step-text.row(ng-hide="backToPlan")
+						.col-xs-12
+							p Next step, choose your plan settings and invite friends.  Once your friends are invited, you'll ask them to pony up for their share of the ticket price.
+					.row
+						.col-xs-12
+							a.btn.btn-primary.btn-sm.form-control(href="{{nextLink}}") {{nextText}}
+
+		include includes/tickets-offsite
 
 		.container-fluid
 			.header.row(ng-cloak)
@@ -46,14 +77,17 @@ block content
 						span.event-date(ng-cloak) {{plan.event.eventDate| date:'MMM d'}}
 						span.time(ng-cloak) {{getDate(plan.event.eventDate)| date:'h:mm a'}}
 				.col-md-10.col-sm-9.col-xs-12
-					.info
-						h1.name.block {{plan.event.eventName}}
-						h2.helvetica.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
-						.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
-						.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
-					.navigation(ng-show="ticketsChosen")
-						a(href="{{nextLink}}") {{nextText}}&nbsp;
-						i.fa.fa-level-down.fa-rotate-270
+					.row
+						.col-xs-12.col-md-8
+							.info
+								h1.name.block {{plan.event.eventName}}
+								h2.helvetica.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
+								.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
+								.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+						.col-xs-12.col-md-4
+							.navigation(ng-show="ticketsChosen || backToPlan")
+								a(href="{{nextLink}}") {{nextText}}&nbsp;
+								i.fa.fa-level-down.fa-rotate-270
 			.row
 				#tickets-left.col-md-8.col-xs-12.addons-content-container
 					#venue-map-row.row
@@ -114,7 +148,7 @@ block content
 											.col-xs-12
 												.row(ng-show="ticket.ticketsInPlan")
 													.col-xs-12
-														i You purchased these tickets and they have been added to your plan:
+														i These tickets have been added to your plan:
 												.row
 													.col-xs-3.price
 														.value
@@ -135,9 +169,12 @@ block content
 																	span(ng-show="{'\*':true}[ticket.LowSeat]") *
 																	span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
 													.col-xs-5.controls
-														.actions
+														.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
+															a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="#", ng-hide="ticket.ticketsInPlan") Add Tix
+															a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan") Remove From Plan
+														.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
 															a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",target="_blank", ng-hide="ticket.ticketsInPlan") Buy Tix
-															a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)",ng-href="#",ng-show="ticket.ticketsInPlan") Remove From Plan
+															a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan") Remove From Plan
 
 					//-
 						.purchased-tickets-list

@@ -1,0 +1,83 @@
+//- have tickets but not purchased
+.row(ng-show="tickets[0]")
+	.col-xs-12
+		.add-on-included
+			.ticket-list-container.add-on-container.row
+				.col-xs-12
+					.ticket-list-header
+						.row
+							.col-xs-2
+								.text-center Section
+							.col-xs-2
+								.text-center Row
+							.col-xs-2
+								.text-center Seats
+							.col-xs-2
+								.text-center Max # of Tix
+							.col-xs-2 Total
+
+					.ticket-row.add-on-row(ng-repeat="ticket in tickets")
+						.row(ng-hide="ticket.purchased")
+							.col-xs-12
+								.tickets-not-purchased-alert.alert.alert-warning
+									.row
+										.col-xs-1
+											i.fa.fa-exclamation-triangle.fa-2x
+										.col-xs-11
+											span These tickets have not been purchased.  There is no guarantee that tickets will be available until they are purchased.
+
+						.row
+							.col-xs-12
+								.ticket-trigger(ng-click="toggleTicketPriceDetails(ticket._id)")
+									.row
+										.col-xs-2
+											.text-center {{ticket.ticketGroup.Section}}
+										.col-xs-2
+											.text-center {{ticket.ticketGroup.Row}}
+										.col-xs-2
+											.text-center
+												span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
+												span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
+										.col-xs-2
+											.qty-container.text-center {{ticket.ticketGroup.maxSplit}}
+												//- select.form-control(id="qty-{{ticket.ticketGroup.ID}}",ng-model="ticket.ticketGroup.SelectedQty", name="qty-{{ticket.ticketGroup.ID}}", ng-options="q for q in ticket.ticketGroup.ValidSplits.int")
+										.col-xs-2
+											.ticket-total {{ticket.costBreakdown.total | currency}}
+										.col-xs-2.text-center(ng-hide="ticket.purchased")
+											a.btn.btn-primary.btn-sm(ng-click="buyTickets()", ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy
+						.row.ticket-price-details.slide-down(ng-show="showTicketPriceDetails[ticket._id]", id="{{ticket._id}}-tickets-slide-down")
+							.col-xs-12
+								.row
+									.col-xs-9
+										strong Ticket Price (ea.)&nbsp;
+									.col-xs-3.text-right {{ticket.costBreakdown.price | currency}}
+								.row.border-bottom
+									.col-xs-9
+										strong Ticketnetwork Service Fee (ea.)&nbsp;
+									.col-xs-3.text-right {{ticket.costBreakdown.serviceFee | currency}}
+								.row
+									.col-xs-9
+										strong Cost Per Person&nbsp;
+									.col-xs-3.text-right {{ticket.costBreakdown.totalEach | currency}}
+								.row
+									.col-xs-9
+										strong Est. Delivery Fee* Per Invitee&nbsp;
+									.col-xs-3.text-right {{ticket.costBreakdown.deliveryFeeEach | currency}}
+								.row
+									.col-xs-9.text-right
+										strong Total (x{{ticket.ticketGroup.selectedQty}} {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}):&nbsp;
+									.col-xs-3.text-right
+										strong {{ticket.costBreakdown.total | currency}}
+								.row.disclaimer
+									.col-xs-12
+										small
+											strong *&nbsp;
+											span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
+						.row
+							.col-xs-12.ticket-notes(ng-show="ticket.ticketGroup.Notes") {{ticket.ticketGroup.Notes}}
+			//- only show this if there are people to request pony up from
+			.row(ng-show="canRequestPonyUp")
+				.col-xs-6
+					a.btn.btn-warning.btn-lg(href="/plan/pony-up") Request Pony Up!
+
+

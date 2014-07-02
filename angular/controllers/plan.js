@@ -203,8 +203,23 @@ controller('ParkingOffsiteCtrl', ['$scope', 'plan', '$http', '$location', '$root
 	}
 ]).
 
-controller('PlanCtrl', ['$rootScope', '$scope', 'plan', 'customer',
-	function($rootScope, $scope, plan, customer) {
+
+/* don't rely on DOM based inheritence in angular
+ *
+ * http://stackoverflow.com/questions/15386137/angularjs-controller-inheritance
+ *
+ */
+controller('PlanCtrl', ['$scope', 'plan', 'customer','overlay', 'cart',
+	function($scope, plan, customer, overlay, cart) {
+    $scope.buyTickets = function() {
+      overlay.show();
+      $scope.buyTicketsOffsite = true;
+    };
+
+    $scope.removeTicketGroup = function() {
+      $scope.buyTicketsOffsite = false;
+      overlay.hide();
+    };
 
 		$scope.activateSection = function(sectionName) {
 			console.log('activateSection '+ sectionName);
@@ -294,13 +309,32 @@ controller('PlanCtrl', ['$rootScope', '$scope', 'plan', 'customer',
         }
       };
 
-
-
       /* count the organizer */
       if ($scope.plan.organizer.rsvp.decision) {
         $scope.totalComing = parseInt($scope.totalComing) + parseInt($scope.plan.organizer.rsvp.guestCount);
-        $scope.friendsComing.push()
       }
+
+    };
+
+    $scope.setSelectedQty = function() {
+      /* init selectedQty */
+      angular.forEach($scope.tickets, function(t) {
+        if (typeof t.ticketGroup.selectedQty === "undefined") {
+          /* if there is a split that matches totalComing use that, else use the highest split */
+          angular.forEach(t.ticketGroup.ValidSplits.int, function(split) {
+            console.log('valid split: '+split+ ' == '+$scope.totalComing);
+            if (split == $scope.totalComing) {
+              t.ticketGroup.selectedQty = parseInt(split)
+            }
+          });
+
+          if (typeof t.ticketGroup.selectedQty === "undefined") {
+            console.log('using last split');
+            t.ticketGroup.selectedQty = parseInt(t.ticketGroup.ValidSplits.int[t.ticketGroup.ValidSplits.int.length - 1]);
+          }
+        }
+      });
+
     };
 
     $scope.reconcileTicketQty = function() {
@@ -324,11 +358,70 @@ controller('PlanCtrl', ['$rootScope', '$scope', 'plan', 'customer',
     };
 
 
+    $scope.acknowledgeNotification = function(key) {
+      plan.acknowledgeNotification(key);
+    };
+
+    $scope.serviceFee = function(price) {
+      return price * 0.15;
+    }
+
+    // TODO - make this a filter?
+    $scope.showEllipses = function(ary, len) {
+      if (typeof ary !== "undefined") {
+        return (ary.join(', ').length > len);
+      }
+    };
+
+    $scope.$watch('restaurants', function(newVal, oldVal) {
+      if (typeof newVal === "undefined") {
+        return;
+      }
+      if (oldVal === newVal) {
+        return;
+      }
+      cart.totals('restaurants');
+      $scope.friendsPonyUp($scope.friends);
+    });
+
+    $scope.$watch('hotels', function(newVal, oldVal) {
+      if (typeof newVal === "undefined") {
+        return;
+      }
+      if (oldVal === newVal) {
+        return;
+      }
+      cart.totals('hotels');
+      $scope.friendsPonyUp($scope.friends);
+    });
+
+    $scope.$watch('parking', function(newVal, oldVal) {
+      if (typeof newVal === "undefined") {
+        return;
+      }
+      if (oldVal === newVal) {
+        return;
+      }
+      $scope.friendsPonyUp($scope.friends);
+      cart.totals('parking');
+    });
+
+    $scope.$watch('tickets', function(newVal, oldVal) {
+      if (typeof newVal === "undefined") {
+        return;
+      }
+      if (oldVal === newVal) {
+        return;
+      }
+      cart.totals('tickets');
+      $scope.friendsPonyUp($scope.friends);
+      $scope.setSelectedQty();
+    });
 
     /* get the plan */
     plan.get(function(p) {
 
-      $rootScope.plan    = p;
+      $scope.plan        = p;
       $scope.organizer   = plan.getOrganizer();
       $scope.tickets     = plan.getTickets();
       $scope.parking     = plan.getParking();
@@ -363,19 +456,39 @@ controller('PlanCtrl', ['$rootScope', '$scope', 'plan', 'customer',
         }
       };
 
-      /* not sure i need this stuff here
-
       $scope.calcTotalComing();
-
+      $scope.setSelectedQty();
       $scope.friendsPonyUp($scope.friends);
-			*/
 
+      $scope.canRequestPonyUp = ($scope.friendsComing && ($scope.friendsComing.length > 0));
+
+	    /* start polling for changes - polls every 30 seconds */
+      /*
+	    plan.poll(function(plan) {
+	      plan.get(function(p) {
+		      $scope.plan        = p;
+		      $scope.organizer   = plan.getOrganizer();
+		      $scope.tickets     = plan.getTickets();
+		      $scope.parking     = plan.getParking();
+		      $scope.hotels      = plan.getHotels();
+		      $scope.restaurants = plan.getRestaurants();
+		      $scope.friends     = plan.getFriends();
+		      $scope.context     = plan.getContext();
+		      $scope.feed        = plan.getFeed();
+
+		      $scope.calcTotalComing();
+          $scope.setSelectedQty();
+
+	      });
+	    });
+      */
     });
 	}
 ]).
 
-controller('OrganizerPlanCtrl', ['$rootScope', '$scope', 'cart', 'plan', '$location', 'wembliRpc', 'overlay', 'ticketPurchaseUrls',
-	function($rootScope, $scope, cart, plan, $location, wembliRpc, overlay, ticketPurchaseUrls) {
+controller('OrganizerPlanCtrl', ['$scope', 'cart', 'plan', '$location', 'wembliRpc', 'overlay', 'ticketPurchaseUrls', 'notifications',
+	function($scope, cart, plan, $location, wembliRpc, overlay, ticketPurchaseUrls, notifications) {
+
     $scope.tnUrl = ticketPurchaseUrls.tn;
 
     $scope.$watch('plan.tickets[0].ticketGroup.selectedQty', function() {
@@ -386,23 +499,12 @@ controller('OrganizerPlanCtrl', ['$rootScope', '$scope', 'cart', 'plan', '$locat
         return;
       }
       cart.totals('tickets');
-      scope.friendsPonyUp(scope.friends);
+      $scope.friendsPonyUp(scope.friends);
       $scope.reconcileTicketQty();
 
     })
 
-    $scope.savePrefs = function(cb) {
-      plan.savePreferences({
-        preferences: $scope.plan.preferences
-      }, function(err, result) {
-        $scope.plan = result.plan;
-        $scope.calcTotalComing();
-        if (typeof cb !== "undefined") {
-          cb();
-        }
-      });
-    };
-
+    /* what calls this? */
     $scope.setPayment = function(addOn, value) {
       $scope.plan.preferences[addOn].payment = value;
       $scope.savePrefs(function() {
@@ -410,6 +512,76 @@ controller('OrganizerPlanCtrl', ['$rootScope', '$scope', 'cart', 'plan', '$locat
         $location.path(path);
       });
 
+    }
+
+    /* what calls this? */
+    $scope.removeTicketGroup = function(ticketId) {
+      wembliRpc.fetch('plan.removeTicketGroup', {
+        ticketId: ticketId
+      }, function(err, result) {
+        $scope.tickets = plan.setTickets(result.tickets);
+        $scope.plan = result.plan;
+      });
+    };
+
+    $scope.$watch('rsvpCompleteNotification', function(n, o) {
+    	if (typeof n !== "undefined") {
+	    	notifications.update();
+	    }
+    });
+
+    $scope.$watch('plan', function(p, oldP) {
+    	if (typeof p === "undefined") {
+    		return;
+    	}
+
+  		plan.rsvpComplete(function(complete) {
+    		/* if the plan was not complete but is now determined to be complete */
+    		if (!p.rsvpComplete && complete) {
+    			plan.submitRsvpComplete(true, function(err, result) {
+    				$scope.plan.rsvpComplete        = result.plan.rsvpComplete;
+    				$scope.plan.rsvpCompleteDate    = result.plan.rsvpCompleteDate;
+    				$scope.rsvpCompleteNotification = true;
+    			});
+    		}
+    	});
+
+  		console.log(p);
+			angular.forEach(p.notifications, function(n) {
+				if (n.key === "rsvpComplete") {
+					$scope.rsvpCompleteNotification = true;
+				}
+			});
+
+    });
+
+	}
+]).
+
+controller('OrganizerRsvpCtrl', ['$rootScope', '$scope','plan', 'planNav', 'wembliRpc',
+	function($rootScope, $scope, plan, planNav, wembliRpc) {
+
+    var makeRsvpDays = function() {
+      var rsvpTime = new Date($scope.plan.rsvpDate).getTime();
+      var now = new Date().getTime();
+      var difference = rsvpTime - now;
+      var hour = 3600 * 1000;
+      var day = hour * 24;
+      if (difference > 0) {
+        if (difference < day) {
+          $scope.rsvpDays = "That's today!";
+        } else {
+          var days = difference / day;
+          if (days < 14) {
+            var d = (parseInt(days) == 1) ? 'day' : 'days';
+            $scope.rsvpDays = "That's in " + parseInt(days) + " " + d + "!";
+          }
+        }
+      } else {
+        if ($scope.plan.rsvpComplete) {
+          $scope.rsvpDays = "RSVP Date has passed.";
+        }
+      }
     }
 
     /* key bindings for up and down arrows for guestCount */
@@ -442,12 +614,36 @@ controller('OrganizerPlanCtrl', ['$rootScope', '$scope', 'cart', 'plan', '$locat
       }
     }
 
+    /* prefs watch function */
+    var savePrefs = function(n, o) {
+      if (typeof n === "undefined") {
+        return;
+      }
+      if (typeof o === "undefined") {
+        return;
+      }
+
+			if (n !== o) {
+	      plan.savePreferences({
+	        preferences: $scope.plan.preferences
+	      }, function(err, result) {
+	        $scope.calcTotalComing();
+	      });
+			}
+    };
+
+    /* watch the prefs change */
+    $scope.$watch('plan.preferences.inviteOptions.guestFriends', savePrefs);
+    $scope.$watch('plan.preferences.inviteOptions.over21', savePrefs);
+    $scope.$watch('plan.preferences.guestList', savePrefs);
+
     $scope.setRsvp = function(rsvp) {
       $scope.plan.organizer.rsvp.decision = rsvp;
 
       if ($scope.plan.organizer.rsvp.decision === false) {
         $scope.plan.organizer.rsvp.guestCount = 0;
       }
+
       if ($scope.plan.organizer.rsvp.decision === true) {
         if ($scope.plan.organizer.rsvp.guestCount == 0) {
           $scope.plan.organizer.rsvp.guestCount = 1;
@@ -464,104 +660,19 @@ controller('OrganizerPlanCtrl', ['$rootScope', '$scope', 'cart', 'plan', '$locat
       });
     }
 
-    $scope.removeTicketGroup = function(ticketId) {
-      wembliRpc.fetch('plan.removeTicketGroup', {
-        ticketId: ticketId
-      }, function(err, result) {
-        $scope.tickets = plan.setTickets(result.tickets);
-        $scope.plan = result.plan;
-      });
-    };
+    $scope.$watch('plan', function(p, oldP) {
+    	if (typeof p === "undefined") {
+    		return;
+    	}
 
-    /* start polling for changes */
-    /* took this out because it causes expanded sections get collapsed
-    plan.poll(function(plan) {
-      $scope.plan = plan.get();
-      $scope.friends = plan.getFriends();
-      $scope.tickets = plan.getTickets();
-      $scope.feed = plan.getFeed();
-      $scope.context = plan.getContext();
-      $scope.organizer = plan.getOrganizer();
-    });
-    */
+    	console.log('rsvpDate: '+$scope.plan.rsvpDate);
 
-    plan.get(function(p) {
-	    /* deal with transitioning to rsvpcomplete only if rsvp is not already completed */
-	    if (!p.rsvpComplete) {
-	      var handleRsvpComplete = function() {
-	        if (p.rsvpComplete) {
-
-	        } else {
-	          $('#rsvp-complete-notification').show();
-	          wembliRpc.fetch('plan.submitRsvpComplete', {
-	            rsvpComplete: true,
-	          }, function(err, result) {
-	            plan.set(result.plan);
-	            $scope.plan = result.plan;
-	            $rootScope.$broadcast('plan-changed', {});
-	            $rootScope.$broadcast('rsvp-complete', {});
-	          });
-	        }
-	      }
-
-	      /* check right now if the plan has become rsvpComplete */
-	      if (plan.rsvpComplete()) {
-	        handleRsvpComplete();
-	      } else {
-	        var deregRsvpComplete = $scope.$watch('plan', function(newVal, oldVal) {
-	          if (newVal) {
-	            if (plan.rsvpComplete()) {
-	              handleRsvpComplete();
-	              deregRsvpComplete();
-	            }
-	          }
-	        });
-	      }
-	    }
-
+      makeRsvpDays();
 
       if ($scope.plan.organizer.rsvp.decision === null) {
         $scope.setRsvp(true);
       }
 
-      $scope.calcTotalComing();
-
-    });
-
-	}
-]).
-
-controller('OrganizerRsvpCtrl', ['$scope','plan', 'planNav',
-	function($scope, plan, planNav) {
-    var makeRsvpDays = function() {
-      var rsvpTime = new Date($scope.plan.rsvpDate).getTime();
-      var now = new Date().getTime();
-      var difference = rsvpTime - now;
-      var hour = 3600 * 1000;
-      var day = hour * 24;
-      if (difference > 0) {
-        if (difference < day) {
-          $scope.rsvpDays = "That's today!";
-        } else {
-          var days = difference / day;
-          if (days < 14) {
-            var d = (parseInt(days) == 1) ? 'day' : 'days';
-            $scope.rsvpDays = "That's in " + parseInt(days) + " " + d + "!";
-          }
-        }
-      } else {
-        if ($scope.plan.rsvpComplete) {
-          $scope.rsvpDays = "RSVP Date has passed.";
-        }
-      }
-    }
-    plan.get(function(p) {
-      makeRsvpDays();
-    });
-    $scope.$watch("plan.rsvpDate", function(newVal, oldVal) {
-      if (newVal && (newVal !== oldVal)) {
-        makeRsvpDays();
-      }
     });
 
     planNav.activate('rsvp');
@@ -572,6 +683,27 @@ controller('OrganizerRsvpCtrl', ['$scope','plan', 'planNav',
 controller('OrganizerCartCtrl', ['$scope','plan', 'planNav',
 	function($scope, plan, planNav) {
     planNav.activate('cart');
+    $scope.$watch('buyTicketsOffsite', function(n, o) {
+      console.log('buyTicketsOffsite: '+n);
+    });
+
+    $scope.showChangeTicketsLink = function() {
+      plan.get(function(p) {
+        /* show the change tix link if tix are chosen */
+        return (p.tickets && p.tickets.length > 0);
+
+      });
+    }
+
+    $scope.showTicketPriceDetails = {};
+    $scope.toggleTicketPriceDetails = function(ticketId) {
+      if (typeof $scope.showTicketPriceDetails[ticketId] === "undefined" ) {
+        $scope.showTicketPriceDetails[ticketId] = true;
+      } else {
+        delete $scope.showTicketPriceDetails[ticketId];
+      }
+    }
+
 	}
 ]).
 

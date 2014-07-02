@@ -1,6 +1,0 @@
-.header
-	label.parking-label.clearfix
-		i.icon-check.icon-3x.green.pull-left(ng-show="plan.preferences.addOns.parking")
-		i.icon-check-empty.icon-3x.pull-left(ng-hide="plan.preferences.addOns.parking")
-		input.pull-left.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()" , ng-disabled="{true:'disabled'}[parking[0].purchased]")
-		h3 Parking

@@ -1,0 +1,29 @@
+.parking-container.add-on-container.row
+	.col-sm-2.hidden-xs
+		include ../includes/cart/parking-icon
+	.col-sm-10.col-xs-12
+		.row
+			.col-xs-6.clearfix
+				label.parking-label.add-on-label.pull-left
+					i.fa.fa-check-square-o.fa-2x.green(ng-show="plan.preferences.addOns.parking")
+					i.fa.fa-square-o.fa-2x(ng-hide="plan.preferences.addOns.parking")
+					input.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()" , ng-disabled="{true:'disabled'}[parking[0].purchased]")
+				h3.pull-left Parking&nbsp;
+					a.change-parking-link.change-add-on-link(ng-show="parking[0]", href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") (Change Parking)
+			.col-xs-6.text-right(ng-show="parking[0]")
+				a.view-on-map(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") View On Map
+
+		.row(ng-hide="plan.preferences.addOns.parking")
+			.col-xs-12
+				.add-on-not-included
+					p So you figured it would be no big deal to find parking near the event until you realized that all the other fans probably had the same thought.  Now throwing caution to the wind seems a little less adventurous and a lot more annoying.
+					p No worries!  You can add parking to your plan now.
+		.row(ng-hide="plan.preferences.addOns.parking")
+			.col-xs-6
+				label
+					a.btn.btn-primary.btn-lg(href="#") Add Parking To Plan
+					input.hide(type="checkbox",ng-model="plan.preferences.addOns.parking", ng-click="savePrefs()")
+
+
+		//- include parking-not-chosen
+		//- include chosen-parking

@@ -48,7 +48,6 @@ factory('overlay', ['$rootScope',
 	function($rootScope) {
 		return {
 			show: function() {
-				console.log('show overlay');
 				angular.element('#overlay').addClass('overlay');
 			},
 			hide: function() {
@@ -440,7 +439,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 						refresh: true
 					}, function() {
 						callback(p);
-						$timeout(tick, 30000);
+						$timeout(tick, 5000); //30 seconds
 					});
 				})();
 			},
@@ -485,12 +484,12 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 			/* is rsvp complete:
 				everyone has responded or date is passed
 			*/
-			rsvpComplete: function() {
+			rsvpComplete: function(f) {
 				var complete = true;
 
 				/* check if rsvpDate exists */
 				if (typeof self.plan.rsvpDate === "undefined") {
-					return !complete;
+					return f(!complete);
 				}
 				/* check if rsvpDate < now */
 				/* lastnight at midnight */
@@ -508,21 +507,30 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 				 * then give them until 6/11/2013
 				 */
 				if (t1 >= t2) {
-					return complete;
+					return f(complete);
 				} else {}
 
 				if (self.friends.length == 0) {
-					return !complete;
+					return f(!complete);
 				}
 
 				/* check if every friend has responded */
 				for (var i = 0; i < self.friends.length; i++) {
 					if (self.friends[i].rsvp.decision === null) {
-						return !complete;
+						return f(!complete);
 					}
 				};
-				return complete;
+				return f(complete);
 			},
+
+			submitRsvpComplete: function(rsvpComplete, callback) {
+				wembliRpc.fetch('plan.submitRsvpComplete', {"rsvpComplete":rsvpComplete}, function(err, result) {
+					if (callback) {
+						return callback(err, result);
+					}
+				});
+			},
+
 
 			/* this may require some tweaking */
 			ponyUpSent: function() {
@@ -544,6 +552,15 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 				 * then give them until 6/11/2013
 				 */
 				return (t1 >= t2);
+			},
+
+
+			acknowledgeNotification: function(key, callback) {
+				wembliRpc.fetch('plan.acknowledgeNotification', {"key":key}, function(err, result) {
+					if (callback) {
+						return callback(err, result);
+					}
+				});
 			},
 
 
@@ -733,9 +750,6 @@ factory('googleAnalytics', ['wembliRpc', 'cookie',
 				}
 			}
 		}
-
-		console.log('google cookie values');
-		console.log(self.cookie);
 
 		return {
 			getCookie: function() {

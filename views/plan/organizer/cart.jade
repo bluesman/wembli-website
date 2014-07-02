@@ -1,19 +1,39 @@
 extends layout
 block plan-section
-	section#section-cart.organizer-cart-section.cart-section.plan-section.hide(ng-controller="OrganizerCartCtrl")
-		.header.clearfix
-			h1.pull-left Shopping Cart
-			.notification.alert.alert-danger.clearfix(ng-show="ticketCountMismatch")
-				.icon-warning-sign.icon-2x.pull-left
-				.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
-		.event-info
-			span.blue &nbsp;{{plan.event.eventName}}
-			span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-			span &nbsp;at {{plan.event.eventVenue}}&nbsp;
-		-if (req.session.plan.preferences.payment === 'split-first')
-			include ../includes/cart/split-first
-		-if (req.session.plan.preferences.payment === 'split-after')
-			include ../includes/cart/split-after
-		-if (req.session.plan.preferences.payment === 'no-split')
-			include ../includes/cart/no-split
+	section#section-cart.organizer-cart-section.cart-section.plan-section.container-fluid.hide(ng-controller="OrganizerCartCtrl")
+		.row.visible-xs.visible-sm
+			.col-xs-12.event-info-container
+				include ../includes/event-info
+		.header.row
+			.col-xs-12
+				h1.segoe Shopping Cart
+		.body
+			.row
+				.col-md-7.col-xs-12
+					include notifications
+					include tickets
+					include parking
+					//-include restaurants
+					//-include hotels
+					.visible-xs.visible-sm
+						include ../includes/cart/totals
+				.col-md-5.col-xs-12.event-info-container
+					.hidden-xs.hidden-sm
+						include ../includes/event-info
+						.row
+							.col-xs-10
+								h3 Totals:
+						.row(ng-class="{'no-split':'orange'}[plan.preferences.payment]")
+							.col-xs-6
+								strong Total Bill
+							.col-xs-4.text-right {{tickets.total + parking.total + restaurants.total + hotels.total | currency}}
+						.row(ng-hide="{'no-split':true}[plan.preferences.payment]")
+							.col-xs-6
+								strong Total Ponied Up
+							.col-xs-4.text-right {{totalPoniedUp/100 | currency}}
+						.row.balance.orange(ng-hide="{'no-split':true}[plan.preferences.payment]")
+							.col-xs-6
+								strong Balance
+							.col-xs-4.text-right {{tickets.total + parking.total + restaurants.total + hotels.total - (totalPoniedUp/100) | currency}}
+
 

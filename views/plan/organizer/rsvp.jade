@@ -1,6 +1,9 @@
 extends layout
 block plan-section
 	section#section-rsvp.organizer-rsvp-section.rsvp-section.plan-section.container-fluid.hide(ng-controller="OrganizerRsvpCtrl")
+		.row.visible-xs.visible-sm
+			.col-xs-12.event-info-container
+				include ../includes/event-info
 		.header.row
 			.col-xs-12
 				h1.segoe RSVP
@@ -9,14 +12,14 @@ block plan-section
 				.col-md-7.col-xs-12
 					.notification-container.row
 						.col-xs-12
-							.confirmed-alert.alert.alert-success(ng-show="confirmationEmailSent")
+							.confirmed-alert.alert.alert-success(ng-cloak, ng-show="confirmationEmailSent")
 								.row
 									.col-xs-1
 										i.fa.fa-check-circle-o.fa-2x.green
 									.col-xs-11
 										span OK - we resent your confirmation email. Please follow the instructions to confirm your account.
 
-							.notification.not-confirmed-warning.alert.alert-danger(ng-show="!customer.confirmed && !confirmationEmailSent")
+							#not-confirmed-notification.notification.not-confirmed-warning.alert.alert-danger(ng-cloak, ng-show="!customer.confirmed && !confirmationEmailSent")
 								.row
 									.col-xs-1
 										i.fa.fa-exclamation-triangle.fa-2x
@@ -25,14 +28,14 @@ block plan-section
 										a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Click here to resend confirmation email.
 										i.fa-cog.fa-spin(ng-show="confirmationEmailInProgress")
 
-							#rsvp-complete-notification.notification.alert.alert-danger.hide
-								a(href="#",class="close",data-dismiss="alert")&times;
+							#rsvp-complete-notification.notification.alert.alert-danger(ng-cloak, ng-show="rsvpCompleteNotification")
+								a(ng-click="acknowledgeNotification('rsvpComplete')",href="#",class="close",data-dismiss="alert")&times;
 								.row
 									.col-xs-1
 										.fa.fa-exclamation-triangle.fa-2x
 									.col-xs-11
 										span The RSVP period is over :) Now that you know who's coming, you can choose the right number of tickets.&nbsp;
-										a#rsvp-2(ng-click="activateSection('nav-section2')", href="#", wembli-hide="#rsvp-complete-notification") Click here to get started filling up your cart.
+										a#rsvp-2(href="/plan/cart", wembli-hide="#rsvp-complete-notification") Click here to get started filling up your cart.
 
 					.organizer-rsvp-container.rsvp-container.row
 						.col-sm-2.hidden-xs
@@ -51,7 +54,7 @@ block plan-section
 								.col-xs-6
 									a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[plan.organizer.rsvp.decision]",href="#no-slide") NOT GOING.
 					.guest-count-container.row(ng-show="plan.preferences.inviteOptions.guestFriends")
-						.col-xs-12
+						.col-sm-offset-2.col-sm-10.col-xs-12
 							form.form-inline
 								.form-group
 									label
@@ -59,7 +62,7 @@ block plan-section
 										input#guest-count.form-control.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="plan.organizer.rsvp.guestCount",placeholder="1")
 										span {{plan.organizer.rsvp.guestCount | pluralize: 'person'}} (spouse, kids, etc..).
 					.row
-						.col-xs-12
+						.col-sm-offset-2.col-sm-10.col-xs-12
 							.payment-type-note
 								strong ** NOTE:&nbsp;
 								span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After invitees vote on preferences you'll favor a ticket group, then we'll prompt you to send a link for everyone to pony up for their part of the outing before you shell out the cash.&nbsp;
@@ -71,22 +74,12 @@ block plan-section
 					.row
 						.col-xs-12
 							.invite-more-button-container.form-group
-								a.btn.btn-primary.form-control(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3")
+								a.btn.btn-primary.btn-lg(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3")
 									span Invite More People
 
 				.col-md-5.col-xs-12.event-info-container
-					.event-info-header.row(ng-cloak)
-						.col-sm-3.col-xs-12
-							.event-date-box
-								span.day(ng-cloak) {{plan.event.eventDate| date:'EEE'}}
-								span.event-date(ng-cloak) {{plan.event.eventDate| date:'MMM d'}}
-								span.time(ng-cloak) {{getDate(plan.event.eventDate)| date:'h:mm a'}}
-						.col-sm-9.col-xs-12
-							.info
-								h1.name.block {{plan.event.eventName}}
-								h2.helvetica.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
-								.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
-								.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+					.hidden-xs.hidden-sm
+						include ../includes/event-info
 					.plan-options-container
 						.row
 							form#event-options-form.col-xs-12
@@ -108,14 +101,14 @@ block plan-section
 										.error-text(ng-show="inviteOptionsError") Error with invite preferences...
 										.form-group
 											label
-												input#guest-friends.hide.form-control(ng-click="savePrefs()", type="checkbox", name="guest_friends", ng-model="plan.preferences.inviteOptions.guestFriends")
-												i.fa.fa-check-square-o.green(ng-show="plan.preferences.inviteOptions.over21")
-												i.fa.fa-square-o(ng-hide="plan.preferences.inviteOptions.over21")
+												input#guest-friends.hide.form-control(type="checkbox", name="guest_friends", ng-model="plan.preferences.inviteOptions.guestFriends")
+												i.fa.fa-check-square-o.green(ng-show="plan.preferences.inviteOptions.guestFriends")
+												i.fa.fa-square-o(ng-hide="plan.preferences.inviteOptions.guestFriends")
 												span My guests can invite their friends/family
 
 										.form-group
 											label
-												input#over-21.hide.form-control(ng-click="savePrefs()", type="checkbox",name="over_21",ng-model="plan.preferences.inviteOptions.over21")
+												input#over-21.hide.form-control(type="checkbox",name="over_21",ng-model="plan.preferences.inviteOptions.over21")
 												i.fa.fa-check-square-o.green(ng-show="plan.preferences.inviteOptions.over21")
 												i.fa.fa-square-o(ng-hide="plan.preferences.inviteOptions.over21")
 												span This outing is for people over 21 (sorry no kids this time)
@@ -124,19 +117,19 @@ block plan-section
 										.error-text(ng-show="guestListOptionsError") Dude, you need to pick one of these...
 										.form-group
 											label
-												input.hide.form-control(ng-click="savePrefs()", type="radio",name="guest_list",value="full",,ng-checked="plan.preferences.guestList=='full'",ng-model="plan.preferences.guestList")
+												input.hide.form-control(type="radio",name="guest_list",value="full",ng-checked="plan.preferences.guestList=='full'",ng-model="plan.preferences.guestList")
 												i.fa.fa-check-square-o.green(ng-show="{'full':true}[plan.preferences.guestList]")
 												i.fa.fa-square-o(ng-show="!{'full':true}[plan.preferences.guestList]")
 												span My guests can see the full invite list
 										.form-group
 											label
-												input.hide.form-control(ng-click="savePrefs()", type="radio",name="guest_list",value="rsvp",,ng-checked="plan.preferences.guestList=='rsvp'",ng-model="plan.preferences.guestList")
+												input.hide.form-control(type="radio",name="guest_list",value="rsvp",ng-checked="plan.preferences.guestList=='rsvp'",ng-model="plan.preferences.guestList")
 												i.fa.fa-check-square-o.green(ng-show="{'rsvp':true}[plan.preferences.guestList]")
 												i.fa.fa-square-o(ng-show="!{'rsvp':true}[plan.preferences.guestList]")
 												span My guests can only see who's RSVP'd 'yes'
 										.form-group
 											label
-												input.hide.form-control(ng-click="savePrefs()", type="radio",name="guest_list",value="private",,ng-checked="plan.preferences.guestList=='private'",ng-model="plan.preferences.guestList")
+												input.hide.form-control(type="radio",name="guest_list",value="private",ng-checked="plan.preferences.guestList=='private'",ng-model="plan.preferences.guestList")
 												i.fa.fa-check-square-o.green(ng-show="{'private':true}[plan.preferences.guestList]")
 												i.fa.fa-square-o(ng-show="!{'private':true}[plan.preferences.guestList]")
 												span My guests can not see who else is invited

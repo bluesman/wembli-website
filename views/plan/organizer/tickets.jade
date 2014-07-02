@@ -1,0 +1,13 @@
+.tickets-container.add-on-container.row
+	.col-sm-2.hidden-xs
+		include ../includes/cart/tickets-icon
+	.col-sm-10.col-xs-12
+		.row
+			.col-xs-6
+				h3 Tickets&nbsp;
+					a.change-tickets-link.change-add-on-link(ng-show="tickets[0]", href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") (Change Tickets)
+			.col-xs-6.text-right(ng-show="tickets[0]")
+				a.view-on-map(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") View On Map
+		include tickets-not-chosen
+		include chosen-tickets
+
