@@ -1,5 +1,35 @@
+//- have hotels but not purchased
+.row(ng-show="hotels[0]")
+	.col-xs-12
+		.add-on-included
+			.hotels-list-container.add-on-list-container.row
+				.col-xs-12
+					.hotels-list-header.add-on-list-header
+						.row
+							.col-xs-6
+								.text-left Hotel Name
+							.col-xs-3
+								.text-left Rating
+							.col-xs-3
+								.text-left Price Level
+
+
+					.hotels-row.add-on-row(ng-repeat="h in hotels track by $index")
+						.row(ng-show="{'google':true}[h.service]")
+							.col-xs-12
+								.hotels-trigger.add-on-trigger
+									.row
+										.col-xs-6
+											.text-left {{$index+1}}. {{h.hotel.name}}
+										.col-xs-3
+											.text-left.star-rating(rating="h.hotel.rating")
+										.col-xs-3
+											.text-left.price-level(level="h.hotel.price_level")
+
+
+
 //- hotels part of the plan, hotel chosen, rsvp not complete, split first - must wait for rsvp complete
-.body.add-on-included(ng-show="plan.preferences.addOns.hotels && hotels[0] && !hotels[0].payment.receipt")
+	.body.add-on-included(ng-show="plan.preferences.addOns.hotels && hotels[0] && !hotels[0].payment.receipt")
 	ul.hotels-list-container
 		li.hotels-row(ng-repeat="p in hotels")
 			.hotels-container.display-popover(title="hotels Cost Breakdown",placement="right",html="true",content-id="{{hotels._id}}-hotels-popover-content",trigger="hover")

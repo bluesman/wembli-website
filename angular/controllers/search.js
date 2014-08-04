@@ -5,8 +5,8 @@ angular.module('wembliApp.controllers.search', []).
  * Event List Controller
  */
 
-controller('EventListCtrl', ['$scope', '$location', 'wembliRpc', '$filter', '$rootScope', 'plan', 'fetchModals', 'loadingModal', '$timeout',
-	function($scope, $location, wembliRpc, $filter, $rootScope, plan, fetchModals, loadingModal, $timeout) {
+controller('EventListCtrl', ['$scope', '$location', 'wembliRpc', '$filter', '$rootScope', 'plan', '$timeout',
+	function($scope, $location, wembliRpc, $filter, $rootScope, plan, $timeout) {
 
 	}
 ]).

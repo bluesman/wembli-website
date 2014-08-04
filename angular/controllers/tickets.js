@@ -1,8 +1,10 @@
 /* Controllers */
 angular.module('wembliApp.controllers.tickets', []).
 
-controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPurchaseUrls', 'tnConfig', 'tuMap', '$location', '$window', '$timeout', '$rootScope', 'overlay', 'googleAnalytics',
-	function($scope, wembliRpc, plan, customer, ticketPurchaseUrls, tnConfig, tuMap, $location, $window, $timeout, $rootScope, overlay, googleAnalytics) {
+controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPurchaseUrls', 'tnConfig', 'tuMap', '$location', '$window', '$timeout', '$rootScope', 'overlay', 'googleAnalytics', 'header',
+	function($scope, wembliRpc, plan, customer, ticketPurchaseUrls, tnConfig, tuMap, $location, $window, $timeout, $rootScope, overlay, googleAnalytics, header) {
+    /* tell the header not to disappear on scroll */
+    header.fixed();
 
     /*
      * scope variables for the template
@@ -443,7 +445,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           /* make this tickets list fill up the whole height of the page
              TODO: make this reevaluate when the window size changes
           */
-          $('#tickets-list > div').css("height", $($window).height() - 172);
+          $('#tickets-list > div').css("height", $($window).height() - 191);
 					tuMap.init('#venue-map-container', options);
 
           /* init the price slider in the tickets list header */
@@ -490,164 +492,5 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           }
 				});
 		});
-	}
-]).
-
-controller('TicketsLoginCtrl', ['$rootScope', '$scope', '$location', 'plan', 'customer', 'wembliRpc', 'ticketPurchaseUrls', 'pixel', 'googleAnalytics',
-	function($rootScope, $scope, $location, plan, customer, wembliRpc, ticketPurchaseUrls, pixel, googleAnalytics) {
-		$scope.tnUrl = ticketPurchaseUrls.tn;
-		$scope.listId = 'a55323395c';
-
-		plan.get(function(p) {
-			$scope.$on('tickets-login-clicked', function(e, args) {
-				$scope.redirectUrl = '/tickets/' + $scope.plan.event.eventId + '/' + $scope.plan.event.eventName + '/login/' + args.ticket.ID;
-				$scope.ticket = args.ticket;
-			});
-		});
-
-		$scope.authActions = {
-			signup: function() {
-				wembliRpc.fetch('customer.signup', {
-						firstName: $scope.firstName,
-						lastName: $scope.lastName,
-						email: $scope.email,
-						listId: $scope.listId
-					}, function(err, result) {
-						if (result.customer) {
-							/* hide this modal and display the tickets offsite modal */
-							//$scope.customer = result.customer;
-							customer.set(result.customer);
-						}
-
-						if (result.loggedIn) {
-							$rootScope.loggedIn = result.loggedIn;
-						}
-
-						if (result.exists) {
-							$scope.formError = false;
-							$scope.signupError = true;
-							$scope.accountExists = result.exists;
-							return;
-						}
-						if (result.formError) {
-							$scope.signupError = true;
-							$scope.formError = true;
-							$scope.accountExists = false;
-							return;
-						}
-						$scope.signupError = false;
-						$scope.formError = false;
-						$scope.accountExists = false;
-
-						/* fire the signup pixels */
-						var gCookie = googleAnalytics.getCookie();
-
-						pixel.fire({
-							type: 'signup',
-							campaign: gCookie.__utmz.utmccn,
-							source: 'google',
-							medium: gCookie.__utmz.utmcmd,
-							term: gCookie.__utmz.utmctr,
-							content: '1070734106',
-						});
-
-						/* fire the facebook signup pixels */
-			      pixel.fire({
-			        type: 'signup',
-			        campaign: 'Signup Conversion Pixel Facebook Ad',
-			        source: 'facebook',
-			        medium: 'cpc',
-			        term: '',
-			        content: '6013588786171',
-			      });
-
-					},
-					/* transformRequest */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = true;
-						return data;
-					},
-
-					/* transformResponse */
-
-					function(data, headersGetter) {
-						$scope.continueSpinner = false;
-						return JSON.parse(data);
-					});
-			},
-			login: function() {
-				wembliRpc.fetch('customer.login', {
-					email: $scope.email,
-					password: $scope.password
-				}, function(err, result) {
-					if (result.error) {
-						$scope.loginError = result.error;
-
-						if (typeof result.noPassword !== "undefined") {
-							$scope.noPassword = result.noPassword;
-						} else if (result.invalidCredentials) {
-							$scope.invalidCredentials = result.invalidCredentials;
-						}
-					}
-					if (result.customer) {
-						/* hide this modal and display the tickets offsite modal */
-						customer.set(result.customer);
-					}
-
-					if (result.loggedIn) {
-						$rootScope.loggedIn = result.loggedIn;
-					}
-
-				})
-			}
-		};
-	}
-]).
-
-controller('TicketsOffsiteCtrl', ['$scope', 'plan', '$http', '$location', '$rootScope',
-	function($scope, plan, $http, $location, $rootScope) {
-		plan.get(function(p) {
-			$scope.plan = p;
-		});
-
-		$scope.$on('tickets-offsite-clicked', function(e, args) {
-			$scope.qty = args.qty;
-			$scope.amountPaid = args.amountPaid;
-			$scope.eventId = args.eventId,
-			$scope.eventName = args.eventName,
-			$scope.sessionId = args.sessionId,
-			$scope.ticketGroup = args.ticketGroup,
-			$scope.ticketId = args.ticketId
-			$scope.backToPlan = (typeof args.backToPlan === "undefined" || args.backToPlan == 'false') ? false : args.backToPlan;
-			if ($scope.backToPlan) {
-				$scope.continueLink = '/plan';
-			} else {
-				$scope.continueLink = '/event-options/' + args.eventId + '/' + args.eventName;
-			}
-		})
-
-		$scope.showButton = function() {
-			return ($scope.ticketsOffsite === 'bought');
-		};
-
-		$scope.submitForm = function() {
-
-		};
-
-		$scope.cancelForm = function() {
-      /* remove the ticketgroup and close the modal */
-      plan.removeTicketGroup({
-        ticketId: $scope.ticketId
-      }, function(err, results) {
-        $('#tickets-offsite-modal').modal('hide');
-        $rootScope.$broadcast('tickets-changed', {
-          tickets: results.tickets
-        });
-
-      });
-
-		};
-
 	}
 ]);

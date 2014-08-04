@@ -4,19 +4,20 @@
 			button.close(type="button", ng-click="$hide()")
 				i.fa.fa-angle-double-left
 		.aside-body
-			//-
-				.sign-up(ng-hide="loggedIn")
-					a.btn.btn-secondary.btn-large(href="/signup")
-						strong sign up
-				.log-out(ng-show="loggedIn")
-					a.btn.btn-secondary.btn-large(href="/logout", target="_self")
-						strong log out
 
 			ul.aside-nav
 				li
 					a(href="http://#{app.settings.host}.wembli.com/")
 						i.fa.fa-home
 						span home
+				li(ng-hide="loggedIn")
+					a(href="http://#{app.settings.host}.wembli.com/signup")
+						i.fa.fa-user
+						span signup
+				li(ng-hide="loggedIn")
+					a(href="http://#{app.settings.host}.wembli.com/login")
+						i.fa.fa-lock
+						span login
 				li(ng-show="loggedIn")
 					a(href="http://#{app.settings.host}.wembli.com/dashboard")
 						i.fa.fa-dashboard

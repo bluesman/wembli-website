@@ -1,0 +1,278 @@
+.pony-up-section {
+
+	.rotate-right-90 {
+		-webkit-transition: all .25s;
+		-moz-transition: all .25s;
+		-ms-transition: all .25s;
+		-o-transition: all .25s;
+		transition: all .25s;
+
+	}
+	.rotate-right-remove,.rotate-right-add {
+	  display:block!important;
+	}
+
+	.rotate-right {
+		-moz-transform: rotate(90deg) translate(4px,5px);
+		-webkit-transform: rotate(90deg) translate(4px,5px);
+		-o-transform: rotate(90deg) translate(4px,5px);
+		transform: rotate(90deg) translate(4px,5px);
+	}
+
+
+	.slide-down {
+		overflow-y: hidden;
+		-webkit-transition: all .25s;
+		-moz-transition: all .25s;
+		-ms-transition: all .25s;
+		-o-transition: all .25s;
+		transition: all .25s;
+	}
+
+	.slide-down.ng-hide-remove,.slide-down.ng-hide-add {
+	  display:block!important;
+	}
+
+	.slide-down.ng-hide {
+		height: 0;
+	}
+
+
+	.pony-up {
+		p {
+			padding:10px;
+		}
+	}
+
+	.send-pony-up-button {
+		height:inherit;
+	}
+
+	.pony-up-alert-info {
+		margin-top:10px;
+	}
+
+	.amount-to-pony-up {
+		border: 4px solid #666;
+		margin: 10px 0px;
+		padding: 10px 0px;
+	}
+
+	.invitee {
+		margin-bottom:25px;
+		background-color: @grayLighter;
+		padding:10px;
+
+		.invitee-info {
+			label {
+				display: block;
+				cursor: pointer;
+
+				.send-pony-up-label {
+					margin-top:5px;
+				}
+
+			}
+
+			.invitee-name {
+				margin-top:4px;
+
+			}
+
+			.suggested-amounts-container {
+				margin-top:10px;
+				margin-bottom: 10px;
+				.suggested-amounts-trigger:hover {
+					/* background-color:lighten(@blueLight,30%); */
+					cursor:pointer;
+				}
+
+				.suggested-amounts-trigger {
+					i {
+						width:15px;
+						font-size:1.75em;
+					}
+				}
+
+				.suggested-amount-value {
+					margin-right:12px;
+				}
+
+				.suggested-amount-header, .suggested-amount-value {
+					font-weight: bold;
+					font-size: 1.2em;
+				}
+
+				/* md and larger have nav on the left */
+				@media (min-width: @screen-md-min) {
+					.suggested-amounts-trigger {
+						i {
+							width:15px;
+							font-size:1.8em;
+						}
+					}
+
+				}
+
+
+				.suggested-amounts {
+					margin:0;
+					padding:10px 0;
+					border:thin solid @grayLight;
+					border-radius: 4px;
+
+					.suggested-amount {
+						text-transform: uppercase;
+						a {
+							font-size:.9em;
+						}
+					}
+				}
+
+			}
+
+
+			.send-pony-up-control {
+
+				.send-pony-up-header {
+					font-weight: bold;
+					font-size: 1.25em;
+					padding-top:5px;
+				}
+
+				.send-request-header {
+					font-weight: bold;
+					font-size: 1.2em;
+				}
+
+				.form-group {
+					margin-bottom: 0px;
+				}
+
+				label {
+					i {
+						width:26px;
+					}
+				}
+				input[type=text] {
+					font-size:18px;
+					text-align: right;
+					font-weight:normal;
+				}
+
+				.total {
+					font-size:18px;
+					text-align: right;
+				}
+			}
+		}
+
+
+		.history-container {
+			margin-left: 0px;
+			margin-right: 0px;
+			background-color:lighten(@blueLight,30%);
+			border:2px dashed @grayDark;
+			cursor: pointer;
+
+			.history-trigger {
+				.history-header {
+					margin-top:2px;
+					font-weight: bold;
+					font-size:1.2em;
+					font-style: italic;
+				}
+				i {
+					width:20px;
+				}
+			}
+
+			.history {
+				.border-bottom {
+					margin-top:5px;
+					margin-bottom:5px;
+					border-bottom:4px solid @blue;
+				}
+
+				.total-requested, .total-paid, .balance {
+					margin-top:10px;
+				}
+
+				.balance {
+					margin-bottom: 10px;
+				}
+
+				.outside-payment-form {
+					border:thin solid @grayLight;
+					border-radius: 4px;
+					margin:10px 0;
+					padding:10px 0;
+
+					label {
+						font-weight: bold;
+						font-style: italic;
+					}
+
+					a {
+						margin-top:2px;
+					}
+
+				}
+
+				.history-item {
+					margin-top:10px;
+
+					.divider {
+						padding-top:10px;
+						border-top: thin solid @grayLight;
+					}
+
+					.actions a {
+						margin-bottom: 5px;
+						margin-right: 5px;
+					}
+
+				}
+
+				.history-item > div {
+					color: @grayDark;
+					text-transform: uppercase;
+					font-style: italic;
+					font-weight: bold;
+				}
+
+				.history-header {
+					color:@gray;
+					font-size:.8em;
+					text-transform: uppercase;
+					font-style: italic;
+					font-weight: bold;
+				}
+
+				.amount {
+					text-transform: uppercase;
+					font-style: italic;
+					font-weight: bold;
+				}
+			}
+		}
+
+
+	}
+
+	.security-message {
+		padding:10px 20px;
+		background-color: @blueLighter;
+		i {
+			margin-top:4px;
+		}
+
+		.header {
+			font-weight:bold;
+			font-size:1.2em;
+		}
+	}
+
+
+
+}

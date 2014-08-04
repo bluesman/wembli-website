@@ -1,0 +1,33 @@
+#parking-offsite.addon-offsite.slide-in-down(ng-show="buyDealOffsite")
+	.buy-offsite-header.slide-in-down-header
+		a(href="#")
+			i.fa.fa-times.fa-2x(ng-click="removeParking(parking._id)").pull-right
+		h2.modal-title Parking Purchase For {{plan.event.eventName}}
+		h4.modal-subtitle Before we take you to your planning dashboard we need to know:
+	.buy-offsite-body.slide-in-down-body.row
+		.col-md-6.col-xs-12.option-container
+			.option-content
+				h3 Yes, I bought my parking!
+				form#parking-offsite-form.form-inline.option-body(name="parking-offsite-form")
+					.form-group
+						span I just bought
+						select#qty.form-control(ng-model="selectedQty",name="selectedQty",ng-options="q for q in tickets[currentTicketIdx].ValidSplits.int")
+						span {{qty | pluralize:'spot'}} for a total of
+					.form-group
+						#amount-paid-input-group.input-group
+							span.input-group-addon $
+							input#amount-paid.form-control(type="text",name="amount_paid",ng-model="amountPaid")
+							span .
+					br
+					.form-group
+						label#confirm-price-qty-container
+							input#confirm-price-qty.hide.form-control(name="confirmPriceQty",type="checkbox",ng-model="confirmPriceQty")
+							i.fa.fa-check-square-o(ng-show="confirmPriceQty")
+							i.fa.fa-square-o(ng-hide="confirmPriceQty")
+							span Check this box if its correct. Otherwise, please update the info above.
+				button#bought-parking-button.btn.btn-primary.btn-sm.form-control(ng-click="boughtParking()") Continue
+		.col-md-6.col-xs-12.option-container.middle-option
+			.option-content
+				h3 No, show me somethin' else...
+				p.option-body I decided not to buy those spots. Show me other options.
+				button.btn.btn-primary.btn-sm.form-control(ng-click="removeParking(parking._id)") See More Parking Options

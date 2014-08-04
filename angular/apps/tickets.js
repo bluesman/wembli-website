@@ -3,6 +3,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('wembliApp', [
   'ngRoute',
+  'ngAnimate',
   'mgcrea.ngStrap',
   'wembliApp.controllers',
   'wembliApp.controllers.tickets',

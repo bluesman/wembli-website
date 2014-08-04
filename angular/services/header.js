@@ -17,6 +17,7 @@ factory('header', [
 					scroll = window;
 				}
 
+				self.scroll = scroll;
 				self.prevScroll = angular.element(scroll).scrollTop();
 
 				angular.element(header).show();
@@ -48,7 +49,8 @@ factory('header', [
 				});
 			},
 			fixed: function() {
-				/* angular.element(scroll).off('scroll'); */
+				console.log('turn off header scroll handler: '+self.scroll);
+				angular.element(self.scroll).off('scroll');
 			}
 		}
 	}

@@ -1,12 +1,12 @@
 /**
  * angular-strap
- * @version v2.0.0-rc.3 - 2014-02-10
+ * @version v2.0.4 - 2014-07-24
  * @link http://mgcrea.github.io/angular-strap
  * @author Olivier Louvignes (olivier@mg-crea.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
 'use strict';
-angular.module('mgcrea.ngStrap.button', ['ngAnimate']).provider('$button', function () {
+angular.module('mgcrea.ngStrap.button', []).provider('$button', function () {
   var defaults = this.defaults = {
       activeClass: 'active',
       toggleEvent: 'click'
@@ -31,8 +31,8 @@ angular.module('mgcrea.ngStrap.button', ['ngAnimate']).provider('$button', funct
   };
 }).directive('bsCheckbox', [
   '$button',
-  '$$animateReflow',
-  function ($button, $$animateReflow) {
+  '$$rAF',
+  function ($button, $$rAF) {
     var defaults = $button.defaults;
     var constantValueRegExp = /^(true|false|\d+)$/;
     return {
@@ -40,6 +40,7 @@ angular.module('mgcrea.ngStrap.button', ['ngAnimate']).provider('$button', funct
       require: 'ngModel',
       link: function postLink(scope, element, attr, controller) {
         var options = defaults;
+        // Support label > input[type="checkbox"]
         var isInput = element[0].nodeName === 'INPUT';
         var activeElement = isInput ? element.parent() : element;
         var trueValue = angular.isDefined(attr.trueValue) ? attr.trueValue : true;
@@ -50,25 +51,32 @@ angular.module('mgcrea.ngStrap.button', ['ngAnimate']).provider('$button', funct
         if (constantValueRegExp.test(attr.falseValue)) {
           falseValue = scope.$eval(attr.falseValue);
         }
+        // Parse exotic values
         var hasExoticValues = typeof trueValue !== 'boolean' || typeof falseValue !== 'boolean';
         if (hasExoticValues) {
           controller.$parsers.push(function (viewValue) {
+            // console.warn('$parser', element.attr('ng-model'), 'viewValue', viewValue);
             return viewValue ? trueValue : falseValue;
           });
+          // Fix rendering for exotic values
           scope.$watch(attr.ngModel, function (newValue, oldValue) {
             controller.$render();
           });
         }
+        // model -> view
         controller.$render = function () {
+          // console.warn('$render', element.attr('ng-model'), 'controller.$modelValue', typeof controller.$modelValue, controller.$modelValue, 'controller.$viewValue', typeof controller.$viewValue, controller.$viewValue);
           var isActive = angular.equals(controller.$modelValue, trueValue);
-          $$animateReflow(function () {
+          $$rAF(function () {
             if (isInput)
               element[0].checked = isActive;
             activeElement.toggleClass(options.activeClass, isActive);
           });
         };
+        // view -> model
         element.bind(options.toggleEvent, function () {
           scope.$apply(function () {
+            // console.warn('!click', element.attr('ng-model'), 'controller.$viewValue', typeof controller.$viewValue, controller.$viewValue, 'controller.$modelValue', typeof controller.$modelValue, controller.$modelValue);
             if (!isInput) {
               controller.$setViewValue(!activeElement.hasClass('active'));
             }
@@ -96,8 +104,8 @@ angular.module('mgcrea.ngStrap.button', ['ngAnimate']).provider('$button', funct
   };
 }).directive('bsRadio', [
   '$button',
-  '$$animateReflow',
-  function ($button, $$animateReflow) {
+  '$$rAF',
+  function ($button, $$rAF) {
     var defaults = $button.defaults;
     var constantValueRegExp = /^(true|false|\d+)$/;
     return {
@@ -105,19 +113,24 @@ angular.module('mgcrea.ngStrap.button', ['ngAnimate']).provider('$button', funct
       require: 'ngModel',
       link: function postLink(scope, element, attr, controller) {
         var options = defaults;
+        // Support `label > input[type="radio"]` markup
         var isInput = element[0].nodeName === 'INPUT';
         var activeElement = isInput ? element.parent() : element;
         var value = constantValueRegExp.test(attr.value) ? scope.$eval(attr.value) : attr.value;
+        // model -> view
         controller.$render = function () {
+          // console.warn('$render', element.attr('value'), 'controller.$modelValue', typeof controller.$modelValue, controller.$modelValue, 'controller.$viewValue', typeof controller.$viewValue, controller.$viewValue);
           var isActive = angular.equals(controller.$modelValue, value);
-          $$animateReflow(function () {
+          $$rAF(function () {
             if (isInput)
               element[0].checked = isActive;
             activeElement.toggleClass(options.activeClass, isActive);
           });
         };
+        // view -> model
         element.bind(options.toggleEvent, function () {
           scope.$apply(function () {
+            // console.warn('!click', element.attr('value'), 'controller.$viewValue', typeof controller.$viewValue, controller.$viewValue, 'controller.$modelValue', typeof controller.$modelValue, controller.$modelValue);
             controller.$setViewValue(value);
             controller.$render();
           });

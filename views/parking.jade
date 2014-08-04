@@ -1,3 +1,192 @@
 extends layout
-block frame1
-	include includes/parking
+block content
+	#parking.addons-container(ng-controller="ParkingCtrl")
+		#parking-confirm.addon-confirm.slide-in-down(ng-show="parkingConfirm")
+			.parking-confirm-header.addon-confirm-header.slide-in-down-header
+				a(href="#")
+					i.fa.fa-times.fa-2x(ng-click="removeParking(parking._id)").pull-right
+				h2.modal-title Confirm Adding Parking To Your Plan
+				h4.modal-subtitle
+			.parking-confirm-body.addon-confirm-body.slide-in-down-body.row
+				.left.section-view.col-md-4.col-xs-12
+					img.img-responsive.center-block(src="/images/wembliman-car.png")
+				.right.col-md-8.col-xs-12
+					.alert.alert-warning
+						.row
+							.col-xs-2.text-center
+								i.fa.fa-exclamation-triangle.fa-2x
+							.col-xs-10
+								span You are&nbsp;
+								strong not&nbsp;
+								span reserving parking spots here. You are only adding them to your plan.
+					.row
+						.col-xs-12
+							h3 Parking Info
+					.addon-info.row(ng-show="{'pw':true}[parking.service]")
+						.col-xs-12
+							.row
+								.col-xs-12
+									strong.name {{parking.location_name}}
+							.row(ng-show="parking.address")
+								.col-xs-12
+									strong.address {{parking.address}}
+							.row(ng-show="parking.available_spots")
+								.col-xs-12
+									i.spots-available {{parking.available_spots}} Spots Available
+
+
+					.addon-info.row(ng-show="{'google':true}[parking.service]")
+						.col-xs-12
+							.row
+								.col-xs-12
+									strong.name {{parking.name}}
+							.row(ng-show="parking.vicinity")
+								.col-xs-12
+									strong.address {{parking.vicinity}}
+							.row(ng-show="parkingDetails.formatted_phone_number")
+								.col-xs-12
+									strong.phone-number {{parkingDetails.formatted_phone_number}}
+							.row(ng-show="parkingDetails.website")
+								.col-xs-12
+									a.website-link(href="{{parkingDetails.website}}", target="_blank") {{parkingDetails.website}}
+							.row(ng-show="parking.rating")
+								.col-xs-12
+									span.star-rating(rating="parking.rating")
+									span(ng-show="parkingDetails.user_ratings_total") &nbsp;-&nbsp;
+									a.reviews-link(target="_blank",ng-show="parkingDetails.user_ratings_total", href="parkingDetails.url") {{parkingDetails.user_ratings_total}} Reviews
+					.next-step-text.row(ng-hide="backToPlan")
+						.col-xs-12
+							p Next step, choose your plan settings and invite friends.  Once your friends are invited, you'll ask them to pony up for their share of the ticket price.
+					.row
+						.col-xs-12
+							a.btn.btn-primary.btn-sm.form-control(href="{{nextLink}}") {{nextText}}
+
+		include includes/parking-offsite
+
+		.container-fluid(style="height:100%")
+			.header.row(ng-cloak)
+				.col-md-2.col-sm-3.col-xs-12
+					.event-date-box
+						span.day(ng-cloak) {{plan.event.eventDate| date:'EEE'}}
+						span.event-date(ng-cloak) {{plan.event.eventDate| date:'MMM d'}}
+						span.time(ng-cloak) {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+				.col-md-10.col-sm-9.col-xs-12
+					.row
+						.col-xs-12.col-md-8
+							.info
+								h1.name.block {{plan.event.eventName}}
+								h2.helvetica.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
+								.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
+								.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+						.col-xs-12.col-md-4
+							.navigation(ng-show="ticketsChosen || backToPlan")
+								a(href="{{nextLink}}") {{nextText}}&nbsp;
+								i.fa.fa-level-down.fa-rotate-270
+
+			.row(style="height:100%")
+				#parking-left.col-md-8.col-xs-12.addons-content-container(style="height:100%")
+					#map-background.row(style="height:100%")
+						.col-xs-12(style="height:100%;margin:0;padding:0")
+							#parking-map-container.addons-map.map-container(style="height:100%",lat="#{lat}",lng="#{lon}",zoom="13",draggable="true",map-type-id="ROADMAP")
+				#parking-right.col-md-4.col-xs-12.addons-list-container
+					#parking-list-header.addons-list-header
+					#parking-list.row
+						.col-xs-12.addons-list-col
+							ul.parking-list-container.list-container.addons-list
+								li.addons-list-row.parking-row.bounce-map-marker(lat="{{p.lat}}",lng="{{p.lng}}",ng-repeat="p in parkingReservations.parking_listings track by $index | filter:{hide:false}",ng-hide="p.hide")
+									.row
+										.col-xs-12
+											i.fa.fa-car
+											strong.title &nbsp;{{p.location_name}}
+									.row(ng-show="p.parkingInPlan")
+										.col-xs-12
+											i This parking has been added to your plan:
+									.row
+										.col-xs-3.price
+											.value
+												strong ${{p.price}}
+											.qty
+												i {{p.available_spots}} {{p.available_spots | pluralize:'spot'}}
+										.col-xs-4.seats
+												div
+													span {{p.address}}&nbsp;
+												div
+													span {{determineDistance(p.distance)}} mi.
+										.col-xs-5.controls
+											//- if its split first then they only add to plan and buy later
+											.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
+												a.btn.btn-primary(ng-click="addParkingReservations($index)", ng-hide="p.parkingInPlan") Add Parking
+												a.btn.btn-warning.btn-sm(ng-click="removeParking(p._id)",ng-href="#",ng-show="p.parkingInPlan && !p.purchased") Remove From Plan
+												button.btn.btn-warning.btn-sm(ng-show="p.parkingInPlan && p.purchased") Purchased
+											//- not split first - add to plan and buy now
+											.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
+												a.btn.btn-primary(ng-click="addParkingReservations($index)", ng-href="{{p.www_reserve_url}}", target="_blank", ng-hide="p.parkingInPlan") Add Parking
+												a.btn.btn-warning.btn-sm(ng-click="removeParking(parking._id)",ng-href="#",ng-show="p.parkingInPlan && !p.purchased") Remove From Plan
+												button.btn.btn-warning.btn-sm(ng-show="p.parkingInPlan && p.purchased") Purchased
+
+								li.addons-list-row.parking-row.bounce-map-marker(lat="{{p.geometry.location.lat()}}",lng="{{p.geometry.location.lng()}}",ng-repeat="p in googleParking track by $index",ng-hide="p.hide")
+									.row(ng-show="p.parkingInPlan")
+										.col-xs-12
+											i This parking has been added to your plan:
+									.row
+										.col-xs-12
+											i.fa.fa-car
+											strong.title &nbsp;{{p.name}}
+									.row
+										.col-xs-7
+											div
+												span {{p.vicinity}}
+											div
+												i Online reservations are not available.
+										.col-xs-5.controls
+											//- if just adding to plan - throw an overly to confirm and then send them on their way
+											.actions
+												button.btn.btn-primary(ng-click="addGoogleParking($index)", ng-show="!p.parkingInPlan") Add Parking
+												button.btn.btn-warning(ng-click="removeParking(p._id)",ng-show="p.parkingInPlan") Remove
+
+								li.text-center
+									a(ng-show="filteredList", ng-click="filterNone()", href="#") Back to list
+
+
+
+					//- old...
+						- if (typeof parkingPurchased[0] !== "undefined")
+							include includes/parking/purchased-parking
+						- else
+							//- plan says split first
+							- if (req.session.plan.preferences.payment === 'split-first')
+								//- plan says split first but parking is split after (override)
+								- if (req.session.plan.preferences.parking.payment === 'split-after')
+									include includes/parking/buy-now
+								- else
+									//- supposed to split first check if rsvp is complete
+									- if (req.session.plan.rsvpComplete)
+										//- add to plan but don't buy
+										include includes/parking/add-to-plan
+									- else
+										//- split first and rsvp is not complete
+										include includes/parking/read-only
+							- else if (req.session.plan.preferences.payment === 'split-after')
+								//- plan says split first but parking is split after (override)
+								- if (req.session.plan.preferences.parking.payment === 'split-first')
+									//- supposed to split first check if rsvp is complete
+									- if (req.session.plan.rsvpComplete)
+										//- add to plan but don't buy
+										include includes/parking/add-to-plan
+									- else
+										//- split first and rsvp is not complete
+										include includes/parking/read-only
+								- else if (req.session.plan.preferences.parking.payment === 'split-after')
+									include includes/parking/buy-now
+							- else
+								include includes/parking/buy-now
+							.no-results
+								.notify-email(ng-show="notFound",type="parking")
+									.collect-email(ng-hide="emailCollected")
+										p Aww shucks! We haven't got any parking listings to show you.  Enter your email below if you'd like to be notified when parking becomes available.
+										fieldset
+											input#email
+										button.btn.btn-primary.pull-right(ng-click="collectEmail()") Notify Me!
+									.collected-email(ng-show="emailCollected")
+										p OK! We'll let you know if any parking spots become available!
+

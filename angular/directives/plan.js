@@ -393,8 +393,8 @@ directive('organizerPonyUpSectionOff', ['$rootScope', 'plan', 'wembliRpc', '$tim
   }
 ]).
 
-directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowContent', 'mapVenue', 'mapMarker', '$timeout',
-  function($rootScope, googleMap, plan, mapInfoWindowContent, mapVenue, mapMarker, $timeout) {
+directive('itineraryMap', ['$rootScope', 'googleMap', 'googlePlaces', 'plan', 'mapInfoWindowContent', 'mapVenue', 'mapMarker', '$timeout',
+  function($rootScope, googleMap, googlePlaces, plan, mapInfoWindowContent, mapVenue, mapMarker, $timeout) {
     return {
       restrict: 'EC',
       cache: false,
@@ -451,52 +451,77 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
 
             /* marker for the parking if there is parking chosen */
             var parking = plan.getParking();
-            if (typeof parking[0] !== "undefined") {
-              if (parking[0].service === "google") {
-                var ll = new google.maps.LatLng(parking[0].parking.geometry.location.ob, parking[0].parking.geometry.location.pb);
-                mapMarker.create(googleMap, {
-                  icon: "/images/icons/map-icons/transportation/parkinggarage.png",
-                  lat: ll.lat(),
-                  lng: ll.lng(),
-                  name: parking[0].parking.name,
-                  body: parking[0].parking.vicinity
+            console.log(parking);
+            angular.forEach(parking, function(p) {
+              if (p.service === "google") {
+                googlePlaces.getDetails(p.parking.reference, function(place, status) {
+                  mapMarker.create(googleMap, {
+                    icon: "/images/icons/map-icons/transportation/parkinggarage.png",
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                    name: place.name,
+                    body: place.vicinity
+                  });
+
                 });
               }
 
-              if (parking[0].service === "pw") {
+              if (p.service === "pw") {
                 mapMarker.create(googleMap, {
                   icon: "/images/icons/map-icons/transportation/parkinggarage.png",
-                  lat: parking[0].parking.lat,
-                  lng: parking[0].parking.lng,
-                  name: parking[0].parking.location_name,
-                  body: parking[0].parking.address + ', ' + parking[0].parking.city
+                  lat: p.parking.lat,
+                  lng: p.parking.lng,
+                  name: p.parking.location_name,
+                  body: p.parking.address + ', ' + p.parking.city
                 });
               }
-            }
+
+            });
 
             /* marker for the restaurant if there is a deal chosen */
             var restaurants = plan.getRestaurants();
-            if (typeof restaurants[0] !== "undefined") {
-              if (restaurants[0].service === "google") {
-                mapMarker.create(googleMap, {
-                  icon: "/images/icons/map-icons/entertainment/restaurant.png",
-                  lat: restaurants[0].restaurant.geometry.location.lat(),
-                  lng: restaurants[0].restaurant.geometry.location.lng(),
-                  name: restaurants[0].restaurant.name,
-                  body: restaurants[0].restaurant.vicinity
+            angular.forEach(restaurants, function(r) {
+              if (r.service === "google") {
+                googlePlaces.getDetails(r.restaurant.reference, function(place, status) {
+                  mapMarker.create(googleMap, {
+                    icon: "/images/icons/map-icons/entertainment/restaurant.png",
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                    name: place.name,
+                    body: place.vicinity
+                  });
                 });
               }
 
-              if (restaurants[0].service === "yipit") {
+              if (r.service === "yipit") {
                 mapMarker.create(googleMap, {
                   icon: "/images/icons/map-icons/entertainment/restaurant.png",
-                  lat: restaurants[0].restaurant.business.locations[0].lat,
-                  lng: restaurants[0].restaurant.business.locations[0].lon,
-                  name: restaurants[0].restaurant.title,
-                  body: restaurants[0].restaurant.business.name
+                  lat: r.restaurant.business.locations[0].lat,
+                  lng: r.restaurant.business.locations[0].lon,
+                  name: r.restaurant.title,
+                  body: r.restaurant.business.name
                 });
               }
-            }
+
+            });
+
+            /* marker for the hotels if there is a hotel chosen */
+            var hotels = plan.getHotels();
+            angular.forEach(hotels, function(h) {
+              if (h.service === "google") {
+                googlePlaces.getDetails(h.hotel.reference, function(place, status) {
+                  mapMarker.create(googleMap, {
+                    icon: "/images/icons/map-icons/entertainment/hotel_0star.png",
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                    name: place.name,
+                    body: place.vicinity
+                  });
+                });
+              }
+
+            });
+
           };
 
           plan.get(function(p) {
@@ -520,7 +545,7 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'plan', 'mapInfoWindowCont
   }
 ]).
 
-directive('friendPlanDashboard', ['$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize', 'fetchModals',
+directive('friendPlanDashboardOff', ['$window', '$location', 'wembliRpc', 'plan', 'customer', 'pluralize', 'fetchModals',
   function($window, $location, wembliRpc, plan, customer, pluralize, fetchModals) {
     return {
       restrict: 'C',
@@ -606,7 +631,7 @@ directive('friendItinerarySection', ['wembliRpc', 'planNav',
   }
 ]).
 
-directive('friendRsvpSection', ['planNav', 'wembliRpc', 'pluralize',
+directive('friendRsvpSectionOff', ['planNav', 'wembliRpc', 'pluralize',
   function(planNav, wembliRpc, pluralize) {
     return {
       restrict: 'E',
@@ -619,55 +644,6 @@ directive('friendRsvpSection', ['planNav', 'wembliRpc', 'pluralize',
           planNav.registerSection();
           //$rootScope.$broadcast('section-loaded');
 
-          /* handle the main plan rsvp */
-          scope.setRsvp = function(rsvp) {
-            scope.me.rsvp.decision = rsvp;
-            if (scope.me.rsvp.decision === false) {
-              scope.me.rsvp.guestCount = 0;
-            }
-            if (scope.me.rsvp.decision === true) {
-              if (scope.me.rsvp.guestCount == 0) {
-                scope.me.rsvp.guestCount = 1;
-              }
-            }
-
-            wembliRpc.fetch('friend.submitRsvp', {
-              decision: scope.me.rsvp.decision,
-              guestCount: scope.me.rsvp.guestCount
-            }, function(err, result) {
-              scope.me = result.friend;
-            });
-          };
-
-          /* key bindings for up and down arrows for guestCount */
-          scope.guestCountKeyUp = function() {
-            if (scope.me.rsvp.guestCount === "") {
-              return;
-            }
-            scope.me.rsvp.decision = (scope.me.rsvp.guestCount > 0);
-
-            scope.guestCountPlural = pluralize(scope.me.rsvp.guestCount);
-            scope.calcTotalComing();
-
-            wembliRpc.fetch('friend.submitRsvp', {
-              decision: scope.me.rsvp.decision,
-              guestCount: scope.me.rsvp.guestCount
-            }, function(err, result) {
-              scope.me = result.friend;
-            });
-          };
-
-          scope.guestCountKeyDown = function(scope, elm, attr, e) {
-            if (e.keyCode == 38) {
-              scope.me.rsvp.guestCount++;
-            }
-            if (e.keyCode == 40) {
-              scope.me.rsvp.guestCount--;
-              if (scope.me.rsvp.guestCount < 0) {
-                scope.me.rsvp.guestCount = 0;
-              }
-            }
-          };
 
         };
       }
@@ -675,7 +651,7 @@ directive('friendRsvpSection', ['planNav', 'wembliRpc', 'pluralize',
   }
 ]).
 
-directive('friendVoteSection', ['planNav', 'wembliRpc',
+directive('friendVoteSectionOff', ['planNav', 'wembliRpc',
   function(planNav, wembliRpc) {
     return {
       restrict: 'E',
@@ -687,301 +663,6 @@ directive('friendVoteSection', ['planNav', 'wembliRpc',
         return function(scope, element, attr, controller) {
           planNav.registerSection();
           //$rootScope.$broadcast('section-loaded');
-
-
-          var submitVote = function() {
-            wembliRpc.fetch('friend.submitVote', {
-              tickets: {
-                number: scope.me.rsvp.guestCount,
-                decision: scope.me.rsvp.decision,
-                price: scope.me.rsvp.tickets.price,
-                priceGroup: scope.me.rsvp.tickets.priceGroup,
-              },
-              parking: {
-                number: scope.me.rsvp.guestCount,
-                decision: scope.me.rsvp.parking.decision,
-                price: scope.me.rsvp.parking.price,
-                priceGroup: scope.me.rsvp.parking.priceGroup
-              },
-              restaurant: {
-                number: scope.me.rsvp.guestCount,
-                decision: scope.me.rsvp.restaurant.decision,
-                price: scope.me.rsvp.restaurant.price,
-                priceGroup: scope.me.rsvp.restaurant.priceGroup,
-                preference: scope.me.rsvp.restaurant.preference
-              },
-              hotel: {
-                number: scope.me.rsvp.guestCount,
-                decision: scope.me.rsvp.hotel.decision,
-                price: scope.me.rsvp.hotel.price,
-                priceGroup: scope.me.rsvp.hotel.priceGroup,
-                preference: scope.me.rsvp.hotel.preference
-              },
-            }, function(err, result) {
-              scope.me = result.friend;
-            });
-          };
-
-          var calcVotePriceTotal = function() {
-            var total = 0;
-            if (parseInt(scope.me.rsvp.tickets.price) > 0) {
-              total += parseInt(scope.me.rsvp.tickets.price);
-            }
-
-            if (scope.plan.preferences.addOns.parking) {
-              if (parseInt(scope.me.rsvp.parking.price) > 0) {
-                total += parseInt(scope.me.rsvp.parking.price);
-              }
-            }
-
-            if (scope.plan.preferences.addOns.restaurants) {
-              if (parseInt(scope.me.rsvp.restaurant.price) > 0) {
-                total += parseInt(scope.me.rsvp.restaurant.price);
-              }
-            }
-
-            if (scope.plan.preferences.addOns.hotels) {
-              if (parseInt(scope.me.rsvp.hotel.price) > 0) {
-                total += parseInt(scope.me.rsvp.hotel.price);
-              }
-            }
-
-            scope.votePriceTotalPerPerson = total;
-            scope.votePriceTotal = total * scope.me.rsvp.tickets.number;
-          }
-
-          /* watch the rsvp checkboxes */
-          scope.$watch('me.rsvp.parking.decision', function(val) {
-            if (typeof val === "undefined") {
-              return;
-            }
-            submitVote();
-          });
-          scope.$watch('me.rsvp.restaurant.decision', function(val) {
-            if (typeof val === "undefined") {
-              return;
-            }
-            submitVote();
-          });
-          scope.$watch('me.rsvp.hotel.decision', function(val) {
-            if (typeof val === "undefined") {
-              return;
-            }
-            submitVote();
-          });
-
-          /* watch the price values to update the total */
-          scope.$watch('me.rsvp.tickets.price', function(val) {
-            if (typeof val === "undefined") {
-              return;
-            }
-            calcVotePriceTotal();
-          });
-          scope.$watch('me.rsvp.parking.price', function(val) {
-            if (typeof val === "undefined") {
-              return;
-            }
-            calcVotePriceTotal();
-          });
-          scope.$watch('me.rsvp.restaurant.price', function(val) {
-            if (typeof val === "undefined") {
-              return;
-            }
-            calcVotePriceTotal();
-          });
-          scope.$watch('me.rsvp.hotel.price', function(val) {
-            if (typeof val === "undefined") {
-              return;
-            }
-            calcVotePriceTotal();
-          });
-
-          var toggleSlider = function(id, val) {
-            if (val) {
-              $(id).slider("enable");
-            } else {
-              $(id).slider("disable");
-            }
-          }
-
-          var toggleMultiselect = function(id, val) {
-            if (val) {
-              $(id).multiselect("enable");
-            } else {
-              $(id).multiselect("disable");
-            }
-          }
-
-          scope.toggleInputs = function(category, val) {
-            var categories = {
-              'restaurant': function(val) {
-                toggleSlider('#restaurant-price-slider', val);
-                toggleMultiselect('#food-preference', val)
-              },
-              'parking': function(val) {
-                toggleSlider('#parking-price-slider', val);
-              },
-              'hotel': function(val) {
-                toggleSlider('#hotel-price-slider', val);
-                toggleMultiselect('#hotel-preference', val)
-              },
-            };
-            categories[category](val);
-          };
-
-          /*multiselect events */
-          scope.foodPreferenceClick = function(event, ui) {
-            if (typeof scope.me.rsvp.restaurant.preference === "undefined") {
-              scope.me.rsvp.restaurant.preference = [];
-            }
-            if (ui.checked) {
-              scope.me.rsvp.restaurant.preference.push(ui.value);
-            } else {
-              /* find the value in the model and remove it */
-              var n = [];
-              for (var i = 0; i < scope.me.rsvp.restaurant.preference.length; i++) {
-                var p = scope.me.rsvp.restaurant.preference[i];
-                if (p !== ui.value) {
-                  n.push(p);
-                }
-              }
-              scope.me.rsvp.restaurant.preference = n;
-            }
-
-            submitVote();
-          }
-          scope.hotelPreferenceClick = function(event, ui) {
-            if (typeof scope.me.rsvp.hotel.preference === "undefined") {
-              scope.me.rsvp.hotel.preference = [];
-            }
-            if (ui.checked) {
-              scope.me.rsvp.hotel.preference.push(ui.value);
-            } else {
-              /* find the value in the model and remove it */
-              var n = [];
-              for (var i = 0; i < scope.me.rsvp.hotel.preference.length; i++) {
-                var p = scope.me.rsvp.hotel.preference[i];
-                if (p !== ui.value) {
-                  n.push(p);
-                }
-              }
-              scope.me.rsvp.hotel.preference = n;
-            }
-
-            submitVote();
-          }
-
-          /* vote sliders */
-          scope.ticketsPriceSlide = function(event, ui) {
-            scope.me.rsvp.tickets.price = ui.value;
-
-            if (ui.value > 0) {
-              scope.me.rsvp.tickets.priceGroup.low = true;
-            }
-            if (ui.value > 100) {
-              scope.me.rsvp.tickets.priceGroup.med = true;
-            }
-            if (ui.value > 300) {
-              scope.me.rsvp.tickets.priceGroup.high = true;
-            }
-            if (ui.value <= 100) {
-              scope.me.rsvp.tickets.priceGroup.med = false;
-            }
-            if (ui.value <= 300) {
-              scope.me.rsvp.tickets.priceGroup.high = false;
-            }
-          }
-          scope.ticketsPriceStop = function(event, ui) {
-            /* when they stop we save it */
-            submitVote();
-          }
-          scope.parkingPriceSlide = function(event, ui) {
-            scope.me.rsvp.parking.price = ui.value;
-
-            if (ui.value > 0) {
-              scope.me.rsvp.parking.priceGroup.low = true;
-            }
-            if (ui.value > 25) {
-              scope.me.rsvp.parking.priceGroup.med = true;
-            }
-            if (ui.value > 50) {
-              scope.me.rsvp.parking.priceGroup.high = true;
-            }
-            if (ui.value <= 25) {
-              scope.me.rsvp.parking.priceGroup.med = false;
-            }
-            if (ui.value <= 50) {
-              scope.me.rsvp.parking.priceGroup.high = false;
-            }
-          }
-          scope.parkingPriceStop = function(event, ui) {
-            submitVote();
-          }
-          scope.restaurantPriceSlide = function(event, ui) {
-            scope.me.rsvp.restaurant.price = ui.value;
-
-            if (ui.value > 0) {
-              scope.me.rsvp.restaurant.priceGroup.low = true;
-            }
-            if (ui.value > 25) {
-              scope.me.rsvp.restaurant.priceGroup.med = true;
-            }
-            if (ui.value > 50) {
-              scope.me.rsvp.restaurant.priceGroup.high = true;
-            }
-            if (ui.value <= 25) {
-              scope.me.rsvp.restaurant.priceGroup.med = false;
-            }
-            if (ui.value <= 50) {
-              scope.me.rsvp.restaurant.priceGroup.high = false;
-            }
-          }
-          scope.restaurantPriceStop = function(event, ui) {
-            submitVote();
-          }
-
-          scope.hotelPriceSlide = function(event, ui) {
-            scope.me.rsvp.hotel.price = ui.value;
-
-            if (ui.value > 0) {
-              scope.me.rsvp.hotel.priceGroup.low = true;
-            }
-            if (ui.value > 100) {
-              scope.me.rsvp.hotel.priceGroup.med = true;
-            }
-            if (ui.value > 300) {
-              scope.me.rsvp.hotel.priceGroup.high = true;
-            }
-            if (ui.value <= 100) {
-              scope.me.rsvp.hotel.priceGroup.med = false;
-            }
-            if (ui.value <= 300) {
-              scope.me.rsvp.hotel.priceGroup.high = false;
-            }
-          }
-
-          scope.hotelPriceStop = function(event, ui) {
-            submitVote();
-          }
-
-
-          /* init the section */
-          var watchMe = function() {
-            scope.toggleInputs('parking', scope.me.rsvp.parking.decision);
-            scope.toggleInputs('restaurant', scope.me.rsvp.restaurant.decision);
-            scope.toggleInputs('hotel', scope.me.rsvp.hotel.decision);
-          };
-
-          if (scope.me) {
-            watchMe();
-          } else {
-            var d = scope.$watch('me', function(newVal) {
-              if (typeof newVal !== "undefined") {
-                watchMe();
-                d();
-              }
-            });
-          }
         };
       }
     };
@@ -1016,89 +697,6 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc', 'planNav',
       templateUrl: '/partials/plan/pony-up-section/friend',
       controller: ['$scope', '$element', '$attrs', '$transclude',
         function($scope, $element, $attrs, $transclude, $timeout) {
-
-          $scope.$watch('ponyUp.amountFormatted', function(newVal) {
-            if (typeof newVal !== "undefined") {
-              var amount = parseInt(parseFloat(newVal) * 100);
-              $scope.ponyUp.transactionFee = .029 * parseFloat(amount) + 250;
-              $scope.ponyUp.total = $scope.ponyUp.transactionFee + amount;
-            }
-          });
-
-
-          function handlePonyUp(newValue) {
-            if (typeof newValue !== "undefined") {
-              var requested = 0;
-              var received = 0;
-              var balance = 0;
-
-              /* evaluate what phase the pony-up section is in */
-              /* check for any pony up requets from the organizer and grab the most recent one */
-              for (var i = 0; i < newValue.payment.length; i++) {
-
-                var p = newValue.payment[i];
-
-                $scope.ponyUp = {
-                  expirationDateMonth: '01',
-                  expirationDateYear: '2014',
-                  amount: 0,
-                  amountFormatted: 0.00,
-                  transactionFee: 0,
-                  total: 0
-                };
-
-                if (p.type === 'request' && p.open) {
-                  console.log('pony up request is open');
-                  console.log(p);
-                  /* found a pony up request */
-                  $scope.ponyUpRequest = p;
-                  if (!$scope.ponyUp || !$scope.ponyUp.amount) {
-                    $scope.ponyUp.amount = parseInt(p.amount) || 0;
-                    $scope.ponyUp.amountFormatted = parseFloat($scope.ponyUp.amount / 100).toFixed(2);
-                    $scope.ponyUp.transactionFee = ($scope.ponyUp.amount * .029) + 250; //tx fee %2.9 + 250
-                    $scope.ponyUp.total = $scope.ponyUp.transactionFee + $scope.ponyUp.amount;
-
-                    $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
-                    $scope.ponyUp.organizerFirstName = $scope.organizer.firstName;
-                  }
-                  console.log($scope.ponyUp);
-                }
-
-                if (p.type == 'request') {
-
-                  if (p.status !== 'canceled') {
-                    requested += parseInt(p.amount);
-                    p.amount = parseInt(p.amount);
-                  }
-                } else {
-                  received += parseInt(p.amount);
-                }
-
-
-
-              };
-              newValue.payment.requested = parseFloat(requested);
-              newValue.payment.received = parseFloat(received);
-              newValue.payment.balance = parseFloat((requested - received));
-            }
-          }
-
-          handlePonyUp($scope.me);
-
-          $rootScope.$on('pony-up-success', function(e, friend) {
-            //$scope.me = JSON.parse(friend);
-            $scope.me = friend;
-            $scope.paymentTotals();
-          });
-
-          $scope.$watch('me', function(newValue, oldValue) {
-            handlePonyUp(newValue);
-          });
-
-          $scope.showPonyUpModal = function() {
-            $('#pony-up-modal').modal('show');
-            $rootScope.$broadcast('pony-up-clicked', $scope.ponyUp);
-          }
         }
       ],
       compile: function(element, attr, transclude) {
@@ -1108,60 +706,6 @@ directive('friendPonyUpSection', ['$rootScope', 'wembliRpc', 'planNav',
         };
       }
     };
-  }
-]).
-
-directive('ponyUpModal', ['$rootScope', 'wembliRpc', 'plan',
-  function($rootScope, wembliRpc, plan) {
-    return {
-      restrict: 'C',
-      cache: false,
-      scope: false,
-      compile: function(element, attr, transclude) {
-        return function(scope, element, attr, controller) {
-          $rootScope.$on('pony-up-clicked', function(e, ponyUp) {
-            //$scope.ponyUp = JSON.parse(ponyUp);
-            scope.ponyUp = ponyUp;
-          });
-          scope.sendPonyUp = function() {
-            if (scope.sendPonyUpInProgress) {
-              return;
-            }
-            scope.sendPonyUpInProgress = true;
-            scope.error = scope.formError = scope.success = false;
-            var args = {};
-            args.total = scope.ponyUp.total;
-            args.amount = parseInt(parseFloat(scope.ponyUp.amountFormatted) * 100);
-            args.transactionFee = parseInt(scope.ponyUp.transactionFee);
-            args.cardHolderName = scope.ponyUp.cardHolderName;
-            args.creditCardNumber = scope.ponyUp.creditCardNumber;
-            args.expirationDateMonth = scope.ponyUp.expirationDateMonth;
-            args.expirationDateYear = scope.ponyUp.expirationDateYear;
-            args.cvv = scope.ponyUp.cvv;
-            args.postalCode = scope.ponyUp.postalCode;
-            wembliRpc.fetch('plan.sendPonyUp', args, function(err, result) {
-              scope.sendPonyUpInProgress = false;
-              if (err) {
-
-                scope.error = true;
-                scope.errorMessage = err;
-                scope.success = false;
-                return;
-              }
-
-              if (!result.success) {
-                scope.error = true;
-                scope.success = false;
-                scope.errorMessage = result.error;
-                return;
-              }
-              scope.success = true;
-              $rootScope.$broadcast('pony-up-success', result.friend);
-            });
-          };
-        };
-      }
-    }
   }
 ]).
 

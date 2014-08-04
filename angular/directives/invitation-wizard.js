@@ -386,7 +386,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
               });
             } else {}
           };
-        }
+k        }
       ],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
@@ -454,8 +454,8 @@ directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter', 'plan',
   }
 ]).
 
-directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', '$http', '$rootScope',
-  function(wembliRpc, $window, facebook, plan, $http, $rootScope) {
+directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', '$http', '$rootScope', '$filter',
+  function(wembliRpc, $window, facebook, plan, $http, $rootScope, $filter) {
     return {
       restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
@@ -532,11 +532,7 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
               serviceId: friend.id
             };
 
-            $('#invitation-modal').modal('loading');
-
             plan.addFriend(addFriendArgs, function(err, result) {
-              $('#invitation-modal').modal('loading');
-
 
               if (result.noCustomer) {
                 $scope.signup.noContinue = true;
@@ -548,16 +544,17 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
                 /* display the feed dialog */
                 facebook.feedDialog({
                   guid: $scope.plan.guid,
-                  token: result.friend.inviteStatusConfirmation.token,
+                  token: result.friend.rsvp.token,
                   to: result.friend.contactInfo.serviceId,
                   eventName: $scope.plan.event.eventName,
                   venue: $scope.plan.event.eventVenue,
-                  rsvpDate: $('#rsvp-date').val()
+                  rsvpDate: $filter('date')($scope.plan.rsvpDate, 'mediumDate')
                 }, function(response) {
                   if (response === null) {
                     /* they hit cancel */
                     $scope.handleFriendsFetch();
                   } else {
+                    console.log(result);
                     /* hit the callback to set the inviteStatus to true */
                     $http.get('/callback/facebook/rsvp/' + $scope.plan.guid + '/' + result.friend.inviteStatusConfirmation.token)
                       .success(function(data, status, headers, config) {

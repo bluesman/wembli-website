@@ -1,0 +1,111 @@
+.cart-section {
+	.not-purchased-alert {
+		margin-top:10px;
+	}
+	/* applies to all add-ons in the cart */
+	.add-on-container {
+		padding-bottom: 50px;
+		.view-on-map {
+			margin-top:8px;
+			padding-right: 10px;
+		}
+
+		.add-on-label {
+			.add-on-toggle {
+				margin-top:10px;
+				i.fa-square-o {
+					margin-right:14px;
+				}
+			}
+		}
+
+		.add-on-included {
+			.disclaimer {
+				font-size:.8em;
+			}
+			.not-purchased-alert {
+				margin:5px 0;
+				font-size:12px;
+			}
+
+			.add-on-list-container {
+
+
+				.add-on-list-header {
+					font-size:.8em;
+					font-weight:bold;
+					border-bottom:thin solid @gray;
+				}
+
+				.add-on-row {
+					font-size:1em;
+					border-bottom:1px solid @grayLight;
+					.add-on-trigger > div {
+						padding-top:5px;
+						padding-bottom:5px;
+					}
+
+					.add-on-trigger:hover {
+						background-color:lighten(@blueLight,30%);
+						cursor:pointer;
+					}
+
+					.slide-down {
+						height:125px;
+						overflow-y: hidden;
+						-webkit-transition: all 0.5s;
+						-moz-transition: all 0.5s;
+						-ms-transition: all 0.5s;
+						-o-transition: all 0.5s;
+						transition: all 0.5s;
+					}
+
+					.slide-down.ng-hide-remove,.slide-down.ng-hide-add {
+					  display:block!important;
+					}
+
+					.slide-down.ng-hide {
+						height: 0;
+					}
+				}
+			}
+		}
+
+		.add-on-included, .add-on-not-included {
+			p {
+				margin:10px 0 20px;
+			}
+		}
+
+		img {
+			margin:0 auto;
+		}
+
+	}
+
+
+	.change-add-on-link {
+		font-size: 14px;
+		font-style:normal;
+	}
+
+
+	.tickets-container {
+
+		.ticket-row {
+
+			.ticket-price-details {
+				font-size:12px;
+			}
+
+			.ticket-notes {
+				font-size: 12px;
+				padding-top:5px;
+				padding-bottom:5px;
+			}
+
+		}
+	}
+
+}
+

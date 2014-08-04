@@ -8,6 +8,7 @@ factory('planNav', ['$timeout', '$rootScope', '$location', 'header', 'notificati
 		self.arrowHeight     = 109;
 		self.navFactor = {
 			'rsvp':1,
+			'vote':2,
 			'cart':2,
 			'pony-up':3,
 			'itinerary':4,
@@ -97,6 +98,7 @@ factory('notifications', ['$timeout', 'plan',
 					return ret;
 				}
 			},
+
 			update: function(p) {
 				var self = this;
 				$timeout(function() {
@@ -118,7 +120,10 @@ factory('notifications', ['$timeout', 'plan',
 							/* console will throw: undefined is not a function if the notification isn't in the mappings */
 							/* if its in the plan then display it else hide it */
 							var n = self.findInPlan(el.id, p.notifications);
+							console.log(el.id);
+
 							if ((typeof n === "undefined") || n.acknowledged) {
+								console.log('hiding notification because it has been acknowledged: ');
 								$(el).hide();
 							} else {
 								$(el).show();
@@ -301,7 +306,7 @@ factory('cart', ['plan',
 
 					/* count the organizer in the split? */
 					if (p.organizer.rsvp.decision) {
-						splitBy += parseInt(p.organizer.rsvp.guestCount);
+						splitBy += parseInt(p.organizer.rsvp.guestCount) + 1;
 						deliverySplitBy++;
 					}
 
@@ -311,7 +316,7 @@ factory('cart', ['plan',
 						var f = friends[i];
 						/* add 1 for each friend who is invited and going but don't count their guests */
 						if (f.inviteStatus && f.rsvp.decision) {
-							splitBy += parseInt(f.rsvp.guestCount);
+							splitBy += parseInt(f.rsvp.guestCount) + 1;
 							deliverySplitBy++;
 						}
 					};

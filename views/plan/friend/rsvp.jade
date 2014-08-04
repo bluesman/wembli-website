@@ -1,0 +1,95 @@
+extends layout
+block plan-section
+	section#section-rsvp.friend-rsvp-section.rsvp-section.plan-section.container-fluid.hide(ng-controller="FriendRsvpCtrl")
+		.row.visible-xs.visible-sm
+			.col-xs-12.event-info-container
+				include ../includes/event-info
+		.header.row
+			.col-xs-12
+				h1.segoe RSVP
+		.body
+			.row
+				.col-md-7.col-xs-12
+					.notification-container.row
+						.col-xs-12
+							#rsvp-complete-notification.notification.alert.alert-danger(ng-cloak, ng-show="rsvpCompleteNotification")
+								a(ng-click="acknowledgeNotification('rsvpComplete')",href="#",class="close",data-dismiss="alert")&times;
+								.row
+									.col-xs-1
+										.fa.fa-exclamation-triangle.fa-2x
+									.col-xs-11
+										span The RSVP period is over :) Your plan organizer should now have a final count of who's coming.&nbsp;
+
+							#not-confirmed-notification.notification.not-confirmed-warning.alert.alert-danger(ng-cloak, ng-show="!customer.confirmed && !confirmationEmailSent")
+								.row
+									.col-xs-1
+										i.fa.fa-exclamation-triangle.fa-2x
+									.col-xs-11
+										span Wembli can't send invites to your friends until you confirm your email address.&nbsp;
+										a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Click here to resend confirmation email.
+										i.fa-cog.fa-spin(ng-show="confirmationEmailInProgress")
+					.friend-rsvp-container.rsvp-container.row
+						.col-sm-2.hidden-xs
+							.img-container
+								.no-image-overlay(ng-hide="customer.imageUrl")
+									i.fa.fa-question-circle
+								img.img-polaroid.img-responsive(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
+								img.img-polaroid.img-responsive(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
+						.collect-rsvp-container.col-sm-10.col-xs-12
+							.row
+								.col-xs-12
+									h4 {{customer.firstName}}, are you in or out?
+							.collect-rsvp.row
+								.col-xs-6
+									a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[me.rsvp.decision]",href="#") YES, I'M IN!
+								.col-xs-6
+									a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[me.rsvp.decision]",href="#") NO, I'M OUT.
+					.guest-count-container.row(ng-show="plan.preferences.inviteOptions.guestFriends")
+						.col-sm-offset-2.col-sm-10.col-xs-12
+							form.form-inline
+								.form-group
+									label
+										span plus
+										input#guest-count.form-control.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="me.rsvp.guestCount",placeholder="1")
+										span {{me.rsvp.guestCount | pluralize: 'person'}} (spouse, kids, etc..).
+					.row
+						.col-sm-offset-2.col-sm-10.col-xs-12
+							.plan-section-note
+								strong ** NOTE:&nbsp;
+								span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
+								span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has chosen to foot the bill for this plan - W00t!
+								span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has already locked in the tickets as soon as all the RSVPs are in you'll get a Pony Up email so you can pay your share of the bill.
+
+				.col-md-5.col-xs-12.event-info-container
+					.hidden-xs.hidden-sm
+						include ../includes/event-info
+					.section-options-container.row
+						.col-xs-12
+							.row
+								.col-xs-12
+									h3 RSVP Date:
+							.row.rsvp-option(ng-show="plan.rsvpDate && !plan.rsvpComplete")
+								.col-xs-4
+									strong RSVP Before:
+								.col-xs-8
+									span {{getDate(plan.rsvpDate)| date:'MMMM d, yyyy'}}
+							.row.rsvp-option(ng-show="plan.rsvpComplete")
+								.col-xs-12 RSVP Is Complete
+							.row
+								.col-xs-12
+									h3 Invite Preferences:
+							.row.rsvp-option
+								.col-xs-4
+									strong Age Limit:
+								.col-xs-8
+									span(ng-show="plan.preferences.inviteOptions.over21") 21+
+									span(ng-hide="plan.preferences.inviteOptions.over21") All Ages
+			if (req.session.plan.preferences.guestList !== 'private')
+				.row
+					.col-xs-12
+						include ../includes/invitees-list
+
+			.section-bottom.hide
+				.next-wrapper.pull-right
+
+					button#next-section2.btn.btn-orange.btn-large.scroll-to Next

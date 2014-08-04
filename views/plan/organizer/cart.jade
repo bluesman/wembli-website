@@ -4,6 +4,15 @@ block plan-section
 		.row.visible-xs.visible-sm
 			.col-xs-12.event-info-container
 				include ../includes/event-info
+				.row
+					.col-xs-12
+						.not-purchased-alert.alert.alert-warning
+							.row
+								.col-xs-1
+									i.fa.fa-exclamation-triangle.fa-2x
+								.col-xs-11
+									span Wembli cannot guarantee the availability of tickets, parking, restaurant deals or hotels until they are purchased.
+
 		.header.row
 			.col-xs-12
 				h1.segoe Shopping Cart
@@ -15,25 +24,41 @@ block plan-section
 					include cart/parking
 					include cart/restaurants
 					include cart/hotels
-					.visible-xs.visible-sm
-						include cart/totals
+					//- only show this if there are people to request pony up from
+					.row(ng-show="canRequestPonyUp")
+						.col-xs-12
+							a.btn.btn-warning.btn-lg.center-block(href="/plan/pony-up") Request Pony Up!
+
+
 				.col-md-5.col-xs-12.event-info-container
 					.hidden-xs.hidden-sm
 						include ../includes/event-info
+
 						.row
-							.col-xs-10
-								h3 Totals:
-						.row(ng-class="{'no-split':'orange'}[plan.preferences.payment]")
-							.col-xs-6
-								strong Total Bill
-							.col-xs-4.text-right {{tickets.total + parking.total + restaurants.total + hotels.total | currency}}
-						.row(ng-hide="{'no-split':true}[plan.preferences.payment]")
-							.col-xs-6
-								strong Total Ponied Up
-							.col-xs-4.text-right {{totalPoniedUp/100 | currency}}
-						.row.balance.orange(ng-hide="{'no-split':true}[plan.preferences.payment]")
-							.col-xs-6
-								strong Balance
-							.col-xs-4.text-right {{tickets.total + parking.total + restaurants.total + hotels.total - (totalPoniedUp/100) | currency}}
+							.col-xs-12
+								.not-purchased-alert.alert.alert-warning
+									.row
+										.col-xs-1
+											i.fa.fa-exclamation-triangle.fa-2x
+										.col-xs-11
+											span Wembli cannot guarantee the availability of tickets, parking, restaurant deals or hotels until they are purchased.
+
+					.section-options-container.row
+						.col-xs-12
+							.row
+								.col-xs-10
+									h3 Totals:
+							.row(ng-class="{'no-split':'orange'}[plan.preferences.payment]")
+								.col-xs-6
+									strong Total Bill
+								.col-xs-6.text-right {{tickets.total + parking.total + restaurants.total + hotels.total | currency}}
+							.row(ng-hide="{'no-split':true}[plan.preferences.payment]")
+								.col-xs-6
+									strong Total Ponied Up
+								.col-xs-6.text-right {{totalPoniedUp/100 | currency}}
+							.row.balance.orange(ng-hide="{'no-split':true}[plan.preferences.payment]")
+								.col-xs-6
+									strong Balance
+								.col-xs-6.text-right {{tickets.total + parking.total + restaurants.total + hotels.total - (totalPoniedUp/100) | currency}}
 
 

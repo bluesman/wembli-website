@@ -16,7 +16,7 @@ module.exports = {
 				'text': "cart",
 			}, {
 				'name': "pony-up",
-				'icon': "fa-credit-card",
+				'icon': "fa-money",
 				'text': "pony up",
 			}, {
 				'name': "itinerary",
@@ -34,12 +34,8 @@ module.exports = {
 				'text': "rsvp",
 			}, {
 				'name': "vote",
-				'icon': "fa-bar-chart",
+				'icon': "fa-bar-chart-o",
 				'text': "vote",
-			}, {
-				'name': "invitees",
-				'icon': "fa-group",
-				'text': "invitees",
 			}, {
 				'name': "pony-up",
 				'icon': "fa-money",

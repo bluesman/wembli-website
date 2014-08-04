@@ -1,6 +1,6 @@
 /**
  * angular-strap
- * @version v2.0.0-rc.3 - 2014-02-10
+ * @version v2.0.4 - 2014-07-24
  * @link http://mgcrea.github.io/angular-strap
  * @author Olivier Louvignes (olivier@mg-crea.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -14,8 +14,10 @@ angular.module('mgcrea.ngStrap.helpers.parseOptions', []).provider('$parseOption
     function ($parse, $q) {
       function ParseOptionsFactory(attr, config) {
         var $parseOptions = {};
+        // Common vars
         var options = angular.extend({}, defaults, config);
         $parseOptions.$values = [];
+        // Private vars
         var match, displayFn, valueName, keyName, groupByFn, valueFn, valuesFn;
         $parseOptions.init = function () {
           $parseOptions.$match = match = attr.match(options.regexp);
@@ -23,16 +25,17 @@ angular.module('mgcrea.ngStrap.helpers.parseOptions', []).provider('$parseOption
         };
         $parseOptions.valuesFn = function (scope, controller) {
           return $q.when(valuesFn(scope, controller)).then(function (values) {
-            $parseOptions.$values = values ? parseValues(values) : {};
+            $parseOptions.$values = values ? parseValues(values, scope) : {};
             return $parseOptions.$values;
           });
         };
-        function parseValues(values) {
+        // Private functions
+        function parseValues(values, scope) {
           return values.map(function (match, index) {
             var locals = {}, label, value;
             locals[valueName] = match;
-            label = displayFn(locals);
-            value = valueFn(locals) || index;
+            label = displayFn(scope, locals);
+            value = valueFn(scope, locals) || index;
             return {
               label: label,
               value: value

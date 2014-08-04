@@ -1,3 +1,167 @@
 extends layout
-block frame1
-	include includes/hotels
+block content
+	#hotel.addons-container(ng-controller="HotelsCtrl")
+		#hotel-confirm.addon-confirm.slide-in-down(ng-show="hotelConfirm")
+			.hotel-confirm-header.addon-confirm-header.slide-in-down-header
+				a(href="#")
+					i.fa.fa-times.fa-2x(ng-click="removeHotel(hotel._id)").pull-right
+				h2.modal-title Confirm Adding Hotel To Your Plan
+				h4.modal-subtitle
+			.hotel-confirm-body.addon-confirm-body.slide-in-down-body.row
+				.left.section-view.col-md-4.col-xs-12
+					img.img-responsive.center-block(ng-hide="hotel.images.image_smart",src="/images/wembliman-hotel.png")
+					img.img-responsive.center-block(ng-show="hotel.images.image_smart",ng-src="{{hotel.images.image_smart}}")
+				.right.col-md-8.col-xs-12
+					.alert.alert-warning
+						.row
+							.col-xs-2.text-center
+								i.fa.fa-exclamation-triangle.fa-2x
+							.col-xs-10
+								span You are&nbsp;
+								strong not&nbsp;
+								span purchasing this hotel, you are only adding it to your plan.  Once your friends pony up, you can buy this hotel.
+					.row
+						.col-xs-12
+							h3 {{hotel.title}}
+					.row
+						.col-xs-12
+							p {{hotel.description}}
+
+					//-
+						.addon-info.row(ng-show="{'yipit':true}[hotel.service]")
+							.col-xs-12
+								.row
+									.col-xs-12
+										strong.name {{hotel.business.name}}
+										span(ng-show="hotel.business.url") &nbsp;(&nbsp;
+										a.website(ng-show="hotel.business.url", target="_blank", ng-href="v{{hotel.business.url}}") website
+										span(ng-show="hotel.business.url") &nbsp;)
+								.row(ng-show="hotel.price.formatted")
+									.col-xs-12
+										span.price {{hotel.price.formatted}}
+										span(ng-show="hotel.discount.formatted") ,
+										span.yellow(ng-show="hotel.discount.formatted") &nbsp;{{hotel.discount.formatted}} discount!
+								.row(ng-show="hotel.end_date")
+									.col-xs-12
+										i.end-date Offer expires:
+											strong &nbsp;{{parseDate(hotel.end_date) | date: 'longDate'}}
+
+
+					.addon-info.row(ng-show="{'google':true}[hotel.service]")
+						.col-xs-12
+							.row
+								.col-xs-12
+									strong.name {{hotel.name}}
+							.row(ng-show="hotel.vicinity")
+								.col-xs-12
+									strong.address {{hotel.vicinity}}
+							.row(ng-show="hotelDetails.formatted_phone_number")
+								.col-xs-12
+									strong.phone-number {{hotelDetails.formatted_phone_number}}
+							.row(ng-show="hotelDetails.website")
+								.col-xs-12
+									a.website-link(href="{{hotelDetails.website}}", target="_blank") {{hotelDetails.website}}
+							.row(ng-show="hotel.price_level")
+								.col-xs-12
+									strong Price:&nbsp;
+									span.price-level(level="hotel.price_level")
+							.row(ng-show="hotel.rating")
+								.col-xs-12
+									span.star-rating(rating="hotel.rating")
+									span(ng-show="hotelDetails.user_ratings_total") &nbsp;-&nbsp;
+									a.reviews-link(target="_blank",ng-show="hotelDetails.user_ratings_total", href="hotelDetails.url") {{hotelDetails.user_ratings_total}} Reviews
+					.next-step-text.row(ng-hide="backToPlan")
+						.col-xs-12
+							p Next step, choose your plan settings and invite friends.  Once your friends are invited, you'll ask them to pony up for their share of the cost.
+					.row
+						.col-xs-12
+							a.btn.btn-primary.btn-sm.form-control(href="{{nextLink}}") {{nextText}}
+
+		include includes/hotel-offsite
+
+		.container-fluid(style="height:100%")
+			.header.row(ng-cloak)
+				.col-md-2.col-sm-3.col-xs-12
+					.event-date-box
+						span.day(ng-cloak) {{plan.event.eventDate| date:'EEE'}}
+						span.event-date(ng-cloak) {{plan.event.eventDate| date:'MMM d'}}
+						span.time(ng-cloak) {{getDate(plan.event.eventDate)| date:'h:mm a'}}
+				.col-md-10.col-sm-9.col-xs-12
+					.row
+						.col-xs-12.col-md-8
+							.info
+								h1.name.block {{plan.event.eventName}}
+								h2.helvetica.venue-name {{ plan.event.eventVenue || plan.event.eventVenue }}
+								.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
+								.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
+						.col-xs-12.col-md-4
+							.navigation(ng-show="ticketsChosen || backToPlan")
+								a(href="{{nextLink}}") {{nextText}}&nbsp;
+								i.fa.fa-level-down.fa-rotate-270
+
+
+			.row(style="height:100%")
+				#hotel-left.col-md-8.col-xs-12.addons-content-container(style="height:100%")
+					#map-background.row(style="height:100%")
+						.col-xs-12(style="height:100%;margin:0;padding:0")
+							#hotel-map-container.addons-map.map-container(style="height:100%",lat="#{lat}",lng="#{lon}",zoom="13",draggable="true",map-type-id="ROADMAP")
+
+				#hotel-right.col-md-4.col-xs-12.addons-list-container
+					#hotel-list-header.addons-list-header
+					#hotel-list.row
+						.col-xs-12.addons-list-col
+							ul.hotel-list-container.list-container.addons-list
+								//- TODO: expedia hotels list
+									li.addons-list-row.hotel-row.bounce-map-marker(lat="{{hotel.business.locations[0].lat}}",lng="{{hotel.business.locations[0].lon}}",ng-repeat="hotel in hotels track by $index | filter:{hide:false}",ng-hide="hotel.hide")
+										.row
+											.col-xs-12
+												i.fa.fa-cutlery
+												strong.title &nbsp;{{hotel.title}}
+										.row(ng-show="hotel.inPlan")
+											.col-xs-12
+												i This hotel has been added to your plan:
+										.row
+											.col-xs-3.price
+												.value
+													strong {{hotel.price.formatted}}
+												.qty
+													i {{hotel.discount.formatted}} savings
+											.col-xs-4.content
+													div
+														span {{hotel.business.name}}
+													div
+														span {{hotel.business.locations[0].address}}
+											.col-xs-5.controls
+												//- if its split first then they only add to plan and buy later
+												.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
+													a.btn.btn-primary(ng-click="addHotel($index)", ng-hide="hotel.inPlan") Add hotel
+													a.btn.btn-warning.btn-sm(ng-click="removeHotel(hotel._id)",ng-href="#",ng-show="hotel.inPlan && !hotel.purchased") Remove From Plan
+													button.btn.btn-warning.btn-sm(ng-show="hotel.inPlan && hotel.purchased") Purchased
+												//- not split first - add to plan and buy now
+												.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
+													a.btn.btn-primary(ng-click="addHotel($index)", ng-href="{{hotel.url}}", target="_blank", ng-hide="hotel.inPlan") Buy hotel
+													a.btn.btn-warning.btn-sm(ng-click="removeHotel(hotel._id)",ng-href="#",ng-show="hotel.inPlan && !hotel.purchased") Remove From Plan
+													button.btn.btn-warning.btn-sm(ng-show="hotel.inPlan && hotel.purchased") Purchased
+
+								li.addons-list-row.hotel-row.bounce-map-marker(lat="{{p.geometry.location.lat()}}",lng="{{p.geometry.location.lng()}}",ng-repeat="p in googleHotels track by $index",ng-hide="p.hide")
+									.row(ng-show="p.inPlan")
+										.col-xs-12
+											i This hotel has been added to your plan:
+									.row
+										.col-xs-12
+											i.fa.fa-building
+											strong.title &nbsp;{{p.name}}
+									.row
+										.col-xs-7
+											div
+												span {{p.vicinity}}
+											div
+												i Online reservations are not available.
+										.col-xs-5.controls
+											//- if just adding to plan - throw an overly to confirm and then send them on their way
+											.actions
+												button.btn.btn-primary(ng-click="addGoogleHotel($index)", ng-show="!p.inPlan") Add hotel
+												button.btn.btn-warning(ng-click="removeHotel(p._id)",ng-show="p.inPlan") Remove
+								li.text-center
+									a(ng-show="filteredList", ng-click="filterNone()", href="#") Back to list
+

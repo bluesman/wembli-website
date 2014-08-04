@@ -120,6 +120,10 @@ app.use(require('./lib/wembli/customer'));
 app.use(require('./lib/wembli/plan'));
 app.use(everyauth.middleware());
 app.use(wemblirpc.server(wemblirpc.rpcDispatchHooks));
+
+/* sendgrid json post handler */
+app.use(require('./controllers/callback/sendgrid'))
+
 app.set('views', __dirname + '/views');
 app.set('controllers', __dirname + '/controllers');
 app.set('view engine', 'jade');
@@ -167,17 +171,14 @@ require('./controllers/event-options')(app);
 require('./controllers/invitation')(app);
 require('./controllers/plan')(app);
 require('./controllers/rsvp')(app);
-require('./controllers/tickets')(app);
-require('./controllers/parking')(app);
-require('./controllers/restaurants')(app);
-require('./controllers/hotels')(app);
+require('./controllers/addons')(app);
 require('./controllers/login')(app);
 require('./controllers/forgot-password')(app);
 require('./controllers/signup')(app);
 require('./controllers/logout')(app);
 require('./controllers/callback/facebook')(app);
 require('./controllers/callback/twitter')(app);
-require('./controllers/callback/sendgrid')(app);
+//require('./controllers/callback/sendgrid')(app);
 require('./controllers/callback/paypal')(app);
 require('./controllers/callback/tn')(app);
 require('./controllers/send-rsvp-email')(app);

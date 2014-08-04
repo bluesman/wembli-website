@@ -29,6 +29,76 @@ directive('toggleSelected', [
   }
 ]).
 
+/* set selected class when clicked */
+directive('priceLevel', [
+  function() {
+    return {
+      restrict: 'C',
+      link: function(scope, element, attr) {
+        scope.$watch(attr.level, function(pl) {
+          /* make sure there aren't already $ made */
+          var len = element.children().length;
+          if (len) {
+            return;
+          }
+          console.log('pl is:');
+          console.log(pl);
+          if (typeof pl !== "undefined") {
+            var d = parseInt(pl);
+            console.log('d:'+d);
+            for (var i = d; i > 0; i--) {
+              console.log('print dollar');
+              element.append('<i class="fa fa-usd"/>');
+            };
+
+          }
+        });
+      }
+    }
+  }
+]).
+
+/* set selected class when clicked */
+directive('starRating', [
+  function() {
+    return {
+      restrict: 'C',
+      link: function(scope, element, attr) {
+        var totalStars = 5;
+        scope.$watch(attr.rating, function(rating) {
+          /* make sure there aren't already stars made */
+          var len = element.children().length;
+          if (len) {
+            return;
+          }
+          console.log(rating);
+          if (typeof rating !== "undefined") {
+            var r = parseFloat(rating);
+
+            var floor = parseInt(Math.floor(r));
+            var ceil  = parseInt(Math.ceil(r));
+            for (var i = floor; i > 0; i--) {
+              element.append('<i class="fa fa-star yellow"/>');
+            };
+
+            /* add a half star */
+            if ((r - floor) > 0) {
+              element.append('<i class="fa fa-star-half-o yellow"/>');
+            }
+
+            /* empty stars */
+            var empty = totalStars - ceil;
+            for(var i = empty; i > 0; i--) {
+              element.append('<i class="fa fa-star-o yellow"/>');
+            }
+
+          }
+        });
+      }
+    }
+  }
+]).
+
 /* multiselect: http://www.erichynds.com/blog/jquery-ui-multiselect-widget */
 directive('multiselect', [
   function() {

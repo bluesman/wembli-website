@@ -1,7 +1,7 @@
-angular.module('wembliApp.services.add-ons', []).
+angular.module('wembliApp.services.addOns', []).
 
 /* add-ons */
-factory('parking', ['wembliRpc', 'googlePlaces',
+factory('wembliParking', ['wembliRpc', 'googlePlaces',
 	function(wembliRpc, googlePlaces) {
 		var self = this;
 		self.googleParking = null;
@@ -58,7 +58,7 @@ factory('parking', ['wembliRpc', 'googlePlaces',
 ]).
 
 /* add-ons */
-factory('restaurants', ['wembliRpc', 'googlePlaces',
+factory('wembliRestaurants', ['wembliRpc', 'googlePlaces',
 	function(wembliRpc, googlePlaces) {
 		var self = this;
 		self.googleRestaurants = null;
@@ -113,7 +113,7 @@ factory('restaurants', ['wembliRpc', 'googlePlaces',
 ]).
 
 /* add-ons */
-factory('hotels', ['wembliRpc', 'googlePlaces',
+factory('wembliHotels', ['wembliRpc', 'googlePlaces',
 	function(wembliRpc, googlePlaces) {
 		var self = this;
 		self.googleHotels = null;

@@ -6,15 +6,7 @@ var async = require('async');
 
 module.exports = function(app) {
 
-	app.get('(/partials)?/modals/rsvp-login/?', function(req, res) {
-
-		res.render('partials/modals/rsvp-login', {
-			partial: true,
-			plan: req.session.plan
-		});
-	});
-
-	var viewPlan = function(req, res, view) {
+	app.get('/rsvp/:guid/:token/:service', function(req, res) {
 		var guid = req.param('guid');
 		var token = req.param('token');
 		var service = req.param('service') || 'wemblimail';
@@ -37,10 +29,10 @@ module.exports = function(app) {
 				};
 
 				if (friend === null) {
-				    req.syslog.notice('friend is null');
+					req.syslog.notice('friend is null');
 					/* this person is no friend of the plan */
 					req.session.visitor.context = 'visitor';
-					var eventView = /partials/.test(view) ? '/partials/event/' + p.event.eventId + '/' + p.event.eventName : '/event/' + p.event.eventId + '/' + p.event.eventName;
+					var eventView = '/tickets/' + p.event.eventId + '/' + p.event.eventName;
 					req.syslog.notice('redirect to '+eventView);
 					return res.redirect(eventView);
 				}
@@ -51,12 +43,13 @@ module.exports = function(app) {
 					service: service,
 					confirmSocial: false,
 					plan: p,
-					friend: friend
+					friend: friend,
+					jsIncludes: ['/js/login.min.js']
 				};
 
 				/* if they are not logged in ask them to log in :) */
 				if (!req.session.loggedIn) {
-				    req.syslog.notice('NOT LOGGED IN FOR RSVP');
+					req.syslog.notice('NOT LOGGED IN FOR RSVP');
 					console.log('not logged in');
 					/* make them login and if they came from twitter or facebook they need to login there too */
 					return res.render('rsvp', l);
@@ -66,8 +59,9 @@ module.exports = function(app) {
 				if (p.organizer.customerId === req.session.customer.id) {
 					req.session.plan = p;
 					req.session.visitor.context = 'organizer';
-					req.syslog.notice('customer is the organizer: '+view);
-					return res.redirect(view);
+					req.syslog.notice('customer is the organizer: ');
+					var planView = '/plan/' + p.event.eventId + '/' + p.event.eventName;
+					return res.redirect(planView);
 				}
 
 				/* keys to the various service ids in the customer obj */
@@ -117,12 +111,13 @@ module.exports = function(app) {
 							and if this customer is not confirmed we can confirm them because we know they signed up
 							with the email address that the organizer specified
 						*/
+						var planView = '/plan/' + p.guid;
 						if (req.session.customer.confirmed) {
-							return res.redirect(view);
+							return res.redirect(planView);
 						} else {
 							req.session.customer.confirmed = true;
 							req.session.customer.save(function(err) {
-								return res.redirect(view);
+								return res.redirect(planView);
 							});
 						}
 					});
@@ -130,19 +125,32 @@ module.exports = function(app) {
 
 				/* this person is no friend of the plan */
 				req.session.visitor.context = 'visitor';
-				var eventView = /partials/.test(view) ? '/partials/event/' + p.event.eventId + '/' + p.event.eventName : '/event/' + p.event.eventId + '/' + p.event.eventName;
+				var eventView = '/tickets/' + p.event.eventId + '/' + p.event.eventName;
 				req.syslog.notice('this person is not invited send them to: '+eventView);
 				return res.redirect(eventView);
 			});
 		});
+	});
+
+
+
+
+	/* old here */
+
+	app.get('(/partials)?/modals/rsvp-login/?', function(req, res) {
+
+		res.render('partials/modals/rsvp-login', {
+			partial: true,
+			plan: req.session.plan
+		});
+	});
+
+	var viewPlan = function(req, res, view) {
+
 	};
 
 	app.get('/partials/rsvp/:guid/:token/:service', function(req, res) {
 		return viewPlan(req, res, '/partials/plan');
 	});
 
-	app.get('/rsvp/:guid/:token/:service', function(req, res) {
-		req.syslog.notice('WTF');
-		return viewPlan(req, res, '/plan');
-	});
 };

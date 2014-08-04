@@ -35,7 +35,7 @@ module.exports = function(grunt) {
       "global": {
       	"files": {
       		'public/js/wembli.min.js':[
-            'bower_components/jquery/dist/jquery.js',
+            'bower_components/jquery/jquery.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-route/angular-route.js',
             'bower_components/bootstrap/js/transition.js',
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
       "directory-default-1": {
       	"files": {
       		'public/js/directory-default-1.min.js':[
-            'bower_components/jquery/dist/jquery.js',
+            'bower_components/jquery/jquery.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-route/angular-route.js',
             'bower_components/bootstrap/js/transition.js',
@@ -154,6 +154,20 @@ module.exports = function(grunt) {
           ]
         }
       },
+      "add-ons": {
+        "files": {
+          'public/js/add-ons.min.js':[
+            'angular/apps/add-ons.js',
+            'angular/controllers/add-ons.js',
+            'angular/directives/add-ons.js',
+            'angular/directives/parking-map.js',
+            'angular/directives/restaurants-map.js',
+            'angular/directives/hotels-map.js',
+            'angular/services/add-ons.js',
+            'angular/services/google.js'
+          ]
+        }
+      },
       "invitation": {
         "files": {
           'public/js/invitation.min.js':[
@@ -168,11 +182,12 @@ module.exports = function(grunt) {
       "plan": {
         "files": {
           'public/js/plan.min.js':[
+            'plugins/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js',
+            'plugins/jquery.multiselect/jquery.multiselect.js',
             'angular/apps/plan.js',
             'angular/controllers/plan.js',
             'angular/directives/plan.js',
             'angular/filters/plan.js',
-            'angular/filters/invitation-wizard.js',
             'angular/services/plan.js',
             'angular/services/google.js'
           ]

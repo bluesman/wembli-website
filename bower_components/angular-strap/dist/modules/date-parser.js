@@ -1,6 +1,6 @@
 /**
  * angular-strap
- * @version v2.0.0-rc.3 - 2014-02-10
+ * @version v2.0.4 - 2014-07-24
  * @link http://mgcrea.github.io/angular-strap
  * @author Olivier Louvignes (olivier@mg-crea.com)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -19,31 +19,33 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', []).provider('$dateParser', 
       };
     this.$get = [
       '$locale',
-      function ($locale) {
+      'dateFilter',
+      function ($locale, dateFilter) {
         var DateParserFactory = function (config) {
           var options = angular.extend({}, defaults, config);
           var $dateParser = {};
           var regExpMap = {
               'sss': '[0-9]{3}',
               'ss': '[0-5][0-9]',
-              's': options.strict ? '[1-5]?[0-9]' : '[0-5][0-9]',
+              's': options.strict ? '[1-5]?[0-9]' : '[0-9]|[0-5][0-9]',
               'mm': '[0-5][0-9]',
-              'm': options.strict ? '[1-5]?[0-9]' : '[0-5][0-9]',
+              'm': options.strict ? '[1-5]?[0-9]' : '[0-9]|[0-5][0-9]',
               'HH': '[01][0-9]|2[0-3]',
-              'H': options.strict ? '[0][1-9]|[1][012]' : '[01][0-9]|2[0-3]',
+              'H': options.strict ? '1?[0-9]|2[0-3]' : '[01]?[0-9]|2[0-3]',
               'hh': '[0][1-9]|[1][012]',
-              'h': options.strict ? '[1-9]|[1][012]' : '[0]?[1-9]|[1][012]',
+              'h': options.strict ? '[1-9]|1[012]' : '0?[1-9]|1[012]',
               'a': 'AM|PM',
               'EEEE': $locale.DATETIME_FORMATS.DAY.join('|'),
               'EEE': $locale.DATETIME_FORMATS.SHORTDAY.join('|'),
-              'dd': '[0-2][0-9]{1}|[3][01]{1}',
-              'd': options.strict ? '[1-2]?[0-9]{1}|[3][01]{1}' : '[0-2][0-9]{1}|[3][01]{1}',
+              'dd': '0[1-9]|[12][0-9]|3[01]',
+              'd': options.strict ? '[1-9]|[1-2][0-9]|3[01]' : '0?[1-9]|[1-2][0-9]|3[01]',
               'MMMM': $locale.DATETIME_FORMATS.MONTH.join('|'),
               'MMM': $locale.DATETIME_FORMATS.SHORTMONTH.join('|'),
-              'MM': '[0][1-9]|[1][012]',
-              'M': options.strict ? '[1-9]|[1][012]' : '[0][1-9]|[1][012]',
-              'yyyy': '(?:(?:[1]{1}[0-9]{1}[0-9]{1}[0-9]{1})|(?:[2]{1}[0-9]{3}))(?![[0-9]])',
-              'yy': '(?:(?:[0-9]{1}[0-9]{1}))(?![[0-9]])'
+              'MM': '0[1-9]|1[012]',
+              'M': options.strict ? '[1-9]|1[012]' : '0?[1-9]|1[012]',
+              'yyyy': '[1]{1}[0-9]{3}|[2]{1}[0-9]{3}',
+              'yy': '[0-9]{2}',
+              'y': options.strict ? '-?(0|[1-9][0-9]{0,3})' : '-?0*[0-9]{1,4}'
             };
           var setFnMap = {
               'sss': proto.setMilliseconds,
@@ -90,21 +92,25 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', []).provider('$dateParser', 
               return !isNaN(date.getTime());
             return regex.test(date);
           };
-          $dateParser.parse = function (value, baseDate) {
+          $dateParser.parse = function (value, baseDate, format) {
             if (angular.isDate(value))
-              return value;
-            var matches = regex.exec(value);
+              value = dateFilter(value, format || $dateParser.$format);
+            var formatRegex = format ? regExpForFormat(format) : regex;
+            var formatSetMap = format ? setMapForFormat(format) : setMap;
+            var matches = formatRegex.exec(value);
             if (!matches)
               return false;
-            var date = baseDate || new Date(0);
+            var date = baseDate || new Date(0, 0, 1);
             for (var i = 0; i < matches.length - 1; i++) {
-              setMap[i] && setMap[i].call(date, matches[i + 1]);
+              formatSetMap[i] && formatSetMap[i].call(date, matches[i + 1]);
             }
             return date;
           };
+          // Private functions
           function setMapForFormat(format) {
             var keys = Object.keys(setFnMap), i;
             var map = [], sortedMap = [];
+            // Map to setFn
             var clonedFormat = format;
             for (i = 0; i < keys.length; i++) {
               if (format.split(keys[i]).length > 1) {
@@ -114,6 +120,7 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', []).provider('$dateParser', 
                   map[index] = setFnMap[keys[i]];
               }
             }
+            // Sort result map
             angular.forEach(map, function (v) {
               sortedMap.push(v);
             });
@@ -125,9 +132,11 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', []).provider('$dateParser', 
           function regExpForFormat(format) {
             var keys = Object.keys(regExpMap), i;
             var re = format;
+            // Abstract replaces to avoid collisions
             for (i = 0; i < keys.length; i++) {
               re = re.split(keys[i]).join('${' + i + '}');
             }
+            // Replace abstracted values
             for (i = 0; i < keys.length; i++) {
               re = re.split('${' + i + '}').join('(' + regExpMap[keys[i]] + ')');
             }

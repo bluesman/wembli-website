@@ -6,6 +6,15 @@ body {
 
 }
 
+/* need this so google maps will show up without a fixed height */
+#body {
+	height:100%;
+	#content {
+		height:100%;
+	}
+}
+
+
 #overlay.overlay {
 	display: block;
 	content: "";
@@ -54,9 +63,6 @@ h1 {
 
 .positive-ssl {
 	margin:20px;
-	height:96px;
-	width:96px;
-	background: transparent url('/images/PositiveSSL.gif') no-repeat center top;
 }
 
 .balanced-logo {
@@ -68,17 +74,11 @@ h1 {
 
 .security-codes {
 	margin:auto;
-	width:300px;
-	height:186px;
 	padding:10px 20px;
-	background: @white url('/images/security-codes.png') no-repeat center center;
 }
 
 .balanced-credit-card-logos {
 	margin:auto;
-	height:100px;
-	width:320px;
-	background: @white url('/images/balanced-credit-card-logos.png') no-repeat center center;
 }
 
 //- this may need to be global

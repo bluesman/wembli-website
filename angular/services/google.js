@@ -48,8 +48,8 @@ factory('googleMap', ['$rootScope',
 			draw: function(element, options, handlers) {
 				var o = angular.extend(mapDefaults, options);
 				/* apply the center offset */
-				var lat = o.center.lat() + centerOffset.lat;
-				var lng = o.center.lng() + centerOffset.lng;
+				var lat = o.center.lat();// + centerOffset.lat;
+				var lng = o.center.lng();// + centerOffset.lng;
 				o.center = new google.maps.LatLng(lat, lng);
 
 				/* instantiate a new google map */

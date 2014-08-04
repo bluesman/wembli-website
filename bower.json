@@ -19,14 +19,13 @@
     "typeahead.js": "~0.9.3",
     "bootstrap-modal": "~2.1.0",
     "jquery-waypoints": "~2.0.3",
-    "components-font-awesome": "~4.0.3",
+    "components-font-awesome": "~4.1.0",
     "pikaday": "~1.1.0",
     "datejs": "*",
     "date.format": "~1.2.3"
   },
   "resolutions": {
-    "angular": "~1.2.10",
-    "bootstrap": "~3.1.0"
+    "bootstrap": "^3.2.0"
   },
   "dependencies": {
     "animate.css": "~3.1.1",

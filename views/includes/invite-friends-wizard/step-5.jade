@@ -38,19 +38,26 @@ form#invite-wizard-step5-form(name="wemblimailForm")
 					button.btn.btn-success(ng-click="sendWemblimail()") Send Email Now
 		.row
 			.col-xs-12
-				#step5-friends-list.friends-list-container(ng-show="wemblimail.friends[0]")
-					.friends-list.row(ng-show="wemblimail.friends[0]")
+				#step5-friends-list.friends-list-container
+					.friends-list.row
 						.col-xs-12
-							.friend.row(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends")
-								.col-xs-8
-									.friend-name
-										.name
-											i.friend-no-img.fa.fa-user &nbsp;invited friend: {{friend.contactInfo.name}}
-								.col-xs-4
-									.friend-status(ng-show="friend.checked && rsvpUndecided(friend)")
-										span.label.label-info undecided
-									.friend-status(ng-show="friend.checked && rsvpAccepted(friend)")
-										span.label.label-success accepted
-									.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
-										span.label.label-important declined
+							.friend(ng-hide="wemblimail.friends[0]")
+								.row
+									.col-xs-12
+										.friend-name
+											.name
+												i.fa.fa-user &nbsp;Friends invited via email will show up here...
+							.friend(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends")
+								.row
+									.col-xs-8
+										.friend-name
+											.name
+												i.friend-no-img.fa.fa-user &nbsp;invited friend: {{friend.contactInfo.name}}
+									.col-xs-4
+										.friend-status(ng-show="friend.checked && rsvpUndecided(friend)")
+											span.label.label-info undecided
+										.friend-status(ng-show="friend.checked && rsvpAccepted(friend)")
+											span.label.label-success accepted
+										.friend-status.pull-right(ng-show="rsvpDeclined(friend)")
+											span.label.label-important declined
 

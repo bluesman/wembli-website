@@ -32,6 +32,7 @@ this.Model = function(mongoose) {
 		collection: "hotel"
 	});
 
+
 	Hotel.pre('save', function(next) {
 		/* convert payment.amount to cents */
 		/* convert total to cents */

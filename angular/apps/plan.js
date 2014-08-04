@@ -3,13 +3,13 @@
 // Declare app level module which depends on filters, and services
 angular.module('wembliApp', [
   'ngRoute',
+  'ngAnimate',
   'mgcrea.ngStrap',
   'wembliApp.controllers',
   'wembliApp.controllers.plan',
   'wembliApp.controllers.header',
   'wembliApp.filters',
   'wembliApp.filters.plan',
-  'wembliApp.filters.invitation-wizard',
   'wembliApp.services',
   'wembliApp.services.header',
   'wembliApp.services.facebook',

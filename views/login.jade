@@ -1,6 +1,5 @@
 extends layout
 block content
-
 	#login(ng-controller="LoginCtrl")
 		.container
 			.row
@@ -13,7 +12,7 @@ block content
 						i.fa.fa-lock
 						span &nbsp;Login To Wembli
 					form#login-form.row(novalidate, role="form", name="loginForm", ng-submit="submitLoginForm()")
-						input.redirect-url(ng-model="redirectUrl", type="hidden",name="redirectUrl",value="")
+						input.redirect-url(ng-model="redirectUrl", type="hidden",name="redirectUrl",value="#{redirectUrl}")
 						input(type="hidden",ng-model="formError", value="")
 						fieldset
 							.error(ng-show="loginForm.invalidCredentials") The email or password was not correct.

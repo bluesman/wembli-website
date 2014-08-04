@@ -2,14 +2,29 @@ extends layout
 block plan-section
 	- var sectionClass = (visitor.context === 'organizer') ? 'organizer-itinerary-section' : 'friend-itinerary-section';
 	- var ngController = (visitor.context === 'organizer') ? 'OrganizerItineraryCtrl' : 'friendItineraryCtrl';
-	section#section-itinerary.hide(class="#{sectionClass} itinerary-section plan-section", ng-controller="#{ngController}")
-		.header.clearfix
-			h1.pull-left Itinerary
-		.event-info
-			span.blue &nbsp;{{plan.event.eventName}}
-			span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-			span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+	section#section-itinerary.container-fluid.hide(class="#{sectionClass} itinerary-section plan-section", ng-controller="#{ngController}")
+		.row.visible-xs.visible-sm
+			.col-xs-12.event-info-container
+				include ../includes/event-info
+				.google-map-container
+					#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
+
+		.header.row
+			.col-xs-12
+				h1.segoe Itinerary
 		.body
+			.row
+				.col-md-7.col-xs-12 foo
+
+					//- tickets (get seat view pic url), parking, restaurant deal, hotel, invitees w/pony up requested total and pony up total)
+				.col-md-5.col-xs-12.event-info-container
+					.hidden-xs.hidden-sm
+						include ../includes/event-info
+						.google-map-container
+							#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
+
+
+		//-
 			.itinerary-data.clearfix
 				.left.pull-left
 				.right.pull-left

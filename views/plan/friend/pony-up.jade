@@ -1,0 +1,218 @@
+extends layout
+block plan-section
+	section#section-pony-up.friend-pony-up-section.pony-up-section.plan-section.container-fluid.hide(ng-controller="FriendPonyUpCtrl")
+		.row.visible-xs.visible-sm
+			.col-xs-12.event-info-container
+				include ../includes/event-info
+		.header.row
+			.col-xs-12
+				h1.segoe Pony Up!
+		.body
+			.row
+				.col-md-7.col-xs-12
+					h4 Wembli's Pony Up feature allows you to pay back the organizer.  Your plan organizer will send you a Pony Up request telling you how much you owe.  You decide how much you want to send then click Send Pony Up to use your credit card to complete the transaction.
+					.notification-container.row
+						.col-xs-12
+
+					.pony-up(ng-hide="me.payment[0]")
+						.row
+							.col-xs-12
+								h3 Find Out What It Means To Pony Up
+						.row
+							.col-xs-12
+								p So you're interested to hear all about the Pony Up process?  I like your style.  Here's how this process goes down:
+						.row
+							.col-xs-12
+								p 1. RSVP and submit your votes for the event first (the quicker the better).
+						.row
+							.col-xs-12
+								p 2. When the RSVP due date comes around your organizer will pick tickets, parking, restaurants and hotel based on everyone's votes.
+						.row
+							.col-xs-12
+								p 3. Before your organizer shells out any cash, you'll get a Pony Up Request email to pitch in your share for your tickets and chosen add-ons.
+						.row
+							.col-xs-12
+								.plan-section-note
+									strong **NOTE:&nbsp;
+									span &nbsp;You'll have 24 hrs from the time you get your pony up email to deposit your share because tickets can't be put on hold.
+
+					.pony-up(ng-show="me.payment[0]")
+						.row
+							.col-xs-12
+								h3 It's Time To Pony Up For Your Part Of The Bill
+						.row
+							.col-xs-12
+								.invitees-container
+									.invitee(id="{{me._id}}")
+										.row
+											.invitee-info.col-xs-12
+												//- this is the checkbox and invitee name
+												.row
+													.col-xs-12
+														.invitee-name
+															span.name.orange {{me.contactInfo.name}}&nbsp;
+															span.guests(ng-show="me.rsvp.decision") + {{me.rsvp.guestCount}} {{me.rsvp.guestCount | pluralize:'guest'}}
+
+												.row.suggested-amounts-container
+													.col-xs-8
+														.suggested-amount-header Requested Amount:
+													.col-xs-4.text-right
+														strong.suggested-amount-value {{ponyUp.amountFormatted}}
+
+												.row.send-pony-up-control
+													.col-xs-12.col-md-8.send-pony-up-header How Much Will You Pony Up?
+													.col-xs-12.col-md-4
+														.form-group
+															.input-group.text-right(ng-class="{true:'muted'}[friend.ponyUp.open]")
+																span.input-group-addon $
+																input.pony-up-amount.form-control(type="text",ng-model="ponyUp.amountFormatted")
+
+												.row.suggested-amounts-container
+													.col-xs-12
+														.row.suggested-amounts-trigger.transaction-fee-trigger(ng-click="showFees=!showFees")
+															.col-xs-8.clearfix
+																i.fa.fa-caret-right.suggested-amounts-caret.fa-2x.rotate-right-90.pull-left(ng-class="{'rotate-right':showFees}")
+																.suggested-amount-header.pull-left Wembli Pony Up Transaction Cost:
+															.col-xs-4.text-right
+																strong.suggested-amount-value {{ponyUp.transactionFee/100 | currency}}
+
+														.row.transaction-fee.slide-down(ng-show="showFees")
+															.col-xs-12
+																span Hey - we gotta keep the lights on and the servers running somehow?!
+																br
+																span Wembli charges $2.50 plus 2.9% of the amount you pony up.
+
+														.row
+															.col-xs-8
+																.suggested-amount-header TOTAL AMOUNT TO BE CHARGED:
+															.col-xs-4.text-right
+																strong.suggested-amount-value {{ponyUp.total/100 | currency}}
+
+
+												.row.history-container
+													.col-xs-12
+															.row
+																.col-xs-12.history-trigger(ng-click="showHistory=!showHistory")
+																	.history-header
+																		span HISTORY&nbsp;
+																		span(ng-hide="showHistory") (click to expand)
+
+															.row.history.slide-down(ng-show="showHistory")
+																.col-xs-12
+																	.row.history-item(ng-repeat="history in me.payment | orderBy:'-date'")
+																		.col-xs-12
+																			.divider
+																		.col-xs-12.type(ng-show="{'outside':true}[history.type]") {{history.date | date:'short'}} - Outside Payment Received ({{history.method}})
+																		.col-xs-12.type(ng-show="{'request':true}[history.type]") {{history.date | date:'short'}} - Pony Up Requested
+																		.col-xs-12.type(ng-show="{'response':true}[history.type]") {{history.date | date:'short'}} - Pony Up Received
+
+																		.col-xs-12
+																			.row.history-header-row
+																				.col-xs-8.history-header Status
+																				.col-xs-4.history-header Amount
+																			.row
+																				.col-xs-8 {{history.status | historyStatus}}
+																				.col-xs-4 {{history.amount/100 | currency}}
+
+																	.row
+																		.col-xs-12
+																			.border-bottom
+																	.row.total-requested
+																		.col-xs-8
+																			.history-header.text-right Total Requested:
+																		.col-xs-4.amount.text-left {{me.payment.requested/100 | currency}}
+																	.row.total-paid
+																		.col-xs-8.history-header.text-right Total Paid:
+																		.col-xs-4.amount.text-left {{me.payment.received/100 | currency}}
+																	.row.balance
+																		.col-xs-8.history-header.text-right Balance:
+																		.col-xs-4.amount.text-left {{me.payment.balance/100 | currency}}
+
+									.row.send-pony-up-button-container
+										.col-xs-12
+											a.btn.btn-warning.btn-lg.send-pony-up-button.form-control(ng-disabled="{false:true}[ponyUpRequest.open] || !ponyUp.amountFormatted", href="/plan/send-pony-up")
+												i.fa.fa-money
+												span &nbsp;Send Pony Up!
+
+
+				.col-md-5.col-xs-12.event-info-container
+					.hidden-xs.hidden-sm
+						include ../includes/event-info
+
+					.row
+						.col-xs-12
+							.pony-up-alert-info.alert.alert-info
+								i.fa.fa-info-circle.fa-2x
+								span You can see what has been chosen by viewing the itinerary
+					.row
+						.col-xs-12
+							a.btn.btn-primary.form-control(href="/plan/itinerary") View Itinerary
+					.section-options-container.row
+						.col-xs-12
+							.row
+								.col-xs-12
+									h3 Tickets breakdown for {{me.rsvp.guestCount + 1}} {{me.rsvp.guestCount + 1 | pluralize:'person'}}
+
+							.row.suggested-amount.suggested-ticket-amount(ng-show="tickets[0]")
+								.col-xs-9
+									strong Ticket Price (each):
+								.col-xs-3.text-right
+									strong.estimated-total {{tickets[0].costBreakdown.price | currency}}
+								.col-xs-3.text-right
+
+							.row.suggested-amount.suggested-ticket-amount(ng-show="tickets[0]")
+								.col-xs-9
+									strong Ticket Broker Fee (each):
+								.col-xs-3.text-right
+									strong.estimated-total {{tickets[0].costBreakdown.serviceFee | currency}}
+								.col-xs-3.text-right
+
+							.row.suggested-amount.suggested-ticket-amount(ng-show="tickets[0]")
+								.col-xs-9
+									strong SubTotal ({{me.rsvp.guestCount + 1}}x):
+								.col-xs-3.text-right
+									strong.estimated-total {{tickets[0].costBreakdown.totalEach * (me.rsvp.guestCount + 1) | currency}}
+								.col-xs-3.text-right
+
+							.row.suggested-amount.suggested-ticket-amount(ng-show="tickets[0]")
+								.col-xs-9
+									strong Delivery Fee:
+								.col-xs-3.text-right
+									strong.estimated-total {{tickets[0].costBreakdown.deliveryFeeEach | currency}}
+								.col-xs-3.text-right
+
+							.row.suggested-amount.suggested-ticket-amount(ng-show="tickets[0]")
+								.col-xs-9
+									strong Total:
+								.col-xs-3.text-right
+									strong.estimated-total {{tickets[0].costBreakdown.deliveryFeeEach + (tickets[0].costBreakdown.totalEach * (me.rsvp.guestCount + 1)) | currency}}
+								.col-xs-3.text-right
+
+
+
+							.row.suggested-amount.suggested-parking-amount(ng-show="plan.preferences.addOns.parking")
+								.col-xs-9
+									strong Parking for {{me.rsvp.guestCount + 1}} {{me.rsvp.guestCount + 1 | pluralize:'person'}}
+								.col-xs-3.text-right(ng-show="plan.preferences.addOns.parking && plan.parking[0]")
+									strong.estimated-total {{me.parking.suggestedPonyUpAmount | currency}}
+								.col-xs-3.text-right(ng-show="plan.preferences.addOns.parking && !plan.parking[0]") -
+
+							.row.suggested-amount.suggested-restaurant-amount(ng-show="plan.preferences.addOns.restaurants")
+								.col-xs-9
+									strong Restaurant for {{me.rsvp.guestCount + 1}} {{me.rsvp.guestCount + 1 | pluralize:'person'}}
+								.col-xs-3.text-right(ng-show="plan.preferences.addOns.restaurants && plan.restaurants[0]")
+									strong.estimated-total {{me.restaurants.suggestedPonyUpAmount | currency}}
+								.col-xs-3.text-right(ng-show="plan.preferences.addOns.restaurants && !plan.restaurants[0]") -
+
+							.row.suggested-amount.suggested-hotel-amount(ng-show="plan.preferences.addOns.hotels")
+								.col-xs-9
+									strong Hotel for {{me.rsvp.guestCount + 1}} {{me.rsvp.guestCount + 1 | pluralize:'person'}}
+								.col-xs-3.text-right(ng-show="plan.preferences.addOns.hotels && plan.hotels[0]")
+									strong.estimated-total {{me.hotels.suggestedPonyUpAmount | currency}}
+								.col-xs-3.text-right(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0]") -
+
+					.row.hidden-sm.hidden-xs
+						.col-xs-12
+							img.wembliman.img-responsive(src="/images/cartoon-man-money-left.png")
+
+

@@ -3,33 +3,61 @@ var Customer = wembliModel.load('customer');
 var Plan = wembliModel.load('plan');
 var Friend = wembliModel.load('friend');
 var keen = require('../../lib/wembli/keenio');
+var async = require('async');
 
-module.exports = function(app) {
-	app.all("/callback/sendgrid/email", function(req, res) {
+module.exports = function(req, res, next) {
+
+  var me = this, contentType = req.headers['content-type'] || '';
+  if(req.method === 'POST' && contentType.indexOf('application/json') >= 0) {
+  	var payload = req.body;
+  	if (Array.isArray(payload)) {
+			async.forEach(payload, function(item, cb) {
+				handle(req, res, item, cb);
+
+      }, function(err) {
+      	if (err) {
+      		console.log('not a valid sendgrid request...next');
+      		return next();
+      	} else {
+					console.log('return 200');
+					res.statusCode = 200;
+					res.setHeader("Content-Type", "text/html");
+					res.write("Thanks");
+					res.end();
+      	}
+      });
+  	} else {
+  		next();
+  	}
+  } else {
+  	next();
+  }
+
+	function handle(req, res, payload, nextItem) {
 
 		function updateFriend(cb) {
 			/* if its rsvp or pony up - put it in the corresponding friend obj */
 			/* find the friend for this friendId and increment a counter for this category[event] */
-			if (typeof req.body.friendId !== "undefined") {
-				Friend.findById(req.body.friendId, function(err, f) {
+			if (typeof payload.friendId !== "undefined") {
+				Friend.findById(payload.friendId, function(err, f) {
 
 					/* no plan in the db */
 					if (!f) {
 						return cb();
 					}
-					if (typeof f.email[req.body.category] == "undefined") {
-						f.email[req.body.category] = {};
-						f.email[req.body.category][req.body.event] = 1;
+					if (typeof f.email[payload.category] == "undefined") {
+						f.email[payload.category] = {};
+						f.email[payload.category][payload.event] = 1;
 					} else {
-						if (typeof f.email[req.body.category][req.body.event] == "undefined") {
-							f.email[req.body.category][req.body.event] = 1;
+						if (typeof f.email[payload.category][payload.event] == "undefined") {
+							f.email[payload.category][payload.event] = 1;
 						} else {
-							f.email[req.body.category][req.body.event]++;
+							f.email[payload.category][payload.event]++;
 						}
 					}
-					var eventDate = req.body.event + 'LastDate';
+					var eventDate = payload.event + 'LastDate';
 
-					f.email[req.body.category][eventDate] = new Date(req.body.timestamp * 1000);
+					f.email[payload.category][eventDate] = new Date(payload.timestamp * 1000);
 					f.markModified('email');
 
 					var save = function(f) {
@@ -38,19 +66,19 @@ module.exports = function(app) {
 								return cb(err);
 							}
 							var d = {
-								event: req.body.event,
+								event: payload.event,
 								service: 'wemblimail',
-								friendId: req.body.friendId
+								friendId: payload.friendId
 							}
-							keen.addEvent(req.body.category, d, req, res, function(err, result) {
+							keen.addEvent(payload.category, d, req, res, function(err, result) {
 								cb();
 							});
 						});
 					};
 
 					/* any special instructions for this friend */
-					if ((typeof updateFriendHooks[req.body.category] !== "undefined") && (typeof updateFriendHooks[req.body.category][req.body.event] !== "undefined")) {
-						updateFriendHooks[req.body.category][req.body.event](f, save);
+					if ((typeof updateFriendHooks[payload.category] !== "undefined") && (typeof updateFriendHooks[payload.category][payload.event] !== "undefined")) {
+						updateFriendHooks[payload.category][payload.event](f, save);
 					} else {
 						save(f);
 					}
@@ -63,7 +91,7 @@ module.exports = function(app) {
 		};
 
 		/*
-		 * req.body will have (at a minimum):
+		 * payload will have (at a minimum):
 		 * event
 		 * email
 		 * category
@@ -80,7 +108,7 @@ module.exports = function(app) {
 		 */
 
 		var collection = 'email';
-		var d = req.body;
+		var d = payload;
 
 		/* handle the appropriate event */
 		var eventHandlers = {
@@ -166,12 +194,12 @@ module.exports = function(app) {
 		var updateFriendHooks = {
 			'pony-up-request': {
 				'delivered': function(f, save) {
-					if (req.body.paymentId) {
-						var p = f.payment.id(req.body.paymentId);
+					if (payload.paymentId) {
+						var p = f.payment.id(payload.paymentId);
 						if (typeof p.email === "undefined") {
 						    p.email = {};
 						}
-						p.email['delivered'] = req.body;
+						p.email['delivered'] = payload;
 						p.status = 'delivered';
 
 						//p.save(function(err) {
@@ -180,12 +208,12 @@ module.exports = function(app) {
 					}
 				},
 				'open': function(f, save) {
-					if (req.body.paymentId) {
-						var p = f.payment.id(req.body.paymentId);
+					if (payload.paymentId) {
+						var p = f.payment.id(payload.paymentId);
 						if (typeof p.email === "undefined") {
 						    p.email = {};
 						}
-						p.email['opened'] = req.body;
+						p.email['opened'] = payload;
 						p.status = 'opened';
 
 						//p.save(function(err) {
@@ -196,11 +224,17 @@ module.exports = function(app) {
 			}
 		};
 
+		console.log(payload);
+		if (typeof eventHandlers[payload.event] === "undefined") {
+			console.log('event doesnt exist');
+			return nextItem('event does not exist');
+		}
 
-		keen.addEvent(collection, d, req, res, function(err, result) {
-			eventHandlers[req.body.event](function() {
-				return res.send(200);
-			});
+		eventHandlers[payload.event](function() {
+			//can't get this to work i dunno why
+			//keen.addEvent(collection, d, req, res, function(err, result) {
+				nextItem();
+			//});
 		});
-	});
+	};
 }

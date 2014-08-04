@@ -82,7 +82,7 @@ function jsonrpc(rpcDispatchHooks) {
      * @param  {Function} respond
      */
 
-    function handleRequest(rpc, respond) {
+    function handleRequest(rpc, next, respond) {
         if(validRequest(rpc)) {
             if(typeof rpcDispatchHooks.initMethod === 'function') {
                 var method = rpcDispatchHooks.initMethod(rpc);
@@ -141,17 +141,19 @@ function jsonrpc(rpcDispatchHooks) {
                 });
             }
         } else {
+            next();
+            /*
             respond({
                 error: {
                     code: INVALID_REQUEST
                 }
             });
+            */
         }
     }
 
     return function jsonrpc(req, res, next) {
-        var me = this,
-            contentType = req.headers['content-type'] || '';
+        var me = this, contentType = req.headers['content-type'] || '';
         if(req.method === 'POST' && contentType.indexOf('application/json') >= 0) {
             var rpc = req.body;
             var batch = Array.isArray(rpc);
@@ -190,10 +192,11 @@ function jsonrpc(rpcDispatchHooks) {
 
                 for(var i = 0; i < len; ++i) {
                     (function(rpc) {
-                        rpc.params.req = req;
-                        rpc.params.res = res;
-
-                        handleRequest.call(me, rpc, function(obj) {
+                        if (typeof rpc.params !== "undefined") {
+                            rpc.params.req = req;
+                            rpc.params.res = res;
+                        }
+                        handleRequest.call(me, rpc, next, function(obj) {
                             responses.push(normalize(rpc, obj));
                             if(!--pending) {
                                 respond(responses);
@@ -202,9 +205,11 @@ function jsonrpc(rpcDispatchHooks) {
                     })(rpc[i]);
                 }
             } else {
-                rpc.params.req = req;
-                rpc.params.res = res;
-                handleRequest.call(me, rpc, function(obj) {
+                if (typeof rpc.params !== "undefined") {
+                    rpc.params.req = req;
+                    rpc.params.res = res;
+                }
+                handleRequest.call(me, rpc, next, function(obj) {
                     respond(normalize(rpc, obj));
                 });
             }

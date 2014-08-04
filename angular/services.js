@@ -7,6 +7,7 @@ var runCount = 0;
 // In this case it is a simple value service.
 angular.module('wembliApp.services', []).
 
+/* deprecated?
 factory('loadingModal', ['$rootScope',
 	function($rootScope) {
 		var stack = 0;
@@ -20,12 +21,10 @@ factory('loadingModal', ['$rootScope',
 					this.body = body;
 				}
 
-				/* hide any modals right now */
 				if (stack == 0) {
 					angular.element(".modal").modal("hide");
 				}
 
-				/* show the page loading modal */
 				stack++;
 				angular.element('#generic-loading-modal').modal("show");
 				$rootScope.$broadcast('loading-modal-show');
@@ -34,7 +33,6 @@ factory('loadingModal', ['$rootScope',
 				stack--;
 				if (stack < 1) {
 					stack = 0;
-					/* hide only the generic loading modal */
 					if (typeof $('#generic-loading-modal').modal !== "undefined") {
 						$('#generic-loading-modal').modal("hide");
 					}
@@ -43,6 +41,7 @@ factory('loadingModal', ['$rootScope',
 		}
 	}
 ]).
+*/
 
 factory('overlay', ['$rootScope',
 	function($rootScope) {
@@ -336,6 +335,11 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 				});
 			},
 
+			deactivate: function(args, callback) {
+				wembliRpc.fetch('plan.deactivate', args, callback);
+			},
+
+
 			addRestaurant: function(args, callback) {
 				wembliRpc.fetch('plan.addRestaurant', args, callback);
 			},
@@ -350,6 +354,14 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 
 			addHotel: function(args, callback) {
 				wembliRpc.fetch('plan.addHotel', args, callback);
+			},
+
+			addHotelReceipt: function(args, callback) {
+				wembliRpc.fetch('plan.addHotelReceipt', args, callback);
+			},
+
+			removeHotel: function(args, callback) {
+				wembliRpc.fetch('plan.removeHotel', args, callback);
 			},
 
 			addParking: function(args, callback) {
@@ -422,6 +434,8 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 
 						if (typeof result.customer !== "undefined" && result.customer) {
 							customer.set(result.customer);
+							console.log('set customer:');
+							console.log(customer.get());
 						}
 						self.fetchInProgress = false;
 						$rootScope.$broadcast('plan-fetched', {});
@@ -591,7 +605,7 @@ factory('customer', ['$rootScope',
 	}
 ]).
 
-/* get rid of this? */
+/* get rid of this?
 factory('fetchModals', ['$rootScope', '$location', '$http', '$compile',
 	function($rootScope, $location, $http, $compile) {
 
@@ -636,14 +650,12 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile',
 		return {
 			'fetch': function(path, callback) {
 
-				/* clean the path */
 				var pathKey = path.split('?')[0];
 
-				/* its already fetched and cached and prepended to the body */
 				if (modalFetched[pathKey]) {
 					return success(callback);
 				}
-				/* this fetch is alredy in progress call the callback when the event is called */
+
 				if (modalFetchInProgress === pathKey) {
 					if (callback) {
 						var dereg = $rootScope.$on($('body :first-child').attr('id') + '-fetched', function() {
@@ -661,8 +673,9 @@ factory('fetchModals', ['$rootScope', '$location', '$http', '$compile',
 		};
 	}
 ]).
+*/
 
-/* rsvp or shared? */
+/* rsvp or shared? deprecated?
 factory('rsvpLoginModal', [
 	function() {
 		var self = this;
@@ -676,6 +689,7 @@ factory('rsvpLoginModal', [
 		};
 	}
 ]).
+*/
 
 /* shared */
 factory('loggedIn', [

@@ -6,7 +6,7 @@ var wembliModel = require('wembli-model'),
 
 module.exports = function(app) {
 
-	app.get(/^\/plan\/?(itinerary|vote|invitees|pony-up|rsvp|cart|chatter)?$/, function(req, res) {
+	app.get(/^\/plan\/?(itinerary|vote|invitees|pony-up|rsvp|cart|chatter|send-pony-up)?$/, function(req, res) {
 
 
 		var locals = {
@@ -105,11 +105,6 @@ module.exports = function(app) {
 		return res.render('partials/plan/chatter', {
 			partial: true
 		});
-	});
-
-	app.get(/^\/partials\/plan\/(nav|dashboard|feed|itinerary-section|vote-section|invitees-section|pony-up-section|rsvp-section|cart-section)\/?(friend|organizer)?$/, function(req, res) {
-
-
 	});
 
 	app.get('/plan/:guid/:section?', function(req, res) {

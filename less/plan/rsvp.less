@@ -1,0 +1,55 @@
+/* rsvp section specific */
+.rsvp-section {
+	.rsvp-container {
+
+		.collect-rsvp-container {
+
+			.collect-rsvp {
+				a {
+					font-size:2em;
+					font-weight:bold;
+					color:@grayLight;
+					display:block;
+				}
+				a.active, a:hover {
+					color:@orange;
+				}
+			}
+		}
+
+	}
+
+	.guest-count-container {
+		form {
+			padding:20px 0;
+
+			label {
+				#guest-count {
+					width:45px;
+					height:26px;
+					text-align:center;
+					color:@grayDark;
+					margin:0 10px;
+					display: inline-block;
+				}
+			}
+		}
+	}
+
+}
+
+/* now context specific plan sections */
+.organizer-rsvp-section {
+	/* md and larger have nav on the left */
+	@media (min-width: @screen-md-min) {
+
+		.rsvp-invitees-list {
+			margin-top:-75px;
+		}
+	}
+
+	.invite-more-button-container {
+		text-align: center;
+		margin-top:40px;
+	}
+}

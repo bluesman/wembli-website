@@ -12,6 +12,14 @@ block plan-section
 				.col-md-7.col-xs-12
 					.notification-container.row
 						.col-xs-12
+							#rsvp-complete-notification.notification.alert.alert-danger(ng-cloak, ng-show="rsvpCompleteNotification")
+								a(ng-click="acknowledgeNotification('rsvpComplete')",href="#",class="close",data-dismiss="alert")&times;
+								.row
+									.col-xs-1
+										.fa.fa-exclamation-triangle.fa-2x
+									.col-xs-11
+										span The RSVP period is over :) Your plan organizer should now have a final count of who's coming.&nbsp;
+
 							.confirmed-alert.alert.alert-success(ng-cloak, ng-show="confirmationEmailSent")
 								.row
 									.col-xs-1
@@ -28,15 +36,6 @@ block plan-section
 										a.send-confirmation-email(ng-hide="confirmationEmailInProgress", href="#",next="/plan/{{plan.event.eventId}}/{{plan.event.eventName}}") Click here to resend confirmation email.
 										i.fa-cog.fa-spin(ng-show="confirmationEmailInProgress")
 
-							#rsvp-complete-notification.notification.alert.alert-danger(ng-cloak, ng-show="rsvpCompleteNotification")
-								a(ng-click="acknowledgeNotification('rsvpComplete')",href="#",class="close",data-dismiss="alert")&times;
-								.row
-									.col-xs-1
-										.fa.fa-exclamation-triangle.fa-2x
-									.col-xs-11
-										span The RSVP period is over :) Now that you know who's coming, you can choose the right number of tickets.&nbsp;
-										a#rsvp-2(href="/plan/cart", wembli-hide="#rsvp-complete-notification") Click here to get started filling up your cart.
-
 					.organizer-rsvp-container.rsvp-container.row
 						.col-sm-2.hidden-xs
 							.img-container
@@ -50,9 +49,9 @@ block plan-section
 									h4 {{customer.firstName}}, are you going or just planning for others?
 							.collect-rsvp.row
 								.col-xs-6
-									a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[plan.organizer.rsvp.decision]",href="#no-slide") I'M GOING!
+									a#yes(ng-click="setRsvp(true)",ng-class="{true:'active'}[plan.organizer.rsvp.decision]",href="#") I'M GOING!
 								.col-xs-6
-									a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[plan.organizer.rsvp.decision]",href="#no-slide") NOT GOING.
+									a#no(ng-click="setRsvp(false)",ng-class="{false:'active'}[plan.organizer.rsvp.decision]",href="#") NOT GOING.
 					.guest-count-container.row(ng-show="plan.preferences.inviteOptions.guestFriends")
 						.col-sm-offset-2.col-sm-10.col-xs-12
 							form.form-inline
@@ -80,14 +79,12 @@ block plan-section
 				.col-md-5.col-xs-12.event-info-container
 					.hidden-xs.hidden-sm
 						include ../includes/event-info
-					.plan-options-container
-						.row
+					.section-options-container.row
 							form#event-options-form.col-xs-12
 								fieldset
 									#rsvp-date.options-group
 										h3 RSVP Date:
-										.form-group(ng-show="plan.rsvpComplete")
-											i.fa.fa-check-square-o.green(ng-show="plan.preferences.inviteOptions.over21") &nbsp;RSVP Is Complete
+										.form-group(ng-show="plan.rsvpComplete") RSVP Is Complete
 										.form-group(ng-hide="plan.rsvpDate")
 											a.btn.btn-primary.form-control(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose RSVP Date
 										.form-group(ng-hide="plan.rsvpComplete")
@@ -134,5 +131,5 @@ block plan-section
 												i.fa.fa-square-o(ng-show="!{'private':true}[plan.preferences.guestList]")
 												span My guests can not see who else is invited
 			.row
-				.col-xs-12
+				.col-xs-12.rsvp-invitees-list
 					include ../includes/invitees-list

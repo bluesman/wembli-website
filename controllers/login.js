@@ -26,7 +26,8 @@ module.exports = function(app) {
 		}
 
 		res.render('login', {
-			jsIncludes: ['/js/login.min.js']
+			jsIncludes: ['/js/login.min.js'],
+			redirectUrl: req.param('redirectUrl')
 		});
 	});
 

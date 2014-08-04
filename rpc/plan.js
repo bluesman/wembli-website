@@ -444,6 +444,38 @@ exports.plan = {
 
 	},
 
+	submitNotification: function(args, req, res) {
+		var me = this;
+		var data = {
+			success: 1
+		};
+		console.log(args);
+		if (typeof args['key'] !== "undefined") {
+			var exists = false;
+			for (var i = req.session.plan.notifications.length - 1; i >= 0; i--) {
+				var item = req.session.plan.notifications[i];
+				if (item.key === args.key) {
+					exists = true;
+				}
+			};
+
+			if (!exists) {
+				req.session.plan.notifications.push({key:args['key']});
+
+				req.session.plan.save(function(err, res) {
+					data.plan = req.session.plan;
+					me(null, data);
+				});
+			}
+		} else {
+			data.success = 0;
+			data.error = true;
+			me(null, data);
+		}
+
+	},
+
+
 	submitNotes: function(args, req, res) {
 		var me = this;
 		var data = {
@@ -607,7 +639,7 @@ exports.plan = {
 		/* perform the balanced transaction and handle errors */
 		/* get the merchant account for the organizer (make sure there is one) */
 		Customer.findById(req.session.plan.organizer.customerId, function(err, organizer) {
-			if (typeof organizer.balancedAPI === "undefined" || typeof organizer.balancedAPI.bankAccounts === "undefined") {
+			if (typeof organizer.balancedAPI === "undefined" || typeof organizer.balancedAPI.bankAccounts === "undefined" || typeof organizer.balancedAPI.bankAccounts.items[0] === "undefined") {
 				data.error = 'No Organizer Bank Account';
 				data.success = 0;
 				return me(null, data);
@@ -618,7 +650,9 @@ exports.plan = {
 			var successfulDebit = function(transaction, data) {
 				/* deposit funds into the organizer's account */
 				/* assuming there will only ever be 1 bank account right now */
+				console.log(organizer.balancedAPI.bankAccounts);
 				var bankAccount = new balanced.bank_accounts(organizer.balancedAPI.bankAccounts.items[0]);
+
 				/* TODO: appears on statement as */
 				bankAccount.credit({
 					amount: amount
@@ -696,6 +730,7 @@ exports.plan = {
 
 			/* check if there's an existing balanced customerAccount for this logged in customer */
 			if (req.session.customer.balancedAPI.customerAccount && req.session.customer.balancedAPI.customerAccount.uri) {
+				console.log('existing balanced customeraccount for this customer');
 				if (req.session.customer.balancedAPI.creditCards) {
 					/* they already have cards, check if the one they are using is one of them */
 					var foundCard = false;
@@ -764,6 +799,7 @@ exports.plan = {
 
 				}
 			} else {
+				console.log('no customer in balanced yet');
 				/* no customer in balanced yet...add the card and the customer */
 				var bCustomers = new balanced.customers();
 				bCustomers.create(buyer, function(err, res, body) {
@@ -1126,6 +1162,264 @@ exports.plan = {
 							req, res
 						]);
 					})
+				});
+			});
+		});
+	},
+
+	addHotel: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add hotel to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		if (typeof args.hotel === "undefined") {
+			console.log('no hotel');
+			data.noHotel = true;
+			return me(null, data);
+		}
+
+		console.log('add hotel to plan:');
+		console.log(args);
+
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+		};
+
+		/* find all the existing parking for this plan and remove them if payment is not complete */
+		Hotel.find(query, function(err, hotels) {
+			if (err) {
+				data.success = 0;
+				data.dbError = 'unable to find hotel';
+				return me(null, data);
+			}
+
+			/* check if hotel is purchased if it is not remove it */
+			async.forEach(hotels, function(item, callback) {
+				console.log('checking hotel');
+				console.log(item);
+				/* check if any of these are not yet purchased and remove them */
+				if (!item.purchased) {
+					item.remove(function(err) {
+						console.log('removed unpaidfor Hotel');
+						/* now remove the ticket from the plan */
+						req.session.plan.removeHotel(item.id, function(err) {
+							if (err) {
+								console.log(err);
+								data.success = 0;
+								data.dbError = 'unable to add Hotel ' + item.id;
+								return callback();
+							}
+							console.log('removed Hotel from plan: ' + req.session.plan.guid);
+							return callback();
+						});
+					})
+				} else {
+					callback();
+				}
+			}, function() {
+				console.log('removed unpurchased Hotel now adding Hotel');
+				/* finished iterating through existing hotel */
+				var set = {
+					planId: req.session.plan.id,
+					planGuid: req.session.plan.guid,
+					service: args.service,
+					eventId: args.eventId,
+					hotel: args.hotel,
+					total: args.total,
+				};
+
+				console.log(set);
+				if (typeof args.payment !== "undefined") {
+
+					var pmt = JSON.parse(args.payment);
+					var payment = {
+						organizer: true,
+						customerId: req.session.customer.id,
+					};
+
+					if (typeof pmt.amount !== "undefined") {
+						payment.amount = pmt.total;
+					}
+
+					if (typeof pmt.receipt !== "undefined") {
+						set.purchased = true;
+						payment.receipt = pmt.receipt;
+					}
+
+					set.payment = payment;
+				}
+
+				r = new Hotel(set);
+
+				r.save(function(err) {
+					if (err) {
+						data.success = 0;
+						data.dbError = 'unable to save hotel';
+						return me(null, data);
+					}
+
+					/* now add the ticket to the plan */
+					req.session.plan.addHotel(r, function(err) {
+						if (err) {
+							console.log(err);
+							data.success = 0;
+							data.dbError = 'unable to add Hotel ' + r.id;
+							return me(null, data);
+						}
+						console.log('added hotel to plan: ' + req.session.plan.guid);
+						data.hotel = r;
+						return me(null, data);
+					});
+				});
+			});
+		});
+	},
+
+	addHotelReceipt: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add tickets to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+
+		if (typeof args.hotelId === "undefined") {
+			console.log('no hotel');
+			data.noHotel = true;
+			return me(null, data);
+		}
+
+		console.log('add receipt to hotel:');
+		console.log(args);
+
+		var query = {
+			'planId': req.session.plan.id,
+			'planGuid': req.session.plan.guid,
+			'service': args.service
+		};
+
+		/* find all the existing parking for this plan and remove them if payment is not complete */
+		Hotel.find(query, function(err, hotels) {
+			console.log('found hotels');
+			console.log(hotels);
+			if (err) {
+				data.success = 0;
+				data.dbError = 'unable to find hotel';
+				return me(null, data);
+			}
+
+			var notFound = true;
+			/* TODO: to actually support an array of parking, this needs to change */
+			for (var i = 0; i < hotels.length; i++) {
+				var item = hotels[i];
+				console.log('existing hotels to add receipt to');
+				console.log(item);
+
+				/* find the parking that matches args.parkingId */
+				if (args.hotelId == item.id) {
+					notFound = false;
+					item.purchased = true;
+					console.log('adding receipt for:');
+					console.log(item);
+					item.payment.manual = args.receipt;
+					if (args.receipt.qty) {
+						item.payment.qty = args.receipt.qty;
+					}
+					if (args.receipt.amountPaid) {
+						item.payment.amount = args.receipt.amountPaid;
+					}
+					item.save(function(err) {
+						if (err) {
+							data.success = 0;
+							data.dbError = 'unable to save parking';
+							return me(null, data);
+						}
+
+						data.hotel = item;
+						return me(null, data);
+					});
+					break;
+				}
+			};
+			if (notFound) {
+				console.log('hotel not found for add receipt');
+				data.notFound = notFound;
+				me(null, data);
+			}
+		});
+	},
+
+	removeHotel: function(args, req, res) {
+		var me = this;
+
+		var data = {
+			success: 1
+		};
+
+		/* must have a customer to create a plan in the db */
+		if (!req.session.customer) {
+			console.log('no customer...');
+			data.noCustomer = true;
+			return me(null, data);
+		}
+
+		if (!req.session.plan) {
+			console.log('no plan...to add parking to');
+			data.noPlan = true;
+			return me(null, data);
+		}
+		console.log('remove hotel args:');
+		console.log(args);
+
+		Hotel.remove({
+			"_id": args.hotelId
+		}, function(err) {
+			console.log('remove hotel err is: ' + err);
+			/* delete the hotel id from the plan and save it */
+			var newHotels = [];
+			for (var i = 0; i < req.session.plan.hotels.length; i++) {
+				if (req.session.plan.hotels[i] != args.hotelId) {
+					newHotels.push(req.session.plan.hotels[i]);
+				}
+			};
+			console.log('removing hotels from plan');
+			req.session.plan.hotels = newHotels;
+			req.session.plan.save(function(err, results) {
+				console.log('saved plan after removing hotel - err is:' + err);
+				/* get parking to return */
+				Hotel.find({
+					planId: req.session.plan.id
+				}, function(err, results) {
+					data.hotels = results;
+					me(null, data);
 				});
 			});
 		});
@@ -2024,6 +2318,9 @@ exports.plan = {
 			req.session.plan.preferences.parking.payment = args.preferences.parking.payment;
 			req.session.plan.preferences.hotels.payment = args.preferences.hotels.payment;
 			req.session.plan.preferences.restaurants.payment = args.preferences.restaurants.payment;
+
+			console.log('saving prefs');
+			console.log(req.session.plan.preferences.guestList);
 
 			//req.session.plan.markModified('preferences');
 			req.session.plan.save(function(err, res) {

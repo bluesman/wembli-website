@@ -184,6 +184,8 @@
 
 
 		.friends-list-container {
+			background-color: @white;
+
 			.spinner {
 				height:30px;
 				width:30px;
@@ -191,10 +193,10 @@
 			}
 
 			.friends-list {
-				margin-left:2px;
-				overflow-y:auto;
-				height:352px;
 
+				overflow-y:auto;
+				min-height:100px;
+				max-height:300px;
 				.friend:hover {
 					background-color:lighten(@blueLight,30%);
 				}
@@ -342,6 +344,9 @@
 		}
 
 		#step5 {
+			background-color:@grayLighter;
+			margin:0 -15px 15px -15px;
+			padding:0 15px 15px 15px;
 
 		}
 

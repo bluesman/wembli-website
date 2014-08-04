@@ -1,0 +1,108 @@
+.event-info-container {
+	.event-info-header {
+		padding:0 15px 30px;
+		position:relative;
+		padding:10px 5px;
+		font-size: 10px;
+		background-color: @blue;
+
+		/* Extra small devices (phones, less than 768px) */
+		/* No media query since this is the default in Bootstrap */
+		h1 {
+			color:@white;
+		  font-size: 1.3em;
+		  margin:4px 0;
+		  letter-spacing: 1px;
+		}
+
+		h2 {
+			color:@white;
+		  font-size: 1.2em;
+			margin:4px 0;
+			font-weight:200;
+			font-family: "Helvetica Neue", "Helvetica";
+			letter-spacing: 1px;
+		}
+
+		h3 {
+		  font-size: 20px;
+		}
+
+
+	  .col-sm-9, .col-sm-3 {
+	  	padding:0 5px;
+	  }
+	  .info {
+	  	padding:5px;
+
+			.venue-address {
+				color:@white;
+				font-weight:200;
+				font-family: "Helvetica Neue", "Helvetica";
+				letter-spacing: 1px;
+			}
+		}
+
+		.navigation {
+			position:absolute;
+			top:7px;
+			right:0;
+			color:@white;
+			a {
+				color:@white;
+			}
+			a:hover {
+				color:@yellow;
+			}
+		}
+	}
+
+	.section-options-container {
+		margin: 20px 0;
+		padding: 10px 0 20px 0;
+		border: thin solid @grayLight;
+		border-radius: 4px;
+
+
+		.fa-square-o {
+			margin-right:12px;
+		}
+
+	}
+
+	img.wembliman {
+		margin:50px auto 20px;
+	}
+}
+
+/* md and larger have nav on the left */
+@media (min-width: @screen-md-min) {
+
+	.event-info-container {
+		box-shadow: -4px -4px 4px -4px;
+		margin-top:-75px;
+		padding-bottom: 20px;
+
+		.event-info-header {
+			border-bottom:4px solid @blue;
+			background-color: @white;
+			h1, h2, h3 {
+				color:@grayDark;
+			}
+
+			.info {
+				.venue-address {
+					color:@grayDark;
+				}
+			}
+
+			.navigation {
+				color:@blue;
+				a {
+					color:@blue;
+				}
+			}
+
+		}
+	}
+}

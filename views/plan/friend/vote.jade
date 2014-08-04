@@ -1,0 +1,165 @@
+extends layout
+block plan-section
+	section#section-vote.friend-vote-section.vote-section.plan-section.container-fluid.hide(ng-controller="FriendVoteCtrl")
+		.row.visible-xs.visible-sm
+			.col-xs-12.event-info-container
+				include ../includes/event-info
+		.header.row
+			.col-xs-12
+				h1.segoe Vote
+
+		.row
+			.col-md-7.col-xs-12
+				.notification-container.row
+					.col-xs-12
+
+				.vote-option.tickets-vote
+					.row
+						.col-xs-12
+							h3 Pick Your Maximum Price Per Ticket:
+					.row
+						.col-xs-8
+							.row
+								.col-xs-12
+									#ticket-price-slider.price-slider.jquery-slider(min="0",max="500",step="5",value="{{me.rsvp.tickets.price}}",range="min",slide="ticketsPriceSlide",stop="ticketsPriceStop")
+							.dollar-signs.row
+								.col-xs-4.text-left
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.low]") $
+								.col-xs-4.text-center
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.med]") $$
+								.col-xs-4.text-right
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.tickets.priceGroup.high]") $$$
+
+						.col-xs-4.price-input-container
+							span.orange $
+							span.ticket-price-range {{me.rsvp.tickets.price}}
+							span.plus-sign(ng-show="me.rsvp.tickets.price==500") +
+				.vote-option.parking-vote(ng-show="plan.preferences.addOns.parking")
+					.row
+						.col-xs-12
+							label
+								input.hide.form-control(type="checkbox",name="parking_decision",ng-model="me.rsvp.parking.decision",ng-click="toggleInputs('parking',me.rsvp.parking.decision)")
+								h3
+									i.fa.fa-check-square-o.green(ng-show="me.rsvp.parking.decision")
+									i.fa.fa-square-o(ng-hide="me.rsvp.parking.decision")
+									span Include Me In The Parking Plans:
+					.row(ng-class="{false:'text-muted'}[me.rsvp.parking.decision]")
+						.col-xs-8
+							.row
+								.col-xs-12
+									#parking-price-slider.price-slider.jquery-slider(min="0",max="100",enable="me.rsvp.parking.decision",step="5",value="{{me.rsvp.parking.price}}",range="min",slide="parkingPriceSlide",stop="parkingPriceStop")
+							.dollar-signs.row
+								.col-xs-4.text-left
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.low]") $
+								.col-xs-4.text-center
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.med]") $$
+								.col-xs-4.text-right
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.parking.priceGroup.high]") $$$
+
+						.col-xs-4.price-input-container
+							span.orange $
+							span.parking-price-range {{me.rsvp.parking.price}}
+							span.plus-sign(ng-show="me.rsvp.parking.price==500") +
+				.vote-option.restaurants-vote(ng-show="plan.preferences.addOns.restaurants")
+					.row
+						.col-xs-12
+							label
+								input.hide.form-control(type="checkbox",name="restaurant_decision",ng-model="me.rsvp.restaurant.decision",ng-click="toggleInputs('restaurant',me.rsvp.restaurant.decision)")
+								h3
+									i.fa.fa-check-square-o.green(ng-show="me.rsvp.restaurant.decision")
+									i.fa.fa-square-o(ng-hide="me.rsvp.restaurant.decision")
+									span Include Me In The Restaurant Plans:
+					.row(ng-class="{false:'text-muted'}[me.rsvp.restaurant.decision]")
+						.col-xs-8
+							.row(ng-class="{false:'text-muted'}[me.rsvp.restaurant.decision]")
+								.col-xs-12
+									.preference-dropdown.form-group
+										select#food-preference.multiselect.form-control(click="foodPreferenceClick",enable="me.rsvp.restaurant.decision",append-to="#section-vote",header="false",min-width="auto",none-selected-text="Food Preference",multiple="multiple",ng-model="me.rsvp.restaurant.preference")
+											option(value="American (traditional)") American (traditional)
+											option(value="Asian Fusion") Asian Fusion
+											option(value="Bars") Bars
+											option(value="Burgers") Burgers
+											option(value="Chinese") Chinese
+											option(value="Fast Food") Fast Food
+											option(value="Italian") Italian
+											option(value="Japanese") Japanese
+											option(value="Mediterranean") Mediterranean
+											option(value="Mexican") Mexican
+											option(value="Pizza") Pizza
+											option(value="Steakhouse") Steakhouse
+											option(value="Sushi") Sushi
+											option(value="Thai") Thai
+											option(value="Vegetarian") Vegetarian
+											option(value="Vietnamese") Vietnamese
+
+							.row
+								.col-xs-12
+									#restaurant-price-slider.price-slider.jquery-slider(min="0",max="100",step="5",enable="me.rsvp.restaurant.decision",value="{{me.rsvp.restaurant.price}}",range="min",slide="restaurantPriceSlide",stop="restaurantPriceStop")
+							.dollar-signs.row
+								.col-xs-4.text-left
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.low]") $
+								.col-xs-4.text-center
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.med]") $$
+								.col-xs-4.text-right
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.restaurant.priceGroup.high]") $$$
+
+						.col-xs-4.price-input-container
+							span.orange $
+							span.restaurant-price-range {{me.rsvp.restaurant.price}}
+							span.plus-sign(ng-show="me.rsvp.restaurant.price==100") +
+				.vote-option.hotels-vote(ng-show="plan.preferences.addOns.hotels")
+					.row
+						.col-xs-12
+							label
+								input.hide.form-control(type="checkbox",name="hotel_decision",ng-model="me.rsvp.hotel.decision",ng-click="toggleInputs('hotel',me.rsvp.hotel.decision)")
+								h3
+									i.fa.fa-check-square-o.green(ng-show="me.rsvp.hotel.decision")
+									i.fa.fa-square-o(ng-hide="me.rsvp.hotel.decision")
+									span Include Me In The Hotel Plans:
+					.row(ng-class="{false:'text-muted'}[me.rsvp.hotel.decision]")
+						.col-xs-8
+							.row(ng-class="{false:'text-muted'}[me.rsvp.hotel.decision]")
+								.col-xs-12
+									.preference-dropdown.form-group
+										select#hotel-preference.multiselect.form-control(click="hotelPreferenceClick",enable="me.rsvp.hotel.decision",append-to="#section-vote",header="false",min-width="auto",none-selected-text="Hotel Types",multiple="multiple",ng-model="me.rsvp.hotel.preference")
+											option(value="Bed & Breakfast") Bed & Breakfast
+											option(value="Boutique") Boutique
+											option(value="Budget") Budget
+											option(value="Chain") Chain (Marriott, Hyatt, etc.)
+											option(value="Luxury") Luxury
+							.row
+								.col-xs-12
+									#hotel-price-slider.price-slider.jquery-slider(min="0",max="500",step="5",enable="me.rsvp.hotel.decision",value="{{me.rsvp.hotel.price}}",range="min",slide="hotelPriceSlide",stop="hotelPriceStop")
+							.dollar-signs.row
+								.col-xs-4.text-left
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.low]") $
+								.col-xs-4.text-center
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.med]") $$
+								.col-xs-4.text-right
+									span.dollar-sign(ng-class="{true:'orange'}[me.rsvp.hotel.priceGroup.high]") $$$
+
+						.col-xs-4.price-input-container
+							span.orange $
+							span.hotel-price-range {{me.rsvp.hotel.price}}
+							span.plus-sign(ng-show="me.rsvp.hotel.price==500") +
+
+			.col-md-5.col-xs-12.event-info-container
+				.hidden-xs.hidden-sm
+					include ../includes/event-info
+
+				.row.section-options-container.vote-totals
+					.col-xs-12
+						.row
+							.col-xs-8
+								h3 Total Budget:
+							.col-xs-4.text-right
+								h3 {{votePriceTotal | currency}}
+						.row
+							.col-xs-8
+								h4 Per Person:
+							.col-xs-4.text-right
+								h4 {{votePriceTotalPerPerson | currency}}
+
+				.row.hidden-sm.hidden-xs
+					.col-xs-12
+						img.wembliman.img-responsive(src="/images/cartoon-man-checkboxes.png")

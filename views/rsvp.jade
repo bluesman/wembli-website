@@ -1,4 +1,176 @@
 extends layout
-block frame1
-	include includes/event-detail
-	rsvp-login-modal(service="#{service}",guid="#{guid}",token="#{token}",confirm-social="#{confirmSocial}",friend="#{friend.contactInfo.name}",event="#{JSON.stringify(plan.event)}")
+block content
+	#rsvp-login(ng-controller="RsvpLoginCtrl")
+		.init(ng-init="guid='#{guid}'")
+		.init(ng-init="service='#{service}'")
+		.init(ng-init="token='#{token}'")
+		.init(ng-init="confirmSocial=#{confirmSocial}")
+		.init(ng-init="friendName='#{friend.contactInfo.name}'")
+		.init(ng-init="eventDate='#{plan.event.eventDate}'")
+		.init(ng-init="eventId='#{plan.event.eventId}'")
+		.init(ng-init="eventName='#{plan.event.eventName}'")
+		.init(ng-init="eventVenue='#{plan.event.eventVenue}'")
+		.init(ng-init="venueAddress='#{plan.venue.data.Street1}, #{plan.event.eventCity}, #{plan.event.eventState}'")
+
+		.container-fluid
+			.row
+				#rsvp-login-left.col-md-3.col-md-offset-1.hidden-xs.hidden-sm
+					.relative
+						.absolute
+							.copy.segoe {{friendName}}, Get ready to view your invitation!
+							img.cartoon-man.img-responsive(src="/images/wembliman/100.png")
+				#rsvp-login-right.col-md-7.col-xs-12
+					.header.row
+						.col-sm-3.col-xs-12
+							.event-date-box(ng-cloak)
+								span.day {{getDate(eventDate)| date:'EEE'}}
+								span.event-date {{getDate(eventDate)| date:'MMM d'}}
+								span.time {{getDate(eventDate)| date:'h:mm a'}}
+						.col-sm-9.col-xs-12
+							.info(ng-cloak)
+								h1.name.block {{eventName}}
+								h2.venue-name {{eventVenue}}
+								.venue-address {{venueAddress}}
+
+					.confirm(ng-show="{'facebook':true}[confirmSocial]")
+						.row
+							.col-xs-12
+								h3 Login With Twitter
+						.row
+							.col-xs-12
+								.alert.alert-info Since you were invited via twitter, you need to login with twitter to view your invitation.
+								.twitter-login
+									a#twitter-login-button.btn.btn-primary.btn-lg(href="/auth/twitter?redirectUrl={{next}}",target="_self")
+										i.fa.fa-twitter
+										span &nbsp;Connect With twitter
+
+					.confirm(ng-show="{'facebook':true}[confirmSocial]")
+						.row
+							.col-xs-12
+								h3 Login With Facebook
+						.row
+							.col-xs-12
+								.alert.alert-info Since you were invited via facebook, you need to login with facebook to view your invitation.
+								.facebook-login
+									a#facebook-login-button.btn.btn-primary.btn-lg(target="_self",ng-href="/auth/facebook?redirectUrl={{next}}")
+										i.fa.fa-facebook.fa-2x
+										span Login with Facebook
+
+					.login(ng-hide="confirmSocial")
+						//- scenarios:
+						//- brand new customer - will have to signup and confirm before moving to step 2
+						//- not logged in, existing customer without a password - must send forgot password email and provide password and confirm
+						//- not logged in, existing customer with password - must just login to continue
+						//- logged in - should skip this step and start on step 2
+						.row(ng-show="showSignupForm")
+							.col-xs-12
+								form#rsvp-signup-form.rsvp-login-form(novalidate, role="form", name="signup", ng-submit="submitSignup()")
+									fieldset
+										.row
+											.col-xs-12
+												h3 Sign Up to View Your Invitation
+										.row
+											.col-xs-12
+												.alert(ng-show="signup.formError") All fields are required.
+												.alert(ng-show="signup.firstName.$error.required && !signup.firstName.$pristine") First Name is required.
+												.alert(ng-show="signup.lastName.$error.required && !signup.lastName.$pristine") Last Name is required.
+												.alert(ng-show="signup.email.$error.required && !signup.email.$pristine") Email Address is required.
+												.alert(ng-show="signup.noContinue") Hey - we need your name and email before we can really do anything here.
+
+										//- if they are logged in, this will be prefilled and they will start on step-2
+										.row
+											.form-group.col-sm-5.col-xs-12
+												input.first-name.form-control(required, ng-model="firstName", placeholder="YOUR FIRST NAME",type="text",name="firstName")
+											.form-group.col-sm-7.col-xs-12
+												input.last-name.form-control(required, ng-model="lastName",placeholder="YOUR LAST NAME",type="text",name="lastName")
+										.row
+											.form-group.col-xs-12
+												input.email.form-control(required, type="email",ng-model="email",placeholder="YOUR EMAIL ADDRESS",name="email")
+										.row
+											.form-group.col-xs-12
+												button.btn.btn-primary.form-control(type="submit") View Invitation
+
+										.switch-login.row
+											.col-xs-12
+												a(ng-click="showForm('showLoginForm','showSignupForm')",href="#",ng-hide="customer.id")
+													i.fa.fa-question-circle &nbsp;Already have an account? Click here to log in.
+										.row
+											.col-xs-12
+												a(href="/tickets/{{eventId}}/{{eventName}}")
+													i.fa.fa-question-circle &nbsp;Not {{friendName}}? Click here for more info about this event.
+
+						.row(ng-show="showSignupView")
+							.col-xs-12
+								#rsvp-signup-signup-view.rsvp-login-form
+									fieldset
+										.row
+											.col-xs-12
+												h3 The Invitation Is From:
+										.row
+											.col-xs-12
+												.alert.alert-info(ng-show="signup.success") Successfully saved your info.
+												.alert.alert-info(ng-show="login.success") Successfully logged you in.
+										.row
+											.col-xs-12
+												p.already-logged-in
+													i.fa.fa-check.green &nbsp;You're already logged in.  We'll use the the contact info you already gave us.
+										.row
+											.col-xs-12
+												p
+													strong Name:&nbsp;
+													span {{customer.firstName}} {{customer.lastName}}
+										.row
+											.col-xs-12
+												p
+													strong Email:&nbsp;
+													span {{customer.email}}
+
+								//- this account exists but they never set a password and did not confirm the email address
+						.row(ng-show="showLoginUnconfirmedForm")
+							.col-xs-12
+								form#rsvp-login-unconfirmed-form.rsvp-login-form(name="loginUnconfirmed")
+									fieldset
+										.row
+											.col-xs-12
+												h3 Check Your Email
+										.row
+											.col-xs-12
+											.alert.alert-info(ng-hide="forgotPasswordEmailSent") An email has been sent to you. Follow the instructions to set your password.
+											.alert.alert-info(ng-show="forgotPasswordEmailSent") Successfully resent password email. Follow the instructions in the email to set your password.
+										.switch-login.row
+											.col-xs-12
+												a(ng-click="showForm('showSignupForm','showLoginUnconfirmedForm')",href="#",ng-hide="customer.id") Don't have an account or password yet? Click Here.
+
+								//- login form - existing account with a password - they just need to supply credentials to continue
+						.row(ng-show="showLoginForm")
+							.col-xs-12
+								form#rsvp-login-form.rsvp-login-form(name="login")
+									fieldset
+										.row
+											.col-xs-12
+												h3 Login To View Your Invitation
+										.row
+											.col-xs-12
+												.alert.alert-info(ng-show="forgotPasswordEmailSent && !forgotPasswordEmailError") Successfully resent password email. Follow the instructions in the email to set your password.
+												.alert.alert-warning(ng-show="forgotPasswordEmailError") Shoot! Looks like that email address doesn't exist.  Make sure you've entered a valid email address (you can leave the password field blank).
+												.alert.alert-warning(ng-show="login.invalidCredentials") Shoot! We were not able to log you in using this email and password.
+												.alertalert-warning(ng-show="login.accountExists") An account already exists for {{customer.email}}. Please, provide your password to login.
+										.row
+											.form-group.col-xs-12
+												input.focus-on-click.email.form-control(type="email",ng-model="email",placeholder="EMAIL ADDRESS",name="login_email",required)
+											.form-group.col-xs-12
+												input.focus-on-click.password.form-control(type="password",ng-model="password",placeholder="PASSWORD",name="password", required)
+
+										.row
+											.form-group.col-xs-12
+												button.btn.btn-primary.form-control(ng-click="submitLogin()") View Invitation
+
+										.switch-login.row
+											.col-xs-12
+												a#fp-link2.send-forgot-password-email(email="{{email}}",next="{{next}}",href="#")
+													i.fa.fa-question-circle &nbsp;Forgot your password? Click here.
+
+										.switch-login.row
+											.col-xs-12
+												a(ng-click="showForm('showSignupForm','showLoginForm')",href="#",ng-hide="customer.id")
+													i.fa.fa-question-circle &nbsp;Don't have an account or password yet? Click Here.

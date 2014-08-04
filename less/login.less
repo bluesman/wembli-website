@@ -67,3 +67,93 @@
 		}
 	}
 }
+
+#rsvp-login {
+	#rsvp-login-left {
+		.relative {
+			position:relative;
+			height:350px;
+		}
+		.absolute {
+			position:absolute;
+			bottom:0px;
+			.copy {
+				.rotate(-4deg);
+				width:220px;
+				text-align:center;
+				font-size:1.2em;
+			}
+		}
+	}
+
+
+	#rsvp-login-right {
+		/* Extra small devices (phones, less than 768px) */
+		/* No media query since this is the default in Bootstrap */
+		h1 {
+			color:@white;
+		  font-size: 1.3em;
+		  margin:10px 0;
+		}
+		h2 {
+			color:@grayDarker;
+		  font-size: 1.2em;
+			margin:5px 0;
+		}
+		h3 {
+		  font-size: 20px;
+		}
+
+		/* Small devices (tablets, 768px and up) */
+		@media (min-width: @screen-sm-min) {
+		  h1 {
+		    font-size: 1.4em;
+		  }
+		  h2 {
+		    font-size: 1.3em;
+		  }
+		  h3 {
+		    font-size: 22px;
+		  }
+		}
+
+		/* Medium devices (desktops, 992px and up) */
+		@media (min-width: @screen-md-min) {
+		  h1 {
+		    font-size: 1.3em;
+		  }
+		  h2 {
+		    font-size: 1.2em;
+		  }
+		  h3 {
+		    font-size: 22px;
+		  }
+		}
+
+		/* Large devices (large desktops, 1200px and up) */
+		@media (min-width: @screen-lg-min) {
+		  h1 {
+		    font-size: 1.4em;
+		  }
+		  h2 {
+		    font-size: 1.3em;
+		  }
+		  h3 {
+		    font-size: 24px;
+		  }
+		}
+
+		.header {
+			padding:10px;
+			background-color:@blue;
+		}
+
+
+		fieldset {
+			button {
+				margin:10px 0;
+			}
+		}
+	}
+
+}

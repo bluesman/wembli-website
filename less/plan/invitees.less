@@ -1,0 +1,106 @@
+/* global invitees lists */
+.invitees-container {
+	.invitee {
+		margin-top:20px;
+
+		.invitee-info {
+			.invitee-prefs-container {
+				.invitee-pref {
+					text-align:left;
+					.invitee-pref-header {
+						text-transform:uppercase;
+						color:@gray;
+						font-style: italic;
+						font-size:20px;
+						line-height: 40px;
+					}
+					.invitee-pref-value {
+						.fa {
+							height:45px;
+							line-height:45px;
+							vertical-align:middle;
+						}
+						.dollar-sign {
+							font-size: 30px;
+							height:45px;
+							line-height:45px;
+							vertical-align:middle;
+						}
+						.prefs-list {
+							text-align:left;
+						}
+					}
+				}
+
+				.invitee-pref.muted {
+					.invitee-pref-header {
+						color:@grayLight;
+					}
+					.invitee-pref-value {
+						.icon {
+							color:@grayLight;
+						}
+						.dollar-sign {
+							color:@grayLight;
+						}
+					}
+				}
+
+
+				.first-off {
+					text-align:left;
+					i {
+						margin-left:25px;
+					}
+				}
+			}
+			.invitee-name {
+				/* height: 24px; */
+				.name {
+					font-size:20px;
+				}
+				.guests {
+					font-weight:bold;
+				}
+				.message-status-container {
+					text-align: right;
+				}
+			}
+		}
+
+	}
+}
+
+/* md and larger have nav on the left */
+@media (min-width: @screen-md-min) {
+
+	/* global invitees lists */
+	.invitees-container {
+		.invitee {
+			.invitee-info {
+				.invitee-prefs-container {
+					.invitee-pref {
+						text-align:center;
+
+						.invitee-pref-header {
+							font-size: 14px;
+							line-height: 14px;
+
+						}
+					}
+				}
+			}
+
+			.history-container {
+				.history {
+					.history-item {
+
+					}
+					.outside-payment-form {
+
+					}
+				}
+			}
+		}
+	}
+}

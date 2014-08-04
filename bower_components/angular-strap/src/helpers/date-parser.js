@@ -15,7 +15,7 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', [])
     strict: false
   };
 
-  this.$get = function($locale) {
+  this.$get = function($locale, dateFilter) {
 
     var DateParserFactory = function(config) {
 
@@ -26,24 +26,25 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', [])
       var regExpMap = {
         'sss'   : '[0-9]{3}',
         'ss'    : '[0-5][0-9]',
-        's'     : options.strict ? '[1-5]?[0-9]' : '[0-5][0-9]',
+        's'     : options.strict ? '[1-5]?[0-9]' : '[0-9]|[0-5][0-9]',
         'mm'    : '[0-5][0-9]',
-        'm'     : options.strict ? '[1-5]?[0-9]' : '[0-5][0-9]',
+        'm'     : options.strict ? '[1-5]?[0-9]' : '[0-9]|[0-5][0-9]',
         'HH'    : '[01][0-9]|2[0-3]',
-        'H'     : options.strict ? '[0][1-9]|[1][012]' : '[01][0-9]|2[0-3]',
+        'H'     : options.strict ? '1?[0-9]|2[0-3]' : '[01]?[0-9]|2[0-3]',
         'hh'    : '[0][1-9]|[1][012]',
-        'h'     : options.strict ? '[1-9]|[1][012]' : '[0]?[1-9]|[1][012]',
+        'h'     : options.strict ? '[1-9]|1[012]' : '0?[1-9]|1[012]',
         'a'     : 'AM|PM',
         'EEEE'  : $locale.DATETIME_FORMATS.DAY.join('|'),
         'EEE'   : $locale.DATETIME_FORMATS.SHORTDAY.join('|'),
-        'dd'    : '[0-2][0-9]{1}|[3][01]{1}',
-        'd'     : options.strict ? '[1-2]?[0-9]{1}|[3][01]{1}' : '[0-2][0-9]{1}|[3][01]{1}',
+        'dd'    : '0[1-9]|[12][0-9]|3[01]',
+        'd'     : options.strict ? '[1-9]|[1-2][0-9]|3[01]' : '0?[1-9]|[1-2][0-9]|3[01]',
         'MMMM'  : $locale.DATETIME_FORMATS.MONTH.join('|'),
         'MMM'   : $locale.DATETIME_FORMATS.SHORTMONTH.join('|'),
-        'MM'    : '[0][1-9]|[1][012]',
-        'M'     : options.strict ? '[1-9]|[1][012]' : '[0][1-9]|[1][012]',
-        'yyyy'  : '(?:(?:[1]{1}[0-9]{1}[0-9]{1}[0-9]{1})|(?:[2]{1}[0-9]{3}))(?![[0-9]])',
-        'yy'    : '(?:(?:[0-9]{1}[0-9]{1}))(?![[0-9]])'
+        'MM'    : '0[1-9]|1[012]',
+        'M'     : options.strict ? '[1-9]|1[012]' : '0?[1-9]|1[012]',
+        'yyyy'  : '[1]{1}[0-9]{3}|[2]{1}[0-9]{3}',
+        'yy'    : '[0-9]{2}',
+        'y'     : options.strict ? '-?(0|[1-9][0-9]{0,3})' : '-?0*[0-9]{1,4}',
       };
 
       var setFnMap = {
@@ -65,7 +66,7 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', [])
         'M'     : function(value) { return this.setMonth(1 * value - 1); },
         'yyyy'  : proto.setFullYear,
         'yy'    : function(value) { return this.setFullYear(2000 + 1 * value); },
-        'y'    : proto.setFullYear
+        'y'     : proto.setFullYear
       };
 
       var regex, setMap;
@@ -81,13 +82,15 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', [])
         return regex.test(date);
       };
 
-      $dateParser.parse = function(value, baseDate) {
-        if(angular.isDate(value)) return value;
-        var matches = regex.exec(value);
+      $dateParser.parse = function(value, baseDate, format) {
+        if(angular.isDate(value)) value = dateFilter(value, format || $dateParser.$format);
+        var formatRegex = format ? regExpForFormat(format) : regex;
+        var formatSetMap = format ? setMapForFormat(format) : setMap;
+        var matches = formatRegex.exec(value);
         if(!matches) return false;
-        var date = baseDate || new Date(0);
+        var date = baseDate || new Date(0, 0, 1);
         for(var i = 0; i < matches.length - 1; i++) {
-          setMap[i] && setMap[i].call(date, matches[i+1]);
+          formatSetMap[i] && formatSetMap[i].call(date, matches[i+1]);
         }
         return date;
       };
@@ -108,7 +111,7 @@ angular.module('mgcrea.ngStrap.helpers.dateParser', [])
         }
         // Sort result map
         angular.forEach(map, function(v) {
-          sortedMap.push(v);
+          if(v) sortedMap.push(v);
         });
         return sortedMap;
       }

@@ -249,6 +249,7 @@ exports.event = {
 		});
 	},
 
+	/* TODO: use expedia */
 	getHotels: function(args, req, res) {
 		var me = this;
 		/*convert date into timestamp */
