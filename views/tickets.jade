@@ -171,12 +171,12 @@ block content
 														.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
 															a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="#", ng-hide="ticket.ticketsInPlan") Add Tix
 															a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan && !ticket.purchased") Remove From Plan
-															button.btn.btn-warning.btn-sm(ng-show="ticket.ticketInPlan && ticket.purchased") Purchased
+															button.btn.btn-warning.btn-sm(ng-show="ticket.purchased", disabled) Purchased
 
 														.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
 															a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",target="_blank", ng-hide="ticket.ticketsInPlan") Buy Tix
 															a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan && !ticket.purchased") Remove From Plan
-															button.btn.btn-warning.btn-sm(ng-show="ticket.ticketInPlan && ticket.purchased") Purchased
+															button.btn.btn-warning.btn-sm(ng-show="ticket.purchased", disabled) Purchased
 
 					//-
 						.purchased-tickets-list

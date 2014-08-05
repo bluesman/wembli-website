@@ -1,81 +1,82 @@
-extends layout
-block content
-	#plan-frame(ng-cloak, ng-controller="PlanCtrl")
-		- var nav = planNav(req.session.visitor.context, req.session.plan.preferences.payment)
-		#nav-container.affix(ng-init="sections=#{nav.length}")
-			#plan-nav
-				.nav-arrow.hide
-				a.plan-section-nav(href="/dashboard").hidden-xs.hidden-sm
-					.fa.fa-dashboard
-					div dashboard
-				each navItem in nav
-					a.plan-section-nav(ng-click="activateSection('#{navItem.id}')",href="#{navItem.href}",id="#{navItem.id}")
-						.fa(class="#{navItem.icon}")
-						div #{navItem.text}
-						div(id="notification-#{navItem.id}",class="hide notification notification-#{navItem.icon}")
-		#plan-dashboard-container.plan-dashboard
-			- if (req.session.visitor.context === 'organizer')
-				#plan-dashboard.organizer-plan-dashboard
-					//- no split has no pony up
-					- if (req.session.plan.preferences.payment === 'no-split')
-						organizer-rsvp-section
-						organizer-cart-section
-						organizer-itinerary-section
-						section#section4.organizer-chatter-section.chatter-section.plan-section
-							.header.clearfix
-								h1.pull-left Chatter
-							.event-info
-								span.blue &nbsp;{{plan.event.eventName}}
-								span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-								span &nbsp;at {{plan.event.eventVenue}}&nbsp;
-							.body
-								h3 Use this space to comment and share conversations about your upcoming event!
-								plan-chatter
-					- else
-						organizer-rsvp-section
-						organizer-cart-section
-						organizer-pony-up-section
-						organizer-itinerary-section
-						section#section5.organizer-chatter-section.chatter-section.plan-section.hide
-							.header.clearfix
-								h1.pull-left Chatter
-							.event-info
-								span.blue &nbsp;{{plan.event.eventName}}
-								span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-								span &nbsp;at {{plan.event.eventVenue}}&nbsp;
-							.body
-								h3 Use this space to comment and share conversations about your upcoming event!
-								plan-chatter
-			- if (req.session.visitor.context === 'friend')
-				#plan-dashboard.friend-plan-dashboard
-					- if (req.session.plan.preferences.payment === 'no-split')
-						friend-rsvp-section
-						friend-vote-section
-						friend-invitees-section
-						friend-itinerary-section
-						section#section5.friend-chatter-section.chatter-section.plan-section.even
-							.header.clearfix
-								h1.pull-left Chatter
-							.event-info
-								span.blue &nbsp;{{plan.event.eventName}}
-								span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-								span &nbsp;at {{plan.event.eventVenue}}&nbsp;
-							.body
-								h3 Use this space to comment and share conversations about your upcoming event!
-								plan-chatter
-					- else
-						friend-rsvp-section
-						friend-vote-section
-						friend-invitees-section
-						friend-pony-up-section
-						friend-itinerary-section
-						section#section6.friend-chatter-section.chatter-section.plan-section.even.hide
-							.header.clearfix
-								h1.pull-left Chatter
-							.event-info
-								span.blue &nbsp;{{plan.event.eventName}}
-								span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-								span &nbsp;at {{plan.event.eventVenue}}&nbsp;
-							.body
-								h3 Use this space to comment and share conversations about your upcoming event!
-								plan-chatter
+//- deprecated
+	extends layout
+	block content
+		#plan-frame(ng-cloak, ng-controller="PlanCtrl")
+			- var nav = planNav(req.session.visitor.context, req.session.plan.preferences.payment)
+			#nav-container.affix(ng-init="sections=#{nav.length}")
+				#plan-nav
+					.nav-arrow.hide
+					a.plan-section-nav(href="/dashboard").hidden-xs.hidden-sm
+						.fa.fa-dashboard
+						div dashboard
+					each navItem in nav
+						a.plan-section-nav(ng-click="activateSection('#{navItem.id}')",href="#{navItem.href}",id="#{navItem.id}")
+							.fa(class="#{navItem.icon}")
+							div #{navItem.text}
+							div(id="notification-#{navItem.id}",class="hide notification notification-#{navItem.icon}")
+			#plan-dashboard-container.plan-dashboard
+				- if (req.session.visitor.context === 'organizer')
+					#plan-dashboard.organizer-plan-dashboard
+						//- no split has no pony up
+						- if (req.session.plan.preferences.payment === 'no-split')
+							organizer-rsvp-section
+							organizer-cart-section
+							organizer-itinerary-section
+							section#section4.organizer-chatter-section.chatter-section.plan-section
+								.header.clearfix
+									h1.pull-left Chatter
+								.event-info
+									span.blue &nbsp;{{plan.event.eventName}}
+									span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+									span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+								.body
+									h3 Use this space to comment and share conversations about your upcoming event!
+									plan-chatter
+						- else
+							organizer-rsvp-section
+							organizer-cart-section
+							organizer-pony-up-section
+							organizer-itinerary-section
+							section#section5.organizer-chatter-section.chatter-section.plan-section.hide
+								.header.clearfix
+									h1.pull-left Chatter
+								.event-info
+									span.blue &nbsp;{{plan.event.eventName}}
+									span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+									span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+								.body
+									h3 Use this space to comment and share conversations about your upcoming event!
+									plan-chatter
+				- if (req.session.visitor.context === 'friend')
+					#plan-dashboard.friend-plan-dashboard
+						- if (req.session.plan.preferences.payment === 'no-split')
+							friend-rsvp-section
+							friend-vote-section
+							friend-invitees-section
+							friend-itinerary-section
+							section#section5.friend-chatter-section.chatter-section.plan-section.even
+								.header.clearfix
+									h1.pull-left Chatter
+								.event-info
+									span.blue &nbsp;{{plan.event.eventName}}
+									span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+									span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+								.body
+									h3 Use this space to comment and share conversations about your upcoming event!
+									plan-chatter
+						- else
+							friend-rsvp-section
+							friend-vote-section
+							friend-invitees-section
+							friend-pony-up-section
+							friend-itinerary-section
+							section#section6.friend-chatter-section.chatter-section.plan-section.even.hide
+								.header.clearfix
+									h1.pull-left Chatter
+								.event-info
+									span.blue &nbsp;{{plan.event.eventName}}
+									span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
+									span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+								.body
+									h3 Use this space to comment and share conversations about your upcoming event!
+									plan-chatter

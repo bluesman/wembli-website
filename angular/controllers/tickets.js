@@ -140,7 +140,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
     });
 
     /* watch selectedQty and initialize amountPaid */
-    $scope.$watch('selectedQty', function(newVal, oldVal) {
+    $scope.$watch('currentTicket.selectedQty', function(newVal, oldVal) {
       if (newVal) {
         var ticket = $scope.tickets[$scope.currentTicketIdx];
         if (ticket) {
@@ -151,7 +151,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           var actualPrice         = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
           var amountPaid          = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
           ticket.amountPaid       = amountPaid.toFixed(2);
-          $scope.amountPaid       = ticket.amountPaid;
+          $scope.currentTicket.amountPaid       = ticket.amountPaid;
         }
       }
     });
@@ -176,8 +176,10 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
       $scope.buyTicket = function(idx) {
         $scope.currentTicketIdx = idx;
         var ticket              = $scope.tickets[idx];
-        $scope.selectedQty      = ticket.selectedQty;
+        $scope.currentTicket    = ticket;
+        $scope.currentTicket.selectedQty = ticket.selectedQty;
         console.log(ticket);
+
         var sections = $('#venue-map-container').tuMap("GetSections");
         for (var i = sections.length - 1; i >= 0; i--) {
           if (sections[i].Name === ticket.Section) {
@@ -250,6 +252,9 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           if ($scope.currentTicketIdx) {
             delete $scope.currentTicketIdx;
           }
+          if ($scope.currentTicket) {
+            delete $scope.currentTicket;
+          }
 
           /* hide the slide down popover */
           if ($scope.buyTicketsOffsite) {
@@ -273,6 +278,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
         }
 
         var ticket = $scope.tickets[$scope.currentTicketIdx];
+        console.log(ticket);
         var id = ticket._id ? ticket._id : ticket.ID;
         /* update the tickets to have a receipt */
         plan.addTicketGroupReceipt({
@@ -280,8 +286,8 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           service: 'tn',
           receipt: {
             transactionToken: ticket.sessionId,
-            amount: $scope.amountPaid,
-            qty: $scope.selectedQty
+            amountPaid: $scope.currentTicket.amountPaid,
+            qty: $scope.currentTicket.selectedQty
           }
         }, function(err, result) {
           console.log('receipt added');
@@ -377,6 +383,9 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
                 $scope.ticketsChosen = true;
                 if (typeof ticketInPlan._id !== "undefined") {
                   el._id = ticketInPlan._id;
+                }
+                if (typeof ticketInPlan.purchased !== "undefined") {
+                  el.purchased = ticketInPlan.purchased;
                 }
               }
             });

@@ -507,7 +507,7 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
       	/* TODO: check to make sure result is success */
         r._id     = result.hotel._id;
       	r.inPlan  = true;
-        $scope.hotel = r;
+        $scope.currentHotel = r;
 
         /* if payment type is split-first just go straight to the options page */
         if ($scope.plan.preferences.payment === 'split-first') {
@@ -552,7 +552,8 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
 			});
 		};
 
-		$scope.removeHotel = function(hotelId) {
+		$scope.removeHotel = function() {
+			var hotelId = $scope.currentHotel._id;
 			if (!hotelId) {
 				$scope.hotelConfirm = false;
         $scope.buyHotelOffsite = false;
@@ -565,8 +566,8 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
 				hotelId: hotelId
 			}, function(err, results) {
         /* no longer interested in this parking */
-        if ($scope.hotel) {
-        	delete $scope.hotel;
+        if ($scope.currentHotel) {
+        	delete $scope.currentHotel;
         }
 
         /* hide the slide down popover */
@@ -588,18 +589,18 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
 
     $scope.boughtHotel = function() {
 
-      if (typeof $scope.hotel == "undefined") {
+      if (typeof $scope.currentHotel == "undefined") {
         $window.location.href = $scope.nextLink;
         return;
       }
 
 			/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
 			plan.addHotelReceipt({
-				hotelId: $scope.hotel._id,
-				service: $scope.hotel.service,
+				hotelId: $scope.currentHotel._id,
+				service: $scope.currentHotel.service,
 				receipt: {
-					qty: $scope.qty,
-					amountPaid: $scope.amountPaid
+					qty: $scope.currentHotel.selectedQty,
+					amountPaid: $scope.currentHotel.amountPaid
 				}
 			}, function(err, result) {
 
@@ -613,7 +614,7 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
     }
 
     $rootScope.$on('overlay-clicked', function() {
-      $scope.removeHotel($scope.hotel._id);
+      $scope.removeHotel($scope.currentHotel._id);
     });
 
 		plan.get(function(p) {
@@ -874,7 +875,7 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
       	/* TODO: check to make sure result is success */
         r._id     = result.restaurant._id;
       	r.inPlan  = true;
-        $scope.deal = r;
+        $scope.currentDeal = r;
         /* if payment type is split-first just go straight to the options page */
         if ($scope.plan.preferences.payment === 'split-first') {
           $scope.restaurantConfirm = true;
@@ -917,7 +918,9 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
 			});
 		};
 
-		$scope.removeDeal = function(dealId) {
+		$scope.removeDeal = function() {
+			var dealId = $scope.currentDeal._id;
+
 			if (!dealId) {
 				$scope.restaurantConfirm = false;
         $scope.buyDealOffsite = false;
@@ -930,8 +933,8 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
 				restaurantId: dealId
 			}, function(err, results) {
         /* no longer interested in this parking */
-        if ($scope.deal) {
-        	delete $scope.deal;
+        if ($scope.currentDeal) {
+        	delete $scope.currentDeal;
         }
 
         /* hide the slide down popover */
@@ -960,11 +963,11 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
 
 			/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
 			plan.addRestaurantReceipt({
-				restaurantId: $scope.deal._id,
-				service: $scope.deal.service,
+				restaurantId: $scope.currentDeal._id,
+				service: $scope.currentDeal.service,
 				receipt: {
-					qty: $scope.qty,
-					amountPaid: $scope.amountPaid
+					qty: $scope.currentDeal.selectedQty,
+					amountPaid: $scope.currentDeal.amountPaid
 				}
 			}, function(err, result) {
 
@@ -978,7 +981,7 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
     }
 
     $rootScope.$on('overlay-clicked', function() {
-      $scope.removeDeal($scope.deal._id);
+      $scope.removeDeal($scope.currentDeal._id);
     });
 
 		plan.get(function(p) {
@@ -1280,7 +1283,7 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
       	/* TODO: check to make sure result is success */
         parking._id            = result.parking._id;
       	parking.parkingInPlan  = true;
-        $scope.parking         = parking;
+        $scope.currentParking  = parking;
         /* if payment type is split-first just go straight to the options page */
         if ($scope.plan.preferences.payment === 'split-first') {
           $scope.parkingConfirm = true;
@@ -1321,7 +1324,8 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
 			});
 		};
 
-		$scope.removeParking = function(parkingId) {
+		$scope.removeParking = function() {
+			var parkingId = $scope.currentParking._id;
 			if (!parkingId) {
 				$scope.parkingConfirm = false;
         $scope.buyParkingOffsite = false;
@@ -1334,8 +1338,8 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
 				parkingId: parkingId
 			}, function(err, results) {
         /* no longer interested in this parking */
-        if ($scope.parking) {
-        	delete $scope.parking;
+        if ($scope.currentParking) {
+        	delete $scope.currentParking;
         }
 
         if ($scope.parkingDetails) {
@@ -1362,18 +1366,18 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
 
     $scope.boughtParking = function() {
 
-      if (typeof $scope.parking == "undefined") {
+      if (typeof $scope.currentParking == "undefined") {
         $window.location.href = $scope.nextLink;
         return;
       }
 
 			/* update the parking to have a receipt because parkwhiz doesn't give us a pixel yet */
 			plan.addParkingReceipt({
-				parkingId: $scope.parking._id,
-				service: $scope.parking.service,
+				parkingId: $scope.currentParking._id,
+				service: $scope.currentParking.service,
 				receipt: {
-					qty: $scope.qty,
-					amountPaid: $scope.amountPaid
+					qty: $scope.currentParking.selectedQty,
+					amountPaid: $scope.currentParking.amountPaid
 				}
 			}, function(err, result) {
 
@@ -1387,7 +1391,7 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
     }
 
     $rootScope.$on('overlay-clicked', function() {
-      $scope.removeParking($scope.parking._id);
+      $scope.removeParking($scope.currentParking._id);
     });
 
 		plan.get(function(p) {
@@ -1426,45 +1430,5 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
 		});
 		*/
 	}
-]).
-
-controller('HotelsOffsiteCtrl', ['$scope', 'plan', '$http',
-	function($scope, plan, $http) {
-		plan.get(function(p) {
-			$scope.plan = p;
-		});
-
-		$scope.$on('tickets-offsite-clicked', function(e, args) {
-
-			$scope.qty = args.qty;
-			$scope.amountPaid = args.amountPaid;
-			$scope.eventId = args.eventId,
-			$scope.eventName = args.eventName,
-			$scope.sessionId = args.sessionId,
-			$scope.ticketGroup = args.ticketGroup,
-			$scope.ticketId = args.ticketId
-		})
-
-		$scope.showButton = function() {
-			return ($scope.ticketsOffsite === 'bought');
-		};
-
-		$scope.submitForm = function() {
-			/* for testing, fire the ticketnetwork pixel */
-			$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
-		};
-
-		$scope.cancelForm = function() {
-			/* remove the ticketgroup and close the modal */
-			plan.removeTicketGroup({
-				ticketId: $scope.ticketId
-			}, function(err, results) {
-				$('#tickets-offsite-modal').modal('hide');
-			});
-
-		};
-
-	}
 ]);
-
 

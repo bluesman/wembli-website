@@ -14,7 +14,7 @@ block plan-section
 
 					.notification-container.row
 						.col-xs-12
-					.pony-up(ng-hide="friendsComing")
+					.pony-up(ng-hide="friendsComing[0]")
 						.row
 							.col-xs-12
 								h3 Find Out What It Means To Pony Up
@@ -30,8 +30,6 @@ block plan-section
 						.row
 							.col-xs-12
 								p 3. Before you out any cash, you'll send Pony Up Requests to your invitees so they can pitch in their share for the tickets and chosen add-ons.
-
-
 					#add-account(ng-show="needBalancedAccount")
 
 						.alert.alert-info
@@ -108,7 +106,7 @@ block plan-section
 
 
 					//- show the pony up form if they have invited friends and have chosen at least one of tickets, parking, restaurants or hotel
-					form.invitees-container(ng-submit="sendPonyUpEmail()",ng-show="friendsComing && !needBalancedAccount")
+					form.invitees-container(ng-submit="sendPonyUpEmail()",ng-show="friendsComing[0] && !needBalancedAccount")
 						.invitee(id="{{friend._id}}",ng-repeat="friend in friends | filter:!{_id:customer._id} | friendComing")
 							.row
 								.invitee-info.col-xs-12

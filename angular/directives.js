@@ -439,8 +439,8 @@ directive('focusOnClick', ['$timeout',
   }
 ]).
 
-directive('createBalancedAccount', ['$rootScope', 'pluralize', 'wembliRpc', 'plan', 'loadingModal',
-  function($rootScope, pluralize, wembliRpc, plan, loadingModal) {
+directive('createBalancedAccount', ['$rootScope', 'pluralize', 'wembliRpc', 'plan',
+  function($rootScope, pluralize, wembliRpc, plan) {
     return {
       restrict: 'C',
       cache: false,

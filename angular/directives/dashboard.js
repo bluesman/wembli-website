@@ -4,8 +4,8 @@
 angular.module('wembliApp.directives.dashboard', []).
 
 /* do i need to fetch modals? i don't think so */
-directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$location', 'loadingModal',
-  function(customer, fetchModals, $rootScope, wembliRpc, $location, loadingModal) {
+directive('dashboard', ['customer', '$rootScope', 'wembliRpc', '$location',
+  function(customer, $rootScope, wembliRpc, $location) {
     return {
       restrict: 'C',
       compile: function(element, attr, transclude) {
@@ -33,9 +33,6 @@ directive('dashboard', ['customer', 'fetchModals', '$rootScope', 'wembliRpc', '$
               });
             }
           });
-
-          /* show the loading modal */
-          loadingModal.show('Fetching Your Plans...');
 
           wembliRpc.fetch('dashboard.init', {}, function(err, result) {
             if (err) {
@@ -87,8 +84,8 @@ directive('updateCustomerInfoButton', ['$rootScope',
   }
 ]).
 
-directive('updateCustomerInfo', ['customer', 'wembliRpc', '$rootScope', '$location', 'loadingModal',
-  function(customer, wembliRpc, $rootScope, $location, loadingModal) {
+directive('updateCustomerInfo', ['customer', 'wembliRpc', '$rootScope', '$location',
+  function(customer, wembliRpc, $rootScope, $location) {
     return {
       restrict: 'C',
       replace: false,
@@ -119,11 +116,9 @@ directive('updateCustomerInfo', ['customer', 'wembliRpc', '$rootScope', '$locati
               /* back from creating merchant account */
               $location.hash('#payment-information');
               $('#edit-customer-account').modal("hide");
-              loadingModal.hide();
 
             }, function(data, headersGetter) {
 
-              loadingModal.show('Securely saving your information...');
               return data;
 
             }, function(data, headersGetter) {
@@ -137,8 +132,8 @@ directive('updateCustomerInfo', ['customer', 'wembliRpc', '$rootScope', '$locati
   }
 ]).
 
-directive('addBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location', 'loadingModal',
-  function(customer, wembliRpc, $rootScope, $location, loadingModal) {
+directive('addBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location',
+  function(customer, wembliRpc, $rootScope, $location) {
     return {
       restrict: 'C',
       replace: false,
@@ -160,10 +155,8 @@ directive('addBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location',
               /* back from creating merchant account */
               $location.hash('#payment-information');
               $('#add-bank-account').modal("hide");
-              loadingModal.hide();
 
             }, function(data, headersGetter) {
-              loadingModal.show('Securely saving your information...');
               return data;
 
             }, function(data, headersGetter) {
@@ -211,8 +204,8 @@ directive('activityFeed', [
   }
 ]).
 
-directive('deleteBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location', 'loadingModal',
-  function(customer, wembliRpc, $rootScope, $location, loadingModal) {
+directive('deleteBankAccount', ['customer', 'wembliRpc', '$rootScope', '$location',
+  function(customer, wembliRpc, $rootScope, $location) {
     return {
       restrict: 'C',
       replace: false,

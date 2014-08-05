@@ -48,6 +48,25 @@ block plan-section
 							.row
 								.col-xs-10
 									h3 Totals:
+							.row
+								.col-xs-6
+									strong Tickets
+								.col-xs-6.text-right {{tickets.total | currency}}
+							.row(ng-show="plan.preferences.addOns.parking")
+								.col-xs-6
+									strong Parking
+								.col-xs-6.text-right {{parking.total | currency}}
+							.row(ng-show="plan.preferences.addOns.restaurants")
+								.col-xs-6
+									strong Restaurant Deals
+								.col-xs-6.text-right {{restaurants.total | currency}}
+							.row(ng-show="plan.preferences.addOns.hotels")
+								.col-xs-6
+									strong Hotel
+								.col-xs-6.text-right {{hotels.total | currency}}
+							.row
+								.col-xs-12
+									.divider
 							.row(ng-class="{'no-split':'orange'}[plan.preferences.payment]")
 								.col-xs-6
 									strong Total Bill

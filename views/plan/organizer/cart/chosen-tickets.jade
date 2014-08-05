@@ -13,8 +13,8 @@
 							.col-xs-2
 								.text-center Seats
 							.col-xs-2
-								.text-center Max # of Tix
-							.col-xs-2 Estimated Total
+								.text-center # of Tix
+							.col-xs-2 Total
 
 					.ticket-row.add-on-row(ng-repeat="ticket in tickets track by $index")
 
@@ -31,13 +31,14 @@
 												span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
 												span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
 										.col-xs-2
-											.qty-container.text-center {{ticket.ticketGroup.maxSplit}}
-												//- select.form-control(id="qty-{{ticket.ticketGroup.ID}}",ng-model="ticket.ticketGroup.SelectedQty", name="qty-{{ticket.ticketGroup.ID}}", ng-options="q for q in ticket.ticketGroup.ValidSplits.int")
+											.qty-container.text-center(ng-hide="ticket.qty") Up to {{ticket.ticketGroup.maxSplit}}
+											.qty-container.text-center(ng-show="ticket.qty") {{ticket.payment.qty}}
 										.col-xs-2
-											.ticket-total.add-on-total {{ticket.costBreakdown.total | currency}}
+											.ticket-total.add-on-total(ng-hide="ticket.total") {{ticket.costBreakdown.total | currency}}
+											.ticket-total.add-on-total(ng-show="ticket.total") {{ticket.payment.amount | currency}}
 										.col-xs-2.text-center(ng-hide="ticket.purchased")
-											a.btn.btn-primary.btn-sm(ng-click="buyTickets()", ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy
-						.row.ticket-price-details.slide-down(ng-show="showTicketPriceDetails[ticket._id]", id="{{ticket._id}}-tickets-slide-down")
+											a.btn.btn-primary.btn-sm(ng-click="buyTickets($index)", ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy
+						.row.ticket-price-details.slide-down(ng-show="!ticket.purchased && showTicketPriceDetails[ticket._id]", id="{{ticket._id}}-tickets-slide-down")
 							.col-xs-12
 								.row
 									.col-xs-9
@@ -57,7 +58,7 @@
 									.col-xs-3.text-right {{ticket.costBreakdown.deliveryFeeEach | currency}}
 								.row
 									.col-xs-9.text-right
-										strong Total (x{{ticket.ticketGroup.selectedQty}} {{ticket.ticketGroup.selectedQty | pluralize:'ticket'}}):&nbsp;
+										strong Total (x{{ticket.costBreakdown.claimed}} {{ticket.costBreakdown.claimed | pluralize:'ticket'}}):&nbsp;
 									.col-xs-3.text-right
 										strong {{ticket.costBreakdown.total | currency}}
 								.row.disclaimer

@@ -10,13 +10,13 @@
 				h3 Yes, I bought my tickets!
 				form#tickets-offsite-form.form-inline.option-body(name="tickets-offsite-form")
 					.form-group
-						span I just bought
-						select#qty.form-control(ng-model="selectedQty",name="selectedQty",ng-options="q for q in tickets[currentTicketIdx].ValidSplits.int")
-						span tix for a total of
+						span I just bought&nbsp;
+						select#qty.form-control(ng-model="currentTicket.selectedQty",name="selectedQty",ng-options="q for q in currentTicket.ValidSplits.int")
+						span &nbsp;tix for a total of&nbsp;
 					.form-group
 						#amount-paid-input-group.input-group
 							span.input-group-addon $
-							input#amount-paid.form-control(type="text",name="amount_paid",ng-model="amountPaid")
+							input#amount-paid.form-control(type="text",name="amount_paid",ng-model="currentTicket.amountPaid")
 							span .
 					br
 					.form-group
@@ -25,6 +25,7 @@
 							i.fa.fa-check-square-o(ng-show="confirmPriceQty")
 							i.fa.fa-square-o(ng-hide="confirmPriceQty")
 							span Check this box if its correct. Otherwise, please update the info above.
+				.alert.alert-danger(ng-show="confirmErr") Please confirm that the amounts are correct and the checkbox is checked before continuing.
 				button#bought-tickets-button.btn.btn-primary.btn-sm.form-control(ng-click="boughtTickets()") Continue
 		.col-md-6.col-xs-12.option-container.middle-option
 			.option-content

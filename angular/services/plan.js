@@ -192,12 +192,24 @@ factory('cart', ['plan',
 								}
 							},
 							"getQty": function(item) {
-								return (item.purchased) ? item.payment.qty : item.ticketGroup.selectedQty;
+								return (item.purchased) ? item.payment.qty : item.ticketGroup.maxSplit;
 							},
-							"totalEach": function(price, fee, qty, splitBy) {
+							"totalEach": function(item, price, fee, qty, splitBy) {
 								//return price + fee;
 								//return ((price * qty) + fee) / splitBy;
-								return ((price + fee) * qty) / splitBy;
+								if (item.purchased) {
+									return price;
+								} else {
+									return price + fee;
+									//return ((price + fee) * qty) / splitBy;
+								}
+							},
+							"total": function(item, totalEach, splitBy, deliveryFee) {
+								if (item.purchased) {
+									return item.payment.amount || 0;
+								} else {
+									return totalEach * splitBy + deliveryFee;
+								}
 							},
 
 						},
@@ -215,23 +227,39 @@ factory('cart', ['plan',
 									if (item.service === 'pw') {
 										return item.parking.price || 0;
 									} else {
-										0
+										return 0;
 									}
 								}
 							},
 							"getQty": function(item) {
 								if (item.purchased) {
-									return item.payment.qty;
+									return item.payment.qty || 0;
 								} else {
 									if (item.service === 'pw') {
 										return item.parking.reservation;
 									} else {
-										0
+										return 0;
 									}
 								}
 							},
-							"totalEach": function(price, fee, qty, splitBy) {
-								return ((price * qty) + fee) / splitBy;
+							"totalEach": function(item, price, fee, qty, splitBy) {
+								//return price + fee;
+								//return ((price * qty) + fee) / splitBy;
+								if (item.purchased) {
+									return price;
+								} else {
+									return price + fee;
+									//return ((price + fee) * qty) / splitBy;
+								}
+							},
+							"total": function(item, totalEach, splitBy, deliveryFee) {
+								if (item.purchased) {
+									return item.payment.amount || 0;
+								} else {
+									console.log('calc parking total');
+									console.log(totalEach, splitBy, deliveryFee);
+									return totalEach * splitBy + deliveryFee;
+								}
 							},
 
 						},
@@ -250,23 +278,37 @@ factory('cart', ['plan',
 									if (item.service === 'yipit') {
 										return item.restaurant.price.raw || 0;
 									} else {
-										0
+										return 0;
 									}
 								}
 							},
-
-							"totalEach": function(price, fee, qty, splitBy) {
-								return ((price * qty) + fee) / splitBy;
+							"totalEach": function(item, price, fee, qty, splitBy) {
+								//return price + fee;
+								//return ((price * qty) + fee) / splitBy;
+								if (item.purchased) {
+									return price;
+								} else {
+									console.log(price,fee);
+									return price + fee;
+									//return ((price + fee) * qty) / splitBy;
+								}
+							},
+							"total": function(item, totalEach, splitBy, deliveryFee) {
+								if (item.purchased) {
+									return item.payment.amount || 0;
+								} else {
+									return totalEach * splitBy + deliveryFee;
+								}
 							},
 
 							"getQty": function(item) {
 								if (item.purchased) {
-									return item.payment.qty;
+									return item.payment.qty || 0;
 								} else {
 									if (item.service === 'yipit') {
 										return 1;
 									} else {
-										0
+										return 0;
 									}
 								}
 							}
@@ -284,25 +326,40 @@ factory('cart', ['plan',
 							"getQty": function(item) {
 								return 0;
 							},
-							"totalEach": function(price, fee, qty, splitBy) {
-								return ((price * qty) + fee) / splitBy;
+							"totalEach": function(item, price, fee, qty, splitBy) {
+								//return price + fee;
+								//return ((price * qty) + fee) / splitBy;
+								if (item.purchased) {
+									return price;
+								} else {
+									console.log(price,fee);
+									return price + fee;
+									//return ((price + fee) * qty) / splitBy;
+								}
 							},
-
+							"total": function(item, totalEach, splitBy, deliveryFee) {
+								if (item.purchased) {
+									return item.payment.amount || 0;
+								} else {
+									return totalEach * splitBy + deliveryFee;
+								}
+							},
 
 						},
 					};
 
-					var funcs = methods[key];
-					var config = funcs.getConfig();
-					var items = funcs.get();
-					var groupTotal = 0;
-					var groupCount = 0;
-					var groups = [];
-					var groupTotalEach = {};
-					var fee = config.fee || 0;
-					var deliveryFee = config.deliveryFee || 0;
-					var splitBy = 0;
-					var deliverySplitBy = 0;
+					var funcs            = methods[key];
+					var config           = funcs.getConfig();
+					var items            = funcs.get();
+					var groupTotal       = 0;
+					var groupCount       = 0;
+					var groups           = [];
+					var groupTotalEach   = {};
+					var fee              = config.fee || 0;
+					var deliveryFee      = config.deliveryFee || 0;
+					var splitBy          = 0;
+					var deliverySplitBy  = 0;
+					var remainingSplitBy = null;
 
 					/* count the organizer in the split? */
 					if (p.organizer.rsvp.decision) {
@@ -321,11 +378,23 @@ factory('cart', ['plan',
 						}
 					};
 
-					/* loop through the list of add-ons and generate totals */
+					/* separate purchased and not purchased */
+					var purchasedFirst = [];
+					var notPurchased   = [];
 					for (var i = 0; i < items.length; i++) {
-						var item = items[i];
+						if (items[i].purchased) {
+							purchasedFirst.push(items[i]);
+						} else {
+							notPurchased.push(items[i]);
+						}
+					}
+					var all = purchasedFirst.concat(notPurchased);
+					/* loop through the purchased list of add-ons first then not purchased and generate totals */
+					for (var i = 0; i < all.length; i++) {
+						var item   = items[i];
 						var amount = parseFloat(funcs.getAmount(item));
-						var qty = funcs.getQty(item);
+						var qty    = funcs.getQty(item);
+
 						if (typeof qty === "undefined") {
 							qty = 0;
 						}
@@ -335,39 +404,63 @@ factory('cart', ['plan',
 						 * or no one is coming at all
 						 */
 						if ((p.organizer.rsvp.decision && splitBy == 1) || (splitBy == 0)) {
-							splitBy = qty;
+							splitBy         = qty;
 							deliverySplitBy = qty;
 						}
 
 
+						/* if not everyone was covered by the previos ticket group then catch them with this one */
+						if (remainingSplitBy !== null) {
+							if (remainingSplitBy > 0) {
+								splitBy         = remainingSplitBy;
+								deliverySplitBy = remainingSplitBy;
+							}
+
+							/* if everyone coming is covered then use the qty for the calc */
+							if (remainingSplitBy <= 0) {
+								splitBy          = qty;
+								deliverySplitBy  = qty;
+							}
+						}
+						/* if splitBy > qty then make splitBy = qty for this calculation
+							this way we'll never split by more people than we have tickets for.
+							the remaining splitBy should be covered by another ticket group
+						*/
+						remainingSplitBy = splitBy - qty;
+						if (splitBy > qty) {
+							splitBy          = qty;
+							deliverySplitBy  = qty;
+						}
 
 						var cb = {};
 						var groupNumber = i + 1;
 
+						/* how many tickets of this group are claimed */
+						cb.claimed         = splitBy;
 						/* price each */
-						cb.price = parseFloat(amount) || 0;
+						cb.price           = parseFloat(amount) || 0;
 						/* service fee each */
-						cb.serviceFee = cb.price * fee;
+						cb.serviceFee      = cb.price * fee;
 						/* total delivery fee */
-						cb.deliveryFee = deliveryFee;
+						cb.deliveryFee     = deliveryFee;
 						/* delivery fee each */
 						cb.deliveryFeeEach = (deliverySplitBy > 0) ? cb.deliveryFee / deliverySplitBy : 0;
-						cb.totalEach = funcs.totalEach(cb.price, cb.serviceFee, qty, splitBy);
+						cb.totalEach       = funcs.totalEach(item, cb.price, cb.serviceFee, qty, splitBy);
+						cb.total           = funcs.total(item, cb.totalEach, splitBy, cb.deliveryFee);
 
-						cb.total = cb.totalEach * splitBy + cb.deliveryFee;
-						groupTotal += cb.total;
-						groupCount += qty;
+						groupTotal        += cb.total;
+						groupCount        += cb.claimed;
 						groups.push({
 							value: i,
 							label: config.label + groupNumber
 						});
-						groupTotalEach[i] = cb.totalEach;
+						groupTotalEach[i]  = cb.totalEach;
 						item.costBreakdown = cb;
 					};
 
-					items.total = groupTotal;
-					items.totalQty = groupCount;
-					items.groups = groups;
+					items.total          = groupTotal;
+					items.totalQty       = groupCount;
+					items.groups         = groups;
 					items.groupTotalEach = groupTotalEach;
 
 				});

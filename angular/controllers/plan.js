@@ -6,8 +6,8 @@ angular.module('wembliApp.controllers.plan', []).
  * http://stackoverflow.com/questions/15386137/angularjs-controller-inheritance
  *
  */
-controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart', 'notifications', 'googlePlaces',
-	function($scope, plan, planNav, customer, overlay, cart, notifications, googlePlaces) {
+controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart', 'notifications', 'googlePlaces', '$timeout', 'googleAnalytics',
+	function($scope, plan, planNav, customer, overlay, cart, notifications, googlePlaces, $timeout, googleAnalytics) {
 
     $scope.getPlacePhotoUrl = function(type, idx) {
       var lookup = {
@@ -27,15 +27,270 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       }
       return url;
     }
-    $scope.buyTickets = function() {
+
+
+    /* buy stuff offsite */
+    $scope.buyTickets = function(idx) {
       overlay.show();
+      $scope.currentTicket     = $scope.tickets[idx].ticketGroup;
+      $scope.currentTicketIdx  = idx;
       $scope.buyTicketsOffsite = true;
     };
 
-    $scope.removeTicketGroup = function() {
-      $scope.buyTicketsOffsite = false;
-      overlay.hide();
+    $scope.buyParking = function(idx) {
+      overlay.show();
+      $scope.currentParking    = $scope.parking[idx].parking;
+      $scope.currentParkingIdx = idx;
+      $scope.buyParkingOffsite = true;
     };
+
+    $scope.buyDeal = function(idx) {
+      overlay.show();
+      $scope.currentDeal    = $scope.restaurants[idx].restaurant;
+      $scope.currentDealIdx = idx;
+      $scope.buyDealOffsite = true;
+    };
+
+    $scope.buyHotel = function(idx) {
+      overlay.show();
+      $scope.currentHotel    = $scope.hotels[idx].hotel;
+      $scope.currentHotelIdx = idx;
+      $scope.buyHotelOffsite = true;
+    };
+
+    $scope.removeTicketGroup = function() {
+      $timeout(function() {
+        $scope.$apply(function() {
+          delete $scope.currentTicket;
+          delete $scope.currentTicketIdx;
+          $scope.buyTicketsOffsite = false;
+          overlay.hide();
+        });
+      });
+    };
+
+    $scope.removeParking = function() {
+      $timeout(function() {
+        $scope.$apply(function() {
+          delete $scope.currentParking;
+          delete $scope.currentParkingIdx;
+          $scope.buyParkingOffsite = false;
+          overlay.hide();
+        });
+      });
+    };
+
+    $scope.removeDeal = function() {
+      $timeout(function() {
+        $scope.$apply(function() {
+          delete $scope.currentDeal;
+          delete $scope.currentDealIdx;
+          $scope.buyDealOffsite = false;
+          overlay.hide();
+        });
+      });
+    };
+
+    $scope.removeHotel = function() {
+      $timeout(function() {
+        $scope.$apply(function() {
+          delete $scope.currentHotel;
+          delete $scope.currentHotelIdx;
+          $scope.buyHotelOffsite = false;
+          overlay.hide();
+        });
+      });
+    };
+
+    $scope.boughtTickets = function() {
+      console.log('set receipt for tix with idx: ');
+      $scope.confirmErr    = false;
+
+      if (typeof $scope.currentTicket == "undefined") {
+        console.log('no currenttixid');
+        $scope.removeTicketGroup();
+        return;
+      }
+
+      /* did they fill out the form? */
+      if (!$scope.confirmPriceQty) {
+        /* they much check the checkbox */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      if (!$scope.currentTicket.selectedQty) {
+        /* they must tell us how many they selected */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      if (!$scope.currentTicket.amountPaid) {
+        /* they must tell us how many they selected */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      var ticket = $scope.tickets[$scope.currentTicketIdx];
+      var id = ticket._id ? ticket._id : ticket.ID;
+      /* update the tickets to have a receipt */
+      plan.addTicketGroupReceipt({
+        ticketId: id,
+        service: 'tn',
+        receipt: {
+          transactionToken: ticket.sessionId,
+          amountPaid: $scope.currentTicket.amountPaid,
+          qty: $scope.currentTicket.selectedQty
+        }
+      }, function(err, result) {
+        console.log('receipt added');
+        console.log(err, result);
+        var t = result.ticket;
+        /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
+        //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+
+        googleAnalytics.trackEvent('Plan', 'boughtTickets', $scope.plan.event.eventName, '', function(err, result) {
+          $timeout(function() {
+            $scope.$apply(function() {
+              $scope.tickets[$scope.currentTicketIdx] = t;
+              $scope.removeTicketGroup();
+            });
+          });
+        });
+      });
+
+    }
+
+    $scope.boughtParking = function() {
+      console.log('set receipt for tix with idx: ');
+      $scope.confirmErr    = false;
+
+      if (typeof $scope.currentParking == "undefined") {
+        console.log('no currenttixid');
+        $scope.removeParking();
+        return;
+      }
+
+      /* did they fill out the form? */
+      if (!$scope.confirmPriceQty) {
+        /* they much check the checkbox */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      if (!$scope.currentParking.selectedQty) {
+        /* they must tell us how many they selected */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      if (!$scope.currentParking.amountPaid) {
+        /* they must tell us how many they selected */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      var parking = $scope.parking[$scope.currentParkingIdx];
+      var id = parking._id;
+      /* update the parking to have a receipt */
+      plan.addParkingReceipt({
+        parkingId: id,
+        service: 'pw',
+        receipt: {
+          amountPaid: $scope.currentParking.amountPaid,
+          qty: $scope.currentParking.selectedQty
+        }
+      }, function(err, result) {
+        console.log('receipt added');
+        console.log(err, result);
+        var p = result.parking;
+        /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
+        //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+
+        googleAnalytics.trackEvent('Plan', 'boughtParking', $scope.plan.event.eventName, '', function(err, result) {
+          $timeout(function() {
+            $scope.$apply(function() {
+              $scope.parking[$scope.currentParkingIdx] = p;
+              $scope.removeParking();
+            });
+          });
+        });
+      });
+
+    }
+
+    $scope.boughtDeal = function() {
+      console.log('set receipt for deal with idx: ');
+      $scope.confirmErr    = false;
+
+      if (typeof $scope.currentDeal == "undefined") {
+        console.log('no currenttixid');
+        $scope.removeDeal();
+        return;
+      }
+
+      /* did they fill out the form? */
+      if (!$scope.confirmPriceQty) {
+        /* they much check the checkbox */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      if (!$scope.currentDeal.selectedQty) {
+        /* they must tell us how many they selected */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      if (!$scope.currentDeal.amountPaid) {
+        /* they must tell us how many they selected */
+        $scope.confirmErr = true;
+        return;
+      }
+
+      var deal = $scope.restaurants[$scope.currentDealIdx];
+      var id = deal._id;
+      /* update the deals to have a receipt */
+      plan.addRestaurantReceipt({
+        restaurantId: id,
+        service: 'yipit',
+        receipt: {
+          amountPaid: $scope.currentDeal.amountPaid,
+          qty: $scope.currentDeal.selectedQty
+        }
+      }, function(err, result) {
+        console.log('receipt added');
+        console.log(err, result);
+        var d = result.restaurant;
+        /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
+        //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+
+        googleAnalytics.trackEvent('Plan', 'boughtDeal', $scope.plan.event.eventName, '', function(err, result) {
+          $timeout(function() {
+            $scope.$apply(function() {
+              $scope.restaurants[$scope.currentDealIdx] = d;
+              $scope.removeDeal();
+            });
+          });
+        });
+      });
+
+    }
+
+    /* not implemented */
+    $scope.boughtHotel = function() {
+      $scope.removeHotel();
+    }
+
+    $scope.$on('overlay-clicked', function() {
+      $scope.removeTicketGroup();
+      $scope.removeParking();
+      $scope.removeDeal();
+      $scope.removeHotel();
+      console.log('overlay clicked');
+    });
+
+
 
 		$scope.activateSection = function(sectionName) {
 			console.log('activateSection '+ sectionName);
@@ -149,7 +404,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
         if (typeof t.ticketGroup.selectedQty === "undefined") {
           /* if there is a split that matches totalComing use that, else use the highest split */
           angular.forEach(t.ticketGroup.ValidSplits.int, function(split) {
-            console.log('valid split: '+split+ ' == '+$scope.totalComing);
             if (split == $scope.totalComing) {
               t.ticketGroup.selectedQty = parseInt(split)
             }
@@ -169,7 +423,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
           t.ticketGroup.selectedQty = $scope.totalComing;
         }
       });
-
     };
 
     $scope.reconcileTicketQty = function() {

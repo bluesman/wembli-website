@@ -67,7 +67,6 @@ module.exports = function(app) {
 		}
 
 		var view = 'plan/' + req.session.visitor.context + '/' + section;
-		console.log('rendering view: '+view);
 		res.render(view, locals);
 	});
 
@@ -100,12 +99,12 @@ module.exports = function(app) {
 			partial: true
 		});
 	});
-	*/
 	app.get(/^\/partials\/plan\/chatter$/, function(req, res) {
 		return res.render('partials/plan/chatter', {
 			partial: true
 		});
 	});
+	*/
 
 	app.get('/plan/:guid/:section?', function(req, res) {
 
