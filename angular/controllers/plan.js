@@ -6,8 +6,27 @@ angular.module('wembliApp.controllers.plan', []).
  * http://stackoverflow.com/questions/15386137/angularjs-controller-inheritance
  *
  */
-controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart', 'notifications',
-	function($scope, plan, planNav, customer, overlay, cart, notifications) {
+controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart', 'notifications', 'googlePlaces',
+	function($scope, plan, planNav, customer, overlay, cart, notifications, googlePlaces) {
+
+    $scope.getPlacePhotoUrl = function(type, idx) {
+      var lookup = {
+        'hotels':'hotel',
+        'restaurants':'restaurant',
+        'parking':'parking'
+      }
+      var obj = $scope[type][idx];
+      var url = '';
+      if (typeof obj[lookup[type]].details !== "undefined") {
+        if (obj[lookup[type]].details.photos[0].url) {
+          return obj[lookup[type]].details.photos[0].url;
+        } else {
+          url = obj[lookup[type]].details.photos[0].getUrl({'maxWidth': 300, 'maxHeight': 300});
+          obj[lookup[type]].details.photos[0].url = url;
+        }
+      }
+      return url;
+    }
     $scope.buyTickets = function() {
       overlay.show();
       $scope.buyTicketsOffsite = true;
@@ -210,6 +229,15 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       if (oldVal === newVal) {
         return;
       }
+      /* fetch the details for the google parking */
+      angular.forEach(newVal, function(h) {
+        if (h.service === 'google') {
+          googlePlaces.getDetails(h.hotel.reference, function(place, status) {
+            h.hotel.details = place;
+          });
+        }
+      });
+
       cart.totals('hotels');
       $scope.friendsPonyUp($scope.friends);
     });
@@ -221,6 +249,16 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       if (oldVal === newVal) {
         return;
       }
+
+      /* fetch the details for the google parking */
+      angular.forEach(newVal, function(p) {
+        if (p.service === 'google') {
+          googlePlaces.getDetails(p.parking.reference, function(place, status) {
+            p.parking.details = place;
+          });
+        }
+      });
+
       $scope.friendsPonyUp($scope.friends);
       cart.totals('parking');
     });
@@ -847,8 +885,8 @@ controller('OrganizerPonyUpCtrl', ['$rootScope','$scope','plan', 'planNav', 'wem
 	}
 ]).
 
-controller('OrganizerItineraryCtrl', ['$scope','plan', 'planNav',
-	function($scope, plan, planNav) {
+controller('OrganizerItineraryCtrl', ['$scope','plan', 'planNav', 'wembliRpc',
+	function($scope, plan, planNav, wembliRpc) {
     var timer;
     $scope.submitNotes = function() {
       clearTimeout(timer);
@@ -1365,6 +1403,57 @@ controller('FriendPonyUpCtrl',['$rootScope', '$scope', 'plan', 'planNav', 'wembl
     };
 
     planNav.activate('pony-up');
+  }
+]).
+
+controller('ChatterCtrl',['$scope', 'wembliRpc', 'planNav',
+  function($scope, wembliRpc, planNav) {
+
+    $scope.createChatter = function() {
+      if ($scope.chatterForm.$valid) {
+        $scope.createChatterInProgress = true;
+        wembliRpc.fetch('chatter.create', {
+          body: $scope.newChatter
+        }, function(err, results) {
+          $scope.chatters = results.chatters;
+          $scope.createChatterInProgress = false;
+        });
+      }
+    };
+
+    $scope.upVoteChatter = function() {};
+
+    $scope.createChatterComment = function(chatterIdx) {
+      var chatter = $scope.chatters[chatterIdx];
+
+      if (chatter.newComment) {
+        chatter.commentInProgress = true;
+        var args = {
+          body: chatter.newComment,
+          chatterId: chatter._id
+        };
+        wembliRpc.fetch('chatter.addComment', args, function(err, results) {
+          chatter.comments = results.comments;
+          chatter.commentInProgress = false;
+          chatter.newComment = "";
+        });
+      }
+    }
+
+    $scope.$watch('newChatterComment', function(val, old) {
+
+    })
+
+    $scope.chatterLoading = true;
+    wembliRpc.fetch('chatter.get', {}, function(err, results) {
+      console.log(results.chatters);
+      $scope.chatters = results.chatters;
+      $scope.chatterLoading = false;
+      planNav.activate('chatter');
+    });
+
+
+
   }
 ]).
 

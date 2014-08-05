@@ -71,10 +71,8 @@ block plan-section
 								span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;You have chosen to foot the bill for this plan - w00t!
 								span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, you will lock in the tickets then send a link for everyone to pay for their portion of the outing.
 					.row
-						.col-xs-12
-							.invite-more-button-container.form-group
-								a.btn.btn-primary.btn-lg(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3")
-									span Invite More People
+						.col-xs-12.rsvp-invitees-list
+							include ../includes/invitees-list
 
 				.col-md-5.col-xs-12.event-info-container
 					.hidden-xs.hidden-sm
@@ -130,6 +128,3 @@ block plan-section
 												i.fa.fa-check-square-o.green(ng-show="{'private':true}[plan.preferences.guestList]")
 												i.fa.fa-square-o(ng-show="!{'private':true}[plan.preferences.guestList]")
 												span My guests can not see who else is invited
-			.row
-				.col-xs-12.rsvp-invitees-list
-					include ../includes/invitees-list

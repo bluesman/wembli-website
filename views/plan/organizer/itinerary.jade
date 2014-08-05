@@ -6,148 +6,322 @@ block plan-section
 		.row.visible-xs.visible-sm
 			.col-xs-12.event-info-container
 				include ../includes/event-info
-				.google-map-container
-					#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
 
 		.header.row
 			.col-xs-12
 				h1.segoe Itinerary
 		.body
-			.row
-				.col-md-7.col-xs-12 foo
+			.row.add-on-container
+				.col-md-7.col-xs-12
+					.row
+						.col-xs-12
+							.row
+								.col-xs-6
+									h3.add-on-header
+										i.fa.fa-ticket
+										span &nbsp;Tickets
+								.col-xs-6.text-right
+									a.btn.btn-sm.btn-warning.view-on-map(href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") View On Map
+					.tickets.add-on-item(ng-repeat="ticket in tickets track by $index")
+						.row(ng-show="{'tn':true}[ticket.service]")
+							.col-xs-12.add-on-title
+								strong {{$index+1}}.&nbsp;
+									strong &nbsp;{{ticket.ticketGroup.TicketGroupType}}
+							.col-sm-6.col-xs-12.add-on-img
+								img.img-responsive(ng-show="ticket.ticketGroup.url",ng-src="{{ticket.ticketGroup.url}}")
+								.image-container(ng-hide="ticket.ticketGroup.url")
+									.no-image-overlay
+										i Photo Not Available
+									img.img-responsive.center-block(src="/images/wembliman/100.png")
+							.col-sm-6.col-xs-12.add-on-content
+								.row
+									.col-xs-12
+										.row.add-on-header-row
+											.col-xs-4.text-left
+												strong Section
+											.col-xs-4.text-center
+												strong Row
+											.col-xs-4.text-center
+												strong Seats
+										.row.add-on-row
+											.col-xs-4
+												span {{ticket.ticketGroup.Section}}
+											.col-xs-4.text-center
+												span {{ticket.ticketGroup.Row}}
+											.col-xs-4.text-center
+												span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
+												span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
+
+								.row(ng-show="ticket.ticketGroup.Rating")
+									.col-xs-12
+										strong Rating:&nbsp;
+										span.star-rating(rating="ticket.ticketGroup.Rating")
+								.row(ng-hide="ticket.purchased")
+									.col-xs-12
+										strong Qty:&nbsp;
+										i.qty-container.text-center Up to {{ticket.ticketGroup.selectedQty}}
+								.row(ng-hide="ticket.purchased")
+									.col-xs-12
+										strong Estimated Total:&nbsp;
+										span {{ticket.costBreakdown.total | currency}}
+								.row(ng-show="ticket.purchased")
+									.col-xs-12
+										strong Qty:&nbsp;
+										span {{ticket.purchased.qty}}
+								.row(ng-show="ticket.purchased")
+									.col-xs-12
+										strong Total Paid:&nbsp;
+										span {{ticket.purchased.amount | currency}}
+								.row(ng-show="ticket.ticketGroup.Notes")
+									.col-xs-12
+										strong Notes:&nbsp;
+										span {{ticket.ticketGroup.Notes}}
+							.col-xs-12(ng-hide="ticket.purchased")
+								a.btn.btn-primary.btn-sm.form-control.buy-now(ng-click="buyTickets($index)", ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy Tickets Now
+
+					//- parking
+					.row.add-on-container
+						.col-xs-12
+							.row
+								.col-xs-6
+									h3.add-on-header
+										i.fa.fa-car
+										span &nbsp;Parking
+								.col-xs-6.text-right
+									a.btn.btn-sm.btn-warning.view-on-map(href="/parking/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") View On Map
+					.parking.add-on-item(ng-repeat="p in parking track by $index")
+						.row(ng-show="{'pw':true}[p.service]")
+							.col-xs-12.add-on-title
+								strong {{$index+1}}.&nbsp;
+								strong &nbsp;{{p.parking.location_name}}
+							.col-sm-6.col-xs-12.add-on-img
+								img.img-responsive(ng-show="p.parking.url",ng-src="{{p.parking.url}}")
+								.image-container(ng-hide="p.parking.url")
+									.no-image-overlay
+										i Photo Not Available
+									img.img-responsive.center-block(src="/images/wembliman/car/150.png")
+							.col-sm-6.col-xs-12.add-on-content
+								.row
+									.col-xs-12
+										span {{p.parking.address}}, {{p.parking.city}} {{p.parking.zip}}
+								.row(ng-hide="p.purchased")
+									.col-xs-12
+										i {{p.parking.available_spots}} {{p.parking.available_spots | pluralize: 'spot'}}, &nbsp;
+											strong {{p.parking.price | currency}}
+											span &nbsp;ea.
+								.row(ng-show="p.purchased")
+									.col-xs-12
+										i Purchased {{p.purchased.qty}} {{p.parking.available_spots | pluralize: 'spot'}}, &nbsp;
+											strong for {{p.purchased.amount | currency}}
+								.row
+									.col-xs-12
+										span Distance: {{feetToMiles(p.parking.distance)}} mi. from {{plan.event.eventVenue}}
+								.row
+									.col-xs-12
+										.row.add-on-header-row
+											.col-xs-12
+												strong Details:
+										.row.add-on-row
+											.col-xs-10 Indoor
+											.col-xs-2
+												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.indoor]")
+												i.fa.fa-ban.red(ng-show="{1:false}[p.parking.indoor]")
+										.row.add-on-row
+											.col-xs-10 Attended
+											.col-xs-2
+												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.attended]")
+												i.fa.fa-ban.red(ng-show="{0:true}[p.parking.attended]")
+										.row.add-on-row
+											.col-xs-10 eTicket
+											.col-xs-2
+												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.eticket]")
+												i.fa.fa-ban.red(ng-show="{0:true}[p.parking.eticket]")
+										.row.add-on-row
+											.col-xs-10 Restrooms
+											.col-xs-2
+												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.restroom]")
+												i.fa.fa-ban.red(ng-show="{0:true}[p.parking.restroom]")
+										.row.add-on-row
+											.col-xs-10 RV Parking
+											.col-xs-2
+												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.rv]")
+												i.fa.fa-ban.red(ng-show="{0:true}[p.parking.rv]")
+										.row.add-on-row
+											.col-xs-10 Security
+											.col-xs-2
+												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.security]")
+												i.fa.fa-ban.red(ng-show="{0:true}[p.parking.security]")
+										.row.add-on-row
+											.col-xs-10 Tailgate
+											.col-xs-2
+												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.tailgate]")
+												i.fa.fa-ban.red(ng-show="{0:true}[p.parking.tailgate]")
+										.row.add-on-row
+											.col-xs-10 Valet
+											.col-xs-2
+												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.valet]")
+												i.fa.fa-ban.red(ng-show="{0:true}[p.parking.valet]")
+							.col-xs-12(ng-hide="p.purchased")
+								a.btn.btn-primary.btn-sm.form-control.buy-now(ng-click="buyParking($index)",ng-href="{{p.parking.www_reserve_url}}",target="_blank") Buy Parking Now
+
+
+						.row(ng-show="{'google':true}[p.service]")
+							.col-xs-12.add-on-title
+								strong {{$index+1}}.&nbsp;
+								strong &nbsp;{{p.parking.details.name}}
+							.col-sm-6.col-xs-12.add-on-img
+								img.img-responsive(ng-show="p.parking.url",ng-src="{{p.parking.url}}")
+								.image-container(ng-hide="p.parking.url")
+									.no-image-overlay
+										i Photo Not Available
+									img.img-responsive.center-block(src="/images/wembliman/car/150.png")
+							.col-sm-6.col-xs-12.add-on-content
+								.row(ng-show="p.parking.details.formatted_address")
+									.col-xs-12 {{p.parking.details.formatted_address}}
+								.row(ng-show="p.parking.details.formatted_phone_number")
+									.col-xs-12 {{p.parking.details.formatted_phone_number}}
+								.row(ng-show="p.parking.details.rating")
+									.col-xs-12
+										strong Rating:&nbsp;
+										span.star-rating(rating="p.parking.details.rating")
+								.row(ng-show="p.parking.details.website")
+									.col-xs-12
+										a(ng-href="p.parking.details.website",target="_blank") website
+										span(ng-show="p.parking.details.url") &nbsp;-&nbsp;
+										a(ng-show="p.parking.details.url", ng-href="p.parking.details.url",target="_blank") directions
+
+
+					.row
+						.col-xs-12
+							.row
+								.col-xs-6
+									h3.add-on-header
+										i.fa.fa-cutlery
+										span &nbsp;Restaurant Deals
+								.col-xs-6.text-right
+									a.btn.btn-sm.btn-warning.view-on-map(href="/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") View On Map
+					.restaurants.add-on-item(ng-repeat="r in restaurants track by $index")
+
+						.row(ng-show="{'yipit':true}[r.service]")
+							.col-xs-12.add-on-title
+								strong {{$index+1}}.&nbsp;
+								strong &nbsp;{{r.restaurant.title}}
+
+							.col-sm-6.col-xs-12.add-on-img
+								img.img-responsive(ng-show="r.restaurant.images.image_smart",ng-src="{{r.restaurant.images.image_smart}}")
+								.image-container(ng-hide="r.restaurant.images")
+									.no-image-overlay
+										i Photo Not Available
+									img.img-responsive.center-block(src="/images/wembliman/restaurant/150.png")
+							.col-sm-6.col-xs-12.add-on-content
+								.row
+									.col-xs-12
+										span {{r.restaurant.business.name}} (
+										a(href="{{r.restaurant.business.url}}",target="_blank") website
+										span )
+								.row
+									.col-xs-12
+
+								.row(ng-show="r.restaurant.value")
+									.col-xs-12
+										strong Face Value:&nbsp;
+										span {{r.restaurant.value.raw | currency}}
+								.row
+									.col-xs-12
+										strong Discount:&nbsp;
+										span {{r.restaurant.discount.formatted}} savings
+								.row
+									.col-xs-12
+										strong Price:&nbsp;
+										span {{r.restaurant.price.raw | currency}}
+								.row
+									.col-xs-12
+										strong Expires:&nbsp;
+										span {{getDate(r.restaurant.end_date) | date: 'shortDate'}}
+							.col-xs-12.add-on-long-desription(ng-show="r.restaurant.description") {{r.restaurant.description}}
+
+							.col-xs-12(ng-hide="r.purchased")
+								a.btn.btn-primary.btn-sm.form-control.buy-now(ng-click="buyDeal($index)",ng-href="r.restaurant.url",target="_blank") Buy Deal Now
+
+						//-
+							.row(ng-show="{'google':true}[r.service]")
+							.col-sm-6.col-xs-12.add-on-img
+								img.img-responsive(ng-show="r.restaurant.url",ng-src="{{r.restaurant.url}}")
+								.image-container(ng-hide="r.restaurant.url")
+									.no-image-overlay
+										i Photo Not Available
+									img.img-responsive.center-block(src="/images/wembliman/restaurant/150.png")
+							.col-sm-6.col-xs-12.add-on-content
+								.row
+									.col-xs-12.add-on-title
+										strong {{$index+1}}.&nbsp;
+										strong &nbsp;{{r.restaurant.details.name}}
+								.row(ng-show="r.restaurant.details.formatted_address")
+									.col-xs-12 {{r.restaurant.details.formatted_address}}
+								.row(ng-show="r.restaurant.details.formatted_phone_number")
+									.col-xs-12 {{r.restaurant.details.formatted_phone_number}}
+								.row(ng-show="r.restaurant.details.rating")
+									.col-xs-12
+										strong Rating:&nbsp;
+										span.star-rating(rating="r.restaurant.details.rating")
+								.row(ng-show="r.restaurant.details.website")
+									.col-xs-12
+										a(ng-href="r.restaurant.details.website",target="_blank") website
+										span(ng-show="r.restaurant.details.url") &nbsp;-&nbsp;
+										a(ng-show="r.restaurant.details.url", ng-href="r.restaurant.details.url",target="_blank") directions
+
+
+
+					//- hotels
+					.row.add-on-container
+						.col-xs-12
+							.row
+								.col-xs-6
+									h3.add-on-header
+										i.fa.fa-building
+										span &nbsp;Hotel
+								.col-xs-6.text-right
+									a.btn.btn-sm.btn-warning.view-on-map(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}?qty={{totalComing}}") View On Map
+					.hotels.add-on-item(ng-repeat="h in hotels track by $index")
+						.row(ng-show="{'google':true}[h.service]")
+							.col-xs-12.add-on-title
+								strong {{$index+1}}.&nbsp;
+								strong &nbsp;{{h.hotel.details.name}}
+
+							.col-sm-6.col-xs-12.add-on-img
+								img.img-responsive(ng-show="h.hotel.details.photos",ng-src="{{getPlacePhotoUrl('hotels',$index)}}")
+								.image-container(ng-hide="h.hotel.details.photos")
+									.no-image-overlay
+										i Photo Not Available
+									img.img-responsive.center-block(src="/images/wembliman/hotel/150.png")
+							.col-sm-6.col-xs-12.add-on-content
+								.row(ng-show="h.hotel.details.formatted_address")
+									.col-xs-12 {{h.hotel.details.formatted_address}}
+								.row(ng-show="h.hotel.details.formatted_phone_number")
+									.col-xs-12 {{h.hotel.details.formatted_phone_number}}
+								.row(ng-show="h.hotel.details.rating")
+									.col-xs-12
+										strong Rating:&nbsp;
+										span.star-rating(rating="h.hotel.details.rating")
+								.row(ng-show="h.hotel.details.website")
+									.col-xs-12
+										a(ng-href="h.hotel.details.website",target="_blank") website
+										span(ng-show="h.hotel.details.url") &nbsp;-&nbsp;
+										a(ng-show="h.hotel.details.url", ng-href="h.hotel.details.url",target="_blank") directions
+
+					.row
+						.col-xs-12.rsvp-invitees-list
+							include ../includes/invitees-list
+
 
 					//- tickets (get seat view pic url), parking, restaurant deal, hotel, invitees w/pony up requested total and pony up total)
 				.col-md-5.col-xs-12.event-info-container
 					.hidden-xs.hidden-sm
 						include ../includes/event-info
-						.google-map-container
-							#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
-
-
-		//-
-			.itinerary-data.clearfix
-				.left.pull-left
-				.right.pull-left
-					.tickets-container
-						h2 Tickets
-						.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && ticketCountMismatch")
-							.icon-warning-sign.icon-2x.pull-left
-							.text.pull-left The number of available tickets in this ticket group do not match the number of confirmed guests.
-						.alert.alert-warning.clearfix(ng-show="{'organizer':true}[context] && tickets[0] && !tickets[0].purchased")
-							.icon-warning-sign.icon-2x.pull-left
-							.text.pull-left
-								span These tickets are not on hold. To guarantee these seats, please&nbsp;
-								a#purchase-3.scroll-to(href="#") purchase your tickets.
-						.row
-							.info.clearfix
-								.col.pull-left
-									.event-name
-										strong EVENT:&nbsp;
-										span {{plan.event.eventName}}
-									.venue-name
-										strong VENUE:&nbsp;
-										span {{plan.event.eventVenue}}
-									.venue-address
-										strong ADDRESS:&nbsp;
-										span {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
-								.col.pull-left
-									.ticket-section
-										strong SECTION/AISLE:&nbsp;
-										span(ng-show="tickets[0].ticketGroup.Section") {{tickets[0].ticketGroup.Section}}&nbsp;
-										span(ng-hide="tickets[0].ticketGroup.Section") TBD&nbsp;
-									.ticket-row
-										strong ROW/BOX:&nbsp;
-										span(ng-show="tickets[0].ticketGroup.Row") {{tickets[0].ticketGroup.Row}}
-										span(ng-hide="tickets[0].ticketGroup.Row") TBD
-									.ticket-seat(ng-show="tickets[0].ticketGroup.LowSeat")
-										strong SEATS:&nbsp;
-										span(ng-show="{'*':true}[tickets[0].ticketGroup.LowSeat]") {{tickets[0].ticketGroup.LowSeat}}
-										span(ng-hide="{'*':true}[tickets[0].ticketGroup.LowSeat]") {{tickets[0].ticketGroup.LowSeat}} - {{tickets[0].ticketGroup.HighSeat}}
-									.ticket-seat(ng-hide="tickets[0].ticketGroup.LowSeat")
-										strong SEATS:&nbsp;
-										span TBD
-									.ticket-notes(ng-show="tickets[0].ticketGroup.Notes")
-										strong NOTES:&nbsp;
-										span {{tickets[0].ticketGroup.Notes}}
-								.ticket-payment.clearfix(ng-show="tickets[0].ticketGroup.costBreakdown.total")
-									.per-person.pull-left
-										strong Total cost for&nbsp;
-									.qty-container.pull-left
-										{{tickets[0].ticketGroup.selectedQty}}&nbsp;
-									.pull-left
-										strong {{tickets[0].ticketGroup.selectedQty | pluralize:'ticket'}}:&nbsp;
-									.ticket-total.pull-left
-										{{tickets[0].ticketGroup.costBreakdown.total | currency}}
-					.parking-container
-						h2 Parking
-						.row
-							.info.clearfix(ng-hide="parking[0].parking")
-								.parking-name
-									strong PARKING COMPANY:&nbsp;
-									span TBD
-								.parking-location
-									strong LOCATION:&nbsp;
-									span TBD
-							.info.clearfix(ng-show="parking[0].parking && {'pw':true}[parking[0].service]")
-								.parking-name
-									strong PARKING COMPANY:&nbsp;
-									span {{parking[0].parking.location_name}}
-								.parking-location
-									strong LOCATION:&nbsp;
-									span {{parking[0].parking.address}}, {{parking[0].parking.city}}, {{parking[0].parking.state}} {{parking[0].parking.zip}}
-							.info.clearfix(ng-show="parking[0].parking && {'google':true}[parking[0].service]")
-								.parking-name
-									strong PARKING COMPANY:&nbsp;
-									span {{parking[0].parking.name}}
-								.parking-location
-									strong LOCATION:&nbsp;
-									span {{parking[0].parking.vicinity}}
-					.restaurant-container
-						h2 Restaurant
-						.row
-							.info.clearfix(ng-hide="restaurants[0].restaurant")
-								.restaurants-name
-									strong RESTAURANT NAME:
-									span TBD&nbsp;
-								.restaurants-location
-									strong LOCATION:
-									span TBD
-
-							.info.clearfix(ng-show="restaurants[0].restaurant && {'google':true}[restaurants[0].service]")
-								.restaurants-name
-									strong RESTAURANT NAME:
-									span {{restaurants[0].restaurant.name}}&nbsp;
-								.restaurants-location
-									strong LOCATION:
-									span {{restaurants[0].restaurant.vicinity}}
-
-							.info.clearfix(ng-show="restaurants[0].restaurant && {'yipit':true}[restaurants[0].service]")
-								.restaurants-deal-name
-									strong {{restaurants[0].restaurant.title}}&nbsp;
-								.restaurants-name
-									strong RESTAURANT:&nbsp;
-									span {{restaurants[0].restaurant.business.name}}
-								.restaurants-location
-									strong LOCATION:&nbsp;
-									span {{restaurants[0].restaurant.business.locations[0].address}}, {{restaurants[0].restaurant.business.locations[0].locality}}, {{restaurants[0].restaurant.business.locations[0].state}} {{restaurants[0].restaurant.business.locations[0].zip_code}}
-								.restaurants-location
-									strong PHONE:&nbsp;
-									span {{restaurants[0].restaurant.business.locations[0].phone}}
-					.hotel-container
-						h2 Hotel
-						.row
-							.info.clearfix(ng-hide="hotels[0].hotel")
-								.hotels-name
-									strong NAME:
-									span TBD&nbsp;
-								.hotels-location
-									strong LOCATION:
-									span TBD
+					.google-map-container
+						#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
 					.notes-container
 						- if (visitor.context === 'organizer')
-							textarea.notes(placeholder="Notes", ng-model="plan.notes",on-keyup="submitNotes")
+							textarea.notes.form-control(placeholder="Notes", ng-model="plan.notes",on-keyup="submitNotes")
 						- else
-							textarea.notes(placeholder="Notes", ng-model="plan.notes",disabled="disabled")
-			.google-map-container
-				#itinerary-map-container.itinerary-map.map-container(lat="#{lat}",lng="#{lon}",zoom="14",scrollwheel="false",draggable="true",map-type-id="ROADMAP")
-
+							textarea.notes.form-control(placeholder="Notes", ng-model="plan.notes",disabled="disabled")

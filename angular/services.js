@@ -155,6 +155,12 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 			//return $filter('date')(d, "MM-dd-yy");
 		}
 
+		$rootScope.feetToMiles = function(feet) {
+			return parseFloat(feet / 5280).toFixed(2);
+		}
+
+
+
 	}
 ]).
 

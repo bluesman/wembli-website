@@ -1,59 +1,68 @@
 /* global invitees lists */
 .invitees-container {
+	.add-on-header-container {
+		border-bottom: 1px solid @grayLight;
+		margin:0;
+	}
+
 	.invitee {
-		margin-top:20px;
+		margin-top:10px;
+		border-bottom:1px solid @grayLight;
+		padding-bottom:10px;
 
 		.invitee-info {
-			.invitee-prefs-container {
-				.invitee-pref {
-					text-align:left;
-					.invitee-pref-header {
-						text-transform:uppercase;
-						color:@gray;
-						font-style: italic;
-						font-size:20px;
-						line-height: 40px;
-					}
+
+			.rsvp-status {
+				margin-top:10px;
+
+				.rsvp-status-header {
+					text-transform:uppercase;
+					color:@gray;
+					font-style: italic;
+					font-size:20px;
+				}
+			}
+
+			.invitee-prefs {
+				text-align:left;
+				padding:10px;
+
+				.invitee-prefs-header {
+					font-weight: bold;
+					font-size: .9em;
+					border-bottom: 1px solid @grayDark;
+				}
+
+				.invitee-prefs-row {
+					margin-top:5px;
+
 					.invitee-pref-value {
-						.fa {
-							height:45px;
-							line-height:45px;
-							vertical-align:middle;
+						text-align: right;
+
+						.price-level {
+							color:@yellow;
+							letter-spacing: -8px;
 						}
-						.dollar-sign {
-							font-size: 30px;
-							height:45px;
-							line-height:45px;
-							vertical-align:middle;
-						}
-						.prefs-list {
-							text-align:left;
-						}
+					}
+
+				}
+
+				.invitee-pref-row {
+					.fa {
+					}
+					.dollar-sign {
+						font-size: 30px;
+					}
+					.prefs-list {
+						text-align:left;
 					}
 				}
 
 				.invitee-pref.muted {
-					.invitee-pref-header {
-						color:@grayLight;
-					}
-					.invitee-pref-value {
-						.icon {
-							color:@grayLight;
-						}
-						.dollar-sign {
-							color:@grayLight;
-						}
-					}
-				}
-
-
-				.first-off {
-					text-align:left;
-					i {
-						margin-left:25px;
-					}
+					color:@grayLight !important;
 				}
 			}
+
 			.invitee-name {
 				/* height: 24px; */
 				.name {

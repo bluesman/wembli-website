@@ -25,10 +25,6 @@ controller('HotelsCtrlOff', ['$rootScope', '$scope', '$timeout', 'plan', 'wembli
 			}
 		};
 
-		$scope.determineDistance = function(feet) {
-			return parseFloat(feet / 5280).toFixed(2);
-		}
-
 		$scope.notFound = true;
 
 		$scope.$watch('hotels', function(hotels) {

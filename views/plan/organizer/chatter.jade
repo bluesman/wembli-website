@@ -1,14 +1,74 @@
 extends layout
 block plan-section
 	- var sectionClass = (visitor.context === 'organizer') ? 'organizer-chatter-section' : 'friend-chatter-section';
-	- var ngController = (visitor.context === 'organizer') ? 'OrganizerChatterCtrl' : 'friendChatterCtrl';
-	section#section-chatter(class="#{sectionClass} chatter-section plan-section", ng-controller="#{ngController}")
-		.header.clearfix
-			h1.pull-left Chatter
-		.event-info
-			span.blue &nbsp;{{plan.event.eventName}}
-			span &nbsp;on {{getDate(plan.event.eventDate)| date:'EEEE, MMMM d, y - h:mm a'}}
-			span &nbsp;at {{plan.event.eventVenue}}&nbsp;
+	- var ngController = (visitor.context === 'organizer') ? 'ChatterCtrl' : 'ChatterCtrl';
+	section#section-chatter(class="#{sectionClass} chatter-section plan-section container-fluid", ng-controller="#{ngController}")
+		.row.visible-xs.visible-sm
+			.col-xs-12.event-info-container
+				include ../includes/event-info
+
+		.header.row
+			.col-xs-12
+				h1.segoe Chatter
+			.col-xs-12
+				h4 Use this space to comment and share conversations about your upcoming event!
 		.body
-			h3 Use this space to comment and share conversations about your upcoming event!
-			plan-chatter
+			.row.add-on-container
+				.col-md-7.col-xs-12
+					form#new-chatter(name="chatterForm")
+						.row
+							.col-xs-2
+								.img-container.create-chatter-image
+									img.img-polaroid.img-responsive(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
+									img.img-polaroid.img-responsive(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
+
+							.col-xs-10.form-group
+								textarea.form-control(placeholder="Start some chatter!", name="newChatter",ng-model="newChatter",required)
+						.row
+							.col-xs-12
+								button.btn.btn-primary.form-control(ng-disabled="createChatterInProgress",href="#",ng-click="createChatter()")
+									i.fa.fa-comment
+									span &nbsp;Comment
+
+					#chatters(ng-show="chatters.length")
+						.row.chatter-item(ng-repeat="chatter in chatters track by $index")
+							.col-xs-12
+								.row.chatter
+									.col-xs-1
+										.img-container
+											img.img-polaroid.img-responsive(ng-hide="chatter.actor.imageUrl",src="/images/cartoon-man-head.png")
+											img.img-polaroid.img-responsive(ng-show="chatter.actor.imageUrl",ng-src="{{chatter.actor.imageUrl}}")
+									.col-xs-11
+										.row
+											.col-xs-12
+												strong {{chatter.actor.name}}
+												span &nbsp;-&nbsp;{{chatter.created | chatterDateString}}
+										.row
+											.col-xs-12.chatter-body {{chatter.body}}
+
+								.row.chatter-comments-container
+									.col-xs-12
+										.row.chatter-comment-item(ng-repeat="comment in chatter.comments | orderBy : 'created' ")
+											.col-xs-1
+												img.img-polaroid.img-responsive(ng-hide="chatter.actor.imageUrl",src="/images/cartoon-man-head.png")
+												img.img-polaroid.img-responsive(ng-show="chatter.actor.imageUrl",ng-src="{{chatter.actor.imageUrl}}")
+											.col-xs-8
+												strong {{comment.actor.name}}
+												span &nbsp;-&nbsp;{{comment.body}}
+											.col-xs-3.comment-date {{comment.created | chatterDateString}}
+
+										form.row.new-chatter-comment
+											.col-xs-1
+												img.img-polaroid.img-responsive(ng-hide="customer.imageUrl",src="/images/cartoon-man-head.png")
+												img.img-polaroid.img-responsive(ng-show="customer.imageUrl",ng-src="{{customer.imageUrl}}")
+											.col-xs-8
+												textarea.form-control(placeholder="Care to comment?",name="newComment",ng-model="chatter.newComment",required)
+											.col-xs-3
+												button.btn.btn-sm.btn-warning.form-control(href="#",ng-click="createChatterComment($index)",ng-disabled="chatter.commentInProgress")
+													i.fa.fa-reply
+													span Reply
+
+				.col-md-5.col-xs-12.event-info-container
+					.hidden-xs.hidden-sm
+						include ../includes/event-info
+						img.chatter-image.img-responsive.center-block(src="/images/cartoon-man-megaphone-left.png")

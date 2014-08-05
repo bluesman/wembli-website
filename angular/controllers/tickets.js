@@ -177,6 +177,15 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
         $scope.currentTicketIdx = idx;
         var ticket              = $scope.tickets[idx];
         $scope.selectedQty      = ticket.selectedQty;
+        console.log(ticket);
+        var sections = $('#venue-map-container').tuMap("GetSections");
+        for (var i = sections.length - 1; i >= 0; i--) {
+          if (sections[i].Name === ticket.Section) {
+            $scope.activeSection = sections[i];
+            ticket.url = $scope.activeSection.SectionViewUrl;
+            break;
+          }
+        };
 
         /* angularjs hack */
         delete ticket["$$hashKey"];
@@ -202,13 +211,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
           /* if payment type is split-first just go straight to the options page */
           if ($scope.plan.preferences.payment === 'split-first') {
-            var sections = $('#venue-map-container').tuMap("GetSections");
-            for (var i = sections.length - 1; i >= 0; i--) {
-              if (sections[i].Name === ticketGroup.ticketGroup.Section) {
-                $scope.activeSection = sections[i];
-                break;
-              }
-            };
 
             $scope.ticketsConfirm = true;
             overlay.show();
