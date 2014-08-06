@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.2.22-build.364+sha.29eaabc
+ * @license AngularJS v1.2.22-build.366+sha.76a0eb8
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -68,7 +68,7 @@ function minErr(module) {
       return match;
     });
 
-    message = message + '\nhttp://errors.angularjs.org/1.2.22-build.364+sha.29eaabc/' +
+    message = message + '\nhttp://errors.angularjs.org/1.2.22-build.366+sha.76a0eb8/' +
       (module ? module + '/' : '') + code;
     for (i = 2; i < arguments.length; i++) {
       message = message + (i == 2 ? '?' : '&') + 'p' + (i-2) + '=' +
@@ -1977,7 +1977,7 @@ function setupModuleLoader(window) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.2.22-build.364+sha.29eaabc',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.2.22-build.366+sha.76a0eb8',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 2,
   dot: 22,
@@ -5316,7 +5316,7 @@ function $TemplateCacheProvider() {
  *
  * #### `template`
  * HTML markup that may:
- * * Replace the contents of the directive's element (defualt).
+ * * Replace the contents of the directive's element (default).
  * * Replace the directive's element itself (if `replace` is true - DEPRECATED).
  * * Wrap the contents of the directive's element (if `transclude` is true).
  *

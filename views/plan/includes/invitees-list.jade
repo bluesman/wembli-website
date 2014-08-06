@@ -4,13 +4,13 @@
 //- make the invitees list respect the preferences for the friend plan
 .invitees-container
 	.row.add-on-header-container
-		.col-xs-6
+		.col-xs-12.col-sm-6
 			h3.add-on-header
 				i.fa.fa-users
 				span &nbsp;Who's Invited
-		.col-xs-6.text-right
+		.col-xs-12.col-sm-6
 			- if (req.session.visitor.context === 'organizer')
-				a.btn.btn-sm.btn-warning.view-on-map(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3") Invite More People
+				a.btn.btn-sm.btn-warning.view-on-map.form-control(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3") Invite More People
 	.row
 		.col-xs-12
 			h4 There are {{totalComing}} {{totalComing | pluralize:'person'}} coming.
@@ -57,8 +57,14 @@
 			.invitee-info.col-xs-10
 				.row.invitee-name
 					.invitee-name-container.col-xs-8
-						strong.name {{friend.contactInfo.name}}&nbsp;
-						span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'guest'}}
+						.row
+							.col-xs-12
+								strong.name {{friend.contactInfo.name}}&nbsp;
+								span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'guest'}}
+						- if (req.session.visitor.context === 'organizer')
+							.row
+								.col-xs-12
+									i.email(ng-show="{'wemblimail':true}[friend.contactInfo.service]") {{friend.contactInfo.serviceId}}
 					.col-xs-4.text-right.rsvp-email-actions(ng-show="{'wemblimail':true}[friend.contactInfo.service]")
 						- if (req.session.visitor.context === 'organizer')
 							a.btn.btn-sm.btn-warning.resend-rsvp-email.clearfix(ng-hide="rsvpEmailSent", href="#",friend-id="{{friend._id}}") Resend RSVP
