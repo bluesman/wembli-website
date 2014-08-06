@@ -320,14 +320,12 @@ module.exports = function(app) {
 									if (err) {
 										/* TODO: render the not found page */
 									}
-									console.log(venue._source);
 									obj.venue = venue._source;
 									/* now get the events, parking and restaurants for this venue */
 									async.parallel([
 										/* get eventlist from es */
 										function(venueGetDetailCb) {
 											es.search({index:'eventful',type:'events',size:20,q:'venue_id:'+venue._source.id}, function(err, result) {
-												console.log(result.hits.hits)
 												obj.venue.events = result.hits.hits;
 												venueGetDetailCb();
 											});
@@ -364,7 +362,6 @@ module.exports = function(app) {
 										/* get eventlist from es */
 										function(venueGetDetailCb) {
 											es.search({index:'eventful',type:'events',size:20,q:'performers.performer.id:'+performer._source.id}, function(err, result) {
-												console.log(result.hits.hits)
 												obj.performer.events = result.hits.hits;
 												venueGetDetailCb();
 											});
@@ -402,7 +399,6 @@ module.exports = function(app) {
 			async.parallel(getData, function(err, results) {
 				/* make the template from the layout style and layout id */
 				var template = 'directory/' + obj.layout.style + '/' + obj.layout.id + '/' + obj.layout.type;
-				//console.log(obj);
 				var sortFunc = function(a, b) {
 					if (a.name < b.name) return -1;
 					if (a.name > b.name) return 1;
