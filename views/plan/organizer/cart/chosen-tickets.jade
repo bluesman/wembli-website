@@ -37,7 +37,9 @@
 											.ticket-total.add-on-total(ng-hide="ticket.total") {{ticket.costBreakdown.total | currency}}
 											.ticket-total.add-on-total(ng-show="ticket.total") {{ticket.payment.amount | currency}}
 										.col-xs-2.text-center(ng-hide="ticket.purchased")
-											a.btn.btn-primary.btn-sm(ng-click="buyTickets($index)", ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy
+											a.btn.btn-primary.btn-xs(ng-click="buyTickets($index)", ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy
+										.col-xs-2.text-center(ng-show="ticket.purchased")
+											a.btn.btn-primary.btn-xs(ng-href="/plan/pony-up") Pony Up!
 						.row.ticket-price-details.slide-down(ng-show="!ticket.purchased && showTicketPriceDetails[ticket._id]", id="{{ticket._id}}-tickets-slide-down")
 							.col-xs-12
 								.row

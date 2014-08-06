@@ -771,6 +771,7 @@ exports.customer = {
 											data.success = 0;
 											data.dbError = 'unable to add ticketGroup ' + ticket.id;
 										}
+										req.session.ticketsToAdd = [];
 										return respond(data);
 									});
 								});

@@ -22,38 +22,37 @@ block content
 					.row
 						.col-xs-12
 							h3 Parking Info
-					.addon-info.row(ng-show="{'pw':true}[parking.service]")
+					.addon-info.row(ng-show="{'pw':true}[currentParking.service]")
 						.col-xs-12
 							.row
 								.col-xs-12
-									strong.name {{parking.location_name}}
-							.row(ng-show="parking.address")
+									strong.name {{currentParking.location_name}}
+							.row(ng-show="currentParking.address")
 								.col-xs-12
-									strong.address {{parking.address}}
-							.row(ng-show="parking.available_spots")
+									strong.address {{currentParking.address}}
+							.row(ng-show="currentParking.available_spots")
 								.col-xs-12
-									i.spots-available {{parking.available_spots}} Spots Available
+									i.spots-available {{currentParking.available_spots}} Spots Available
 
 
-					.addon-info.row(ng-show="{'google':true}[parking.service]")
+					.addon-info.row(ng-show="{'google':true}[currentParking.service]")
 						.col-xs-12
 							.row
 								.col-xs-12
-									strong.name {{parking.name}}
-							.row(ng-show="parking.vicinity")
+									strong.name {{currentParking.name}}
+							.row(ng-show="currentParking.vicinity")
 								.col-xs-12
-									strong.address {{parking.vicinity}}
+									strong.address {{currentParking.vicinity}}
 							.row(ng-show="parkingDetails.formatted_phone_number")
 								.col-xs-12
 									strong.phone-number {{parkingDetails.formatted_phone_number}}
-							.row(ng-show="parkingDetails.website")
+							.row(ng-show="currentParking.rating")
 								.col-xs-12
-									a.website-link(href="{{parkingDetails.website}}", target="_blank") {{parkingDetails.website}}
-							.row(ng-show="parking.rating")
-								.col-xs-12
-									span.star-rating(rating="parking.rating")
+									span.star-rating(rating="currentParking.rating")
 									span(ng-show="parkingDetails.user_ratings_total") &nbsp;-&nbsp;
-									a.reviews-link(target="_blank",ng-show="parkingDetails.user_ratings_total", href="parkingDetails.url") {{parkingDetails.user_ratings_total}} Reviews
+									a.reviews-link(target="_blank",ng-show="parkingDetails.user_ratings_total", ng-href="{{parkingDetails.url}}") {{parkingDetails.user_ratings_total}} Reviews
+									span(ng-show="parkingDetails.website") &nbsp;-&nbsp;
+									a.website-link(ng-show="parkingDetails.website",href="{{parkingDetails.website}}", target="_blank") website
 					.next-step-text.row(ng-hide="backToPlan")
 						.col-xs-12
 							p Next step, choose your plan settings and invite friends.  Once your friends are invited, you'll ask them to pony up for their share of the ticket price.

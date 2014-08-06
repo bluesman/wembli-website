@@ -28,6 +28,47 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       return url;
     }
 
+    /*
+      sum all the type: requests
+      sum all the others
+      subtract requests from others and get balance
+    */
+    $scope.paymentTotals = function() {
+      for (var i = 0; i < $scope.friends.length; i++) {
+        var requested = 0;
+        var received  = 0;
+        var balance   = 0;
+
+        var f = $scope.friends[i];
+        f.ponyUp         = (typeof f.ponyUp === "undefined") ? {} : f.ponyUp;
+        f.ponyUp.open    = false;
+        f.ponyUp.request = true;
+
+        for (var j = 0; j < f.payment.length; j++) {
+          var p = f.payment[j];
+          console.log(f.payment);
+
+          if (p.type == 'request') {
+            if (p.open) {
+              f.ponyUp.open = true;
+              f.ponyUp.request = false;
+            }
+            if (p.status !== 'canceled') {
+              requested += parseInt(p.amount);
+              p.amount = parseInt(p.amount);
+
+            }
+          } else {
+            received += parseInt(p.amount);
+          }
+        }
+
+        f.payment.requested = requested;
+        f.payment.received  = received;
+        f.payment.balance   = requested - received;
+
+      }
+    }
 
     /* buy stuff offsite */
     $scope.buyTickets = function(idx) {
@@ -299,53 +340,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       googleMap.resize();
 		};
 
-    $scope.friendsPonyUp = function(friends) {
-
-      var tickets     = plan.getTickets();
-      var parking     = plan.getParking();
-      var restaurants = plan.getRestaurants();
-
-      /* assuming there's only 1 ticketGroup for now */
-      /* kim and ash say guests don't count for a delivery fee */
-      var totalPoniedUp = 0;
-
-      for (var i = 0; i < friends.length; i++) {
-        friends[i].suggestedPonyUpAmount = 0;
-
-        if ((typeof tickets[0] !== "undefined") && (typeof tickets[0].costBreakdown !== "undefined")) {
-          if (typeof friends[i].tickets == "undefined") {
-            friends[i].tickets = {};
-          }
-          friends[i].tickets = tickets[0];
-          var suggested = friends[i].tickets.costBreakdown.totalEach * (friends[i].rsvp.guestCount + 1) + friends[i].tickets.costBreakdown.deliveryFeeEach;
-          friends[i].tickets.suggestedPonyUpAmount = suggested.toFixed(2);
-          friends[i].suggestedPonyUpAmount += parseFloat(suggested);
-        } else {
-          friends[i].tickets = [];
-        }
-
-        if ((typeof parking[0] !== "undefined") && (typeof parking[0].costBreakdown !== "undefined")) {
-          friends[i].parking = parking[0];
-          var suggested = friends[i].parking.costBreakdown.totalEach * (friends[i].rsvp.guestCount + 1);
-          friends[i].parking.suggestedPonyUpAmount = suggested.toFixed(2);
-          friends[i].suggestedPonyUpAmount += parseFloat(suggested);
-        } else {
-          friends[i].parking = [];
-        }
-
-        if ((typeof restaurants[0] !== "undefined") && (typeof restaurants[0].costBreakdown !== "undefined")) {
-          friends[i].restaurants = restaurants[0];
-          var suggested = friends[i].restaurants.costBreakdown.totalEach * (friends[i].rsvp.guestCount + 1);
-          friends[i].restaurants.suggestedPonyUpAmount = suggested.toFixed(2);
-          friends[i].suggestedPonyUpAmount += parseFloat(suggested);
-        } else {
-          friends[i].restaurants = [];
-        }
-        friends[i].suggestedPonyUpAmount = parseFloat(friends[i].suggestedPonyUpAmount).toFixed(2);
-      };
-      return friends;
-    };
-
     $scope.calcTotalComing = function() {
       $scope.totalComing   = 0;
       $scope.totalInvited  = 0;
@@ -472,7 +466,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
         return;
       }
       cart.totals('restaurants');
-      $scope.friendsPonyUp($scope.friends);
     });
 
     $scope.$watch('hotels', function(newVal, oldVal) {
@@ -492,7 +485,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       });
 
       cart.totals('hotels');
-      $scope.friendsPonyUp($scope.friends);
     });
 
     $scope.$watch('parking', function(newVal, oldVal) {
@@ -512,7 +504,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
         }
       });
 
-      $scope.friendsPonyUp($scope.friends);
       cart.totals('parking');
     });
 
@@ -524,7 +515,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
         return;
       }
       cart.totals('tickets');
-      $scope.friendsPonyUp($scope.friends);
       $scope.setSelectedQty();
     });
 
@@ -601,7 +591,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       $scope.calcTotalComing();
       $scope.setSelectedQty();
       $scope.reconcileTicketQty();
-      $scope.friendsPonyUp($scope.friends);
 
       $scope.canRequestPonyUp = ($scope.friendsComing && ($scope.friendsComing.length > 0));
 
@@ -642,7 +631,6 @@ controller('OrganizerPlanCtrl', ['$scope', 'cart', 'plan', '$location', 'wembliR
         return;
       }
       cart.totals('tickets');
-      $scope.friendsPonyUp($scope.friends);
       $scope.reconcileTicketQty();
 
     })
@@ -1086,48 +1074,6 @@ controller('OrganizerPonyUpCtrl', ['$rootScope','$scope','plan', 'planNav', 'wem
       dereg();
     });
 
-    /*
-      sum all the type: requests
-      sum all the others
-      subtract requests from others and get balance
-    */
-    $scope.paymentTotals = function() {
-      for (var i = 0; i < $scope.friends.length; i++) {
-        var requested = 0;
-        var received  = 0;
-        var balance   = 0;
-
-        var f = $scope.friends[i];
-        f.ponyUp         = (typeof f.ponyUp === "undefined") ? {} : f.ponyUp;
-        f.ponyUp.open    = false;
-        f.ponyUp.request = true;
-
-        for (var j = 0; j < f.payment.length; j++) {
-          var p = f.payment[j];
-          console.log(f.payment);
-
-          if (p.type == 'request') {
-            if (p.open) {
-              f.ponyUp.open = true;
-              f.ponyUp.request = false;
-            }
-            if (p.status !== 'canceled') {
-              requested += parseInt(p.amount);
-              p.amount = parseInt(p.amount);
-
-            }
-          } else {
-            received += parseInt(p.amount);
-          }
-        }
-
-        f.payment.requested = requested;
-        f.payment.received  = received;
-        f.payment.balance   = requested - received;
-
-      }
-    }
-
     $scope.$watch('friends', function(newVal, oldVal) {
       if (newVal) {
         $scope.paymentTotals();
@@ -1139,7 +1085,7 @@ controller('OrganizerPonyUpCtrl', ['$rootScope','$scope','plan', 'planNav', 'wem
 ]).
 
 controller('OrganizerItineraryCtrl', ['$scope','plan', 'planNav', 'wembliRpc',
-	function($scope, plan, planNav, wembliRpc) {
+  function($scope, plan, planNav, wembliRpc) {
     var timer;
     $scope.submitNotes = function() {
       clearTimeout(timer);
@@ -1154,13 +1100,7 @@ controller('OrganizerItineraryCtrl', ['$scope','plan', 'planNav', 'wembliRpc',
     };
 
     planNav.activate('itinerary');
-	}
-]).
-
-controller('OrganizerChatterCtrl', ['$scope','plan', 'planNav',
-	function($scope, plan, planNav) {
-    planNav.activate('chatter');
-	}
+  }
 ]).
 
 controller('FriendPlanCtrl', ['$scope', 'plan', '$location', 'wembliRpc',
@@ -1264,30 +1204,31 @@ controller('FriendVoteCtrl',['$scope', 'plan', 'planNav', 'wembliRpc',
 
     var calcVotePriceTotal = function() {
       var total = 0;
+      console.log($scope.me.rsvp.tickets.price);
       if (parseInt($scope.me.rsvp.tickets.price) > 0) {
         total += parseInt($scope.me.rsvp.tickets.price);
       }
 
-      if ($scope.plan.preferences.addOns.parking) {
+      if ($scope.me.rsvp.parking.decision && $scope.plan.preferences.addOns.parking) {
         if (parseInt($scope.me.rsvp.parking.price) > 0) {
           total += parseInt($scope.me.rsvp.parking.price);
         }
       }
 
-      if ($scope.plan.preferences.addOns.restaurants) {
+      if ($scope.me.rsvp.restaurant.decision && $scope.plan.preferences.addOns.restaurants) {
         if (parseInt($scope.me.rsvp.restaurant.price) > 0) {
           total += parseInt($scope.me.rsvp.restaurant.price);
         }
       }
 
-      if ($scope.plan.preferences.addOns.hotels) {
+      if ($scope.me.rsvp.hotel.decision && $scope.plan.preferences.addOns.hotels) {
         if (parseInt($scope.me.rsvp.hotel.price) > 0) {
           total += parseInt($scope.me.rsvp.hotel.price);
         }
       }
 
       $scope.votePriceTotalPerPerson = total;
-      $scope.votePriceTotal = total * $scope.me.rsvp.tickets.number;
+      $scope.votePriceTotal = total * ($scope.me.rsvp.guestCount + 1);
     }
 
     /* watch the rsvp checkboxes */
@@ -1296,18 +1237,21 @@ controller('FriendVoteCtrl',['$scope', 'plan', 'planNav', 'wembliRpc',
         return;
       }
       submitVote();
+      calcVotePriceTotal();
     });
     $scope.$watch('me.rsvp.restaurant.decision', function(val) {
       if (typeof val === "undefined") {
         return;
       }
       submitVote();
+      calcVotePriceTotal();
     });
     $scope.$watch('me.rsvp.hotel.decision', function(val) {
       if (typeof val === "undefined") {
         return;
       }
       submitVote();
+      calcVotePriceTotal();
     });
 
     /* watch the price values to update the total */
@@ -1528,7 +1472,7 @@ controller('FriendVoteCtrl',['$scope', 'plan', 'planNav', 'wembliRpc',
 
 controller('FriendPonyUpCtrl',['$rootScope', '$scope', 'plan', 'planNav', 'wembliRpc', '$timeout',
   function($rootScope, $scope, plan, planNav, wembliRpc, $timeout) {
-
+    $scope.displaySendPonyUp = false;
     $scope.showFees = false;
     $scope.showHistory = false;
 
@@ -1658,6 +1602,13 @@ controller('FriendPonyUpCtrl',['$rootScope', '$scope', 'plan', 'planNav', 'wembl
     planNav.activate('pony-up');
   }
 ]).
+
+controller('FriendItineraryCtrl', ['$scope','plan', 'planNav', 'wembliRpc',
+  function($scope, plan, planNav, wembliRpc) {
+    planNav.activate('itinerary');
+  }
+]).
+
 
 controller('ChatterCtrl',['$scope', 'wembliRpc', 'planNav',
   function($scope, wembliRpc, planNav) {

@@ -11,7 +11,8 @@
 				form#tickets-offsite-form.form-inline.option-body(name="tickets-offsite-form")
 					.form-group
 						span I just bought&nbsp;
-						select#qty.form-control(ng-model="currentTicket.selectedQty",name="selectedQty",ng-options="q for q in currentTicket.ValidSplits.int")
+						input#qty.form-control(type="text",ng-model="currentTicket.selectedQty",name="selectedQty", type="number")
+						//- select#qty.form-control(ng-model="currentTicket.selectedQty",ng-options="q for q in currentTicket.ValidSplits.int")
 						span &nbsp;tix for a total of&nbsp;
 					.form-group
 						#amount-paid-input-group.input-group

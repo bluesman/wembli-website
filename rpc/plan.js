@@ -49,6 +49,10 @@ exports.plan = {
 
 		function getRelated(plan) {
 			if (plan) {
+				console.log('getting related for ');
+				console.log(plan);
+				console.log(req.session.plan);
+
 				async.parallel([
 
 						function(callback) {
@@ -77,12 +81,17 @@ exports.plan = {
 								planId: req.session.plan.id
 							}, function(err, results) {
 								data.tickets = results;
-
-								/* merge in any tickets that didn't get saved in the db yet */
-								if (typeof req.session.ticketsToAdd !== "undefined") {
-									for (var i = req.session.ticketsToAdd.length - 1; i >= 0; i--) {
-										data.tickets.push(req.session.ticketsToAdd[i]);
-									};
+								console.log(req.session.ticketsToAdd);
+								if (req.session.context === 'organizer') {
+									/* merge in any tickets that didn't get saved in the db yet */
+									if (typeof req.session.ticketsToAdd !== "undefined") {
+										for (var i = req.session.ticketsToAdd.length - 1; i >= 0; i--) {
+											/* sanity check - make sure the guid for the tix is this plans guid */
+											if (req.session.plan.guid === req.session.ticketsToAdd[i].planGuid) {
+												data.tickets.push(req.session.ticketsToAdd[i]);
+											}
+										};
+									}
 								}
 								/* check if these tickets are still available */
 								async.forEach(data.tickets, function(item, callback2) {
@@ -1200,93 +1209,56 @@ exports.plan = {
 			'planId': req.session.plan.id,
 			'planGuid': req.session.plan.guid,
 		};
+		var set = {
+			planId: req.session.plan.id,
+			planGuid: req.session.plan.guid,
+			service: args.service,
+			eventId: args.eventId,
+			hotel: args.hotel,
+			total: args.total,
+		};
 
-		/* find all the existing parking for this plan and remove them if payment is not complete */
-		Hotel.find(query, function(err, hotels) {
+		console.log(set);
+		if (typeof args.payment !== "undefined") {
+
+			var pmt = JSON.parse(args.payment);
+			var payment = {
+				organizer: true,
+				customerId: req.session.customer.id,
+			};
+
+			if (typeof pmt.amount !== "undefined") {
+				payment.amount = pmt.total;
+			}
+
+			if (typeof pmt.receipt !== "undefined") {
+				set.purchased = true;
+				payment.receipt = pmt.receipt;
+			}
+
+			set.payment = payment;
+		}
+
+		r = new Hotel(set);
+
+		r.save(function(err) {
 			if (err) {
 				data.success = 0;
-				data.dbError = 'unable to find hotel';
+				data.dbError = 'unable to save hotel';
 				return me(null, data);
 			}
 
-			/* check if hotel is purchased if it is not remove it */
-			async.forEach(hotels, function(item, callback) {
-				console.log('checking hotel');
-				console.log(item);
-				/* check if any of these are not yet purchased and remove them */
-				if (!item.purchased) {
-					item.remove(function(err) {
-						console.log('removed unpaidfor Hotel');
-						/* now remove the ticket from the plan */
-						req.session.plan.removeHotel(item.id, function(err) {
-							if (err) {
-								console.log(err);
-								data.success = 0;
-								data.dbError = 'unable to add Hotel ' + item.id;
-								return callback();
-							}
-							console.log('removed Hotel from plan: ' + req.session.plan.guid);
-							return callback();
-						});
-					})
-				} else {
-					callback();
+			/* now add the ticket to the plan */
+			req.session.plan.addHotel(r, function(err) {
+				if (err) {
+					console.log(err);
+					data.success = 0;
+					data.dbError = 'unable to add Hotel ' + r.id;
+					return me(null, data);
 				}
-			}, function() {
-				console.log('removed unpurchased Hotel now adding Hotel');
-				/* finished iterating through existing hotel */
-				var set = {
-					planId: req.session.plan.id,
-					planGuid: req.session.plan.guid,
-					service: args.service,
-					eventId: args.eventId,
-					hotel: args.hotel,
-					total: args.total,
-				};
-
-				console.log(set);
-				if (typeof args.payment !== "undefined") {
-
-					var pmt = JSON.parse(args.payment);
-					var payment = {
-						organizer: true,
-						customerId: req.session.customer.id,
-					};
-
-					if (typeof pmt.amount !== "undefined") {
-						payment.amount = pmt.total;
-					}
-
-					if (typeof pmt.receipt !== "undefined") {
-						set.purchased = true;
-						payment.receipt = pmt.receipt;
-					}
-
-					set.payment = payment;
-				}
-
-				r = new Hotel(set);
-
-				r.save(function(err) {
-					if (err) {
-						data.success = 0;
-						data.dbError = 'unable to save hotel';
-						return me(null, data);
-					}
-
-					/* now add the ticket to the plan */
-					req.session.plan.addHotel(r, function(err) {
-						if (err) {
-							console.log(err);
-							data.success = 0;
-							data.dbError = 'unable to add Hotel ' + r.id;
-							return me(null, data);
-						}
-						console.log('added hotel to plan: ' + req.session.plan.guid);
-						data.hotel = r;
-						return me(null, data);
-					});
-				});
+				console.log('added hotel to plan: ' + req.session.plan.guid);
+				data.hotel = r;
+				return me(null, data);
 			});
 		});
 	},
@@ -1459,92 +1431,56 @@ exports.plan = {
 			'planGuid': req.session.plan.guid,
 		};
 
-		/* find all the existing parking for this plan and remove them if payment is not complete */
-		Restaurant.find(query, function(err, restaurants) {
+		var set = {
+			planId: req.session.plan.id,
+			planGuid: req.session.plan.guid,
+			service: args.service,
+			eventId: args.eventId,
+			restaurant: args.restaurant,
+			total: args.total,
+		};
+
+		console.log(set);
+		if (typeof args.payment !== "undefined") {
+
+			var pmt = JSON.parse(args.payment);
+			var payment = {
+				organizer: true,
+				customerId: req.session.customer.id,
+			};
+
+			if (typeof pmt.amount !== "undefined") {
+				payment.amount = pmt.total;
+			}
+
+			if (typeof pmt.receipt !== "undefined") {
+				set.purchased = true;
+				payment.receipt = pmt.receipt;
+			}
+
+			set.payment = payment;
+		}
+
+		r = new Restaurant(set);
+
+		r.save(function(err) {
 			if (err) {
 				data.success = 0;
-				data.dbError = 'unable to find restaurant';
+				data.dbError = 'unable to save restaurant';
 				return me(null, data);
 			}
 
-			/* check if restaurant is purchased if it is not remove it */
-			async.forEach(restaurants, function(item, callback) {
-				console.log('checking restaurant');
-				console.log(item);
-				/* check if any of these are not yet purchased and remove them */
-				if (!item.purchased) {
-					item.remove(function(err) {
-						console.log('removed unpaidfor Restaurant');
-						/* now remove the ticket from the plan */
-						req.session.plan.removeRestaurant(item.id, function(err) {
-							if (err) {
-								console.log(err);
-								data.success = 0;
-								data.dbError = 'unable to add Restaurant ' + item.id;
-								return callback();
-							}
-							console.log('removed Restaurant from plan: ' + req.session.plan.guid);
-							return callback();
-						});
-					})
-				} else {
-					callback();
+			/* now add the ticket to the plan */
+			req.session.plan.addRestaurant(r, function(err) {
+				if (err) {
+					console.log(err);
+					data.success = 0;
+					data.dbError = 'unable to add Parking ' + r.id;
+					return me(null, data);
 				}
-			}, function() {
-				console.log('removed unpurchased Restaurant now adding Restaurant');
-				/* finished iterating through existing restaurant */
-				var set = {
-					planId: req.session.plan.id,
-					planGuid: req.session.plan.guid,
-					service: args.service,
-					eventId: args.eventId,
-					restaurant: args.restaurant,
-					total: args.total,
-				};
-
-				console.log(set);
-				if (typeof args.payment !== "undefined") {
-
-					var pmt = JSON.parse(args.payment);
-					var payment = {
-						organizer: true,
-						customerId: req.session.customer.id,
-					};
-
-					if (typeof pmt.amount !== "undefined") {
-						payment.amount = pmt.total;
-					}
-
-					if (typeof pmt.receipt !== "undefined") {
-						set.purchased = true;
-						payment.receipt = pmt.receipt;
-					}
-
-					set.payment = payment;
-				}
-
-				r = new Restaurant(set);
-
-				r.save(function(err) {
-					if (err) {
-						data.success = 0;
-						data.dbError = 'unable to save restaurant';
-						return me(null, data);
-					}
-
-					/* now add the ticket to the plan */
-					req.session.plan.addRestaurant(r, function(err) {
-						if (err) {
-							console.log(err);
-							data.success = 0;
-							data.dbError = 'unable to add Parking ' + r.id;
-							return me(null, data);
-						}
-						console.log('added parking to plan: ' + req.session.plan.guid);
-						data.restaurant = r;
-						return me(null, data);
-					});
-				});
+				console.log('added parking to plan: ' + req.session.plan.guid);
+				data.restaurant = r;
+				return me(null, data);
 			});
 		});
 	},
@@ -1717,94 +1653,58 @@ exports.plan = {
 			'planGuid': req.session.plan.guid,
 		};
 
-		/* find all the existing parking for this plan and remove them if payment is not complete */
-		Parking.find(query, function(err, parking) {
+		var set = {
+			planId: req.session.plan.id,
+			planGuid: req.session.plan.guid,
+			service: args.service,
+			eventId: args.eventId,
+			parking: args.parking,
+			total: args.total,
+		};
+
+		console.log(set);
+		if (typeof args.payment !== "undefined") {
+
+			var pmt = JSON.parse(args.payment);
+			var payment = {
+				organizer: true,
+				customerId: req.session.customer.id,
+			};
+
+			if (typeof pmt.amount !== "undefined") {
+				payment.amount = pmt.total;
+			}
+
+			if (typeof pmt.receipt !== "undefined") {
+				set.purchased = true;
+				payment.receipt = pmt.receipt;
+			}
+
+			set.payment = payment;
+		}
+
+		p = new Parking(set);
+
+		p.save(function(err) {
 			if (err) {
 				data.success = 0;
-				data.dbError = 'unable to find ticketGroup';
+				data.dbError = 'unable to save parking';
 				return me(null, data);
 			}
 
-			/* check if parking is purchased if it is not remove it */
-			async.forEach(parking, function(item, callback) {
-				console.log('checking parking');
-				console.log(item);
-				/* check if any of these are not yet purchased and remove them */
-				if (!item.purchased) {
-					item.remove(function(err) {
-						console.log('removed unpaidfor parking');
-						/* now remove the ticket from the plan */
-						req.session.plan.removeParking(item.id, function(err) {
-							if (err) {
-								console.log(err);
-								data.success = 0;
-								data.dbError = 'unable to remove parking ' + item.id;
-								return callback();
-							}
-							console.log('removed parking from plan: ' + req.session.plan.guid);
-							return callback();
-						});
-					})
-				} else {
-					callback();
-				}
-			}, function() {
-				console.log('removed unpurchased parking now adding parking');
-				/* finished iterating through existing parking */
-				var set = {
-					planId: req.session.plan.id,
-					planGuid: req.session.plan.guid,
-					service: args.service,
-					eventId: args.eventId,
-					parking: args.parking,
-					total: args.total,
-				};
-
-				console.log(set);
-				if (typeof args.payment !== "undefined") {
-
-					var pmt = JSON.parse(args.payment);
-					var payment = {
-						organizer: true,
-						customerId: req.session.customer.id,
-					};
-
-					if (typeof pmt.amount !== "undefined") {
-						payment.amount = pmt.total;
-					}
-
-					if (typeof pmt.receipt !== "undefined") {
-						set.purchased = true;
-						payment.receipt = pmt.receipt;
-					}
-
-					set.payment = payment;
+			/* now add the ticket to the plan */
+			req.session.plan.addParking(p, function(err) {
+				if (err) {
+					console.log(err);
+					data.success = 0;
+					data.dbError = 'unable to add Parking ' + p.id;
+					return me(null, data);
 				}
 
-				p = new Parking(set);
 
-				p.save(function(err) {
-					if (err) {
-						data.success = 0;
-						data.dbError = 'unable to save parking';
-						return me(null, data);
-					}
-
-					/* now add the ticket to the plan */
-					req.session.plan.addParking(p, function(err) {
-						if (err) {
-							console.log(err);
-							data.success = 0;
-							data.dbError = 'unable to add Parking ' + p.id;
-							return me(null, data);
-						}
-
-
-						console.log('added parking to plan: ' + req.session.plan.guid);
-						data.parking = p;
-						return me(null, data);
-					});
-				});
+				console.log('added parking to plan: ' + req.session.plan.guid);
+				data.parking = p;
+				return me(null, data);
 			});
 		});
 	},
@@ -1992,8 +1892,6 @@ exports.plan = {
 			return me(null, data);
 		}
 
-
-
 		console.log('add tickets to plan:');
 		console.log(args);
 
@@ -2002,102 +1900,114 @@ exports.plan = {
 			'planGuid': req.session.plan.guid,
 		};
 
-		/* right now - you can only have 1 un-purchased ticket group..so remove any tickets that are unpurchased from the plan */
+		var addTicketGroup = function() {
+			/* finished iterating through existing tickets */
+			var set = {
+				planId: req.session.plan.id,
+				planGuid: req.session.plan.guid,
+				service: 'tn',
+				eventId: args.ticketGroup.EventID,
+				ticketGroup: args.ticketGroup
+			};
 
-
-		/* find all the existing tickets for this plan and remove them if payment is not complete */
-		Ticket.find(query, function(err, tickets) {
-			if (err) {
-				data.success = 0;
-				data.dbError = 'unable to find ticketGroup';
-				return me(null, data);
+			console.log('add tickets');
+			if (typeof args.qty !== "undefined") {
+				set.qty = args.qty;
 			}
 
-			/* check if these tickets are still available */
-			async.forEach(tickets, function(item, callback) {
+			if (typeof args.total !== "undefined") {
+				set.total = args.total;
+			}
 
-				/* check if any of these are not yet purchased and remove them */
-				if (!item.purchased) {
-					item.remove(function(err) {
-						console.log('removed unpaidfor ticket');
-						/* now remove the ticket from the plan */
-						req.session.plan.removeTicket(item.id, function(err) {
-							if (err) {
-								console.log(err);
-								data.success = 0;
-								data.dbError = 'unable to add ticketGroup ' + item.id;
-								return callback();
-							}
-							console.log('removed ticketGroup from plan: ' + req.session.plan.guid);
-							return callback();
-						});
-					})
-				} else {
-					callback();
-				}
-			}, function() {
+			console.log(set);
+			if (typeof args.payment !== "undefined") {
 
-				/* finished iterating through existing tickets */
-				var set = {
-					planId: req.session.plan.id,
-					planGuid: req.session.plan.guid,
-					service: 'tn',
-					eventId: args.ticketGroup.EventID,
-					ticketGroup: args.ticketGroup
+				var p = JSON.parse(args.payment);
+				var payment = {
+					organizer: true,
+					transactionToken: p.transactionToken,
+					customerId: req.session.customer.id,
+					amount: p.total,
+					qty: p.qty
 				};
 
-				if (typeof args.qty !== "undefined") {
-					set.qty = args.qty;
+				set.payment = payment;
+			}
+
+			ticket = new Ticket(set);
+
+			ticket.save(function(err) {
+				console.log('saved ticket');
+				if (err) {
+					data.success = 0;
+					data.dbError = 'unable to save ticketGroup: ' + err;
+					console.log('error adding ticket to plan:');
+					console.log(data);
+					return me(null, data);
 				}
 
-				if (typeof args.total !== "undefined") {
-					set.total = args.total;
-				}
-
-				console.log(set);
-				if (typeof args.payment !== "undefined") {
-
-					var p = JSON.parse(args.payment);
-					var payment = {
-						organizer: true,
-						transactionToken: p.transactionToken,
-						customerId: req.session.customer.id,
-						amount: p.total,
-						qty: p.qty
-					};
-
-					set.payment = payment;
-				}
-
-				ticket = new Ticket(set);
-
-				ticket.save(function(err) {
+				/* now add the ticket to the plan */
+				req.session.plan.addTicket(ticket, function(err) {
+					console.log('added ticket');
+					console.log(err);
 					if (err) {
+						console.log(err);
 						data.success = 0;
-						data.dbError = 'unable to save ticketGroup: ' + err;
-						console.log('error adding ticket to plan:');
-						console.log(data);
+						data.dbError = 'unable to add ticketGroup ' + ticket.id;
 						return me(null, data);
 					}
-
-					/* now add the ticket to the plan */
-					req.session.plan.addTicket(ticket, function(err) {
-						if (err) {
-							console.log(err);
-							data.success = 0;
-							data.dbError = 'unable to add ticketGroup ' + ticket.id;
-							return me(null, data);
-						}
-						console.log('added ticketGroup to plan: ' + req.session.plan.guid);
-						data.ticketGroup = ticket;
-						return me(null, data);
-					});
+					console.log('added ticketGroup to plan: ' + req.session.plan.guid);
+					data.ticketGroup = ticket;
+					return me(null, data);
 				});
 			});
-		});
+
+		};
+		addTicketGroup();
+
+		/* find all the existing tickets for this plan and remove them if payment is not complete */
+		/* allowing multiple unpurchased ticket groups for now */
+		if (0) {
+			Ticket.find(query, function(err, tickets) {
+				if (err) {
+					data.success = 0;
+					data.dbError = 'unable to find ticketGroup';
+					return me(null, data);
+				}
+
+				/* check if these tickets are still available */
+				async.forEach(tickets, function(item, callback) {
+					console.log('remove existing ticket item');
+					console.log(item);
+
+					/* check if any of these are not yet purchased and remove them */
+					if (!item.purchased) {
+						item.remove(function(err) {
+							console.log('removed unpaidfor ticket');
+							/* now remove the ticket from the plan */
+							req.session.plan.removeTicket(item.id, function(err) {
+								if (err) {
+									console.log(err);
+									data.success = 0;
+									data.dbError = 'unable to add ticketGroup ' + item.id;
+									return callback();
+								}
+								console.log('removed ticketGroup from plan: ' + req.session.plan.guid);
+								return callback();
+							});
+						})
+					} else {
+						callback();
+					}
+				}, function() {
+					addTicketGroup();
+				});
+			});
+		}
 	},
 
 	removeTicketGroup: function(args, req, res) {
+		console.log('remove ticket group called');
 		var me = this;
 
 		var data = {
@@ -2137,15 +2047,35 @@ exports.plan = {
 			Ticket.find({
 				planId: req.session.plan.id
 			}, function(err, results) {
+				console.log(results);
+
 				var newT = [];
-				for (var i = 0; i < results.length; i++) {
-					newT.push(results[i]._id);
-				}
+				for (var i = results.length - 1; i >= 0; i--) {
+					var t = results[i];
+					newT.push(t.id);
+				};
 				req.session.plan.tickets = newT;
+				req.session.plan.markModified('tickets');
 				req.session.plan.save(function(err, results) {
-					console.log('saved plan after removing ticket - err is:' + err);
-					data.tickets = results;
-					me(null, data);
+					if (err) {
+						Plan.findOne()
+							.where('organizer.customerId').equals(req.session.customer._id)
+							.where('guid').equals(req.session.plan.guid).exec(function(err, p) {
+								console.log(err,p);
+								if (p === null) {
+									//this plan does not belong to this customer
+									return me('invalid guid');
+								}
+								req.session.plan = p;
+								return me(null, data);
+							});
+					} else {
+
+						console.log('saved plan after removing ticket - err is:' + err);
+						data.tickets = results;
+						me(null, data);
+
+					}
 				});
 			});
 		});

@@ -123,7 +123,7 @@ block plan-section
 													i.fa.fa-check-square-o.fa-2x.green(ng-show="friend.ponyUp.request")
 													i.fa.fa-square-o.fa-2x(ng-hide="friend.ponyUp.request")
 												.invitee-name.pull-left
-													span.name.orange {{friend.contactInfo.name}}&nbsp;
+													strong.name {{friend.contactInfo.name}}&nbsp;
 													span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'guest'}}
 
 									.row.send-pony-up-control(ng-show="friend.ponyUp.request")

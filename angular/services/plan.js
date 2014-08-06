@@ -120,7 +120,6 @@ factory('notifications', ['$timeout', 'plan',
 							/* console will throw: undefined is not a function if the notification isn't in the mappings */
 							/* if its in the plan then display it else hide it */
 							var n = self.findInPlan(el.id, p.notifications);
-							console.log(el.id);
 
 							if ((typeof n === "undefined") || n.acknowledged) {
 								console.log('hiding notification because it has been acknowledged: ');
@@ -152,203 +151,328 @@ factory('cart', ['plan',
 		self.tickets = {
 			fee: 0.15,
 			deliveryFee: 15,
-			label: 'Ticket Group '
+			label: 'Ticket Group ',
+			perGroup: false
 		};
 
 		self.parking = {
 			fee: 0,
 			deliveryFee: 0,
-			label: 'Parking Spot '
+			label: 'Parking Spot ',
+			perGroup: true
 		};
 
 		self.restaurants = {
 			fee: 0,
 			deliveryFee: 0,
-			label: 'Restaurant Deal '
+			label: 'Restaurant Deal ',
+			perGroup: true
 		};
 
 		self.hotels = {
 			fee: 0,
 			deliveryFee: 0,
-			label: 'Hotel Room '
+			label: 'Hotel Room ',
+			perGroup: true
+		};
+		self.methods = {
+			'tickets': {
+				"get": function() {
+					return plan.getTickets();
+				},
+				"getConfig": function() {
+					return self.tickets;
+				},
+				"getAmount": function(item) {
+					if (item.purchased) {
+						return item.payment.qty ? (item.payment.amount / item.payment.qty) : 0;
+					} else {
+						return item.ticketGroup.ActualPrice || 0;
+					}
+				},
+				"getQty": function(item) {
+					return (item.purchased) ? item.payment.qty : item.ticketGroup.maxSplit;
+				},
+				"totalEach": function(item, price, fee, qty, splitBy) {
+					//return price + fee;
+					//return ((price * qty) + fee) / splitBy;
+					if (item.purchased) {
+						return price;
+					} else {
+						return price + fee;
+						//return ((price + fee) * qty) / splitBy;
+					}
+				},
+				"total": function(item, totalEach, splitBy, deliveryFee) {
+					if (item.purchased) {
+						return item.payment.amount || 0;
+					} else {
+						return totalEach * splitBy + deliveryFee;
+					}
+				},
+
+			},
+			'parking': {
+				"get": function() {
+					return plan.getParking();
+				},
+				"getConfig": function() {
+					return self.parking;
+				},
+				"getAmount": function(item) {
+					if (item.purchased) {
+						return item.payment.qty ? (item.payment.amount / item.payment.qty) : 0;
+					} else {
+						if (item.service === 'pw') {
+							return item.parking.price || 0;
+						} else {
+							return 0;
+						}
+					}
+				},
+				"getQty": function(item) {
+					if (item.purchased) {
+						return item.payment.qty || 0;
+					} else {
+						if (item.service === 'pw') {
+							return item.parking.available_spots;
+						} else {
+							return 0;
+						}
+					}
+				},
+				"totalEach": function(item, price, fee, qty, splitBy) {
+					//return price + fee;
+					//return ((price * qty) + fee) / splitBy;
+					if (item.purchased) {
+						return price;
+					} else {
+						return price + fee;
+						//return ((price + fee) * qty) / splitBy;
+					}
+				},
+				"total": function(item, totalEach, splitBy, deliveryFee) {
+					if (item.purchased) {
+						return item.payment.amount || 0;
+					} else {
+						return totalEach * splitBy + deliveryFee;
+					}
+				},
+
+			},
+			'restaurants': {
+				"get": function() {
+					return plan.getRestaurants();
+				},
+				"getConfig": function() {
+					return self.restaurants;
+				},
+
+				"getAmount": function(item) {
+					if (item.purchased) {
+						return item.payment.qty ? (item.payment.amount / item.payment.qty) : 0;
+					} else {
+						if (item.service === 'yipit') {
+							return item.restaurant.price.raw || 0;
+						} else {
+							return 0;
+						}
+					}
+				},
+				"totalEach": function(item, price, fee, qty, splitBy) {
+					//return price + fee;
+					//return ((price * qty) + fee) / splitBy;
+					if (item.purchased) {
+						return price;
+					} else {
+						return price + fee;
+						//return ((price + fee) * qty) / splitBy;
+					}
+				},
+				"total": function(item, totalEach, splitBy, deliveryFee) {
+					if (item.purchased) {
+						return item.payment.amount || 0;
+					} else {
+						return totalEach * splitBy + deliveryFee;
+					}
+				},
+
+				"getQty": function(item) {
+					if (item.purchased) {
+						return item.payment.qty || 0;
+					} else {
+						if (item.service === 'yipit') {
+							return 1;
+						} else {
+							return 0;
+						}
+					}
+				}
+			},
+			'hotels': {
+				"get": function() {
+					return plan.getHotels();
+				},
+				"getConfig": function() {
+					return self.hotels;
+				},
+				"getAmount": function(item) {
+					return 0;
+				},
+				"getQty": function(item) {
+					return 0;
+				},
+				"totalEach": function(item, price, fee, qty, splitBy) {
+					//return price + fee;
+					//return ((price * qty) + fee) / splitBy;
+					if (item.purchased) {
+						return price;
+					} else {
+						return price + fee;
+						//return ((price + fee) * qty) / splitBy;
+					}
+				},
+				"total": function(item, totalEach, splitBy, deliveryFee) {
+					if (item.purchased) {
+						return item.payment.amount || 0;
+					} else {
+						return totalEach * splitBy + deliveryFee;
+					}
+				},
+
+			},
 		};
 
 		return {
-			totals: function(key) {
-				plan.get(function(p) {
-					var methods = {
-						'tickets': {
-							"get": function() {
-								return plan.getTickets();
-							},
-							"getConfig": function() {
-								return self.tickets;
-							},
-							"getAmount": function(item) {
-								if (item.purchased) {
-									return item.payment.qty ? (item.payment.amount / item.payment.qty) : 0;
-								} else {
-									return item.ticketGroup.ActualPrice || 0;
-								}
-							},
-							"getQty": function(item) {
-								return (item.purchased) ? item.payment.qty : item.ticketGroup.maxSplit;
-							},
-							"totalEach": function(item, price, fee, qty, splitBy) {
-								//return price + fee;
-								//return ((price * qty) + fee) / splitBy;
-								if (item.purchased) {
-									return price;
-								} else {
-									return price + fee;
-									//return ((price + fee) * qty) / splitBy;
-								}
-							},
-							"total": function(item, totalEach, splitBy, deliveryFee) {
-								if (item.purchased) {
-									return item.payment.amount || 0;
-								} else {
-									return totalEach * splitBy + deliveryFee;
-								}
-							},
+			suggestedAmounts: function() {
+				var friends = plan.getFriends();
+				var p = plan.get();
+				if (typeof p === "undefined") {
+					return;
+				}
+				if (typeof friends === "undefined") {
+					return;
+				}
 
-						},
-						'parking': {
-							"get": function() {
-								return plan.getParking();
-							},
-							"getConfig": function() {
-								return self.parking;
-							},
-							"getAmount": function(item) {
-								if (item.purchased) {
-									return item.payment.qty ? (item.payment.amount / item.payment.qty) : 0;
-								} else {
-									if (item.service === 'pw') {
-										return item.parking.price || 0;
-									} else {
-										return 0;
-									}
-								}
-							},
-							"getQty": function(item) {
-								if (item.purchased) {
-									return item.payment.qty || 0;
-								} else {
-									if (item.service === 'pw') {
-										return item.parking.reservation;
-									} else {
-										return 0;
-									}
-								}
-							},
-							"totalEach": function(item, price, fee, qty, splitBy) {
-								//return price + fee;
-								//return ((price * qty) + fee) / splitBy;
-								if (item.purchased) {
-									return price;
-								} else {
-									return price + fee;
-									//return ((price + fee) * qty) / splitBy;
-								}
-							},
-							"total": function(item, totalEach, splitBy, deliveryFee) {
-								if (item.purchased) {
-									return item.payment.amount || 0;
-								} else {
-									console.log('calc parking total');
-									console.log(totalEach, splitBy, deliveryFee);
-									return totalEach * splitBy + deliveryFee;
-								}
-							},
+	      var addOns = ['tickets', 'parking', 'restaurants', 'hotels'];
 
-						},
-						'restaurants': {
-							"get": function() {
-								return plan.getRestaurants();
-							},
-							"getConfig": function() {
-								return self.restaurants;
-							},
+	      angular.forEach(addOns, function(a) {
+	      	console.log('processing suggest amounts for '+a);
+					var funcs            = self.methods[a];
+					var config           = funcs.getConfig();
+					var items            = funcs.get();
+	        var remainingQty     = null;
+	        var remainingItem    = null;
+	        var used             = {};
+	        used[a]              = {};
 
-							"getAmount": function(item) {
-								if (item.purchased) {
-									return item.payment.qty ? (item.payment.amount / item.payment.qty) : 0;
-								} else {
-									if (item.service === 'yipit') {
-										return item.restaurant.price.raw || 0;
-									} else {
-										return 0;
-									}
-								}
-							},
-							"totalEach": function(item, price, fee, qty, splitBy) {
-								//return price + fee;
-								//return ((price * qty) + fee) / splitBy;
-								if (item.purchased) {
-									return price;
-								} else {
-									console.log(price,fee);
-									return price + fee;
-									//return ((price + fee) * qty) / splitBy;
-								}
-							},
-							"total": function(item, totalEach, splitBy, deliveryFee) {
-								if (item.purchased) {
-									return item.payment.amount || 0;
-								} else {
-									return totalEach * splitBy + deliveryFee;
-								}
-							},
 
-							"getQty": function(item) {
-								if (item.purchased) {
-									return item.payment.qty || 0;
-								} else {
-									if (item.service === 'yipit') {
-										return 1;
-									} else {
-										return 0;
-									}
-								}
+	        var handleFriend = function(friend) {
+	          var friendCount      = 1;
+	          var purchased        = [];
+	          var notPurchased     = [];
+	          var remainingFriends = null;
+	          friend[a]            = {};
+	          friend[a].suggestedPonyUpAmount = 0;
+	          friend.suggestedPonyUpAmount = 0;
+
+	          /* is this item per person or per friend group? */
+	          if (!config.perGroup) {
+	          	friendCount += parseInt(friend.rsvp.guestCount);
+	          }
+
+	          console.log('friendCount: '+friendCount);
+	          console.log('remainingQty: '+remainingQty);
+						/* didn't use all the qty from the last item */
+						if (remainingQty > 0) {
+							/* this friend still didn't use all the qty */
+							if (friendCount <= remainingQty) {
+								remainingQty    = remainingQty - friendCount;
+		            friend[a].suggestedPonyUpAmount += (remainingItem.costBreakdown.totalEach * friendCount) + remainingItem.costBreakdown.deliveryFeeEach;
+		            return;
+							} else {
+								/* not enough qty for all these friends */
+		            friend[a].suggestedPonyUpAmount += (remainingItem.costBreakdown.totalEach * remainingQty) + remainingItem.costBreakdown.deliveryFeeEach;
+
+		            /* decrement friendCount by remainingQty */
+		            friendCount   = friendCount - remainingQty;
+		          	used[a][remainingItem._id] = true;
+		            remainingQty  = null;
+		            remainingItem = null;
 							}
-						},
-						'hotels': {
-							"get": function() {
-								return plan.getHotels();
-							},
-							"getConfig": function() {
-								return self.hotels;
-							},
-							"getAmount": function(item) {
-								return 0;
-							},
-							"getQty": function(item) {
-								return 0;
-							},
-							"totalEach": function(item, price, fee, qty, splitBy) {
-								//return price + fee;
-								//return ((price * qty) + fee) / splitBy;
-								if (item.purchased) {
-									return price;
-								} else {
-									console.log(price,fee);
-									return price + fee;
-									//return ((price + fee) * qty) / splitBy;
-								}
-							},
-							"total": function(item, totalEach, splitBy, deliveryFee) {
-								if (item.purchased) {
-									return item.payment.amount || 0;
-								} else {
-									return totalEach * splitBy + deliveryFee;
-								}
-							},
 
-						},
-					};
+						}
 
-					var funcs            = methods[key];
+						if (remainingQty == 0) {
+		          used[a][remainingItem._id] = true;
+		          remainingQty               = null;
+		          remainingItem              = null;
+						}
+
+
+	          angular.forEach(items, function(i) {
+	            if (i.purchased) {
+	              purchased.push(i);
+	            } else {
+	              notPurchased.push(i);
+	            }
+	          });
+	          var all = purchased.concat(notPurchased);
+
+	          angular.forEach(all, function(item) {
+	          	if (typeof item.costBreakdown === "undefined") {
+	          		return;
+	          	}
+	          	if (friendCount == 0) {
+	          		return;
+	          	}
+	          	if (used[a][item._id]) {
+	          		return;
+	          	}
+	            /* are there enough qty in this item to satisfy this invitee */
+							var qty = funcs.getQty(item);
+							console.log('item qty: '+qty);
+
+							/* there more qty in this item than friends */
+							if (friendCount < qty) {
+								remainingQty    = qty - friendCount;
+								remainingItem   = item;
+		            friend[a].suggestedPonyUpAmount += (item.costBreakdown.totalEach * friendCount) + item.costBreakdown.deliveryFeeEach;
+		            /* all friends accounted for */
+			          friendCount     = 0;
+							}
+
+							if (friendCount >= qty) {
+								/* need to use the next ticket group */
+								friendCount  = friendCount - qty;
+								friend[a].suggestedPonyUpAmount += (item.costBreakdown.totalEach * qty) + item.costBreakdown.deliveryFeeEach;
+								used[a][item._id] = true;
+							}
+
+	          });
+	        };
+
+	        if (p.organizer.rsvp.decision) {
+	        	handleFriend(p.organizer);
+	        }
+
+	        angular.forEach(friends, handleFriend);
+
+	      });
+
+        angular.forEach(friends, function(friend) {
+		      angular.forEach(addOns, function(a) {
+	        	friend.suggestedPonyUpAmount += friend[a].suggestedPonyUpAmount;
+	        	friend[a].suggestedPonyUpAmount = parseFloat(friend[a].suggestedPonyUpAmount).toFixed(2);
+	        });
+	        friend.suggestedPonyUpAmount = parseFloat(friend.suggestedPonyUpAmount).toFixed(2);
+	      });
+			},
+
+			totals: function(key) {
+				var me = this;
+				plan.get(function(p) {
+					var funcs            = self.methods[key];
 					var config           = funcs.getConfig();
 					var items            = funcs.get();
 					var groupTotal       = 0;
@@ -363,7 +487,11 @@ factory('cart', ['plan',
 
 					/* count the organizer in the split? */
 					if (p.organizer.rsvp.decision) {
-						splitBy += parseInt(p.organizer.rsvp.guestCount) + 1;
+						splitBy += 1;
+	          /* is this item per person or per friend group? */
+	          if (!config.perGroup) {
+	          	splitBy += p.organizer.rsvp.guestCount;
+	          }
 						deliverySplitBy++;
 					}
 
@@ -373,7 +501,13 @@ factory('cart', ['plan',
 						var f = friends[i];
 						/* add 1 for each friend who is invited and going but don't count their guests */
 						if (f.inviteStatus && f.rsvp.decision) {
-							splitBy += parseInt(f.rsvp.guestCount) + 1;
+							splitBy += 1;
+		          /* is this item per person or per friend group? */
+		          if (!config.perGroup) {
+		          	splitBy += parseInt(f.rsvp.guestCount);
+		          }
+
+
 							deliverySplitBy++;
 						}
 					};
@@ -436,7 +570,7 @@ factory('cart', ['plan',
 						var groupNumber = i + 1;
 
 						/* how many tickets of this group are claimed */
-						cb.claimed         = splitBy;
+						cb.claimed         = parseInt(splitBy);
 						/* price each */
 						cb.price           = parseFloat(amount) || 0;
 						/* service fee each */
@@ -462,7 +596,7 @@ factory('cart', ['plan',
 					items.totalQty       = groupCount;
 					items.groups         = groups;
 					items.groupTotalEach = groupTotalEach;
-
+					me.suggestedAmounts();
 				});
 			}
 		};

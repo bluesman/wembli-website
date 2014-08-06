@@ -28,7 +28,10 @@
 											.add-on-total(ng-hide="p.purchased") {{p.parking.price * parkingSpotsNeeded | currency}}
 											.add-on-total(ng-show="p.purchased") {{p.payment.amount | currency}}
 										.col-xs-2.text-center(ng-hide="p.purchased")
-											a.btn.btn-primary.btn-sm(ng-click="buyParking($index)", ng-href="{{p.parking.www_reserve_url}}",target="_blank") Buy
+											a.btn.btn-primary.btn-xs(ng-click="buyParking($index)", ng-href="{{p.parking.www_reserve_url}}",target="_blank") Buy
+										.col-xs-2.text-center(ng-show="p.purchased")
+											a.btn.btn-primary.btn-xs(ng-href="/plan/pony-up") Pony Up!
+
 						.row(ng-show="{'google':true}[p.service]")
 							.col-xs-12
 								.parking-trigger.add-on-trigger(ng-click="toggleParkingPriceDetails(p._id)")
@@ -41,5 +44,5 @@
 
 			.row
 				.col-xs-12.disclaimer
-					strong * Wembli estimates the number of parking spots you'll need based on how many people are coming.
+					//- strong * Wembli estimates the number of parking spots you'll need based on how many people are coming.
 

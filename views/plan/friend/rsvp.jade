@@ -59,6 +59,15 @@ block plan-section
 								span(ng-show="{'split-first':true}[plan.preferences.payment]") &nbsp;After all invitees vote on preferences, {{organizer.firstName}} will send a link for everyone to pay for their portion of the outing before locking it in.
 								span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has chosen to foot the bill for this plan - W00t!
 								span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;{{organizer.firstName}} has already locked in the tickets as soon as all the RSVPs are in you'll get a Pony Up email so you can pay your share of the bill.
+					.row
+						.col-xs-12
+							a.btn.btn-warning.form-control(href="/plan/vote") Next Up: Vote!
+
+					if (req.session.plan.preferences.guestList !== 'private')
+						.row
+							.col-xs-12.rsvp-invitees-list
+								include ../includes/invitees-list
+
 
 				.col-md-5.col-xs-12.event-info-container
 					.hidden-xs.hidden-sm
@@ -84,12 +93,4 @@ block plan-section
 								.col-xs-8
 									span(ng-show="plan.preferences.inviteOptions.over21") 21+
 									span(ng-hide="plan.preferences.inviteOptions.over21") All Ages
-			if (req.session.plan.preferences.guestList !== 'private')
-				.row
-					.col-xs-12
-						include ../includes/invitees-list
 
-			.section-bottom.hide
-				.next-wrapper.pull-right
-
-					button#next-section2.btn.btn-orange.btn-large.scroll-to Next

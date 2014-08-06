@@ -9,7 +9,8 @@
 				i.fa.fa-users
 				span &nbsp;Who's Invited
 		.col-xs-6.text-right
-			a.btn.btn-sm.btn-warning.view-on-map(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3") Invite More People
+			- if (req.session.visitor.context === 'organizer')
+				a.btn.btn-sm.btn-warning.view-on-map(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3") Invite More People
 	.row
 		.col-xs-12
 			h4 There are {{totalComing}} {{totalComing | pluralize:'person'}} coming.
@@ -30,11 +31,11 @@
 					.invitee-name-container.col-xs-12
 						strong.name {{organizer.firstName}} {{organizer.lastName}} (organizer)&nbsp;
 						span.guests(ng-show="plan.organizer.rsvp.decision") + {{plan.organizer.rsvp.guestCount}} {{plan.organizer.rsvp.guestCount | pluralize:'guest'}}
-				.row.invitee-pref
+				.row.rsvp-status
 					.col-xs-10
-						.invitee-pref-header RSVP STATUS
+						.rsvp-status-header RSVP STATUS
 					.col-xs-2
-						.invitee-pref-value.text-right
+						.rsvp-status-value.text-right
 							i.fa.fa-2x.fa-check-circle-o.green(ng-show="{true:true}[plan.organizer.rsvp.decision]")
 							i.fa.fa-2x.fa-ban.red(ng-show="{false:true}[plan.organizer.rsvp.decision]")
 							i.fa.fa-2x.fa-question.invitee-rsvp-decision(ng-show="{null:true}[plan.organizer.rsvp.decision]")
@@ -59,8 +60,9 @@
 						strong.name {{friend.contactInfo.name}}&nbsp;
 						span.guests(ng-show="friend.rsvp.decision") + {{friend.rsvp.guestCount}} {{friend.rsvp.guestCount | pluralize:'guest'}}
 					.col-xs-4.text-right.rsvp-email-actions(ng-show="{'wemblimail':true}[friend.contactInfo.service]")
-						a.btn.btn-sm.btn-warning.resend-rsvp-email.clearfix(ng-hide="rsvpEmailSent", href="#",friend-id="{{friend._id}}") Resend RSVP
-						a.btn.btn-sm.btn-success(disabled, ng-show="rsvpEmailSent") Email Sent
+						- if (req.session.visitor.context === 'organizer')
+							a.btn.btn-sm.btn-warning.resend-rsvp-email.clearfix(ng-hide="rsvpEmailSent", href="#",friend-id="{{friend._id}}") Resend RSVP
+							a.btn.btn-sm.btn-success(disabled, ng-show="rsvpEmailSent") Email Sent
 
 				.row.rsvp-status
 					.col-xs-10
@@ -72,7 +74,7 @@
 							i.fa.fa-question.fa-2x.invitee-rsvp-decision(ng-show="{null:true}[friend.rsvp.decision]")
 
 				.row.invitee-prefs
-					.col-xs-12
+					.col-xs-12(ng-show="friend.rsvp.decision")
 						.row.invitee-prefs-header
 							.col-xs-12 Preferences:
 						.row.invitee-prefs-row(ng-show="friend.rsvp.decision && friend.rsvp.tickets")
@@ -106,11 +108,12 @@
 
 
 				//- make sure this is appropriate for friend plan view
-				.message-status-container(ng-show="{'organizer':true}[context]")
-					.row.rsvp-email-status(ng-show="{'wemblimail':true}[friend.contactInfo.service]")
-						.col-xs-12.message-status
-							span.label.label-info(title="Delivered on {{friend.email.rsvp.deliveredLastDate | date:'short'}}",ng-show="friend.email.rsvp.delivered") &nbsp;rsvp delivered({{friend.email.rsvp.delivered}})
-							span &nbsp;
-							span.label.label-info(title="Opened on {{friend.email.rsvp.openLastDate | date:'short'}}", ng-show="friend.rsvp.open") &nbsp;rsvp opened ({{friend.email.rsvp.open}})
-							span &nbsp;
-					//- TODO: pony up email status
+				- if (req.session.visitor.context === 'organizer')
+					.message-status-container
+						.row.rsvp-email-status(ng-show="{'wemblimail':true}[friend.contactInfo.service]")
+							.col-xs-12.message-status
+								span.label.label-info(title="Delivered on {{friend.email.rsvp.deliveredLastDate | date:'short'}}",ng-show="friend.email.rsvp.delivered") &nbsp;rsvp delivered({{friend.email.rsvp.delivered}})
+								span &nbsp;
+								span.label.label-info(title="Opened on {{friend.email.rsvp.openLastDate | date:'short'}}", ng-show="friend.rsvp.open") &nbsp;rsvp opened ({{friend.email.rsvp.open}})
+								span &nbsp;
+						//- TODO: pony up email status

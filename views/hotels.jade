@@ -4,13 +4,13 @@ block content
 		#hotel-confirm.addon-confirm.slide-in-down(ng-show="hotelConfirm")
 			.hotel-confirm-header.addon-confirm-header.slide-in-down-header
 				a(href="#")
-					i.fa.fa-times.fa-2x(ng-click="removeHotel(hotel._id)").pull-right
+					i.fa.fa-times.fa-2x(ng-click="removeHotel(currentHotel._id)").pull-right
 				h2.modal-title Confirm Adding Hotel To Your Plan
 				h4.modal-subtitle
 			.hotel-confirm-body.addon-confirm-body.slide-in-down-body.row
 				.left.section-view.col-md-4.col-xs-12
-					img.img-responsive.center-block(ng-hide="hotel.images.image_smart",src="/images/wembliman-hotel.png")
-					img.img-responsive.center-block(ng-show="hotel.images.image_smart",ng-src="{{hotel.images.image_smart}}")
+					img.img-responsive.center-block(ng-hide="currentHotel.images.image_smart",src="/images/wembliman-hotel.png")
+					img.img-responsive.center-block(ng-show="currentHotel.images.image_smart",ng-src="{{currentHotel.images.image_smart}}")
 				.right.col-md-8.col-xs-12
 					.alert.alert-warning
 						.row
@@ -22,10 +22,10 @@ block content
 								span purchasing this hotel, you are only adding it to your plan.  Once your friends pony up, you can buy this hotel.
 					.row
 						.col-xs-12
-							h3 {{hotel.title}}
+							h3 {{currentHotel.title}}
 					.row
 						.col-xs-12
-							p {{hotel.description}}
+							p {{currentHotel.description}}
 
 					//-
 						.addon-info.row(ng-show="{'yipit':true}[hotel.service]")
@@ -47,29 +47,29 @@ block content
 											strong &nbsp;{{parseDate(hotel.end_date) | date: 'longDate'}}
 
 
-					.addon-info.row(ng-show="{'google':true}[hotel.service]")
+					.addon-info.row(ng-show="{'google':true}[currentHotel.service]")
 						.col-xs-12
 							.row
 								.col-xs-12
-									strong.name {{hotel.name}}
-							.row(ng-show="hotel.vicinity")
+									strong.name {{currentHotel.name}}
+							.row(ng-show="currentHotel.vicinity")
 								.col-xs-12
-									strong.address {{hotel.vicinity}}
+									strong.address {{currentHotel.vicinity}}
 							.row(ng-show="hotelDetails.formatted_phone_number")
 								.col-xs-12
 									strong.phone-number {{hotelDetails.formatted_phone_number}}
-							.row(ng-show="hotelDetails.website")
-								.col-xs-12
-									a.website-link(href="{{hotelDetails.website}}", target="_blank") {{hotelDetails.website}}
-							.row(ng-show="hotel.price_level")
+							.row(ng-show="currentHotel.price_level")
 								.col-xs-12
 									strong Price:&nbsp;
-									span.price-level(level="hotel.price_level")
-							.row(ng-show="hotel.rating")
+									span.price-level(level="currentHotel.price_level")
+							.row(ng-show="currentHotel.rating")
 								.col-xs-12
-									span.star-rating(rating="hotel.rating")
+									span.star-rating(rating="currentHotel.rating")
 									span(ng-show="hotelDetails.user_ratings_total") &nbsp;-&nbsp;
-									a.reviews-link(target="_blank",ng-show="hotelDetails.user_ratings_total", href="hotelDetails.url") {{hotelDetails.user_ratings_total}} Reviews
+									a.reviews-link(target="_blank",ng-show="hotelDetails.user_ratings_total", ng-href="{{hotelDetails.url}}") {{hotelDetails.user_ratings_total}} Reviews
+									span(ng-show="hotelDetails.website") &nbsp;-&nbsp;
+									a.website-link(ng-show="hotelDetails.website", ng-href="{{hotelDetails.website}}", target="_blank") website
+
 					.next-step-text.row(ng-hide="backToPlan")
 						.col-xs-12
 							p Next step, choose your plan settings and invite friends.  Once your friends are invited, you'll ask them to pony up for their share of the cost.

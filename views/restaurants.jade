@@ -4,13 +4,13 @@ block content
 		#restaurant-confirm.addon-confirm.slide-in-down(ng-show="restaurantConfirm")
 			.restaurant-confirm-header.addon-confirm-header.slide-in-down-header
 				a(href="#")
-					i.fa.fa-times.fa-2x(ng-click="removeDeal(deal._id)").pull-right
+					i.fa.fa-times.fa-2x(ng-click="removeDeal(currentDeal._id)").pull-right
 				h2.modal-title Confirm Adding Deal To Your Plan
 				h4.modal-subtitle
 			.restaurant-confirm-body.addon-confirm-body.slide-in-down-body.row
 				.left.section-view.col-md-4.col-xs-12
-					img.img-responsive.center-block(ng-hide="deal.images.image_smart",src="/images/wembliman-restaurant.png")
-					img.img-responsive.center-block(ng-show="deal.images.image_smart",ng-src="{{deal.images.image_smart}}")
+					img.img-responsive.center-block(ng-hide="currentDeal.images.image_smart",src="/images/wembliman-restaurant.png")
+					img.img-responsive.center-block(ng-show="currentDeal.images.image_smart",ng-src="{{currentDeal.images.image_smart}}")
 				.right.col-md-8.col-xs-12
 					.alert.alert-warning
 						.row
@@ -22,37 +22,37 @@ block content
 								span purchasing this deal, you are only adding it to your plan.  Once your friends pony up, you can buy this deal.
 					.row
 						.col-xs-12
-							h3 {{deal.title}}
+							h3 {{currentDeal.title}}
 					.row
 						.col-xs-12
-							p {{deal.description}}
-					.addon-info.row(ng-show="{'yipit':true}[deal.service]")
+							p {{currentDeal.description}}
+					.addon-info.row(ng-show="{'yipit':true}[currentDeal.service]")
 						.col-xs-12
 							.row
 								.col-xs-12
-									strong.name {{deal.business.name}}
-									span(ng-show="deal.business.url") &nbsp;(&nbsp;
-									a.website(ng-show="deal.business.url", target="_blank", ng-href="{{deal.business.url}}") website
-									span(ng-show="deal.business.url") &nbsp;)
-							.row(ng-show="deal.price.formatted")
+									strong.name {{currentDeal.business.name}}
+									span(ng-show="currentDeal.business.url") &nbsp;(&nbsp;
+									a.website(ng-show="currentDeal.business.url", target="_blank", ng-href="{{currentDeal.business.url}}") website
+									span(ng-show="currentDeal.business.url") &nbsp;)
+							.row(ng-show="currentDeal.price.formatted")
 								.col-xs-12
-									span.price {{deal.price.formatted}}
-									span(ng-show="deal.discount.formatted") ,
-									span.yellow(ng-show="deal.discount.formatted") &nbsp;{{deal.discount.formatted}} discount!
-							.row(ng-show="deal.end_date")
+									span.price {{currentDeal.price.formatted}}
+									span(ng-show="currentDeal.discount.formatted") ,
+									span.yellow(ng-show="currentDeal.discount.formatted") &nbsp;{{currentDeal.discount.formatted}} discount!
+							.row(ng-show="currentDeal.end_date")
 								.col-xs-12
 									i.end-date Offer expires:
-										strong &nbsp;{{parseDate(deal.end_date) | date: 'longDate'}}
+										strong &nbsp;{{parseDate(currentDeal.end_date) | date: 'longDate'}}
 
 
-					.addon-info.row(ng-show="{'google':true}[deal.service]")
+					.addon-info.row(ng-show="{'google':true}[currentDeal.service]")
 						.col-xs-12
 							.row
 								.col-xs-12
-									strong.name {{restaurant.name}}
-							.row(ng-show="restaurant.vicinity")
+									strong.name {{currentDeal.name}}
+							.row(ng-show="currentDeal.vicinity")
 								.col-xs-12
-									strong.address {{restaurant.vicinity}}
+									strong.address {{currentDeal.vicinity}}
 							.row(ng-show="restaurantDetails.formatted_phone_number")
 								.col-xs-12
 									strong.phone-number {{restaurantDetails.formatted_phone_number}}
@@ -61,7 +61,7 @@ block content
 									a.website-link(href="{{restaurantDetails.website}}", target="_blank") {{restaurantDetails.website}}
 							.row(ng-show="restaurant.rating")
 								.col-xs-12
-									span.star-rating(rating="restaurant.rating")
+									span.star-rating(rating="currentDeal.rating")
 									span(ng-show="restaurantDetails.user_ratings_total") &nbsp;-&nbsp;
 									a.reviews-link(target="_blank",ng-show="restaurantDetails.user_ratings_total", href="restaurantDetails.url") {{restaurantDetails.user_ratings_total}} Reviews
 					.next-step-text.row(ng-hide="backToPlan")

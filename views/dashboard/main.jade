@@ -33,9 +33,11 @@ block dashboard-content
 					.row
 						include dashboard-list-item
 						.col-sm-3.col-xs-12
-							.cta.col-xs-4.col-sm-12
-								a(href="#",ng-click="deletePlan(plan.guid)") Delete this plan
-								a.btn.btn-primary(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
+							.row.actions
+								.col-xs-6.col-sm-12
+									a.btn.btn-primary.form-control(id="{{plan.guid}}",target="_self", href="/plan/{{plan.guid}}") See Plan
+								.col-xs-6.col-sm-12
+									a.btn.btn-warning.form-control(href="#",ng-click="deletePlan(plan.guid)") Delete this plan
 		#invited-list.invited-list(ng-show="{'/invited-list':true}[showList]")
 			- var activeBreadcrumb = "Events You're Invited To";
 			- var icon = 'fa-group'

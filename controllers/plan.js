@@ -123,7 +123,7 @@ module.exports = function(app) {
 			req.session.plan = p;
 			var url = '/plan';
 			if (req.param('section')) {
-				url = url + '#section' + req.param('section');
+				url = url + '/' + req.param('section');
 			}
 			res.redirect(url);
 		};

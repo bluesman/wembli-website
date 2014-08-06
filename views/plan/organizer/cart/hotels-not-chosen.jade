@@ -20,11 +20,11 @@
 
 - else
 	//- hotels part of the plan, none chosen, rsvp not complete, split after
-	.row(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0] && plan.rsvpComplete")
+	.row(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0]")
 		.col-xs-12
 			.add-on-included
 				p Your home away from home awaits.  In just a few short steps you'll be choosing the lodging of your dreams.  Happy Travels!
-	.row(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0] && plan.rsvpComplete")
+	.row(ng-show="plan.preferences.addOns.hotels && !plan.hotels[0]")
 		.col-xs-6
 			a.btn.btn-warning.btn-lg(href="/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}") Choose Hotel
 

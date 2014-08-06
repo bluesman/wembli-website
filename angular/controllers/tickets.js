@@ -141,17 +141,17 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
     /* watch selectedQty and initialize amountPaid */
     $scope.$watch('currentTicket.selectedQty', function(newVal, oldVal) {
+      console.log('currentTicket selectedqty changed');
+      console.log(newVal);
       if (newVal) {
-        var ticket = $scope.tickets[$scope.currentTicketIdx];
-        if (ticket) {
-          ticket.selectedQty      = parseInt(newVal);
-          /* can't do this here cause I don't have selected qty yet */
-          var shipping            = 15;
-          var serviceCharge       = (parseFloat(ticket.ActualPrice) * .15) * parseInt(ticket.selectedQty);
-          var actualPrice         = parseFloat(ticket.ActualPrice) * parseInt(ticket.selectedQty);
-          var amountPaid          = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
-          ticket.amountPaid       = amountPaid.toFixed(2);
-          $scope.currentTicket.amountPaid       = ticket.amountPaid;
+        $scope.currentTicket = $scope.tickets[$scope.currentTicketIdx];
+        if ($scope.currentTicket) {
+          $scope.currentTicket.selectedQty = parseInt(newVal);
+          var shipping                     = 15;
+          var serviceCharge                = (parseFloat($scope.currentTicket.ActualPrice) * .15) * parseInt($scope.currentTicket.selectedQty);
+          var actualPrice                  = parseFloat($scope.currentTicket.ActualPrice) * parseInt($scope.currentTicket.selectedQty);
+          var amountPaid                   = parseFloat(actualPrice) + parseFloat(serviceCharge) + parseFloat(shipping);
+          $scope.currentTicket.amountPaid  = amountPaid.toFixed(2);
         }
       }
     });
@@ -177,8 +177,9 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
         $scope.currentTicketIdx = idx;
         var ticket              = $scope.tickets[idx];
         $scope.currentTicket    = ticket;
-        $scope.currentTicket.selectedQty = ticket.selectedQty;
-        console.log(ticket);
+        $scope.currentTicket.selectedQty = ticket.selectedQty || ticket.maxSplit;
+        $scope.currentTicket.selectedQty = $scope.currentTicket.selectedQty.toString();
+        console.log($scope.currentTicket);
 
         var sections = $('#venue-map-container').tuMap("GetSections");
         for (var i = sections.length - 1; i >= 0; i--) {
@@ -297,6 +298,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
           googleAnalytics.trackEvent('Plan', 'boughtTickets', $scope.plan.event.eventName, '', function(err, result) {
             /* go to the next page which depends on whether they are splitting with friends or paying themself */
+            console.log('going to next page: '+ $scope.nextLink);
             $window.location.href = $scope.nextLink;
           });
         });
@@ -370,7 +372,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             if (el.maxSplit > $scope.maxSplit) {
               $scope.maxSplit = el.maxSplit;
             }
-            /* if the passed in qty is one of the valid splits, set it to the selectedQty of the dropdown */
+            /* if the passed in qty as one of the valid splits, set it to the selectedQty of the dropdown */
             if ($location.search().qty && (el.ValidSplits.int.indexOf($location.search().qty))) {
               el.selectedQty = $location.search().qty;
             }

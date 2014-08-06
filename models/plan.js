@@ -170,6 +170,8 @@ this.Model = function(mongoose) {
 		}
 
 		var p = this;
+		console.log('key: '+key);
+		console.log(p);
 		//check if this plan is in the list yet
 		async.detect(p[key],function(el,cb) {
 			 return cb((id === el));
@@ -178,6 +180,7 @@ this.Model = function(mongoose) {
 			console.log(result);
 			if (typeof result === "undefined") {
 				p[key].push(id);
+				console.log(p[key]);
 				p.markModified(key);
 				p.save(callback);
 			} else {

@@ -1,7 +1,7 @@
 extends layout
 block plan-section
 	- var sectionClass = (visitor.context === 'organizer') ? 'organizer-itinerary-section' : 'friend-itinerary-section';
-	- var ngController = (visitor.context === 'organizer') ? 'OrganizerItineraryCtrl' : 'friendItineraryCtrl';
+	- var ngController = (visitor.context === 'organizer') ? 'OrganizerItineraryCtrl' : 'FriendItineraryCtrl';
 	section#section-itinerary.container-fluid.hide(class="#{sectionClass} itinerary-section plan-section", ng-controller="#{ngController}")
 		.row.visible-xs.visible-sm
 			.col-xs-12.event-info-container
@@ -13,7 +13,7 @@ block plan-section
 		.body
 			.row.add-on-container
 				.col-md-7.col-xs-12
-					.row
+					.row(ng-show="tickets[0]")
 						.col-xs-12
 							.row
 								.col-xs-6
@@ -67,20 +67,21 @@ block plan-section
 								.row(ng-show="ticket.purchased")
 									.col-xs-12
 										strong Qty:&nbsp;
-										span {{ticket.purchased.qty}}
+										span {{ticket.payment.qty}}
 								.row(ng-show="ticket.purchased")
 									.col-xs-12
 										strong Total Paid:&nbsp;
-										span {{ticket.purchased.amount | currency}}
+										span {{ticket.payment.amount | currency}}
 								.row(ng-show="ticket.ticketGroup.Notes")
 									.col-xs-12
 										strong Notes:&nbsp;
 										span {{ticket.ticketGroup.Notes}}
+						- if (visitor.context === 'organizer')
 							.col-xs-12(ng-hide="ticket.purchased")
 								a.btn.btn-primary.btn-sm.form-control.buy-now(ng-click="buyTickets($index)", ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy Tickets Now
 
 					//- parking
-					.row.add-on-container
+					.row.add-on-container(ng-show="parking[0]")
 						.col-xs-12
 							.row
 								.col-xs-6
@@ -161,8 +162,9 @@ block plan-section
 											.col-xs-2
 												i.fa.fa-check-circle-o.green(ng-show="{1:true}[p.parking.valet]")
 												i.fa.fa-ban.red(ng-show="{0:true}[p.parking.valet]")
-							.col-xs-12(ng-hide="p.purchased")
-								a.btn.btn-primary.btn-sm.form-control.buy-now(ng-click="buyParking($index)",ng-href="{{p.parking.www_reserve_url}}",target="_blank") Buy Parking Now
+							- if (visitor.context === 'organizer')
+								.col-xs-12(ng-hide="p.purchased")
+									a.btn.btn-primary.btn-sm.form-control.buy-now(ng-click="buyParking($index)",ng-href="{{p.parking.www_reserve_url}}",target="_blank") Buy Parking Now
 
 
 						.row(ng-show="{'google':true}[p.service]")
@@ -191,7 +193,7 @@ block plan-section
 										a(ng-show="p.parking.details.url", ng-href="p.parking.details.url",target="_blank") directions
 
 
-					.row
+					.row.add-on-container(ng-show="restaurants[0]")
 						.col-xs-12
 							.row
 								.col-xs-6
@@ -238,10 +240,14 @@ block plan-section
 									.col-xs-12
 										strong Expires:&nbsp;
 										span {{getDate(r.restaurant.end_date) | date: 'shortDate'}}
+								.row(ng-show="r.purchased")
+									.col-xs-12
+										strong Deal Website:&nbsp;
+										a(ng-href="{{r.restaurant.url}}", target="_blank") view deal on {{r.restaurant.service}}
 							.col-xs-12.add-on-long-desription(ng-show="r.restaurant.description") {{r.restaurant.description}}
-
-							.col-xs-12(ng-hide="r.purchased")
-								a.btn.btn-primary.btn-sm.form-control.buy-now(ng-click="buyDeal($index)",ng-href="r.restaurant.url",target="_blank") Buy Deal Now
+							- if (visitor.context === 'organizer')
+								.col-xs-12(ng-hide="r.purchased")
+									a.btn.btn-primary.btn-sm.form-control.buy-now(ng-click="buyDeal($index)",ng-href="r.restaurant.url",target="_blank") Buy Deal Now
 
 						//-
 							.row(ng-show="{'google':true}[r.service]")
@@ -273,7 +279,7 @@ block plan-section
 
 
 					//- hotels
-					.row.add-on-container
+					.row.add-on-container(ng-show="hotels[0]")
 						.col-xs-12
 							.row
 								.col-xs-6

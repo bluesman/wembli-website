@@ -33,7 +33,9 @@
 											.add-on-total(ng-hide="r.purchased") {{r.restaurant.price.raw | currency}}
 											.add-on-total(ng-show="r.purchased") {{r.payment.amount | currency}}
 										.col-xs-2.text-center(ng-hide="r.purchased")
-											a.btn.btn-primary.btn-sm(ng-click="buyDeal($index)", ng-href="{{r.restaurant.url}}",target="_blank") Buy
+											a.btn.btn-primary.btn-xs(ng-click="buyDeal($index)", ng-href="{{r.restaurant.url}}",target="_blank") Buy
+										.col-xs-2.text-center(ng-show="r.purchased")
+											a.btn.btn-primary.btn-xs(ng-href="/plan/pony-up") Pony Up!
 
 						.row(ng-show="{'google':true}[p.service]")
 							.col-xs-12

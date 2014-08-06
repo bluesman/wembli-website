@@ -41,13 +41,9 @@ directive('priceLevel', [
           if (len) {
             return;
           }
-          console.log('pl is:');
-          console.log(pl);
           if (typeof pl !== "undefined") {
             var d = parseInt(pl);
-            console.log('d:'+d);
             for (var i = d; i > 0; i--) {
-              console.log('print dollar');
               element.append('<i class="fa fa-usd"/>');
             };
 
@@ -71,7 +67,6 @@ directive('starRating', [
           if (len) {
             return;
           }
-          console.log(rating);
           if (typeof rating !== "undefined") {
             var r = parseFloat(rating);
 

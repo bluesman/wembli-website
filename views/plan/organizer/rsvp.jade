@@ -12,13 +12,13 @@ block plan-section
 				.col-md-7.col-xs-12
 					.notification-container.row
 						.col-xs-12
-							#rsvp-complete-notification.notification.alert.alert-danger(ng-cloak, ng-show="rsvpCompleteNotification")
+							#rsvp-complete-notification.notification.alert.alert-info(ng-cloak, ng-show="rsvpCompleteNotification")
 								a(ng-click="acknowledgeNotification('rsvpComplete')",href="#",class="close",data-dismiss="alert")&times;
 								.row
 									.col-xs-1
 										.fa.fa-exclamation-triangle.fa-2x
 									.col-xs-11
-										span The RSVP period is over :) Your plan organizer should now have a final count of who's coming.&nbsp;
+										span The RSVP period is over :) There should now be a final count of who's coming.&nbsp;
 
 							.confirmed-alert.alert.alert-success(ng-cloak, ng-show="confirmationEmailSent")
 								.row
@@ -58,7 +58,7 @@ block plan-section
 								.form-group
 									label
 										span plus
-										input#guest-count.form-control.on-keydown.on-keyup(maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="plan.organizer.rsvp.guestCount",placeholder="1")
+										input#guest-count.form-control.on-keydown.on-keyup(ng-disabled="!plan.organizer.rsvp.decision",maxlength="2",on-keyup="guestCountKeyUp",on-keydown="guestCountKeyDown",name="guest_count",ng-model="plan.organizer.rsvp.guestCount",placeholder="1")
 										span {{plan.organizer.rsvp.guestCount | pluralize: 'person'}} (spouse, kids, etc..).
 					.row
 						.col-sm-offset-2.col-sm-10.col-xs-12

@@ -1284,6 +1284,8 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
         parking._id            = result.parking._id;
       	parking.parkingInPlan  = true;
         $scope.currentParking  = parking;
+        console.log('parking is now current: ');
+        console.log($scope.currentParking);
         /* if payment type is split-first just go straight to the options page */
         if ($scope.plan.preferences.payment === 'split-first') {
           $scope.parkingConfirm = true;
@@ -1303,6 +1305,8 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
 
 		$scope.addParkingReservations = function(idx) {
       var parking              = $scope.parkingReservations.parking_listings[idx];
+      console.log('add parking res: ');
+      console.log(parking);
       /* angularjs hack */
       delete parking["$$hashKey"];
       addParking(parking);
