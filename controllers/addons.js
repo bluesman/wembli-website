@@ -32,6 +32,10 @@ module.exports = function(app) {
 			};
 
 			planRpc['startPlan'].apply(function(err, results) {
+				if (!results.success) {
+					console.log('sending 404');
+					res.send('404: Page not Found', 404);
+				}
 				console.log(results);
 				locals.lat = req.session.plan.venue.data.geocode.geometry.location.lat;
 				locals.lon = req.session.plan.venue.data.geocode.geometry.location.lng;
