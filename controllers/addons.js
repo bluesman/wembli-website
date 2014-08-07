@@ -24,7 +24,7 @@ module.exports = function(app) {
 		};
 
 		/* check for a plan in the session */
-		if (typeof req.session.plan == "undefined") {
+		if (typeof req.session.plan == "undefined" || (req.session.plan.event.eventId !== eventId)) {
 			var args = {
 				'eventId': eventId,
 				'eventName': eventName,
