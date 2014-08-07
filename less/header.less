@@ -1,5 +1,37 @@
 header {
 
+	#header-search-form {
+		background-color:@grayLight;
+		color:@grayLight;
+		margin:10px 0 0 0;
+		padding:1px 2px;
+		border-radius:10px;
+
+		i {
+			border-top-left-radius:8px;
+			border-bottom-left-radius:8px;
+			position:absolute;
+			display: block;
+			background-color: transparent;
+			line-height:28px;
+			margin:0px 0px 0px 3px;
+			font-size:18px;
+		}
+
+		input {
+			border-radius:8px;
+			width:100%;
+			border: none;
+			padding: 4px 4px 4px 30px;
+			margin: 0px;
+
+			font-size: 14px;
+			line-height: 20px;
+			vertical-align: middle;
+			font-style: italic;
+		}
+	}
+
 	.aside {
 	  background: @white;
 
@@ -70,6 +102,12 @@ header {
 		.box-shadow(@shadow);
 		font-size:18px;
 
+		form {
+			input {
+				min-width:300px;
+			}
+		}
+
 		button.slidepanel {
 			line-height:26px;
 			padding:15px 20px 15px 0;
@@ -107,40 +145,6 @@ header {
 			margin:10px 0;
 			text-align:center;
 			font-size:14px;
-		}
-
-		.navbar-form {
-
-			background-color:@grayLight;
-			color:@grayLight;
-
-			padding:2px;
-			border-radius:10px;
-
-			i {
-				border-top-left-radius:8px;
-				border-bottom-left-radius:8px;
-				position:absolute;
-				display: block;
-				background-color: transparent;
-				line-height:28px;
-				margin:0px 0px 0px 3px;
-				font-size:18px;
-			}
-
-			input {
-				border-radius:8px;
-
-				border: none;
-				padding: 4px 4px 4px 30px;
-				margin: 0px;
-				width:266px;
-
-				font-size: 14px;
-				line-height: 20px;
-				vertical-align: middle;
-				font-style: italic;
-			}
 		}
 
 		.logo-35 {
