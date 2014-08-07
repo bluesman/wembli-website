@@ -29,8 +29,9 @@ module.exports = function(grunt) {
         	except: ['jQuery']
         },
         */
-        mangle:false,
-        beautify: true
+        mangle:true,
+        beautify: false,
+	compress:true,
       },
       "global": {
       	"files": {
