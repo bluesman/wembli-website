@@ -29,8 +29,8 @@
     "express-meta-tags": "0.0.x",
     "csv": "0.3.x",
     "optimist": "0.6.x",
-    "elasticsearch":"2.1.x",
-    "xml-stream":"0.4.x"
+    "elasticsearch": "2.1.x",
+    "xml-stream": "0.4.x"
   },
   "repository": {
     "type": "git",
@@ -41,8 +41,8 @@
   },
   "devDependencies": {
     "grunt": "~0.4.2",
-    "grunt-contrib-uglify": "~0.2.7",
-    "grunt-contrib-less": "~0.8.3",
-    "grunt-contrib-watch": "~0.5.3"
+    "grunt-contrib-less": "^0.11.4",
+    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-contrib-watch": "^0.6.1"
   }
 }
