@@ -137,7 +137,7 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 	function($window, $rootScope, $location) {
 		//templates can't make a date for some reason
 		$rootScope.getDate = function(d) {
-			return new Date(d);
+			//return new Date(d);
 
 			/* get current timezone offset for this browser */
 			var tmpDate = new Date()
