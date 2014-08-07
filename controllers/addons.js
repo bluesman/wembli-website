@@ -32,6 +32,7 @@ module.exports = function(app) {
 			};
 
 			planRpc['startPlan'].apply(function(err, results) {
+				console.log(results);
 				locals.lat = req.session.plan.venue.data.geocode.geometry.location.lat;
 				locals.lon = req.session.plan.venue.data.geocode.geometry.location.lng;
 				res.render(addon,locals);
