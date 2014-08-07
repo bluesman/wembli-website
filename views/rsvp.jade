@@ -22,12 +22,12 @@ block content
 				#rsvp-login-right.col-md-7.col-xs-12
 					.header.row
 						.col-sm-3.col-xs-12
-							.event-date-box(ng-cloak)
-								span.day {{getDate(eventDate)| date:'EEE'}}
-								span.event-date {{getDate(eventDate)| date:'MMM d'}}
-								span.time {{getDate(eventDate)| date:'h:mm a'}}
+							.event-date-box()
+								span.day {{getDate(eventDate) | date:'EEE'}}
+								span.event-date {{getDate(eventDate) | date:'MMM d'}}
+								span.time {{getDate(eventDate) | date:'h:mm a'}}
 						.col-sm-9.col-xs-12
-							.info(ng-cloak)
+							.info()
 								h1.name.block {{eventName}}
 								h2.venue-name {{eventVenue}}
 								.venue-address {{venueAddress}}

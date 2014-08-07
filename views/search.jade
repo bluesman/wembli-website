@@ -40,7 +40,7 @@ block content
 					.modal-body.container-fluid
 						.form-group
 							button.btn.btn-default.form-control.close(type="button", data-dismiss="modal") Back to Search
-		#payment-type-shade.slide-in-down(ng-show="showPaymentType")
+		#payment-type-shade.slide-in-down(ng-cloak, ng-show="showPaymentType")
 			.payment-type-header.slide-in-down-header
 				a(href="#")
 					i.fa.fa-times.fa-2x(ng-click="closePaymentModal()").pull-right
@@ -96,13 +96,13 @@ block content
 												- var btnText = 'Plan It';
 											- if ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined"))
 												- payment = plan.preferences.payment;
-											.col-sm-2
+											.col-sm-2.col-xs-12
 												.event-date-box
 													span.day!=        date.format("ddd")
 													span.event-date!= date.format("mmm d")
 													span.time!=       date.format("h:MM TT")
-											.col-sm-7
-												.info
+											.col-sm-7.col-xs-12
+												.info.text-center
 													span.name.block= event.Name
 													span.venue.block= (typeof event.Venue.Name != "undefined") ? event.Venue.Name : event.Venue
 													span.location.block= location
@@ -110,39 +110,43 @@ block content
 														span.changeEvent.block
 															a#changeEvent(href="http://#{app.settings.host}.wembli.com/search/#{lastSearch}") Change Event
 											.col-sm-3.col-xs-12
-												.cta.col-xs-4.col-sm-12
-													a.btn.btn-primary.prevent-default(ng-click="openPaymentModal({ID: \"#{event.ID}\",Name: \"#{event.Name}\"})",id="#{event.ID}", name="#{event.Name}", href="/tickets/"+event.ID+"/"+event.Name) Start Plan
-												.ticket-range.col-xs-8.col-sm-12
-													i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData['#{event.ID}'].locked")
-													span.visible-xs.visible-sm
-														span(ng-hide="ticketSummaryData['#{event.ID}'] || ticketSummaryData['#{event.ID}'].locked") Tap for ticket price range.
+												.row
+													.cta.col-xs-12
+														a.btn.btn-primary.prevent-default.form-control(ng-click="openPaymentModal({ID: \"#{event.ID}\",Name: \"#{event.Name}\"})",id="#{event.ID}", name="#{event.Name}", href="/tickets/"+event.ID+"/"+event.Name) Start Plan
+												.row
+													.ticket-range.col-xs-12
+														i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData['#{event.ID}'].locked")
+														span.visible-xs.visible-sm
+															span(ng-hide="ticketSummaryData['#{event.ID}'] || ticketSummaryData['#{event.ID}'].locked") Tap for ticket price range.
 									//- this is needed for the more events client side functionality
-									li.row.show-ticket-range(event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events")
+									li.row.show-ticket-range(event-id="{{event.ID}}",name="{{event.Name}}",id="{{event.ID}}-wrapper",ng-repeat="event in events track by $index")
 										- var lastSearch = req.session.lastSearch ? req.session.lastSearch : '/search';
 										- lastSearch += '?updateEvent=1';
 										- var payment;
 										- if ((typeof plan !== "undefined") && (typeof plan.preferences !== "undefined"))
 											- payment = plan.preferences.payment;
-										.col-sm-2
+										.col-xs-12.col-sm-2
 											.event-date-box
 												span.day {{getDate(event.Date)| date:'EEE'}}
 												span.event-date {{getDate(event.Date)| date:'MMM d'}}
 												span.time {{getDate(event.Date)| date:'h:mm a'}}
-										.col-sm-7
-											.info
+										.col-xs-12.col-sm-7
+											.info.text-center
 												span.name.block {{event.Name}}
 												span.venue.block {{ event.Venue.Name || event.Venue }}
 												span.location.block {{event.City+', '+event.StateProvince}}
 												- if (typeof changeEvent != "undefined" && changeEvent == true)
 													span.changeEvent.block
 														a#changeEvent(href="http://#{app.settings.host}.wembli.com/search/#{lastSearch}") Change Event
-										.col-sm-3.col-xs-12
-											.cta.col-xs-4.col-sm-12
-												a.btn.btn-primary.prevent-default(ng-click="openPaymentModal(event)", id="{{event.ID}}",name="{{event.Name}}",ng-href="/tickets/{{event.ID}}/{{event.Name}}") Start Plan
-											.ticket-range.col-xs-8.col-sm-12
-												i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData[event.ID].locked")
-												span.visible-xs.visible-sm
-													span(ng-hide="ticketSummaryData[event.ID] || ticketSummaryData[event.ID].locked") Tap for ticket price range.
+										.col-xs-12.col-sm-3
+											.row
+												.col-xs-12
+													a.btn.btn-primary.prevent-default.form-control(ng-href="/tickets/{{event.ID}}/{{event.Name}}", ng-click="openPaymentModal(event)") Start Plan
+											.row
+												.ticket-range.col-xs-12
+													i.fa.fa-cog.fa-spin(ng-show="ticketSummaryData[event.ID].locked")
+													span.visible-xs.visible-sm
+														span(ng-hide="ticketSummaryData[event.ID] || ticketSummaryData[event.ID].locked") Tap for ticket price range.
 
 									li.row.loading-more-events(ng-show="loadingMoreEvents")
 										.icon.col-sm-2

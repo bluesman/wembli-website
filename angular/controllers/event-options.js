@@ -1,8 +1,8 @@
 /* Controllers */
 angular.module('wembliApp.controllers.eventOptions', []).
 
-controller('EventOptionsCtrl', ['$scope', 'wembliRpc', '$window', 'plan',
-	function($scope, wembliRpc, $window, plan) {
+controller('EventOptionsCtrl', ['$scope', 'wembliRpc', '$window', 'plan', 'overlay',
+	function($scope, wembliRpc, $window, plan, overlay) {
 
 		//init login vars
 		var args = {};
@@ -35,6 +35,8 @@ controller('EventOptionsCtrl', ['$scope', 'wembliRpc', '$window', 'plan',
 					$scope.inviteOptionsError = (result.errors.inviteOptions) ? true : false;
 					$scope.guestListOptionsError = (result.errors.guestList) ? true : false;
 				}
+				overlay.loading(false);
+				overlay.hide();
 			});
 		});
 
@@ -51,20 +53,21 @@ controller('EventOptionsCtrl', ['$scope', 'wembliRpc', '$window', 'plan',
 			//fetchModals.fetch('/invitation');
 			$scope.submitInProgress = true;
 			wembliRpc.fetch('event-options.submit', eventOptions,	function(err, result) {
+				if (err) {
+					$scope.error = true;
+					$scope.errorMessage = err;
+				}
+
+				if (!result.success) {
+					$scope.error = true;
+					$scope.errorMessage = result.errorMessage;
+				}
+
+				if (result.success) {
+					$window.location.href = $scope.next;
+				} else {
 					$scope.submitInProgress = false;
-					if (err) {
-						$scope.error = true;
-						$scope.errorMessage = err;
-					}
-
-					if (!result.success) {
-						$scope.error = true;
-						$scope.errorMessage = result.errorMessage;
-					}
-
-					if (result.success) {
-						$window.location.href = $scope.next;
-					}
+				}
 
 			});
 		}

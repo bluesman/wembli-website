@@ -137,6 +137,8 @@ factory('initRootScope', ['$window', '$rootScope', '$location',
 	function($window, $rootScope, $location) {
 		//templates can't make a date for some reason
 		$rootScope.getDate = function(d) {
+			return new Date(d);
+
 			/* get current timezone offset for this browser */
 			var tmpDate = new Date()
 			var h = '0' + tmpDate.getTimezoneOffset() / 60;
@@ -459,7 +461,7 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 						refresh: true
 					}, function() {
 						callback(p);
-						$timeout(tick, 5000); //30 seconds
+						$timeout(tick, 30000); //30 seconds
 					});
 				})();
 			},

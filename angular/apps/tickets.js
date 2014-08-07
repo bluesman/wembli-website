@@ -22,9 +22,10 @@ angular.module('wembliApp', [
   function($routeProvider, $locationProvider) {
     //$locationProvider.html5Mode(true);
   }
-]).run(['$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'facebook', 'twitter', 'plan', 'wembliRpc',
-  function($timeout, initRootScope, $scope, $location, $route, $window, facebook, twitter, plan, wembliRpc) {
+]).run(['$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'facebook', 'twitter', 'plan', 'wembliRpc', 'overlay',
+  function($timeout, initRootScope, $scope, $location, $route, $window, facebook, twitter, plan, wembliRpc, overlay) {
     console.log('run event-options angular app');
+    overlay.show();
     $timeout(function() {
       plan.fetch(function() {});
     });

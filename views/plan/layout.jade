@@ -1,10 +1,11 @@
 extends ../layout
 block content
 	#plan-frame(ng-controller="PlanCtrl")
-		include ../includes/tickets-offsite
-		include ../includes/parking-offsite
-		include ../includes/hotel-offsite
-		include ../includes/restaurant-offsite
+		.slide-downs(ng-cloak)
+			include ../includes/tickets-offsite
+			include ../includes/parking-offsite
+			include ../includes/hotel-offsite
+			include ../includes/restaurant-offsite
 		include includes/nav
 		#plan-dashboard-container.plan-dashboard
 			block plan-dashboard

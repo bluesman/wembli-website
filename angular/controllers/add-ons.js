@@ -626,7 +626,7 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
       if (p.organizer.rsvp.decision !== null) {
         $scope.backToPlan = true;
       }
-      $scope.nextLink = $scope.backToPlan ? "/plan" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
+      $scope.nextLink = $scope.backToPlan ? "/plan/cart" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
       $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
 
 			if ($scope.context === 'friend') {
@@ -918,8 +918,12 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
 			});
 		};
 
-		$scope.removeDeal = function() {
-			var dealId = $scope.currentDeal._id;
+		$scope.removeDeal = function(idx) {
+			if (typeof idx === "undefined") {
+				var dealId = $scope.currentDeal._id;
+			} else {
+				var dealId = $scope.deals[idx]._id;
+			}
 
 			if (!dealId) {
 				$scope.restaurantConfirm = false;
@@ -946,8 +950,8 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
           $scope.restaurantConfirm = false;
           overlay.hide();
         }
-
-        plan.setRestaurants(results.restaurant);
+        console.log(results);
+        plan.setRestaurants(results.restaurants);
 
 				$rootScope.$broadcast('restaurants-changed');
 
@@ -993,7 +997,7 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
       if (p.organizer.rsvp.decision !== null) {
         $scope.backToPlan = true;
       }
-      $scope.nextLink = $scope.backToPlan ? "/plan" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
+      $scope.nextLink = $scope.backToPlan ? "/plan/cart" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
       $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
 
 			if ($scope.context === 'friend') {
@@ -1407,7 +1411,7 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
       if (p.organizer.rsvp.decision !== null) {
         $scope.backToPlan = true;
       }
-      $scope.nextLink = $scope.backToPlan ? "/plan" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
+      $scope.nextLink = $scope.backToPlan ? "/plan/cart" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
       $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
 
 			if ($scope.context === 'friend') {

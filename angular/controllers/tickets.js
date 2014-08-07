@@ -167,7 +167,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
         $scope.backToPlan = true;
       }
 
-      $scope.nextLink = $scope.backToPlan ? "/plan" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
+      $scope.nextLink = $scope.backToPlan ? "/plan/cart" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
       $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
       /* click handler for buy tix button
        * - adds tix to plan
@@ -426,6 +426,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           options.ServiceUrl = "//imap.ticketutils.net";
 			    options.OnInit = function(e, data) {
             $('#venue-map-loading').hide();
+            overlay.hide();
             console.log(data);
             tuMap.mapType = data.MapType;
 

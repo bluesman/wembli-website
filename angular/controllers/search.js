@@ -35,10 +35,11 @@ controller('SearchCtrl', ['$scope', '$rootScope', '$window', 'wembliRpc', 'googl
 			$scope.eventData = eventData;
 			$scope.showPaymentType = true;
 			overlay.show();
-			console.log($scope.showPaymentType);
 		}
+
 		$scope.closePaymentModal = function() {
 			$scope.showPaymentType = false;
+			overlay.loading(false);
 			overlay.hide();
 		}
 

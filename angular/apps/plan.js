@@ -31,8 +31,6 @@ angular.module('wembliApp', [
     overlay.show();
 
     planNav.onActivate(function() {
-      overlay.loading(false);
-      overlay.hide();
     });
 
 

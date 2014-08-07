@@ -28,6 +28,36 @@ directive('toggleSelected', [
     }
   }
 ]).
+directive('ngVisible', [
+  function() {
+    return {
+      restrict: 'CA',
+      link: function(scope, element, attr) {
+        if (element.hasClass('invisible')) {
+          element.removeClass('invisible');
+        }
+        if (!element.hasClass('visible')) {
+          element.addClass('visible');
+        }
+      }
+    }
+  }
+]).
+directive('ngInvisible', [
+  function() {
+    return {
+      restrict: 'CA',
+      link: function(scope, element, attr) {
+        if (element.hasClass('visible')) {
+          element.removeClass('visible');
+        }
+        if (!element.hasClass('invisible')) {
+          element.addClass('invisible');
+        }
+      }
+    }
+  }
+]).
 
 /* set selected class when clicked */
 directive('priceLevel', [

@@ -593,9 +593,10 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       $scope.reconcileTicketQty();
 
       $scope.canRequestPonyUp = ($scope.friendsComing && ($scope.friendsComing.length > 0));
+      overlay.loading(false);
+      overlay.hide();
 
 	    /* start polling for changes - polls every 30 seconds */
-      /*
 	    plan.poll(function(plan) {
 	      plan.get(function(p) {
 		      $scope.plan        = p;
@@ -610,10 +611,11 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
 
 		      $scope.calcTotalComing();
           $scope.setSelectedQty();
+          $scope.reconcileTicketQty();
 
 	      });
 	    });
-      */
+
     });
 	}
 ]).
@@ -791,9 +793,6 @@ controller('OrganizerCartCtrl', ['$scope','plan', 'planNav',
     }
 
     planNav.activate('cart');
-    $scope.$watch('buyTicketsOffsite', function(n, o) {
-      console.log('buyTicketsOffsite: '+n);
-    });
 
     $scope.showChangeTicketsLink = function() {
       plan.get(function(p) {

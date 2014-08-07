@@ -10,7 +10,7 @@ block plan-section
 		.body
 			.row
 				.col-md-7.col-xs-12
-					.notification-container.row
+					.notification-container.row(ng-cloak)
 						.col-xs-12
 							#rsvp-complete-notification.notification.alert.alert-info(ng-cloak, ng-show="rsvpCompleteNotification")
 								a(ng-click="acknowledgeNotification('rsvpComplete')",href="#",class="close",data-dismiss="alert")&times;
@@ -70,6 +70,11 @@ block plan-section
 										strong Please be aware that tickets are NOT locked in until they are paid for.
 								span(ng-show="{'no-split':true}[plan.preferences.payment]") &nbsp;You have chosen to foot the bill for this plan - w00t!
 								span(ng-show="{'split-after':true}[plan.preferences.payment]") &nbsp;Once the RSVP's are in, you will lock in the tickets then send a link for everyone to pay for their portion of the outing.
+
+					.row
+						.col-xs-12.actions
+							a.btn.btn-primary.form-control(ng-cloak, ng-hide="tickets", ng-href="/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}") Next, Find Tickets
+							a.btn.btn-primary.form-control(ng-cloak, ng-show="tickets", ng-href="/plan/cart") View Your Cart
 					.row
 						.col-xs-12.rsvp-invitees-list
 							include ../includes/invitees-list
@@ -128,3 +133,4 @@ block plan-section
 												i.fa.fa-check-square-o.green(ng-show="{'private':true}[plan.preferences.guestList]")
 												i.fa.fa-square-o(ng-show="!{'private':true}[plan.preferences.guestList]")
 												span My guests can not see who else is invited
+

@@ -4,39 +4,43 @@
 			i.fa.fa-times.fa-2x(ng-click="removeDeal()").pull-right
 		h2.modal-title Purchase Deal For {{plan.event.eventName}}
 		h4.modal-subtitle Before we take you to your planning dashboard we need to know:
-	.buy-offsite-body.slide-in-down-body.row
-		.col-md-6.col-xs-12.option-container
-			.option-content
+
+	form#deal-offsite-form.form-inline.buy-offsite-body.slide-in-down-body(name="deal-offsite-form")
+		.row
+			.col-md-6.col-xs-12
 				.row
 					.col-xs-12
 						h3 Yes, I bought my deal!
 				.row
 					.col-xs-12
-						form#deal-offsite-form.form-inline.option-body(name="deal-offsite-form")
-							.form-group
-								span I just bought&nbsp;
-								input#qty.form-control(type="text",ng-model="currentDeal.selectedQty",name="selectedQty", type="number")
-								span &nbsp;{{currentDeal.selectedQty | pluralize:'deal'}} for a total of&nbsp;
-							.form-group
-								#amount-paid-input-group.input-group
-									span.input-group-addon $
-									input#amount-paid.form-control(type="text",name="amount_paid",ng-model="currentDeal.amountPaid")
-									span .
-							br
-							.form-group
-								label#confirm-price-qty-container
-									input#confirm-price-qty.hide.form-control(name="confirmPriceQty",type="checkbox",ng-model="confirmPriceQty")
-									i.fa.fa-check-square-o(ng-show="confirmPriceQty")
-									i.fa.fa-square-o(ng-hide="confirmPriceQty")
-									span Check this box if its correct. Otherwise, please update the info above.
+						.form-group
+							span I just bought&nbsp;
+							input#qty.form-control(type="text",ng-model="currentDeal.selectedQty",name="selectedQty", type="number")
+							span &nbsp;{{currentDeal.selectedQty | pluralize:'deal'}} for a total of&nbsp;
+						.form-group
+							#amount-paid-input-group.input-group
+								span.input-group-addon $
+								input#amount-paid.form-control(type="text",name="amount_paid",ng-model="currentDeal.amountPaid")
+								span .
+				.row
+					.col-xs-12.form-group
+						label#confirm-price-qty-container
+							input#confirm-price-qty.hide.form-control(name="confirmPriceQty",type="checkbox",ng-model="confirmPriceQty")
+							i.fa.fa-check-square-o(ng-show="confirmPriceQty")
+							i.fa.fa-square-o(ng-hide="confirmPriceQty")
+							span Check this box if its correct. Otherwise, please update the info above.
 				.row
 					.col-xs-12
 						.alert.alert-danger(ng-show="confirmErr") Please confirm that the amounts are correct and the checkbox is checked before continuing.
+			.col-sm-6.middle-option.hidden-xs
 				.row
 					.col-xs-12
-						button#bought-deal-button.btn.btn-primary.btn-sm.form-control(ng-click="boughtDeal()") Continue
-		.col-md-6.col-xs-12.option-container.middle-option
-			.option-content
-				h3 No, show me somethin' else...
-				p.option-body I decided not to buy those spots. Show me other options.
-				button.btn.btn-primary.btn-sm.form-control(ng-click="removeDeal()") See More Deals
+						h3 No, show me somethin' else...
+				.row
+					.col-xs-12
+						p.option-body I decided not to buy those spots. Show me other options.
+		.row.actions
+			.col-xs-6
+				button#bought-deal-button.btn.btn-primary.btn-sm.form-control(ng-click="boughtDeal()") Continue
+			.col-xs-6
+				button.btn.btn-danger.btn-sm.form-control(ng-click="removeDeal()") Cancel

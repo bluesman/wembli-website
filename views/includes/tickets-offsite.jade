@@ -1,36 +1,47 @@
-#tickets-offsite.slide-in-down(ng-show="buyTicketsOffsite")
+#tickets-offsite.slide-in-down(ng-show="buyTicketsOffsite", ng-cloak)
 	.buy-offsite-header.slide-in-down-header
 		a(href="#")
 			i.fa.fa-times.fa-2x(ng-click="removeTicketGroup()").pull-right
 		h2.modal-title Ticket Purchase For {{plan.event.eventName}}
 		h4.modal-subtitle Before we take you to your planning dashboard we need to know:
-	.buy-offsite-body.slide-in-down-body.row
-		.col-md-6.col-xs-12.option-container
-			.option-content
-				h3 Yes, I bought my tickets!
-				form#tickets-offsite-form.form-inline.option-body(name="tickets-offsite-form")
-					.form-group
-						span I just bought&nbsp;
-						input#qty.form-control(type="text",ng-model="currentTicket.selectedQty",name="selectedQty", type="number")
-						//- select#qty.form-control(ng-model="currentTicket.selectedQty",ng-options="q for q in currentTicket.ValidSplits.int")
-						span &nbsp;tix for a total of&nbsp;
-					.form-group
-						#amount-paid-input-group.input-group
-							span.input-group-addon $
-							input#amount-paid.form-control(type="text",name="amount_paid",ng-model="currentTicket.amountPaid")
-							span .
-					br
-					.form-group
+
+	form#tickets-offsite-form.form-inline.buy-offsite-body.slide-in-down-body(name="tickets-offsite-form")
+		.row
+			.col-sm-6.col-xs-12
+				.row
+					.col-xs-12
+						h3 Yes, I bought my tickets!
+				.row
+					.col-xs-12
+						.form-group
+							span I just bought&nbsp;
+							input#qty.form-control(type="text",ng-model="currentTicket.selectedQty",name="selectedQty", type="number")
+							//- select#qty.form-control(ng-model="currentTicket.selectedQty",ng-options="q for q in currentTicket.ValidSplits.int")
+							span &nbsp;tix for a total of&nbsp;
+						.form-group
+							#amount-paid-input-group.input-group
+								span.input-group-addon $
+								input#amount-paid.form-control(type="text",name="amount_paid",ng-model="currentTicket.amountPaid")
+								span .
+				.row
+					.col-xs-12.form-group
 						label#confirm-price-qty-container
 							input#confirm-price-qty.hide.form-control(name="confirmPriceQty",type="checkbox",ng-model="confirmPriceQty")
 							i.fa.fa-check-square-o(ng-show="confirmPriceQty")
 							i.fa.fa-square-o(ng-hide="confirmPriceQty")
 							span Check this box if its correct. Otherwise, please update the info above.
-				.alert.alert-danger(ng-show="confirmErr") Please confirm that the amounts are correct and the checkbox is checked before continuing.
+				.row
+					.col-xs-12
+						.alert.alert-danger(ng-show="confirmErr") Please confirm that the amounts are correct and the checkbox is checked before continuing.
+			.col-sm-6.middle-option.hidden-xs
+				.row
+					.col-xs-12
+						h3 No, show me somethin' else...
+					.col-xs-12
+						p.option-body I decided not to buy those stinkin' tickets. Show me other options.
+		.row.actions
+			.col-xs-6
 				button#bought-tickets-button.btn.btn-primary.btn-sm.form-control(ng-click="boughtTickets()") Continue
-		.col-md-6.col-xs-12.option-container.middle-option
-			.option-content
-				h3 No, show me somethin' else...
-				p.option-body I decided not to buy those stinkin' tickets. Show me other options.
-				button.btn.btn-primary.btn-sm.form-control(ng-click="removeTicketGroup()") See More Tickets
+			.col-xs-6
+				button.btn.btn-danger.btn-sm.form-control(ng-click="removeTicketGroup()") Cancel
 

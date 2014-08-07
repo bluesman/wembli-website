@@ -53,23 +53,27 @@ h4 {
     @media (min-width: @screen-md-min) {
       .middle-option {
         border-left: thin solid @grayLight;
-
+        min-height:130px;
       }
     }
-    .option-container {
-
+    .row {
+      margin-bottom:10px;
     }
     .option-container:hover {
       background-color: lighten(@blueLight, 20%);
     }
 
     .option-content {
-      padding:20px;
 
       .option-body {
         height:100px;
       }
 
+    }
+    .actions {
+      button {
+        width:100%;
+      }
     }
   }
 
@@ -376,6 +380,13 @@ dd {margin-left:0;}
 .tc { text-align: center }
 .tb { text-align: block }
 
+.visible {
+  visibility: initial !important;
+}
+
+.invisivble {
+  visibility: hidden !important;
+}
 
 /* Extra small devices (phones, less than 768px) */
 /* No media query since this is the default in Bootstrap */

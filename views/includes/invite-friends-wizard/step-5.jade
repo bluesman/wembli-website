@@ -41,19 +41,19 @@ form#invite-wizard-step5-form(name="wemblimailForm")
 				#step5-friends-list.friends-list-container
 					.friends-list.row
 						.col-xs-12
-							.friend(ng-hide="wemblimail.friends[0]")
+							.friend(ng-hide="invitedFriends[0]")
 								.row
 									.col-xs-12
 										.friend-name
 											.name
 												i.fa.fa-user &nbsp;Friends invited via email will show up here...
-							.friend(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in wemblimail.friends")
+							.friend(title="{{friend.contactInfo.serviceId}}",ng-repeat="friend in invitedFriends")
 								.row
-									.col-xs-8
+									.col-xs-12.col-sm-8
 										.friend-name
 											.name
-												i.friend-no-img.fa.fa-user &nbsp;invited friend: {{friend.contactInfo.name}}
-									.col-xs-4
+												i.friend-no-img.fa.fa-user &nbsp;invited friend: {{friend.contactInfo.name}} ({{friend.contactInfo.serviceId}})
+									.col-xs-12.col-sm-4
 										.friend-status(ng-show="friend.checked && rsvpUndecided(friend)")
 											span.label.label-info undecided
 										.friend-status(ng-show="friend.checked && rsvpAccepted(friend)")

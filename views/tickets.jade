@@ -4,7 +4,7 @@ block content
 	//- include includes/modals/tickets/tickets-login
 	//- include includes/modals/tickets/tickets-offsite
 	#tickets.addons-container(ng-controller="TicketsCtrl")
-		#tickets-confirm.slide-in-down(ng-show="ticketsConfirm")
+		#tickets-confirm.slide-in-down(ng-cloak,ng-show="ticketsConfirm")
 			.tickets-confirm-header.slide-in-down-header
 				a(href="#")
 					i.fa.fa-times.fa-2x(ng-click="removeTicketGroup()").pull-right

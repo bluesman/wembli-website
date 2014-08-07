@@ -22,7 +22,7 @@ block content
 								.venue-address(ng-show="plan.venue.data.geocode.formatted_address") {{plan.venue.data.geocode.formatted_address}}
 								.venue-address(ng-hide="plan.venue.data.geocode.formatted_address") {{plan.venue.data.Street1+', '+plan.event.eventCity+', '+plan.event.eventState}}
 
-					.row(ng-show="error")
+					.row(ng-show="error",ng-cloak)
 						.col-xs-12
 							.credit-card-alert.alert.alert-warning
 								i.fa.fa-warningd.fa-2x
@@ -94,9 +94,8 @@ block content
 											i.fa.fa-check-square-o.fa-2x.green(ng-show="{'private':true}[guest_list]")
 											i.fa.fa-square-o.fa-2x(ng-show="!{'private':true}[guest_list]")
 											span My guests can not see who else is invited
-								button.btn.btn-primary.form-control(type="submit", ng-hide="submitInProgress") &nbsp;Continue To Invite Friends
-								button.btn.btn-primary.form-control.mute(type="submit", ng-show="submitInProgress",ng-disabled="submitInProgress")
-									.fa.fa-cog.fa-spin
+								button.btn.btn-primary.form-control(type="submit", ng-disabled="submitInProgress")
+									i.fa.fa-cog.fa-spin.invisible(ng-class="{true:'visible'}[submitInProgress]")
 									span &nbsp;Continue To Invite Friends
 
 

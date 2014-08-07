@@ -8,9 +8,6 @@
 			h3.add-on-header
 				i.fa.fa-users
 				span &nbsp;Who's Invited
-		.col-xs-12.col-sm-6
-			- if (req.session.visitor.context === 'organizer')
-				a.btn.btn-sm.btn-warning.view-on-map.form-control(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3") Invite More People
 	.row
 		.col-xs-12
 			h4 There are {{totalComing}} {{totalComing | pluralize:'person'}} coming.
@@ -67,8 +64,8 @@
 									i.email(ng-show="{'wemblimail':true}[friend.contactInfo.service]") {{friend.contactInfo.serviceId}}
 					.col-xs-4.text-right.rsvp-email-actions(ng-show="{'wemblimail':true}[friend.contactInfo.service]")
 						- if (req.session.visitor.context === 'organizer')
-							a.btn.btn-sm.btn-warning.resend-rsvp-email.clearfix(ng-hide="rsvpEmailSent", href="#",friend-id="{{friend._id}}") Resend RSVP
-							a.btn.btn-sm.btn-success(disabled, ng-show="rsvpEmailSent") Email Sent
+							a.btn.btn-xs.btn-warning.resend-rsvp-email.clearfix(ng-hide="rsvpEmailSent", href="#",friend-id="{{friend._id}}") Resend RSVP
+							a.btn.btn-xs.btn-success(disabled, ng-show="rsvpEmailSent") Email Sent
 
 				.row.rsvp-status
 					.col-xs-10
@@ -123,3 +120,8 @@
 								span.label.label-info(title="Opened on {{friend.email.rsvp.openLastDate | date:'short'}}", ng-show="friend.rsvp.open") &nbsp;rsvp opened ({{friend.email.rsvp.open}})
 								span &nbsp;
 						//- TODO: pony up email status
+	- if (req.session.visitor.context === 'organizer')
+		.row
+			.col-xs-12
+				a.btn.btn-sm.btn-warning.view-on-map.form-control(href="/invitation/{{plan.event.eventId}}/{{plan.event.eventName}}#/step3") Invite More People
+

@@ -3,8 +3,8 @@
 /* Directives */
 angular.module('wembliApp.directives.invitationWizard', []).
 
-directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '$timeout', 'plan', '$location', 'wembliRpc', 'customer', 'facebook', 'twitter', 'loggedIn',
-  function($rootScope, $http, $filter, $window, $timeout, plan, $location, wembliRpc, customer, facebook, twitter, loggedIn) {
+directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '$timeout', 'plan', '$location', 'wembliRpc', 'customer', 'facebook', 'twitter', 'loggedIn', 'overlay',
+  function($rootScope, $http, $filter, $window, $timeout, plan, $location, wembliRpc, customer, facebook, twitter, loggedIn, overlay) {
     return {
       restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
@@ -123,10 +123,6 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
           plan.get(function(p) {
             $scope.plan = p;
             $scope.loggedIn = loggedIn.check();
-            //display the modal if there's a plan
-            if ($scope.plan && typeof $scope.plan.event.eventId === "undefined") {
-              return;
-            }
 
             /* figure out which step to go to */
             var path = $location.path();
@@ -158,6 +154,10 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
               customer.set($scope.customer);
             }
             $scope.gotoStep(initialStep);
+            overlay.loading(false);
+            overlay.hide();
+
+
           });
 
         }
@@ -278,7 +278,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
             $scope.forgotPasswordEmailSent = false;
 
             if ($scope.signup.$valid) {
-              $('#invitation-modal').modal('loading');
 
               var rpcArgs = {
                 'firstName': $scope.customer.firstName,
@@ -289,9 +288,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
               };
 
               wembliRpc.fetch('invite-friends.submit-signup', rpcArgs, function(err, result) {
-                /* toggle loading */
-                $('#invitation-modal').modal('loading');
-
                 if (result.exists && !result.noPassword) {
                   $scope.login.accountExists = true;
                   return $scope.showForm('showLoginForm', 'showSignupForm');
@@ -357,7 +353,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
             $scope.forgotPasswordEmailSent = false;
 
             if ($scope.login.$valid) {
-              $('#invitation-modal').modal('loading');
 
               var rpcArgs = {
                 'email': $scope.customer.email,
@@ -365,8 +360,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
               };
 
               wembliRpc.fetch('invite-friends.submit-login', rpcArgs, function(err, result) {
-                /* toggle loading */
-                $('#invitation-modal').modal('loading');
 
                 if (result.noPassword) {
                   return $scope.showForm('showLoginUnconfirmedForm', 'showLoginForm');
@@ -386,7 +379,7 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
               });
             } else {}
           };
-k        }
+        }
       ],
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
@@ -410,16 +403,11 @@ directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter', 'plan',
               return $scope.gotoStep('step1');
             }
 
-            $('#invitation-modal').modal('loading');
-
             var rpcArgs = {
               rsvpDate: $scope.plan.rsvpDate,
             };
 
             wembliRpc.fetch('invite-friends.submit-rsvp', rpcArgs, function(err, result) {
-              /* toggle loading */
-              $('#invitation-modal').modal('loading');
-
               /* If There's A No Cust Error Send Them Back To Step-1 With An Error */
               if (result.noCustomer) {
                 $scope.signup.noContinue = true;
@@ -443,6 +431,7 @@ directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter', 'plan',
             $scope.navData['nav-step2'] = $filter('date')($scope.plan.rsvpDate, 'mediumDate');
             $scope.stepCompleted['nav-step2'] = true;
           });
+
         }
       ],
       compile: function(element, attr, transclude) {
@@ -601,7 +590,6 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
               facebook.api('/me/friends', $scope.handleFriendsFetch);
             }
           }
-
           $scope.$on('facebook-login', function(e, args) {
             if (facebook.getAuth()) {
               facebook.api('/me', $scope.handleProfileFetch);
@@ -665,18 +653,14 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
               serviceId: friend.id
             };
 
-            $('#invitation-modal').modal('loading');
             /*
             initially add the friend to the plan with an inviteStatus of false
             once the post callback indicates a successful post, then we'll set invite status to true
           */
             plan.addFriend(addFriendArgs, function(err, result) {
-              $('#invitation-modal').modal('loading');
-
               /* If There's A No Cust Error Send Them Back To Step-1 With An Error */
               if (result.noCustomer) {
                 $scope.signup.noContinue = true;
-                $('#invitation-modal').modal('loading');
                 return $scope.gotoStep('step1');
               }
 
@@ -759,7 +743,6 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
             }
           });
 
-
         }
       ],
       compile: function(element, attr, transclude) {
@@ -780,24 +763,18 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
           $scope.navData['nav-step5'] = 0;
           $scope.stepCompleted['nav-step5'] = false;
 
-          $scope.selectedFriends = [];
-          $scope.wemblimail = {
-            friends: [],
-          };
-
           /* set up the wemblimail friends array with friends in the plan */
+          var n = []; //holds the list of wemblimail invited friends */
           plan.get(function(p) {
-            if (typeof plan.getFriends() !== "undefined") {
-              for (var i = plan.getFriends().length - 1; i >= 0; i--) {
-                var friend = plan.getFriends()[i];
-                friend.checked = friend.inviteStatus;
-                if (friend.contactInfo.service === 'wemblimail') {
-                  $scope.wemblimail.friends.push(friend);
-                  $scope.selectedFriends[friend.contactInfo.serviceId] = friend.inviteStatus;
-                  $scope.navData['nav-step5']++;
-                }
-              };
-            }
+            var friends = plan.getFriends();
+            angular.forEach(friends, function(friend) {
+              friend.checked = friend.inviteStatus;
+              if (friend.contactInfo.service === 'wemblimail') {
+                n.push(friend);
+                $scope.navData['nav-step5']++;
+              }
+            });
+            $scope.invitedFriends = n;
           });
 
           $scope.sendWemblimail = function() {
@@ -806,8 +783,6 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
             }
             /* this step is completed if they sent 1 email */
             $scope.stepCompleted['nav-step5'] = true;
-
-            $('#invitation-modal').modal('loading');
 
             var addFriendArgs = {
               name: $scope.wemblimail.name,
@@ -819,7 +794,6 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
             };
 
             wembliRpc.fetch('invite-friends.sendWemblimail', addFriendArgs, function(err, result) {
-              $('#invitation-modal').modal('loading');
 
               if (!$scope.customer.email) {
                 $scope.signup.noContinue = true;
@@ -841,12 +815,7 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
               var friend = result.friend;
               friend.checked = friend.inviteStatus;
 
-              /* if this friend is not in the list of step5 selected friends, push it on the the wemblimail friends scope cause its a new one */
-              if (typeof $scope.selectedFriends[friend.contactInfo.serviceId] === "undefined") {
-                $scope.wemblimail.friends.unshift(friend);
-                /* in submit reponse, do the formStatus fade */
-                $scope.wemblimail.formStatus = true; /* this will make the element fade in */
-              }
+              $scope.invitedFriends.unshift(friend);
               $scope.wemblimail.lastSentEmail = $scope.wemblimail.email;
 
               if (friend.rsvp.status === 'queued') {
@@ -854,22 +823,6 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
               } else {
                 $scope.successConfirmed = true;
               }
-
-              /* tihs should make it fade out */
-              var Promise = $timeout(function() {
-                $scope.wemblimail.name = null;
-                $scope.wemblimail.email = null;
-                $scope.wemblimail.messageText = null;
-                $scope.wemblimail.formstatus = false;
-              }, 1500);
-
-              /* add this friend to the selected friends hash */
-              $scope.selectedFriends[friend.contactInfo.serviceId] = friend.checked;
-              /* add this friend to the list of invited friends */
-
-              plan.fetch(function() {
-                $rootScope.$broadcast('plan-friends-changed', plan.getFriends());
-              });
 
             });
           };
