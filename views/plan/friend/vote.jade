@@ -143,6 +143,7 @@ block plan-section
 							span.hotel-price-range {{me.rsvp.hotel.price}}
 							span.plus-sign(ng-show="me.rsvp.hotel.price==500") +
 
+
 			.col-md-5.col-xs-12.event-info-container
 				.hidden-xs.hidden-sm
 					include ../includes/event-info
@@ -159,6 +160,15 @@ block plan-section
 								h4 Per Person:
 							.col-xs-4.text-right
 								h4 {{votePriceTotalPerPerson | currency}}
+
+				.row
+					.col-xs-12
+						.pony-up-alert-info.alert.alert-info
+							i.fa.fa-info-circle.fa-2x
+							span You can see what has been chosen by viewing the itinerary
+				.row
+					.col-xs-12
+						a.btn.btn-primary.form-control(href="/plan/itinerary") View Itinerary
 
 				.row.hidden-sm.hidden-xs
 					.col-xs-12
