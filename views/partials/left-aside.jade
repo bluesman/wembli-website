@@ -26,6 +26,22 @@
 					a(href="http://#{app.settings.host}.wembli.com/plan")
 						i.fa.fa-flag
 						span current plan
+				li(ng-show="loggedIn && plan")
+					a(href="http://#{app.settings.host}.wembli.com/tickets/{{plan.event.eventId}}/{{plan.event.eventName}}")
+						i.fa.fa-ticket
+						span tickets
+				li(ng-show="loggedIn && plan")
+					a(href="http://#{app.settings.host}.wembli.com/parking/{{plan.event.eventId}}/{{plan.event.eventName}}")
+						i.fa.fa-car
+						span parking
+				li(ng-show="loggedIn && plan")
+					a(href="http://#{app.settings.host}.wembli.com/restaurants/{{plan.event.eventId}}/{{plan.event.eventName}}")
+						i.fa.fa-cutlery
+						span restaurants
+				li(ng-show="loggedIn && plan")
+					a(href="http://#{app.settings.host}.wembli.com/hotels/{{plan.event.eventId}}/{{plan.event.eventName}}")
+						i.fa.fa-building
+						span hotels
 				li(ng-show="loggedIn")
 					a(href="/dashboard/settings")
 						i.fa.fa-gears

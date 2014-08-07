@@ -128,12 +128,12 @@ block content
 											//- if its split first then they only add to plan and buy later
 											.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
 												a.btn.btn-primary(ng-click="addDeal($index)", ng-hide="deal.inPlan") Add Deal
-												a.btn.btn-warning.btn-sm(ng-click="removeDeal($index)",ng-href="#",ng-show="deal.inPlan && !deal.purchased") Remove From Plan
+												a.btn.btn-warning.btn-sm(ng-click="removeDeal(deal._id)",ng-href="#",ng-show="deal.inPlan && !deal.purchased") Remove From Plan
 												button.btn.btn-warning.btn-sm(ng-show="deal.inPlan && deal.purchased") Purchased
 											//- not split first - add to plan and buy now
 											.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
 												a.btn.btn-primary(ng-click="addDeal($index)", ng-href="{{deal.url}}", target="_blank", ng-hide="deal.inPlan") Buy Deal
-												a.btn.btn-warning.btn-sm(ng-click="removeDeal($index)",ng-href="#",ng-show="deal.inPlan && !deal.purchased") Remove From Plan
+												a.btn.btn-warning.btn-sm(ng-click="removeDeal(deal._id)",ng-href="#",ng-show="deal.inPlan && !deal.purchased") Remove From Plan
 												button.btn.btn-warning.btn-sm(ng-show="deal.inPlan && deal.purchased") Purchased
 								li.text-center
 									a(ng-show="filteredList", ng-click="filterNone()", href="#") Back to list

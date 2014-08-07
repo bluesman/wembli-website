@@ -1,97 +1,100 @@
-header {
+#header-search-form {
+	background-color:@grayLight;
+	color:@grayLight;
+	margin:10px 0 0 0;
+	padding:1px 2px;
+	border-radius:10px;
 
-	#header-search-form {
-		background-color:@grayLight;
-		color:@grayLight;
-		margin:10px 0 0 0;
-		padding:1px 2px;
-		border-radius:10px;
+	i {
+		border-top-left-radius:8px;
+		border-bottom-left-radius:8px;
+		position:absolute;
+		display: block;
+		background-color: transparent;
+		line-height:28px;
+		margin:0px 0px 0px 3px;
+		font-size:18px;
+	}
 
-		i {
-			border-top-left-radius:8px;
-			border-bottom-left-radius:8px;
-			position:absolute;
-			display: block;
-			background-color: transparent;
-			line-height:28px;
-			margin:0px 0px 0px 3px;
-			font-size:18px;
-		}
+	input {
+		border-radius:8px;
+		width:100%;
+		border: none;
+		padding: 4px 4px 4px 30px;
+		margin: 0px;
 
-		input {
-			border-radius:8px;
-			width:100%;
-			border: none;
-			padding: 4px 4px 4px 30px;
-			margin: 0px;
+		font-size: 14px;
+		line-height: 20px;
+		vertical-align: middle;
+		font-style: italic;
+	}
+}
 
-			font-size: 14px;
-			line-height: 20px;
-			vertical-align: middle;
-			font-style: italic;
+.aside {
+  background: @white;
+
+  .aside-content {
+  	button {
+  		padding: 0 10px;
+  	}
+  }
+
+	.log-out, .sign-up {
+		width:100%;
+		text-align:center;
+		a {
+			margin:20px;
+			width:180px;
 		}
 	}
 
-	.aside {
-	  background: @white;
+	ul {
+		padding:20px 0px;
+		li {
 
-	  .aside-content {
-	  	button {
-	  		padding: 0 10px;
-	  	}
-	  }
-
-		.log-out, .sign-up {
-			width:100%;
-			text-align:center;
 			a {
-				margin:20px;
-				width:180px;
+				padding: 10px;
+				display:block;
+				color:@blueDark;
+				font-size: 16px;
+				line-height: 16px;
+
+				i {
+					width:25px;
+					margin-right:10px;
+				}
+
+			}
+			a:hover {
+				background-color:@blue;
+				color:@yellow;
 			}
 		}
-
-		ul {
-			padding:20px 0px;
-			li {
-
-				a {
-					padding: 10px;
-					display:block;
-					color:@blueDark;
-					font-size: 16px;
-					line-height: 16px;
-
-					i {
-						width:25px;
-						margin-right:10px;
-					}
-
-				}
-				a:hover {
-					background-color:@blue;
-					color:@yellow;
-				}
-			}
-		}
-
-		ul.aside-nav {
-			li {
-				a {
-					border-bottom: 1px solid #CCC;
-				}
-			}
-		}
-
-		ul.links {
-			li {
-				a {
-					display:block;
-					padding:10px 0 10px 40px;
-				}
-			}
-		}
-
 	}
+
+	ul.aside-nav {
+		li {
+			a {
+				border-bottom: 1px solid #CCC;
+			}
+		}
+	}
+
+	ul.links {
+		li {
+			a {
+				display:block;
+				padding:10px 0 10px 40px;
+			}
+		}
+	}
+
+}
+
+
+
+header {
+	z-index:1030;
 
 	nav.navbar {
 		padding:0 20px;

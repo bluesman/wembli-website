@@ -454,7 +454,7 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
 			var lng = p.venue.data.geocode.geometry.location.lng;
 
 			/* set the height for the container that will hold the parking list */
-      $('.addons-list-col').css("height", $($window).height() - 111);
+      $('.addons-list-col').css("height", $($window).height() - 108);
 
 			/* put the venue on the map */
 			mapVenue.create(googleMap, {
@@ -516,12 +516,19 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
         } else {
         	/* TODO: make sure we don't try to buy google places off site */
           /* offsite - wait then show the slidedown */
+          /* there is no offsite hotel yet
           var Promise = $timeout(function() {
             $rootScope.$apply(function() {
               $scope.buyHotelOffsite = true;
               overlay.show();
             });
           }, 1500);
+					*/
+
+					/* just add to plan until we get offite hotel reservations */
+          $scope.hotelConfirm = true;
+          overlay.show();
+
         }
 
       });
@@ -552,8 +559,10 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
 			});
 		};
 
-		$scope.removeHotel = function() {
-			var hotelId = $scope.currentHotel._id;
+		$scope.removeHotel = function(hotelId) {
+			if (typeof hotelId === "undefined") {
+				hotelId = $scope.currentHotel._id;
+			}
 			if (!hotelId) {
 				$scope.hotelConfirm = false;
         $scope.buyHotelOffsite = false;
@@ -822,7 +831,7 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
 			var lng = p.venue.data.geocode.geometry.location.lng;
 
 			/* set the height for the container that will hold the parking list */
-      $('.addons-list-col').css("height", $($window).height() - 111);
+      $('.addons-list-col').css("height", $($window).height() - 108);
 
 			/* put the venue on the map */
 			mapVenue.create(googleMap, {
@@ -918,11 +927,9 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
 			});
 		};
 
-		$scope.removeDeal = function(idx) {
-			if (typeof idx === "undefined") {
+		$scope.removeDeal = function(dealId) {
+			if (typeof dealId === "undefined") {
 				var dealId = $scope.currentDeal._id;
-			} else {
-				var dealId = $scope.deals[idx]._id;
 			}
 
 			if (!dealId) {
@@ -1236,7 +1243,7 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
 			var lng = p.venue.data.geocode.geometry.location.lng;
 
 			/* set the height for the container that will hold the parking list */
-      $('#parking-list > div').css("height", $($window).height() - 111);
+      $('#parking-list > div').css("height", $($window).height() - 108);
 
 			/* put the venue on the map */
 			mapVenue.create(googleMap, {
@@ -1296,12 +1303,17 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
           overlay.show();
         } else {
           /* offsite - wait then show the slidedown */
-          var Promise = $timeout(function() {
-            $rootScope.$apply(function() {
-              $scope.buyParkingOffsite = true;
-              overlay.show();
-            });
-          }, 1500);
+          if (parking.service === 'pw') {
+	          var Promise = $timeout(function() {
+	            $rootScope.$apply(function() {
+	              $scope.buyParkingOffsite = true;
+	              overlay.show();
+	            });
+	          }, 1500);
+					} else {
+	          $scope.parkingConfirm = true;
+	          overlay.show();
+					}
         }
 
       });
@@ -1332,8 +1344,11 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
 			});
 		};
 
-		$scope.removeParking = function() {
-			var parkingId = $scope.currentParking._id;
+		$scope.removeParking = function(parkingId) {
+			if (typeof parkingId === "undefined") {
+				parkingId = $scope.currentParking._id;
+			}
+
 			if (!parkingId) {
 				$scope.parkingConfirm = false;
         $scope.buyParkingOffsite = false;

@@ -459,7 +459,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           /* make this tickets list fill up the whole height of the page
              TODO: make this reevaluate when the window size changes
           */
-          $('#tickets-list > div').css("height", $($window).height() - 191);
+          $('#tickets-list > div').css("height", $($window).height() - 188);
 					tuMap.init('#venue-map-container', options);
 
           /* init the price slider in the tickets list header */

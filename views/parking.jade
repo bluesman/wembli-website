@@ -120,7 +120,7 @@ block content
 											//- not split first - add to plan and buy now
 											.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
 												a.btn.btn-primary(ng-click="addParkingReservations($index)", ng-href="{{p.www_reserve_url}}", target="_blank", ng-hide="p.parkingInPlan") Add Parking
-												a.btn.btn-warning.btn-sm(ng-click="removeParking(parking._id)",ng-href="#",ng-show="p.parkingInPlan && !p.purchased") Remove From Plan
+												a.btn.btn-warning.btn-sm(ng-click="removeParking(p._id)",ng-href="#",ng-show="p.parkingInPlan && !p.purchased") Remove From Plan
 												button.btn.btn-warning.btn-sm(ng-show="p.parkingInPlan && p.purchased") Purchased
 
 								li.addons-list-row.parking-row.bounce-map-marker(lat="{{p.geometry.location.lat()}}",lng="{{p.geometry.location.lng()}}",ng-repeat="p in googleParking track by $index",ng-hide="p.hide")
