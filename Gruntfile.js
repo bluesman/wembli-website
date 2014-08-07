@@ -30,7 +30,8 @@ module.exports = function(grunt) {
         },
         */
         mangle:false,
-        beautify: true
+        beautify: true,
+        compress: false,
       },
       "global": {
       	"files": {
