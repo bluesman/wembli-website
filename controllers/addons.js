@@ -16,11 +16,19 @@ module.exports = function(app) {
 			jsIncludes.push('//maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places');
 		}
 
+		var title = eventName + ' ' + addon+ '.';
+
 		var locals = {
+			'meta': {'TITLE': title},
 			'jsIncludes': jsIncludes,
 			'cssIncludes':[
 				'/css/fixed.css'
 			]
+		};
+
+
+		var makeDescription = function(plan) {
+			return "Get the best prices on " + addon + " for " + plan.event.eventName + " at " + plan.venue.data.Name + " - " + plan.venue.data.Street1 + ', ' + plan.venue.data.ZipCode + ' on ' + plan.event.data.DisplayDate + '.';
 		};
 
 		/* check for a plan in the session */
@@ -39,14 +47,21 @@ module.exports = function(app) {
 				console.log(results);
 				locals.lat = req.session.plan.venue.data.geocode.geometry.location.lat;
 				locals.lon = req.session.plan.venue.data.geocode.geometry.location.lng;
+
+				locals.meta["DESCRIPTION"] = makeDescription(req.session.plan);
+
 				res.render(addon,locals);
 			}, [args, req, res]);
 		} else {
 			locals.lat = req.session.plan.venue.data.geocode.geometry.location.lat;
 			locals.lon = req.session.plan.venue.data.geocode.geometry.location.lng;
+			locals.meta["DESCRIPTION"] = makeDescription(req.session.plan);
 			res.render(addon,locals);
+
 		}
 	});
+
+
 
 	app.get('/partials/interactive-venue-map', function(req, res) {
 		/* get any purchased tickets for this plan */
