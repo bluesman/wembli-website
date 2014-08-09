@@ -638,6 +638,10 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
       $scope.nextLink = $scope.backToPlan ? "/plan/cart" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
       $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
 
+      if ($scope.nextLink === '/plan/cart' && plan.getContext() !== "organizer") {
+        $scope.nextLink = '/plan/vote';
+      }
+
 			if ($scope.context === 'friend') {
 				$scope.backToPlan = true;
 			}
@@ -1007,9 +1011,10 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
       $scope.nextLink = $scope.backToPlan ? "/plan/cart" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
       $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
 
-			if ($scope.context === 'friend') {
-				$scope.backToPlan = true;
-			}
+      if ($scope.nextLink === '/plan/cart' && plan.getContext() !== "organizer") {
+        $scope.nextLink = '/plan/vote';
+      }
+
 
 			if (googleMap.isDrawn()) {
 				initMap(p);
@@ -1429,9 +1434,9 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
       $scope.nextLink = $scope.backToPlan ? "/plan/cart" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
       $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
 
-			if ($scope.context === 'friend') {
-				$scope.backToPlan = true;
-			}
+      if ($scope.nextLink === '/plan/cart' && plan.getContext() !== "organizer") {
+        $scope.nextLink = '/plan/vote';
+      }
 
 			if (googleMap.isDrawn()) {
 				initMap(p);

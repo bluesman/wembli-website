@@ -13,7 +13,7 @@ module.exports = function(app) {
 
 		/* get the friend for this token */
 		Friend.findOne().where('rsvp.token').equals(token).where('planGuid').equals(guid).exec(function(err, friend) {
-			req.syslog.notice('found friend');
+			console.log('friend that should be rsvping');
 			console.log(friend);
 			/* if i have a friend then this person is invited */
 			if (err) {
@@ -57,6 +57,8 @@ module.exports = function(app) {
 
 				/* is this customer the plan organizer? */
 				if (p.organizer.customerId === req.session.customer.id) {
+					console.log(req.session.customer);
+					console.log(p.organizer);
 					req.session.plan = p;
 					req.session.visitor.context = 'organizer';
 					req.syslog.notice('customer is the organizer: ');

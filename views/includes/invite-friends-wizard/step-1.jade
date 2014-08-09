@@ -31,7 +31,8 @@ form#invite-wizard-signup-form.invite-wizard-step1-form(name="signup",ng-show="s
 		.switch-login.row
 			.col-xs-12
 				a(ng-click="showForm('showLoginForm','showSignupForm')",href="#",ng-hide="customer.id")
-					i.fa.fa-question-circle &nbsp;Already have an account? Click here to log in.
+					i.fa.fa-question-circle
+					span &nbsp;Already have an account? Click here to log in.
 
 #invite-wizard-signup-view(ng-show="showSignupView")
 	fieldset
@@ -44,8 +45,9 @@ form#invite-wizard-signup-form.invite-wizard-step1-form(name="signup",ng-show="s
 				.alert.alert-info(ng-show="login.success") Successfully logged you in.
 		.row
 			.col-xs-12
-				p.already-logged-in
-					i.fa.fa-check.green &nbsp;You're already logged in.  We'll use the the contact info you already gave us.
+				.alert.alert-success
+					i.fa.fa-check.green
+					span &nbsp;You're already logged in.  We'll use the the contact info you already gave us.
 		.row
 			.col-xs-12
 				p
@@ -102,9 +104,11 @@ form#invite-wizard-login-form.invite-wizard-step1-form(name="login",ng-show="sho
 		.switch-login.row
 			.col-xs-12
 				a#fp-link2.send-forgot-password-email(email="{{customer.email}}",next="{{next}}",href="#")
-					i.fa.fa-question-circle &nbsp;Forgot your password? Click here.
+					i.fa.fa-question-circle
+					span &nbsp;Forgot your password? Click here.
 
 		.switch-login.row
 			.col-xs-12
 				a(ng-click="showForm('showSignupForm','showLoginForm')",href="#",ng-hide="customer.id")
-					i.fa.fa-question-circle &nbsp;Don't have an account or password yet? Click Here.
+					i.fa.fa-question-circle
+					span &nbsp;Don't have an account or password yet? Click Here.

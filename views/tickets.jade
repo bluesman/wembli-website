@@ -145,16 +145,17 @@ block content
 																	strong Seats:&nbsp;
 																	span(ng-show="{'\*':true}[ticket.LowSeat]") *
 																	span(ng-hide="{'\*':true}[ticket.LowSeat]") {{ticket.LowSeat}} - {{ticket.HighSeat}}
-													.col-xs-5.controls
-														.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
-															a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="#", ng-hide="ticket.ticketsInPlan") Add Tix
-															a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan && !ticket.purchased") Remove From Plan
-															button.btn.btn-warning.btn-sm(ng-show="ticket.purchased", disabled) Purchased
+													- if (visitor.context === "organizer")
+														.col-xs-5.controls
+															.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
+																a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="#", ng-hide="ticket.ticketsInPlan") Add Tix
+																a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan && !ticket.purchased") Remove From Plan
+																button.btn.btn-warning.btn-sm(ng-show="ticket.purchased", disabled) Purchased
 
-														.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
-															a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",target="_blank", ng-hide="ticket.ticketsInPlan") Buy Tix
-															a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan && !ticket.purchased") Remove From Plan
-															button.btn.btn-warning.btn-sm(ng-show="ticket.purchased", disabled) Purchased
+															.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
+																a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",target="_blank", ng-hide="ticket.ticketsInPlan") Buy Tix
+																a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan && !ticket.purchased") Remove From Plan
+																button.btn.btn-warning.btn-sm(ng-show="ticket.purchased", disabled) Purchased
 
 					//-
 						.purchased-tickets-list

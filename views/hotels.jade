@@ -5,7 +5,7 @@ block content
 			.hotel-confirm-header.addon-confirm-header.slide-in-down-header
 				a(href="#")
 					i.fa.fa-times.fa-2x(ng-click="removeHotel(currentHotel._id)").pull-right
-				h2.modal-title Confirm Adding Hotel To Your Plan
+				h2.modal-title Confirm Adding Hotel To Your Itinerary
 				h4.modal-subtitle
 			.hotel-confirm-body.addon-confirm-body.slide-in-down-body.row
 				.left.section-view.col-md-4.col-xs-12
@@ -19,7 +19,7 @@ block content
 							.col-xs-10
 								span You are&nbsp;
 								strong not&nbsp;
-								span purchasing this hotel, you are only adding it to your plan.  Once your friends pony up, you can buy this hotel.
+								span purchasing this hotel, you are only adding it to your itinerary.  Once your friends pony up, you can buy this hotel.
 					.row
 						.col-xs-12
 							h3 {{currentHotel.title}}
@@ -131,17 +131,18 @@ block content
 														span {{hotel.business.name}}
 													div
 														span {{hotel.business.locations[0].address}}
-											.col-xs-5.controls
-												//- if its split first then they only add to plan and buy later
-												.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
-													a.btn.btn-primary(ng-click="addHotel($index)", ng-hide="hotel.inPlan") Add hotel
-													a.btn.btn-warning.btn-sm(ng-click="removeHotel(hotel._id)",ng-href="#",ng-show="hotel.inPlan && !hotel.purchased") Remove From Plan
-													button.btn.btn-warning.btn-sm(ng-show="hotel.inPlan && hotel.purchased") Purchased
-												//- not split first - add to plan and buy now
-												.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
-													a.btn.btn-primary(ng-click="addHotel($index)", ng-href="{{hotel.url}}", target="_blank", ng-hide="hotel.inPlan") Buy hotel
-													a.btn.btn-warning.btn-sm(ng-click="removeHotel(hotel._id)",ng-href="#",ng-show="hotel.inPlan && !hotel.purchased") Remove From Plan
-													button.btn.btn-warning.btn-sm(ng-show="hotel.inPlan && hotel.purchased") Purchased
+											- if (visitor.context === "organizer")
+												.col-xs-5.controls
+													//- if its split first then they only add to plan and buy later
+													.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
+														a.btn.btn-primary(ng-click="addHotel($index)", ng-hide="hotel.inPlan") Add hotel
+														a.btn.btn-warning.btn-sm(ng-click="removeHotel(hotel._id)",ng-href="#",ng-show="hotel.inPlan && !hotel.purchased") Remove From Plan
+														button.btn.btn-warning.btn-sm(ng-show="hotel.inPlan && hotel.purchased") Purchased
+													//- not split first - add to plan and buy now
+													.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
+														a.btn.btn-primary(ng-click="addHotel($index)", ng-href="{{hotel.url}}", target="_blank", ng-hide="hotel.inPlan") Buy hotel
+														a.btn.btn-warning.btn-sm(ng-click="removeHotel(hotel._id)",ng-href="#",ng-show="hotel.inPlan && !hotel.purchased") Remove From Plan
+														button.btn.btn-warning.btn-sm(ng-show="hotel.inPlan && hotel.purchased") Purchased
 
 								li.addons-list-row.hotel-row.bounce-map-marker(lat="{{p.geometry.location.lat()}}",lng="{{p.geometry.location.lng()}}",ng-repeat="p in googleHotels track by $index",ng-hide="p.hide")
 									.row(ng-show="p.inPlan")
@@ -156,12 +157,13 @@ block content
 											div
 												span {{p.vicinity}}
 											div
-												i Online reservations are not available.
-										.col-xs-5.controls
-											//- if just adding to plan - throw an overly to confirm and then send them on their way
-											.actions
-												button.btn.btn-primary(ng-click="addGoogleHotel($index)", ng-show="!p.inPlan") Add hotel
-												button.btn.btn-warning(ng-click="removeHotel(p._id)",ng-show="p.inPlan") Remove
+												i Online reservations are not available
+										- if (visitor.context === "organizer")
+											.col-xs-5.controls
+												//- if just adding to plan - throw an overly to confirm and then send them on their way
+												.actions
+													button.btn.btn-primary(ng-click="addGoogleHotel($index)", ng-show="!p.inPlan") Add hotel
+													button.btn.btn-warning(ng-click="removeHotel(p._id)",ng-show="p.inPlan") Remove
 								li.text-center
 									a(ng-show="filteredList", ng-click="filterNone()", href="#") Back to list
 

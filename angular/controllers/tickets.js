@@ -169,6 +169,9 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
       $scope.nextLink = $scope.backToPlan ? "/plan/cart" : "/event-options/" + p.event.eventId + '/' + p.event.eventName;
       $scope.nextText = $scope.backToPlan ? "Ok, Back To Plan Dashboard" : "Continue To Plan Preferences";
+      if ($scope.nextLink === '/plan/cart' && plan.getContext() !== "organizer") {
+        $scope.nextLink = '/plan/vote';
+      }
       /* click handler for buy tix button
        * - adds tix to plan
        * - display a popup asking if they really did buy the tix

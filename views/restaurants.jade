@@ -5,7 +5,7 @@ block content
 			.restaurant-confirm-header.addon-confirm-header.slide-in-down-header
 				a(href="#")
 					i.fa.fa-times.fa-2x(ng-click="removeDeal(currentDeal._id)").pull-right
-				h2.modal-title Confirm Adding Deal To Your Plan
+				h2.modal-title Confirm Adding Deal To Your Itinerary
 				h4.modal-subtitle
 			.restaurant-confirm-body.addon-confirm-body.slide-in-down-body.row
 				.left.section-view.col-md-4.col-xs-12
@@ -19,7 +19,7 @@ block content
 							.col-xs-10
 								span You are&nbsp;
 								strong not&nbsp;
-								span purchasing this deal, you are only adding it to your plan.  Once your friends pony up, you can buy this deal.
+								span purchasing this deal, you are only adding it to your itinerary.  Once your friends pony up, you can buy this deal.
 					.row
 						.col-xs-12
 							h3 {{currentDeal.title}}
@@ -124,17 +124,18 @@ block content
 													span {{deal.business.name}}
 												div
 													span {{deal.business.locations[0].address}}
-										.col-xs-5.controls
-											//- if its split first then they only add to plan and buy later
-											.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
-												a.btn.btn-primary(ng-click="addDeal($index)", ng-hide="deal.inPlan") Add Deal
-												a.btn.btn-warning.btn-sm(ng-click="removeDeal(deal._id)",ng-href="#",ng-show="deal.inPlan && !deal.purchased") Remove From Plan
-												button.btn.btn-warning.btn-sm(ng-show="deal.inPlan && deal.purchased") Purchased
-											//- not split first - add to plan and buy now
-											.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
-												a.btn.btn-primary(ng-click="addDeal($index)", ng-href="{{deal.url}}", target="_blank", ng-hide="deal.inPlan") Buy Deal
-												a.btn.btn-warning.btn-sm(ng-click="removeDeal(deal._id)",ng-href="#",ng-show="deal.inPlan && !deal.purchased") Remove From Plan
-												button.btn.btn-warning.btn-sm(ng-show="deal.inPlan && deal.purchased") Purchased
+										- if (visitor.context === "organizer")
+											.col-xs-5.controls
+												//- if its split first then they only add to plan and buy later
+												.actions(ng-show="{'split-first':true}[plan.preferences.payment]")
+													a.btn.btn-primary(ng-click="addDeal($index)", ng-hide="deal.inPlan") Add Deal
+													a.btn.btn-warning.btn-sm(ng-click="removeDeal(deal._id)",ng-href="#",ng-show="deal.inPlan && !deal.purchased") Remove From Plan
+													button.btn.btn-warning.btn-sm(ng-show="deal.inPlan && deal.purchased") Purchased
+												//- not split first - add to plan and buy now
+												.actions(ng-hide="{'split-first':true}[plan.preferences.payment]")
+													a.btn.btn-primary(ng-click="addDeal($index)", ng-href="{{deal.url}}", target="_blank", ng-hide="deal.inPlan") Buy Deal
+													a.btn.btn-warning.btn-sm(ng-click="removeDeal(deal._id)",ng-href="#",ng-show="deal.inPlan && !deal.purchased") Remove From Plan
+													button.btn.btn-warning.btn-sm(ng-show="deal.inPlan && deal.purchased") Purchased
 								li.text-center
 									a(ng-show="filteredList", ng-click="filterNone()", href="#") Back to list
 
@@ -153,9 +154,10 @@ block content
 												span {{p.vicinity}}
 											div
 												i Online reservations are not available.
-										.col-xs-5.controls
-											//- if just adding to plan - throw an overly to confirm and then send them on their way
-											.actions
-												button.btn.btn-primary(ng-click="addGooglerestaurant($index)", ng-show="!p.inPlan") Add restaurant
-												button.btn.btn-warning(ng-click="removerestaurant(p._id)",ng-show="p.inPlan") Remove
+										- if (visitor.context === "organizer")
+											.col-xs-5.controls
+												//- if just adding to plan - throw an overly to confirm and then send them on their way
+												.actions
+													button.btn.btn-primary(ng-click="addGooglerestaurant($index)", ng-show="!p.inPlan") Add restaurant
+													button.btn.btn-warning(ng-click="removerestaurant(p._id)",ng-show="p.inPlan") Remove
 
