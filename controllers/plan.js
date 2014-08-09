@@ -6,7 +6,7 @@ var wembliModel = require('wembli-model'),
 
 module.exports = function(app) {
 
-	app.get(/^\/plan\/?(itinerary|vote|invitees|pony-up|rsvp|cart|chatter|send-pony-up)?$/, function(req, res) {
+	app.get(/^\/plan\/?(itinerary|vote|invitees|pony-up|rsvp|cart|chatter|send-pony-up)?\/?(\w+)?$/, function(req, res) {
 
 
 		var locals = {
@@ -67,6 +67,7 @@ module.exports = function(app) {
 		}
 
 		var view = 'plan/' + req.session.visitor.context + '/' + section;
+		console.log('rendering view: '+view);
 		res.render(view, locals);
 	});
 
@@ -124,7 +125,10 @@ module.exports = function(app) {
 			var url = '/plan';
 			if (req.param('section')) {
 				url = url + '/' + req.param('section');
+			} else {
+				url = url + '/rsvp'
 			}
+			url = url + '/' + req.session.visitor.context
 			res.redirect(url);
 		};
 
