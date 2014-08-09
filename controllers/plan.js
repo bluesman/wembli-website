@@ -122,6 +122,7 @@ module.exports = function(app) {
 				return res.redirect('/dashboard');
 			};
 			req.session.plan = p;
+
 			var url = '/plan';
 			if (req.param('section')) {
 				url = url + '/' + req.param('section');
@@ -137,6 +138,7 @@ module.exports = function(app) {
 		for (var i = 0; i < req.session.customer.plans.length; i++) {
 			var g = req.session.customer.plans[i];
 			if (g === req.param('guid')) {
+				req.session.visitor.context = 'organizer';
 				planFound = true;
 				var query = {"guid":req.param('guid')};
 				Plan.findOne(query, foundPlan);
@@ -150,11 +152,12 @@ module.exports = function(app) {
 				customerId: req.session.customer.id
 			}, function(err, f) {
 				if (!f) {
+					req.session.visitor.context = 'visitor';
 					return res.redirect('/dashboard');
 				};
 				console.log('found friend invited to plan');
 				console.log(f);
-
+				req.session.visitor.context = 'friend';
 				Plan.findOne({
 					guid: req.param('guid')
 				}, foundPlan);
