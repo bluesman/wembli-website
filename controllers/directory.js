@@ -235,7 +235,6 @@ module.exports = function(app) {
 				function(pCb) {
 					async.forEach(Object.keys(fetchKeys),
 						function(key, cb) {
-							console.log('fetching: '+fetchKeys[key]);
 							client.get(fetchKeys[key], function(err, result) {
 								var data = JSON.parse(result);
 								obj[key] = data;
@@ -357,14 +356,11 @@ module.exports = function(app) {
 										console.log(err);
 									}
 
-									console.log(performer);
-
 									obj.performer = performer._source;
 									/* now get the events, parking and restaurants for this venue */
 									async.parallel([
 										/* get eventlist from es */
 										function(venueGetDetailCb) {
-											console.log(performer)
 											es.search({index:'eventful',type:'events',size:20,q:'performers.performer.id:'+performer._source.id}, function(err, result) {
 												obj.performer.events = result.hits.hits;
 												venueGetDetailCb();
