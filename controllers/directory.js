@@ -354,13 +354,17 @@ module.exports = function(app) {
 								es.get({index:"eventful",type:"performers",id:obj.id},function(err, performer) {
 									if (err) {
 										/* TODO: render the not found page */
+										console.log(err);
 									}
+
+									console.log(performer);
 
 									obj.performer = performer._source;
 									/* now get the events, parking and restaurants for this venue */
 									async.parallel([
 										/* get eventlist from es */
 										function(venueGetDetailCb) {
+											console.log(performer)
 											es.search({index:'eventful',type:'events',size:20,q:'performers.performer.id:'+performer._source.id}, function(err, result) {
 												obj.performer.events = result.hits.hits;
 												venueGetDetailCb();
