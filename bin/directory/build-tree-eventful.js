@@ -4,7 +4,7 @@ var redis = require('redis');
 var async = require('async');
 var elasticsearch= require('elasticsearch');
 var es = new elasticsearch.Client({
-		host: '166.78.116.141:9200'
+		host: 'es01.wembli.com:9200'
 });
 
 /* maybe this is a param some day */

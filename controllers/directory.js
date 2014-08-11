@@ -4,7 +4,7 @@ var async = require('async');
 var redis = require("redis");
 var elasticsearch= require('elasticsearch');
 var es = new elasticsearch.Client({
-		host: '166.78.116.141:9200'
+		host: 'es01.wembli.com:9200'
 });
 
 var eventRpc = require('../rpc/event').event;
