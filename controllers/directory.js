@@ -355,8 +355,14 @@ module.exports = function(app) {
 										/* TODO: render the not found page */
 										console.log(err);
 									}
+									if (typeof performer === "undefined") {
+										return res.status(404).render('error/404')
+									}
 
 									obj.performer = performer._source;
+									if (typeof performer._source === "undefined") {
+										return res.status(404).render('error/404')
+									}
 									/* now get the events, parking and restaurants for this venue */
 									async.parallel([
 										/* get eventlist from es */
