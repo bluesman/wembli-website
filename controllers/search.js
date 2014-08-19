@@ -23,6 +23,8 @@ module.exports = function(app) {
 		args.beginDate     = getBeginDate();
 		args.orderByClause = 'Date'; //order by date
 
+		console.log(req.session.visitor);
+
 		if (typeof req.session.visitor.tracking.postalCode != "undefined") {
 			args.nearZip = req.session.visitor.tracking.postalCode;
 		}
