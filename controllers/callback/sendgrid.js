@@ -20,6 +20,7 @@ module.exports = function(req, res, next) {
       		return next();
       	} else {
 					console.log('return 200');
+					return res.status(200);
 					res.statusCode = 200;
 					res.setHeader("Content-Type", "text/html");
 					res.write("Thanks");

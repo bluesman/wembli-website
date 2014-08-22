@@ -274,6 +274,7 @@ module.exports = function(app) {
 								es.mget({body: {docs: docs}}, function(err, data) {
 									if (err) {
 										/* TODO: render the not found page */
+									    return res.status(404).render('error/404');
 									}
 
 									data.docs.forEach(function(el) {
@@ -290,6 +291,10 @@ module.exports = function(app) {
 											obj.performers.push(el._source);
 										}
 									});
+
+									if (typeof obj.venue === "undefined") {
+									    return res.status(404).render('error/404');
+									}
 
 									obj.slugs = {};
 									obj.slugs.country = wembliUtils.slugify(obj.venue.country);
@@ -318,6 +323,10 @@ module.exports = function(app) {
 								es.get({index:"eventful",type:"venues",id:obj.id},function(err, venue) {
 									if (err) {
 										/* TODO: render the not found page */
+									    return res.status(404).render('error/404');
+									}
+									if (typeof venue._source === "undefined") {
+									    return res.status(404).render('error/404');
 									}
 									obj.venue = venue._source;
 									/* now get the events, parking and restaurants for this venue */
@@ -354,6 +363,7 @@ module.exports = function(app) {
 									if (err) {
 										/* TODO: render the not found page */
 										console.log(err);
+									    return res.status(404).render('error/404');
 									}
 									if (typeof performer === "undefined") {
 										return res.status(404).render('error/404')
@@ -424,6 +434,8 @@ module.exports = function(app) {
 		}
 
 		function notInRedis() {
+
+		    return res.status(404).render('error/404');
 
 			/* not in redis, do a search (don't redirect) */
 			var str = req.params[0].replace(/^\//, '');
