@@ -60,6 +60,11 @@ module.exports = function(app) {
 
 	//use case 1a: its either a incoming link (bot) or the user hitting refresh
 	app.get('/event-options/:eventId/:eventName', function(req, res) {
+
+		if (typeof req.session.plan === "undefined") {
+		    return res.status(404).render('error/404');
+		}
+
 		return viewOptionsForm(req, res, 'event-options', {});
 	});
 
