@@ -49,9 +49,6 @@ exports.plan = {
 
 		function getRelated(plan) {
 			if (plan) {
-				console.log('getting related for ');
-				console.log(plan);
-				console.log(req.session.plan);
 
 				async.parallel([
 
