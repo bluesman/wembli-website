@@ -1,7 +1,7 @@
 var elasticsearch = require('elasticsearch');
 var client = new elasticsearch.Client({
-		host: 'es01.wembli.com:9200',
-		log:"trace"
+    host: 'es01.wembli.com:9200',
+    log:"trace"
 });
 
 /*
@@ -57,24 +57,24 @@ client.search({
   type:'events',
   size:3,
   body: {
-  	"sort":[{"NumTicketsSold":{"order":"desc"}}],
-  	"query": {
-  		"filtered": {
-  			"query": {
-					"match": {
-						"City":"Diego"
-					},
-				},
-  			"filter": {
-  				"range": {
-  					"DateTime": {"gte":"2014-08-10T00:00:00"}
-  				}
-  			}
-  		}
-  	},
+    "sort":[{"NumTicketsSold":{"order":"desc"}}],
+    "query": {
+      "filtered": {
+        "query": {
+          "match": {
+            "City":"Diego"
+          },
+        },
+        "filter": {
+          "range": {
+            "DateTime": {"gte":"2014-08-10T00:00:00"}
+          }
+        }
+      }
+    },
   }
 }).then(function (resp) {
-	console.log(resp.body)
+  console.log(resp.body)
 
 }, function (error) {
   console.trace(error.message);
