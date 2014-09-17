@@ -92,28 +92,30 @@ exports.plan = {
 								}
 								/* check if these tickets are still available */
 								async.forEach(data.tickets, function(item, callback2) {
-
-									ticketNetwork.GetTickets({
-										ticketGroupID: item.ticketGroup.ID
-									}, function(err, results) {
-										if (err) {
-											callback2(err);
-										}
-										if (results && (typeof results.TicketGroup === "undefined")) {
-											item.gone = true;
-
-											if (item._id) {
-												item.save(function(err) {
-													callback2();
-												});
+									if ((typeof item.ticketGroup !== "undefined") && (typeof item.ticketGroup.ID !== "undefined")) {
+										ticketNetwork.GetTickets({
+											ticketGroupID: item.ticketGroup.ID
+										}, function(err, results) {
+											if (err) {
+												callback2(err);
 											}
+											if (results && (typeof results.TicketGroup === "undefined")) {
+												item.gone = true;
 
-										} else {
-											/* done with loop iteration */
-											callback2();
-										}
-									});
+												if (item._id) {
+													item.save(function(err) {
+														callback2();
+													});
+												}
 
+											} else {
+												/* done with loop iteration */
+												callback2();
+											}
+										});
+									} else {
+										callback2();
+									}
 								}, function(err) {
 									/* done with outer loop iteration */
 									callback();
@@ -1872,7 +1874,7 @@ exports.plan = {
 
 			var set = {
 				planGuid: req.session.plan.guid,
-				service: 'tn',
+				service: args.service,
 				eventId: args.ticketGroup.EventID,
 				ticketGroup: args.ticketGroup,
 			};
@@ -1902,7 +1904,7 @@ exports.plan = {
 			var set = {
 				planId: req.session.plan.id,
 				planGuid: req.session.plan.guid,
-				service: 'tn',
+				service: args.service,
 				eventId: args.ticketGroup.EventID,
 				ticketGroup: args.ticketGroup
 			};
@@ -2176,6 +2178,7 @@ exports.plan = {
 					if (args.receipt.qty) {
 						item.payment.qty = args.receipt.qty;
 						item.qty         = args.receipt.qty;
+						item.ticketGroup.selectedQty = args.receipt.qty;
 					}
 					if (args.receipt.amountPaid) {
 						item.payment.amount = args.receipt.amountPaid;

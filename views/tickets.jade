@@ -46,6 +46,7 @@ block content
 							a.btn.btn-primary.btn-sm.form-control(href="{{nextLink}}") {{nextText}}
 
 		include includes/tickets-offsite
+		include includes/goldstar-offsite
 
 		.container-fluid
 			.header.row(ng-cloak)
@@ -156,6 +157,17 @@ block content
 																a.btn.btn-primary.btn-lg(ng-click="buyTicket($index)",ng-href="{{tnUrl}}&tgid={{ticket.ID}}&evtid={{ticket.EventID}}&price={{ticket.ActualPrice}}&treq={{ticket.selectedQty}}&req.sessionId={{ticket.sessionId}}",target="_blank", ng-hide="ticket.ticketsInPlan") Buy Tix
 																a.btn.btn-warning.btn-sm(ng-click="removeTicketGroup($index)", ng-href="#", ng-show="ticket.ticketsInPlan && !ticket.purchased") Remove From Plan
 																button.btn.btn-warning.btn-sm(ng-show="ticket.purchased", disabled) Purchased
+						#partners.partners
+							.partners-container
+								.partners-heading Can't find what you're looking for? Check with our partner(s) below:
+								.partners-list
+									.partner
+										.pull-left.brand
+											img(src="/images/goldstar-logo.png")
+											//-img.hidden(src="{{gsPixel}}&aff_sub={{plan.guid}}", width="1", height="1")
+										.pull-left.action.text-right
+											a.btn.btn-lg.btn-default(ng-click="buyGoldstar($index)",ng-href="{{gsUrl}}&aff_sub={{plan.guid}}",target="_blank", ng-hide="goldstarTicket.ticketsInPlan") Goldstar
+											button.btn.btn-warning.btn-sm(ng-show="goldstarTicket.purchased", disabled) Purchased
 
 					//-
 						.purchased-tickets-list

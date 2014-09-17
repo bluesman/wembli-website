@@ -17,57 +17,72 @@
 							.col-xs-2 Total
 
 					.ticket-row.add-on-row(ng-repeat="ticket in tickets track by $index")
-
-						.row
-							.col-xs-12
-								.ticket-trigger.add-on-trigger(ng-click="toggleTicketPriceDetails(ticket._id)")
+						.tn-ticket(ng-show="{'tn':true}[ticket.service]")
+							.row
+								.col-xs-12
+									.ticket-trigger.add-on-trigger(ng-click="toggleTicketPriceDetails(ticket._id)")
+										.row
+											.col-xs-2
+												.text-center {{ticket.ticketGroup.Section}}
+											.col-xs-2
+												.text-center {{ticket.ticketGroup.Row}}
+											.col-xs-2
+												.text-center
+													span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
+													span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
+											.col-xs-2
+												.qty-container.text-center(ng-hide="ticket.qty") Up to {{ticket.ticketGroup.maxSplit}}
+												.qty-container.text-center(ng-show="ticket.qty") {{ticket.payment.qty}}
+											.col-xs-2
+												.ticket-total.add-on-total(ng-hide="ticket.total") {{ticket.costBreakdown.total | currency}}
+												.ticket-total.add-on-total(ng-show="ticket.total") {{ticket.payment.amount | currency}}
+											.col-xs-2.text-center(ng-hide="ticket.purchased")
+												a.btn.btn-primary.btn-xs(ng-click="buyTickets($index)", ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy
+											.col-xs-2.text-center(ng-show="ticket.purchased")
+												a.btn.btn-primary.btn-xs(ng-href="/plan/pony-up") Pony Up!
+							.row.ticket-price-details.slide-down(ng-show="!ticket.purchased && showTicketPriceDetails[ticket._id]", id="{{ticket._id}}-tickets-slide-down")
+								.col-xs-12
 									.row
-										.col-xs-2
-											.text-center {{ticket.ticketGroup.Section}}
-										.col-xs-2
-											.text-center {{ticket.ticketGroup.Row}}
-										.col-xs-2
-											.text-center
-												span(ng-show="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}}
-												span(ng-hide="{'*':true}[ticket.ticketGroup.LowSeat]") {{ticket.ticketGroup.LowSeat}} - {{ticket.ticketGroup.HighSeat}}
-										.col-xs-2
-											.qty-container.text-center(ng-hide="ticket.qty") Up to {{ticket.ticketGroup.maxSplit}}
-											.qty-container.text-center(ng-show="ticket.qty") {{ticket.payment.qty}}
-										.col-xs-2
-											.ticket-total.add-on-total(ng-hide="ticket.total") {{ticket.costBreakdown.total | currency}}
-											.ticket-total.add-on-total(ng-show="ticket.total") {{ticket.payment.amount | currency}}
-										.col-xs-2.text-center(ng-hide="ticket.purchased")
-											a.btn.btn-primary.btn-xs(ng-click="buyTickets($index)", ticket="{{ticket.ticketGroup}}",ng-href="{{tnUrl}}&tgid={{ticket.ticketGroup.ID}}&evtid={{ticket.ticketGroup.EventID}}&price={{ticket.ticketGroup.ActualPrice}}&treq={{ticket.ticketGroup.selectedQty}}&req.sessionId={{ticket.ticketGroup.sessionId}}",target="_blank") Buy
-										.col-xs-2.text-center(ng-show="ticket.purchased")
-											a.btn.btn-primary.btn-xs(ng-href="/plan/pony-up") Pony Up!
-						.row.ticket-price-details.slide-down(ng-show="!ticket.purchased && showTicketPriceDetails[ticket._id]", id="{{ticket._id}}-tickets-slide-down")
-							.col-xs-12
-								.row
-									.col-xs-9
-										strong Ticket Price (ea.)&nbsp;
-									.col-xs-3.text-right {{ticket.costBreakdown.price | currency}}
-								.row.border-bottom
-									.col-xs-9
-										strong Ticketnetwork Service Fee (ea.)&nbsp;
-									.col-xs-3.text-right {{ticket.costBreakdown.serviceFee | currency}}
-								.row
-									.col-xs-9
-										strong Cost Per Person&nbsp;
-									.col-xs-3.text-right {{ticket.costBreakdown.totalEach | currency}}
-								.row
-									.col-xs-9
-										strong Est. Delivery Fee* Per Invitee&nbsp;
-									.col-xs-3.text-right {{ticket.costBreakdown.deliveryFeeEach | currency}}
-								.row
-									.col-xs-9.text-right
-										strong Total (x{{ticket.costBreakdown.claimed}} {{ticket.costBreakdown.claimed | pluralize:'ticket'}}):&nbsp;
-									.col-xs-3.text-right
-										strong {{ticket.costBreakdown.total | currency}}
-								.row.disclaimer
-									.col-xs-12
-										small
-											strong *&nbsp;
-											span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
-						.row
-							.col-xs-12.ticket-notes(ng-show="ticket.ticketGroup.Notes") {{ticket.ticketGroup.Notes}}
+										.col-xs-9
+											strong Ticket Price (ea.)&nbsp;
+										.col-xs-3.text-right {{ticket.costBreakdown.price | currency}}
+									.row.border-bottom
+										.col-xs-9
+											strong Ticketnetwork Service Fee (ea.)&nbsp;
+										.col-xs-3.text-right {{ticket.costBreakdown.serviceFee | currency}}
+									.row
+										.col-xs-9
+											strong Cost Per Person&nbsp;
+										.col-xs-3.text-right {{ticket.costBreakdown.totalEach | currency}}
+									.row
+										.col-xs-9
+											strong Est. Delivery Fee* Per Invitee&nbsp;
+										.col-xs-3.text-right {{ticket.costBreakdown.deliveryFeeEach | currency}}
+									.row
+										.col-xs-9.text-right
+											strong Total (x{{ticket.costBreakdown.claimed}} {{ticket.costBreakdown.claimed | pluralize:'ticket'}}):&nbsp;
+										.col-xs-3.text-right
+											strong {{ticket.costBreakdown.total | currency}}
+									.row.disclaimer
+										.col-xs-12
+											small
+												strong *&nbsp;
+												span Delivery fee varies depending on the delivery method you choose when you purchase the tickets.
+							.row
+								.col-xs-12.ticket-notes(ng-show="ticket.ticketGroup.Notes") {{ticket.ticketGroup.Notes}}
+						.gs-ticket(ng-show="{'gs':true}[ticket.service]")
+							.row
+								.col-xs-12
+									.ticket-trigger.add-on-trigger
+										.row
+											.col-xs-6.text-center
+												i Purchased from Goldstar
+											.col-xs-2
+												.qty-container.text-center(ng-hide="ticket.qty") -
+												.qty-container.text-center(ng-show="ticket.qty") {{ticket.payment.qty}}
+											.col-xs-2
+												.ticket-total.add-on-total(ng-hide="ticket.total") {{ticket.costBreakdown.total | currency}}
+												.ticket-total.add-on-total(ng-show="ticket.total") {{ticket.payment.amount | currency}}
+											.col-xs-2.text-center(ng-show="ticket.purchased")
+												a.btn.btn-primary.btn-xs(ng-href="/plan/pony-up") Pony Up!
 

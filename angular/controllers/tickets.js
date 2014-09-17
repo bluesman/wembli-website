@@ -13,6 +13,8 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
     /* where to send them if they click buy */
     $scope.tnUrl = ticketPurchaseUrls.tn;
+    $scope.gsUrl = ticketPurchaseUrls.gs;
+    $scope.gsPixel = ticketPurchaseUrls.gsPixel;
 
     /* list of all possible ticket split combinations for the qty filter */
     $scope.distinctSplits = [1];
@@ -176,6 +178,33 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
        * - adds tix to plan
        * - display a popup asking if they really did buy the tix
       */
+
+      $scope.buyGoldstar = function() {
+        /* add this ticket group - it will be removed if they later say they did not buy it */
+        var ticketGroup = {
+          service: 'gs',
+          eventId: p.event.eventId,
+          ticketGroup: {selectedQty:1},
+        };
+        $scope.goldstarTicket = ticketGroup;
+        plan.addTicketGroup(ticketGroup, function(err, results) {
+          console.log(results);
+
+          $scope.goldstarTicket._id = results.ticketGroup._id;
+          $scope.goldstarTicket.ticketsInPlan = true;
+
+          /* wait then show the slidedown */
+          var Promise = $timeout(function() {
+            $rootScope.$apply(function() {
+              console.log('showbuygoldstaroffsite');
+              $scope.buyGoldstarOffsite = true;
+              overlay.show();
+            });
+          }, 1500);
+        });
+
+      };
+
       $scope.buyTicket = function(idx) {
         $scope.currentTicketIdx = idx;
         var ticket              = $scope.tickets[idx];
@@ -233,6 +262,21 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
         });
       }
 
+      $scope.removeGoldstar = function() {
+        /* remove the ticketgroup and close the modal */
+        plan.removeTicketGroup({ticketId: $scope.goldstarTicket._id}, function(err, results) {
+          /* cause the button to change */
+          $scope.goldstarTicket.ticketsInPlan = false;
+
+          /* hide the slide down popover */
+          if ($scope.buyGoldstarOffsite) {
+            $scope.buyGoldstarOffsite = false;
+            overlay.hide();
+          }
+        });
+
+      }
+
       $scope.removeTicketGroup = function(idx) {
         var index = (typeof idx !== "undefined") ? idx : $scope.currentTicketIdx;
 
@@ -269,6 +313,30 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             $scope.ticketsConfirm = false;
             overlay.hide();
           }
+        });
+      }
+
+      $scope.boughtGoldstar = function() {
+        var id = $scope.goldstarTicket._id;
+        /* update the tickets to have a receipt */
+        plan.addTicketGroupReceipt({
+          ticketId: id,
+          service: 'gs',
+          receipt: {
+            amountPaid: $scope.goldstarTicket.amountPaid,
+            qty: $scope.goldstarTicket.selectedQty
+          }
+        }, function(err, result) {
+          console.log('receipt added');
+          console.log(err, result);
+          /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
+          //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
+
+          googleAnalytics.trackEvent('Plan', 'boughtTickets', $scope.plan.event.eventName, '', function(err, result) {
+            /* go to the next page which depends on whether they are splitting with friends or paying themself */
+            console.log('going to next page: '+ $scope.nextLink);
+            $window.location.href = $scope.nextLink;
+          });
         });
       }
 
@@ -344,8 +412,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             /* session id for the ticketNetwork purchase link */
             el.sessionId = tnConfig.generateSessionId();
 
-
-
             /* determine the lower bound for the tickets price */
             if (parseInt(el.ActualPrice) < $scope.minTixPrice) {
               $scope.minTixPrice = parseInt(el.ActualPrice);
@@ -354,8 +420,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             if (parseInt(el.ActualPrice) > $scope.maxTixPrice) {
               $scope.maxTixPrice = parseInt(el.ActualPrice);
             }
-
-
 
             /* initialize selectedQty */
             el.selectedQty = el.ValidSplits.int[0];
@@ -383,7 +447,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             /* check for tickets already chosen */
             el.ticketsInPlan = false;
             angular.forEach(plan.getTickets(), function(ticketInPlan) {
-              if (ticketInPlan.ticketGroup.ID === el.ID) {
+              if ((ticketInPlan.service == "tn") && (ticketInPlan.ticketGroup.ID === el.ID)) {
                 el.ticketsInPlan = true;
                 $scope.ticketsChosen = true;
                 if (typeof ticketInPlan._id !== "undefined") {

@@ -751,12 +751,6 @@ controller('OrganizerRsvpCtrl', ['$rootScope', '$scope','plan', 'planNav', 'wemb
         $scope.plan.organizer.rsvp.guestCount = 0;
       }
 
-      if ($scope.plan.organizer.rsvp.decision === true) {
-        if ($scope.plan.organizer.rsvp.guestCount == 0) {
-          $scope.plan.organizer.rsvp.guestCount = 1;
-        }
-      }
-
       $scope.calcTotalComing();
 
       wembliRpc.fetch('plan.submitOrganizerRsvp', {
@@ -1117,11 +1111,6 @@ controller('FriendRsvpCtrl', ['$scope', 'plan', 'planNav', 'wembliRpc',
       $scope.me.rsvp.decision = rsvp;
       if ($scope.me.rsvp.decision === false) {
         $scope.me.rsvp.guestCount = 0;
-      }
-      if ($scope.me.rsvp.decision === true) {
-        if ($scope.me.rsvp.guestCount == 0) {
-          $scope.me.rsvp.guestCount = 1;
-        }
       }
 
       wembliRpc.fetch('friend.submitRsvp', {

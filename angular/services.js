@@ -91,7 +91,32 @@ factory('balancedApiConfig', ['environment',
 	}
 ]).
 
-/* ticket network config */
+/* goldstar config */
+factory('gsConfig', ['environment',
+	function(environment) {
+		var config = {
+			'development': {
+				'baseUrl': 'http://tracking.goldstar.com/aff_c',
+				'pixelBaseUrl':'//tracking.goldstar.com/aff_i',
+				'affiliateId': 2437,
+				'offerId':1,
+				'source':'development'
+			},
+			'production': {
+				'baseUrl': 'http://tracking.goldstar.com/aff_c',
+				'pixelBaseUrl':'//tracking.goldstar.com/aff_i',
+				'affiliateId': 2437,
+				'offerId':1,
+				'source':'website'
+			}
+		};
+		var envConfig = config[environment];
+		envConfig.url = envConfig.baseUrl + '?aff_id=' + envConfig.affiliateId + '&offer_id='+envConfig.offerId+'&source='+envConfig.source;
+		envConfig.pixel = envConfig.pixelBaseUrl + '?aff_id=' + envConfig.affiliateId + '&offer_id='+envConfig.offerId+'&source='+envConfig.source;
+
+		return envConfig;
+	}
+]).
 factory('tnConfig', ['environment',
 	function(environment) {
 		var config = {
@@ -125,10 +150,12 @@ factory('tnConfig', ['environment',
 ]).
 
 /* ticket purchase urls */
-factory('ticketPurchaseUrls', ['tnConfig',
-	function(tnConfig) {
+factory('ticketPurchaseUrls', ['tnConfig','gsConfig',
+	function(tnConfig, gsConfig) {
 		return {
-			'tn': tnConfig.url
+			'tn': tnConfig.url,
+			'gs': gsConfig.url,
+			'gsPixel':gsConfig.pixel
 		};
 	}
 ]).

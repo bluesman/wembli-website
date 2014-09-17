@@ -100,7 +100,7 @@ this.Model = function(mongoose) {
 				*/
 				decision:{type:Boolean, default:null},
 				/* how many people will this friend bring (including self) */
-				guestCount:{type:Number, default:1},
+				guestCount:{type:Number, default:0},
 				/* the most recent time they made a decision */
 				decidedLastDate:{type:Date,default:Date.now()},
 				/* rsvp specifically for tickets */
