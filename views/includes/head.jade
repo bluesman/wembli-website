@@ -1,7 +1,7 @@
 - var title       = (meta && (typeof meta.TITLE       !== "undefined")) ? meta.TITLE       : 'Live Event Outings - Wembli';
 - var description = (meta && (typeof meta.DESCRIPTION !== "undefined")) ? meta.DESCRIPTION : 'Your one stop shop for planning an outing to concerts, theater and sporting events with friends:  Tickets, Parking, Restaurant Deals & Hotels.';
 - var canonical   = (meta && (typeof meta.CANONICAL   !== "undefined")) ? meta.CANONICAL   : false;
-
+- var fbAppId = app.get("fbAppId") || "314732478586428";
 title #{title}
 
 //- meta tags come from redis
@@ -12,10 +12,17 @@ meta(name="description", content="#{description}")
 //facebook meta
 meta(property="og:title",content="#{title}")
 meta(property="og:type",content="website")
-meta(property="og:image",content="http://www.wembli.com/images/wembliman-home.png")
+meta(property="og:image",content="http://www.wembli.com/images/layout/wembli-button-222x200.png")
+meta(property="og:image",content="http://www.wembli.com/images/wembliman-hero-200.png")
+meta(property="og:image",content="http://www.wembli.com/images/cartoon-man-megaphone1.png")
+meta(property="og:image",content="http://www.wembli.com/images/wembliman-restaurant.png")
+meta(property="og:image",content="http://www.wembli.com/images/wembliman-itinerary.png")
+meta(property="og:image",content="http://www.wembli.com/images/cartoon-man-money.png")
 meta(property="og:url",content="http://www.wembli.com#{req.path}")
 meta(property="og:description",content="#{description}")
 meta(property="og:video",content="http://www.youtube.com/embed/_DKAIoIHk5c")
+meta(property="fb:admins",content="sdbluesman")
+meta(property="fb:app_id",content="#{fbAppId}")
 
 
 if (canonical)
