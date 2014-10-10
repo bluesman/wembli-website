@@ -273,18 +273,21 @@ module.exports = function(app) {
 
 								es.mget({body: {docs: docs}}, function(err, data) {
 									if (err) {
+										console.log('es error');
+										console.log(err);
+										console.log(data);
 										/* TODO: render the not found page */
 									    return res.status(404).render('error/404');
 									}
 
 									data.docs.forEach(function(el) {
-										if (el._type === 'events' && el.exists) {
+										if (el._type === 'events' && el.found) {
 											obj.event = el._source;
 										}
-										if (el._type === 'venues' && el.exists) {
+										if (el._type === 'venues' && el.found) {
 											obj.venue = el._source;
 										}
-										if (el._type === 'performers' && el.exists) {
+										if (el._type === 'performers' && el.found) {
 											if (typeof obj.performers === "undefined") {
 												obj.performers = [];
 											}
@@ -293,6 +296,9 @@ module.exports = function(app) {
 									});
 
 									if (typeof obj.venue === "undefined") {
+										console.log('es venue error');
+										console.log(err);
+										console.log(data);
 									    return res.status(404).render('error/404');
 									}
 
