@@ -8,6 +8,16 @@ title #{title}
 meta(name="viewport",content="width=device-width, initial-scale=1.0")
 meta(charset="utf-8")
 meta(name="description", content="#{description}")
+
+//facebook meta
+meta(property="og:title",content="#{title}")
+meta(property="og:type",content="website")
+meta(property="og:image",content="http://www.wembli.com/images/wembliman-home.png")
+meta(property="og:url",content="http://www.wembli.com#{req.path}")
+meta(property="og:description",content="#{description}")
+meta(property="og:video",content="http://www.youtube.com/embed/_DKAIoIHk5c")
+
+
 if (canonical)
   link(rel="canonical", href="#{canonical}")
 
