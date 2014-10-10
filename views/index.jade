@@ -1,36 +1,11 @@
 extends layout
 block content
 	#index(ng-controller="IndexCtrl")
-		section.section1.carousel-container.hidden-xs
-			#carousel.carousel.slide
-				ol.carousel-indicators
-					li.active(data-target="#carousel",data-slide-to="0")
-					li(data-target="#carousel",data-slide-to="1")
-					li(data-target="#carousel",data-slide-to="2")
-					li(data-target="#carousel",data-slide-to="3")
-					li(data-target="#carousel",data-slide-to="4")
-				.carousel-inner
-					//-
-						.item.active
-							img(src="/images/carousel/carousel-1.jpg")
-						.item.active
-							img(src="/images/carousel/carousel-2.jpg")
-					.item.active
-						img(src="/images/carousel/carousel-3.jpg")
-					.item
-						img(src="/images/carousel/carousel-4.jpg")
-					.item
-						img(src="/images/carousel/carousel-5.jpg")
-					.item
-						img(src="/images/carousel/carousel-6.jpg")
-					.item
-						img(src="/images/carousel/carousel-7.jpg")
-				//- a.carousel-control.left.icon-chevron-sign-left.icon-3x(href="#carousel",data-slide="prev")
-				//- a.carousel-control.right.icon-chevron-sign-right.icon-3x(href="#carousel",data-slide="next")
-
+		section.section1
+			img.img-responsive(src="/images/seating.jpg")
 		section.section2.container
 			//- h1.tag-line HARD TO GET TICKETS AND SO MUCH MORE...
-			h1.tag-line THE EASIEST WAY TO LIVE EVENTS
+			h1.tag-line Your Outing. Your Way.
 			//- can this be an include?
 			.search-box
 				form#index-search-form.search-form.clearfix(ng-submit="submitSearch()", novalidate)
@@ -40,63 +15,74 @@ block content
 					input.pull-left(config="index", type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
 					button.btn.btn-secondary.segoe.pull-left(href="#") search
 			.copy
-				p Get deals on tickets to concerts, theater and sports events then choose add ons like parking, restaurant deals and hotels.
-				p You can even invite and go dutch with friends so you don’t get stuck footing their bill!
+				p Search for tickets to concerts, theater and sporting events
 		section.section3.container
-			h1.hidden-xs GO AHEAD - INVITE FRIENDS!
-			img.hidden-xs.hidden-sm(src="/images/index-wembli-man-arrow.png").wembli-man-arrow.img-responsive
-			.row.info-boxes.hidden-xs.hidden-sm
-				.col-md-3.box.one.clearfix
-					h2.fa.fa-search &nbsp;1. You pick an event
-					p Whether you have an event in mind, or you want some ideas of what’s available in your area, use Wembli to search for events throughout the U.S.
-				.col-md-3.box.two.clearfix
-					h2.fa.fa-group &nbsp;2. Invite friends
-					p They get to vote on things like ticket prices and any add ons you choose for your outing i.e.: parking, restaurant deals & hotel
-				.col-md-3.box.three.clearfix
-					h2.fa.fa-credit-card &nbsp;3. Everyone pays
-					p Gone are the days of you getting stuck footing the bill.  Using Wembli, you can have your friends pay up front or you can collect after.  You choose.
-				.col-md-3.box.four.clearfix
-					h2.fa.fa-ticket &nbsp;4. Tickets are bought
-					p We aggregate tickets from across the web - so you don’t waste precious time bouncing from site to site.  We even know how many seats you can get together.
+			h1.hidden-xs THE OPTIONS
+			strong Instead of the one size fits all approach that the other sites take, we let you build your outing, your way.
+			.row.info-boxes
+				.col-sm-4.col-xs-12
+					.box.one
+						.circle
+							i.fa.fa-ticket.fa-4x.fa-rotate-45
+						h2 Tickets
+						p We scour the web for tickets to concerts, theater and sporting event so you just have to search once and you're done.
+				.col-sm-4.col-xs-12
+					.box.two
+						.circle-small.one
+							i.fa.fa-car
+						.circle-small.two
+							i.fa.fa-beer
+						.circle-small.three
+							i.fa.fa-suitcase
+						.circle-black
+							i.fa.fa-plus.fa-4x.
+						h2 Add Ons
+						p Creating the perfect experience is different for everyone.  Wembli lets you choose from smart add-ons like parking, restaurant deals and hotels.
+				.col-sm-4.col-xs-12
+					.box.three.clearfix
+						.circle
+								i.fa.fa-group.fa-4x.
+						h2 Friends
+						p If you decide to invite friends, we'll make it easy with fun features like voting options and bill splitting.  We'll save you time and friendships!
 
 		section.section4
 			.container
 				.row.video-container
 					.col-md-6
 						.video-text
-							h1 One Stop Shop For Events
-							p We save you time, money... and friendships!
-							p Instead of creating an Evite or Facebook event, visiting dozens of ticketing sites, scouring for big bargains on good eats, driving around in circles for parking, or the pain of all pains - trying to get friends to pony up for their part of the bill - we bring all of those pieces together for you in a snap!
+							h1 YOUR STORY
+							p Whether you're going solo, inviting others (like Ken in our video) or planning a date night with that special someone - Wembli wants to help you make great memories that turn into great stories.
+							p Other sites dump you off to fend for yourself after the ticket sale. Wembli is different. We make sure that the right options are there when you need them.  With smart add ons like Parking, Restaurant Deals, Hotels and friend options, we make planning flawless... and experiences, memorable.
+							p Let Wembli be the hero in your story!
 					.col-md-6.video
 						iframe(src="//www.youtube.com/embed/_DKAIoIHk5c",frameborder="0",allowfullscreen)
-
+			.wembli-man-transparent.hidden-xs
 		section.section5
-			.container
-				.row.hidden-sm.hidden-xs
-					.col-md-6.col-md-offset-3.top-events-arrow
-						img(src="/images/top-events-arrow.png").img-responsive
-				.row.header
-					.col-md-8.col-md-offset-2
-						h1 UPCOMING EVENTS IN YOUR AREA
-				.row.top-lists
-					.col-md-3.col-md-offset-1
-						h2.segoe Top Concerts:
-						ul.left
-							- each c, i in concerts
-								li.performers
-									a.performer.white.show-ellipses(target="_self", start="0", title="#{c.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{c.url}", ng-href="http://#{app.settings.host}.wembli.com#{c.url}") #{i+1}) #{c.name}
-					.col-md-3.col-md-offset-1
-						h2.segoe Top Sporting Events:
-						ul.middle
-							- each s, i in sports
-								li.performers
-									a.performer.white.show-ellipses(target="_self", start="0", title="#{s.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{s.url}", ng-href="http://#{app.settings.host}.wembli.com#{s.url}") #{i+1}) #{s.name}
-					.col-md-3
-						h2.segoe Top Theater:
-						ul.right
-							- each t, i in theater
-								li.performers
-									a.performer.white.show-ellipses(target="_self", start="0", title="#{t.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{t.url}", ng-href="http://#{app.settings.host}.wembli.com#{t.url}") #{i+1}) #{t.name}
+			.row.hidden-sm.hidden-xs
+				.col-md-6.col-md-offset-3.top-events-arrow
+					img(src="/images/top-events-arrow.png").img-responsive
+			.row.header
+				.col-xs-12
+					h1 UPCOMING EVENTS IN YOUR AREA
+			.row.top-lists
+				.col-md-3.col-md-offset-1.col-sm-4.col-xs-12
+					h2.segoe Top Concerts:
+					ul.left
+						- each c, i in concerts
+							li.performers
+								a.performer.white.show-ellipses(target="_self", start="0", title="#{c.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{c.url}", ng-href="http://#{app.settings.host}.wembli.com#{c.url}") #{i+1}) #{c.name}
+				.col-md-3.col-md-offset-1.col-sm-4.col-xs-12
+					h2.segoe Top Sporting Events:
+					ul.middle
+						- each s, i in sports
+							li.performers
+								a.performer.white.show-ellipses(target="_self", start="0", title="#{s.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{s.url}", ng-href="http://#{app.settings.host}.wembli.com#{s.url}") #{i+1}) #{s.name}
+				.col-md-3.col-sm-4.col-xs-12
+					h2.segoe Top Theater:
+					ul.right
+						- each t, i in theater
+							li.performers
+								a.performer.white.show-ellipses(target="_self", start="0", title="#{t.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{t.url}", ng-href="http://#{app.settings.host}.wembli.com#{t.url}") #{i+1}) #{t.name}
 
 		section.section6
 			.container

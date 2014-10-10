@@ -7,7 +7,7 @@
 
 	h1 {
 		font-weight:bold;
-		text-transform: uppercase;
+
 	}
 
 	h1, h2 {
@@ -74,26 +74,113 @@
 	}
 
 	.section3 {
-		padding-bottom: 20px;
+		padding-bottom: 50px;
 		margin:auto;
 
 		h1 {
 			width:100%;
-			margin-top:20px;
+			margin:20px 0;
+		}
+
+		strong {
+			display:block;
+			margin:15px;
 		}
 
 		h2 {
 			font-weight:bold;
 		}
 
-		.wembli-man-arrow {
-			margin:auto;
-		}
+
 
 		.info-boxes {
+
 			.box {
+				max-width:250px;
+				margin:20px auto;
 				color:@black;
 				padding:0 20px;
+				text-align:left;
+
+				.fa-plus {
+					color:#FFF;
+				}
+
+				.circle-small {
+					border-radius: 50%;
+					border:4px solid @yellow;
+					width:40px;
+					height:40px;
+					margin:auto;
+					background-color: #FFF;
+
+					i {
+						margin:9px;
+					}
+
+				}
+
+				.circle-black {
+					border-radius: 50%;
+					background-color: #000;
+					border:4px solid #000;
+					width:100px;
+					height:100px;
+					margin:auto;
+
+					i {
+						margin:20px 24px;
+
+					}
+
+				}
+
+				.circle {
+					border-radius: 50%;
+					border:4px solid @yellow;
+					width:100px;
+					height:100px;
+					margin:auto;
+
+					i {
+						margin:18px;
+
+					}
+				}
+
+				h2 {
+					text-align:center;
+					font-size:1.3em;
+					font-weight:bold;
+					padding:0;
+					margin:20px;
+				}
+
+				p {
+					font-size: .8em;
+				}
+			}
+
+			.box.two {
+				position:relative;
+				.circle-small.one {
+					position: absolute;
+					top:2%;
+					left:20%;
+
+				}
+
+				.circle-small.two {
+					position: absolute;
+					top:-8%;
+					left:42%;
+
+				}
+				.circle-small.three {
+					position: absolute;
+					top:2%;
+					right:20%;
+				}
 			}
 		}
 
@@ -101,6 +188,8 @@
 
 	.section4 {
 		background-color:@gray;
+		position:relative;
+
 
 		h1 {
 			padding:6px 0;
@@ -130,6 +219,15 @@
 			}
 		}
 
+		.wembli-man-transparent {
+			position:absolute;
+			bottom:0;
+			left:20px;
+			height:147px;
+			width:108px;
+
+			background: transparent url("/images/wembliman-home.png") no-repeat left bottom;
+		}
 
 		/* Small devices (tablets, 768px and up) */
 		@media (min-width: @screen-sm-min) {
@@ -159,7 +257,9 @@
 
 	.section5 {
 		background-color:@blueDark;
+		padding:0 10px 60px 10px;
 		padding-bottom:60px;
+		position:relative;
 
 		/* (tablets) */
 		@media (max-width: @screen-sm-max) {
@@ -172,28 +272,28 @@
 			}
 		}
 
-		.container {
-			text-align:left;
 
-			.top-events-arrow {
-				position:absolute;
-				img {
-					margin:30px 0 0 20px;
-				}
+		.top-events-arrow {
+			position:absolute;
+			img {
+				margin:60px 0 0 120px;
 			}
+		}
 
-			.header {
-				h1 {
-					margin:20px 0;
-				}
+		.header {
+			background-color:#000;
+			h1 {
+				font-weight:normal;
+				margin:40px 0;
+				color:#FFF;
 			}
+		}
 
-			.left, .middle, .right {
-				min-height:350px;
-				.performers {
-					padding:6px;
-					max-width:300px;
-				}
+		.left, .middle, .right {
+			min-height:350px;
+			.performers {
+				padding:6px;
+				max-width:300px;
 			}
 		}
 
