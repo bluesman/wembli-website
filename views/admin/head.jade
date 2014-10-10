@@ -1,9 +1,24 @@
 - var title = (typeof title !== "undefined") ? title : 'Wembli Admin';
+- var description = 'Your Outing. Your Way. Plan your own custom outing for concerts, theater or sporting events with friends.';
+
+if ((typeof meta == "undefined") && (typeof meta.title !== "undefined"))
+  title = meta.title;
+if ((typeof meta == "undefined") && (typeof meta.description !== "undefined"))
+  description = meta.description;
+
 title #{title}
-meta(charset = "utf-8")
-meta(name = "description", content = "")
-meta(name = "author", content = "")
+meta(charset="utf-8")
+meta(name="description", content="#{description}")
+meta(name="author", content="")
 meta(name="viewport",content="width=device-width, initial-scale=1.0")
+
+//facebook meta
+meta(property="og:title",content="#{title}")
+meta(property="og:type",content="website")
+meta(property="og:image",content="http://www.wembli.com/images/wembliman-home.png")
+meta(property="og:url",content="http://www.wembli.com#{req.path}")
+meta(property="og:description",content="#{description}")
+meta(property="og:video",content="http://www.youtube.com/embed/_DKAIoIHk5c")
 
 link(type = "image/x-icon", rel = "icon", href = "/favicon.ico")
 link(type = "image/png", rel = "icon", href = "/favicon.png")
