@@ -9,8 +9,9 @@ block header
 				//- show for phones
 				#page-title.visible-xs.col-xs-8 Wembli
 
-				a#search-toggle.nav-aside-toggle.visible-xs.col-xs-2.text-center(href="#",bs-aside="aside", data-container="header", data-placement="right", data-animation="am-fade-and-slide-right", data-template="/partials/right-aside")
-					i.fa.fa-search
+				if (req.path !== '/')
+					a#search-toggle.nav-aside-toggle.visible-xs.col-xs-2.text-center(href="#",bs-aside="aside", data-container="header", data-placement="right", data-animation="am-fade-and-slide-right", data-template="/partials/right-aside")
+						i.fa.fa-search
 
 				//- hide for phones
 				.hidden-xs.col-sm-10
@@ -20,9 +21,10 @@ block header
 						li
 							a(href="//#{app.settings.host}.wembli.com/signup") signup
 
-					form#header-search-form.navbar-form.navbar-left(role="search", method="GET", action="//#{app.settings.host}.wembli.com/search/events")
-						i.fa.fa-search.pull-left(ng-hide="searchInProgress")
-						input.pull-left(type="text", name="search", placeholder="Search")
+					if (req.path !== '/')
+						form#header-search-form.navbar-form.navbar-left(role="search", method="GET", action="//#{app.settings.host}.wembli.com/search/events")
+							i.fa.fa-search.pull-left(ng-hide="searchInProgress")
+							input.pull-left(type="text", name="search", placeholder="Search")
 
 					.navbar-right
 						a(href="//#{app.settings.host}.wembli.com/")
