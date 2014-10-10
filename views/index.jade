@@ -1,10 +1,9 @@
 extends layout
 block content
 	#index(ng-controller="IndexCtrl")
-		section.section1
+		section.section1.hidden-xs
 			img.img-responsive(src="/images/seating.jpg")
 		section.section2.container
-			//- h1.tag-line HARD TO GET TICKETS AND SO MUCH MORE...
 			h1.tag-line Your Outing. Your Way.
 			//- can this be an include?
 			.search-box
@@ -14,7 +13,7 @@ block content
 					//- add class .typeahead to turn on autocomplete
 					input.pull-left(config="index", type="text", ng-model="search", name="search", placeholder="enter an event, team or venue, city or zip code")
 					button.btn.btn-secondary.segoe.pull-left(href="#") search
-			.copy
+			.copy.hidden-xs
 				p Search for tickets to concerts, theater and sporting events
 		section.section3.container
 			h1.hidden-xs THE OPTIONS
@@ -117,5 +116,5 @@ block content
 					a.col-md-2.col-md-offset-1.footer-link(href="http://#{app.settings.host}.wembli.com/about-us") About Us
 					a.col-md-2.footer-link(target="_self",href="http://#{app.settings.host}.wembli.com/terms-policies") Terms Of Service & Privacy Policy
 					a.col-md-2.footer-link(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+
-					.col-md-2.col-md-offset-1
+					.col-md-2.col-md-offset-1.col-xs-2.col-xs-offset-5
 						img.img-responsive(src="/img/rackspace-logo.png")
