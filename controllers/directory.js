@@ -295,18 +295,18 @@ module.exports = function(app) {
 										}
 									});
 
-									if (typeof obj.venue === "undefined") {
-										console.log('es venue error');
-										console.log(err);
-										console.log(data);
-									    return res.status(404).render('error/404');
-									}
 
 									obj.slugs = {};
-									obj.slugs.country = wembliUtils.slugify(obj.venue.country);
-									obj.slugs.region = wembliUtils.slugify(obj.venue.region);
-									obj.slugs.city = wembliUtils.slugify(obj.venue.city);
-									obj.slugs.venue = wembliUtils.slugify(obj.venue.name);
+									if (typeof obj.venue !== "undefined") {
+
+										obj.slugs.country = wembliUtils.slugify(obj.venue.country);
+										obj.slugs.region = wembliUtils.slugify(obj.venue.region);
+										obj.slugs.city = wembliUtils.slugify(obj.venue.city);
+										obj.slugs.venue = wembliUtils.slugify(obj.venue.name);
+
+									}
+
+
 									obj.slugs.category = wembliUtils.slugify(obj.event.categories.category.name);
 
 									if (typeof obj.event.subcategories.subcategory !== "undefined") {

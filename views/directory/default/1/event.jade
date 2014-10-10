@@ -11,18 +11,19 @@ block content
 					li
 						a(href="http://#{app.settings.host}.wembli.com/#{slugs.category}/#{slugs.subcategory}") #{event.subcategories.subcategory.short_name}
 		.row
-			.col-md-4.where
-				h2(itemprop="location", itemscope, itemtype="http://schema.org/EventVenue")
-					span Where:&nbsp;
-					a(itemprop="url", href="//#{app.settings.host}.wembli.com/venues/#{slugs.venue}") #{venue.name}
-				if (venue.address && venue.address !== "")
-					address.venue-address
-						span.address-street #{venue.address}
-						br
-						a.address-locality(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.region}/#{slugs.city}")= venue.city + ', '
-						a.address-region(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.region}")= venue.region+', '
-						a.address-country(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}")= venue.country+ ' '
-						span.address-postal-code= venue.postal_code
+			if (typeof venue !== "undefined")
+				.col-md-4.where
+					h2(itemprop="location", itemscope, itemtype="http://schema.org/EventVenue")
+						span Where:&nbsp;
+						a(itemprop="url", href="//#{app.settings.host}.wembli.com/venues/#{slugs.venue}") #{venue.name}
+					if ((typeof venue !=="undefined") && venue.address && venue.address !== "")
+						address.venue-address
+							span.address-street #{venue.address}
+							br
+							a.address-locality(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.region}/#{slugs.city}")= venue.city + ', '
+							a.address-region(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}/#{slugs.region}")= venue.region+', '
+							a.address-country(href="//#{app.settings.host}.wembli.com/events/#{slugs.country}")= venue.country+ ' '
+							span.address-postal-code= venue.postal_code
 			.col-md-4.when
 				h2(itemprop="startDate")
 					span When:&nbsp;
