@@ -1,13 +1,13 @@
 #index {
-	text-align:left;
+	text-align:center;
 
 	section {
 		position:relative;
+		text-align:center;
 	}
 
 	h1 {
 		font-weight:bold;
-		font-size:42px;
 	}
 
 	h1, h2 {
@@ -54,6 +54,8 @@
 			.tag-line {
 				text-shadow: #000 4px 4px 10px;
 				font-weight: normal;
+				font-size:42px;
+
 			}
 
 			.copy, .tag-line {
@@ -98,16 +100,19 @@
 			font-weight:bold;
 		}
 
-
-
 		.info-boxes {
 
 			.box {
+				@media (min-width: @screen-sm-min) {
+					text-align:left;
+				}
+
+
+
 				max-width:275px;
 				margin:20px auto;
 				color:@black;
 				padding:0 20px;
-				text-align:left;
 
 				.fa-plus {
 					color:#FFF;
@@ -267,6 +272,7 @@
 		padding:0 10px 60px 10px;
 		padding-bottom:60px;
 		position:relative;
+		text-align:left;
 
 		/* (tablets) */
 		@media (max-width: @screen-sm-max) {
@@ -306,6 +312,7 @@
 
 		/* Small devices (tablets, 768px and up) */
 		@media (min-width: @screen-sm-min) {
+			text-align:center;
 			.top-lists {
 				margin-top:50px;
 				h2 {

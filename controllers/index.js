@@ -7,8 +7,6 @@ module.exports = function(app) {
 
 	function indexView(req, res, callback) {
 
-		console.log(req.path);
-
 		var view = {};
 
 		var client = redis.createClient(app.settings.redisport || 6379, app.settings.redishost || 'localhost', {});
