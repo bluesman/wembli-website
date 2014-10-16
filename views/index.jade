@@ -107,14 +107,21 @@ block content
 				//-
 					.footer-social-button.twitter-button.pull-left
 						a(href="//twitter.com/wembli", class="twitter-follow-button", data-show-count="false", data-lang="en") Follow @wembli
-				.row.social-links
-					.col-md-5.col-md-offset-1.footer-social-button.facebook-like-button
-						.fb-like(data-href="http://www.wembli.com", data-width="280",data-show-faces="true", data-send="true")
-					.col-md-5.col-md-offset-1.footer-social-button.gplus-like-button
-						.g-plusone(data-href="http://www.wembli.com", data-annotation="inline", data-width="280")
-				.row.links
-					a.col-md-2.col-md-offset-1.footer-link(href="http://#{app.settings.host}.wembli.com/about-us") About Us
-					a.col-md-2.footer-link(target="_self",href="http://#{app.settings.host}.wembli.com/terms-policies") Terms Of Service & Privacy Policy
-					a.col-md-2.footer-link(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+
-					.col-md-2.col-md-offset-1.col-xs-2.col-xs-offset-5
+				.row
+					.col-xs-12.col-md-4
+						.row.links(style="margin-top:0")
+							div.text-left
+								a.footer-link(href="http://#{app.settings.host}.wembli.com/about-us") About Us
+							div.text-left(style="margin-top:10px")
+								a.footer-link(target="_self",href="http://#{app.settings.host}.wembli.com/terms-policies") Terms Of Service & Privacy Policy
+							div.text-left(style="margin-top:10px")
+								a.footer-link(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+
+					.col-xs-12.col-md-4
+						.row.social-links
+							.col-xs-12.footer-social-button.facebook-like-button
+								.fb-like(data-href="http://www.wembli.com", data-width="280",data-show-faces="true", data-send="true")
+							.col-xs-12.footer-social-button.gplus-like-button
+								.g-plusone(data-href="http://www.wembli.com", data-annotation="inline", data-width="280")
+
+					.col-xs-12.col-md-2.col-md-offset-1
 						img.img-responsive(src="/img/rackspace-logo.png")
