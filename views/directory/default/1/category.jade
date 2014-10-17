@@ -14,6 +14,11 @@ block content
 							li.active	#{crum[0]}
 						else
 							li
+								//- replace amp with and so link works
+								- console.log(crum[1])
+								- crum[1] = crum[1].replace(/-amp-/gi,"-and-")
+								- console.log(crum[1])
+
 								a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") #{crum[0]}
 		.row
 			.sidebar.col-md-4
@@ -24,6 +29,10 @@ block content
 							//- each parent cat except breadcrums[0][0]
 							each cat in rootCategories
 								li
+									- console.log(cat.url)
+									- cat.url = cat.url.replace(/-amp-/gi,"-and-")
+									- console.log(cat.url)
+
 									a(href="http://#{app.settings.host}.wembli.com#{cat.url}") #{cat.name}
 									if (breadcrumbs[0] && cat.name === breadcrumbs[0][0] && typeof childCategories !== "undefined" && childCategories !== null)
 										ul
@@ -34,6 +43,11 @@ block content
 															ul
 																each cat2 in grandChildCategories
 																	li
+																		//- replace amp with and so link works
+																		- console.log(cat2.url)
+																		- cat2.url = cat2.url.replace(/-amp-/gi,"-and-")
+																		- console.log(cat2.url)
+
 																		a(href="http://#{app.settings.host}.wembli.com#{cat2.url}") #{cat2.name}
 													else
 														li
