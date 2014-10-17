@@ -4,8 +4,7 @@ var async = require('async');
 var redis = require("redis");
 var elasticsearch = require('elasticsearch');
 var es = new elasticsearch.Client({
-    host: 'es01.wembli.com:9200',
-    log:"trace"
+    host: 'es01.wembli.com:9200'
 });
 
 module.exports = function(app) {
@@ -29,7 +28,6 @@ module.exports = function(app) {
 		var d = new Date(d1);
 		d.setDate(d1.getDate() + daysPadding);
 		dateFmt = d.format("isoDateTime")
-		console.log(dateFmt);
 		var filters = [
       {
       	"range": {
@@ -77,7 +75,6 @@ module.exports = function(app) {
 				    },
 				  }
 				}).then(function (resp) {
-					console.log(resp.hits.hits);
 					for (var i = resp.hits.hits.length - 1; i >= 0; i--) {
 						view.concerts.push(resp.hits.hits[i]._source);
 					};
@@ -114,7 +111,6 @@ module.exports = function(app) {
   					"PCatID":1
   				}
   			});
-				console.log(filters);
 				es.search({
 				  index: 'ticket_network',
 				  type:'events',
@@ -130,7 +126,6 @@ module.exports = function(app) {
 				    },
 				  }
 				}).then(function (resp) {
-					console.log(resp.hits.hits);
 					for (var i = resp.hits.hits.length - 1; i >= 0; i--) {
 						view.sports.push(resp.hits.hits[i]._source);
 					};
@@ -183,7 +178,6 @@ module.exports = function(app) {
 				    },
 				  }
 				}).then(function (resp) {
-					console.log(resp.hits.hits);
 					for (var i = resp.hits.hits.length - 1; i >= 0; i--) {
 						view.theater.push(resp.hits.hits[i]._source);
 					};
