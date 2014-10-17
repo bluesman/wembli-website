@@ -274,6 +274,21 @@
 		position:relative;
 		text-align:left;
 
+		li:hover {
+			background-color: @blueLight;
+		}
+		li {
+			padding:10px;
+			.event-date-box {
+
+			}
+
+			.info {
+				color:@black;
+			}
+		}
+
+
 		/* (tablets) */
 		@media (max-width: @screen-sm-max) {
 			h2 {
@@ -317,19 +332,6 @@
 				margin-top:50px;
 				h2 {
 					font-size:20px;
-				}
-				li:hover {
-					background-color: @blueLight;
-				}
-				li {
-					padding:10px;
-					.event-date-box {
-
-					}
-
-					.info {
-						color:@black;
-					}
 				}
 			}
 		}

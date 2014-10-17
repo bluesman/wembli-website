@@ -1,5 +1,8 @@
 extends layout
 block content
+	var yourCity = "";
+	if (typeof req.session.visitor.tracking.city !== "undefined")
+		yourCity = "IN "+req.session.visitor.tracking.city;
 	#index(ng-controller="IndexCtrl")
 		section.section1.hidden-xs
 			img.img-responsive(src="/images/seating.jpg")
@@ -63,7 +66,7 @@ block content
 						img(src="/images/top-events-arrow.png").img-responsive
 			.row.header
 				.col-xs-12
-					h1 POPULAR EVENTS IN YOUR AREA
+					h1 POPULAR EVENTS #{yourCity}
 			.row.top-lists.text-left
 				.col-sm-offset-1.col-sm-10
 					.row
@@ -74,12 +77,16 @@ block content
 									li.row(event-id="#{c.EventID}",name="#{c.Event}",id="#{c.EventID}-wrapper")
 										- var date = new Date(Date.parse(c.DateTime));
 										- var location = c.City+', '+c.State;
+										.col-xs-12.hidden-sm.hidden-md.hidden-lg.hidden-xl
+											h2
+												a.info.text-left.performer(target="_self", start="0", title="#{c.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{c.EventID}/#{c.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{c.EventID}/#{c.Event}")
+													.name.white #{i+1}) #{c.Event}
 										.col-sm-4.col-xs-12
 											.event-date-box
 												span.day!=        date.format("ddd")
 												span.event-date!= date.format("mmm d")
 												span.time!=       date.format("h:MM TT")
-										.col-sm-8.col-xs-12
+										.col-sm-8.hidden-xs
 											a.info.text-left.performer(target="_self", start="0", title="#{c.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{c.EventID}/#{c.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{c.EventID}/#{c.Event}")
 												.name.white #{i+1}) #{c.Event}
 												.venue #{c.Venue}
@@ -92,12 +99,16 @@ block content
 									li.row(event-id="#{s.EventID}",name="#{s.Event}",id="#{s.EventID}-wrapper")
 										- var date = new Date(Date.parse(s.DateTime));
 										- var location = s.City+', '+s.State;
+										.col-xs-12.hidden-sm.hidden-md.hidden-lg.hidden-xl
+											h2
+												a.info.text-left.performer(target="_self", start="0", title="#{s.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{s.EventID}/#{s.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{s.EventID}/#{s.Event}")
+													.name.white #{i+1}) #{s.Event}
 										.col-sm-4.col-xs-12
 											.event-date-box
 												span.day!=        date.format("ddd")
 												span.event-date!= date.format("mmm d")
 												span.time!=       date.format("h:MM TT")
-										.col-sm-8.col-xs-12
+										.col-sm-8.col-xs-12.hidden-xs
 											a.info.text-left.performer(target="_self", start="0", title="#{s.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{s.EventID}/#{s.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{s.EventID}/#{s.Event}")
 												.name.white #{i+1}) #{s.Event}
 												.venue #{s.Venue}
@@ -110,12 +121,17 @@ block content
 									li.row(event-id="#{t.EventID}",name="#{t.Event}",id="#{t.EventID}-wrapper")
 										- var date = new Date(Date.parse(t.DateTime));
 										- var location = t.City+', '+t.State;
+										.col-xs-12.hidden-sm.hidden-md.hidden-lg.hidden-xl
+											h2
+												a.info.text-left.performer(target="_self", start="0", title="#{t.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{t.EventID}/#{t.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{t.EventID}/#{t.Event}")
+													.name.white #{i+1}) #{t.Event}
+
 										.col-sm-4.col-xs-12
 											.event-date-box
 												span.day!=        date.format("ddd")
 												span.event-date!= date.format("mmm d")
 												span.time!=       date.format("h:MM TT")
-										.col-sm-8.col-xs-12
+										.col-sm-8.col-xs-12.hidden-xs
 											a.info.text-left.performer(target="_self", start="0", title="#{t.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{t.EventID}/#{t.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{t.EventID}/#{t.Event}")
 												.name.white #{i+1}) #{t.Event}
 												.venue #{t.Venue}
