@@ -16,6 +16,13 @@ module.exports = function(app) {
 	var client = redis.createClient(app.settings.redisport || 6379, app.settings.redishost || 'localhost', {});
 	var prefix = 'directory:';
 
+	var daysPadding = 2; //how many days from today for the beginDate
+	var d1 = Date.today();
+	var d = new Date(d1);
+	d.setDate(d1.getDate() + daysPadding);
+	dateFmt = d.format("isoDateTime")
+
+
 
 	/* example urls:
 		- event directory -
@@ -339,7 +346,23 @@ module.exports = function(app) {
 									async.parallel([
 										/* get eventlist from es */
 										function(venueGetDetailCb) {
-											es.search({index:'eventful',type:'events',size:20,q:'venue_id:'+venue._source.id}, function(err, result) {
+											var vId = venue._source.id.split('-');
+										  var body = {
+				    						"sort":[{"start_time":{"order":"asc"}}],
+										    "query": {
+										      "filtered": {
+										      	"query": {
+										      		"match": {"venue_id":vId[2]}
+										      	},
+										        "filter": {
+										          "range": {
+										            "start_time": {gte: dateFmt}
+										          }
+										      	},
+										      },
+										    },
+										  };
+											es.search({index:'eventful',type:'events',size:20,body:body}, function(err, result) {
 												obj.venue.events = result.hits.hits;
 												venueGetDetailCb();
 											});
@@ -368,7 +391,6 @@ module.exports = function(app) {
 								es.get({index:"eventful",type:"performers",id:obj.id},function(err, performer) {
 									if (err) {
 										/* TODO: render the not found page */
-										console.log(err);
 									    return res.status(404).render('error/404');
 									}
 									if (typeof performer === "undefined") {
@@ -383,7 +405,23 @@ module.exports = function(app) {
 									async.parallel([
 										/* get eventlist from es */
 										function(venueGetDetailCb) {
-											es.search({index:'eventful',type:'events',size:20,q:'performers.performer.id:'+performer._source.id}, function(err, result) {
+											var pId = performer._source.id.split('-');
+										  var body = {
+				    						"sort":[{"start_time":{"order":"asc"}}],
+										    "query": {
+										      "filtered": {
+										      	"query": {
+										      		"match": {"performers.performer.id":pId[2]}
+										      	},
+										        "filter": {
+										          "range": {
+										            "start_time": {gte: dateFmt}
+										          }
+										      	},
+										      },
+										    },
+										  };
+											es.search({index:'eventful',type:'events',size:20,body:body}, function(err, result) {
 												obj.performer.events = result.hits.hits;
 												venueGetDetailCb();
 											});

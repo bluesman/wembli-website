@@ -27,7 +27,7 @@ module.exports = function(app) {
 		var d1 = Date.today();
 		var d = new Date(d1);
 		d.setDate(d1.getDate() + daysPadding);
-		dateFmt = d.format("isoDateTime")
+		dateFmt = d.format("isoDateTime");
 		var filters = [
       {
       	"range": {
