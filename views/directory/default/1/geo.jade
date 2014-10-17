@@ -32,8 +32,9 @@ block content
 						h2= sidebarHeading
 						ul
 							each c in subGeoVenues
-								li
-									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+								- if (c.name)
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 
 			.main.col-md-8
 				if (top)
