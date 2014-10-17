@@ -24,15 +24,16 @@ block content
 						h2= sidebarHeading
 						ul
 							each c in subGeoEvents
-								li
-									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+								if c.name
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 
 				if (type == 'venues' && typeof subGeoVenues !== "undefined" && subGeoVenues !== null)
 					.category
 						h2= sidebarHeading
 						ul
 							each c in subGeoVenues
-								- if (c.name)
+								if (c.name)
 									li
 										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 
@@ -42,6 +43,7 @@ block content
 						h2 Top #{type.charAt(0).toUpperCase() + type.slice(1)}
 						ul
 							each t in top.list
-								li.col-md-4
-									a(href="http://#{app.settings.host}.wembli.com#{t.url}") #{t.name}
+								if t.name
+									li.col-md-4
+										a(href="http://#{app.settings.host}.wembli.com#{t.url}") #{t.name}
 

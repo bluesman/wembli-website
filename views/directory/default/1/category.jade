@@ -45,16 +45,18 @@ block content
 						h2 Sub Geo Events
 						ul
 							each c in subGeoEvents
-								li
-									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+								if c.name
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 
 				if (typeof subGeoVenues !== "undefined" && subGeoVenues !== null)
 					.category
 						h2 Sub Geo Venues
 						ul
 							each c in subGeoVenues
-								li
-									a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+								if c.name
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
 
 			.main.col-md-8
 				if (top)
