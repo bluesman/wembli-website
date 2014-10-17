@@ -1,8 +1,8 @@
 extends layout
 block content
-	var yourCity = "";
-	if (typeof req.session.visitor.tracking.city !== "undefined")
-		yourCity = "IN "+req.session.visitor.tracking.city;
+	- var yourCity = "";
+	- if (typeof visitor.tracking.city !== "undefined")
+		- yourCity = "IN "+visitor.tracking.city;
 	#index(ng-controller="IndexCtrl")
 		section.section1.hidden-xs
 			img.img-responsive(src="/images/seating.jpg")
