@@ -2,19 +2,93 @@ var eventRpc = require('../rpc/event').event;
 var wembliUtils = require('../lib/wembli/utils');
 var async = require('async');
 var redis = require("redis");
+var elasticsearch = require('elasticsearch');
+var es = new elasticsearch.Client({
+    host: 'es01.wembli.com:9200',
+    log:"trace"
+});
 
 module.exports = function(app) {
 
 	function indexView(req, res, callback) {
 
-		var view = {};
+		var view = {'concerts':[],'sports':[],'theater':[]};
 
 		var client = redis.createClient(app.settings.redisport || 6379, app.settings.redishost || 'localhost', {});
+
+		var zips = [];
+		if (typeof req.session.visitor.tracking.nearby !== "undefined") {
+			for (var i = req.session.visitor.tracking.nearby.zip_codes.length - 1; i >= 0; i--) {
+				zips.push(req.session.visitor.tracking.nearby.zip_codes[i].zip_code);
+			};
+		}
+
+		/* where clause for search */
+		var daysPadding = 2; //how many days from today for the beginDate
+		var d1 = Date.today();
+		var d = new Date(d1);
+		d.setDate(d1.getDate() + daysPadding);
+		dateFmt = d.format("isoDateTime")
+		console.log(dateFmt);
+		var filters = [
+      {
+      	"range": {
+        	"DateTime": {gte: dateFmt}
+     		}
+     	}
+		];
+		if (typeof zips[0] !== "undefined") {
+    	filters.push({
+      	"terms": {
+        	"Zip":zips
+      	}
+      });
+		}
+
+
 
 		/* get concerts, sport and theater events in parallel */
 		async.parallel([
 			/* get 10 concerts nearby (categoryId: 2) */
 			function(cb) {
+				var f = [];
+				for (var i = filters.length - 1; i >= 0; i--) {
+					f.push(filters[i]);
+				};
+
+				f.push({
+  				"term": {
+  					"PCatID":2
+  				}
+  			});
+
+				es.search({
+				  index: 'ticket_network',
+				  type:'events',
+				  size:10,
+				  body: {
+				    "sort":[{"NumTicketsSold":{"order":"desc"}}],
+				    "query": {
+				      "filtered": {
+				        "filter": {
+				        	"and": f
+						    }
+				      },
+				    },
+				  }
+				}).then(function (resp) {
+					console.log(resp.hits.hits);
+					for (var i = resp.hits.hits.length - 1; i >= 0; i--) {
+						view.concerts.push(resp.hits.hits[i]._source);
+					};
+					cb();
+
+				}, function (error) {
+					cb();
+				});
+
+
+				/*
 				client.get('directory:top:/concerts-and-tour-dates', function(err, results) {
 					if (results) {
 						var r = JSON.parse(results);
@@ -24,10 +98,50 @@ module.exports = function(app) {
 					}
 					cb();
 				});
+				*/
 			},
 
 			/* get 10 sports nearby (categoryId: 1) */
 			function(cb) {
+				var f = [];
+				for (var i = filters.length - 1; i >= 0; i--) {
+					f.push(filters[i]);
+				};
+
+
+				f.push({
+  				"term": {
+  					"PCatID":1
+  				}
+  			});
+				console.log(filters);
+				es.search({
+				  index: 'ticket_network',
+				  type:'events',
+				  size:10,
+				  body: {
+				    "sort":[{"NumTicketsSold":{"order":"desc"}}],
+				    "query": {
+				      "filtered": {
+				        "filter": {
+				        	"and": f
+						    }
+				      },
+				    },
+				  }
+				}).then(function (resp) {
+					console.log(resp.hits.hits);
+					for (var i = resp.hits.hits.length - 1; i >= 0; i--) {
+						view.sports.push(resp.hits.hits[i]._source);
+					};
+					cb();
+
+				}, function (error) {
+					cb();
+				});
+
+
+				/*
 				client.get('directory:top:/sports', function(err, results) {
 					if (results) {
 						var r = JSON.parse(results);
@@ -37,10 +151,50 @@ module.exports = function(app) {
 					}
 					cb();
 				});
+				*/
 			},
 
 			/* get 10 theater nearby (categoryId: 3) */
 			function(cb) {
+				var f = [];
+				for (var i = filters.length - 1; i >= 0; i--) {
+					f.push(filters[i]);
+				};
+
+
+				f.push({
+  				"term": {
+  					"PCatID":3
+  				}
+  			});
+
+				es.search({
+				  index: 'ticket_network',
+				  type:'events',
+				  size:10,
+				  body: {
+				    "sort":[{"NumTicketsSold":{"order":"desc"}}],
+				    "query": {
+				      "filtered": {
+				        "filter": {
+				        	"and": f
+						    }
+				      },
+				    },
+				  }
+				}).then(function (resp) {
+					console.log(resp.hits.hits);
+					for (var i = resp.hits.hits.length - 1; i >= 0; i--) {
+						view.theater.push(resp.hits.hits[i]._source);
+					};
+					cb();
+
+				}, function (error) {
+					cb();
+				});
+
+
+				/*
 				client.get('directory:top:/performing-arts', function(err, results) {
 					if (results) {
 						var r = JSON.parse(results);
@@ -50,6 +204,7 @@ module.exports = function(app) {
 					}
 					cb();
 				});
+				*/
 			},
 
 		], function(err, results) {

@@ -57,31 +57,70 @@ block content
 						iframe(src="//www.youtube.com/embed/OYzu7dFHNO8",frameborder="0",allowfullscreen)
 			.wembli-man-transparent.hidden-xs
 		section.section5
-			.row.hidden-sm.hidden-xs
-				.col-md-6.col-md-offset-3.top-events-arrow
-					img(src="/images/top-events-arrow.png").img-responsive
+			//-
+				.row.hidden-sm.hidden-xs
+					.col-md-6.col-md-offset-3.top-events-arrow
+						img(src="/images/top-events-arrow.png").img-responsive
 			.row.header
 				.col-xs-12
-					h1 MOST POPULAR EVENTS
-			.row.top-lists
-				.col-md-3.col-md-offset-1.col-sm-4.col-xs-12
-					h2.segoe Top Concerts:
-					ul.left
-						- each c, i in concerts
-							li.performers
-								a.performer.white.show-ellipses(target="_self", start="0", title="#{c.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{c.url}", ng-href="http://#{app.settings.host}.wembli.com#{c.url}") #{i+1}) #{c.name}
-				.col-md-3.col-md-offset-1.col-sm-4.col-xs-12
-					h2.segoe Top Sporting Events:
-					ul.middle
-						- each s, i in sports
-							li.performers
-								a.performer.white.show-ellipses(target="_self", start="0", title="#{s.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{s.url}", ng-href="http://#{app.settings.host}.wembli.com#{s.url}") #{i+1}) #{s.name}
-				.col-md-3.col-sm-4.col-xs-12
-					h2.segoe Top Theater:
-					ul.right
-						- each t, i in theater
-							li.performers
-								a.performer.white.show-ellipses(target="_self", start="0", title="#{t.name}", characters="26", href="http://#{app.settings.host}.wembli.com#{t.url}", ng-href="http://#{app.settings.host}.wembli.com#{t.url}") #{i+1}) #{t.name}
+					h1 POPULAR EVENTS IN YOUR AREA
+			.row.top-lists.text-left
+				.col-sm-offset-1.col-sm-10
+					.row
+						.col-sm-4.col-xs-12
+							h2.segoe Top Concerts:
+							ul.left
+								- each c, i in concerts
+									li.row(event-id="#{c.EventID}",name="#{c.Event}",id="#{c.EventID}-wrapper")
+										- var date = new Date(Date.parse(c.DateTime));
+										- var location = c.City+', '+c.State;
+										.col-sm-4.col-xs-12
+											.event-date-box
+												span.day!=        date.format("ddd")
+												span.event-date!= date.format("mmm d")
+												span.time!=       date.format("h:MM TT")
+										.col-sm-8.col-xs-12
+											a.info.text-left.performer(target="_self", start="0", title="#{c.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{c.EventID}/#{c.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{c.EventID}/#{c.Event}")
+												.name.white #{i+1}) #{c.Event}
+												.venue #{c.Venue}
+												.location #{location}
+
+						.col-sm-4.col-xs-12
+							h2.segoe Top Sporting Events:
+							ul.middle
+								- each s, i in sports
+									li.row(event-id="#{s.EventID}",name="#{s.Event}",id="#{s.EventID}-wrapper")
+										- var date = new Date(Date.parse(s.DateTime));
+										- var location = s.City+', '+s.State;
+										.col-sm-4.col-xs-12
+											.event-date-box
+												span.day!=        date.format("ddd")
+												span.event-date!= date.format("mmm d")
+												span.time!=       date.format("h:MM TT")
+										.col-sm-8.col-xs-12
+											a.info.text-left.performer(target="_self", start="0", title="#{s.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{s.EventID}/#{s.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{s.EventID}/#{s.Event}")
+												.name.white #{i+1}) #{s.Event}
+												.venue #{s.Venue}
+												.location #{location}
+
+						.col-sm-4.col-xs-12
+							h2.segoe Top Theater:
+							ul.right
+								- each t, i in theater
+									li.row(event-id="#{t.EventID}",name="#{t.Event}",id="#{t.EventID}-wrapper")
+										- var date = new Date(Date.parse(t.DateTime));
+										- var location = t.City+', '+t.State;
+										.col-sm-4.col-xs-12
+											.event-date-box
+												span.day!=        date.format("ddd")
+												span.event-date!= date.format("mmm d")
+												span.time!=       date.format("h:MM TT")
+										.col-sm-8.col-xs-12
+											a.info.text-left.performer(target="_self", start="0", title="#{t.Event}", characters="50", href="http://#{app.settings.host}.wembli.com/tickets/#{t.EventID}/#{t.Event}", ng-href="http://#{app.settings.host}.wembli.com/tickets/#{t.EventID}/#{t.Event}")
+												.name.white #{i+1}) #{t.Event}
+												.venue #{t.Venue}
+												.location #{location}
+
 
 		section.section6
 			.container
@@ -116,6 +155,8 @@ block content
 								a.footer-link(target="_self",href="http://#{app.settings.host}.wembli.com/terms-policies") Terms Of Service & Privacy Policy
 							div.text-left(style="margin-top:10px")
 								a.footer-link(href="https://plus.google.com/102053515859174299215", rel="publisher") Google+
+							div.text-left(style="margin-top:10px")
+								a.footer-link(href="/events/united-states") Events Directory
 					.col-xs-12.col-md-4
 						.row.social-links
 							.col-xs-12.footer-social-button.facebook-like-button

@@ -34,11 +34,11 @@ client.search({
 		        Event: 'shpongle',
 		      },
 		    },
-		    filter: {
-		      range: {
-		        DateTime: {gte: "2014-03-05T00:00:00"}
-		      }
-		    }
+        filter: {
+          range: {
+            DateTime: {gte: "2014-03-05T00:00:00"}
+          }
+        }
 		  }
 		}
   }
@@ -55,21 +55,16 @@ client.search({
 client.search({
   index: 'ticket_network',
   type:'events',
-  size:3,
+  size:10,
   body: {
     "sort":[{"NumTicketsSold":{"order":"desc"}}],
     "query": {
       "filtered": {
-        "query": {
-          "match": {
-            "City":"Diego"
+        "filter": {
+          "terms": {
+            "Zip":["92101","92120","92104","92129","96754"]
           },
         },
-        "filter": {
-          "range": {
-            "DateTime": {"gte":"2014-08-10T00:00:00"}
-          }
-        }
       }
     },
   }
