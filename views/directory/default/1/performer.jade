@@ -1,14 +1,8 @@
 extends layout
 block content
-	- console.log(performer.name)
 	//- replace amp with and so link works
-	- console.log(slugs.category)
 	- slugs.category = slugs.category.replace(/-amp-/gi,"-and-")
-	- console.log(slugs.category)
-	- console.log(slugs.subcategory)
 	- slugs.subcategory = slugs.subcategory.replace(/-amp-/gi,"-and-")
-	- console.log(slugs.subcategory)
-
 
 	.container.event-venue(itemscope, itemtype="http://schema.org/PerformingGroup")
 		h1.name(itemprop="name") #{performer.name}

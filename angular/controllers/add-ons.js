@@ -612,12 +612,8 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
 					amountPaid: $scope.currentHotel.amountPaid
 				}
 			}, function(err, result) {
-
-        googleAnalytics.trackEvent('Plan', 'boughtHotel', $scope.plan.event.eventName, '', function(err, result) {
-          /* go to the next page which depends on whether they are splitting with friends or paying themself */
-          $window.location.href = $scope.nextLink;
-        });
-
+        /* go to the next page which depends on whether they are splitting with friends or paying themself */
+        $window.location.href = $scope.nextLink;
 			});
 
     }

@@ -237,8 +237,8 @@ factory('pluralizeWords', [
 
 /* shared */
 /* plan.fetch sets plan and isLoggedIn in the $rootScope and calls customer.set() which sets customer in the root scope */
-factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
-	function($rootScope, wembliRpc, customer, $timeout, loggedIn) {
+factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn', 'googleAnalytics',
+	function($rootScope, wembliRpc, customer, $timeout, loggedIn, googleAnalytics) {
 		var self = this;
 		self.plan = null;
 		self.tickets = null;
@@ -365,66 +365,127 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 					if (result.friends) {
 						self.friends = result.friends;
 						$rootScope.$broadcast('plan-friends-changed', result.friends);
+            googleAnalytics.trackEvent('Plan', 'add-friend', self.plan.event.eventName, '', function(e2, r2) {
+							callback(err, result);
+            });
+					} else {
+							callback(err, result);
 					}
-					callback(err, result);
+
 				});
 			},
 
 			deactivate: function(args, callback) {
-				wembliRpc.fetch('plan.deactivate', args, callback);
+				wembliRpc.fetch('plan.deactivate', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'deactivate', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 
 			addRestaurant: function(args, callback) {
-				wembliRpc.fetch('plan.addRestaurant', args, callback);
+				wembliRpc.fetch('plan.addRestaurant', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'add-restaurant', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			addRestaurantReceipt: function(args, callback) {
-				wembliRpc.fetch('plan.addRestaurantReceipt', args, callback);
+				wembliRpc.fetch('plan.addRestaurantReceipt', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'add-restaurant-receipt', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			removeRestaurant: function(args, callback) {
-				wembliRpc.fetch('plan.removeRestaurant', args, callback);
+				wembliRpc.fetch('plan.removeRestaurant', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'remove-restaurant', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			addHotel: function(args, callback) {
-				wembliRpc.fetch('plan.addHotel', args, callback);
+				wembliRpc.fetch('plan.addHotel', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'add-hotel', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			addHotelReceipt: function(args, callback) {
-				wembliRpc.fetch('plan.addHotelReceipt', args, callback);
+				wembliRpc.fetch('plan.addHotelReceipt', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'add-hotel-receipt', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			removeHotel: function(args, callback) {
-				wembliRpc.fetch('plan.removeHotel', args, callback);
+				wembliRpc.fetch('plan.removeHotel', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'remove-hotel', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			addParking: function(args, callback) {
-				wembliRpc.fetch('plan.addParking', args, callback);
+				wembliRpc.fetch('plan.addParking', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'add-parking', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			addParkingReceipt: function(args, callback) {
-				wembliRpc.fetch('plan.addParkingReceipt', args, callback);
+				wembliRpc.fetch('plan.addParkingReceipt', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'add-parking-receipt', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			removeParking: function(args, callback) {
-				wembliRpc.fetch('plan.removeParking', args, callback);
+				wembliRpc.fetch('plan.removeParking', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'remove-parking', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			addTicketGroup: function(args, callback) {
-				wembliRpc.fetch('plan.addTicketGroup', args, callback);
+				wembliRpc.fetch('plan.addTicketGroup', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'add-tickets', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			addTicketGroupReceipt: function(args, callback) {
-				wembliRpc.fetch('plan.addTicketGroupReceipt', args, callback);
+				wembliRpc.fetch('plan.addTicketGroupReceipt', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'add-tickets-receipt', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			removeTicketGroup: function(args, callback) {
-				wembliRpc.fetch('plan.removeTicketGroup', args, callback);
+				wembliRpc.fetch('plan.removeTicketGroup', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'remove-tickets', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			savePreferences: function(args, callback) {
-				wembliRpc.fetch('plan.savePreferences', args, callback);
+				wembliRpc.fetch('plan.savePreferences', args, function(err, result) {
+          googleAnalytics.trackEvent('Plan', 'save-preferences', self.plan.event.eventName, '', function(e2, r2) {
+						callback(err, result);
+          });
+				});
 			},
 
 			//get plan from server and return it
@@ -511,7 +572,9 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn',
 				wembliRpc.fetch('plan.submitRsvp', args, function(err, result) {
 						$('#generic-loading-modal').modal("hide");
 						if (callback) {
-							return callback(err, result);
+		          googleAnalytics.trackEvent('Plan', 'submit-rsvp', self.plan.event.eventName, '', function(e2, r2) {
+								return callback(err, result);
+        		  });
 						}
 					},
 
