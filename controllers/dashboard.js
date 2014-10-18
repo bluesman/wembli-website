@@ -14,16 +14,19 @@ module.exports = function(app) {
 		//not logged in? send to login page
 		if (!req.session.loggedIn) {
 			//this wont work for a partial
-			return res.redirect('/login', 302);
+			res.redirect('/login', 302);
+			return false;
 		}
 
 		//they need to confirm their email before they can use the dashboard
 		if (req.session.customer.confirmed === false) {
 			//need email confirmation
-			return res.render('confirm-email-sent', {
+			res.render('confirm-email-sent', {
 				jsIncludes:['/js/dashboard.min.js']
 			});
+			return false;
 		}
+		return true;
 	};
 
 	app.get('/dashboard/settings', function(req, res) {
@@ -49,7 +52,9 @@ module.exports = function(app) {
 	});
 
 	app.get('/dashboard', function(req, res) {
-		checkLogin(req, res);
+		if (!checkLogin(req, res)) {
+			return;
+		}
 		// add dashboard.min.js
 		res.render('dashboard/main', {
 			active: {
