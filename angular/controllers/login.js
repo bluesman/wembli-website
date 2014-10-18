@@ -116,6 +116,8 @@ controller('RsvpLoginCtrl', ['$scope', 'plan', 'customer', 'wembliRpc', 'pixel',
           /* fire the signup pixels */
           var gCookie = googleAnalytics.getCookie();
 
+          googleAnalytics.trackEvent('Customer', 'signup', 'signup', '', function(err, result) {});
+
           pixel.fire({
             type: 'signup',
             campaign: gCookie.__utmz.utmccn,

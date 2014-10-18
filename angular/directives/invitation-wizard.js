@@ -341,8 +341,9 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                   content: '6013588780171',
                 });
                 */
-
-                return $scope.gotoStep('step2');
+                googleAnalytics.trackEvent('Customer', 'signup', 'invitation', '', function(err, result) {
+                  return $scope.gotoStep('step2');
+                });
 
               });
             } else {}
@@ -369,12 +370,15 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
                   $scope.login.invalidCredentials = true;
                   return;
                 }
-                $scope.navData['nav-step1'] = $scope.customer.email;
-                $scope.stepCompleted['nav-step1'] = true;
 
-                $scope.login.success = true;
-                $scope.showForm('showSignupView', 'showLoginForm');
-                return $scope.gotoStep('step2');
+                googleAnalytics.trackEvent('Customer', 'login', $scope.customer.email, '', function(err, result) {
+                  $scope.navData['nav-step1'] = $scope.customer.email;
+                  $scope.stepCompleted['nav-step1'] = true;
+
+                  $scope.login.success = true;
+                  $scope.showForm('showSignupView', 'showLoginForm');
+                  return $scope.gotoStep('step2');
+                });
 
               });
             } else {}
@@ -390,8 +394,8 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
   }
 ]).
 
-directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter', 'plan',
-  function(wembliRpc, $window, $filter, plan) {
+directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter', 'plan', 'googleAnalytics',
+  function(wembliRpc, $window, $filter, plan, googleAnalytics) {
     return {
       restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
@@ -413,7 +417,9 @@ directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter', 'plan',
                 $scope.signup.noContinue = true;
                 return $scope.gotoStep('step1');
               }
-              return $scope.gotoStep('step3');
+              googleAnalytics.trackEvent('Plan', 'submit-rsvp', $scope.plan.event.eventName, '', function(e2, r2) {
+                return $scope.gotoStep('step3');
+              });
             });
           };
 
@@ -552,7 +558,6 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
                         });
 
                       });
-
                   }
                 });
               }
@@ -754,8 +759,8 @@ directive('invitationWizardStep4', ['wembliRpc', '$window', 'twitter', 'plan', '
   }
 ]).
 
-directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', '$rootScope',
-  function(wembliRpc, $window, plan, $timeout, $rootScope) {
+directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', '$rootScope', 'googleAnalytics',
+  function(wembliRpc, $window, plan, $timeout, $rootScope, googleAnalytics) {
     return {
       restrict: 'C',
       controller: ['$scope', '$element', '$attrs', '$transclude',
@@ -812,18 +817,20 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
                 return;
               }
 
-              var friend = result.friend;
-              friend.checked = friend.inviteStatus;
+              googleAnalytics.trackEvent('Plan', 'add-friend', self.plan.event.eventName, '', function(e2, r2) {
 
-              $scope.invitedFriends.unshift(friend);
-              $scope.wemblimail.lastSentEmail = $scope.wemblimail.email;
+                var friend = result.friend;
+                friend.checked = friend.inviteStatus;
 
-              if (friend.rsvp.status === 'queued') {
-                $scope.successUnconfirmed = true;
-              } else {
-                $scope.successConfirmed = true;
-              }
+                $scope.invitedFriends.unshift(friend);
+                $scope.wemblimail.lastSentEmail = $scope.wemblimail.email;
 
+                if (friend.rsvp.status === 'queued') {
+                  $scope.successUnconfirmed = true;
+                } else {
+                  $scope.successConfirmed = true;
+                }
+              });
             });
           };
         }

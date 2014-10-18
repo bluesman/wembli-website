@@ -16,9 +16,7 @@ block content
 						else
 							li
 								//- replace amp with and so link works
-								- console.log(crum[1])
 								- crum[1] = crum[1].replace(/-amp-/gi,"-and-")
-								- console.log(crum[1])
 								a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") #{crum[0]}
 		.row
 			.sidebar.col-md-4

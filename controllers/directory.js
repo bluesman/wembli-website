@@ -157,7 +157,7 @@ module.exports = function(app) {
 
 		/* check slug in redis */
 		var key = prefix + req.url;
-
+		console.log('checking key: '+key);
 		client.get(key, function(err, obj) {
 			if (err || !obj) {
 				return notInRedis();
@@ -390,15 +390,22 @@ module.exports = function(app) {
 								/* get the performer and a list of events */
 								es.get({index:"eventful",type:"performers",id:obj.id},function(err, performer) {
 									if (err) {
+											console.log('error getting from ES');
+											console.log(err);
+											console.log(obj);
 										/* TODO: render the not found page */
 									    return res.status(404).render('error/404');
 									}
 									if (typeof performer === "undefined") {
+											console.log('error getting from ES no performer');
 										return res.status(404).render('error/404')
 									}
 
 									obj.performer = performer._source;
 									if (typeof performer._source === "undefined") {
+											console.log("error getting from ES no source");
+											console.log(performer);
+
 										return res.status(404).render('error/404')
 									}
 									/* now get the events, parking and restaurants for this venue */
@@ -478,7 +485,7 @@ module.exports = function(app) {
 		}
 
 		function notInRedis() {
-
+			console.log('not in redis');
 		    return res.status(404).render('error/404');
 
 			/* not in redis, do a search (don't redirect) */
