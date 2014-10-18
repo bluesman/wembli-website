@@ -1,6 +1,6 @@
 extends layout
 block content
-	#login(ng-controller="LoginCtrl")
+	#login
 		.container
 			.row
 				#login-left.col-md-4.hidden-xs.hidden-sm
@@ -10,11 +10,12 @@ block content
 				#confirm-hero-right.hero-right
 					#confirm-right(ng-controller="ConfirmCtrl")
 						h2.segoe Check Your Email!
-						.white-box
-							#error
-								.error-text(ng-show="emailError") Shoot! We had trouble sending the confirmation email.  If the problem persists contact help@wembli.com
-								.error-text(ng-show="expiredToken") Doh! Your token expired.  Please resend the confirmation email and click the link within 48 hours.
-								.success-text(ng-show="resent") Thanks! We sent you a new confirmation email.
-							.copy Alright, we just need to confirm your email address.  Check your email and follow the instructions.
-							a#resend-confirm-link(href="/confirm/resend-email",target="_self") Click here to resend your confirmation email.
+						//- TODO: make this work
+							.white-box
+								#error
+									.error-text(ng-show="emailError") Shoot! We had trouble sending the confirmation email.  If the problem persists contact help@wembli.com
+									.error-text(ng-show="expiredToken") Doh! Your token expired.  Please resend the confirmation email and click the link within 48 hours.
+									.success-text(ng-show="resent") Thanks! We sent you a new confirmation email.
+								.copy Alright, we just need to confirm your email address.  Check your email and follow the instructions.
+								a#resend-confirm-link(href="/confirm/resend-email",target="_self") Click here to resend your confirmation email.
 
