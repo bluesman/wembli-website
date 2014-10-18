@@ -817,7 +817,7 @@ directive('invitationWizardStep5', ['wembliRpc', '$window', 'plan', '$timeout', 
                 return;
               }
 
-              googleAnalytics.trackEvent('Plan', 'add-friend', self.plan.event.eventName, '', function(e2, r2) {
+              googleAnalytics.trackEvent('Plan', 'add-friend', $scope.plan.event.eventName, '', function(e2, r2) {
 
                 var friend = result.friend;
                 friend.checked = friend.inviteStatus;
