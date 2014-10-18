@@ -1,5 +1,20 @@
-extends hero
-block hero-left
-	include includes/confirm-email-sent/hero-left
-block hero-right
-	include includes/confirm-email-sent/hero-right
+extends layout
+block content
+	#login(ng-controller="LoginCtrl")
+		.container
+			.row
+				#login-left.col-md-4.hidden-xs.hidden-sm
+					img(src="/images/search-arrow.png").img-responsive.search-arrow
+					.copy.segoe You've got mail...
+					img(src="/images/question.png").img-responsive.wembliman
+				#confirm-hero-right.hero-right
+					#confirm-right(ng-controller="ConfirmCtrl")
+						h2.segoe Check Your Email!
+						.white-box
+							#error
+								.error-text(ng-show="emailError") Shoot! We had trouble sending the confirmation email.  If the problem persists contact help@wembli.com
+								.error-text(ng-show="expiredToken") Doh! Your token expired.  Please resend the confirmation email and click the link within 48 hours.
+								.success-text(ng-show="resent") Thanks! We sent you a new confirmation email.
+							.copy Alright, we just need to confirm your email address.  Check your email and follow the instructions.
+							a#resend-confirm-link(href="/confirm/resend-email",target="_self") Click here to resend your confirmation email.
+
