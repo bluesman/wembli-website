@@ -19,3 +19,5 @@ Disallow: /
 User-agent: *
 Allow: /
 
+User-agent: spbot
+Crawl-delay: 10

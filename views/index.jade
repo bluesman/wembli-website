@@ -2,7 +2,7 @@ extends layout
 block content
 	- var yourCity = "";
 	- if (typeof visitor.tracking.city !== "undefined")
-		- yourCity = "IN "+visitor.tracking.city;
+		- yourCity = "NEAR "+visitor.tracking.city;
 	#index(ng-controller="IndexCtrl")
 		section.section1.hidden-xs
 			img.img-responsive(src="/images/seating.jpg")
