@@ -388,7 +388,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
       /* get the tix and make the ticket list */
       wembliRpc.fetch('event.getTickets', {eventID: p.event.eventId}, function(err, result) {
-
+        console.log('back from get tix');
           if (err) {
             alert('error happened - contact help@wembli.com');
             return;
@@ -396,6 +396,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
           if (typeof result.tickets[0] === "undefined") {
             //$scope.noTickets = true;
+            console.log('no tix');
             $scope.notFound = true;
           }
 

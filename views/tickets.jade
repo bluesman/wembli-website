@@ -108,7 +108,11 @@ block content
 						#tickets-list.row
 							.col-xs-12
 								ul.ticket-list-container.list-container.addons-list
-									li.tickets-loading.addons-list-loading(ng-hide="tickets[0]")
+									li.tickets-loading.addons-list-loading(ng-show="notFound")
+										.loading-icon
+											i.fa.fa-ban
+										.loading-text Shucks...all tickets are sold!
+									li.tickets-loading.addons-list-loading(ng-hide="tickets[0] || notFound")
 										.loading-icon
 											i.fa.fa-cog.fa-spin.fa-3x
 										.loading-text Finding Tickets...
