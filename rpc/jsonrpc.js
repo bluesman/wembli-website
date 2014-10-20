@@ -158,6 +158,10 @@ function jsonrpc(rpcDispatchHooks) {
             var rpc = req.body;
             var batch = Array.isArray(rpc);
 
+	    if(!validRequest(rpc)) {
+		return next();
+	    }
+
             /**
              * Normalize response object.
              */

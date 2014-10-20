@@ -8,20 +8,17 @@ var async = require('async');
 module.exports = function(req, res, next) {
 
   var me = this, contentType = req.headers['content-type'] || '';
+
   if(req.method === 'POST' && contentType.indexOf('application/json') >= 0) {
   	var payload = req.body;
-	console.log(payload);
   	if (Array.isArray(payload)) {
-	    async.forEach(payload, function(item, cb) {
+	    async.forEachSeries(payload, function(item, cb) {
 		    handle(req, res, item, cb);
 		    
 		}, function(err) {
-		    console.log('finished');
 		    if (err) {
-			console.log('not a valid sendgrid request...next');
 			return next();
 		    } else {
-			console.log('return 200');
 			res.status(200).send('OK');
 			
 		    }
@@ -225,7 +222,6 @@ module.exports = function(req, res, next) {
 		};
 
 		if (typeof eventHandlers[payload.event] === "undefined") {
-			console.log('event doesnt exist');
 			return nextItem('event does not exist');
 		}
 
