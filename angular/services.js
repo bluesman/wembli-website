@@ -875,7 +875,8 @@ factory('googleAnalytics', ['wembliRpc', 'cookie',
 					'hitType':'event',
 					'eventCategory':category,
 					'eventAction':action,
-					'eventLabel':label
+					'eventLabel':label,
+					'eventValue':0,
 					'hitCallback': function() {
 
 						wembliRpc.fetch('analytics.addEvent', {
