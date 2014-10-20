@@ -870,19 +870,30 @@ factory('googleAnalytics', ['wembliRpc', 'cookie',
 
 			trackEvent: function(category, action, label, value, cb) {
 				//_gaq.push(['_trackEvent', category, action, label, value]);
-				ga('send', 'event', category, action, label, value);
+				ga('send', {
+					'hitType':'event',
+					'eventCategory':category,
+					'eventAction':action,
+					'eventLabel':label,
+					'eventValue':value,
+					'hitCallback': function() {
 
-				wembliRpc.fetch('analytics.addEvent', {
-					collection: "event",
-					category: category,
-					action: action,
-					label: label,
-					value: value
-				}, function(err, result) {
-					if (typeof cb !== "undefined") {
-						cb(err, result);
+						wembliRpc.fetch('analytics.addEvent', {
+							collection: "event",
+							category: category,
+							action: action,
+							label: label,
+							value: value
+						}, function(err, result) {
+							if (typeof cb !== "undefined") {
+								cb(err, result);
+							}
+							console.log('logged event:' + category + ' ' + action + ' ' + label +  ' ' + value);
+						});
+
 					}
 				});
+
 			},
 		}
 	}

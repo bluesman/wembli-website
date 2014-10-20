@@ -493,9 +493,11 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 		      options.SingleSectionSelection = true;
           options.ServiceUrl = "//imap.ticketutils.net";
 			    options.OnInit = function(e, data) {
+            console.log('venue map loaded');
+            console.log(data);
+
             $('#venue-map-loading').hide();
             overlay.hide();
-            console.log(data);
             tuMap.mapType = data.MapType;
 
             /* display the static map if ticket utils map is not interactive */
