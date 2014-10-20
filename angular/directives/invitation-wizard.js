@@ -418,7 +418,7 @@ directive('invitationWizardStep2', ['wembliRpc', '$window', '$filter', 'plan', '
                 return $scope.gotoStep('step1');
               }
               googleAnalytics.trackEvent('Plan', 'submit-rsvp', $scope.plan.event.eventName, '', function(e2, r2) {
-                return $scope.gotoStep('step3');
+                return $scope.gotoStep('tracked submit rsvp event on to step 3');
               });
             });
           };

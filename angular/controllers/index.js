@@ -14,10 +14,12 @@ controller('IndexCtrl', ['$scope', '$rootScope', '$window', 'googleAnalytics',
 			$scope.searchInProgress = false;
 		});
 
-
 		$scope.submitSearch = function() {
 			$scope.searchInProgress = true;
       googleAnalytics.trackEvent('Search', 'submit', 'index', $scope.search, function(err, result) {
+      	console.log('logged search submit in analytics');
+      	console.log(err);
+      	console.log(result);
 				$window.location.href = '/search/events/' + $scope.search;
       });
 
