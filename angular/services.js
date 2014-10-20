@@ -869,13 +869,13 @@ factory('googleAnalytics', ['wembliRpc', 'cookie',
 			},
 
 			trackEvent: function(category, action, label, value, cb) {
+
 				//_gaq.push(['_trackEvent', category, action, label, value]);
 				ga('send', {
 					'hitType':'event',
 					'eventCategory':category,
 					'eventAction':action,
-					'eventLabel':label,
-					'eventValue':value,
+					'eventLabel':label
 					'hitCallback': function() {
 
 						wembliRpc.fetch('analytics.addEvent', {
