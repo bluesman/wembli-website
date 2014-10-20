@@ -1181,7 +1181,6 @@ exports.customer = {
 		var data = {
 			success: 1
 		};
-
 		if (args.email && req.session.plan) {
 			var newNotify = {
 				email: args.email,

@@ -108,10 +108,15 @@ block content
 						#tickets-list.row
 							.col-xs-12
 								ul.ticket-list-container.list-container.addons-list
-									li.tickets-loading.addons-list-loading(ng-show="notFound")
-										.loading-icon
-											i.fa.fa-ban
-										.loading-text Shucks...all tickets are sold!
+									li.no-results(ng-show="notFound")
+										.notify-email(ng-show="notFound",add-on="tickets")
+											.col-xs-12.collect-email(ng-hide="emailCollected")
+												p Aww shucks! Tickets are all gone!  Enter your email below if you'd like to be notified when more tickets become available.
+												fieldset
+													input#email.form-control(ng-model="notifyEmail")
+												button.btn.btn-primary(ng-click="collectEmail()") Notify Me!
+											.collected-email(ng-show="emailCollected")
+												p OK! We'll let you know when tickets become available!
 									li.tickets-loading.addons-list-loading(ng-hide="tickets[0] || notFound")
 										.loading-icon
 											i.fa.fa-cog.fa-spin.fa-3x

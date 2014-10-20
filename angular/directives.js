@@ -729,8 +729,8 @@ directive('eventData', ['$rootScope', '$filter', 'wembliRpc', 'plan',
 ]).
 
 /* store customer info when we don't have what they ar elooking for */
-directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan',
-  function($rootScope, $filter, wembliRpc, plan) {
+directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan', 'googleAnalytics',
+  function($rootScope, $filter, wembliRpc, plan, googleAnalytics) {
     return {
       restrict: 'C',
       cache: false,
@@ -744,7 +744,7 @@ directive('notifyEmail', ['$rootScope', '$filter', 'wembliRpc', 'plan',
               addOn: attr.addOn,
               email: scope.notifyEmail
             }, function(err, result) {
-
+              googleAnalytics.trackEvent('Visitor', 'notify', attr.addOn, '', function(e2, r2) {});
             });
             scope.emailCollected = true;
           }
