@@ -16,6 +16,10 @@ module.exports = function(app) {
 	var client = redis.createClient(app.settings.redisport || 6379, app.settings.redishost || 'localhost', {});
 	var prefix = 'directory:';
 
+	process.on("exit", function() {
+		client.close();
+	    });
+
 	var daysPadding = 2; //how many days from today for the beginDate
 	var d1 = Date.today();
 	var d = new Date(d1);

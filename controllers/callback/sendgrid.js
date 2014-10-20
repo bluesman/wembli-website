@@ -10,31 +10,30 @@ module.exports = function(req, res, next) {
   var me = this, contentType = req.headers['content-type'] || '';
   if(req.method === 'POST' && contentType.indexOf('application/json') >= 0) {
   	var payload = req.body;
+	console.log(payload);
   	if (Array.isArray(payload)) {
-			async.forEach(payload, function(item, cb) {
-				handle(req, res, item, cb);
-
-      }, function(err) {
-      	if (err) {
-      		console.log('not a valid sendgrid request...next');
-      		return next();
-      	} else {
-					console.log('return 200');
-					return res.status(200);
-					res.statusCode = 200;
-					res.setHeader("Content-Type", "text/html");
-					res.write("Thanks");
-					res.end();
-      	}
-      });
+	    async.forEach(payload, function(item, cb) {
+		    handle(req, res, item, cb);
+		    
+		}, function(err) {
+		    console.log('finished');
+		    if (err) {
+			console.log('not a valid sendgrid request...next');
+			return next();
+		    } else {
+			console.log('return 200');
+			res.status(200).send('OK');
+			
+		    }
+		});
   	} else {
-  		next();
+	    next();
   	}
   } else {
-  	next();
+      next();
   }
-
-	function handle(req, res, payload, nextItem) {
+  
+  function handle(req, res, payload, nextItem) {
 
 		function updateFriend(cb) {
 			/* if its rsvp or pony up - put it in the corresponding friend obj */
@@ -225,7 +224,6 @@ module.exports = function(req, res, next) {
 			}
 		};
 
-		console.log(payload);
 		if (typeof eventHandlers[payload.event] === "undefined") {
 			console.log('event doesnt exist');
 			return nextItem('event does not exist');
