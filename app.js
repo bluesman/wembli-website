@@ -37,7 +37,7 @@ if (process.env.NODE_ENV == 'development') {
 
 	app.set('host', 'dev');
 	app.set('dbhost',mongoConfig.host);
-	app.set('redishost',redisConfig.host);
+	//app.set('redishost',redisConfig.host);
 
 	//tom.wembli.com fb app
 	app.set('fbAppId', '364157406939543');
