@@ -1,0 +1,17 @@
+extends layout
+block content
+	- console.log(performer.PeformerName)
+	.container.event-venue(itemscope, itemtype="http://schema.org/PerformingGroup")
+		h1.name(itemprop="name") #{performer.PerformerName}
+		.row.categories.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
+			ol.breadcrumb(itemprop="breadcrumb")
+				if (performer.ParentCategory && performer.ParentCategory !== '-')
+					li
+						a(href="http://#{app.settings.host}.wembli.com/#{slugs.pcat}") #{performer.ParentCategory}
+				if (performer.ChildCategory && performer.ChildCategory !== '-')
+					li
+						a(href="http://#{app.settings.host}.wembli.com/#{slugs.pcat}/#{slugs.ccat}") #{performer.ChildCategory}
+				if (performer.GrandChildCategory && performer.GrandChildCategory !== '-')
+					li
+						a(href="http://#{app.settings.host}.wembli.com/#{slugs.pcat}/#{slugs.ccat}/#{slugs.gcat}") #{performer.GrandChildCategory}
+		include includes/performer-event-list

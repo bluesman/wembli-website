@@ -1,0 +1,50 @@
+title #{meta.title}
+meta(charset="utf-8")
+meta(name="description", content="#{meta.description}")
+- if (meta.canonical)
+  link(rel="canonical", href="#{meta.canonical}")
+
+meta(name="viewport",content="width=device-width, initial-scale=1.0")
+
+//facebook meta
+meta(property="og:title",content="#{meta.title}")
+meta(property="og:type",content="website")
+meta(property="og:image",content="http://www.wembli.com/images/layout/wembli-button-222x200.png")
+meta(property="og:image",content="http://www.wembli.com/images/wembliman-hero-200.png")
+meta(property="og:image",content="http://www.wembli.com/images/cartoon-man-megaphone1.png")
+meta(property="og:image",content="http://www.wembli.com/images/wembli-concert.png")
+meta(property="og:url",content="http://www.wembli.com#{req.path}")
+meta(property="og:description",content="#{meta.description}")
+meta(property="og:video",content="http://youtu.be/OYzu7dFHNO8")
+meta(property="fb:admins",content="sdbluesman")
+meta(property="fb:app_id",content="#{fbAppId}")
+
+link(rel="image_src", href="http://www.wembli.com/images/layout/wembli-button-222x200.png")
+link(rel="image_src", href="http://www.wembli.com/images/wembliman-hero-200.png")
+
+
+link(type = "image/x-icon", rel = "icon", href = "/favicon.ico")
+link(type = "image/png", rel = "icon", href = "/favicon.png")
+
+//- include the approriate stylesheet
+link(rel='stylesheet', href='/css/directory-#{layout.style}-#{layout.id}-style.css')
+
+//- include the minified javascript for this style/layout
+script(type = "text/javascript", src = "/js/directory-#{layout.style}-#{layout.id}.min.js")
+
+script(type = "text/javascript")
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-28081425-1']);
+  _gaq.push(['_setDomainName', 'wembli.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+  })();

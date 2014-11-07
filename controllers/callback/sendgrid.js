@@ -14,13 +14,13 @@ module.exports = function(req, res, next) {
   	if (Array.isArray(payload)) {
 	    async.forEachSeries(payload, function(item, cb) {
 		    handle(req, res, item, cb);
-		    
+
 		}, function(err) {
 		    if (err) {
 			return next();
 		    } else {
 			res.status(200).send('OK');
-			
+
 		    }
 		});
   	} else {
@@ -29,7 +29,7 @@ module.exports = function(req, res, next) {
   } else {
       next();
   }
-  
+
   function handle(req, res, payload, nextItem) {
 
 		function updateFriend(cb) {

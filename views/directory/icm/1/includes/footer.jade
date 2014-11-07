@@ -1,0 +1,31 @@
+footer#footer
+	.container
+		.row
+			.col-md-4
+				if (rootGeoEvents)
+					.root-geo-events
+						h3 Find Tickets By Country
+						ul.row
+							each c in rootGeoEvents
+								if c.name
+									li.col-md-4
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+			.col-md-4
+				if (rootGeoVenues)
+					.root-geo-venues
+						h3 Find Tickets By Venue
+						ul.row
+							each c in rootGeoVenues
+								if c.name
+									li.col-md-4
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+			.col-md-4
+				if (rootCategories)
+					.root-categories
+						h3 Find Tickets By Category
+						ul.row
+							each c in rootCategories
+								if c.name
+									li.col-md-6
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+

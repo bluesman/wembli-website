@@ -1,0 +1,51 @@
+extends layout
+block content
+	- var mainHeading = {"events":'Event Tickets by Region',"venues":'Venues by Region'}[type];
+	.container
+		.row.heading
+			.col-md-12
+				h1= mainHeading
+
+		.row.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
+			if (typeof breadcrumbs !== "undefined")
+				ol.breadcrumb(itemprop="breadcrumb")
+					- var l = breadcrumbs.length - 1;
+					each crum, idx in breadcrumbs
+						if (l == idx)
+							li.active	#{crum[0]}
+						else
+							li
+								//- replace amp with and so link works
+								- crum[1] = crum[1].replace(/-amp-/gi,"-and-")
+								a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") #{crum[0]}
+		.row
+			.sidebar.col-md-4
+				- var sidebarHeading = breadcrumbs[1] ? 'Cities' : 'States';
+				if (type == 'events' && typeof subGeoEvents !== "undefined" && subGeoEvents !== null)
+					.category
+						h2= sidebarHeading
+						ul
+							each c in subGeoEvents
+								if c.name
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+
+				if (type == 'venues' && typeof subGeoVenues !== "undefined" && subGeoVenues !== null)
+					.category
+						h2= sidebarHeading
+						ul
+							each c in subGeoVenues
+								if (c.name)
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+
+			.main.col-md-8
+				if (top)
+					.top
+						h2 Top #{type.charAt(0).toUpperCase() + type.slice(1)}
+						ul
+							each t in top.list
+								if t.name
+									li.col-md-4
+										a(href="http://#{app.settings.host}.wembli.com#{t.url}") #{t.name}
+

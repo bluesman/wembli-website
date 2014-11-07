@@ -207,7 +207,7 @@ module.exports = function(app) {
 	};
 
 
-	app.get(/^\/(index)?$/, function(req, res) {
+	app.get(/^\/(index|features|faq|contact)?$/, function(req, res) {
 		indexView(req, res, function(err, view) {
 			res.render('index', {
 				concerts: view.concerts,

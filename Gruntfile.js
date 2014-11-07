@@ -19,6 +19,11 @@ module.exports = function(grunt) {
         "files": {
           'public/css/directory-default-1-style.css':'less/directory/default/1/style.less'
         }
+      },
+      "directory-icm-1": {
+        "files": {
+          'public/css/directory-icm-1-style.css':'less/directory/icm/1/style.less'
+        }
       }
     },
     uglify: {
@@ -67,8 +72,8 @@ module.exports = function(grunt) {
       	}
       },
       "directory-default-1": {
-      	"files": {
-      		'public/js/directory-default-1.min.js':[
+        "files": {
+          'public/js/directory-default-1.min.js':[
             'bower_components/jquery/jquery.js',
             'bower_components/angular/angular.js',
             'bower_components/angular-route/angular-route.js',
@@ -92,7 +97,35 @@ module.exports = function(grunt) {
             'angular/directory/default/1/filters.js',
             'angular/directory/default/1/app.js'
           ]
-      	}
+        }
+      },
+      "directory-icm-1": {
+        "files": {
+          'public/js/directory-icm-1.min.js':[
+            'bower_components/jquery/jquery.js',
+            'bower_components/angular/angular.js',
+            'bower_components/angular-route/angular-route.js',
+            'bower_components/bootstrap/js/transition.js',
+            'bower_components/bootstrap/js/collapse.js',
+            'bower_components/bootstrap/js/alert.js',
+            'bower_components/bootstrap/js/carousel.js',
+            'bower_components/bootstrap/js/tooltip.js',
+            'bower_components/bootstrap/js/dropdown.js',
+            'bower_components/bootstrap/js/popover.js',
+            'bower_components/bootstrap/js/tab.js',
+            'bower_components/bootstrap-modal/js/bootstrap-modalmanager.js',
+            'bower_components/bootstrap-modal/js/bootstrap-modal.js',
+            'bower_components/angular-strap/dist/angular-strap.js',
+            'bower_components/angular-strap/dist/angular-strap.tpl.js',
+            'angular/directory/icm/1/controllers.js',
+            'angular/directory/icm/1/services.js',
+            'angular/services/header.js',
+            'angular/directory/icm/1/directives.js',
+            'angular/directives/header.js',
+            'angular/directory/icm/1/filters.js',
+            'angular/directory/icm/1/app.js'
+          ]
+        }
       },
       "index": {
         "files": {

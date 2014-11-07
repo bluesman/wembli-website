@@ -192,7 +192,7 @@ module.exports = function(app) {
 			/* set up some defaults */
 			if (!obj.layout) {
 				obj.layout = {
-					"style": "default",
+					"style": "icm",
 					"id": 1,
 					"type": "category"
 				};
@@ -484,6 +484,8 @@ module.exports = function(app) {
 				if (obj.subGeoVenues) {
 					obj.subGeoVenues = obj.subGeoVenues.sort(sortFunc);
 				}
+				obj.req = req;
+				obj.fbAppId = app.settings.fbAppId;
 				res.render(template, obj);
 			});
 		}

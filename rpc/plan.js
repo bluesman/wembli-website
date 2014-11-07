@@ -216,7 +216,11 @@ exports.plan = {
 			guid: Plan.makeGuid()
 		});
 
-		args.eventID = parseInt(args.eventId);
+		if (typeof args.eventId !== "undefined") {
+			args.eventId = parseInt(args.eventId);
+		} else {
+			args.eventId = null;
+		}
 
 		req.session.plan.preferences.payment = args.payment ? args.payment : 'split-first';
 		if (args.payment !== "split-first") {

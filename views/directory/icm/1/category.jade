@@ -1,0 +1,78 @@
+extends layout
+block content
+	.container
+		.row.heading
+			.col-md-12
+				h1= breadcrumbs[0][0]
+
+		.row.breadcrumbs(itemscope, itemtype="http://schema.org/WebPage")
+			if (typeof breadcrumbs !== "undefined")
+				ol.breadcrumb(itemprop="breadcrumb")
+					- var l = breadcrumbs.length - 1;
+					each crum, idx in breadcrumbs
+						if (l == idx)
+							li.active	#{crum[0]}
+						else
+							li
+								//- replace amp with and so link works
+								- crum[1] = crum[1].replace(/-amp-/gi,"-and-")
+
+								a(href="http://#{app.settings.host}.wembli.com#{crum[1]}") #{crum[0]}
+		.row
+			.sidebar.col-md-4
+				if (rootCategories)
+					.category
+						h2 Categories
+						ul
+							//- each parent cat except breadcrums[0][0]
+							each cat in rootCategories
+								li
+									- cat.url = cat.url.replace(/-amp-/gi,"-and-")
+
+									a(href="http://#{app.settings.host}.wembli.com#{cat.url}") #{cat.name}
+									if (breadcrumbs[0] && cat.name === breadcrumbs[0][0] && typeof childCategories !== "undefined" && childCategories !== null)
+										ul
+											each cat in childCategories
+													if (breadcrumbs[1] && cat.name === breadcrumbs[1][0] && typeof grandChildCategories !== "undefined" && grandChildCategories !== null)
+														li
+															span #{cat.name}
+															ul
+																each cat2 in grandChildCategories
+																	li
+																		//- replace amp with and so link works
+																		- cat2.url = cat2.url.replace(/-amp-/gi,"-and-")
+
+																		a(href="http://#{app.settings.host}.wembli.com#{cat2.url}") #{cat2.name}
+													else
+														li
+															a(href="http://#{app.settings.host}.wembli.com#{cat.url}") #{cat.name}
+
+
+				if (typeof subGeoEvents !== "undefined" && subGeoEvents !== null)
+					.category
+						h2 Sub Geo Events
+						ul
+							each c in subGeoEvents
+								if c.name
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+
+				if (typeof subGeoVenues !== "undefined" && subGeoVenues !== null)
+					.category
+						h2 Sub Geo Venues
+						ul
+							each c in subGeoVenues
+								if c.name
+									li
+										a(href="http://#{app.settings.host}.wembli.com#{c.url}") #{c.name}
+
+			.main.col-md-8
+				if (top)
+					.top
+						h2 Top #{type.charAt(0).toUpperCase() + type.slice(1)}
+						//- make 3 lists
+						ul
+							each t in top.list
+								li.col-md-4
+									a(href="http://#{app.settings.host}.wembli.com#{t.url}") #{t.name}
+

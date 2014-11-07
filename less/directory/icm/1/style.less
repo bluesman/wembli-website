@@ -1,0 +1,86 @@
+@import url('/css/plugins/jquery.slidepanel.css');
+
+// stylesheet for directory-default-1
+@import "../../../../bower_components/bootstrap/less/bootstrap.less";
+@import "../../../../bower_components/components-font-awesome/less/font-awesome.less";
+@import "../../../wembli-variables.less";  // Modify this for custom colors, font-sizes, etc
+@import "../../../wembli-mixins.less";     // Modify this for custom colors, font-sizes, etc
+@import "../../../wembli-fonts.less";      // wembli fonts
+@import "../../../wembli-style.less";      // global wembli styles
+
+@import "layout.less";
+@import "header.less";
+
+body {
+	background-color:@grayLighter;
+}
+#content {
+	margin-bottom:60px;
+}
+
+.section1 {
+	img {
+		position:absolute;
+	}
+}
+
+.section2 {
+	position:relative;
+	top:60px;
+	background-color: rgba(255,255,255,1);
+	h2 {
+		color:@black;
+		font-weight:bold;
+		padding:0;
+		margin:0;
+		font-size:1.5em;
+	}
+	h3 {
+		margin:0;
+		padding:0;
+		font-weight: normal;
+		color:@black;
+		font-style:none;
+		font-size:1em;
+	}
+	.venue-name {
+		font-weight:bold;
+		font-size:1.2em;
+	}
+
+	.form-control {
+		height:initial !important;
+	}
+	.cta {
+		margin-bottom:20px;
+	}
+}
+
+.section3 {
+	margin-top:100px;
+
+	p {
+		width:75%;
+		margin:auto;
+		text-align:center;
+		font-style: italic;
+		font-size: 1.2em;
+	}
+}
+
+.container {
+	width:75%
+}
+
+/* directory style */
+h1 {
+	padding: 20px 0;
+}
+
+h2 {
+	font-family:"Arial";
+	font-size:20px;
+	padding:10px 0
+}
+
+@import "footer.less";

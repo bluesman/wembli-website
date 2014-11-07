@@ -24,6 +24,7 @@ app.set('secure', false);
 app.set('autoIndex', false); //tell mongoose not to do autoIndex in produciton
 app.set('dbhost','mongo01.wembli.com');
 app.set('redishost','redis01.wembli.com');
+
 app.set('mailchimpKey','a70be54f752f1b3ce3ccd4116d0e470c-us5');
 app.set('tnUrl', 'tn.wembli.com');
 
@@ -36,7 +37,7 @@ if (process.env.NODE_ENV == 'development') {
 
 	app.set('host', 'dev');
 	app.set('dbhost',mongoConfig.host);
-	//app.set('redishost',redisConfig.host);
+	app.set('redishost',redisConfig.host);
 
 	//tom.wembli.com fb app
 	app.set('fbAppId', '364157406939543');
