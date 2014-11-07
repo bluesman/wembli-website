@@ -3,7 +3,7 @@ block content
 	- var yourCity = "";
 	- if (typeof visitor.tracking.city !== "undefined")
 		- yourCity = "NEAR "+visitor.tracking.city;
-	#index(ng-controller="IndexCtrl")
+	#index()
 		section.section1.hidden-xs
 			img.img-responsive(src="/images/seating.jpg")
 
@@ -68,7 +68,7 @@ block content
 								.col-xs-12
 									h2.name(itemprop="name") #{event.title}
 							.row
-								.col-xs.12
+								.col-xs-12
 									h3(itemprop="startDate") When:
 									.when #{event.start_time}
 							if (typeof performers !== "undefined")
@@ -85,7 +85,7 @@ block content
 							if (typeof venue !== "undefined")
 								.row
 									.col-xs-12
-										h3(itemprop="location", itemscope, itemtype="http://schema.org/EventVenue") Where
+										h3(itemprop="location", itemscope, itemtype="http://schema.org/EventVenue") Where:
 										.where
 											a(itemprop="url", href="//#{app.settings.host}.wembli.com/venues/#{slugs.venue}") #{venue.name}
 											if ((typeof venue !=="undefined") && venue.address && venue.address !== "")
@@ -98,10 +98,11 @@ block content
 													br
 													span.address-postal-code= venue.postal_code
 
-				.row
-					.col-md-12
-						h3 More Information:
-						.description(itemprop="description") !{event.description}
+				if (typeof event.description !== "undefined")
+					.row
+						.col-md-12
+							h3 More Information:
+							.description(itemprop="description") !{event.description}
 
 				.row
 					.col-xs-12.cta
