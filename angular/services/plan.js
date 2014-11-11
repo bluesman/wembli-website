@@ -117,12 +117,10 @@ factory('notifications', ['$timeout', 'plan',
 						$('section .notification').each(function(idx, el) {
 
 							var mapping = keyMapping[reverseKeyMapping[el.id]];
-							/* console will throw: undefined is not a function if the notification isn't in the mappings */
 							/* if its in the plan then display it else hide it */
 							var n = self.findInPlan(el.id, p.notifications);
 
 							if ((typeof n === "undefined") || n.acknowledged) {
-								console.log('hiding notification because it has been acknowledged: ');
 								$(el).hide();
 							} else {
 								$(el).show();
@@ -357,7 +355,6 @@ factory('cart', ['plan',
 	      var addOns = ['tickets', 'parking', 'restaurants', 'hotels'];
 
 	      angular.forEach(addOns, function(a) {
-	      	console.log('processing suggest amounts for '+a);
 					var funcs            = self.methods[a];
 					var config           = funcs.getConfig();
 					var items            = funcs.get();
@@ -381,8 +378,6 @@ factory('cart', ['plan',
 	          	friendCount += parseInt(friend.rsvp.guestCount);
 	          }
 
-	          console.log('friendCount: '+friendCount);
-	          console.log('remainingQty: '+remainingQty);
 						/* didn't use all the qty from the last item */
 						if (remainingQty > 0) {
 							/* this friend still didn't use all the qty */
@@ -431,7 +426,6 @@ factory('cart', ['plan',
 	          	}
 	            /* are there enough qty in this item to satisfy this invitee */
 							var qty = funcs.getQty(item);
-							console.log('item qty: '+qty);
 
 							/* there more qty in this item than friends */
 							if (friendCount < qty) {

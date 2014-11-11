@@ -60,7 +60,6 @@ directive('inviteFriendsWizard', ['$rootScope', '$http', '$filter', '$window', '
           };
 
           $scope.gotoStep = function(step) {
-            console.log('goto step: '+step);
             $scope.currentStep = 'nav-' + step;
             $scope.showStep = step;
           };
@@ -206,7 +205,6 @@ directive('pikaday', ['wembliRpc', '$rootScope', 'plan',
             /* if there's an rsvp date, set it in the datepicker */
             if (typeof p.rsvpDate !== "undefined") {
               /* init the date picker */
-              console.log('init datepicker with date: '+p.rsvpDate);
               defaultDate = new Date(p.rsvpDate);
             }
 
@@ -250,19 +248,15 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
           });
 
           $scope.initSignupForm = function() {
-            console.log('init signup form');
             plan.get(function(p) {
               $scope.next = '/plan/' + p.guid + '/' + '2';
 
-              console.log($scope.customer);
               /* check if there's a customer already - if so just display the customer info */
               if ($scope.customer && $scope.customer.email) {
-                console.log('got a customer in scope');
                 $scope.navData['nav-step1'] = $scope.customer.email;
                 $scope.stepCompleted['nav-step1'] = true;
                 $scope.showSignupView = true;
               } else {
-                console.log('no customer');
                 $scope.showSignupForm = true;
               }
             });
@@ -307,7 +301,6 @@ directive('invitationWizardStep1', ['wembliRpc', '$window', 'customer', 'plan', 
 
                 $scope.signup.success = true;
                 $scope.showForm('showSignupView', 'showSignupForm');
-                console.log('submit signup succes - fire pixel');
 
                 /* fire the signup pixels */
                 var gCookie = googleAnalytics.getCookie();
@@ -549,7 +542,6 @@ directive('invitationWizardStep3', ['wembliRpc', '$window', 'facebook', 'plan', 
                     /* they hit cancel */
                     $scope.handleFriendsFetch();
                   } else {
-                    console.log(result);
                     /* hit the callback to set the inviteStatus to true */
                     $http.get('/callback/facebook/rsvp/' + $scope.plan.guid + '/' + result.friend.inviteStatusConfirmation.token)
                       .success(function(data, status, headers, config) {

@@ -375,7 +375,6 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
 			if (typeof googleHotels === "undefined") {
 				return;
 			}
-			console.log(googleHotels);
 			angular.forEach(googleHotels, function(place, i) {
 				place.service = 'google';
 				place.hide = (typeof place.hide === "undefined") ? false : place.hide;
@@ -502,8 +501,6 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
         total: 0,
         payment: JSON.stringify(payment)
       }, function(err, result) {
-      	console.log('added hotel:');
-      	console.log(err,result);
       	/* TODO: check to make sure result is success */
         r._id     = result.hotel._id;
       	r.inPlan  = true;
@@ -536,7 +533,6 @@ controller('HotelsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliHot
 
 		$scope.addHotel = function(idx) {
       var hotel = $scope.hotels[idx];
-      console.log(hotel);
       /* angularjs hack */
       delete hotel["$$hashKey"];
       addHotel(hotel);
@@ -879,8 +875,6 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
         total: 0,
         payment: JSON.stringify(payment)
       }, function(err, result) {
-      	console.log('added restaurant:');
-      	console.log(result);
       	/* TODO: check to make sure result is success */
         r._id     = result.restaurant._id;
       	r.inPlan  = true;
@@ -904,7 +898,6 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
 
 		$scope.addDeal = function(idx) {
       var deal = $scope.deals[idx];
-      console.log(deal);
       /* angularjs hack */
       delete deal["$$hashKey"];
       addRestaurant(deal);
@@ -957,7 +950,6 @@ controller('RestaurantsCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wemb
           $scope.restaurantConfirm = false;
           overlay.hide();
         }
-        console.log(results);
         plan.setRestaurants(results.restaurants);
 
 				$rootScope.$broadcast('restaurants-changed');
@@ -1296,8 +1288,6 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
         parking._id            = result.parking._id;
       	parking.parkingInPlan  = true;
         $scope.currentParking  = parking;
-        console.log('parking is now current: ');
-        console.log($scope.currentParking);
         /* if payment type is split-first just go straight to the options page */
         if ($scope.plan.preferences.payment === 'split-first') {
           $scope.parkingConfirm = true;
@@ -1322,8 +1312,6 @@ controller('ParkingCtrl', ['$rootScope', '$scope', '$timeout', 'plan', 'wembliPa
 
 		$scope.addParkingReservations = function(idx) {
       var parking              = $scope.parkingReservations.parking_listings[idx];
-      console.log('add parking res: ');
-      console.log(parking);
       /* angularjs hack */
       delete parking["$$hashKey"];
       addParking(parking);

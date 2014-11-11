@@ -143,8 +143,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
     /* watch selectedQty and initialize amountPaid */
     $scope.$watch('currentTicket.selectedQty', function(newVal, oldVal) {
-      console.log('currentTicket selectedqty changed');
-      console.log(newVal);
       if (newVal) {
         $scope.currentTicket = $scope.tickets[$scope.currentTicketIdx];
         if ($scope.currentTicket) {
@@ -188,15 +186,12 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
         };
         $scope.goldstarTicket = ticketGroup;
         plan.addTicketGroup(ticketGroup, function(err, results) {
-          console.log(results);
-
           $scope.goldstarTicket._id = results.ticketGroup._id;
           $scope.goldstarTicket.ticketsInPlan = true;
 
           /* wait then show the slidedown */
           var Promise = $timeout(function() {
             $rootScope.$apply(function() {
-              console.log('showbuygoldstaroffsite');
               $scope.buyGoldstarOffsite = true;
               overlay.show();
             });
@@ -211,8 +206,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
         $scope.currentTicket    = ticket;
         $scope.currentTicket.selectedQty = ticket.selectedQty || ticket.maxSplit;
         $scope.currentTicket.selectedQty = $scope.currentTicket.selectedQty.toString();
-        console.log($scope.currentTicket);
-
         var sections = $('#venue-map-container').tuMap("GetSections");
         for (var i = sections.length - 1; i >= 0; i--) {
           if (sections[i].Name === ticket.Section) {
@@ -232,10 +225,7 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
           ticketGroup: ticket,
         };
 
-        console.log('add ticketgroup');
-        console.log(ticketGroup);
         plan.addTicketGroup(ticketGroup, function(err, results) {
-          console.log(results);
           ticket.ticketsInPlan = true;
           if (results.ticketGroup._id) {
             ticket._id = results.ticketGroup._id;
@@ -253,7 +243,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             /* wait then show the slidedown */
             var Promise = $timeout(function() {
               $rootScope.$apply(function() {
-                console.log('showbuytixoffsite');
                 $scope.buyTicketsOffsite = true;
                 overlay.show();
               });
@@ -289,7 +278,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
         /* if there's _id then there's a db record to modify, else its just stored in the session and no db id */
         var id = $scope.tickets[index]._id ? $scope.tickets[index]._id : $scope.tickets[index].ID;
-        console.log('removing ticket id: '+id);
 
         /* remove the ticketgroup and close the modal */
         plan.removeTicketGroup({ticketId: id}, function(err, results) {
@@ -327,30 +315,25 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             qty: $scope.goldstarTicket.selectedQty
           }
         }, function(err, result) {
-          console.log('receipt added');
-          console.log(err, result);
+
           /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
           //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
 
           googleAnalytics.trackEvent('Plan', 'boughtTickets', $scope.plan.event.eventName, '', function(err, result) {
             /* go to the next page which depends on whether they are splitting with friends or paying themself */
-            console.log('going to next page: '+ $scope.nextLink);
             $window.location.href = $scope.nextLink;
           });
         });
       }
 
       $scope.boughtTickets = function() {
-        console.log('set receipt for tix with idx: '+$scope.currentTicketIdx);
 
         if (typeof $scope.currentTicketIdx == "undefined") {
-          console.log('no currenttixid');
           $window.location.href = $scope.nextLink;
           return;
         }
 
         var ticket = $scope.tickets[$scope.currentTicketIdx];
-        console.log(ticket);
         var id = ticket._id ? ticket._id : ticket.ID;
         /* update the tickets to have a receipt */
         plan.addTicketGroupReceipt({
@@ -362,14 +345,11 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             qty: $scope.currentTicket.selectedQty
           }
         }, function(err, result) {
-          console.log('receipt added');
-          console.log(err, result);
           /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
           //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
 
           googleAnalytics.trackEvent('Plan', 'boughtTickets', $scope.plan.event.eventName, '', function(err, result) {
             /* go to the next page which depends on whether they are splitting with friends or paying themself */
-            console.log('going to next page: '+ $scope.nextLink);
             $window.location.href = $scope.nextLink;
           });
         });
@@ -377,10 +357,8 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
       $rootScope.$on('overlay-clicked', function() {
         $scope.removeTicketGroup();
-        console.log('overlay clicked');
       });
 
-			console.log($scope.plan);
 			$scope.organizer = plan.getOrganizer();
 
 			/* todo find out if this person is a friend invited to the plan */
@@ -388,7 +366,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
       /* get the tix and make the ticket list */
       wembliRpc.fetch('event.getTickets', {eventID: p.event.eventId}, function(err, result) {
-        console.log('back from get tix');
           if (err) {
             alert('error happened - contact help@wembli.com');
             return;
@@ -396,7 +373,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 
           if (typeof result.tickets[0] === "undefined") {
             //$scope.noTickets = true;
-            console.log('no tix');
             $scope.notFound = true;
           }
 
@@ -408,7 +384,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
             if (/parking/gi.test(el.Section)) {
               return;
             }
-            /* console.log(el); */
 
             /* session id for the ticketNetwork purchase link */
             el.sessionId = tnConfig.generateSessionId();
@@ -493,8 +468,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 		      options.SingleSectionSelection = true;
           options.ServiceUrl = "//imap.ticketutils.net";
 			    options.OnInit = function(e, data) {
-            console.log('venue map loaded');
-            console.log(data);
 
             $('#venue-map-loading').hide();
             overlay.hide();
@@ -516,8 +489,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
 			    };
 
 			    options.OnError = function(e, Error) {
-			    	console.log('error with map');
-			      console.log(Error);
 			      if (Error.Code === 1) {
 			        if (typeof $scope.plan.event.data.MapURL === "undefined") {
 			          $scope.plan.event.data.MapURL = "/images/no-seating-chart.jpg";
@@ -545,7 +516,6 @@ controller('TicketsCtrl', ['$scope', 'wembliRpc', 'plan', 'customer', 'ticketPur
               },
               stop: function(event, ui) {
                 var q = $(this).val();
-                console.log('quantity in price slider stop: '+q);
                 filterTickets({
                   quantity: q
                 });

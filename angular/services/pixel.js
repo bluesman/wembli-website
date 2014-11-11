@@ -26,9 +26,6 @@ factory('pixel', ['$http', 'wembliRpc',
 			fire: function(args, cb) {
 				if (typeof self.pixelsFired[args.content] === "undefined") {
 
-					console.log('pixel args: ');
-					console.log(args);
-
 					/* fetch the facebook conversion snippet and add the pixel id to it - then compile it */
 					var getArgs = {
 						method: 'get',

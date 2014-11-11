@@ -33,7 +33,6 @@ directive('typeahead', [
       replace: false,
       compile: function(element, attr, transclude) {
         return function(scope, element, attr) {
-          console.log(config[attr.config]);
           element.typeahead(config[attr.config]);
         }
       }

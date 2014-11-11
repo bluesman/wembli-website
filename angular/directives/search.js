@@ -50,7 +50,6 @@ directive('eventListWaypoint', ['wembliRpc', '$filter', '$timeout',
                 }
 
                 $timeout(function() {
-                  console.log(result);
                   if (result.event.length < 1) {
                     scope.noMoreEvents = true;
                     $this.waypoint('destroy');
@@ -96,7 +95,6 @@ directive('showTicketRange', ['wembliRpc', '$window',
 
             //we have already fetched and displayed this one
             if (typeof scope.ticketSummaryData[attr.eventId] != "undefined") {
-              console.log('already fetched');
               return;
             }
 
@@ -104,7 +102,6 @@ directive('showTicketRange', ['wembliRpc', '$window',
 
             /* if its locked that means we moused in while doing a fetch */
             if (scope.ticketSummaryData[attr.eventId].locked) {
-              console.log('locked');
               return;
             }
 
@@ -116,8 +113,6 @@ directive('showTicketRange', ['wembliRpc', '$window',
               "eventID": attr.eventId
             };
 
-              console.log('getpricing info');
-              console.log(args);
 
             wembliRpc.fetch('event.getPricingInfo', args, function(err, result) {
                 var summaryContent = 'Start plan for ticket pricing';

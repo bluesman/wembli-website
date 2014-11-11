@@ -38,7 +38,6 @@ factory('tuMap', [
       },
       displayStaticMap: function(mapUrl) {
         /* TODO: check if this is split first */
-        console.log('init static map - container is: '+this.container);
         var img = new Image();
         img.src = mapUrl;
         img.onload = function() {

@@ -46,7 +46,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
 
         for (var j = 0; j < f.payment.length; j++) {
           var p = f.payment[j];
-          console.log(f.payment);
 
           if (p.type == 'request') {
             if (p.open) {
@@ -144,11 +143,9 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
     };
 
     $scope.boughtTickets = function() {
-      console.log('set receipt for tix with idx: ');
       $scope.confirmErr    = false;
 
       if (typeof $scope.currentTicket == "undefined") {
-        console.log('no currenttixid');
         $scope.removeTicketGroup();
         return;
       }
@@ -184,8 +181,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
           qty: $scope.currentTicket.selectedQty
         }
       }, function(err, result) {
-        console.log('receipt added');
-        console.log(err, result);
         var t = result.ticket;
         /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
         //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
@@ -203,11 +198,9 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
     }
 
     $scope.boughtParking = function() {
-      console.log('set receipt for tix with idx: ');
       $scope.confirmErr    = false;
 
       if (typeof $scope.currentParking == "undefined") {
-        console.log('no currenttixid');
         $scope.removeParking();
         return;
       }
@@ -242,8 +235,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
           qty: $scope.currentParking.selectedQty
         }
       }, function(err, result) {
-        console.log('receipt added');
-        console.log(err, result);
         var p = result.parking;
         /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
         //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
@@ -261,11 +252,9 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
     }
 
     $scope.boughtDeal = function() {
-      console.log('set receipt for deal with idx: ');
       $scope.confirmErr    = false;
 
       if (typeof $scope.currentDeal == "undefined") {
-        console.log('no currenttixid');
         $scope.removeDeal();
         return;
       }
@@ -300,8 +289,7 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
           qty: $scope.currentDeal.selectedQty
         }
       }, function(err, result) {
-        console.log('receipt added');
-        console.log(err, result);
+
         var d = result.restaurant;
         /* for testing, fire the ticketnetwork pixel which will set the payment.receipt value */
         //$http.get('http://tom.wembli.com/callback/tn/checkout?request_id=' + $scope.sessionId + '&event_id=' + $scope.eventId);
@@ -328,13 +316,11 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       $scope.removeParking();
       $scope.removeDeal();
       $scope.removeHotel();
-      console.log('overlay clicked');
     });
 
 
 
 		$scope.activateSection = function(sectionName) {
-			console.log('activateSection '+ sectionName);
       var sectionName = sectionName.split('-')[2];
       planNav.activate(sectionName);
       googleMap.resize();
@@ -389,7 +375,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
         $scope.totalComing  = parseInt($scope.totalComing) + parseInt($scope.plan.organizer.rsvp.guestCount) + 1;
       }
 
-      console.log('total coming: '+ $scope.totalComing);
     };
 
     $scope.setSelectedQty = function() {
@@ -404,11 +389,8 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
           });
 
           if (typeof t.ticketGroup.selectedQty === "undefined") {
-            console.log('using last split');
             t.ticketGroup.selectedQty = parseInt(t.ticketGroup.ValidSplits.int[t.ticketGroup.ValidSplits.int.length - 1]);
           }
-
-          console.log('selected qty: '+t.ticketGroup.selectedQty);
 
         }
 
@@ -433,11 +415,7 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       /* if they have more than 0 tickets, check to see if they have more than the number of people coming */
       if (sum > 0) {
         $scope.ticketCountMismatch = true;
-        console.log('there are '+sum+' tickets selected');
-        console.log('there are '+$scope.totalComing+' people coming');
-
         if (sum >= $scope.totalComing) {
-          console.log('ticketcount mismatch is false');
           $scope.ticketCountMismatch = false;
         }
       }
@@ -561,25 +539,6 @@ controller('PlanCtrl', ['$scope', 'plan', 'planNav', 'customer','overlay', 'cart
       $scope.context     = plan.getContext();
 
       /* debug stuff */
-      console.log('GETTING PLAN INFO:');
-      console.log('plan:');
-      console.log($scope.plan);
-      console.log('organizer');
-      console.log($scope.organizer);
-      console.log('tickets');
-      console.log($scope.tickets);
-      console.log('friends');
-      console.log($scope.friends);
-      console.log('parking');
-      console.log($scope.parking);
-      console.log('restaurants');
-      console.log($scope.restaurants);
-      console.log('hotels');
-      console.log($scope.hotels);
-      console.log('context');
-      console.log($scope.context);
-      console.log('customer');
-      console.log($scope.customer);
 
       /* get the friend that is this customer */
       for (var i = 0; i < $scope.friends.length; i++) {
@@ -667,11 +626,9 @@ controller('OrganizerPlanCtrl', ['$scope', 'cart', 'plan', '$location', 'wembliR
       }
 
       if (n !== o) {
-        console.log('saving prefs');
         plan.savePreferences({
           preferences: $scope.plan.preferences
         }, function(err, result) {
-          console.log(result);
           $scope.calcTotalComing();
         });
       }
@@ -986,7 +943,6 @@ controller('OrganizerPonyUpCtrl', ['$rootScope','$scope','plan', 'planNav', 'wem
     $scope.sendPonyUpEmail = function() {
       /* check if they have an account - if not throw a modal to collect account info */
       if ((typeof customer.get().balancedAPI === "undefined") || (typeof customer.get().balancedAPI.bankAccounts === "undefined") || (typeof customer.get().balancedAPI.bankAccounts.items[0] === "undefined")) {
-        console.log('create balanced account');
         $scope.needBalancedAccount = true;
         return;
       }
@@ -1025,9 +981,6 @@ controller('OrganizerPonyUpCtrl', ['$rootScope','$scope','plan', 'planNav', 'wem
         $scope.sendPonyUpInProgress = false;
         return;
       }
-
-      console.log('sending pony up requests');
-      console.log(ponyUpRequests);
 
       wembliRpc.fetch('plan.sendPonyUpEmail', {
         ponyUpRequests: ponyUpRequests
@@ -1098,13 +1051,11 @@ controller('OrganizerItineraryCtrl', ['$scope','plan', 'planNav', 'wembliRpc',
 
 controller('FriendPlanCtrl', ['$scope', 'plan', '$location', 'wembliRpc',
   function($scope, plan, $location, wembliRpc) {
-    console.log('friend plan ctrl');
   }
 ]).
 
 controller('FriendRsvpCtrl', ['$scope', 'plan', 'planNav', 'wembliRpc',
   function($scope, plan, planNav, wembliRpc) {
-    console.log('friend rsvp ctrl');
 
     /* handle the main plan rsvp */
     $scope.setRsvp = function(rsvp) {
@@ -1192,7 +1143,6 @@ controller('FriendVoteCtrl',['$scope', 'plan', 'planNav', 'wembliRpc',
 
     var calcVotePriceTotal = function() {
       var total = 0;
-      console.log($scope.me.rsvp.tickets.price);
       if (parseInt($scope.me.rsvp.tickets.price) > 0) {
         total += parseInt($scope.me.rsvp.tickets.price);
       }
@@ -1495,8 +1445,7 @@ controller('FriendPonyUpCtrl',['$rootScope', '$scope', 'plan', 'planNav', 'wembl
           };
 
           if (p.type === 'request' && p.open) {
-            console.log('pony up request is open');
-            console.log(p);
+
             /* found a pony up request */
             $scope.ponyUpRequest = p;
             if (!$scope.ponyUp || !$scope.ponyUp.amount) {
@@ -1508,7 +1457,6 @@ controller('FriendPonyUpCtrl',['$rootScope', '$scope', 'plan', 'planNav', 'wembl
               $scope.ponyUp.cardHolderName = $scope.customer.firstName + ' ' + $scope.customer.lastName;
               $scope.ponyUp.organizerFirstName = $scope.organizer.firstName;
             }
-            console.log($scope.ponyUp);
           }
 
           if (p.type == 'request') {
@@ -1638,7 +1586,6 @@ controller('ChatterCtrl',['$scope', 'wembliRpc', 'planNav',
 
     $scope.chatterLoading = true;
     wembliRpc.fetch('chatter.get', {}, function(err, results) {
-      console.log(results.chatters);
       $scope.chatters = results.chatters;
       $scope.chatterLoading = false;
       planNav.activate('chatter');
@@ -1656,7 +1603,6 @@ controller('PlanCtrlOff', ['$scope', 'wembliRpc', '$window', 'plan', 'planNav', 
 
 			/* this activate section stuff should no longer be needed */
 			$scope.activateSection = function(sectionName) {
-				console.log('activateSection '+ sectionName);
         var sectionName = parseInt(sectionName.charAt(sectionName.length - 1));
         planNav.activate(sectionName);
         googleMap.resize();
@@ -1671,7 +1617,6 @@ controller('PlanCtrlOff', ['$scope', 'wembliRpc', '$window', 'plan', 'planNav', 
 	      } else {
 	        activateSection = parseInt(h.charAt(h.length - 1));
 	      }
-	      console.log('activate section from path '+activateSection);
 	    } else {
 	      if ((typeof $scope.customer !== "undefined") && (p.organizer.customerId === $scope.customer.id)) {
 	        /* automatically go to the right section depending on what phase of the plan they are in */

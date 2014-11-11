@@ -66,7 +66,6 @@ filter('filterInvitees', ['plan',
 			 * p.preferences.guestList can be: full, rsvp, private
 			 */
 
-			 console.log('guestlist: '+ p.preferences.guestList);
 			if (p.preferences.guestList === 'private') {
 				return newList;
 			}

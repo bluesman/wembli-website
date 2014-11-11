@@ -23,7 +23,6 @@ angular.module('wembliApp', [
   }
 ]).run(['$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'facebook', 'twitter', 'plan', 'wembliRpc',
   function($timeout, initRootScope, $scope, $location, $route, $window, facebook, twitter, plan, wembliRpc) {
-    console.log('run dashboard angular app');
     $timeout(function() {
       plan.fetch(function() {});
     });

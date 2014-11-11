@@ -49,7 +49,6 @@ factory('header', [
 				});
 			},
 			fixed: function() {
-				console.log('turn off header scroll handler: '+self.scroll);
 				angular.element(self.scroll).off('scroll');
 			}
 		}

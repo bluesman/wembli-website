@@ -209,7 +209,6 @@ directive('wembliOverlay', ['$rootScope',
       restrict: 'A',
       compile: function(element, attr, transclude) {
         element.click(function() {
-          console.log('broadcast overlay clicked');
           $rootScope.$broadcast('overlay-clicked');
         });
       }
@@ -473,7 +472,6 @@ directive('createBalancedAccount', ['$rootScope', 'pluralize', 'wembliRpc', 'pla
         return function(scope, element, attr, controller) {
 
           scope.createBalancedAccount = function() {
-            console.log('show loading modal');
             scope.submitInProgress = true;
 
             /* validate dob */
@@ -506,8 +504,6 @@ directive('createBalancedAccount', ['$rootScope', 'pluralize', 'wembliRpc', 'pla
             }
 
             if (error) {
-              console.log('error creating bank account');
-              console.log(scope.createMerchantAccount);
               scope.submitInProgress = false;
               return;
             }
@@ -565,13 +561,11 @@ directive('friendTweetButton', ['$window','wembliRpc',function($window,wembliRpc
 
         element.bind('click',function(e) {
           e.preventDefault();
-          console.log('clicked on the button');
 
         });
 
         $window.twttr.ready(function(twttr) {
           twttr.events.bind('click',function(event) {
-            console.log(event);
             wembliRpc.fetch('invite-friends.submit-step4', {friend:scope.friend}, function(err,result) {
               scope.$apply(function(){
                 scope.friend.inviteStatus = true;
@@ -580,8 +574,6 @@ directive('friendTweetButton', ['$window','wembliRpc',function($window,wembliRpc
           });
 
           twttr.events.bind('tweet',function(event) {
-            console.log('actually tweeted');
-            console.log(event.data);
           });
 
           twttr.widgets.load();
@@ -639,7 +631,6 @@ directive('leafletMap', ['plan',
         return function(scope, element, attr) {
           plan.get(function(p) {
             var initLeaflet = function() {
-              console.log('init leaflet!');
               var $el = element[0];
               var map = new L.Map($el, {
                 zoom: attr.zoom
@@ -660,27 +651,20 @@ directive('leafletMap', ['plan',
                 icon: venueIcon
               });
               marker.bindPopup(p.event.eventVenue);
-              console.log('adding marker to map');
-              console.log(marker);
               marker.addTo(map);
               marker.openPopup();
               scope.$watch('markers', function(markers) {
                 if (typeof markers === "undefined") {
                   return;
                 };
-                console.log('adding markers');
-                console.log(markers);
                 map.addLayer(markers);
               });
 
             };
 
-            console.log(p.event);
             if (scope.sequenceCompleted) {
-              console.log('sequence completed already');
               initLeaflet();
             } else {
-              console.log('wait for sequence to complete');
               scope.$on('sequence-afterNextFrameAnimatesIn', function() {
                 initLeaflet();
               })

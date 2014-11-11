@@ -50,7 +50,6 @@ directive('ticketsPopover', ['plan', 'wembliRpc', '$compile',
         var html = $('#static-popover-content').html();
 
         return function(scope, element, attr) {
-          console.log(scope.tickets);
 
           var originalLeave = $.fn.popover.Constructor.prototype.leave;
           $.fn.popover.Constructor.prototype.leave = function(obj) {
@@ -118,7 +117,6 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
         }
       ],
       compile: function(element, attr, transclude) {
-        console.log('compile map');
 
         var generateTnSessionId = function() {
           var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
@@ -132,7 +130,6 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
         };
 
         return function(scope, element, attr) {
-        console.log('link map');
 
           /* don't cache this partial - cache:false doesn't do it */
           $templateCache.remove("/partials/interactive-venue-map");
@@ -272,13 +269,11 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
               var h2 = $('#venue-map-container').height() - 220;
               $('.ticket-list-container').height(h2);
               $('#static-map-image').mouseenter(function() {
-                console.log('enter mouse');
                 scope.$apply(function(){
                   scope.showTicketsPopover = true;
                 });
               });
               $('#static-map-image').mouseleave(function() {
-                console.log('enter mouse');
                 scope.$apply(function(){
                   scope.showTicketsPopover = false;
                 });
@@ -329,12 +324,10 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
           };
 
           plan.get(function(p) {
-            console.log('get plan');
             //get the tix and make the ticket list
             wembliRpc.fetch('event.getTickets', {
                 eventID: p.event.eventId
               }, function(err, result) {
-                console.log('fetched tix');
                 if (err) {
                   //handle err
                   alert('error happened - contact help@wembli.com');
@@ -444,15 +437,12 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 options.MapId = scope.event.VenueConfigurationID;
                 options.EventId = scope.event.ID;
                 options.OnInit = function(e, MapType) {
-                  console.log(MapType);
-                  console.log('move zoom controls');
                   //$(".tuMapControl").parent("div").attr('style', "display:none;position:absolute;left:5px;top:120px;font-size:12px");
                   if (MapType == 'Interactive') {
                     /* check if the ticket utils url is general admission */
                     if (/ga_venue_tn/.test(scope.event.MapUrl)) {
                       initStaticMap();
                     } else {
-                      console.log('moving zoom controls');
                       $(".ZoomControls").appendTo("#venue-map");
                     }
                   } else {
@@ -462,7 +452,6 @@ directive('interactiveVenueMap', ['$timeout', '$rootScope', '$compile', 'interac
                 };
 
                 options.OnError = function(e, Error) {
-                  console.log(Error);
                   if (Error.Code === 1) {
                     if (typeof scope.event.MapURL === "undefined") {
                       scope.event.MapURL = "/images/no-seating-chart.jpg";

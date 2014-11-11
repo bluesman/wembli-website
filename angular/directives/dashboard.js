@@ -57,7 +57,6 @@ directive('dashboard', ['customer', '$rootScope', 'wembliRpc', '$location',
             /* put the result in the scope for the children scopes */
             scope.dashboard = result;
             customer.set(result.customer);
-            console.log(result);
             /* let the modals know that the dashboard has been initialized */
             $rootScope.$broadcast('dashboard-fetched', result);
           });

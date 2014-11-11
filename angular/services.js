@@ -530,8 +530,6 @@ factory('plan', ['$rootScope', 'wembliRpc', 'customer', '$timeout', 'loggedIn', 
 
 						if (typeof result.customer !== "undefined" && result.customer) {
 							customer.set(result.customer);
-							console.log('set customer:');
-							console.log(customer.get());
 						}
 						self.fetchInProgress = false;
 						$rootScope.$broadcast('plan-fetched', {});
@@ -890,7 +888,6 @@ factory('googleAnalytics', ['wembliRpc', 'cookie',
 							if (typeof cb !== "undefined") {
 								cb(err, result);
 							}
-							console.log('logged event:' + category + ' ' + action + ' ' + label +  ' ' + value);
 						});
 
 					}

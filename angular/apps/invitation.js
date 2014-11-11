@@ -23,7 +23,6 @@ angular.module('wembliApp', [
   }
 ]).run(['$timeout', 'initRootScope', '$rootScope', '$location', '$route', '$window', 'facebook', 'twitter', 'plan', 'wembliRpc', 'overlay',
   function($timeout, initRootScope, $scope, $location, $route, $window, facebook, twitter, plan, wembliRpc, overlay) {
-    console.log('run invitation angular app');
     overlay.loading(true);
     overlay.show();
 

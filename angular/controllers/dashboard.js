@@ -5,20 +5,14 @@ angular.module('wembliApp.controllers.dashboard', []).
 controller('DashboardMainCtrl', ['$rootScope', '$scope', '$location', 'plan',
 	function($rootScope, $scope, $location, plan) {
 		$scope.showList = $location.url();
-		console.log($scope.showList);
 		/*
 		$rootScope.$on('dashboard-fetched', function() {
-			console.log($scope.dashboard);
 		});
 		*/
 
 		$scope.deletePlan = function(guid) {
-			console.log('delete plan: '+ guid);
 			plan.deactivate({guid:guid}, function(err, result) {
-				console.log(result);
 				$scope.dashboard['organizer'].map(function(plan) {
-					console.log('plan in map: ');
-					console.log(plan);
 				});
 				var newAry = [];
 				for (var i = 0; i < $scope.dashboard['organizer'].length; i++) {
@@ -28,7 +22,6 @@ controller('DashboardMainCtrl', ['$rootScope', '$scope', '$location', 'plan',
 					newAry.push($scope.dashboard['organizer'][i]);
 				};
 				$scope.dashboard['organizer'] = newAry;
-				console.log($scope.dashboard['organizer']);
 
 			});
 		};
@@ -51,7 +44,6 @@ controller('DashboardSettingsCtrl', ['$rootScope', '$scope', '$location', 'wembl
 	      };
 
 	      wembliRpc.fetch('customer.changePassword', args, function(err, result) {
-					console.log(result);
 					$scope.submitInProgress = false;
           $scope.changePasswordForm.error = result.formError;
           $scope.changePasswordForm.mismatch = result.passwordMismatch;
@@ -69,8 +61,6 @@ controller('DashboardPaymentsCtrl', ['$rootScope', '$scope', '$window', '$locati
 	function($rootScope, $scope, $window, $location, plan, customer, wembliRpc) {
 		$scope.showDetail = $location.url();
 		$scope.submitInProgress = false;
-
-		console.log($scope.showDetail);
 
 		$scope.$on('bank-account-created', function(e, result) {
 			$window.location.href = '/dashboard/payment-information';
@@ -90,7 +80,6 @@ controller('DashboardPaymentsCtrl', ['$rootScope', '$scope', '$window', '$locati
       args.cvv = $scope.creditCard.cvv;
       args.postalCode = $scope.creditCard.postalCode;
       wembliRpc.fetch('customer.createCreditCard', args, function(err, result) {
-      	console.log(result);
         $scope.submitInProgress = false;
         if (err) {
           $scope.error = true;
@@ -115,7 +104,6 @@ controller('DashboardPaymentsCtrl', ['$rootScope', '$scope', '$window', '$locati
     $scope.deleteAccount = function() {
     	$scope.submitInProgress = true;
       wembliRpc.fetch('customer.deleteBankAccount', {}, function(err, result) {
-      	console.log(result);
 
         if (err) {
           alert('something bad happened contact help@wembli.com');
@@ -128,7 +116,6 @@ controller('DashboardPaymentsCtrl', ['$rootScope', '$scope', '$window', '$locati
     $scope.deleteCard = function() {
     	$scope.submitInProgress = true;
       wembliRpc.fetch('customer.deleteCreditCard', {}, function(err, result) {
-      	console.log(result);
 
         if (err) {
           alert('something bad happened contact help@wembli.com');

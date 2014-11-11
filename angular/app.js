@@ -40,7 +40,6 @@ angular.module('wembliApp', [
     });
 
     $window.fbAsyncInit = function() {
-      console.log('call fb init');
       FB.init({
         appId: fbAppId,
         channelUrl: fbChannelUrl,

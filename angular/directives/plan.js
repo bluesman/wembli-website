@@ -310,7 +310,6 @@ directive('organizerItinerarySectionOff', ['wembliRpc', 'planNav',
       templateUrl: '/partials/plan/itinerary-section/organizer',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          console.log('organize itinerary loaded');
           planNav.registerSection();
           //$rootScope.$broadcast('section-loaded');
         };
@@ -330,7 +329,6 @@ directive('organizerRsvpSectionOff', ['planNav', 'plan',
       templateUrl: '/partials/plan/rsvp-section/organizer',
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          console.log('organize rsvp loaded');
           planNav.registerSection();
           //$rootScope.$broadcast('section-loaded');
         };
@@ -352,7 +350,6 @@ directive('organizerCartSectionOff', ['ticketPurchaseUrls', 'plan', 'cart', 'pla
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
           scope.tnUrl = ticketPurchaseUrls.tn;
-          console.log('organize cart loaded');
           planNav.registerSection();
           //$rootScope.$broadcast('section-loaded');
 
@@ -384,7 +381,6 @@ directive('organizerPonyUpSectionOff', ['$rootScope', 'plan', 'wembliRpc', '$tim
 
       compile: function(element, attr, transclude) {
         return function(scope, element, attr, controller) {
-          console.log('organize pony up loaded');
           planNav.registerSection();
           //$rootScope.$broadcast('section-loaded');
         }
@@ -451,7 +447,6 @@ directive('itineraryMap', ['$rootScope', 'googleMap', 'googlePlaces', 'plan', 'm
 
             /* marker for the parking if there is parking chosen */
             var parking = plan.getParking();
-            console.log(parking);
             angular.forEach(parking, function(p) {
               if (p.service === "google") {
                 googlePlaces.getDetails(p.parking.reference, function(place, status) {

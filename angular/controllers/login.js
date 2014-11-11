@@ -8,7 +8,6 @@ controller('RsvpLoginCtrl', ['$scope', 'plan', 'customer', 'wembliRpc', 'pixel',
 
 		$scope.$watch('service', function(n, o) {
 			if (n !== "undefined") {
-				console.log(n);
 				if (n === 'wemblimail') {
 					wembliRpc.fetch('friend.getServiceId', {
 						token: $scope.token
@@ -20,7 +19,6 @@ controller('RsvpLoginCtrl', ['$scope', 'plan', 'customer', 'wembliRpc', 'pixel',
 				} else {
 					if ($scope.customer && (n === 'twitter') || (n === 'facebook')) {
 						$scope.confirmSocial = n;
-						console.log('confirmSocial: '+$scope.confirmSocial);
 					}
 				}
 			}
@@ -28,7 +26,6 @@ controller('RsvpLoginCtrl', ['$scope', 'plan', 'customer', 'wembliRpc', 'pixel',
 
 		$scope.$watch('guid', function(n, o) {
 			$scope.next = '/rsvp/' + $scope.guid + '/' + $scope.token + '/' + $scope.service;
-			console.log('next: '+$scope.next);
 		})
 
 		$scope.confirm = function(social) {
@@ -79,16 +76,12 @@ controller('RsvpLoginCtrl', ['$scope', 'plan', 'customer', 'wembliRpc', 'pixel',
         };
 
         wembliRpc.fetch('customer.signup', rpcArgs, function(err, result) {
-        	console.log('back from customer signup');
-        	console.log(result);
           if (result.exists && !result.noPassword) {
-          	console.log('account exists and has password');
             $scope.login.accountExists = true;
             return $scope.showForm('showLoginForm', 'showSignupForm');
           }
 
           if (result.noPassword) {
-          	console.log('no password');
             return $scope.showForm('showLoginUnconfirmedForm', 'showSignupForm');
           }
 
@@ -111,7 +104,6 @@ controller('RsvpLoginCtrl', ['$scope', 'plan', 'customer', 'wembliRpc', 'pixel',
 					}
 
           $scope.signup.success = true;
-          console.log('submit signup succes - fire pixel');
 
           /* fire the signup pixels */
           var gCookie = googleAnalytics.getCookie();
@@ -149,7 +141,6 @@ controller('RsvpLoginCtrl', ['$scope', 'plan', 'customer', 'wembliRpc', 'pixel',
           */
           /* load next page */
           if (!$scope.confirmSocial) {
-	          console.log('navigate to: '+ $scope.next);
 						return $window.location.href = $scope.next;
 					}
         });
@@ -196,25 +187,20 @@ controller('SupplyPasswordCtrl', ['$scope', 'wembliRpc', '$window',
 		$scope.email = $('#email').val();
 		$scope.token = $('#token').val();
 		$scope.redirectUrl = $('#redirectUrl').val();
-		console.log('redirecturl: '+$scope.redirectUrl);
 		$scope.submitConfirmPasswordForm = function() {
 			if ($scope.confirmPasswordForm.$invalid) {
 				return;
 			}
 
 			$scope.confirmPasswordInProgress = true;
-			console.log($scope.email);
 			wembliRpc.fetch('customer.resetPassword', {
 				email: $scope.email,
 				token: $scope.token,
 				password: $scope.password,
 				password2: $scope.password2
 			}, function(err, results) {
-				console.log(err);
-				console.log(results);
 
 				if (err) {
-					console.log('fatal err');
 					$scope.confirmPasswordForm.fatalError = err;
 					$scope.confirmPasswordInProgress = false;
 					return;
@@ -225,7 +211,6 @@ controller('SupplyPasswordCtrl', ['$scope', 'wembliRpc', '$window',
 					$scope.confirmPasswordInProgress = false;
 				} else {
 					$scope.confirmPasswordInProgress = false;
-					console.log('supplied password - redirect to: '+$scope.redirectUrl);
 					$window.location.href = ($scope.redirectUrl) ? $scope.redirectUrl : '/dashboard';
 				}
 
@@ -257,7 +242,6 @@ controller('SignupCtrl', ['$scope', '$window', 'wembliRpc', 'pixel', 'googleAnal
 			}, function(err, results) {
 
 				if (err) {
-					console.log('fatal err');
 					$scope.signupForm.fatalError = err;
 					$scope.signupInProgress = false;
 					return;
@@ -323,7 +307,6 @@ controller('LoginCtrl', ['$scope', '$window', 'wembliRpc',
 		/* need to handle redirectUrl */
 		$scope.submitLoginForm = function() {
 			if ($scope.loginForm.$invalid) {
-				console.log('login form is not valid');
 				return;
 			}
 
@@ -340,7 +323,6 @@ controller('LoginCtrl', ['$scope', '$window', 'wembliRpc',
 				$scope.loginInProgress = false;
 
 				if (err) {
-					console.log('fatal err');
 					$scope.loginForm.fatalError = err;
 					return;
 				}
